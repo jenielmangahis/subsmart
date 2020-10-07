@@ -7,38 +7,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .module_ac {
         background: #f2f2f2;
         border-radius: 1px;
-        padding-right: 15px;
-        padding-left: 15px;
-        padding-bottom: 10px;
-        border: 1px solid #32243d !important;
-        margin-bottom: 20px;
-        flex-flow: wrap;
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-    .module_ac_full {
-        background: #f2f2f2;
-        border-radius: 1px;
-        padding-right: 15px;
-        padding-left: 15px;
-        padding-bottom: 10px;
-        border: 1px solid #32243d !important;
-        margin-bottom: 20px;
-        flex-flow: wrap;
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-    .module_ac_{
-        flex: 0 0 97.33%;
-        max-width: 100%;
-        height: 100%;
         flex-direction: column; /*added*/
         display: inline-block;
         grid-gap: 15px;
+        flex-flow: wrap;
+        flex: 0 0 41.666667%;
+        max-width: 30%;
         position: relative;
         padding-right: 15px;
         padding-left: 15px;
         padding-bottom: 15px;
+        border: 2px solid #32243d !important;
+        margin-left: 10px;
+        margin-bottom: 20px;
         float: left;
         overflow-y:auto;
         overflow-x: auto;
@@ -47,369 +28,2575 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .module_header{
         /** background-color: #5f0a87;
       background-image: linear-gradient(326deg, #862987 0%, #5f0a87 74%); */
+
         background-color: #32243d;
         color : #fff;
         text-align: center;
-        font-size: 11px;
-        max-height: 20px;
+        max-height: 40px;
         max-width: 100%;
-        margin-bottom: 3px;
+        margin-bottom: 10px;
     }
-    .module_title{
-        padding-top: 1px;
+    .module_ac2 {
+        background: #f2f2f2;
+        border-radius: 1px;
+        display: flex;
+        flex-flow: wrap;
+        flex: 0 0 41.666667%;
+        max-width: 100%;
+        position: relative;
+        padding-right: 15px;
+        padding-left: 15px;
+        padding-bottom: 15px;
+        border: 2px solid #32243d !important;
+        margin-left: 10px;
+        margin-bottom: 20px;
+    }
+    .module_ac3 {
+        background: #f2f2f2;
+        border-radius: 1px;
+        border-left : #0b2e13 20px;
+        height : 130px;
     }
 
-    .required{
-        color : red!important;
+    .module_ac_long {
+        background: #f2f2f2;
+        border-radius: 1px;
+        display: inline-block;
+        flex-direction: column; /*added*/
+        grid-gap: 15px;
+        flex-flow: wrap;
+        flex: 0 0 91%;
+        max-width: 100%;
+        position: relative;
+        padding-right: 15px;
+        padding-left: 15px;
+        padding-bottom: 15px;
+        border: 2px solid #32243d !important;
+        margin-left: 10px;
+        margin-bottom: 20px;
+        float: left;
+        overflow-y: auto;
+        overflow-x: auto;
+        white-space: nowrap;
+        height:auto;
+        min-height: 100px;
     }
 
-    .form-control  {
-        font-size: 11px !important;
-        height: 20px !important;
-        line-height: 5%;
-    }
-    .form-controls{
-        font-size: 11px !important;
+    .form-control {
+        font-size: 12px;
+        height: 30px !important;
         line-height: 150%;
     }
     label{
-        font-size: 10px !important;
+        font-size: 12px !important;
         margin-bottom: 1px !important;
     }
     hr{
-        border: 0.5px solid #32243d !important;
+        border: 2px solid #32243d !important;
         width: 100%;
     }
     .form-group {
-        margin-bottom: 2px !important;
+        margin-bottom: 3px !important;
     }
     .banking-tab-container {
         border-bottom: 1px solid grey;
         padding-left: 0;
     }
-    .form-line{
-        padding-bottom: 1px;
-    }
-    .btn {
-        font-size: 12px !important;
-        background-repeat: no-repeat;
-        padding: 6px 12px;
-    }
-    .input_select{
-        color: #363636;
-        border: 2px solid #e0e0e0;
-        box-shadow: none;
-        display: inline-block !important;
-        width: 100%;
-        background-color: #fff;
-        background-clip: padding-box;
-        font-size: 11px !important;
-    }
 </style>
-    <div class="wrapper" role="wrapper">
-        <?php include viewPath('includes/sidebars/customer'); ?>
-        <!-- page wrapper start -->
-        <div wrapper__section>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="col-md-6" style="padding-left: 40px;">
-                            <h6 >New Advance Customer</h6>
-                            <a class="btn btn-primary btn-md" href="#"><span class="fa fa-print "></span> Print</a>
-                        </div>
 
-                        <div class="cards">
-                            <div class="card-body">
-                                <div class="row" >
-                                    <div class="col-md-12">
-                                        <div class="cards">
-                                            <div class="card-body">
-                                                <div class="col-md-12">
-                                                    <form id="customer_form">
-                                                        <div class="row">
-                                                            <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td align="" valign="top">
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;padding-right:-41px !important;">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_profile');
-                                                                                ?>
-                                                                            </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_billing');
-                                                                                ?>
-                                                                            </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_alarm');
-                                                                                ?>
-                                                                            </table>
-                                                                        </td>
-                                                                        <td align="" valign="top" >
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_office');
-                                                                                ?>
-                                                                            </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_access');
-                                                                                ?>
-                                                                            </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_notes');
-                                                                                ?>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/customer'); ?>
 
-                                                                </tbody>
-                                                            </table>
-                                                            <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td>
-                                                                        <?php
-                                                                            include viewPath('customer/adv_module_sheets/module_devices');
-                                                                        ?>
-                                                                        <table width="" border="0" cellspacing="0" cellpadding="0">
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                        <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
-                                                        <div class="col-md-12">
-                                                                <div class="row">
-                                                                    <a href="<?php echo base_url('customer') ?>">
-                                                                        <button type="button" class="btn btn-primary btn-md "><span class="fa fa-remove"></span> Cancel </button> &nbsp;
-                                                                    </a>
-                                                                    <button type="submit" class="btn btn-primary btn-md" name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
-                                                                </div>
-                                                        </div>
-                                                    </form>
-                                                    <div id="readroot" class="col-md-12" style="display: none;">
-                                                        <a align="left" style="color:#58bc4f; padding-top:1px;font-size: 10px !important;" href="javascript:void(0);" onclick="this.parentNode.parentNode.removeChild(this.parentNode);" >
-                                                            <span class="fa fa-minus"></span>Remove</a>
-                                                        <!--  <a href="javascript:void(0);">Action/Notes</a>-->
-                                                        <br>
-                                                        <label for="">Device Name</label>
-                                                        <input type="text" class="form-control col-md-2 device" name="device_name[]" id="device_name" />
 
-                                                        <label for="">Sold By</label>
-                                                        <input type="text" class="form-control col-md-2 device" name="sold_by[]" id="sold_by" />
-
-                                                        <label for="">Points</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="device_points[]" id="device_points" />
-
-                                                        <label for="">Retail Cost</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="retail_cost[]" id="retail_cost" />
-
-                                                        <br>
-                                                        <label for="">Purchase Price</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="purch_price[]" id="purch_price" />
-
-                                                        <label for="">Quantity</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="device_qty[]" id="device_qty" />
-
-                                                        <label for="">Total Points</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="total_points[]" id="total_points" />
-
-                                                        <label for="">Total Cost</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="total_cost[]" id="total_cost" />
-
-                                                        <br>
-                                                        <label for="">Total Purch Price</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="total_purch_price[]" id="total_purch_price" />
-
-                                                        <label for="">Net</label>
-                                                        <input type="number" class="form-control col-md-2 device" name="device_net[]" id="device_net" />
-                                                        <br>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> <!-- end card -->
-                                     <br><br><br>
-                                </div>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title">New Advance Customer</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Add your new customer.</li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="float-right d-none d-md-block">
+                            <div class="dropdown">
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                <a href="<?php echo base_url('customer') ?>" class="btn btn-primary"
+                                   aria-expanded="false">
+                                    <i class="mdi mdi-settings mr-2"></i> Go Back to Customer
+                                </a>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>
-        <!-- end container-fluid -->
+                </div>
+            </div>
+            <!-- end row -->
+            <?php echo form_open_multipart('customer/save', ['class' => 'form-validate require-validation', 'id' => 'customer_form', 'autocomplete' => 'off']); ?>
+            <style>
+                .switch {
+                    margin-top: 7px;
+                    float:right;
+                }
 
-                        <!-- Lead Type Modal -->
-                        <div class="modal fade" id="modal_assign" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Add Assign</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form id="modal_form_assign">
-                                        <div class="modal-body">
+            </style>
+            <div class="row custom__border">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="module_ac" style="max-width: 90%;">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="checkbox checkbox-sec margin-right">
+                                                    <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
+                                                    <label for="notify_by_email"><span>Rep Paper</span></label>
+                                                </div>
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for=""></label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div><br>
+
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for=""></label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for=""></label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
-                                                    <label for="">Assign Name</label><br/>
-                                                    <select id="fk_user_id" name="fk_user_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
-                                                        <option value="">Select</option>
-                                                        <?php foreach ($employees as $employee): ?>
-                                                            <option value="<?= $employee->id; ?>"><?= $employee->FName.' '.$employee->LName; ?></option>
-                                                        <?php endforeach ?>
+                                                    <label for="">Status</label><br/>
+                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                        <option value="0">Scheduled</option>
+                                                        <option value="0">Re-Scheduled</option>
+                                                        <option value="0">Past Date</option>
+                                                        <option value="0">Cancel Pending</option>
+                                                        <option value="0">Service Customer</option>
+                                                        <option value="0">Charged Back</option>
+                                                        <option value="0">Installed</option>
+                                                        <option value="0">Cancelled</option>
+                                                        <option value="0">Collections</option>
+                                                        <option value="0">No Show</option>
                                                     </select>
-                                                    <input type="hidden" class="form-control" name="fk_prof_id" id="fk_prof_id" />
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div>
+
+                                <div class=" module_ac">
+                                                <div class="row">
+                                                    <div class="col-md-12 module_header">
+                                                        <div class="onoffswitch grid-onoffswitch switch">
+                                                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                                        </div>
+                                                        <h6>Account Information</h6>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Entered By</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Time Entered</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Sales Date</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Credit Score *</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Monitoring Company *</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">- none -</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Account Type *</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">Select</option>
+                                                                <option value="0">In-House</option>
+                                                                <option value="0">Purchase</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Monitoring ID</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Language</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">Select</option>
+                                                                <option value="English">English</option>
+                                                                <option value="Spanish">Spanish</option>
+                                                                <option value="Mandarin Chinese">Mandarin Chinese</option>
+                                                                <option value="French">French</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Signal Confirmation Number</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Monitoring Confirmation </label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Abort Code</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Sales Rep</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">- none -</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Technician</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">- none -</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Save Date</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Save By</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">- none -</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Cancellation Date</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Cancellation Reason</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">Select</option>
+                                                                <option value="0">Dissatisfied with Service</option>
+                                                                <option value="0">Financial Hardship</option>
+                                                                <option value="0">Fulfilled Contract</option>
+                                                                <option value="0">Moving</option>
+                                                                <option value="0">Non-Payment</option>
+                                                                <option value="0">Paid BOC</option>
+                                                                <option value="0">Passed Away</option>
+                                                                <option value="0">Still Under Contruct</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="checkbox checkbox-sec margin-right">
+                                                            <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                                                            <label for="notify_by_email"><span>Check for Schedule Conflict</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Install Date</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Tech Arrival Time</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Tech Departure Time</label><br/>
+                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Panel Type *</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">- none -</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Pre-Install Survey</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">Select</option>
+                                                                <option value="0">Pass</option>
+                                                                <option value="0">Fail</option>
+                                                                <option value="0">Pending</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Post-Install Survey</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">Select</option>
+                                                                <option value="0">Pass</option>
+                                                                <option value="0">Fail</option>
+                                                                <option value="0">Pending</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Monitoring Waived</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">- none -</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="checkbox checkbox-sec margin-right">
+                                                            <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                                                            <label for="notify_by_email"><span>Rebate Offered</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group" id="customer_type_group">
+                                                                    <label for="">Rebate Check # 1</label><br/>
+                                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group" id="customer_type_group">
+                                                                    <label for="">Amount $</label><br/>
+                                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group" id="customer_type_group">
+                                                                    <label for="">Rebate Check # 2</label><br/>
+                                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group" id="customer_type_group">
+                                                                    <label for="">Amount $</label><br/>
+                                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group" id="customer_type_group">
+                                                                    <label for="">Activation Fee</label><br/>
+                                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                        <option value="0">- none -</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group" id="customer_type_group">
+                                                                    <div class="checkbox checkbox-sec margin-right">
+                                                                        <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                                                                        <label for="notify_by_email"><span>None</span></label>
+                                                                    </div>
+                                                                    <div class="checkbox checkbox-sec margin-right">
+                                                                        <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                                                                        <label for="notify_by_email"><span>Check</span></label>
+                                                                    </div>
+                                                                    <div class="checkbox checkbox-sec margin-right">
+                                                                        <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                                                                        <label for="notify_by_email"><span>Credit</span></label>
+                                                                    </div>
+                                                                    <div class="checkbox checkbox-sec margin-right">
+                                                                        <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                                                                        <label for="notify_by_email"><span>Paid</span></label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <label for="">Lead Source</label><br/>
+                                                            <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                <option value="0">Select</option>
+                                                                <option value="0">Customer Referral</option>
+                                                                <option value="0">Door</option>
+                                                                <option value="0">Door Hanger</option>
+                                                                <option value="0">Flyer Mail Outs</option>
+                                                                <option value="0">Outbound Calls</option>
+                                                                <option value="0">Phone</option>
+                                                                <option value="0">Radio Ad</option>
+                                                                <option value="0">Social Media</option>
+                                                                <option value="0">TV Ad</option>
+                                                                <option value="0">Unknown</option>
+                                                                <option value="0">Website</option>
+                                                                <option value="0">Yard Sign</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                         </div>
+
+                                <div class=" module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Address Information</h6>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Sales Area</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">- none -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Name Prefix</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">Select</option>
+                                                    <option value="0">Captain</option>
+                                                    <option value="0">Cnl.</option>
+                                                    <option value="0">Colonel</option>
+                                                    <option value="0">Dr.</option>
+                                                    <option value="0">Gen.</option>
+                                                    <option value="0">Judge</option>
+                                                    <option value="0">Lady</option>
+                                                    <option value="0">Lieutenant</option>
+                                                    <option value="0">Lord</option>
+                                                    <option value="0">Lt.</option>
+                                                    <option value="0">Madam</option>
+                                                    <option value="0">Maj.</option>
+                                                    <option value="0">Major</option>
+                                                    <option value="0">Master</option>
+                                                    <option value="0">Miss</option>
+                                                    <option value="0">Mister</option>
+                                                    <option value="0">Mr.</option>
+                                                    <option value="0">Mrs.</option>
+                                                    <option value="0">Ms.</option>
+                                                    <option value="0">Pastor</option>
+                                                    <option value="0">Private</option>
+                                                    <option value="0">Prof.</option>
+                                                    <option value="0">Pvt.</option>
+                                                    <option value="0">Rev.</option>
+                                                    <option value="0">Sergeant</option>
+                                                    <option value="0">Sgt</option>
+                                                    <option value="0">Sir</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">First Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Middle Initial</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Last Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Date of Birth</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Name Suffix</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">Select</option>
+                                                    <option value="0">DS</option>
+                                                    <option value="0">Esq.</option>
+                                                    <option value="0">II</option>
+                                                    <option value="0">III</option>
+                                                    <option value="0">IV</option>
+                                                    <option value="0">Jr.</option>
+                                                    <option value="0">MA</option>
+                                                    <option value="0">MBA</option>
+                                                    <option value="0">MD</option>
+                                                    <option value="0">MS</option>
+                                                    <option value="0">PhD</option>
+                                                    <option value="0">RN</option>
+                                                    <option value="0">Sr.</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Company</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Address *</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Cross Street</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Subdivision</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">City State ZIP</label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Country</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">USA</option>
+                                                    <option value="0">Canada</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Home/Panel Phone *</label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Cell Phone </label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Alternate Phone </label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Email</label><br/>
+                                                <input type="email" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact First Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact Last Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact Phone </label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                            <option value="0">Select</option>
+                                                            <option value="0">Cell</option>
+                                                            <option value="0">Fax</option>
+                                                            <option value="0">Home</option>
+                                                            <option value="0">Pager</option>
+                                                            <option value="0">Work</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact Relationship</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">- none -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact First Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact Last Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact Phone </label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                            <option value="0">Select</option>
+                                                            <option value="0">Cell</option>
+                                                            <option value="0">Fax</option>
+                                                            <option value="0">Home</option>
+                                                            <option value="0">Pager</option>
+                                                            <option value="0">Work</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contact Relationship</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">- none -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Admin Module</h6>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Entered by</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Time Entered</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Assign To</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Pre-install Survey</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 1</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Language</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Date Enter</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Sales Rep</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Post-install Survey</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 2</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="module_ac" >
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Billing Information</h6>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Card Holder First Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Card Holder Last Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Card Holder Address </label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">City State ZIP</label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Monthly Monitoring Rate* $</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">0.00</option>
+                                                    <option value="0">5.00</option>
+                                                    <option value="0">6.95</option>
+                                                    <option value="0">6.95</option>
+                                                    <option value="0">17.99</option>
+                                                    <option value="0">19.91</option>
+                                                    <option value="0">19.99</option>
+                                                    <option value="0">20.00</option>
+                                                    <option value="0">21.25</option>
+                                                    <option value="0">21.91</option>
+                                                    <option value="0">21.99</option>
+                                                    <option value="0">22.00</option>
+                                                    <option value="0">22.99</option>
+                                                    <option value="0">24.99</option>
+                                                    <option value="0">25.00</option>
+                                                    <option value="0">25.91</option>
+                                                    <option value="0">25.99</option>
+                                                    <option value="0">26.99</option>
+                                                    <option value="0">27.91</option>
+                                                    <option value="0">27.99</option>
+                                                    <option value="0">29.91</option>
+                                                    <option value="0">29.97</option>
+                                                    <option value="0">29.99</option>
+                                                    <option value="0">30.00</option>
+                                                    <option value="0">30.33</option>
+                                                    <option value="0">30.50</option>
+                                                    <option value="0">31.00</option>
+                                                    <option value="0">31.95</option>
+                                                    <option value="0">31.99</option>
+                                                    <option value="0">32.41</option>
+                                                    <option value="0">32.91</option>
+                                                    <option value="0">32.99</option>
+                                                    <option value="0">33.91</option>
+                                                    <option value="0">34.91</option>
+                                                    <option value="0">34.99</option>
+                                                    <option value="0">35.00</option>
+                                                    <option value="0">35.91</option>
+                                                    <option value="0">35.95</option>
+                                                    <option value="0">35.99</option>
+                                                    <option value="0">36.91</option>
+                                                    <option value="0">36.95</option>
+                                                    <option value="0">36.99</option>
+                                                    <option value="0">37.91</option>
+                                                    <option value="0">37.99</option>
+                                                    <option value="0">38.00</option>
+                                                    <option value="0">38.91</option>
+                                                    <option value="0">38.99</option>
+                                                    <option value="0">39.00</option>
+                                                    <option value="0">39.91</option>
+                                                    <option value="0">39.95</option>
+                                                    <option value="0">39.97</option>
+                                                    <option value="0">39.99</option>
+                                                    <option value="0">40.00</option>
+                                                    <option value="0">40.91</option>
+                                                    <option value="0">40.95</option>
+                                                    <option value="0">40.99</option>
+                                                    <option value="0">41.91</option>
+                                                    <option value="0">41.95</option>
+                                                    <option value="0">41.99</option>
+                                                    <option value="0">42.91</option>
+                                                    <option value="0">42.97</option>
+                                                    <option value="0">42.99</option>
+                                                    <option value="0">43.98</option>
+                                                    <option value="0">44.91</option>
+                                                    <option value="0">44.93</option>
+                                                    <option value="0">44.95</option>
+                                                    <option value="0">44.97</option>
+                                                    <option value="0">44.99</option>
+                                                    <option value="0">45.00</option>
+                                                    <option value="0">45.91</option>
+                                                    <option value="0">45.95</option>
+                                                    <option value="0">46.95</option>
+                                                    <option value="0">46.99</option>
+                                                    <option value="0">47.07</option>
+                                                    <option value="0">47.91</option>
+                                                    <option value="0">47.94</option>
+                                                    <option value="0">47.95</option>
+                                                    <option value="0">47.97</option>
+                                                    <option value="0">47.99</option>
+                                                    <option value="0">48.65</option>
+                                                    <option value="0">48.91</option>
+                                                    <option value="0">48.95</option>
+                                                    <option value="0">48.97</option>
+                                                    <option value="0">49.91</option>
+                                                    <option value="0">49.95</option>
+                                                    <option value="0">49.97</option>
+                                                    <option value="0">49.99</option>
+                                                    <option value="0">50.00</option>
+                                                    <option value="0">50.91</option>
+                                                    <option value="0">50.99</option>
+                                                    <option value="0">51.00</option>
+                                                    <option value="0">51.91</option>
+                                                    <option value="0">51.95</option>
+                                                    <option value="0">51.99</option>
+                                                    <option value="0">52.91</option>
+                                                    <option value="0">52.95</option>
+                                                    <option value="0">53.37</option>
+                                                    <option value="0">53.91</option>
+                                                    <option value="0">53.92</option>
+                                                    <option value="0">53.95</option>
+                                                    <option value="0">53.97</option>
+                                                    <option value="0">53.99</option>
+                                                    <option value="0">54.91</option>
+                                                    <option value="0">54.95</option>
+                                                    <option value="0">54.97</option>
+                                                    <option value="0">54.99</option>
+                                                    <option value="0">55.00</option>
+                                                    <option value="0">55.91</option>
+                                                    <option value="0">55.95</option>
+                                                    <option value="0">55.97</option>
+                                                    <option value="0">55.99</option>
+                                                    <option value="0">56.91</option>
+                                                    <option value="0">56.95</option>
+                                                    <option value="0">56.99</option>
+                                                    <option value="0">57.91</option>
+                                                    <option value="0">57.97</option>
+                                                    <option value="0">57.99</option>
+                                                    <option value="0">58.91</option>
+                                                    <option value="0">58.95</option>
+                                                    <option value="0">58.99</option>
+                                                    <option value="0">59.34</option>
+                                                    <option value="0">59.91</option>
+                                                    <option value="0">59.95</option>
+                                                    <option value="0">59.97</option>
+                                                    <option value="0">59.99</option>
+                                                    <option value="0">60.99</option>
+                                                    <option value="0">61.99</option>
+                                                    <option value="0">62.91</option>
+                                                    <option value="0">62.99</option>
+                                                    <option value="0">63.91</option>
+                                                    <option value="0">63.99</option>
+                                                    <option value="0">64.91</option>
+                                                    <option value="0">64.95</option>
+                                                    <option value="0">64.99</option>
+                                                    <option value="0">65.99</option>
+                                                    <option value="0">66.91</option>
+                                                    <option value="0">67.91</option>
+                                                    <option value="0">67.99</option>
+                                                    <option value="0">69.91</option>
+                                                    <option value="0">69.99</option>
+                                                    <option value="0">70.99</option>
+                                                    <option value="0">71.99</option>
+                                                    <option value="0">72.98</option>
+                                                    <option value="0">73.99</option>
+                                                    <option value="0">74.91</option>
+                                                    <option value="0">74.95</option>
+                                                    <option value="0">74.98</option>
+                                                    <option value="0">74.99</option>
+                                                    <option value="0">75.99</option>
+                                                    <option value="0">77.99</option>
+                                                    <option value="0">79.90</option>
+                                                    <option value="0">79.91</option>
+                                                    <option value="0">79.99</option>
+                                                    <option value="0">80.98</option>
+                                                    <option value="0">81.95</option>
+                                                    <option value="0">81.99</option>
+                                                    <option value="0">84.99</option>
+                                                    <option value="0">85.95</option>
+                                                    <option value="0">85.99</option>
+                                                    <option value="0">87.99</option>
+                                                    <option value="0">88.00</option>
+                                                    <option value="0">88.91</option>
+                                                    <option value="0">89.91</option>
+                                                    <option value="0">89.97</option>
+                                                    <option value="0">89.99</option>
+                                                    <option value="0">93.94</option>
+                                                    <option value="0">94.99</option>
+                                                    <option value="0">97.85</option>
+                                                    <option value="0">99.00</option>
+                                                    <option value="0">99.90</option>
+                                                    <option value="0">99.91</option>
+                                                    <option value="0">99.94</option>
+                                                    <option value="0">99.97</option>
+                                                    <option value="0">99.98</option>
+                                                    <option value="0">99.99</option>
+                                                    <option value="0">100.99</option>
+                                                    <option value="0">101.97</option>
+                                                    <option value="0">103.98</option>
+                                                    <option value="0">103.99</option>
+                                                    <option value="0">104.99</option>
+                                                    <option value="0">105.98</option>
+                                                    <option value="0">107.90</option>
+                                                    <option value="0">108.98</option>
+                                                    <option value="0">109.90</option>
+                                                    <option value="0">109.91</option>
+                                                    <option value="0">109.99</option>
+                                                    <option value="0">113.98</option>
+                                                    <option value="0">115.98</option>
+                                                    <option value="0">118.98</option>
+                                                    <option value="0">119.99</option>
+                                                    <option value="0">120.98</option>
+                                                    <option value="0">129.00</option>
+                                                    <option value="0">129.99</option>
+                                                    <option value="0">134.99</option>
+                                                    <option value="0">139.91</option>
+                                                    <option value="0">149.99</option>
+                                                    <option value="0">161.23</option>
+                                                    <option value="0">199.97</option>
+                                                    <option value="0">255.00</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Billing Frequency</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">- none -</option>
+                                                    <option value="One Time Only">One Time Only</option>
+                                                    <option value="Every 1 Month">Every 1 Month</option>
+                                                    <option value="Every 3 Months">Every 3 Months</option>
+                                                    <option value="Every 6 Months">Every 6 Months</option>
+                                                    <option value="Every 1 Year">Every 1 Year</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Billing Day of Month</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0"></option>
+                                                    <option value="0">1</option>
+                                                    <option value="0">2</option>
+                                                    <option value="0">3</option>
+                                                    <option value="0">4</option>
+                                                    <option value="0">5</option>
+                                                    <option value="0">6</option>
+                                                    <option value="0">7</option>
+                                                    <option value="0">8</option>
+                                                    <option value="0">9</option>
+                                                    <option value="0">10</option>
+                                                    <option value="0">11</option>
+                                                    <option value="0">12</option>
+                                                    <option value="0">13</option>
+                                                    <option value="0">14</option>
+                                                    <option value="0">15</option>
+                                                    <option value="0">16</option>
+                                                    <option value="0">17</option>
+                                                    <option value="0">18</option>
+                                                    <option value="0">19</option>
+                                                    <option value="0">20</option>
+                                                    <option value="0">21</option>
+                                                    <option value="0">22</option>
+                                                    <option value="0">23</option>
+                                                    <option value="0">24</option>
+                                                    <option value="0">25</option>
+                                                    <option value="0">26</option>
+                                                    <option value="0">27</option>
+                                                    <option value="0">28</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contract Term* (months)</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0"></option>
+                                                    <option value="0">36</option>
+                                                    <option value="0">60</option>
+                                                    <option value="0">12</option>
+                                                    <option value="0">24</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Billing Method</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">- none -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Billing Start Date</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Billing End Date</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Check Number</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Routing Number</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Account Number</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Credit Card Number</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Credit Card Expiration</label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>/
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div> (MM/YYYY)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Social Security Number</label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div> -
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div> -
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Collections Date</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Collections Amount $</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contract Extension Date</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Tech Module</h6>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Tech Arrive Time</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Tech Complete Time</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Time Given</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Date Given</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">TECH Assign</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 1</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 2</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 3</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 4</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">URL</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Account Access Module</h6>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Portal Status (on/off)</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Reset Password (Button)</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Login</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Password</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 1</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Custom Field 2</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Cancellation Date</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Collection Date</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Cancellation Reason</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Collection Amount</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="module_ac">
+                                        <div class="row">
+                                            <div class="col-md-12 module_header">
+                                                <div class="onoffswitch grid-onoffswitch switch">
+                                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                                </div>
+                                                <h6>Alarm Industry Module</h6>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Monitoring Company</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Monitoring ID</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Install Date</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Credit Score</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Account Type</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Account Information</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Abort/Password Code</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Installer Code</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Monitoring confirmation number</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Signal confirmation number</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Contact Name #2</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Contact Name #2</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Contact Name #3</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Contact Name #3</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Contact Name #3</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Contact Name #3</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Panel Type</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">System Type</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Monitoring Waived</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Rebate Offered:</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Verification:</label><br/>
+                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                        <option value="TrunsUnion">TrunsUnion</option>
+                                                        <option value="Experian">Experian </option>
+                                                        <option value="Equifax ">Equifax  </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Rebate Check 1</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Rebate Check 2</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Warranty Type</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 1</label><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="module_ac">
+                                        <div class="row">
+                                            <div class="col-md-12 module_header">
+                                                <div class="onoffswitch grid-onoffswitch switch">
+                                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                                </div>
+                                                <h6>Customizable Industry Module</h6>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 1</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 2</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 3</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 4</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 5</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 6</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 7</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 8</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 9</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 10</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 11</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 12</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 13</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 14</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 15</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 16</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 17</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 18</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 19</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 20</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 21</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 22</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 23</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="customer_type_group">
+                                                    <label for="">Custom Field 24</label><a href="#"><span class="fa fa-pencil pull-right"></span></a><br/>
+                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Profile Module</h6>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Sales Area</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">- none -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">First Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Last Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Middle Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Name Prefix</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">Select</option>
+                                                    <option value="0">Captain</option>
+                                                    <option value="0">Cnl.</option>
+                                                    <option value="0">Colonel</option>
+                                                    <option value="0">Dr.</option>
+                                                    <option value="0">Gen.</option>
+                                                    <option value="0">Judge</option>
+                                                    <option value="0">Lady</option>
+                                                    <option value="0">Lieutenant</option>
+                                                    <option value="0">Lord</option>
+                                                    <option value="0">Lt.</option>
+                                                    <option value="0">Madam</option>
+                                                    <option value="0">Maj.</option>
+                                                    <option value="0">Major</option>
+                                                    <option value="0">Master</option>
+                                                    <option value="0">Miss</option>
+                                                    <option value="0">Mister</option>
+                                                    <option value="0">Mr.</option>
+                                                    <option value="0">Mrs.</option>
+                                                    <option value="0">Ms.</option>
+                                                    <option value="0">Pastor</option>
+                                                    <option value="0">Private</option>
+                                                    <option value="0">Prof.</option>
+                                                    <option value="0">Pvt.</option>
+                                                    <option value="0">Rev.</option>
+                                                    <option value="0">Sergeant</option>
+                                                    <option value="0">Sgt</option>
+                                                    <option value="0">Sir</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Surffix</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">- none -</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Business Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Email</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">SSN</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">DOB</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Phone (H)</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Phone (W)</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Phone (M)</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Fax</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Mailing Address</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Image/Logo File</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">City</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">State</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Country</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Zip Code</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Cross Street</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Subdivision</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="Email" checked id="prev_add">
+                                                <label for="prev_add"><span>Check for Schedule Conflict</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Office Use</h6>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                <label for="notify_by_sms"><span>Welcome kit Sent</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="checkbox checkbox-sec margin-right">
+                                                        <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                        <label for="notify_by_sms"><span>Rebate Received</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="checkbox checkbox-sec margin-right">
+                                                        <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                        <label for="notify_by_sms"><span>Rebate Paid</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label for="">Commision Scheme Override</label><br/>
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                <label for="notify_by_sms"><span>On</span></label>
+                                            </div>
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                <label for="notify_by_sms"><span>Off</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Rep Commission $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Rep Upfront Pay</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Rep Tiered Upfront Bonus</label><br/>
+                                                <i>$0.00</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Rep Tiered Holdfund Bonus</label><br/>
+                                                <i>$0.00</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Rep Deductions Total</label><br/>
+                                                <i>$0.00</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Tech Commission $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Tech Upfront Pay $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Tech Deductions Total</label><br/>
+                                                <i>$0.00</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Rep Hold Fund Charge Back $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Rep Payroll Charge Back $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label for="">Points Scheme Override</label><br/>
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                <label for="notify_by_sms"><span>On</span></label>
+                                            </div>
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                <label for="notify_by_sms"><span>Off</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Points Included</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Price Per Point $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Purchase Price $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Purchase Multiple</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Purchase Discount $</label><br/>
+                                                <input type="number" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Payment Information</h6>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                <label for="notify_by_sms"><span>Credit Card</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                                                <label for="notify_by_sms"><span>eCheck</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Card Number</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group" id="customer_type_group">
+                                                        <label for="">Credit Card Expiration</label><br/>
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group" id="customer_type_group">
+                                                        <label for=""></label>(MM/YYYY)
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Transaction Subtotal</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Tax Amount</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Transaction Amount</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Transaction Category</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Note</label><br/>
+                                                <textarea class="form-controls" cols="55" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <button type="submit" class="btn btn-flat btn-primary">Pre-Add Mode</button>
+                                                <button type="submit" class="btn btn-flat btn-primary">Capture New </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Customer Information</h6>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">First Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Last Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Address</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">City</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">State</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Zip</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Owner Information</h6>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Social Security Number</label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div> -
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div> -
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">First Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Last Name</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Address 1</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Address 2</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Address 3</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">City State ZIP</label><br/>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="pay_history">Pay History</label><br/>
+                                                <select id="pay_history" name="pay_history" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+
+                                <!--<div class="module_ac">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <h6>Custom Fields</h6>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Contract Extension Date</label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>   -->
+
+                                <div class="col-md-12 module_ac_long">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>Existing Notes</h6>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-12">
+                                                <textarea class="form-controls"> </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 module_ac_long">
+                                    <div class="row">
+                                    <div class="col-md-12 module_header">
+                                        <div class="onoffswitch grid-onoffswitch switch">
+                                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                        </div>
+                                        <h6>Devices</h6>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn-flat btn-primary">Cancel</button><br>
+                                            <button type="submit" class="btn btn-flat btn-primary">Delete </button><br>
+                                            <button type="submit" class="btn btn-flat btn-primary">Save</button>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <table class="table  table-bordered table-to-list" data-id="work_orders">
+                                                <thead>
+                                                <tr>
+                                                    <th>Del</th>
+                                                    <th>Name</th>
+                                                    <th>Sold By</th>
+                                                    <th>Points</th>
+                                                    <th>Retail Cost</th>
+                                                    <th>Purchase Price</th>
+                                                    <th>Qty</th>
+                                                    <th>Tot Points</th>
+                                                    <th>Tot Cost</th>
+                                                    <th>Tot Purchase Price</th>
+                                                    <th>Total</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>asdf</td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-flat btn-primary"> Edit </button>
+                                                        <button type="submit" class="btn btn-flat btn-primary">Delete </button>
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 module_ac_long">
+                                    <div class="row">
+                                        <div class="col-md-12 module_header">
+                                            <div class="onoffswitch grid-onoffswitch switch">
+                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                            </div>
+                                            <h6>New Notes</h6>
+                                        </div>
+
+                                        <div class="col-md-12">  <br>
+                                            <textarea class="form-controls"> </textarea>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <br>
+                                            <div class="form-group right">
+                                                <button type="submit" class="btn btn-flat btn-primary">Cancel</button>
+                                                <button type="submit" class="btn btn-flat btn-primary">Delete </button>
+                                                <button type="submit" class="btn btn-flat btn-primary">Save</button>
+                                                <!-- <a href="<?php echo url('customer') ?>" class="btn btn-danger">Cancel this</a>-->
+                                            </div>
+
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+
+                                </div>
+
                             </div>
                         </div>
+                        </div>
+                    </div>
+                    <!-- end card -->
+                </div>
+            </div>
+
+            <style>
+
+            </style>
+            <?php echo form_close(); ?>
+
+            <!-- Modal Service Address -->
+            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Service Address -->
+            <div class="modal fade" id="modalServiceGroup" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Group</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Additional Contact -->
+            <div class="modal fade" id="modalAdditionalContacts" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Source</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frm_add_new_source" name="modal-form" method="post">
+                                <div class="validation-error" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label>Source Name</label> <span class="form-required">*</span>
+                                    <input type="text" name="title" value="" class="form-control"
+                                           autocomplete="off">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modalAddNewCustomerTypes" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Customer Type</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frm_add_new_customer_types" name="modal-form" method="post">
+                                <div class="validation-error" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label>Type</label> <span class="form-required">*</span>
+                                    <input type="text" name="title" value="" class="form-control"
+                                           autocomplete="off">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modalAddNewGroup" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <b class="modal-title" id="exampleModalLabel">Add New Group</b>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="padding:30px 30px 10px 30px;">
+                            <form id="frm_add_new_group" name="modal-form" method="post">
+                                <div class="validation-error" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label>Group Name</label> <span class="form-required">*</span>
+                                    <input type="text" name="title" value="" class="form-control" required
+                                           autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label> <span class="form-required">*</span>
+                                    <textarea class="form-control" required name="description" autocomplete="off"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- page wrapper end -->
+</div>
 <?php include viewPath('includes/footer'); ?>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 
 <script>
 
-
-    $(document).ready(function () {
-        $('#ssn').keydown(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            $text = $(this);
-            if (key !== 8 && key !== 9) {
-                if ($text.val().length === 3) {
-                    $text.val($text.val() + '-');
-                }
-                if ($text.val().length === 6) {
-                    $text.val($text.val() + '-');
-                }
-            }
-            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
-        });
-
-        $('.phone_number').keydown(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            $text = $(this);
-            if (key !== 8 && key !== 9) {
-                if ($text.val().length === 3) {
-                    $text.val($text.val() + '-');
-                }
-                if ($text.val().length === 7) {
-                    $text.val($text.val() + '-');
-                }
-            }
-            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
-        });
-
-        $("#date_picker").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        });
-        $("#bill_start_date").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        });
-        $("#bill_end_date").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        });
-
-
-
-        $(".date_picker").datetimepicker({
-            format: "l",
-            //'setDate': new Date(),
-            //minDate: new Date(),
-        });
-        $('.date_picker').val(new Date().toLocaleDateString());
-
-        //$('.time_picker').val(new Date().toLocaleTimeString());
-
-        // $(".time_picker").datetimepicker({
-        //     format: "LT",
-        // });
-
-        $('.timepicker').timepicker('setTime', new Date().toLocaleTimeString());
-
-        var table_assign_module = $('#assign_module_table').DataTable({
-            "lengthChange": false,
-            "searching" : true,
-            "pageLength": 5
-        });
-        var note = $('#notes_table').DataTable({
-            "lengthChange": false,
-            "searching" : true,
-            "pageLength": 5
-        });
-        var devices_table= $('#devices_table').DataTable({
-            "lengthChange": false,
-            "searching" : true,
-            "pageLength": 5
-        });
+    document.getElementById('contact_mobile').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
     });
-</script>
-<script>
-    $(document).ready(function() {
-        $("#customer_form").submit(function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "/customer/add_data_sheet",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Added"){
-                        sucess("New Customer has been Added Successfully!");
-                    }else if(data === "Updated"){
-                        sucess("Customer Info has been Updated Successfully!");
-                    }else{
-                        console.log(data);
-                    }
+    document.getElementById('contact_phone').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
 
-                }
-            });
-        });
-        function save_sucess(information){
-            Swal.fire(
-                'Good job!',
-                information,
-                'success'
-            );
+    function validatecard() {
+        var inputtxt = $('.card-number').val();
+
+        if (inputtxt == 4242424242424242) {
+            $('.require-validation').submit();
+        } else {
+            alert("Not a valid card number!");
+            return false;
         }
-        function sucess(information){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href="/customer";
-                }
-            });
-        }
+    }
 
-        var counter = 0;
 
-        function moreFields() {
+        function more_custom_fields() {
             counter++;
-            var newFields = document.getElementById('readroot').cloneNode(true);
+            var newFields = document.getElementById('custom_form').cloneNode(true);
             newFields.id = '';
             newFields.style.display = 'inline';
             var newField = newFields.childNodes;
@@ -418,14 +2605,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             for (var i=0;i<newField.length;i++) {
                 var theName = newField[i].name;
                 if (theName){
-                  //  newField[i].name = theName+'[]';
+                    //  newField[i].name = theName+'[]';
                 }
 
             }
-            var insertHere = document.getElementById('writeroot');
+            var insertHere = document.getElementById('write_custom_form');
             insertHere.parentNode.insertBefore(newFields,insertHere);
         }
-       // window.onload = moreFields;
+        //window.onload = more_custom_fields();
         // $("#moreFields").on( "click", function( event ) {
         //     alert("sf");
         //
@@ -433,6 +2620,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         // $("#moreFields").on( "click", function( event ) {
         //     moreFields();
         // });
+
 
         $("body").delegate("#moreFields", "click", function(){
             //alert("Delegated Button Clicked");
@@ -450,10 +2638,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     //  newField[i].name = theName+'[]';
                 }
 
+
+    $(document).ready(function() {
+        $("input[name=birthday]").keydown(function(event) {
+            // Allow only backspace and delete
+            if ( event.keyCode == 46 || event.keyCode == 8 ) {
+                // let it happen, don't do anything
             }
-            var insertHere = document.getElementById('writeroot');
-            insertHere.parentNode.insertBefore(newFields,insertHere);
+            else {
+                // Ensure that it is a number and stop the keypress
+                if (event.keyCode < 48 || event.keyCode > 57 ) {
+                    event.preventDefault();
+                }
+            }
         });
 
+        $("input[name=birthday]").keyup(function(event) {
+            console.log($(this).val());
+            if ($(this).val().length == 2) {
+                $(this).val($(this).val() + "/");
+            } else if ($(this).val().length == 5) {
+                $(this).val($(this).val() + "/");
+            }
+        }
+
+
+        $(".remove_device").on( "click", function( event ) {
+            var ID=this.id;
+            //alert(ID);
+            $.ajax({
+                 type: "POST",
+                 url: "/customer/remove_devices",
+                 data: {id : ID}, // serializes the form's elements.
+                 success: function(data){
+                     if(data === "Done"){
+                         window.location.href="/customer/add_advance/"+<?php echo $this->uri->segment(3); ?>;
+                     }else{
+                         console.log(data);
+                     }
+                 }
+            });
+        });
     });
 </script>
+<style>
+    .select2-container--open{       z-index: 0;}
+    span.select2-selection.select2-selection--single {
+        font-size: 16px;
+    }
+</style>

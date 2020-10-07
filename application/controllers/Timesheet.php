@@ -948,6 +948,9 @@ class Timesheet extends MY_Controller {
             foreach ($ts_logs as $log){
                 if ($log->action == 'Check in' && $log->user_id == $user->id){
                     $status = 'In';
+                    if ($log->date == date('Y-m-d',strtotime('yesterday'))){
+                        $mon_logtime = date('h:i A',$log->time);
+                    }
                     switch ($log->date){
                         case ($week_check[0]):
                             $mon_logtime = date('h:i A',$log->time);
@@ -1007,6 +1010,8 @@ class Timesheet extends MY_Controller {
                             $mon_id = $log->id;
                             if ($log->entry_type == 'Manual'){
                                 $mon_status = '#ffc859';
+                            }else{
+                                $mon_status = null;
                             }
                             break;
                         case ($week_check[1]):
@@ -1383,7 +1388,7 @@ class Timesheet extends MY_Controller {
     }
 
     public function inNow(){
-	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date_in'=>date('Y-m-d')));
+	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1));
 	    echo json_encode($query->num_rows());
     }
     public function outNow(){
@@ -1392,7 +1397,9 @@ class Timesheet extends MY_Controller {
     }
     public function loggedInToday(){
         $total_users = $this->users_model->getTotalUsers();
-        $query =  $this->db->get_where('timesheet_attendance',array('date_in'=>date('Y-m-d')));
+        $this->db->or_where('date_in',date('Y-m-d'));
+        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $query =  $this->db->get('timesheet_attendance');
         $logged_in = $query->num_rows();
         echo json_encode($total_users - $logged_in);
     }
@@ -1427,7 +1434,8 @@ class Timesheet extends MY_Controller {
         $user_id = $this->input->post('id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $query = $this->timesheet_model->breakIn($user_id,$entry,$approved_by);
+        $end_break = $this->input->post('end_of_break');
+        $query = $this->timesheet_model->breakIn($user_id,$entry,$approved_by,$end_break);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -2147,15 +2155,6 @@ class Timesheet extends MY_Controller {
         if($this->db->affected_rows() != 1){
             echo json_encode(0);
         }else{
-            $session = array(
-                'active' => 'clock-active',
-                'clock-in-time' => date('h:i A',$clock_in),
-                'clock-out-time' => 'Pending...',
-                'attn-id' => $attn_id,
-                'lunch-in' => true,
-                'lunch-active' => 1
-            );
-            $this->session->set_userdata($session);
             $data = new stdClass();
             $data->clock_in_time = date('h:i A',$clock_in);
             $data->clock_out_time = 'Pending...';
@@ -2195,34 +2194,11 @@ class Timesheet extends MY_Controller {
             $this->db->update('timesheet_attendance',$update);
             $affected_row = $this->db->affected_rows();
             //Update weekly total duration
-            $weekly_duration = 0;
-            $weekly_break = 0;
-            $weekly_overtime = 0;
-            $get_weekly = $this->db->get_where('timesheet_attendance',array('week_id'=>$check_attn->row()->week_id))->result();
-            foreach ($get_weekly as $total){
-                $weekly_duration += $total->shift_duration;
-                $weekly_break += $total->break_duration;
-                $weekly_overtime += $total->overtime;
-            }
-            $weekly_update = array(
-                'total_shift' => $weekly_duration,
-                'total_break' => $weekly_break,
-                'total_overtime' => $weekly_overtime
-            );
-            $this->db->where('id',$check_attn->row()->week_id);
-            $this->db->update('ts_weekly_total_shift',$weekly_update);
+            $this->timesheet_model->updateWeeklyReport($check_attn->row()->week_id);
 
             if($affected_row != 1){
                 echo json_encode(0);
             }else{
-                $unset = array('active','lunch-active','attn-id');
-                $this->session->unset_userdata($unset);
-                $session = array(
-                    'clock-out-time' => date('h:i A',$clock_out),
-                    'attn-id' => $attn_id,
-                    'shift_duration' => $shift_duration
-                );
-                $this->session->set_userdata($session);
                 $data = new stdClass();
                 $data->clock_out_time = date('h:i A',$clock_out);
                 $data->attendance_id = $attn_id;
@@ -2248,13 +2224,11 @@ class Timesheet extends MY_Controller {
             'status' => 1
         );
         $this->db->insert('timesheet_logs',$lunch);
-        $lunch_sess = array(
-            'active' => 'clock-break',
-            'lunch_in_time' => date('h:i A',$lunch_in),
-            'lunch-active' => 2,
-            'end_break' => $end_break
-        );
-        $this->session->set_userdata($lunch_sess);
+        //Update timesheet_attendance end of lunch break
+        $lunch_update = array('expected_endbreak'=>$end_break);
+        $this->db->where('id',$attn_id);
+        $this->db->update('timesheet_attendance',$lunch_update);
+
         $data = new stdClass();
         $data->lunch_in_time = date('h:i A',$lunch_in);
         $data->end_break = $end_break;
@@ -2306,13 +2280,7 @@ class Timesheet extends MY_Controller {
         $update_lunch = array('break_remaining_time'=>$remaining_time);
         $this->db->where('id',$attn_id);
         $this->db->update('timesheet_attendance',$update_lunch);
-        $lunch_sess = array(
-                'active' => 'clock-active',
-                'remaining_time' => $remaining_time,
-        );
-        $this->session->set_userdata($lunch_sess);
-        $lunch_unset = array('lunch_in_time','end_break','lunch-active');
-        $this->session->unset_userdata($lunch_unset);
+
         $data = new stdClass();
         $data->lunch_out_time = date('h:i A',$lunch_out);
         $data->remaining = $remaining_time;
@@ -2354,7 +2322,6 @@ class Timesheet extends MY_Controller {
         $message = $this->load->view('users/email_template',$page,TRUE);
         $this->email->message($message);
         //Send mail
-
         if($this->email->send()) {
             echo json_encode("Email Send Successfully.");
         }else{
@@ -2398,9 +2365,77 @@ class Timesheet extends MY_Controller {
         fclose($fp);
     }
 
+    public function pdfTimesheetReport(){
+        $start_date = date('M d',strtotime('monday last week'));
+        $date = date('M d, Y',strtotime('monday last week'));
+        $date = strtotime($date);
+        $date = strtotime("+6 day", $date);
+        $end_date = date('M d', $date);
+        $this->load->library('Reportpdf');
+        $title = 'Timesheet Weekly Report('.$start_date."-".$end_date.")";
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, $title);
+        $obj_pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $obj_pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->SetFont('helvetica', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        $obj_pdf->AddPage();
+        ob_start();
+        $week_of = date('Y-m-d',strtotime('monday last week'));
+        $data = $this->db->get_where('ts_weekly_total_shift',array('week_of' => $week_of))->result();
+        $users = $this->users_model->getUsers();
+       $display = '';
+       $display .= '<table>';
+       $display .= '<thead>';
+       $display .= '<tr>';
+       $display .= '<th style="font-weight: bold;">Name</th>';
+       $display .= '<th style="font-weight: bold;text-align: center">Total Shift</th>';
+       $display .= '<th style="font-weight: bold;text-align: center">Total Overtime</th>';
+       $display .= '<th style="font-weight: bold;text-align: center">Total Break</th>';
+       $display .= '<th style="font-weight: bold;text-align: center">PTO</th>';
+       $display .= '</tr>';
+       $display .= '</thead>';
+       $display .= '<tbody>';
+        $shift = 0;
+        $break = 0;
+        $overtime = 0;
+        foreach ($users as $cnt => $user){
+            $name = $user->FName." ".$user->LName;
+            foreach ($data as $line) {
+                if ($user->id == $line->user_id){
+                    $shift = $line->total_shift;
+                    $break = $line->total_break;
+                    $overtime = $line->total_overtime;
+                }
+            }
+            $display .= '<tr>';
+            $display .= '<td>'.$name.'</td>';
+            $display .= '<td style="text-align: center">'.$shift.'hrs</td>';
+            $display .= '<td style="text-align: center">'.$break.'hrs</td>';
+            $display .= '<td style="text-align: center">'.$overtime.'hrs</td>';
+            $display .= '<td style="text-align: center">0hrs</td>';
+            $display .= '</tr>';
+        }
+       $display .= '</tbody>';
+       $display .= '</table>';
+        echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
+
+    }
+
     public function notificationSchedule(){
 
     }
+//    Email Report for Timesheet
     public function email(){
 	    $page = array(
 	        'last_week' => $this->timesheet_model->getWeekTotalDuration()

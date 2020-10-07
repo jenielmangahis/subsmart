@@ -503,9 +503,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         }elseif($log->action == 'Check out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
                                                             if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
                                                                 $status = 'fa-times-circle';
-                                                                $btn_action = null;
+                                                                $btn_action = 'employeeCheckIn';
+//                                                                $btn_action = null;
                                                                 $time_out = date('h:i A',$log->time);
-                                                                $disabled = 'disabled="disabled"';
+                                                                $disabled = null;
+//                                                                $disabled = 'disabled="disabled"';
                                                                 $break = 'disabled="disabled"';
                                                                 $break_id = null;
                                                                 $indicator_in = 'display:none';
@@ -514,10 +516,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 $indicator_out_break = 'display:none';
                                                                 $tooltip_status = 'Logged out';
                                                             }
-                                                            if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                                                $disabled = null;
-                                                                $btn_action = 'employeeCheckIn';
-                                                            }
+//                                                            if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+//                                                                $disabled = null;
+//                                                                $btn_action = 'employeeCheckIn';
+//                                                            }
                                                         }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
                                                             if ($attn->status == 1 && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
                                                                 $break_id = 'employeeBreakOut';
@@ -621,11 +623,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <?php if ($this->session->userdata('logged')['role'] > 5): ?>
                             <?php
                                 $lunch_active = null;
-//                                if ($this->session->userdata('lunch-active') == 2){
-//                                    $lunch_active = 'lunchOut';
-//                                }elseif($this->session->userdata('lunch-active')== 1){
-//                                    $lunch_active = 'lunchIn';
-//                                }
                                 $employee_logs = getEmployeeLogs();
                                 $employee_attn = getClockInSession();
                                 foreach ($employee_attn as $attn){
@@ -1000,6 +997,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var selected = this;
             var entry = 'Manual';
             var approved_by = $(this).attr('data-approved');
+            var time = new Date();
+            var end_of_break = time.setMinutes(time.getMinutes() + 60);
             Swal.fire({
                 title: 'Take a break?',
                 html: "Are you sure you want to take a break this person?<br> <strong>"+emp_name+"</strong>",
@@ -1014,7 +1013,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/breakIn',
                     method:"POST",
                     dataType:"json",
-                    data:{id:id,approved_by:approved_by,entry:entry},
+                    data:{id:id,approved_by:approved_by,entry:entry,end_of_break:end_of_break},
                     success:function (data) {
                         if (data == 1){
                             var time = serverTime();

@@ -46,7 +46,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
                         <b>Tot Purchase Price</b></td>
                     <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                        <b>Net</b></td>
+                        <b>Net</b>
+                    </td>
+                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+
+                    </td>
                 </tr>
                 </thead>
                 <tbody>
@@ -82,6 +86,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </td>
                         <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
                             <?= '$'.$device->device_net; ?>
+                        </td>
+                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
+                            <a id="<?= $device->dev_id; ?>" href="javascript:void(0);" class="remove_device" style="color:#58bc4f;"><span class="fa fa-trash-o"></span> </a>&nbsp;&nbsp;
                         </td>
                     </tr>
                 <?php } ?>
