@@ -4,10 +4,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Offers_model extends MY_Model
 {
     public $table = 'offers';
-    public $status_active   = 1;
-    public $status_inactive = 0;
-    public $discount_percent = 1;
-    public $discount_amount   = 0;
+    public $status_draft   = 1;
+    public $status_active = 2;
+    public $discount_inactive = 3;
+    public $discount_ended   = 4;
 
     public function getAll($filters=array())
     {
@@ -28,6 +28,23 @@ class Offers_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllDraft($filters=array())
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('title', $filters['search'], 'both');
+            }
+        }
+        $this->db->where('status', $this->status_draft);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
     
 
     public function getById($id)

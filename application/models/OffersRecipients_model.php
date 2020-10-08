@@ -13,12 +13,6 @@ class OffersRecipients_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');
-            }
-        }
-
         $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
