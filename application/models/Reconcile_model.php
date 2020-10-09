@@ -7,7 +7,7 @@ class Reconcile_model extends MY_Model {
 
 	public function saverecords($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account)
 	{
-		$query="insert into accounting_reconcile values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','1')";
+		$query="insert into accounting_reconcile values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','','','','1')";
 		echo $this->db->query($query);
 	}
 
@@ -26,6 +26,12 @@ class Reconcile_model extends MY_Model {
 	public function updatepg2records($id,$second_date,$interest_earned,$income_account,$memo_it)
 	{
 		$query="update accounting_reconcile set second_date ='$second_date', income_account = '$income_account', interest_earned ='$interest_earned', memo_it = '$memo_it' where id = '$id'";;
+		echo $this->db->query($query);
+	}
+
+	public function update_sc_records($reconcile_id,$mailing_address,$first_date,$checkno,$memo_sc,$descp_sc,$expense_account,$service_charge)
+	{
+		$query="update accounting_reconcile set mailing_address ='$mailing_address', first_date = '$first_date', checkno ='$checkno', memo_sc = '$memo_sc',descp_sc = '$descp_sc',expense_account = '$expense_account',service_charge = '$service_charge' where id = '$reconcile_id'";;
 		echo $this->db->query($query);
 	}
 
@@ -132,5 +138,20 @@ class Reconcile_model extends MY_Model {
 	  }
 	  return $output;
 	 }
+
+	 public function save_service($reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub)
+	{
+		$query="insert into accounting_reconcile_has_servicecharge values('','$reconcile_id','$chart_of_accounts_id','$expense_account_sub','$service_charge_sub','$descp_sc_sub')";
+		echo $this->db->query($query);
+	}
+
+	public function select_service($id)
+	{
+		$this->db->from('accounting_reconcile_has_servicecharge');  
+		$this->db->where('chart_of_accounts_id',$id);
+		$result =  $this->db->get()->result();
+		print_r($result);die();
+	    return $result;	
+	}
 }
 ?>

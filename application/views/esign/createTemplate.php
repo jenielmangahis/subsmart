@@ -167,6 +167,14 @@ input {
                     }
                 ?>
                 <div class="form-group">
+                    <label for="category">Category : </label>
+                    <select name="category_id" id="category" class="dropdown">
+                        <?php foreach($categories as $category){ ?>
+                            <option <?=isset($template) && $template->category_id ? "selected" : "" ?> value="<?=$category['category_id']?>"><?=$category['categoryName']?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="">Status : </label>
                     <div class="form-check-inline">
                         <label class="form-check-label" for="radio1">

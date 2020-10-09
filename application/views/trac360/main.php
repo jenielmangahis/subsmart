@@ -69,5 +69,10 @@
 <?php include viewPath('includes/footer'); ?>
 <?php echo $map_js; ?>
 <script>
-  
+  var vTLat = 49.152011;
+  var vTLon = -123.157000;
+  var vT = setInterval(function(){
+    vTLat += .000500;
+    marker_2.setPosition(new google.maps.LatLng(vTLat, vTLon));
+  }, 2000);
 </script>

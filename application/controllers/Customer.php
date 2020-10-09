@@ -13,7 +13,6 @@ class Customer extends MY_Controller
 
 {
 
-
     public function __construct()
 
     {
@@ -24,17 +23,14 @@ class Customer extends MY_Controller
         $this->page_data['page']->title = 'My Customers';
 
         $this->page_data['page']->menu = 'customers';
-
         $this->load->model('Customer_model', 'customer_model');
         $this->load->model('CustomerAddress_model', 'customeraddress_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
-
-
         $this->checkLogin();
-
-
         $this->load->library('session');
+        $this->load->library('form_validation');
 
+        $this->load->helper('functions');
 
         $user_id = getLoggedUserID();
 
@@ -79,12 +75,12 @@ class Customer extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'assets/frontend/js/creditcard.js',
-            'assets/frontend/js/customer/add.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+           // 'assets/frontend/js/creditcard.js',
+           // 'assets/frontend/js/customer/add.js',
         ));
 
     }
-
 
     public function leads()
     {
@@ -407,6 +403,25 @@ class Customer extends MY_Controller
         echo "Done";
     }
 
+    public function update_custom_fields(){
+        $input = $this->input->post();
+        $file_array = array();
+        //print_r($input);
+        for($x=0;$x<count($input['fieldname']);$x++){
+            $file_array[$x]['field_name'] = $input['fieldname'][$x];
+            $file_array[$x]['field_value'] = $input['fieldvalue'][$x];
+        }
+        unset($input['fieldname']);
+        unset($input['fieldvalue']);
+        $input['custom_fields'] = json_encode($file_array);
+        if($this->customer_ad_model->update_data($input,"acs_profile","prof_id")){
+            echo "Success";
+        }else{
+            echo "Done";
+        }
+
+    }
+
     public function add_advance()
     {
         $userid = $this->uri->segment(3);
@@ -680,18 +695,43 @@ class Customer extends MY_Controller
 
             $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
         }
+
+        $this->page_data['customers'] = $this->customer_model->getAllByUserId();
+
+        $user_id = logged('id');
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
+        if(!$check_if_exist){
+            $input = array();
+            $input['fk_user_id'] = $user_id ;
+            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
+            $this->customer_ad_model->add($input,"ac_module_sort");
+        }
+        $user_id = logged('id');
+        $userid = $this->uri->segment(4);
+        if(!isset($userid) || empty($userid)){
+            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
+            if(!empty($get_id)){
+                $userid =  $get_id[0]->prof_id;
+            }
+        }
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+           // print_r($this->page_data['alarm_info']);
+        }
+        $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['cust_tab'] = $this->uri->segment(3);
+        $this->page_data['minitab'] = $this->uri->segment(5);
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
 
-
-//        print_r($this->page_data['statusCount']); die;
-
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
         $this->load->view('customer/list', $this->page_data);
-
     }
-
-
     public function view($id)
     {
         $customer = get_customer_by_id($id);
@@ -713,8 +753,6 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/mixedview', $this->page_data);
     }
-
-
     /**
      * @param $id
      */
@@ -737,9 +775,6 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/genview', $this->page_data);
     }
-
-
-
     /**
      * @param $id
      */
@@ -764,10 +799,7 @@ class Customer extends MY_Controller
     }
 
     public function edit($id)
-
     {
-
-
         $company_id = logged('company_id');
 
         $user_id = logged('id');
@@ -818,7 +850,6 @@ class Customer extends MY_Controller
         $this->load->view('customer/edit', $this->page_data);
 
     }
-
 
     public function save()
 
@@ -903,7 +934,7 @@ class Customer extends MY_Controller
                     $temp_data['customer_id'] = $id;
                     $temp_data['module'] = 'customer';
                     $temp_data['type'] = 'service_address';
-                    $this->customeraddress_model->create($temp_data);                
+                    $this->customeraddress_model->create($temp_data);
                 }
             }
 
@@ -924,7 +955,6 @@ class Customer extends MY_Controller
         redirect('customer');
 
     }
-
 
     public function update($id)
 
@@ -1007,7 +1037,7 @@ class Customer extends MY_Controller
 
         if($this->input->post('service_address_container_deleted_addresses') !='')
         {
-            $delete_list = explode(",", $this->input->post('service_address_container_deleted_addresses'));        
+            $delete_list = explode(",", $this->input->post('service_address_container_deleted_addresses'));
             $this->db->from($this->customeraddress_model->table);
             $this->db->where('customer_id ', $id);
             $this->db->where_in('id', $delete_list);
@@ -1033,15 +1063,10 @@ class Customer extends MY_Controller
 
     }
 
-
     public function service_address_form()
-
     {
 
-
         $get = $this->input->get();
-
-
         if (!empty($get)) {
 
 
@@ -1064,9 +1089,7 @@ class Customer extends MY_Controller
 
 
     public function save_service_address()
-
     {
-
 
         $post = $this->input->post();
 
@@ -1120,13 +1143,8 @@ class Customer extends MY_Controller
 
 
     public function json_get_address_services()
-
     {
-
-
         $get = $this->input->get();
-
-
         if (!empty($get['customer_id'])) {
 
             $cid = $get['customer_id'];
@@ -1156,9 +1174,7 @@ class Customer extends MY_Controller
 
 
     public function add()
-
     {
-
 
         $user_id = logged('id');
 
@@ -1191,7 +1207,6 @@ class Customer extends MY_Controller
         $this->load->view('customer/add', $this->page_data);
 
     }
-
 
 
     public function remove_address_services()
@@ -1653,7 +1668,7 @@ class Customer extends MY_Controller
                 }
             }
         }
-        
+
         foreach($cat as $key => $c) {
             if(!empty($c)) {
                 $header = array($key, "header", "", "");
@@ -1665,8 +1680,135 @@ class Customer extends MY_Controller
                 }
             }
         }
-        
+
         return $result;
+    }
+
+    public function exportItems()
+    {
+        $items = $this->customer_model->getByCompanyId(logged('company_id'));
+        $delimiter = ",";
+        $filename = getLoggedName()."_customer.csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Customer Type', 'Company Name', 'Contact Name', 'Contact Email', 'Mobile', 'Phone', 'Birthday', 'Suite Unit', 'Street Address', 'City', 'State', 'Postal Code');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($items)) {
+            foreach ($items as $item) {
+                $csvData = array($item->customer_type, $item->company_name, $item->contact_name, $item->contact_email, $item->mobile, $item->phone, $item->birthday, $item->suite_unit, $item->street_address, $item->city, $item->state, $item->postal_code);
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function importItems () {
+        $data = array();
+        $itemData = array();
+
+        if ($this->input->post('importSubmit')) {
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+
+            if ($this->form_validation->run() == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+
+                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    $this->load->library('CSVReader');
+
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+                    if (!empty($csvData)) {
+                        foreach ($csvData as $row) {
+                            $rowCount++;
+
+                            $itemData = array(
+                                'company_id' => logged('company_id'),
+                                'customer_type' => $row['Customer Type'],
+                                'company_name' => $row['Company Name'],
+                                'contact_name' => $row['Contact Name'],
+                                'contact_email' => $row['Contact Email'],
+                                'mobile' => $row['Mobile'],
+                                'phone' => $row['Phone'],
+                                'birthday' => $row['Birthday'],
+                                'suite_unit' => $row['Suite Unit'],
+                                'street_address' => $row['Street Address'],
+                                'city' => $row['City'],
+                                'state' => $row['State'],
+                                'postal_code' => $row['Postal Code']
+                            );
+
+                            $con = array(
+                                'where' => array(
+                                    'contact_name' => $row['Contact Name']
+                                ),
+                                'returnType' => 'count'
+                            );
+                            $prevCount = $this->customer_model->getRows($con);
+
+                            if ($prevCount > 0) {
+                                $condition = array('contact_name' => $row['Contact Name']);
+                                $update = $this->customer_model->update($itemData, $condition);
+
+                                if ($update) {
+                                    $updateCount++;
+                                }
+                            } else {
+                                $insert = $this->customer_model->insert($itemData);
+
+                                if ($insert) {
+                                    $insertCount++;
+                                }
+                            }
+                        }
+
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        $this->session->set_userdata('success_msg', $successMsg);
+
+                        $this->activity_model->add($successMsg);
+                        $this->session->set_flashdata('alert-type', 'success');
+                        $this->session->set_flashdata('alert', $successMsg);
+                    }
+                } else {
+                    $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                }
+            } else {
+                $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
+            }
+        }
+        redirect('customer');
+    }
+
+        /*
+     * Callback function to check file value and type during validation
+     */
+    public function file_check($str){
+        $allowed_mime_types = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
+        if(isset($_FILES['file']['name']) && $_FILES['file']['name'] != ""){
+            $mime = get_mime_by_extension($_FILES['file']['name']);
+            $fileAr = explode('.', $_FILES['file']['name']);
+            $ext = end($fileAr);
+            if(($ext == 'csv') && in_array($mime, $allowed_mime_types)){
+                return true;
+            }else{
+                $this->form_validation->set_message('file_check', 'Please select only CSV file to upload.');
+                return false;
+            }
+        }else{
+            $this->form_validation->set_message('file_check', 'Please select a CSV file to upload.');
+            return false;
+        }
     }
 }
 

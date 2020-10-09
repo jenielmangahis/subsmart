@@ -89,37 +89,45 @@ class Esign extends MY_Controller {
 	}
 	
 	public function createTemplate(){
-		$getCategories = $this->db->from('esign_library_template')->where('user_id',logged('id') )->select('esignLibraryTemplateId, title, isActive')->get('esign_library_template');
-		
+		$this->load->model('Esign_model', 'Esign_model');
+		$loggedInUser = logged('id');
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
 	public function templateLibrary(){
-		$id = logged('id');
-		
-		$getTemplates = $this->db->from('esign_library_template')->where('user_id',logged('id') )->select('esignLibraryTemplateId, title, isActive')->get('esign_library_template');
+		$loggedInUser = logged('id');
+		$getTemplates = $this->db->from('esign_library_template')->where('user_id',$loggedInUser )->select('esignLibraryTemplateId, title, isActive')->get();
 		$this->page_data['templates'] = $getTemplates->result_array();
-		// echo "<pre>";
-		// print_r($this->page_data);
-		// exit;
 		$this->load->view('esign/templateLibrary', $this->page_data);
 	}
 	public function editTemplate(){
+		$loggedInUser = logged('id');
+		$this->load->model('Esign_model', 'Esign_model');
+
 		$queryParams = $this->input->get();
 		if(!isset($queryParams['id'])){
 			redirect('esign/esignmain');
 		}
-		$getTemplate = $this->db->from('esign_library_template')->where('user_id',logged('id') )->where('esignLibraryTemplateId',$queryParams['id'])->get('esign_library_template');
+		$getTemplate = $this->db->from('esign_library_template')->where('user_id',$loggedInUser)->where('esignLibraryTemplateId',$queryParams['id'])->get();
+		
+		if(!$getTemplate->num_rows()){
+			redirect('esign/esignmain');
+		}
+		
 		$this->page_data['template'] = $getTemplate->row();
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
 	
 	public function saveCreatedTemplate(){
+		$loggedInUser = logged('id');
 		extract($this->input->post());
 		$data = [
 			'title' => $letterTitle,
 			'content' => $template,
 			'isActive' => $status,
-			'user_id' => logged('id'),
+			'user_id' => $loggedInUser,
+			'category_id' => $category_id
 		];
 		if(isset($esignLibraryTemplateId) && $esignLibraryTemplateId > 0 ){
 			$this->db->where('user_id' , logged('id'))->where('esignLibraryTemplateId' , $esignLibraryTemplateId);

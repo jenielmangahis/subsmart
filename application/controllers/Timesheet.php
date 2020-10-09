@@ -2251,7 +2251,7 @@ class Timesheet extends MY_Controller {
         );
         $this->db->insert('timesheet_logs',$lunch);
         //Employee Notification
-        $notification = '';
+        $notification = null;
         if (explode(':',$remaining_time)[1] <= 0){
             $data_notify = array(
                 'user_id' => $user_id,
@@ -2262,20 +2262,9 @@ class Timesheet extends MY_Controller {
             );
             $this->db->insert('user_notification',$data_notify);
             $remaining_time = '00:00';
-            //Display notification
-            $notify = $this->db->order_by('id',"desc")->limit(1)->get('user_notification')->result();
-            foreach ($notify as $value){
-                if ($value->status == 1){
-                    $bg = '#e6e3e3';
-                }else{
-                    $bg = '#f8f9fa';
-                }
-                $notification .= '<a href="'.site_url().'timesheet/attendance" id="notificationDP" data-id="'.$value->id.'" class="dropdown-item notify-item active" style="background-color: '.$bg.'">';
-                $notification .= '<div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>';
-                $notification .= '<p class="notify-details">'.$value->title.'<span class="text-muted">'.$value->content.'</span></p>';
-                $notification .= '</a>';
-            }
+            $notification = $this->notificationBell();
         }
+
 //        Update break remaining time
         $update_lunch = array('break_remaining_time'=>$remaining_time);
         $this->db->where('id',$attn_id);
@@ -2286,6 +2275,38 @@ class Timesheet extends MY_Controller {
         $data->remaining = $remaining_time;
         $data->notifications = $notification;
         echo json_encode($data);
+    }
+    public function notifyStartSchedule(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->get_where('user_notification',array('user_id' => $user_id,'title' => 'Your shift will start soon.','date_created' => date('Y-m-d h:i:s')));
+        if ($qry->num_rows() == 0){
+            $data_notify = array(
+                'user_id' => $user_id,
+                'title' => 'Your shift will start soon.',
+                'content' => 'Shift start at',
+                'date_created' => date('Y-m-d h:i:s'),
+                'status' => 1
+            );
+            $this->db->insert('user_notification',$data_notify);
+        }
+        echo json_encode($this->notificationBell());
+    }
+
+    public function notificationBell(){
+        $notification = '';
+        $notify = $this->db->order_by('id',"desc")->limit(1)->get('user_notification')->result();
+        foreach ($notify as $value){
+            if ($value->status == 1){
+                $bg = '#e6e3e3';
+            }else{
+                $bg = '#f8f9fa';
+            }
+            $notification .= '<a href="'.site_url().'timesheet/attendance" id="notificationDP" data-id="'.$value->id.'" class="dropdown-item notify-item active" style="background-color: '.$bg.'">';
+            $notification .= '<div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>';
+            $notification .= '<p class="notify-details">'.$value->title.'<span class="text-muted">'.$value->content.'</span></p>';
+            $notification .= '</a>';
+        }
+        return $notification;
     }
 
     public function readNotification(){
