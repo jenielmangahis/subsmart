@@ -394,7 +394,8 @@ img.calendar-user-profile {
                     </ul>
                 </div> -->
                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header">CALENDARS <a class="btn btn-sm btn-info pull-right btn-add-gcalendar btn-gcustom" title="Add Calendar" href="javascript:void(0);"><i class="fa fa-plus"></i></a></h4>
+                    <h4  class="right-filter-header"><a class="btn-calendar-list" href="javascript:void(0);"><i class="fa fa-plus clist-icon"></i></a> CALENDARS <a class="btn btn-sm btn-info pull-right btn-add-gcalendar btn-gcustom" title="Add Calendar" href="javascript:void(0);"><i class="fa fa-plus"></i></a></h4>
+                    <div class="public-calendar-list" style="display: none;">
                     <?php if(!empty($calendar_list)){ ?>
                       <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
                       <?php if(!empty($calendar_list)) { ?>
@@ -423,7 +424,7 @@ img.calendar-user-profile {
                     <?php }else{ ?>
                       <p style="font-size: 13px;text-align: left;">To enable mini calendar events filtering, bind your gmail account in <a style="color:#44a73c;" href="<?= base_url()?>settings/schedule">Calendar Settings</a></p>
                     <?php } ?>
-                    
+                    </div>
                 </div>
                  <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">RECENT CONTACTS</h4>
@@ -904,6 +905,19 @@ img.calendar-user-profile {
 
 
 <script>
+  $(".btn-calendar-list").click(function(){
+    if( $(".clist-icon").hasClass("fa-plus") ){
+      $(".public-calendar-list").slideDown();
+      $(".clist-icon").removeClass("fa-plus");
+      $(".clist-icon").addClass("fa-minus");
+    }else{
+      $(".public-calendar-list").slideUp();
+      $(".clist-icon").removeClass("fa-minus");
+      $(".clist-icon").addClass("fa-plus");
+    }
+    
+  });
+
 	$(".btn-add-gevent").click(function(){
 		var gid = $(this).attr("data-id");
 
