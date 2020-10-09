@@ -447,21 +447,23 @@ $(function(){
         	var a_email = $("#email_address").val(); 
         	var a_bname = $(".business_name").val();
 
-        	var authenticating_url = base_url + '/register/authenticating_registration';
-        	var aut_msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Authenticating registration...</div>';
+        	var authenticating_url = base_url + 'register/authenticating_registration';
+        	var aut_msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'assets/img/spinner.gif" /> Authenticating registration...</div>';
         	$("#ajax-authentication-alert-container").html(aut_msg);
 
 	        setTimeout(function () {
 	            $.ajax({
-	               type: "POST",
+	               type: "GET",
 	               url: authenticating_url,
 	               data: {
 	               		a_email:a_email,
 	               		a_bname:a_bname
 	               	},
-	               success: function(obj)
+	               success: function(o)
 	               {
-	               		if(obj == 1) {
+	               		var obj = jQuery.parseJSON( o );
+	               		//if(obj == 1) {
+	               		if(obj.is_authentic == 1) {
 					        $("span." + curStepBtn).removeClass("btn-indigo");
 					        $("span." + curStepBtn).addClass("btn-default");
 					        $("span." + step).addClass("btn-indigo");

@@ -103,7 +103,7 @@ class Register extends MY_Controller {
 	}
 
     
-    public function authenticating_registration()
+    public function authenticating_registrationBackup()
     {
         /*
          * To do: 
@@ -148,6 +148,53 @@ class Register extends MY_Controller {
         echo $is_authentic;
     }
 
+    public function authenticating_registration()
+    {
+        /*
+         * To do: 
+        *   - Done : Authenticate via email
+        *   - Done : Authenticate via business name
+        *   - Done : Authenticate via ip address
+        */
+
+        $post = $this->input->post();
+        $count_exist_email = 0;
+        $count_exist_business_name = 0;
+        $count_exist_ip_address = 0;
+
+        $is_authentic = 1;
+
+        if(!empty($post)) {
+            $aemail = $post['a_email'];
+            $abname = $post['a_bname'];
+            $client_ip_address = ip_address();
+
+            $edata = $this->Clients_model->getByEmail($aemail); 
+            $edata_business = $this->Clients_model->getByBusinessName($abname); 
+            $edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
+
+            $count_exist_email = count($edata);
+            if($count_exist_email > 0) {
+                $is_authentic = 0;
+            }
+
+            $count_exist_business_name = count($edata_business);
+            if($count_exist_business_name > 0) {
+                $is_authentic = 0;
+            }
+
+            $count_exist_ip_address = count($edata_ip);
+            if($count_exist_ip_address > 0) {
+                $is_authentic = 0;
+            }
+
+        }
+
+        //echo $is_authentic;
+        
+        $json_data = array('is_authentic' => $is_authentic);
+        echo json_encode($json_data);        
+    }
 
     function subscribe(){
 
