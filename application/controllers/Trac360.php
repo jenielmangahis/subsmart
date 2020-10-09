@@ -60,8 +60,8 @@ class Trac360 extends MY_Controller {
 
         $this->page_data['map'] = $data['html'];
         $this->page_data['map_js'] = $data['js'];
-  
+
         $this->page_data['users_geo'] = $users_geo;
-		$this->load->view('trac360/main', $this->page_data);
+	       $this->load->view('trac360/main', $this->page_data);
 	}
 }

@@ -569,7 +569,7 @@ class Settings extends MY_Controller {
         $access_token  = $client->getAccessToken();
         $calendar      = new Google_Service_Calendar($client);
         $calendar_data = array();
-
+        
         $c_index = 0;
         foreach( $enabled_calendars as $c ){
             $calendarListEntry = $calendar->calendarList->get($c);

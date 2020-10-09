@@ -233,6 +233,8 @@ $route['accounting/reconcile/view/showData'] = 'reconcile/showData';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
+$route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicecharge';
+$route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';
@@ -339,6 +341,11 @@ $route['sms_campaigns/build_sms'] = 'Sms_Campaigns/build_sms';
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
 $route['offers/save_draft_offer'] = 'Offers/create_draft_offer';
+$route['offers/add_offer_send_to'] = 'Offers/add_offer_send_to';
+$route['offers/save_offer_send_to_settings'] = 'Offers/save_offer_send_to_settings';
+$route['offers/build_email'] = 'Offers/build_email';
 
 //workcalendar
 $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';
+$route['calendar/_create_google_event'] = 'Workcalender/ajax_create_google_event';
+$route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_calendar';

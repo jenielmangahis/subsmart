@@ -46,8 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
                         <b>Tot Purchase Price</b></td>
                     <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                        <b>Net</b>
-                    </td>
+                        <b>Net</b></td>
                     <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
 
                     </td>

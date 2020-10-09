@@ -847,6 +847,7 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByUserId();
         }
 
+        $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
         if(!empty($events)) {            
@@ -928,6 +929,7 @@ class Workcalender extends MY_Controller
             $calendar_list = $data->getItems(); 
             $email = $google_user_api->google_email;
             $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
+
             foreach( $calendar_list as $cl ){
                 if(!in_array($cl['id'], $enabled_mini_calendar)){
                     //Display in events
@@ -959,6 +961,149 @@ class Workcalender extends MY_Controller
         }
 
         echo json_encode($resources_user_events);
+    }
+
+    public function ajax_create_google_event()
+    {   
+        $post = $this->input->post();
+
+        $is_success = false;
+        $message    = 'Cannot create event';
+
+        if( $post['gevent_name'] != '' && $post['gevent_date_from'] != '' && $post['gevent_date_to'] != '' ){
+            $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+            if( $google_user_api ){
+                $google_credentials = google_credentials();        
+
+                $google_credentials = google_credentials();        
+
+                $access_token = "";
+                $refresh_token = "";
+                $google_client_id = "";
+                $google_secrect = "";
+                $calendar_list = array();
+
+                if(isset($google_user_api->google_access_token)) {
+                    $access_token = $google_user_api->google_access_token;
+                }
+
+                if(isset($google_user_api->google_refresh_token)) {
+                    $refresh_token = $google_user_api->google_refresh_token;
+                }
+
+                if(isset($google_credentials['client_id'])) {
+                    $google_client_id = $google_credentials['client_id'];
+                }
+
+                if(isset($google_credentials['client_secret'])) {
+                    $google_secrect = $google_credentials['client_secret'];
+                }    
+                
+                //Set Client
+                $client = new Google_Client();
+                $client->setClientId($google_client_id);
+                $client->setClientSecret($google_secrect);
+                $client->setAccessToken($access_token);
+                $client->refreshToken($refresh_token);
+
+                //Request
+                $date_to = date("Y-m-d",strtotime($post['gevent_date_to'] . ' +1 day'));
+                $calendar = new Google_Service_Calendar($client);
+                $event    = new Google_Service_Calendar_Event(array(
+                  'summary' => $post['gevent_name'],
+                  'location' => '',
+                  'description' => $post['gevent_name'],
+                  'start' => array(
+                    'date' => $post['gevent_date_from']   
+                  ),
+                  'end' => array(
+                    'date' => $date_to
+                  )
+                ));
+
+                $calendarId = $post['gevent_gcid'];
+                $event = $calendar->events->insert($calendarId, $event);
+
+                $is_success = true;
+                $message    = 'Google event was successfully created.';
+            }
+        }else{
+            $message = 'Required fields cannot be empty';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message 
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_create_google_calendar()
+    {
+        $post = $this->input->post();
+
+        $is_success = false;
+        $message    = 'Cannot create event';
+
+        if( $post['gcalendar_name'] != '' ){
+            $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+            if( $google_user_api ){
+                $google_credentials = google_credentials();        
+
+                $google_credentials = google_credentials();        
+
+                $access_token = "";
+                $refresh_token = "";
+                $google_client_id = "";
+                $google_secrect = "";
+                $calendar_list = array();
+
+                if(isset($google_user_api->google_access_token)) {
+                    $access_token = $google_user_api->google_access_token;
+                }
+
+                if(isset($google_user_api->google_refresh_token)) {
+                    $refresh_token = $google_user_api->google_refresh_token;
+                }
+
+                if(isset($google_credentials['client_id'])) {
+                    $google_client_id = $google_credentials['client_id'];
+                }
+
+                if(isset($google_credentials['client_secret'])) {
+                    $google_secrect = $google_credentials['client_secret'];
+                }    
+                
+                //Set Client
+                $client = new Google_Client();
+                $client->setClientId($google_client_id);
+                $client->setClientSecret($google_secrect);
+                $client->setAccessToken($access_token);
+                $client->refreshToken($refresh_token);
+
+                //Request
+                $service = new Google_Service_Calendar($client);
+
+                $calendar = new Google_Service_Calendar_Calendar(array(
+                  'summary' => $post['gcalendar_name'],
+                  'timezone' => 'America/Los_Angeles'
+                ));
+                $event = $service->calendars->insert($calendar);
+
+                $is_success = true;
+                $message    = 'Google calendar was successfully created.';
+            }
+        }else{
+            $message = 'Please enter calendar name';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message 
+        ];
+
+        echo json_encode($json_data);
     }
 }
 

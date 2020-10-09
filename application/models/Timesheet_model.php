@@ -16,6 +16,7 @@ class Timesheet_model extends MY_Model {
 //    }
     public function getTSNotification(){
         $user_id = $this->session->userdata('logged')['id'];
+        $this->db->order_by('id',"desc");
         $qry = $this->db->get_where('user_notification',array('user_id'=>$user_id))->result();
         return $qry;
     }
@@ -707,6 +708,7 @@ class Timesheet_model extends MY_Model {
         return $query->num_rows();
     }
     public function getOutNow(){
+        $this->db->where('date_in',date('Y-m-d'));
         $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_out'=>date('Y-m-d')));
         return $query->num_rows();
     }

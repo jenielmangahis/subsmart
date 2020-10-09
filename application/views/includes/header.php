@@ -33,7 +33,7 @@
     <!-- taxes page -->
 <!--    Clock CSS-->
     <link href="<?php echo $url->assets ?>css/timesheet/clock.css" rel="stylesheet" type="text/css">
-    <link href="<?php echo $url->assets ?>css/notification/notification.css?v=<?php echo time()?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>css/notification/notification.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
@@ -95,6 +95,9 @@
 <!--                                </a>-->
                                 <div class="wrapper-bell nav-link dropdown-toggle arrow-none" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                     <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0)?'visible':'hidden';?>;z-index: 20" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
+                                    <div class="icon-loader">
+                                        <i class="fa fa-spinner fa-spin" style="font-size:25px"></i>
+                                    </div>
                                     <div class="bell" id="bell-1">
                                         <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-1 5000ms infinite':'unset'?>">notifications_active</div>
                                         <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-2 5000ms infinite':'unset'?>">notifications</div>
@@ -200,8 +203,15 @@
                             $attn_id = null;
                             $expected_endbreak = null;
                             foreach ($attendance as $attn){
-                                if ($attn->user_id ==  $this->session->userdata('logged')['id'] && $attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
+                                if ($attn->user_id ==  $this->session->userdata('logged')['id'] && $attn->shift_duration > 0 && $attn->date_out == date('Y-m-d') && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 0){
                                     $shift_duration = $attn->shift_duration;
+                                }else{
+                                    $shift_duration = '-';
+                                }
+                                if ($attn->user_id ==  $this->session->userdata('logged')['id'] && $attn->shift_duration > 0 && $attn->date_out == date('Y-m-d') && $attn->date_in == date('Y-m-d') && $attn->status == 0){
+                                    $shift_duration = $attn->shift_duration;
+                                }else{
+                                    $shift_duration = '-';
                                 }
                                 if ($attn->user_id == $this->session->userdata('logged')['id']){
                                     $attn_id = $attn->id;
@@ -248,6 +258,24 @@
                                     }
                                 }
                             }
+                            $ts_settings = getEmpTSsettings();
+                            $schedule = getEmpSched();
+                            $expected_shift = 0;
+                            foreach ($schedule as $sched){
+                                if ($sched->user_id == $this->session->userdata('logged')['id'] && $sched->start_date == date('Y-m-d')){
+                                    $expected_shift = strtotime($sched->start_date." ".$sched->start_time);
+                                }else{
+                                    $expected_shift = 0;
+                                }
+                            }
+                            $sched_notify = 1;
+                            foreach ($notification as $u_notify){
+                                if ($u_notify->status == 1 && $u_notify->title == 'Your shift will start soon.'){
+                                    $sched_notify = 0;
+                                }else{
+                                    $sched_notify = 0;
+                                }
+                            }
                             //Removed session
 //                            clock-in-time
 //                            clock-out-time
@@ -261,6 +289,8 @@
 <!--                                <input type="hidden" id="clock-server-time" value="">-->
                                 <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break')?1:0; ?>">
                                 <input type="hidden" id="attendanceId" value="<?php echo $attn_id;?>">
+                                <input type="hidden" id="employeeShiftStart" value="<?php echo (!empty($expected_shift))?$expected_shift:0;?>">
+                                <input type="hidden" id="employeePingOnce" value="<?php echo $sched_notify;?>">
                                 <div class="clock-users " id="<?php echo $clock_btn?>" >
                                     <div class="clock <?php echo $analog_active ?>">
                                         <div class="hour">

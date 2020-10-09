@@ -10,6 +10,11 @@ $(document).ready(function() {
          height: 360
     }); 
 
+     CKEDITOR.replace("offer_email_body",
+    {
+         height: 360
+    });
+
     $( ".toggle-placeholders" ).click(function() {
       $( "#placeholders-list" ).toggle( "slow", function() {
       });

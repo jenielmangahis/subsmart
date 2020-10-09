@@ -56,9 +56,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li class="active">1. Edit Offer</li>
+                                  <li>1. Edit Offer</li>
                                   <li>2. Select Customers</li>
-                                  <li>3. Build Email</li>
+                                  <li class="active">3. Build Email</li>
                                   <li>4. Preview</li>
                                   <li>5. Purchase</li>
                                 </ul>
@@ -66,25 +66,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div class="row">
                                 <div class="col-md-12 form-group">
-                                    <label for="formClient-Name">Title</label>
+                                    <label for="formClient-Name">Subject</label>
                                     <input type="text" class="form-control" name="title" id="" required placeholder="" autofocus/>
                                 </div>
                                 <div class="col-md-12 form-group">
-                                    <label for="formClient-Name">Description</label>
-                                    <textarea name="description" class="form-control" rows="5" > </textarea>
-                                </div>
-                                <div class="col-md-12 form-group">
-                                    <label for="formClient-Name">Terms & Conditions</label>
-                                    <textarea name="terms_and_conditions" class="form-control" > </textarea>
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="formClient-Name">Deal Price</label>
-                                    <input type="text" class="form-control" name="deal_price" id="" required placeholder="" autofocus/>
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="formClient-Name">Original Price</label>
-                                    <input type="text" class="form-control" name="original_price" id="" required placeholder="" autofocus/>
-                                </div>
+                                  <label>Email Body</label> <span class="help"></span>
+                                  <textarea name="email_body" id="offer_email_body" cols="40" rows="5" class="form-control"></textarea>              
+                                </div>     
                                <!-- <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Upload Image</label>
                                     <input data-fileupload="file" name="fileimage" type="file">
@@ -109,7 +97,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php // include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_marketing'); ?>
+
 <script>
 $(function(){
     $("#create_offer").submit(function(e){
@@ -140,4 +130,13 @@ $(function(){
         }, 1000);
     });
 });
+
+$(document).ready(function() {
+    CKEDITOR.replace("offer_email_body",
+    {
+         height: 360
+    });
+ });
+
+
 </script>

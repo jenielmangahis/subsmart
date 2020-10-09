@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active p-3" id="active-offers" role="tabpanel" aria-labelledby="one-tab">
                       
-                      <table class="table table-bordered table-striped dataTableCampaign">
+                      <table class="table table-bordered table-striped dataTableOffer">
                         <thead>
                           <tr>
                             <th>Offer</th>
@@ -68,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="tab-pane fade p-3" id="scheduled-offers" role="tabpanel" aria-labelledby="two-tab">
                       
-                      <table class="table table-bordered table-striped dataTableCampaign">
+                      <table class="table table-bordered table-striped dataTableOffer">
                         <thead>
                           <tr>
                             <th>Offer</th>
@@ -84,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="tab-pane fade p-3" id="ended-offers" role="tabpanel" aria-labelledby="three-tab">
                       
-                      <table class="table table-bordered table-striped dataTableCampaign">
+                      <table class="table table-bordered table-striped dataTableOffer">
                         <thead>
                           <tr>
                             <th>Offer</th>
@@ -100,7 +100,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="tab-pane fade p-3" id="draft-offers" role="tabpanel" aria-labelledby="four-tab">
                       
-                      <table class="table table-bordered table-striped dataTableCampaign">
+                      <table class="table table-bordered table-striped dataTableOffer">
                         <thead>
                           <tr>
                             <th>Offer</th>
@@ -110,7 +110,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <th>Status</th>                          
                           </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            <?php if($offers_draft_list){ foreach($offers_draft_list as $draft){ ?>
+                              <tr class="">
+                                <td><?php echo $draft->title; ?></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>Draft</td>
+                              </tr> 
+                            <?php } } ?>   
+                        </tbody>
                       </table>
 
                     </div>
@@ -134,5 +144,5 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 
 <script>
-  $('.dataTableCampaign').DataTable();
+  $('.dataTableOffer').DataTable();
 </script>

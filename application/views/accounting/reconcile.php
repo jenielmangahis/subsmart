@@ -228,18 +228,18 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-2">
                         <label>Mailing Address:</label>
-                        <textarea name="mailing_add" rows="4"></textarea>
+                        <textarea name="mailing_add" id="mailing_add" rows="4"><?=$rows[0]->mailing_address?></textarea>
                     </div>
                     <div class="col-md-2">
                         <label>Payment date:</label>
                         <div class="col-xs-10 date_picker">
-                            <input type="text" name="date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                            <input type="text" name="date_popup" id="date_popup" class="form-control" value="<?=$rows[0]->first_date?>"/>
                         </div>
                     </div>
                     <div class="col-md-4"></div>
                     <div class="col-md-2">
                         <label>Check no.</label>
-                        <input type="text" name="checkno" id="checkno" class="form-control" value="<?=$rows[0]->CHRG?>"/>
+                        <input type="text" name="checkno" id="checkno" class="form-control" value="<?=$rows[0]->checkno?>"/>
                         </br>
                         </br>
                         <input type="checkbox" class="form-control" name="print_check" id="print_check">Print Later
@@ -249,7 +249,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <div class="col-md-8"></div>
                     <div class="col-md-2">
                         <label>Permit no.</label>
-                        <input type="text" name="permitno" id="permitno" class="form-control" value="<?=$rows[0]->CHRG?>"/>
+                        <input type="text" name="permitno" id="permitno" class="form-control" value=""/>
                     </div>
                 </div>
             </div>
@@ -368,7 +368,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-4">
                     <label>Memo</label>
                     </br>
-                    <textarea name="memo" rows="4"><?=$rows[0]->memo_sc?></textarea>
+                    <textarea name="memo_sc" id="memo_sc" rows="4"><?=$rows[0]->memo_sc?></textarea>
                 </div>
                 <div class="col-md-6"></div>
                 <div class="col-md-2">
@@ -399,7 +399,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <button type="button" class="btn-cmn" onclick="closeFullNav()">Cancel</button>
             <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
             <a href="#" style="margin-left: 5%" onclick="OpenRecurr()">Make Recurring</a>
-            <button type="submit" class="savebtn">Done</button>
+            <button type="button" onclick="save_close_edit(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
     </div>
     <!-- End Add New -->
@@ -2018,7 +2018,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 </div>
             </div>
             <!-- end row -->
-           
+           <div id="chart_of_accounts_id" style="display: none;"><?=$rows[0]->chart_of_accounts_id?></div>
              <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
@@ -3813,4 +3813,71 @@ function closeAddaccount()
            openAddAccount();
           } 
       });
+</script>
+<script type="text/javascript">
+    function save_close_edit(id,chart_of_accounts_id)
+    {
+      var reconcile_id = id;
+      var chart_of_accounts_id = chart_of_accounts_id;
+      var mailing_address = $('#mailing_add').val();
+      var date_popup = $('#date_popup').val();
+      var checkno = $('#checkno').val();
+      var memo_sc = $('#memo_sc').val();
+      var descp_sc = $('.edit_descp').text();
+      var expense_account=$('.edit_expense_account').text();
+      var service_charge=$('.edit_service_charge').text();
+
+      var tablelength = $('#participantTable tr').length -2;
+      datatab=[];
+
+      for(var i = 2 ; i <= tablelength ; i++)
+        {
+            /*datatab['edit_expense_account_'+i]=$('.edit_expense_account_'+i).text();
+            datatab['edit_service_charge_'+i]=$('.edit_service_charge_'+i).text();
+            datatab['edit_descp_'+i]=$('.edit_descp_'+i).text();*/
+
+            var expense_account_sub = $('.edit_expense_account_'+i).text();
+            var service_charge_sub = $('.edit_service_charge_'+i).text();
+            var descp_sub = $('.edit_descp_'+i).text();
+
+          if(expense_account_sub!='' || service_charge_sub!='' || descp_sub!='')
+          {
+            $.ajax({
+                url:"<?php echo url('accounting/reconcile/add/servicecharge') ?>",
+                method: "POST",
+                data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sub:descp_sub},
+                success:function(data)
+                {
+                }
+            })
+          }
+        }
+
+      if(reconcile_id!='')
+      {
+        $.ajax({
+            url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
+            method: "POST",
+            data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc},
+            success:function(data)
+            {
+                closeFullNav();
+                location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+            }
+        })
+      }
+
+      /*  var data_tab=Object.assign({}, datatab); 
+      if(reconcile_id!='')
+      {
+        $.ajax({
+            url:"<?php echo url('accounting/reconcile/add/servicecharge') ?>",
+            method: "POST",
+            data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,data_tab:JSON.stringify(data_tab)},
+            success:function(data)
+            {
+            }
+        })
+      }*/
+    }
 </script>

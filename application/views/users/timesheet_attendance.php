@@ -215,7 +215,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="card-body">
                             <div class="today-date">
-                                <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y');?></span></h6>
+                                <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y')." ".date_default_timezone_get();?></span></h6>
                             </div>
                             <?php if ($this->session->userdata('logged')['role'] < 5):?>
                             <div class="row" style="margin-bottom: 20px">

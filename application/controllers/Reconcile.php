@@ -299,4 +299,34 @@ class Reconcile extends MY_Controller {
     {
 
     }
+
+    public function insert_servicecharge()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $expense_account_sub=$this->input->post('expense_account_sub');
+        $service_charge_sub=$this->input->post('service_charge_sub');
+        $descp_sc_sub=$this->input->post('descp_sc_sub');
+        $this->reconcile_model->save_service($reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub);
+        /*$data_tab=$this->input->post('data_tab');
+        $myArray = json_decode(json_encode($data_tab), true);
+        foreach ($myArray as $key => $val) {
+          $this->reconcile_model->save_service();
+        }*/
+    }
+
+    public function update_sc()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $mailing_address=$this->input->post('mailing_address');
+        $first_date=$this->input->post('date_popup');
+        $checkno=$this->input->post('checkno');
+        $memo_sc=$this->input->post('memo_sc');
+        $descp_sc=$this->input->post('descp_sc');
+        $expense_account=$this->input->post('expense_account');
+        $service_charge=$this->input->post('service_charge');
+
+        $this->reconcile_model->update_sc_records($reconcile_id,$mailing_address,$first_date,$checkno,$memo_sc,$descp_sc,$expense_account,$service_charge);
+        
+    }
 }
