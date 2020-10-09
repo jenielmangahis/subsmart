@@ -977,6 +977,10 @@ body .navigation-menu {
     color: #dee2e6;
 }
 
+i.icon-plus-cz {
+    color: #3cdcf7;
+}
+
 .app-search input:-moz-placeholder {
     color: #adb5bd;
 }

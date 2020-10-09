@@ -56,6 +56,10 @@ img.calendar-user-profile {
     position: relative;
     top: 6px;
 }
+a.top-1 {
+  position: relative;
+  top: 1px;
+}
 .dot {
   height: 25px;
   width: 25px;
@@ -214,14 +218,14 @@ img.calendar-user-profile {
   .right-calendar-loading{
     position: absolute;
     width: 50%;
-    left: 28%;  
+    left: 28%;
     top: 217px;
     z-index: 99999;
   }
   .left-calendar-loading{
     position: absolute;
     width: 90%;
-    left: 5%;  
+    left: 5%;
     top: 50%;
     z-index: 99999;
   }
@@ -235,9 +239,22 @@ img.calendar-user-profile {
   .fc .fc-toolbar-title {
   	font-size: 23px;
   }
-  .btn-gcustom{
-  	min-width: 31px;
-    padding: 1px 8px;
+  .btn-gcustom {
+    min-width: 24px;
+    padding: 0px 3px;
+    min-height: 24px;
+  }
+  a.btn-gcustom i {
+    position: relative;
+    left: 1px;
+    top: 2px;
+  }
+  .br-99 {
+    border-radius: 99px;
+  }
+  .sc-bottom-2 {
+    position: relative;
+    bottom: 3px;
   }
 </style>
 <div class="wrapper" role="wrapper">
@@ -394,14 +411,14 @@ img.calendar-user-profile {
                     </ul>
                 </div> -->
                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header"><a class="btn-calendar-list" href="javascript:void(0);"><i class="fa fa-plus clist-icon"></i></a> CALENDARS <a class="btn btn-sm btn-info pull-right btn-add-gcalendar btn-gcustom" title="Add Calendar" href="javascript:void(0);"><i class="fa fa-plus"></i></a></h4>
+                    <h4  class="right-filter-header"><a class="btn-calendar-list" href="javascript:void(0);"><i class="fa fa-plus clist-icon icon-plus-cz"></i></a> <span class="pl-1">CALENDARS</span> <a class="btn btn-sm btn-info pull-right btn-add-gcalendar btn-gcustom sc-bottom-2 br-99" title="Add Calendar" href="javascript:void(0);"><i class="far fa-calendar-plus"></i></a></h4>
                     <div class="public-calendar-list" style="display: none;">
                     <?php if(!empty($calendar_list)){ ?>
                       <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
                       <?php if(!empty($calendar_list)) { ?>
                           <ul class="right-list-events">
                               <?php foreach($calendar_list as $calendar) { ?>
-                                      <?php 
+                                      <?php
                                           $is_checked = "";
                                           if(!empty($enabled_calendar)) {
                                             if(in_array($calendar['id'], $enabled_calendar)){
@@ -416,9 +433,9 @@ img.calendar-user-profile {
                                       ?>
                                       <li style="background-color: <?php echo $rowBgColor; ?>">
                                       	<label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label>
-                                      	<a class="btn btn-sm btn-info pull-right btn-add-gevent btn-gcustom" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>"><i class="fa fa-plus"></i></a>
+                                      	<a class="btn btn-sm btn-info pull-right btn-add-gevent btn-gcustom top-1 br-99" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>"><i class="far fa-edit"></i></a>
                                       </li>
-                              <?php } ?> 
+                              <?php } ?>
                           </ul>
                       <?php } ?>
                     <?php }else{ ?>
@@ -514,7 +531,7 @@ img.calendar-user-profile {
 				<div class="form-group" style="text-align: left;">
 				  <label>Event Name</label> <span class="form-required">*</span>
 				  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
-				</div>				
+				</div>
 				<div class="form-group" style="text-align: left;">
 				  <label>Date from</label> <span class="form-required">*</span>
 				  <input type="text" name="gevent_date_from" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
@@ -550,7 +567,7 @@ img.calendar-user-profile {
 				<div class="form-group" style="text-align: left;">
 				  <label>Calendar Name</label> <span class="form-required">*</span>
 				  <input type="text" name="gcalendar_name" value=""  class="form-control" required="" autocomplete="off" required />
-				</div>	
+				</div>
 				<div class="create-gcalendar-validation-error" style="text-align: left;"></div>
             </div>
             <div class="modal-footer">
@@ -639,7 +656,7 @@ img.calendar-user-profile {
     }
 
 
-    
+
     function get_employee_dropdown() {
         jQuery.ajax({
             url: base_url + 'users/ajax_user_dropdown',
@@ -849,10 +866,10 @@ img.calendar-user-profile {
               if (isLoading) {
                   $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading Events...</div>');
               }
-              else {                
+              else {
                   $(".left-calendar-loading").html('');
               }
-             
+
             },
             resources: <?php echo json_encode($resources_users); ?>,
             events: {
@@ -915,7 +932,7 @@ img.calendar-user-profile {
       $(".clist-icon").removeClass("fa-minus");
       $(".clist-icon").addClass("fa-plus");
     }
-    
+
   });
 
 	$(".btn-add-gevent").click(function(){
@@ -1032,7 +1049,7 @@ img.calendar-user-profile {
 
         $.ajax({
            type: "POST",
-           url: url,      
+           url: url,
            data: {cid:cid, show_calendar:show_calendar},
            success: function(o)
            {
@@ -1050,7 +1067,7 @@ img.calendar-user-profile {
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           schedulerLicenseKey: '0531798248-fcs-1598103289',
-          initialView: 'dayGridMonth',      
+          initialView: 'dayGridMonth',
           events: {
             url: events_url,
             method: 'POST'
@@ -1059,10 +1076,10 @@ img.calendar-user-profile {
             if (isLoading) {
                 $(".right-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading Events...</div>');
             }
-            else {                
+            else {
                 $(".right-calendar-loading").html('');
             }
-           
+
           },
           eventDidMount: function(info) {
             var tooltip = new Tooltip(info.el, {
@@ -1075,7 +1092,7 @@ img.calendar-user-profile {
           },
         });
 
-        calendar.render(); 
+        calendar.render();
     }
 
     load_calendar();
