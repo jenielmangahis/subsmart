@@ -12,4 +12,11 @@ $(function(){
 
         $("#modalDeletePlanHeading").modal("show");
     });
+
+    $(".btn-delete-addon").click(function(){
+        var addon_id = $(this).attr("data-id");
+        $("#aid").val(addon_id);
+
+        $("#modalDeleteAddon").modal("show");
+    });
 });

@@ -36,6 +36,7 @@
         <?php 
             $is_active_plans    = "";
             $is_active_features = "";
+            $is_active_addons   = "";
             if($this->uri->uri_string() == 'nsmart_plans/index') {
                 $is_active_plans = "active";
             }elseif($this->uri->uri_string() == 'nsmart_features/index') {
@@ -44,7 +45,15 @@
                 $is_active_features = "active";
             }elseif($this->uri->uri_string() == 'nsmart_features/add_new_feature') {
                 $is_active_features = "active";
+            }elseif($this->uri->uri_string() == 'nsmart_addons/index') {
+                $is_active_addons = "active";
+            }elseif($this->uri->uri_string() == 'nsmart_addons/add_new_addon') {
+                $is_active_addons = "active";
+            }elseif($this->uri->uri_string() == 'nsmart_addons/edit_addon') {
+                $is_active_addons = "active";
             }
+
+
         ?>
         <li class="submenus <?= $is_active_plans; ?>"><a href="<?php echo base_url('nsmart_plans/index') ?>" title="Plans" style="color: #fff;">
             <span class="fa fa-cubes"></span>Plans</a>
@@ -53,5 +62,10 @@
         <li class="submenus <?= $is_active_features; ?>"><a href="<?php echo base_url('nsmart_features/index') ?>" title="Features" style="color: #fff;">
             <span class="fa fa-list"></span>Features</a>
         </li>
+
+        <li class="submenus <?= $is_active_addons; ?>"><a href="<?php echo base_url('nsmart_addons/index') ?>" title="Addons" style="color: #fff;">
+            <span class="fa fa-list"></span>Addons</a>
+        </li>
+
     </ul>
 </nav>

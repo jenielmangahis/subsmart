@@ -287,6 +287,12 @@ $route['nsmart_plans/edit_plan/(:any)'] = 'Nsmart_Plans/edit_plan/$1';
 $route['nsmart_plans/update_plan'] = 'Nsmart_Plans/update_plan';
 $route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
 
+$route['nsmart_addons/index'] = 'Nsmart_Addons/index';
+$route['nsmart_addons/add_new_addon'] = 'Nsmart_Addons/add_new_addon';
+$route['nsmart_addons/create_addon'] = 'Nsmart_Addons/create_addon';
+$route['nsmart_addons/edit_addon/(:any)'] = 'Nsmart_Addons/edit_addon/$1';
+$route['nsmart_addons/update_addon'] = 'Nsmart_Addons/update_addon';
+
 $route['plan_headings/index'] = 'Plan_Headings/index';
 $route['plan_headings/add_new_headings'] = 'Plan_Headings/add_new_headings';
 $route['plan_headings/create_plan_headings'] = 'Plan_Headings/create_plan_headings';
