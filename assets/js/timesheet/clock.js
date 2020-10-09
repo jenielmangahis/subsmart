@@ -1,15 +1,27 @@
 $(document).ready(function () {
+    //Check if body is fully loaded
+    var readyStateCheckInterval = setInterval(function() {
+        if (document.readyState === "complete") {
+            clearInterval(readyStateCheckInterval);
+            $('.bell').css('display','inline-block');
+            $('.icon-loader').hide();
+        }
+    }, 10);
     var break_end_time = 0;
     var minutes = 0;
     var seconds = 0;
     var remaining_time = 0;
-    var get_server_time,countdown;
+    var countdown;
     var difference = 0;
-
-    function notificationRing() {
-        var url = '../assets/css/notification/notification_tone2.mp3';
-        const audio = new Audio(url);
-        audio.play();
+    async function notificationRing() {
+        const audio = new Audio();
+        audio.src = '../assets/css/notification/notification_tone2.mp3';
+        audio.muted = false;
+        try {
+           await audio.play();
+        } catch(err) {
+            console.log('error');
+        }
     }
     if($('#clock-status').val() == 1){
         breakTime();
@@ -253,19 +265,64 @@ $(document).ready(function () {
         }
     });
     });
-});
+    var overtime = (function() {
+        var executed = false;
+        return function() {
+            if (!executed) {
+                executed = true;
+                $.ajax({
+                    url:"/timesheet/notifyStartSchedule",
+                    dataType:"json",
+                    data:"POST",
+                   success:function (data) {
+                       var notify_count = $('#notifyBadge').text();
+                       if (notify_count == ''){
+                           notify_count = 0;
+                       }
+                       var count = parseInt(notify_count) + 1;
+                       $('#notificationList').prepend(data);
+                       $('#notifyBadge').css('visibility','visible').text(count);
+                       $('.layer-1').css('animation','animation-layer-1 5000ms infinite');
+                       $('.layer-2').css('animation','animation-layer-2 5000ms infinite');
+                       $('.layer-3').css('animation','animation-layer-3 5000ms infinite');
+                       $('#employeePingOnce').val(0);
+                       notificationRing();
+                   }
+                });
+            }
+        };
+    })();
 
-//Live Clock JS
-const deg = 6;
-const hr = document.querySelector("#hr");
-const min = document.querySelector("#min");
-const sec = document.querySelector("#sec");
-setInterval(() => {
-    let day = new Date();
-let hh = day.getHours() * 30;
-let mm = day.getMinutes() * deg;
-let ss = day.getSeconds() * deg;
-hr.style.transform = 'rotateZ(' + (hh + (mm / 12)) + 'deg)';
-min.style.transform = 'rotateZ(' + mm + 'deg)';
-sec.style.transform = 'rotateZ(' + ss + 'deg)';
+    //Live Clock JS
+    const deg = 6;
+    const hr = document.querySelector("#hr");
+    const min = document.querySelector("#min");
+    const sec = document.querySelector("#sec");
+    if (hr != null){
+        setInterval(() => {
+            let day = new Date();
+        let hh = day.getHours() * 30;
+        let mm = day.getMinutes() * deg;
+        let ss = day.getSeconds() * deg;
+        hr.style.transform = 'rotateZ(' + (hh + (mm / 12)) + 'deg)';
+        min.style.transform = 'rotateZ(' + mm + 'deg)';
+        sec.style.transform = 'rotateZ(' + ss + 'deg)';
+        //Check if there is an schedule
+        //Start time
+        var emp_shift = $('#employeeShiftStart').val();
+        var sched_notify = $('#employeePingOnce').val();
+        if (emp_shift > 0 && sched_notify == 1){
+            var a = new Date(emp_shift * 1000);
+            a.setMinutes(a.getMinutes() - 10);
+            var b = a.setHours(a.getHours() - 13);
+            var current_time = day.getTime();
+            if (b <= current_time){
+                overtime();
+            }
+        }
+        });
+    }
+
+// end of Live clock
+
 });

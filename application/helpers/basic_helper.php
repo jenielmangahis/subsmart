@@ -1034,6 +1034,18 @@ if (!function_exists('getEmployeeAttendance')){
         return $CI->timesheet_model->getEmployeeAttendance();
     }
 }
+if (!function_exists('getEmpTSsettings')){
+    function getEmpTSsettings(){
+        $CI = &get_instance();
+        return $CI->timesheet_model->getTimeSheetSettings();
+    }
+}
+if (!function_exists('getEmpSched')){
+    function getEmpSched(){
+        $CI = &get_instance();
+        return $CI->timesheet_model->getTimeSheetDay();
+    }
+}
 if (!function_exists('getNewTasks')){
 
     function getNewTasks(){

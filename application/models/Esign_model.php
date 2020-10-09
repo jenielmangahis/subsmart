@@ -22,11 +22,13 @@ class Esign_model extends MY_Model {
 	}
 
 	public function getLibraryCategory($userId = 0){
-		$this->db->select('*');
-        $this->db->from($this->categoryTable);
-        $this->db->where('user_id', $userId);
-        $query = $this->db->get();
-        return $query->result();
+		$this->db->select(['category_id','categoryName']);
+		$this->db->from($this->categoryTable);
+        $this->db->where('isActive', 1);
+        $this->db->where('isDefault', 1);
+        $this->db->or_where('user_id', $userId);
+		$query = $this->db->get();
+        return $query->result_array();
 	}
 
 }

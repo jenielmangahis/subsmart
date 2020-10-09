@@ -233,6 +233,8 @@ $route['accounting/reconcile/view/showData'] = 'reconcile/showData';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
+$route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicecharge';
+$route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';
