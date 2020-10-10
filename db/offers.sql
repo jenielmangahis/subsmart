@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2020 at 12:20 PM
+-- Generation Time: Oct 10, 2020 at 11:09 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -37,7 +37,6 @@ CREATE TABLE `offers` (
   `deal_price` float NOT NULL,
   `original_price` float NOT NULL,
   `customer_type` smallint(1) DEFAULT NULL COMMENT 'customer_with_email = 1, customer_group = 2, certain_customer = 3 ',
-  `customer_group_id` int(11) DEFAULT NULL,
   `image_offer` varchar(255) DEFAULT NULL,
   `subject` varchar(100) DEFAULT NULL,
   `email_body` text DEFAULT NULL,

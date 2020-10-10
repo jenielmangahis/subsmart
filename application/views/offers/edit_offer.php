@@ -67,23 +67,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Title</label>
-                                    <input type="text" class="form-control" name="title" id="" required placeholder="" autofocus/>
+                                    <input type="text" class="form-control" name="title" id="" required placeholder="" value="<?php echo $offer->title; ?>" autofocus/>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Description</label>
-                                    <textarea name="description" class="form-control" rows="5" > </textarea>
+                                    <textarea name="description" class="form-control" rows="5" > <?php echo $offer->description; ?> </textarea>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Terms & Conditions</label>
-                                    <textarea name="terms_and_conditions" class="form-control" > </textarea>
+                                    <textarea name="terms_and_conditions" class="form-control" > <?php echo $offer->terms_and_conditions; ?> </textarea>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="formClient-Name">Deal Price</label>
-                                    <input type="text" class="form-control" name="deal_price" id="" required placeholder="" autofocus/>
+                                    <input type="text" class="form-control" name="deal_price" id="" required placeholder="" value="<?php echo $offer->deal_price; ?>" autofocus/>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="formClient-Name">Original Price</label>
-                                    <input type="text" class="form-control" name="original_price" id="" required placeholder="" autofocus/>
+                                    <input type="text" class="form-control" name="original_price" id="" value="<?php echo $offer->original_price; ?>" required placeholder="" autofocus/>
+                                    <input type="hidden" name="status" id="status" value="<?php echo $offer->status; ?>" />
                                 </div>
                                <!-- <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Upload Image</label>
@@ -93,7 +94,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-offer-save-draft">Save as Draft</button>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-offer-save-draft">Update Draft</button>
                                     <a href="<?php echo url('offers') ?>">cancel this</a>
                                 </div>
                             </div>
@@ -114,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $("#create_offer").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'offers/save_draft_offer';
+        var url = base_url + 'offers/update_draft_offer';
         $(".btn-offer-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
         setTimeout(function () {
           $.ajax({

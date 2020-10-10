@@ -353,6 +353,10 @@ $route['offers/save_draft_offer'] = 'Offers/create_draft_offer';
 $route['offers/add_offer_send_to'] = 'Offers/add_offer_send_to';
 $route['offers/save_offer_send_to_settings'] = 'Offers/save_offer_send_to_settings';
 $route['offers/build_email'] = 'Offers/build_email';
+$route['offers/save_offer_build_email'] = 'Offers/save_offer_build_email';
+$route['offers/email_preview'] = 'Offers/email_preview';
+$route['offers/edit_offer/(:num)'] = 'Offers/edit_offer/$1';
+$route['offers/update_draft_offer'] = 'Offers/update_draft_offer';
 
 //workcalendar
 $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';
