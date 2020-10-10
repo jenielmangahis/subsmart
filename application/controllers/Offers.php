@@ -26,7 +26,15 @@ class Offers extends MY_Controller {
 	public function index()
 	{	
 		$offers_draft_list = $this->Offers_model->getAllDraft();
+        $offers_active_list = $this->Offers_model->getAllActive();
+        $offers_inactive_list = $this->Offers_model->getAllInactive();
+        $offers_ended_list = $this->Offers_model->getAllEnded();
+
         $this->page_data['offers_draft_list'] = $offers_draft_list;
+        $this->page_data['offers_active_list'] = $offers_active_list;
+        $this->page_data['offers_inactive_list'] = $offers_inactive_list;
+        $this->page_data['offers_ended_list'] = $offers_ended_list;
+
 		$this->load->view('offers/index', $this->page_data);
 	}
 
@@ -35,6 +43,15 @@ class Offers extends MY_Controller {
 		$this->session->unset_userdata('offerId');
 		$this->load->view('offers/add_offer', $this->page_data);
 	}
+
+    public function edit_offer($id)
+    {   
+        $offer = $this->Offers_model->getById($id);
+        $this->session->set_userdata('offerId', $id);
+        $this->page_data['offer'] = $offer;
+        $this->session->unset_userdata('offerId');
+        $this->load->view('offers/edit_offer', $this->page_data);
+    }
 
 	public function create_draft_offer()
 	{	
@@ -72,6 +89,41 @@ class Offers extends MY_Controller {
 
 		echo json_encode($json_data);
 	}
+
+    public function update_draft_offer()
+    {   
+        $json_data = [
+            'is_success' => false,
+            'err_msg' => 'Please enter Title'
+        ];
+
+        $post = $this->input->post(); 
+
+        if( $post['title'] != '' ){
+            $user = $this->session->userdata('logged');
+            $offer_id = $this->session->userdata('offerId');
+            $offers_data = [
+                'user_id' => $user['id'],
+                'title' => $post['title'],
+                'description' => $post['description'],
+                'terms_and_conditions' => $post['terms_and_conditions'],
+                'deal_price' => $post['deal_price'],
+                'original_price' => $post['original_price'],
+                'status' => $post['status'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];  
+
+            $offer_id = $this->Offers_model->updateOffers($offer_id,$offers_data);
+
+            $json_data = [
+                'is_success' => true,
+                'err_msg' => ''
+            ];
+        }
+
+        echo json_encode($json_data);
+    }
 
 	public function add_offer_send_to()
 	{
@@ -182,6 +234,46 @@ class Offers extends MY_Controller {
 			
 		$this->load->view('offers/build_email', $this->page_data);
 	}
+
+
+	public function save_offer_build_email()
+    {       
+            $json_data = [
+                    'is_success' => false,
+                    'err_msg' => 'Please enter Title'
+            ];
+
+            $post = $this->input->post(); 
+            $offer_id = $this->session->userdata('offerId');
+            if($offer_id){
+                    $data_offers = [
+                        'subject' => post('subject'),
+        				'email_body' => post('email_body'),
+                    ];
+
+                    $offers = $this->Offers_model->updateOffers($offer_id,$data_offers);
+
+                    $json_data = [
+                            'is_success' => true,
+                            'err_msg' => ''
+                    ];
+            }
+           
+            echo json_encode($json_data);
+    }
+
+
+    public function email_preview()
+    {
+    	$user = $this->session->userdata('logged');
+		$cid  = logged('company_id');
+		$offer_id = $this->session->userdata('offerId');
+
+		$offers = $this->Offers_model->getById($offer_id);
+
+		$this->page_data['offers'] = $offers;	
+		$this->load->view('offers/email_preview', $this->page_data);
+    }
 
 
 }

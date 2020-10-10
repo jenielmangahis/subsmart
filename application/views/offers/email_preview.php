@@ -33,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <h1 class="page-title">Create Offer</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Add a new offer to promote your business.</li>
+                            <li class="breadcrumb-item active">Preview and select the valid period.</li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
@@ -58,30 +58,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <ul class="clearfix">
                                   <li>1. Edit Offer</li>
                                   <li>2. Select Customers</li>
-                                  <li class="active">3. Build Email</li>
-                                  <li>4. Preview</li>
+                                  <li>3. Build Email</li>
+                                  <li class="active" >4. Preview</li>
                                   <li>5. Purchase</li>
                                 </ul>
                             </div>
                             <hr />
                             <div class="row">
-                                <div class="col-md-12 form-group">
-                                    <label for="formClient-Name">Subject</label>
-                                    <input type="text" class="form-control" name="subject" id="subject" required placeholder="" autofocus/>
-                                </div>
-                                <div class="col-md-12 form-group">
-                                  <label>Email Body</label> <span class="help"></span>
-                                  <textarea name="email_body" id="offer_email_body" cols="40" rows="5" class="form-control"></textarea>              
-                                </div>     
-                               <!-- <div class="col-md-12 form-group">
-                                    <label for="formClient-Name">Upload Image</label>
-                                    <input data-fileupload="file" name="fileimage" type="file">
-                                </div> -->
+                                <div class="col-md-6 form-group">
+                                    <div class="col-md-12 form-group">
+                                       <label for="formClient-Name">Title: <?php echo $offers->title; ?> </label>
+                                    </div>
+                                    <div class="col-md-12 form-group">
+                                       <label>Deal Price: $<?php  echo $offers->deal_price; ?> </label> <span class="help"></span>
+                                    </div>  
+                                    <div class="col-md-12 form-group">
+                                       <label>Original Price: $<?php  echo $offers->original_price; ?> </label> <span class="help"></span>
+                                    </div>  
+                                    <div class="col-md-12 form-group">
+                                       <label>What You'll Get:  </label> <span class="help"><?php  echo $offers->description; ?></span>
+                                    </div>  
+                                    <div class="col-md-12 form-group">
+                                       <label>Terms & Conditions </label> <span class="help"><?php  echo $offers->terms_and_conditions; ?></span>
+                                    </div>  
+                                </div> 
+
+                                <div class="col-md-6 form-group">
+                                    <div class="col-md-12 form-group">
+                                        <label for="formClient-Name">The current package to run the deal:</label><br /><br />
+                                        <label for="formClient-Name"> Pay flat fee $10.00 to list your deal for 1 Month. </label> <br /><br />
+                                        <span class="help">The deal will be emailed to your customers upon confirmation. You pay a monthly fee to keep the deal valid. No additional commission on customer bookings and transactions </span>
+                                        <hr style="margin-top: 10px; margin-bottom: 30px;">
+
+                                    </div>
+                                    <div class="col-md-12 form-group">
+                                          <label>Valid From</label> 
+                                          <input type="text" name="offer_date_from" id="offer_date_from" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />         
+                                    </div>     
+                                    <div class="col-md-12 form-group">
+                                          <label>Valid To</label> 
+                                          <input type="text" name="offer_date_to" value="" disabled class="form-control " required="" autocomplete="off" required />  
+
+                                    </div>     
+                                    <div class="col-md-12 form-group">
+                                          <label>Total</label> 
+                                          <span class="bold" data-shop="package-price">$10.00</span>  <br /><br />  
+
+                                          <button type="submit" class="btn btn-flat btn-primary margin-right btn-offer-save-draft">Confirm Deal</button>
+                                    </div>     
+
+                                </div> 
+                              
                             </div>
                             <hr />
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-offer-save-draft">Continue</button>
+                                    
                                     <a href="<?php echo url('offers/add_offer_send_to') ?>">Back</a>
                                 </div>
                             </div>
@@ -102,6 +134,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <script>
 $(function(){
+
+    $('.default-datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    });
+
+
+
     $("#create_offer").submit(function(e){
         e.preventDefault();
         var url = base_url + 'offers/save_offer_build_email';
