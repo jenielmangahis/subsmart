@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2020 at 12:21 PM
+-- Generation Time: Oct 10, 2020 at 11:13 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -31,8 +31,8 @@ DROP TABLE IF EXISTS `offers_recipients`;
 CREATE TABLE `offers_recipients` (
   `id` int(11) NOT NULL,
   `offer_id` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `email` varchar(256) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `customer_group_id` int(11) DEFAULT NULL,
   `date_created` timestamp NULL DEFAULT NULL,
   `date_modified` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
