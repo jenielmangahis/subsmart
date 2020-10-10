@@ -1,6 +1,6 @@
 <!-- Modal Add Campaign Blast -->
 <div class="modal fade bd-example-modal-lg" id="modalAddCampaignBlast" tabindex="-1" role="dialog" aria-labelledby="modalAddCampaignBlastmTitle" aria-hidden="true">
-  <?php echo form_open_multipart('booking/create_service_item', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+  <?php echo form_open_multipart('campaign_blast/save_blast', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -16,7 +16,7 @@
                 <div class="row margin-bottom">
                     <div class="col-sm-18 col-xl-12">
                         <label>Campaign Name</label>
-                        <input type="text" name="name" value="" class="form-control">
+                        <input type="text" name="name" value="" class="form-control" required="">
                     </div>
                 </div>
                 <hr>
@@ -29,7 +29,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label>Return to Name/Company</label>
-                                    <input type="text" name="postcard_return_address_name" value="" id="postcard_return_address_name" class="form-control" autocomplete="off">
+                                    <input type="text" name="postcard_return_address_name" value="" id="postcard_return_address_name" class="form-control" autocomplete="off" required="">
                                 </div>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label>Address</label> <span class="help help-sm">(type in to search for address)</span>
-                                    <input type="text" name="postcard_return_address_address" value="" id="postcard_return_address_address" class="form-control pac-target-input" autocomplete="off" placeholder="e.g. 123 Old Oak Drive">
+                                    <input type="text" required="" name="postcard_return_address_address" value="" id="postcard_return_address_address" class="form-control pac-target-input" autocomplete="off" placeholder="e.g. 123 Old Oak Drive">
                                     <input name="postcard_return_address_latlng" id="postcard_return_address_latlng" type="hidden" value="">
                                 </div>
                                 <div class="col-sm-12">
@@ -49,15 +49,15 @@
                         <div class="row">
                             <div class="col-sm-7">
                                 <label>City </label>
-                                <input type="text" name="postcard_return_address_city" value="" id="postcard_return_address_city" class="form-control" autocomplete="off">
+                                <input type="text" required="" name="postcard_return_address_city" value="" id="postcard_return_address_city" class="form-control" autocomplete="off">
                             </div>
                             <div class="col-sm-5">
                                 <label>Zip/Postal Code</label>
-                                <input type="text" name="postcard_return_address_zip" value="" id="postcard_return_address_zip" class="form-control" autocomplete="off">
+                                <input type="text" required="" name="postcard_return_address_zip" value="" id="postcard_return_address_zip" class="form-control" autocomplete="off">
                             </div>
                             <div class="col-sm-12">
                                 <label>State/Province</label>
-                                <select name="postcard_return_address_state" id="postcard_return_address_state" class="form-control">
+                                <select required="" name="postcard_return_address_state" id="postcard_return_address_state" class="form-control">
                                   <option value="" selected="selected">- select -</option>
                                   <option value="AK">Alaska</option>
                                   <option value="AL">Alabama</option>
@@ -119,7 +119,7 @@
             </div>
             <hr class="card-hr" >
             <button type="button" style="float: right;" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Add</button>            
+            <button type="submit" class="btn btn-primary">Save & Continue</button>            
         </form>     		
       </div>
       </div>
@@ -128,5 +128,29 @@
       </div>
     </div>
   </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Delete Campaign Blast --> 
+<div class="modal fade" id="modalDeleteCampaignBlast" tabindex="-1" role="dialog" aria-labelledby="modalDeleteCampaignBlastTitle" aria-hidden="true">
+    <?php echo form_open_multipart('campaign_blast/delete_blast', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <?php echo form_input(array('name' => 'tid', 'type' => 'hidden', 'value' => '', 'id' => 'tid'));?>
+     <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Campaign</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Delete selected campaign blast?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-danger">Yes</button>
+          </div>
+        </div>
+      </div>
   <?php echo form_close(); ?>
 </div>

@@ -188,9 +188,12 @@ $route['before-after/main'] = 'Before_after';
 $route['before-after/add_photo'] = 'Before_after/addPhoto';
 
 $route['offers'] = 'Offers';
-$route['campaign_blast'] = 'Campaign_Blast';
 $route['my_inquires'] = 'My_Inquires';
 $route['campaign'] = 'Campaign';
+
+$route['campaign_blast'] = 'Campaign_Blast';
+$route['campaign_blast/save_blast'] = 'Campaign_Blast/save_blast';
+$route['campaign_blast/delete_blast'] = 'Campaign_Blast/delete_blast';
 
 $route['register/subscribe'] = 'register/subscribe';
 
