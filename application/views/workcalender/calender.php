@@ -325,7 +325,7 @@ a.top-1 {
                                         }
                                     ?>
                                 </div>
-                                <div class="card-body col-12">
+                                <div class="card-body col-12" style="text-align: left;">
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <div class="stcs-2 left">
@@ -406,6 +406,7 @@ a.top-1 {
                                     </div>
                                     <div class="left-calendar-loading"></div>
                                     <div id='calendar'></div>
+                                    <a class="btn btn-primary btn-add-gcalendar" title="Add Calendar" href="javascript:void(0);" style="margin-top: 15px;"><i class="far fa-calendar-plus"></i> Add Calendar</a>
                                 </div>
                             </div>
                             <!-- end card -->
@@ -435,32 +436,54 @@ a.top-1 {
                     </ul>
                 </div> -->
                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header"><a class="btn-calendar-list" href="javascript:void(0);"><i class="fa fa-plus clist-icon icon-plus-cz"></i></a> <span class="pl-1">CALENDARS</span> <a class="btn btn-sm btn-info pull-right btn-add-gcalendar btn-gcustom sc-bottom-2 br-99" title="Add Calendar" href="javascript:void(0);"><i class="far fa-calendar-plus"></i></a></h4>
+                    <h4  class="right-filter-header"><a class="btn-calendar-list" href="javascript:void(0);"><i class="fa fa-plus clist-icon icon-plus-cz"></i></a> <span class="pl-1">CALENDARS</span></h4>
                     <div class="public-calendar-list" style="display: none;">
                     <?php if(!empty($calendar_list)){ ?>
-                      <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
+                      <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show</p>
                       <?php if(!empty($calendar_list)) { ?>
-                          <ul class="right-list-events">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th style="font-size: 12px;">Main</th>
+                                <th style="font-size: 12px;">Mini</th>
+                                <th style="font-size: 12px;">Calendar Name</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
                               <?php foreach($calendar_list as $calendar) { ?>
-                                      <?php
-                                          $is_checked = "";
-                                          if(!empty($enabled_calendar)) {
-                                            if(in_array($calendar['id'], $enabled_calendar)){
-                                                $is_checked = 'checked="checked"';
-                                            }
-                                          }
+                                <tr>
+                                    <?php
+                                        $is_checked = "";
+                                        $is_mini_checked = "";
 
-                                          $rowBgColor = '#38a4f8';
-                                          if( $calendar['backgroundColor'] != '' ){
-                                            $rowBgColor = $calendar['backgroundColor'];
+                                        if(!empty($enabled_calendar)) {
+                                          if(in_array($calendar['id'], $enabled_calendar)){
+                                              $is_checked = 'checked="checked"';
                                           }
-                                      ?>
-                                      <li style="background-color: <?php echo $rowBgColor; ?>">
-                                      	<label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label>
-                                      	<a class="btn btn-sm btn-info pull-right btn-add-gevent btn-gcustom top-1 br-99" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>"><i class="far fa-edit"></i></a>
-                                      </li>
-                              <?php } ?>
-                          </ul>
+                                        }
+
+                                        if(!empty($enabled_mini_calendar)) {
+                                          if(in_array($calendar['id'], $enabled_mini_calendar)){
+                                              $is_mini_checked = 'checked="checked"';
+                                          }
+                                        }
+
+                                        $rowBgColor = '#38a4f8';
+                                        if( $calendar['backgroundColor'] != '' ){
+                                          $rowBgColor = $calendar['backgroundColor'];
+                                        }
+                                    ?>
+                                    <td style="background-color: <?php echo $rowBgColor; ?>"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"></td>
+                                    <td style="background-color: <?php echo $rowBgColor; ?>"><input type="checkbox" class="chk-calendar-mini-entries" <?php echo $is_mini_checked; ?> data-id="<?php echo $calendar['id']; ?>"></td>
+                                    <td style="background-color: <?php echo $rowBgColor; ?>"><?php echo $calendar['summary']; ?></td>
+                                    <td style="background-color: <?php echo $rowBgColor; ?>">
+                                      <a class="btn btn-sm btn-info pull-right btn-add-gevent btn-gcustom top-1 br-99" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>"><i class="far fa-edit"></i></a>
+                                    </td>
+                              </tr>
+                            <?php } ?>
+                            </tbody>
+                          </table>
                       <?php } ?>
                     <?php }else{ ?>
                       <p style="font-size: 13px;text-align: left;">To enable mini calendar events filtering, bind your gmail account in <a style="color:#44a73c;" href="<?= base_url()?>settings/schedule">Calendar Settings</a></p>
@@ -888,7 +911,7 @@ a.top-1 {
             },
             loading: function (isLoading) {
               if (isLoading) {
-                  $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading Events...</div>');
+                  $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Events...</div>');
               }
               else {
                   $(".left-calendar-loading").html('');
@@ -1077,10 +1100,26 @@ a.top-1 {
            data: {cid:cid, show_calendar:show_calendar},
            success: function(o)
            {
-              load_calendar();
               var calendarEl = document.getElementById('calendar');
               var timeZoneSelectorEl = document.getElementById('time-zone-selector');
               render_calender(calendarEl, timeZoneSelectorEl);
+           }
+        });
+    });
+
+    $(".chk-calendar-mini-entries").change(function(){
+        var cid = $(this).attr("data-id");
+        var url = base_url + '/settings/_update_enabled_google_mini_calendar';
+
+        $('.chk-calendar-mini-entries').not(this).prop('checked', false);
+
+        $.ajax({
+           type: "POST",
+           url: url,
+           data: {cid:cid},
+           success: function(o)
+           {
+              load_calendar();              
            }
         });
     });
