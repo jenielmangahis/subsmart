@@ -5,6 +5,7 @@ class Esign_model extends MY_Model {
 
 	public $table = 'esign';
 	public $categoryTable = 'esign_library_category';
+	public $libraryTable = 'esign_library_template';
 
 	public function __construct()
 	{
@@ -22,13 +23,21 @@ class Esign_model extends MY_Model {
 	}
 
 	public function getLibraryCategory($userId = 0){
+		$whereClouser = "(isActive = 1 AND ( isDefault = 1 OR user_id = $userId ) )";
 		$this->db->select(['category_id','categoryName']);
 		$this->db->from($this->categoryTable);
-        $this->db->where('isActive', 1);
-        $this->db->where('isDefault', 1);
-        $this->db->or_where('user_id', $userId);
+        $this->db->where($whereClouser);
 		$query = $this->db->get();
         return $query->result_array();
+	}
+
+	public function getLibraryWithCategory($userId){
+		return $this->db->from($this->libraryTable . " AS LT")
+		->where('LT.user_id',$userId )
+		->where('LT.isActive',1 )
+		->join( $this->categoryTable. " AS CT", 'CT.category_id = LT.category_id')
+		->select('LT.esignLibraryTemplateId, LT.title, LT.isActive, CT.categoryName, LT.isFavorite')
+		->get()->result_array();
 	}
 
 }

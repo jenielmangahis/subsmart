@@ -1,6 +1,7 @@
 <head>
   <title><?= $form->forms_title?> | nSmarTrac Form</title>
   <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="<?php echo $url->assets ?>formbuilder/css/dynamic.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <style>

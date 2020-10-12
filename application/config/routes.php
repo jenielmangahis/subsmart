@@ -67,10 +67,10 @@ $route['services/(:any)?'] = 'service/$1';
 $route['services'] = 'service';
 
 // form builder pages - Gene
-$route['formbuilder'] = 'formbuilder';
-$route['formbuilder/create'] = 'formbuilder/create';
-$route['form/(:num)'] = 'formbuilder/view/$1';
-$route['formbuilder/edit/(:num)'] = 'formbuilder/edit/$1';
+$route['formbuilder'] = 'formBuilder';
+$route['formbuilder/create'] = 'formBuilder/create';
+$route['form/(:num)'] = 'formBuilder/view/$1';
+$route['formbuilder/edit/(:num)'] = 'formBuilder/edit/$1';
 
 // form builder functions - Gene
 $route['formbuilder/form/view/(:any)'] = 'formbuilder/getForms/$1';
@@ -188,9 +188,12 @@ $route['before-after/main'] = 'Before_after';
 $route['before-after/add_photo'] = 'Before_after/addPhoto';
 
 $route['offers'] = 'Offers';
-$route['campaign_blast'] = 'Campaign_Blast';
 $route['my_inquires'] = 'My_Inquires';
 $route['campaign'] = 'Campaign';
+
+$route['campaign_blast'] = 'Campaign_Blast';
+$route['campaign_blast/save_blast'] = 'Campaign_Blast/save_blast';
+$route['campaign_blast/delete_blast'] = 'Campaign_Blast/delete_blast';
 
 $route['register/subscribe'] = 'register/subscribe';
 
@@ -234,6 +237,7 @@ $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
 $route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicecharge';
+$route['accounting/reconcile/change/servicecharge'] = 'reconcile/update_servicecharge';
 $route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
@@ -286,6 +290,12 @@ $route['nsmart_plans/create_plan'] = 'Nsmart_Plans/create_plan';
 $route['nsmart_plans/edit_plan/(:any)'] = 'Nsmart_Plans/edit_plan/$1';
 $route['nsmart_plans/update_plan'] = 'Nsmart_Plans/update_plan';
 $route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
+
+$route['nsmart_addons/index'] = 'Nsmart_Addons/index';
+$route['nsmart_addons/add_new_addon'] = 'Nsmart_Addons/add_new_addon';
+$route['nsmart_addons/create_addon'] = 'Nsmart_Addons/create_addon';
+$route['nsmart_addons/edit_addon/(:any)'] = 'Nsmart_Addons/edit_addon/$1';
+$route['nsmart_addons/update_addon'] = 'Nsmart_Addons/update_addon';
 
 $route['plan_headings/index'] = 'Plan_Headings/index';
 $route['plan_headings/add_new_headings'] = 'Plan_Headings/add_new_headings';
@@ -344,6 +354,10 @@ $route['offers/save_draft_offer'] = 'Offers/create_draft_offer';
 $route['offers/add_offer_send_to'] = 'Offers/add_offer_send_to';
 $route['offers/save_offer_send_to_settings'] = 'Offers/save_offer_send_to_settings';
 $route['offers/build_email'] = 'Offers/build_email';
+$route['offers/save_offer_build_email'] = 'Offers/save_offer_build_email';
+$route['offers/email_preview'] = 'Offers/email_preview';
+$route['offers/edit_offer/(:num)'] = 'Offers/edit_offer/$1';
+$route['offers/update_draft_offer'] = 'Offers/update_draft_offer';
 
 //workcalendar
 $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';

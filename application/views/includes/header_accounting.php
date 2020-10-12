@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 
 <head>
     <meta charset="utf-8">
@@ -161,7 +161,7 @@
                                             }*/
                                             $image = base_url('uploads/users/default.png');
                                         ?>
-                                        <img src="<?php echo $image; ?>" alt="user" class="rounded-circle">
+                                        <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle">
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                         <a class="dropdown-item" href="<?php echo url('dashboard')?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>

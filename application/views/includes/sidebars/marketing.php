@@ -36,6 +36,7 @@
             }
         ?>
         <li class="submenus <?= $email_automation_active; ?>"><a href="<?php echo base_url('email_automation'); ?>" title="Email Automation"><span class="fa fa-cube"></span>Email Automation</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'promote/deals') ? "active" : "";  ?>"><a href="<?php echo base_url('promote/deals'); ?>" title="Deals and Steals"><span class="fa fa-money"></span>Deals and Steals</a></li>
 
         <li class="submenus <?= ($this->uri->uri_string() == 'campaign_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('campaign_automation'); ?>" title="Campaign Automation"><span class="fa fa-cube"></span>Campaign Automation</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'offers') ? "active" : "";  ?>"><a href="<?php echo base_url('offers'); ?>" title="Offers"><span class="fa fa-cube"></span>Offers</a></li>

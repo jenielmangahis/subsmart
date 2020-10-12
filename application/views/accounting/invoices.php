@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_accounting'); ?>
+<?php include viewPath('includes/header'); ?>
     <div class="wrapper" role="wrapper" >
         <!-- page wrapper start -->
            <div wrapper__section>

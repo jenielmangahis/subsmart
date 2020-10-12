@@ -246,7 +246,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step3 for creating email
-                    location.href = base_url + "/offers/build_email";
+                    location.href = base_url + "offers/build_email";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);

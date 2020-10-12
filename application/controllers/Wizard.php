@@ -15,6 +15,23 @@ class Wizard extends MY_Controller {
 		parent::__construct();
 		$this->load->model('Wizard_model', 'wizard_model');
 		$user_id = getLoggedUserID();
+
+		add_css(array(
+            'assets/wizard/css/style.css',
+            'assets/wizard/css/responsive.css',
+            'assets/wizard/css/slick-theme.min.css',
+            'assets/wizard/css/slick.min.css',
+        ));
+
+
+        // JS to add only Customer module
+        add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'assets/frontend/js/invoice/add.js',
+            'assets/js/invoice.js'
+        ));
 		
 	}
 

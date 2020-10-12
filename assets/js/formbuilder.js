@@ -269,6 +269,11 @@ const elementsList = [
     type: "star-matrix",
     category: 'matrix-items'
   },
+  {
+    id: 54,
+    type: "zone-information-table",
+    category: 'matrix-items'
+  },
 ]
 
 // =====================================
@@ -279,7 +284,7 @@ const elementsList = [
 
 
 // this function runs upon page load
-loadFormSettings = id => {
+loadFormSettings = (id) => {
   $.ajax({
     url: `${formBaseUrl}formbuilder/form/view/${id}`,
     dataType: 'json',
@@ -308,7 +313,10 @@ loadFormSettings = id => {
       document.querySelector('#txtSuccessTitle').value = res.data.forms_success_title
       document.querySelector('#txtSuccessMessage').value = res.data.forms_success_message
       document.querySelector('#chkSubmitAnotherResponse').checked = (res.data.forms_show_repeat_form_check == 1)? true : false
-      
+      document.querySelector('#fTFontFamily').value = res.data.forms_title_font_family
+      document.querySelector('#fTFontSize').value = res.data.forms_title_font_size
+      document.querySelector('#fLFontFamily').value = res.data.forms_label_font_family
+      document.querySelector('#fLFontSize').value = res.data.forms_label_font_size
       
       return;
     }
@@ -318,15 +326,23 @@ loadFormSettings = id => {
 
 loadFormElements = (id, mode = null) => {
   document.querySelector("#windowPreviewContent").innerHTML = "";
+  // const titlesFontFamily = document.getElementById("fTFontFamily").value;
+  // const titlesFontSize = document.getElementById('fTFontSize').value;
+  // const labelsFontFamily = document.getElementById('fLFontFamily').value;
+  // const labelsFontSize = document.getElementById('fLFontSize').value;
   $.ajax({
     url: `${formBaseUrl}formbuilder/form/element/get/${id}`,
     dataType: 'json',
     type: 'GET',
     success: function(res){
-      res.data.forEach(el => {
-        let elementType = el.fe_element_id;
-        var choices = []
-        
+      console.log(res)
+      const titlesFontFamily = res.form.forms_title_font_family || '';
+      const titlesFontSize = res.form.forms_title_font_size || '';
+      const labelsFontFamily = res.form.forms_label_font_family || '';
+      const labelsFontSize = res.form.forms_label_font_size || '';
+      res.form_elements.forEach(el => {
+        const elementType = el.fe_element_id;
+        let choices = []
         if(elementType == 1 || elementType == 2 || elementType == 3 || elementType >= 44 ){
           choices = JSON.parse($.ajax({
             url: `${formBaseUrl}formbuilder/form/element/choices/${el.fe_id}`,
@@ -379,7 +395,7 @@ loadFormElements = (id, mode = null) => {
                     <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                   </div>
                 </div>
-                <p class="form-user-elements mt-3 ">${el.fe_label}</p>
+                <p class="${titlesFontFamily} ${titlesFontSize}" class="form-user-elements mt-3 ">${el.fe_label}</p>
               </div>
             `:""}
 
@@ -465,11 +481,11 @@ loadFormElements = (id, mode = null) => {
   
               ${(elementType == 1)?`
                 <!-- Radio -->
-                <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                <label class="${titlesFontFamily} ${titlesFontSize}" for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 ${choices.map((choice,i) => `
                   <div class="form-check form-user-elements">
                     <input type="radio" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}-${i}" class="form-check-input" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="choice.fc_choice">
-                    <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
+                    <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
                   </div>
                 `).join("")}
                 
@@ -478,7 +494,7 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 2)?`
                 <!-- dropdown -->
                 <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}">${el.fe_label}</label>
+                  <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}">${el.fe_label}</label>
                   <select id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="custom-select" ${(el.fe_is_required == 1)?"required":""} >
                     ${choices.map(choice => `
                       <option>${choice.fc_choice}</option>
@@ -489,12 +505,12 @@ loadFormElements = (id, mode = null) => {
               
               ${(elementType == 3)?`
                 <!-- Checkbox -->
-                <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                <label class="${titlesFontFamily} ${titlesFontSize}" for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 ${(el.fe_span == 1)?`
                   ${choices.map((choice, i) => `
                     <div class="form-check form-user-elements">
                       <input type="checkbox" name="feinput-${el.fe_id}-chk-${i}" id="feinput-${el.fe_id}-chk" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
-                      <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
+                      <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
                     </div>
                     `).join("")}
                 `:`
@@ -502,7 +518,7 @@ loadFormElements = (id, mode = null) => {
                     ${choices.map((choice, i) => `
                       <div class="col text-left form-check form-check-inline ">
                         <input type="checkbox" name="feinput-${el.fe_id}-chk-${i}" id="feinput-${el.fe_id}-chk" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
-                        <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
+                        <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
                       </div>
                     `).join("")}
                   </div>
@@ -513,7 +529,7 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 6 || elementType == 4)?`
                 <!-- Short answer / Email -->
                 <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                   <input type="text" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
                 </div>
               `:""}
@@ -521,7 +537,7 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 5 || elementType == 10)?`
                 <!-- Long answer / Email List -->
                 <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                   <textarea name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"></textarea>
                 </div>
               `:""}
@@ -529,7 +545,7 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 7)?`
                 <!-- Date -->
                 <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}-date"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}-date"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                   <input type="date" name="feinput-${el.fe_id}-date" id="feinput-${el.fe_id}-date" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"/>
                 </div>
               `:""}
@@ -537,7 +553,7 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 8)?`
                 <!-- Number -->
                 <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                   <input type="number" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
                 </div>
               `:""} 
@@ -546,7 +562,7 @@ loadFormElements = (id, mode = null) => {
                 <!-- fix this part -->
                 <!-- File Upload-->
                 <div class="form-group form-user-elements">
-                  <label for="${el.fe_id}">${el.fe_label}</label>
+                  <label class="${labelsFontFamily} ${labelsFontSize}" for="${el.fe_id}">${el.fe_label}</label>
                   <input type="file" name="feinput-${el.fe_id}" ${(el.fe_is_required == 1)?"required":""}  id="feinput-${el.fe_id}" >
                 </div>
               `:""}
@@ -562,7 +578,7 @@ loadFormElements = (id, mode = null) => {
                     </div>
                   </div>
 
-                    <label for="${el.fe_id}">${el.fe_label}</label>
+                    <label class="${labelsFontFamily} ${labelsFontSize}" for="${el.fe_id}">${el.fe_label}</label>
                     <canvas id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="border" width="${(el.fe_span == 5)?"170":""} ${(el.fe_span == 1)?"260":""}  ${(el.fe_span == 6)?"330":""} ${(el.fe_span == 2)?"530":""}  ${(el.fe_span == 3)?"720":""} ${(el.fe_span == 4)?"1050":""} " height="150" ></canvas>
                     <button type="button" class="btn btn-sm btn-secondary" onclick="clearCanvas(${el.fe_id})">clear</button>
                     
@@ -619,14 +635,14 @@ loadFormElements = (id, mode = null) => {
                   `
                 }
                 <div class="container-fluid ">
-                  <p>${el.fe_label}</p>
+                  <p class="${titlesFontFamily} ${titlesFontFamily}">${el.fe_label}</p>
                   <table class="table form-user-elements" id="table-${el.fe_id}">
                     <thead>
                         <tr>
-                            <th class="text-left">Product</th>
-                            <th class="text-left">Quantity</th>
-                            <th class="text-left">Price (Tax: +7.5%)</th>
-                            <th class="text-right">Total</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Product</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Quantity</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Price (Tax: +7.5%)</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-right">Total</th>
                         </tr>
                     </thead>
                     <tbody id="table-product-list-${el.fe_id}"></tbody>
@@ -724,6 +740,37 @@ loadFormElements = (id, mode = null) => {
                 </table>
                 
               `:""}
+
+              ${(elementType == 53)?`
+              <!-- Zone Information Table -->
+              <div class="bg-lgray p-2">
+                <table class="table table-hover form-user-elements">
+                <p class="${titlesFontFamily} ${titlesFontSize}">${el.fe_label}</p>
+                  <thead>
+                    <tr>
+                      <th class="text-center ${labelsFontFamily} font-weight-bold" style="width: 10%">Entry/Exit</th>
+                      <th class="text-center ${labelsFontFamily} font-weight-bold" style="width: 10%">Zn #</th>
+                      <th class="text-center ${labelsFontFamily} font-weight-bold" style="width: 10%">Verified</th>
+                      <th class="text-center ${labelsFontFamily} font-weight-bold" style="width: 70%">Location</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      ${choices.map((choice, rowIndex) => 
+                        `<tr>
+                          ${(choice.fc_column == null)?`
+                            <td class="p-2 text-center"><input type="checkbox" id="entryExitChk-${rowIndex}" name="entryExitChk-${rowIndex}" value="entryExitChk-${rowIndex}">
+                            <td class="p-2 text-center">${rowIndex + 1}</td>
+                            <td class="p-2 text-center"><input type="checkbox" id="verified-${rowIndex}" name="verified-${rowIndex}" value="verified-${rowIndex}">
+                            <td class="p-2"><input class="form-control bg-whitesmoke" type="text" id="location-${rowIndex}" name="location-${rowIndex}">
+                          `:""}
+                        </tr>`
+                      ).join('')}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `:""}
   
               
             </div>

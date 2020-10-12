@@ -315,6 +315,17 @@ class Reconcile extends MY_Controller {
         }*/
     }
 
+    public function update_servicecharge()
+    {
+        $id=$this->input->post('id');
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $expense_account_sub=$this->input->post('expense_account_sub');
+        $service_charge_sub=$this->input->post('service_charge_sub');
+        $descp_sc_sub=$this->input->post('descp_sc_sub');
+        $this->reconcile_model->update_service($id,$expense_account_sub,$service_charge_sub,$descp_sc_sub);
+    }
+
     public function update_sc()
     {
         $reconcile_id=$this->input->post('reconcile_id');

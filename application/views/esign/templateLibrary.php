@@ -31,6 +31,12 @@ legend {
   padding: 5px 10px;
 }
 
+.notFavorite { 
+    color: #5f5f5f
+}
+.favorite {
+    color : tomato;
+}
 input {
   margin: 5px;
 }
@@ -151,11 +157,16 @@ input {
     <section class="main-wrapper" id="custome-fileup" style="background: white;padding-bottom: 15px;">
         <br>
         <div class="container">
+            <div class="row">
+                <a href="<?=base_url('esign/createTemplate')?>" class="btn btn-info">Add New Letter</a>            
+            </div>
             <table id="myTable" class="display">
                 <thead>
                     <tr>
                         <th>Title</th>
                         <th>Status</th>
+                        <th>Category</th>
+                        <th>Favorite</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -164,6 +175,12 @@ input {
                         <tr>
                             <td><a href="<?=base_url('esign/editTemplate?id='.$template['esignLibraryTemplateId'])?>"><?=$template['title']?></a></td>
                             <td><?=$template['isActive'] ? "Active" : "InActive"?></td>
+                            <td><?=$template['categoryName']?></td>
+                            <td>
+                                <a href="#" class="changeFavorite">
+                                    <i id="<?=$template['esignLibraryTemplateId']?>" class="fa fa-heart <?=$template['isFavorite'] ? 'favorite' : 'notFavorite'?> "></i>
+                                </a>
+                            </td>
                             <td>
                                 <a href="<?=base_url('esign/editTemplate?id='.$template['esignLibraryTemplateId'])?>"><i class="fa fa-edit"></i></a>
                             </td>
@@ -178,10 +195,23 @@ input {
         $(document).ready(function() {
             $('#myTable').DataTable({
                 columnDefs: [
-                  { orderable: false, targets: -1 }
+                  { orderable: false, targets: -1 },
+                  { orderable: false, targets: -2 }
                 ]
             });
+            $('.changeFavorite').click(function(){
+                let clickedObj = $(this).children();
+                if(clickedObj.hasClass("favorite")){
+                    console.log("we are removing from favorite : ",clickedObj.attr('id'));
+                    clickedObj.toggleClass('favorite notFavorite');
+                }else{
+                    console.log("we are adding favorite : ",clickedObj.attr('id'));
+                    clickedObj.toggleClass('notFavorite favorite');
+                }
+
+            })
         });
+
     </script>
 </body>
 </html>

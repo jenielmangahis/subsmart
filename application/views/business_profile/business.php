@@ -99,13 +99,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</div>
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
-								<h3 class="profile-subtitle">Deals <a class="a-alert a-edit" href="#"><span class="fa fa-edit"></span> edit</a></h3>
+								<h3 class="profile-subtitle">Deals <a class="a-alert a-edit" href="<?php echo base_url('promote/deals'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
 								<p class="profile-content-margin">No deals at this moment.</p>
 							</div>
 						</div>
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
-								<h3 class="profile-subtitle">Portfolio <a class="a-alert a-edit" href="#"><span class="fa fa-edit"></span> edit</a></h3>
+								<h3 class="profile-subtitle">Portfolio <a class="a-alert a-edit" href="<?php echo base_url('users/portfolio'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
 								<p class="profile-content-margin">No photos have been added yet.</p>
 							</div>
 						</div>
@@ -117,7 +117,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</div>
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
-								<h3 class="profile-subtitle">Business Tags <a class="a-alert a-edit" href="3"><span class="fa fa-edit"></span> edit</a></h3>
+								<h3 class="profile-subtitle">Business Tags <a class="a-alert a-edit" href="<?php echo base_url('users/profilesetting'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
 								<p class="profile-content-margin"></p>
 							</div>
 						</div>
@@ -133,41 +133,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<a class="a-alert a-edit" href="<?php echo url('users/businessdetail') ?>"><span class="fa fa-edit"></span> edit</a>
 							<div class="margin-bottom-sec">
 								<span class="side-title">Business Phone</span><br>
-								<?php //echo $profiledata->b_phone ?>
+								<?php echo $profiledata->business_phone ?>
 							</div>
 							<div class="phone-emergency">
 								<span class="side-title">24/7 Emergency</span><br>
-								<?php //echo $profiledata->phone_emergency ?>
+								<?php echo $profiledata->phone_emergency ?>
 							</div>
 						</div>
 						<div class="margin-bottom-ter">
 							<div class="margin-bottom-sec">
 								<span class="side-title">Contact Name</span><br>
-								<?php 
-                               /*$id = $profiledata->user_id;
-                               $query = $this->db->query("Select name from users where id = $id");
-                               $query11 = $query->row();*/                             
-                            ?>
-                            <?php //echo ucfirst($query11->name);?>
+                            <?php echo ucfirst($profiledata->contact_name);?>
 							</div>
-							<span class="side-title"><?php //echo $profiledata->b_name; ?></span><br>
-							<?php //echo $profiledata->address ?>, <br>
-							<?php //echo $profiledata->city ?>,  <?php //echo $profiledata->state ?> <?php //echo $profiledata->zip ?>, <br>
+							<span class="side-title"><?php echo $profiledata->business_name; ?></span><br>
+							<?php echo $profiledata->address ?>, <br>
+							<?php echo $profiledata->city ?>,  <?php echo $profiledata->state ?> <?php echo $profiledata->zip ?>, <br>
 							United States<br>
 							<div class="side-title margin-top-sec">Website</div>
-							<a class="a-default" href="<?php echo ($profiledata) ? $profiledata->website : ''; ?>" target="_blank"><?php //echo $profiledata->website ?></a><br>
+							<a class="a-default" href="<?php echo ($profiledata) ? $profiledata->website : ''; ?>" target="_blank"><?php echo $profiledata->website ?></a><br>
 						</div>
 						<div class="margin-bottom">
 							<div class="side-title">Quick Facts</div>
 							<ul class="side-facts">
-								<li>Business since <?php //echo $profiledata->year_est ?></li>
-								<li><?php //echo $profiledata->employee_count ?> employees</li>
+								<li>Business since <?php echo $profiledata->year_est ?></li>
+								<li><?php echo $profiledata->employee_count ?> employees</li>
 								<li>Works with other businesses or sub-contractors</li>
 							</ul>
 						</div>
 						<hr>
 						<div class="margin-bottom" style="position: relative">
-							<a class="a-alert a-edit" href="#"><span class="fa fa-edit"></span> edit</a>
+							<a class="a-alert a-edit" href="<?php echo url('users/availability'); ?>"><span class="fa fa-edit"></span> edit</a>
 							<div class="side-title">Availability</div>
 							Working Days<br>
 							<div class="margin-bottom-sec text-ter">Mon - Fri</div>
@@ -217,6 +212,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					Accepted files type: gif, jpg, png
 					</span>
 				</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+				<div class="clearfix">
+					<label>Business Short Description</label><span class="help help-sm help-bold pull-right">characters left: <span data-char="counter" data-char-max="2000">1962</span></span>
+				</div>
+				<div class="help help-block help-sm">Give customers more details on what your business actually does. Describe your company's values and goals. Minimum 25 characters.</div>
+				<textarea name="business_desc" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
+				<span class="validation-error-field" data-formerrors-for-name="about" data-formerrors-message="true" style="display: none;"></span>
 				</div>
 			</div>
 		</div>

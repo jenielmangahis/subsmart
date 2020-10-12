@@ -95,9 +95,9 @@ class Esign extends MY_Controller {
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
 	public function templateLibrary(){
+		$this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
-		$getTemplates = $this->db->from('esign_library_template')->where('user_id',$loggedInUser )->select('esignLibraryTemplateId, title, isActive')->get();
-		$this->page_data['templates'] = $getTemplates->result_array();
+		$this->page_data['templates'] = $this->Esign_model->getLibraryWithCategory($loggedInUser);
 		$this->load->view('esign/templateLibrary', $this->page_data);
 	}
 	public function editTemplate(){
@@ -108,7 +108,7 @@ class Esign extends MY_Controller {
 		if(!isset($queryParams['id'])){
 			redirect('esign/esignmain');
 		}
-		$getTemplate = $this->db->from('esign_library_template')->where('user_id',$loggedInUser)->where('esignLibraryTemplateId',$queryParams['id'])->get();
+		$getTemplate = $this->db->from('esign_library_template')->where('user_id',$loggedInUser)->where('isActive',1)->where('esignLibraryTemplateId',$queryParams['id'])->get();
 		
 		if(!$getTemplate->num_rows()){
 			redirect('esign/esignmain');
@@ -125,7 +125,7 @@ class Esign extends MY_Controller {
 		$data = [
 			'title' => $letterTitle,
 			'content' => $template,
-			'isActive' => $status,
+			'status' => $status,
 			'user_id' => $loggedInUser,
 			'category_id' => $category_id
 		];

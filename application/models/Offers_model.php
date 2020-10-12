@@ -6,8 +6,8 @@ class Offers_model extends MY_Model
     public $table = 'offers';
     public $status_draft   = 1;
     public $status_active = 2;
-    public $discount_inactive = 3;
-    public $discount_ended   = 4;
+    public $status_inactive = 3;
+    public $status_ended   = 4;
 
     public function getAll($filters=array())
     {
@@ -46,6 +46,59 @@ class Offers_model extends MY_Model
         return $query->result();
     }
     
+    public function getAllActive($filters=array())
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('title', $filters['search'], 'both');
+            }
+        }
+        $this->db->where('status', $this->status_active);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllInactive($filters=array())
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('title', $filters['search'], 'both');
+            }
+        }
+        $this->db->where('status', $this->status_inactive);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllEnded($filters=array())
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('title', $filters['search'], 'both');
+            }
+        }
+        $this->db->where('status', $this->status_ended);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getById($id)
     {

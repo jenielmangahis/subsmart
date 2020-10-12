@@ -170,7 +170,7 @@ input {
                     <label for="category">Category : </label>
                     <select name="category_id" id="category" class="dropdown">
                         <?php foreach($categories as $category){ ?>
-                            <option <?=isset($template) && $template->category_id ? "selected" : "" ?> value="<?=$category['category_id']?>"><?=$category['categoryName']?></option>
+                            <option <?=isset($template) && $template->category_id ==  $category['category_id'] ? "selected" : "" ?> value="<?=$category['category_id']?>"><?=$category['categoryName']?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -178,12 +178,12 @@ input {
                     <label for="">Status : </label>
                     <div class="form-check-inline">
                         <label class="form-check-label" for="radio1">
-                            <input <?=isset($template) && $template->isActive ? "checked" : "" ?> type="radio" class="form-check-input" id="radio1" name="status" value="1" checked>Active
+                            <input <?=isset($template) && $template->status ? "checked" : "" ?> type="radio" class="form-check-input" id="radio1" name="status" value="1" checked>Active
                         </label>
                     </div>
                     <div class="form-check-inline">
                         <label class="form-check-label" for="radio2">
-                            <input <?=isset($template) && !$template->isActive ? "checked" : "" ?> type="radio" class="form-check-input" id="radio2" name="status" value="0">In Active
+                            <input <?=isset($template) && !$template->status ? "checked" : "" ?> type="radio" class="form-check-input" id="radio2" name="status" value="0">In Active
                         </label>
                     </div>
                 </div>

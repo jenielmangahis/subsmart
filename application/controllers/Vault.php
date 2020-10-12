@@ -539,7 +539,8 @@ class Vault extends MY_Controller {
 		}
 
 		if(empty($return['error'])){
-			$return['permissions'] = getUserFileVaultPermissions();
+			$return['cu_user_permissions'] = $this->getUserPermissions($uid, true);
+			$return['cu_role_permissions'] = $this->getRolePermissions($role_id, true);
 		}
 
 		echo json_encode($return);

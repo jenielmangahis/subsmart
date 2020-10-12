@@ -9,7 +9,6 @@
 <!-- jQuery  -->
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/jquery-initialize/jquery.initialize.min.js"></script>
-<script src="<?php echo $url->assets ?>js/custom.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/waves.min.js"></script>
@@ -21,6 +20,7 @@
 <script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js"></script>
@@ -51,7 +51,7 @@
 	?>
 </script>
 <script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
-<script src="<?php echo $url->assets;?>js/accounting/sweetalert2@9.js"></script>
+<script src="<?php echo $url->assets;?>plugins/sweetalert/sweetalert2@10.js"></script>
 
 <?php echo put_footer_assets(); ?>
 
@@ -64,6 +64,7 @@
 <!-- <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
 <script src="<?php echo $url->assets ?>js/sign2.js"></script> -->
 <script src="<?php echo $url->assets ?>js/sidebar_badges.js"></script>
+<script src="<?php echo $url->assets ?>js/custom.js"></script>
 <script>
     jQuery(document).ready(function () {
         jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});

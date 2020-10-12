@@ -62,7 +62,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <th>Status</th>                            
                           </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                          <?php if($offers_active_list){ foreach($offers_active_list as $active){ ?>
+                              <tr class="">
+                                <td><a href="<?php echo url('offers/edit_offer/'.$active->id) ?>"><?php echo $active->title; ?></a></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>Draft</td>
+                              </tr> 
+                            <?php } } ?>   
+                        </tbody>
                       </table>
 
                     </div>
@@ -78,7 +88,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <th>Status</th>                            
                           </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                          <?php if($offers_inactive_list){ foreach($offers_inactive_list as $inactive){ ?>
+                              <tr class="">
+                                <td><a href="<?php echo url('offers/edit_offer/'.$inactive->id) ?>"><?php echo $inactive->title; ?></a></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>Draft</td>
+                              </tr> 
+                            <?php } } ?>   
+                        </tbody>
                       </table>
 
                     </div>
@@ -94,7 +114,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <th>Status</th>                                 
                           </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                          <?php if($offers_ended_list){ foreach($offers_ended_list as $ended){ ?>
+                              <tr class="">
+                                <td><a href="<?php echo url('offers/edit_offer/'.$ended->id) ?>"><?php echo $ended->title; ?></a></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>Draft</td>
+                              </tr> 
+                            <?php } } ?>   
+                        </tbody>
                       </table>
 
                     </div>
@@ -113,7 +143,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <tbody>
                             <?php if($offers_draft_list){ foreach($offers_draft_list as $draft){ ?>
                               <tr class="">
-                                <td><?php echo $draft->title; ?></td>
+                                <td><a href="<?php echo url('offers/edit_offer/'.$draft->id) ?>"><?php echo $draft->title; ?></a></td>
                                 <td>0</td>
                                 <td>0</td>
                                 <td>0</td>

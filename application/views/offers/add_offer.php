@@ -128,7 +128,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "/offers/add_offer_send_to";
+                    location.href = base_url + "offers/add_offer_send_to";
                     //alert('saved');
                 }else{
                     $(".validation-error").show();

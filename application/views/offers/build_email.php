@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Subject</label>
-                                    <input type="text" class="form-control" name="title" id="" required placeholder="" autofocus/>
+                                    <input type="text" class="form-control" name="subject" id="subject" required placeholder="" autofocus/>
                                 </div>
                                 <div class="col-md-12 form-group">
                                   <label>Email Body</label> <span class="help"></span>
@@ -81,8 +81,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-offer-save-draft">Save as Draft</button>
-                                    <a href="<?php echo url('offers') ?>">cancel this</a>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-offer-save-draft">Continue</button>
+                                    <a href="<?php echo url('offers/add_offer_send_to') ?>">Back</a>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $("#create_offer").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'offers/save_draft_offer';
+        var url = base_url + 'offers/save_offer_build_email';
         $(".btn-offer-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
         setTimeout(function () {
           $.ajax({
@@ -118,7 +118,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "/offers/add_offer_send_to";
+                    location.href = base_url + "offers/email_preview";
                     //alert('saved');
                 }else{
                     $(".validation-error").show();

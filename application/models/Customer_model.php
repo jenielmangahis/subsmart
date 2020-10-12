@@ -16,7 +16,7 @@ class Customer_model extends MY_Model
         if ($role == 2 || $role == 3) {
 
             $company_id = logged('company_id');
-
+            
             return $this->getAllByCompany($company_id);
 
         } else {

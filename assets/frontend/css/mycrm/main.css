@@ -1,0 +1,57 @@
+/* plan-option-box */ 
+.plan-option-box {
+    margin-bottom: 30px;
+}
+.plan-option-box .plan-option-box-header {
+   display: block;
+   background: #596e7f;
+   color: #fff; 
+   border-radius: 2px 2px 0 0;
+   text-align: center;
+   text-transform: uppercase;
+   font-size: 12px;
+   font-weight: 600;	
+}
+.plan-option-box .plan-option-box-cnt {
+   border: 1px solid #dfdfdf;
+   background: #fff;
+   border-top: none;
+   padding: 10px 5px;
+   text-align: center;
+}
+.plan-option-box .plan-option-box-cnt .plan-option-box-value {
+   display: block;
+   font-size: 28px;
+   padding: 10px 0;
+}
+.plan-option-box .plan-option-box-cnt .plan-option-box-name {
+   display: block;
+   color: #888;	
+   font-size: 14px;
+}
+.plan-option-box .plan-option-box-header.better {
+   background: #2ab363;	
+}
+
+.spacer-vertical {
+   width: 1px;
+   background: #dfdfdf;
+   height: 360px;
+   margin-left: 50%;
+}
+
+/* plan-items */
+.plan-items {
+   list-style: none;
+   margin: 0 0 30px 0;
+   padding: 0;	
+}
+.plan-items > li {
+   margin-bottom: 10px;
+}
+
+/* plan */
+.plan {
+   background: #f2f2f2 none repeat scroll 0 0;
+   padding: 30px;
+}

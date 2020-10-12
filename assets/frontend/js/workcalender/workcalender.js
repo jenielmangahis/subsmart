@@ -529,7 +529,7 @@ function formatRepoUser (repo) {
 
     console.log(repo);
     if (repo) {
-      return repo.name;
+      return repo.FName + ' ' + repo.LName;
     }
   
     var $container = $(
@@ -549,5 +549,5 @@ function formatRepoUser (repo) {
 
 function formatRepoSelectionUser (repo) {
       console.log(repo);
-    return repo.name || repo.text;
+    return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
 }
