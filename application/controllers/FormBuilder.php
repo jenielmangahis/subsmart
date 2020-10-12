@@ -112,10 +112,11 @@ class FormBuilder extends MY_Controller {
 		
 		$data =  array(
 			"status" => 1,
-			"data" => $this->formsbuilder_model->getFormElements($form_id, $element_id)
+			"form_elements" => $this->formsbuilder_model->getFormElements($form_id, $element_id),
+			"form"	=> $this->formsbuilder_model->getForms($form_id),
 		);
-		if(is_array($data['data'])){
-			usort($data['data'], function($a, $b){
+		if(is_array($data['form_elements'])){
+			usort($data['form_elements'], function($a, $b){
 				return ($a->fe_order > $b->fe_order);
 			});
 		}

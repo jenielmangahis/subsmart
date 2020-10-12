@@ -141,7 +141,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="employeeTable" class="table table-bordered table-striped">
+                                    <table id="employeeTable" data-page-length='25' class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
                                             <th>ID</th>
@@ -354,8 +354,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="help help-sm help-block">Select employee role</div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="2" id="role_2">
-                                        <label for="role_2"><span>Office Manager</span></label>
+                                        <input type="radio" name="role" value="1" id="role_1">
+                                        <label for="role_1"><span>Office Manager</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
                                         ALL except high security file vault<br>
@@ -363,11 +363,47 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="3" id="role_3">
-                                        <label for="role_3"><span>Partner</span></label>
+                                        <input type="radio" name="role" value="2" id="role_2">
+                                        <label for="role_2"><span>Partner</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
                                         ALL base on plan type
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="role" value="3" id="role_3">
+                                        <label for="role_3"><span>Team Leader</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        No accounting or any changes to company profile or deletion
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="role" value="4" id="role_4">
+                                        <label for="role_4"><span>Standard User</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        Can not add or delete employees, can not manage subscriptions
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="role" value="5" id="role_5">
+                                        <label for="role_5"><span>Field Sales</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        View only no input 
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="role" value="6" id="role_6">
+                                        <label for="role_6"><span>Field Tech</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        App access only, no Web access 
                                     </div>
                                 </div>
                             </div>

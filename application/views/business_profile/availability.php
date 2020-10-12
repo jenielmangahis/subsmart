@@ -13,108 +13,204 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <form id="form-business-credentials" method="post" action="#">
                 <div class="validation-error" style="display: none;"></div>
                 <div class="card">
+                    <h1>Availability</h1>
 
-<h1>Availability</h1>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                    <form id="form-business-availability" method="post" action="#">
+                    <div class="validation-error" style="display: none;"></div>
 
-<div class="row">
-    <div class="col-md-12 col-lg-12"><form id="form-business-availability" method="post" action="#">
-    <div class="validation-error" style="display: none;"></div>
-
-    <div class="card">
-        <h3>Working Days</h3>
-        <p>Your working days will appear on your public profile.</p>
-        <ul class="wd-weekday clearfix">
-                        <li>
-                <div class="checkbox checkbox-sec checkbox-border">
-                    <input type="checkbox" name="weekday[0]" value="1" checked="checked" id="weekday_0">
-                    <label for="weekday_0"><span>Mon</span></label>
-                </div>
-            </li>
-                        <li>
-                <div class="checkbox checkbox-sec checkbox-border">
-                    <input type="checkbox" name="weekday[1]" value="1" checked="checked" id="weekday_1">
-                    <label for="weekday_1"><span>Tue</span></label>
-                </div>
-            </li>
-                        <li>
-                <div class="checkbox checkbox-sec checkbox-border">
-                    <input type="checkbox" name="weekday[2]" value="1" checked="checked" id="weekday_2">
-                    <label for="weekday_2"><span>Wed</span></label>
-                </div>
-            </li>
-                        <li>
-                <div class="checkbox checkbox-sec checkbox-border">
-                    <input type="checkbox" name="weekday[3]" value="1" checked="checked" id="weekday_3">
-                    <label for="weekday_3"><span>Thu</span></label>
-                </div>
-            </li>
-                        <li>
-                <div class="checkbox checkbox-sec checkbox-border">
-                    <input type="checkbox" name="weekday[4]" value="1" checked="checked" id="weekday_4">
-                    <label for="weekday_4"><span>Fri</span></label>
-                </div>
-            </li>
-                        <li>
-                <div class="checkbox checkbox-sec checkbox-border">
-                    <input type="checkbox" name="weekday[5]" value="1" id="weekday_5">
-                    <label for="weekday_5"><span>Sat</span></label>
-                </div>
-            </li>
-                        <li>
-                <div class="checkbox checkbox-sec checkbox-border">
-                    <input type="checkbox" name="weekday[6]" value="1" id="weekday_6">
-                    <label for="weekday_6"><span>Sun</span></label>
-                </div>
-            </li>
-                    </ul>
-    </div>
-
-    <hr class="card-hr">
-
-    <div class="card">
-        <h3>Time Off / Unavailability</h3>
-        <p>Please set your unavailable timings and time-off.</p>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-4 times-availability">
-                    <label>Time Off From</label>
-                    <div class="input-group">
-                       <input type="text" name="timeoff_from" value="" class="form-control hasDatepicker" id="timeoff_from">
-                       	<div class="input-group-addon calendar-button" data-for="timeoff_from">
-                            <span class="fa fa-calendar"></span>
+                    <div class="card">
+                        <h3>Working Days</h3>
+                        <p>Your working days will appear on your public profile.</p>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <h4>Hours</h4>
+                            </div>
+                            <div class="col-md-10">
+                            <div class="row">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                                    <label class="form-check-label" for="exampleRadios1">
+                                        Open on selected hours
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" checked>
+                                    <label class="form-check-label" for="exampleRadios2">
+                                        Always Open
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" checked>
+                                    <label class="form-check-label" for="exampleRadios3">
+                                        No hours available
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="option4" checked>
+                                    <label class="form-check-label" for="exampleRadios4">
+                                        Permanently closed
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-md-2 checkbox checkbox-sec">
+                                    <input type="checkbox" name="weekday[0]" value="1" checked="checked" id="weekday_0">
+                                    <label for="weekday_0"><span>Monday</span></label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="monHoursFromAvail" id="monHoursFromAvail" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="monHoursToAvail" id="monHoursToAvail" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-md-2 checkbox checkbox-sec">
+                                    <input type="checkbox" name="weekday[1]" value="2" checked="checked" id="weekday_1">
+                                    <label for="weekday_1"><span>Tuesday</span></label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="tueHoursFromAvail" id="tueHoursFromAvail" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="tueHoursToAvail" id="tueHoursToAvail" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-md-2 checkbox checkbox-sec">
+                                    <input type="checkbox" name="weekday[2]" value="3" checked="checked" id="weekday_2">
+                                    <label for="weekday_2"><span>Wednesday</span></label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="wedHoursFromAvail" id="wedHoursFromAvail" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="wedHoursToAvail" id="wedHoursToAvail" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-md-2 checkbox checkbox-sec">
+                                    <input type="checkbox" name="weekday[3]" value="4" checked="checked" id="weekday_3">
+                                    <label for="weekday_3"><span>Thursday</span></label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="thuHoursFromAvail" id="thuHoursFromAvail" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="thuHoursToAvail" id="thuHoursToAvail" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-md-2 checkbox checkbox-sec">
+                                    <input type="checkbox" name="weekday[4]" value="5" checked="checked" id="weekday_4">
+                                    <label for="weekday_4"><span>Friday</span></label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="friHoursFromAvail" id="friHoursFromAvail" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="friHoursToAvail" id="friHoursToAvail" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-md-2 checkbox checkbox-sec">
+                                    <input type="checkbox" name="weekday[5]" value="6" checked="checked" id="weekday_5">
+                                    <label for="weekday_5"><span>Saturday</span></label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="satHoursFromAvail" id="satHoursFromAvail" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="satHoursToAvail" id="satHoursToAvail" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-md-2 checkbox checkbox-sec">
+                                    <input type="checkbox" name="weekday[6]" value="7" checked="checked" id="weekday_6">
+                                    <label for="weekday_6"><span>Sunday</span></label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="sunHoursFromAvail" id="sunHoursFromAvail" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="button" type="text" name="sunHoursToAvail" id="sunHoursToAvail" class="form-control">
+                                </div>
+                            </div>
+                            </div>
                         </div>
                     </div>
-                    <span class="validation-error-field" data-formerrors-for-name="timeoff_from" data-formerrors-message="true" style="display: none;"></span>
-                </div>
-                <div class="col-lg-4 times-availability">
-                    <label>Time Off To</label>
-                    <div class="input-group">
-                        <input type="text" name="timeoff_to" value="" class="form-control hasDatepicker" id="timeoff_to">
-                        <div class="input-group-addon calendar-button" data-for="timeoff_to">
-                            <span class="fa fa-calendar"></span>
+                    <hr class="card-hr">
+
+                    <div class="card">
+                        <h3>Time Off / Unavailability</h3>
+                        <p>Please set your unavailable timings and time-off.</p>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-4 times-availability">
+                                    <label>Time Off From</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="timeoff_from" id="timeoff_from" class="form-control">
+                                        <div class="input-group-append" data-for="timeoff_from">
+                                            <span class="input-group-text"><span class="fa fa-clock"></span></span>
+                                        </div>
+                                    </div>
+                                    <span class="validation-error-field" data-formerrors-for-name="timeoff_from" data-formerrors-message="true" style="display: none;"></span>
+                                </div>
+                                <div class="col-lg-4 times-availability">
+                                    <label>Time Off To</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="timeoff_to" id="timeoff_to" class="form-control">
+                                        <div class="input-group-append" data-for="timeoff_to">
+                                            <span class="input-group-text"><span class="fa fa-clock"></span></span>
+                                        </div>
+                                    </div>
+                                    <span class="validation-error-field" data-formerrors-for-name="timeoff_to" data-formerrors-message="true" style="display: none;"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <span class="validation-error-field" data-formerrors-for-name="timeoff_to" data-formerrors-message="true" style="display: none;"></span>
+
+                    <hr class="card-hr">
+                    <div class="card">
+                        <div class="row">
+                        <div class="col-md-8">
+                            <button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a class="btn btn-default btn-lg" href="credentials">« Back</a>
+                            <a href="workpictures" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
+                        </div>
+                    </div>
                 </div>
+            </form>
             </div>
         </div>
-    </div>
-
-    <hr class="card-hr">
-<div class="card">
-    <div class="row">
-    	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
-    		    	</div>
-    	<div class="col-md-4 text-right">
-    		    		<a class="btn btn-default btn-lg" href="credentials">« Back</a>
-    		    		    		<a href="workpictures" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-    		    	</div>
-    </div>
-</div>
-</form>
-    </div>
-</div>
     </div>
             </div>
          </div>

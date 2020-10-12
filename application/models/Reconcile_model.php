@@ -145,12 +145,17 @@ class Reconcile_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
+	public function update_service($id,$expense_account_sub,$service_charge_sub,$descp_sc_sub)
+	{
+		$query="update accounting_reconcile_has_servicecharge set expense_account_sub = '$expense_account_sub',service_charge_sub = '$service_charge_sub',descp_sc_sub = '$descp_sc_sub' where id = '$id'";
+		echo $this->db->query($query);
+	}
+
 	public function select_service($id)
 	{
 		$this->db->from('accounting_reconcile_has_servicecharge');  
 		$this->db->where('chart_of_accounts_id',$id);
 		$result =  $this->db->get()->result();
-		print_r($result);die();
 	    return $result;	
 	}
 }

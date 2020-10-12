@@ -1,6 +1,6 @@
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_wizard'); ?>
+<?php include viewPath('includes/header'); ?>
 <link rel="stylesheet" href="https://twitter.github.io/typeahead.js/css/examples.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>wizard/listing/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>wizard/listing/css/bootstrap.min.css" />

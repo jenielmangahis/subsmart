@@ -1,6 +1,6 @@
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_wizard'); ?>
+<?php include viewPath('includes/header'); ?>
 <link rel="stylesheet" href="https://twitter.github.io/typeahead.js/css/examples.css" />
 <style type="text/css">
 .tt-suggestion

@@ -1,0 +1,42 @@
+.ft-ff-auto, .fl-ff-auto {
+    font-family: auto;
+}
+
+.ft-ff-cursive, .fl-ff-cursive {
+    font-family: cursive;
+}
+
+.ft-ff-fantasy, .fl-ff-fantasy {
+    font-family: fantasy;
+}
+
+.ft-ff-arial, .fl-ff-arial {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.ft-fs-smaller, .fl-fs-smaller {
+    font-size: smaller;
+}
+
+.ft-fs-small, .fl-fs-small {
+    font-size: small;
+}
+
+.ft-fs-medium, .fl-fs-medium {
+    font-size: medium;
+}
+
+.ft-fs-large, .fl-fs-large {
+    font-size: large;
+}
+
+.ft-fs-larger, .fl-fs-larger {
+    font-size: larger;
+}
+
+.bg-lgray{ 
+    background-color: lightgray;
+}
+.bg-whitesmoke{ 
+    background-color: whitesmoke;
+}

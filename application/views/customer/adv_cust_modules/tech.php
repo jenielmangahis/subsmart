@@ -76,15 +76,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo string_max_length($office_info->url,20); }; ?></b> </label>
                             </td>
                         </tr>
-
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <div style="margin-left:30px; padding-top:65px;" align="left" class="normaltext1">
-                <a href="#" style="color:#58bc4f;">Send QR</a>&nbsp;&nbsp;
-                <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+            <div style="margin-left:30px; padding-top:1px;" align="left" class="normaltext1">
+                <?php if(isset($profile_info)): ?>
+                    <img alt="" src="<?php echo base_url()."assets/img/customer/qr/".$profile_info->prof_id.".png"?>" width="80" />
+                <?php endif; ?>
+                <a href="#" style="color:#58bc4f;">Send QR</a>&nbsp;&nbsp
             </div>
 
         </div>

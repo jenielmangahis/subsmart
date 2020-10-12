@@ -1025,13 +1025,14 @@ if (!function_exists('getClockInSession')){
 if (!function_exists('getEmployeeLogs')){
     function getEmployeeLogs(){
         $CI = &get_instance();
-        return $CI->timesheet_model->getTSLogsByUser();
+//        return $CI->timesheet_model->getTSLogsByUser();
+        return $CI->timesheet_model->getUserLogs();
     }
 }
 if (!function_exists('getEmployeeAttendance')){
     function getEmployeeAttendance(){
         $CI = &get_instance();
-        return $CI->timesheet_model->getEmployeeAttendance();
+        return $CI->timesheet_model->getUserAttendance();
     }
 }
 if (!function_exists('getEmpTSsettings')){

@@ -61,7 +61,6 @@
   
   
 </style>
-
 <div class="wrapper">
   <div __wrapper_section>
     <div class="card my-2" style="height: 1250px">
@@ -241,7 +240,7 @@
                                 </div>
                               </div>
                             </div>
-                            <!-- <div class="col-xs-6 col-sm-6 m-0">
+                            <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="13">
                                 <div class="card p-1">
                                   <div class="card-content">
@@ -249,7 +248,7 @@
                                   </div>
                                 </div>
                               </div>
-                            </div> -->
+                            </div>
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="14">
                                 <div class="card p-1">
@@ -391,53 +390,7 @@
 
                           </div>
                         </div>
-                    
-    
-                        <!-- <li class="list-group-item" data-toggle="collapse" data-target="#collapseEmailItemsMenu" aria-expanded="true" aria-controls="collapse0">
-                          Email Items
-                        </li>
-                        <div id="collapseEmailItemsMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                          <div class="row" style="overflow-x: auto; heightL 250px;">
-                            <div class="col-xs-6 col-sm-6 m-0">
-                              <div class="form-elements-draggable" data-element-id="4">
-                                <div class="card p-1">
-                                  <div class="card-content element-buttons">
-                                    <span><i class="fa fa-calendar"></i> Email Address</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 m-0">
-                              <div class="form-elements-draggable" data-element-id="28">
-                                <div class="card p-1">
-                                  <div class="card-content element-buttons">
-                                    <span><i class="fa fa-calendar"></i> Radio Button Email Routing </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 m-0">
-                              <div class="form-elements-draggable" data-element-id="29">
-                                <div class="card p-1">
-                                  <div class="card-content element-buttons">
-                                    <span><i class="fa fa-calendar"></i> Dropdown Email Routing</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 m-0">
-                              <div class="form-elements-draggable" data-element-id="30">
-                                <div class="card p-1">
-                                  <div class="card-content element-buttons">
-                                    <span><i class="fa fa-calendar"></i> Checkbox Email Routing</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                     -->
-    
+
                         <li class="list-group-item" data-toggle="collapse" data-target="#collapseOrderFormMenu" aria-expanded="true" aria-controls="collapse0">
                           Order Form Tables
                         </li>
@@ -456,7 +409,6 @@
 
                         </div>
                     
-    
                         <li class="list-group-item" data-toggle="collapse" data-target="#collapseMatrixGridMenu" aria-expanded="true" aria-controls="collapse0">
                           Matrix/Grid Items
                         </li>
@@ -535,7 +487,7 @@
                               </div>
                             </div>
                             <div class="col-xs-6 col-sm-6 m-0">
-                              <div class="form-elements-draggable" data-element-id="52">
+                              <div class="form-elements-draggable" data-element-id="53">
                                 <div class="card p-1">
                                   <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Star Matrix</span>
@@ -543,17 +495,35 @@
                                 </div>
                               </div>
                             </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="54">
+                                <div class="card p-1">
+                                  <div class="card-content element-buttons">
+                                    <span><i class="fa fa-cog"></i> Zone Information Table</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                            
                           </div>
 
 
                         </div>
-                    
-    
-                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseItemMenu" aria-expanded="true" aria-controls="collapse0">
-                          Item Blocks
+                        
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseContainers" aria-expanded="true" aria-controls="collapse0">
+                          Containers
                         </li>
-                        <div id="collapseItemMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                          <p class="text-muted">Coming soon</p>
+                        <div id="collapseContainers" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                          <div class="row" style="overflow-x: auto; heightL 250px;">
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="53">
+                                <div class="card p-1">
+                                  <div class="card-content element-buttons">
+                                    <span><i class="fa fa-cog"></i> Blank Container</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
     
                         <li class="list-group-item" data-toggle="collapse" data-target="#collapseHeaderFooterMenu" aria-expanded="true" aria-controls="collapse0">
@@ -567,7 +537,49 @@
 
                   </div>
                   <div id="form-editor-style-sidenav" class="tab-pane fade">
-                    <h3 class="text-center text-muted">Coming soon</h3>
+                    <div class="container-fluid py-3">
+                      <div class="form-group">
+                        <label for="form-title-font-family">Titles Font Family</label>
+                        <select name="form-title-font-family" id="fTFontFamily" class="form-control">
+                          <option value="ft-ff-auto">Auto</option>
+                          <option value="ft-ff-cursive">Cursive</option>
+                          <option value="ft-ff-fantasy">Fantasy</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="form-title-font-size">Titles Font Size</label>
+                        <select name="form-title-font-size" id="fTFontSize" class="form-control">
+                          <option value="ft-fs-smaller">Smaller</option>
+                          <option value="ft-fs-small">Small</option>
+                          <option value="ft-fs-medium">Medium</option>
+                          <option value="ft-fs-large">Large</option>
+                          <option value="ft-fs-larger">Larger</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="form-label-font-family">Labels Font Family</label>
+                        <select name="form-label-font-family" id="fLFontFamily" class="form-control">
+                          <option value="fl-ff-auto">Auto</option>
+                          <option value="fl-ff-cursive">Cursive</option>
+                          <option value="fl-ff-fantasy">Fantasy</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="form-label-font-size">Labels Font Size</label>
+                        <select name="form-label-font-size" id="fLFontSize" class="form-control">
+                          <option value="fl-fs-smaller">Smaller</option>
+                          <option value="fl-fs-small">Small</option>
+                          <option value="fl-fs-medium">Medium</option>
+                          <option value="fl-fs-large">Large</option>
+                          <option value="fl-fs-larger">Larger</option>
+                        </select>
+                      </div>
+                      <div class="text-right">
+                        <button class="btn btn-primary" id="saveFormStylesBtn">
+                          Save
+                        </button>
+                      </div>                 
+                    </div>
                   </div>
                   <div id="form-editor-rules-sidenav" class="tab-pane fade">
                     <h3 class="text-center text-muted">Coming soon</h3>
@@ -1366,7 +1378,7 @@
       dataType: 'json',
       type: 'GET',
       success: function(res){
-        element = res.data;
+        element = res.form_elements;
         
         document.querySelector('#txtElementSettingsFieldLabel').value = element.fe_label;
         document.querySelector('#txtElementSettingsPlaceholderText').value = element.fe_placeholder_text;
@@ -1422,7 +1434,7 @@
           document.querySelector('#modal-element-settings-text-section').style.display = "block"
         }
         
-        if(element.fe_element_id == 44 || element.fe_element_id == 45 || element.fe_element_id == 46 || element.fe_element_id == 47 || element.fe_element_id == 48 || element.fe_element_id == 50){
+        if(element.fe_element_id == 44 || element.fe_element_id == 45 || element.fe_element_id == 46 || element.fe_element_id == 47 || element.fe_element_id == 48 || element.fe_element_id == 50 ||element.fe_element_id == 53 ){
           document.querySelector('#modal-element-settings-choices-row-section').style.display = "block"
           document.querySelector('#modal-element-settings-choices-column-section').style.display = "block"
         }
@@ -1663,6 +1675,10 @@
       "forms_results_limit": document.querySelector('#txtResultsLimit').value,
       "forms_results_max_title": document.querySelector('#txtResultsMessageTitle').value,
       "forms_results_max_message": document.querySelector('#txtResultsMessageContent').value,
+      "forms_title_font_family": document.querySelector('#txtEndMessageContent').value,
+      "forms_title_font_size": document.querySelector('#txtResultsLimit').value,
+      "forms_label_font_family": document.querySelector('#txtResultsMessageTitle').value,
+      "forms_label_font_family": document.querySelector('#txtResultsMessageContent').value,
     };
     
     $.ajax({
@@ -1720,10 +1736,9 @@
     snapMode: "inner",
     grid: [20, 20],
     start: function(event, ui){
-      
       selectedElement = elementsList.findIndex((item) => {
         return item.id == event.target.dataset.elementId;
-      })
+      });
     },
     stop: function(event){
       selectedElement = 0
@@ -1789,6 +1804,45 @@
       
       
     }
+  })
+
+  $('#saveFormStylesBtn').on('click', () => {
+    let data = {
+      "forms_title": document.querySelector('#txtFormName').value,
+      "forms_private_note": document.querySelector('#txtPrivateNotes').value,
+      "forms_social_desc": document.querySelector('#txtSocialDescription').value,
+      "forms_use_start_date": (document.querySelector('#txtFormToggleStart').checked === true) ? 1 : 0,
+      "forms_use_closing_date": (document.querySelector('#txtFormToggleEnd').checked === true) ? 1 : 0,
+      "forms_use_results_limit": (document.querySelector('#txtFormToggleResult').checked === true) ? 1 : 0,
+      "forms_start_date": document.querySelector('#txtStartDate').value,
+      "forms_start_time": document.querySelector('#txtStartTime').value,
+      "forms_start_title": document.querySelector('#txtStartMessageTitle').value,
+      "forms_start_message": document.querySelector('#txtStartMessageContent').value,
+      "forms_end_date": document.querySelector('#txtEndDate').value,
+      "forms_end_time": document.querySelector('#txtEndTime').value,
+      "forms_end_title": document.querySelector('#txtEndMessageTitle').value,
+      "forms_end_message": document.querySelector('#txtEndMessageContent').value,
+      "forms_results_limit": document.querySelector('#txtResultsLimit').value,
+      "forms_results_max_title": document.querySelector('#txtResultsMessageTitle').value,
+      "forms_results_max_message": document.querySelector('#txtResultsMessageContent').value,
+      "forms_title_font_family": document.querySelector('#fTFontFamily').value,
+      "forms_title_font_size": document.querySelector('#fTFontSize').value,
+      "forms_label_font_family": document.querySelector('#fLFontFamily').value,
+      "forms_label_font_size": document.querySelector('#fLFontSize').value,
+    };
+    
+    $.ajax({
+      url: "<?= base_url()?>formbuilder/form/update/<?=$form->forms_id?>",
+      data: data,
+      dataType: 'json',
+      type: 'POST',
+      success: function(res){
+        window.alert("form styles saved");
+        loadFormSettings(<?= $form->forms_id?>);
+        loadFormElements(<?= $form->forms_id?>, "edit");
+        return;
+      }
+    })
   })
 
 </script>

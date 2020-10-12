@@ -35,7 +35,7 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'users/services') ? "active" : "";  ?>"><a href="services" title="Services"><span class="fa fa-home"></span>Services</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'users/credentials') ? "active" : "";  ?>"><a href="credentials" title="Credentials"><span class="fa fa-shield"></span>Credentials</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'users/availability') ? "active" : "";  ?>"><a href="availability" title="Availability"><span class="fa fa-calendar"></span>Availability</a></li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'users/workpictures') ? "active" : "";  ?>"><a href="workpictures" title="Work Pictures"><span class="fa fa-camera-retro"></span>Work Pictures</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'users/portfolio') ? "active" : "";  ?>"><a href="portfolio" title="Portfolio"><span class="fa fa-camera-retro"></span>Work Pictures</a></li>
         <li class="nav-header header-left">Settings</li>
         <li class="submenus <?= ($this->uri->uri_string() == 'users/profilesetting') ? "active" : "";  ?>"><a href="profilesetting" title="Profile Settings"><span class="fa fa-file-o"></span>Profile Settings</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'users/socialMedia') ? "active" : "";  ?>"><a href="socialMedia" title="Social Media"><span class="fa fa-share-square-o"></span>Social Media</a></li>

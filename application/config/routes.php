@@ -67,10 +67,10 @@ $route['services/(:any)?'] = 'service/$1';
 $route['services'] = 'service';
 
 // form builder pages - Gene
-$route['formbuilder'] = 'formbuilder';
-$route['formbuilder/create'] = 'formbuilder/create';
-$route['form/(:num)'] = 'formbuilder/view/$1';
-$route['formbuilder/edit/(:num)'] = 'formbuilder/edit/$1';
+$route['formbuilder'] = 'formBuilder';
+$route['formbuilder/create'] = 'formBuilder/create';
+$route['form/(:num)'] = 'formBuilder/view/$1';
+$route['formbuilder/edit/(:num)'] = 'formBuilder/edit/$1';
 
 // form builder functions - Gene
 $route['formbuilder/form/view/(:any)'] = 'formbuilder/getForms/$1';
@@ -237,6 +237,7 @@ $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
 $route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicecharge';
+$route['accounting/reconcile/change/servicecharge'] = 'reconcile/update_servicecharge';
 $route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';

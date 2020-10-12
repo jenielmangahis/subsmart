@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_accounting'); ?>
+<?php include viewPath('includes/header'); ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
@@ -287,8 +287,8 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     <div class="edit_expense_account"><?=$rows[0]->expense_account?></div>
                                 </td>
                                 <td>
-                                    <input type="hidden" id="edit_descp" name="edit_descp" value="" placeholder="What did you paid for?">
-                                    <div class="edit_descp"></div>
+                                    <input type="hidden" id="edit_descp" name="edit_descp" value="" placeholder="What did you paid for?" value="<?=$rows[0]->descp_sc?>">
+                                    <div class="edit_descp"><?=$rows[0]->descp_sc?></div>
                                 </td>
                                 <td>
                                      <input type="hidden" id="edit_service_charge" name="edit_service_charge" value="<?=number_format($rows[0]->service_charge,2)?>">
@@ -296,6 +296,42 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
+                            <?php 
+                            if(!empty($this->reconcile_model->select_service($rows[0]->chart_of_accounts_id)))
+                            {
+                            $editrowcount =2;
+                            foreach($this->reconcile_model->select_service($rows[0]->chart_of_accounts_id) as $editrowtab)
+                            {
+                                
+                            ?>
+                            <tr onclick="trClickEdit(<?=$editrowcount?>)">
+                                <td><i class="fa fa-th"></i></td>
+                                <td><?=$editrowcount?></td>
+                                <td>
+                                    <select name='edit_expense_account_<?=$editrowcount?>' id='edit_expense_account_<?=$editrowcount?>' data-id='<?=$editrowtab->id?>' class='up_row' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($editrowtab->expense_account_sub == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="edit_expense_account_<?=$editrowcount?>"><?=$editrowtab->expense_account_sub?></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_descp_<?=$editrowcount?>" name="edit_descp_<?=$editrowcount?>" value="" placeholder="What did you paid for?" value="<?=$editrowtab->descp_sc_sub?>">
+                                    <div class="edit_descp_<?=$editrowcount?>"><?=$editrowtab->descp_sc_sub?></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="edit_service_charge_<?=$editrowcount?>" name="edit_service_charge_<?=$editrowcount?>" value="<?=number_format($editrowtab->service_charge_sub,2)?>">
+                                    <div class="edit_service_charge_<?=$editrowcount?>"><?=number_format($editrowtab->service_charge_sub,2)?></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php $editrowcount++; }}else{ ?>
                             <tr onclick="trClickEdit(2)">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>2</td>
@@ -323,6 +359,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
+                            <?php } ?>
                             <tr class="pr participantRow hide">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>0</td>
@@ -3825,31 +3862,47 @@ function closeAddaccount()
       var memo_sc = $('#memo_sc').val();
       var descp_sc = $('.edit_descp').text();
       var expense_account=$('.edit_expense_account').text();
-      var service_charge=$('.edit_service_charge').text();
+      //var service_charge=$('.edit_service_charge').text();
+      var service_charge=$('#total').text().substr(9);
 
       var tablelength = $('#participantTable tr').length -2;
       datatab=[];
 
       for(var i = 2 ; i <= tablelength ; i++)
         {
-            /*datatab['edit_expense_account_'+i]=$('.edit_expense_account_'+i).text();
-            datatab['edit_service_charge_'+i]=$('.edit_service_charge_'+i).text();
-            datatab['edit_descp_'+i]=$('.edit_descp_'+i).text();*/
 
             var expense_account_sub = $('.edit_expense_account_'+i).text();
             var service_charge_sub = $('.edit_service_charge_'+i).text();
             var descp_sub = $('.edit_descp_'+i).text();
 
-          if(expense_account_sub!='' || service_charge_sub!='' || descp_sub!='')
+          if(expense_account_sub!='' || descp_sub!='' || service_charge_sub!='')
           {
-            $.ajax({
-                url:"<?php echo url('accounting/reconcile/add/servicecharge') ?>",
-                method: "POST",
-                data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sub:descp_sub},
-                success:function(data)
+            if(service_charge_sub!='')
+            {
+                if($('#edit_expense_account_'+i).hasClass('up_row'))
                 {
+                    var id = $('#edit_expense_account_'+i).data('id');
+                    $.ajax({
+                        url:"<?php echo url('accounting/reconcile/change/servicecharge') ?>",
+                        method: "POST",
+                        data: {id:id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sub:descp_sub},
+                        success:function(data)
+                        {
+                        }
+                    })
                 }
-            })
+                else
+                {
+                    $.ajax({
+                        url:"<?php echo url('accounting/reconcile/add/servicecharge') ?>",
+                        method: "POST",
+                        data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sub:descp_sub},
+                        success:function(data)
+                        {
+                        }
+                    })
+                }
+            }
           }
         }
 
@@ -3858,7 +3911,7 @@ function closeAddaccount()
         $.ajax({
             url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
             method: "POST",
-            data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc},
+            data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
             success:function(data)
             {
                 closeFullNav();
@@ -3866,6 +3919,11 @@ function closeAddaccount()
             }
         })
       }
+
+
+            /*datatab['edit_expense_account_'+i]=$('.edit_expense_account_'+i).text();
+            datatab['edit_service_charge_'+i]=$('.edit_service_charge_'+i).text();
+            datatab['edit_descp_'+i]=$('.edit_descp_'+i).text();*/
 
       /*  var data_tab=Object.assign({}, datatab); 
       if(reconcile_id!='')

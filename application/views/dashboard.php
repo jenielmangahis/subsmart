@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<?php include viewPath('includes/header_accounting'); ?>
+<?php include viewPath('includes/header'); ?>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css"></link>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
     <!-- page wrapper start -->
@@ -74,8 +74,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="float-right d-none d-md-block">
 						<ol class="breadcrumb">
 							<?php $image = base_url('uploads/users/default.png'); ?>
-							<img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;">
-                            <!-- <img src="<?php //echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;"> -->
+							<!-- <img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;"> -->
+                            <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle" style="height: 50px;">
                             <?php
                                /*$id = logged('id');
                                $query = $this->db->query("Select name from users where id = $id");
@@ -970,25 +970,25 @@ responsive: true
 });
 
 //polar
-var ctxPA = document.getElementById("polarChart").getContext('2d');
-var myPolarChart = new Chart(ctxPA, {
-type: 'polarArea',
-data: {
-labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
-datasets: [{
-data: [300, 50, 100, 40, 120],
-backgroundColor: ["rgba(219, 0, 0, 0.1)", "rgba(0, 165, 2, 0.1)", "rgba(255, 195, 15, 0.2)",
-"rgba(55, 59, 66, 0.1)", "rgba(0, 0, 0, 0.3)"
-],
-hoverBackgroundColor: ["rgba(219, 0, 0, 0.2)", "rgba(0, 165, 2, 0.2)",
-"rgba(255, 195, 15, 0.3)", "rgba(55, 59, 66, 0.1)", "rgba(0, 0, 0, 0.4)"
-]
-}]
-},
-options: {
-responsive: true
-}
-});
+// var ctxPA = document.getElementById("polarChart").getContext('2d');
+// var myPolarChart = new Chart(ctxPA, {
+// type: 'polarArea',
+// data: {
+// labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
+// datasets: [{
+// data: [300, 50, 100, 40, 120],
+// backgroundColor: ["rgba(219, 0, 0, 0.1)", "rgba(0, 165, 2, 0.1)", "rgba(255, 195, 15, 0.2)",
+// "rgba(55, 59, 66, 0.1)", "rgba(0, 0, 0, 0.3)"
+// ],
+// hoverBackgroundColor: ["rgba(219, 0, 0, 0.2)", "rgba(0, 165, 2, 0.2)",
+// "rgba(255, 195, 15, 0.3)", "rgba(55, 59, 66, 0.1)", "rgba(0, 0, 0, 0.4)"
+// ]
+// }]
+// },
+// options: {
+// responsive: true
+// }
+// });
 $(document).ready(function() {
 	$('#myStatsTable').DataTable({
 		"paging": false,

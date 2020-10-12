@@ -44,6 +44,18 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get($this->attn_tbl)->result();
         return $qry;
     }
+    //Employee's End
+    public function getUserAttendance(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $this->db->order_by('id',"desc")->limit(1);
+        $query = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id));
+        return $query->result();
+    }
+    public function getUserLogs(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $query = $this->db->get_where($this->db_table,array('user_id' => $user_id));
+        return $query->result();
+    }
 
     public function getWeekTotalDuration(){
         $qry = $this->db->get('ts_weekly_total_shift');
@@ -708,9 +720,8 @@ class Timesheet_model extends MY_Model {
         return $query->num_rows();
     }
     public function getOutNow(){
-        $this->db->where('date_in',date('Y-m-d'));
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_out'=>date('Y-m-d')));
-        return $query->num_rows();
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_out'=>date('Y-m-d')))->num_rows();
+        return $query;
     }
     public function getAttendanceByDay($day){
         $this->db->or_where('date_in',$day);

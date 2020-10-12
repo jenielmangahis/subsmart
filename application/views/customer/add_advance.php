@@ -464,7 +464,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 data: {id : ID}, // serializes the form's elements.
                 success: function(data){
                     if(data === "Done"){
-                        window.location.href="/customer/add_advance/"+<?php echo $this->uri->segment(3); ?>;
+                        window.location.href="/customer/add_advance/"<?php echo $this->uri->segment(3); ?>;
                     }else{
                         console.log(data);
                     }

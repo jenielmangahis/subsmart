@@ -27,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			<div class="col-md-2 " style="margin-top:12px;">
 				<a href="<?php echo base_url('esign/createTemplate') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img src="<?=url("");?>uploads/image/scan.jpg" style="margin:0 auto;" height="150" width="180" title="Scan">
+						<img src="<?=url("");?>uploads/image/esign.jpeg" style="margin:0 auto;" height="150" width="180" title="Scan">
 						<button type="button" class="form-control btn btn-success">Esign</button>
 					</div>
 				</a>

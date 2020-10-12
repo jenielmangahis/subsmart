@@ -31,3 +31,10 @@ CREATE TABLE `admintom_nsmart_companies`.`esign_library_category` (
 INSERT INTO `admintom_nsmart_companies`.`esign_library_category` (`categoryName`, `isDefault`) VALUES ('Credit Repair Letters Library', '1');
 INSERT INTO `admintom_nsmart_companies`.`esign_library_category` (`categoryName`, `isDefault`) VALUES ('Alarm Industry Library', '1');
 INSERT INTO `admintom_nsmart_companies`.`esign_library_category` (`categoryName`, `isDefault`) VALUES ('Business Library', '1');
+
+-- Add Two Required Columns 
+ALTER TABLE `admintom_nsmart_companies`.`esign_library_template` 
+ADD COLUMN `status` TINYINT(1) UNSIGNED NULL DEFAULT 0 AFTER `isActive`,
+ADD COLUMN `isFavorite` TINYINT(1) UNSIGNED NULL DEFAULT 0 AFTER `status`;
+ALTER TABLE `admintom_nsmart_companies`.`esign_library_template` 
+CHANGE COLUMN `isActive` `isActive` TINYINT(1) UNSIGNED NULL DEFAULT 1 COMMENT 'Esign Library ' ;

@@ -12,7 +12,8 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function index(){
-		$this->page_data['tasks'] = getTasks();
+		// $this->page_data['tasks'] = getTasks();
+		$this->page_data['tasks'] = [];
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$this->load->view('workcalender/taskhub/list', $this->page_data);

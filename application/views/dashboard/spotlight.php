@@ -12,7 +12,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="expenses-money-section" style="margin-top:10px;">
                             <div class="spot-img">
-                                <img src="<?php echo $url->assets ?>dashboard/images/users/user.jpg" alt="">
+                                <!-- <img src="<?php //echo $url->assets ?>dashboard/images/users/user.jpg" alt=""> -->
+                                <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user">
                             </div>
                         </div>
                     </div>

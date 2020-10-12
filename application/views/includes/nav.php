@@ -213,13 +213,13 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> My Business </b>
                         </a>
-                        <a class="dropdown-item" href="<?php //echo base_url('dashboard/blank/?page=Add-ons') ?>">
+                        <a class="dropdown-item" href="<?php echo base_url('/settings/email_templates') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> Settings </b>
                         </a>
                         <a class="dropdown-item" href="<?php echo base_url('/users') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> Employees </b>
                         </a>
-                        <a class="dropdown-item" href="<?php //echo base_url('dashboard/blank/?page=Add-ons') ?>">
+                        <a class="dropdown-item" href="<?php echo base_url('/mycrm') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> My CRM </b>
                         </a>
                     </div>

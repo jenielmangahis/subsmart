@@ -3,6 +3,30 @@ $(document).ready(function () {
     viewMode: 'years',
     format: 'YYYY'
   });
+
+  $('#monHoursFromAvail').timepicker();
+  $('#tueHoursFromAvail').timepicker();
+  $('#wedHoursFromAvail').timepicker();
+  $('#thuHoursFromAvail').timepicker();
+  $('#friHoursFromAvail').timepicker();
+  $('#satHoursFromAvail').timepicker();
+  $('#sunHoursFromAvail').timepicker();
+  $('#monHoursToAvail').timepicker();
+  $('#tueHoursToAvail').timepicker();
+  $('#wedHoursToAvail').timepicker();
+  $('#thuHoursToAvail').timepicker();
+  $('#friHoursToAvail').timepicker();
+  $('#satHoursToAvail').timepicker();
+  $('#sunHoursToAvail').timepicker();
+  $('#hoursToAvail').timepicker();
+  $('#timeoff_from').timepicker();
+  $('#timeoff_to').timepicker();
+
+  $('input[type=checkbox]').each(function () {
+    // $(this).click(function() {
+
+    // });
+  });
 });
 
 function getplanItems(pid) {

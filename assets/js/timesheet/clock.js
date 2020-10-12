@@ -62,6 +62,11 @@ $(document).ready(function () {
                         $('.in').text(data.clock_in_time);
                         $('.out').text(data.clock_out_time);
                         $('#userClockIn').text(data.clock_in_time);
+                        $('#userClockOut').text('-');
+                        $('#userLunchIn').text('-');
+                        $('#userLunchOut').text('-');
+                        $('#shiftDuration').text('-');
+                        $('#break-duration').text('60:00');
                         $('.employeeLunch').attr('id','lunchIn').attr('disabled',false);
                         Swal.fire(
                             {
@@ -102,6 +107,7 @@ $(document).ready(function () {
                         $('.out').text(data.clock_out_time);
                         $('#userClockOut').text(data.clock_out_time);
                         $('#shiftDuration').text(data.shift_duration);
+                        $('#userShiftDuration').text(data.shift_duration);
                         $('.employeeLunch').attr('id',null).attr('disabled',true);
                         Swal.fire(
                             {
@@ -265,7 +271,7 @@ $(document).ready(function () {
         }
     });
     });
-    var overtime = (function() {
+    var start_sched = (function() {
         var executed = false;
         return function() {
             if (!executed) {
@@ -285,13 +291,79 @@ $(document).ready(function () {
                        $('.layer-1').css('animation','animation-layer-1 5000ms infinite');
                        $('.layer-2').css('animation','animation-layer-2 5000ms infinite');
                        $('.layer-3').css('animation','animation-layer-3 5000ms infinite');
-                       $('#employeePingOnce').val(0);
+                       $('#employeePingStart').val(0);
                        notificationRing();
                    }
                 });
             }
         };
     })();
+    var overtime = (function() {
+        var executed = false;
+        return function() {
+            if (!executed) {
+                executed = true;
+                $.ajax({
+                    url:"/timesheet/notifyEndSchedule",
+                    dataType:"json",
+                    data:"POST",
+                    success:function (data) {
+                        var notify_count = $('#notifyBadge').text();
+                        if (notify_count == ''){
+                            notify_count = 0;
+                        }
+                        var count = parseInt(notify_count) + 1;
+                        $('#notificationList').prepend(data);
+                        $('#notifyBadge').css('visibility','visible').text(count);
+                        $('.layer-1').css('animation','animation-layer-1 5000ms infinite');
+                        $('.layer-2').css('animation','animation-layer-2 5000ms infinite');
+                        $('.layer-3').css('animation','animation-layer-3 5000ms infinite');
+                        $('#employeePingEnd').val(0);
+                        notificationRing();
+                    }
+                });
+            }
+        };
+    })();
+    function overtimeTimer(){
+        let timerInterval;
+        Swal.fire({
+            title: 'Do you want to overtime?',
+            icon:'question',
+            html:'Auto close after <strong></strong> seconds',
+            showDenyButton: true,
+            confirmButtonText: `Yes,I want to`,
+            denyButtonText: `Let's call it a day`,
+            allowOutsideClick: false,
+            timer: 5000,
+            timerProgressBar: true,
+            willOpen: () => {
+            const content = Swal.getContent();
+        const $ = content.querySelector.bind(content);
+        timerInterval = setInterval(() => {
+            if((Swal.getTimerLeft() / 1000).toFixed(0) >= 0){
+            Swal.getContent().querySelector('strong').textContent = (Swal.getTimerLeft() / 1000).toFixed(0);
+            }
+        }, 100);
+    },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+    }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+            Swal.fire('Work more!', '', 'success');
+        } else if (result.isDenied) {
+            Swal.fire('To tired, I am out for now.', '', 'info');
+        }
+        if (result.dismiss === Swal.DismissReason.timer) {
+            clearInterval(timerInterval);
+            console.log('I was closed by the timer');
+            Swal.fire('Times up! ', '', 'info');
+        }
+    });
+    }
+
 
     //Live Clock JS
     const deg = 6;
@@ -310,16 +382,30 @@ $(document).ready(function () {
         //Check if there is an schedule
         //Start time
         var emp_shift = $('#employeeShiftStart').val();
-        var sched_notify = $('#employeePingOnce').val();
-        if (emp_shift > 0 && sched_notify == 1){
+        var emp_overtime = $('#employeeOvertime').val();
+        var sched_notify = $('#employeePingStart').val();
+        var over_notify = $('#employeePingEnd').val();
+        var current_time = day.getTime();
+        if (emp_shift != 0 && parseInt(sched_notify) > 0){
             var a = new Date(emp_shift * 1000);
             a.setMinutes(a.getMinutes() - 10);
             var b = a.setHours(a.getHours() - 13);
-            var current_time = day.getTime();
             if (b <= current_time){
-                overtime();
+                start_sched();
             }
         }
+        if (emp_overtime != 0 && parseInt(over_notify) > 0){
+            var c = new Date(emp_overtime * 1000);
+            c.setMinutes(c.getMinutes() - 10);
+            var d = c.setHours(c.getHours() - 13);
+            if(current_time >= d){
+                overtime();
+                overtimeTimer();
+            }
+        }
+
+
+
         });
     }
 

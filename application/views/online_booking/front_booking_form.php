@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_front_booking'); ?>
+<?php include viewPath('includes/header'); ?>
 <div>
     <!-- page wrapper start -->
     <div class="col-xl-9 left">

@@ -19,9 +19,7 @@ class Customer extends MY_Controller
 
         parent::__construct();
 
-
         $this->page_data['page']->title = 'My Customers';
-
         $this->page_data['page']->menu = 'customers';
         $this->load->model('Customer_model', 'customer_model');
         $this->load->model('CustomerAddress_model', 'customeraddress_model');
@@ -29,34 +27,20 @@ class Customer extends MY_Controller
         $this->checkLogin();
         $this->load->library('session');
         $this->load->library('form_validation');
-
+        $this->load->helper('url');
         $this->load->helper('functions');
 
         $user_id = getLoggedUserID();
-
-
         // concept
-
         $uid = $this->session->userdata('uid');
-
-
         if (empty($uid)) {
-
             $this->page_data['uid'] = md5(time());
-
             $this->session->set_userdata(['uid' => $this->page_data['uid']]);
-
         } else {
-
             $uid = $this->session->userdata('uid');
-
             $this->page_data['uid'] = $uid;
-
         }
-
-
         // CSS to add only Customer module
-
         add_css(array(
             'assets/css/jquery.signaturepad.css',
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -66,9 +50,7 @@ class Customer extends MY_Controller
             'assets/css/accounting/sales.css',
         ));
 
-
         // JS to add only Customer module
-
         add_footer_js(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
@@ -79,7 +61,6 @@ class Customer extends MY_Controller
            // 'assets/frontend/js/creditcard.js',
            // 'assets/frontend/js/customer/add.js',
         ));
-
     }
 
     public function leads()
@@ -100,8 +81,16 @@ class Customer extends MY_Controller
     }
 
 
-    public function test_device(){
-        $input = $this->input->post();
+    public function qrcodeGenerator($profile_id){
+        $this->load->library('qrcode/ciqrcode');
+        $SERVERFILEPATH = $_SERVER['DOCUMENT_ROOT'].'/assets/img/customer/qr/'.$profile_id.'.png';
+
+        $params['data'] = 'https://nsmartrac.com/customer/index/tab2/'.$profile_id;
+        $params['level'] = 'H';
+        $params['size'] = 10;
+        $params['savename'] = $SERVERFILEPATH;
+        $this->ciqrcode->generate($params);
+        //echo '<img src="'.base_url().'assets/img/customer/qr/names.png" />';
     }
 
     public function add_data_sheet(){
@@ -114,7 +103,6 @@ class Customer extends MY_Controller
         $input_alarm = array();
         $input_office = array();
         $input_access = array();
-
         $input_profile['fk_user_id'] = logged('id');
         $input_profile['fk_sa_id'] = $input['fk_sa_id'];
         $input_profile['first_name'] = $input['first_name'];
@@ -306,6 +294,7 @@ class Customer extends MY_Controller
             $this->customer_ad_model->add($input_alarm,"acs_alarm");
             $this->customer_ad_model->add($input_billing,"acs_billing");
 
+            $this->qrcodeGenerator($fk_prod_id);
 
             if(isset($input['device_name'])){
                 $devices = count($input['device_name']);
@@ -326,7 +315,6 @@ class Customer extends MY_Controller
                     unset($device_data);
                 }
             }
-
             echo "Added";
         }else{
             $input_profile['prof_id'] = $fk_prod_id;
@@ -713,6 +701,8 @@ class Customer extends MY_Controller
             if(!empty($get_id)){
                 $userid =  $get_id[0]->prof_id;
             }
+        }else{
+            $this->qrcodeGenerator($userid);
         }
 
         if(isset($userid) || !empty($userid)){
@@ -1419,11 +1409,11 @@ class Customer extends MY_Controller
 
         $get = $this->input->get();
 
+        $company_id = logged('company_id');
+
         $role = logged('role');
 
         if ($role == 2 || $role == 3) {
-
-            $company_id = logged('company_id');
 
             $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id, $get);
 
@@ -1435,6 +1425,7 @@ class Customer extends MY_Controller
 
         }
 
+        $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id, $get);
 
         die(json_encode($this->page_data['customers']));
 

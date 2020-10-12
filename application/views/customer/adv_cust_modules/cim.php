@@ -37,7 +37,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <?php if(isset($profile_info)) : ?>
                     <a href="/customer/index/tab3/<?= $profile_info->prof_id  ?>/mt11" style="color:#58bc4f;">View/Edit Fields</a>
                 <?php endif; ?>
-                <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
 
         </div>

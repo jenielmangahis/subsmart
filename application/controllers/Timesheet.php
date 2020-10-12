@@ -1381,8 +1381,11 @@ class Timesheet extends MY_Controller {
         $this->page_data['logs'] = $this->timesheet_model->getTimesheetLogs();
         $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
-        $this->page_data['schedule'] = $this->timesheet_model->getTimeSheetSettings();
+        $this->page_data['schedules'] = $this->timesheet_model->getTimeSheetSettings();
         $this->page_data['tasks'] = $this->timesheet_model->getTimeSheetDay();
+        //Employee's attendance
+        $this->page_data['emp_attendance'] = $this->timesheet_model->getUserAttendance();
+        $this->page_data['emp_logs'] = $this->timesheet_model->getUserLogs();
 
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
@@ -2240,16 +2243,20 @@ class Timesheet extends MY_Controller {
         $remaining_time = $this->input->post('remaining_time');
         $lunch_out = time();
         $user_id = $this->session->userdata('logged')['id'];
-        $lunch = array(
-            'attendance_id' => $attn_id,
-            'user_id' => $user_id,
-            'action' => 'Break out',
-            'date' => date('Y-m-d'),
-            'time' => $lunch_out,
-            'entry_type' => 'Normal',
-            'status' => 1
-        );
-        $this->db->insert('timesheet_logs',$lunch);
+        $check = $this->db->get_where('timesheet_logs',array('attendance_id'=>$attn_id,'action'=>'Break out'));
+        if ($check->num_rows() == 0){
+            $lunch = array(
+                'attendance_id' => $attn_id,
+                'user_id' => $user_id,
+                'action' => 'Break out',
+                'date' => date('Y-m-d'),
+                'time' => $lunch_out,
+                'entry_type' => 'Normal',
+                'status' => 1
+            );
+            $this->db->insert('timesheet_logs',$lunch);
+        }
+
         //Employee Notification
         $notification = null;
         if (explode(':',$remaining_time)[1] <= 0){
@@ -2284,6 +2291,22 @@ class Timesheet extends MY_Controller {
                 'user_id' => $user_id,
                 'title' => 'Your shift will start soon.',
                 'content' => 'Shift start at',
+                'date_created' => date('Y-m-d h:i:s'),
+                'status' => 1
+            );
+            $this->db->insert('user_notification',$data_notify);
+        }
+        echo json_encode($this->notificationBell());
+    }
+
+    public function notifyEndSchedule(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->get_where('user_notification',array('user_id' => $user_id,'title' => 'Your shift will end soon.','date_created' => date('Y-m-d h:i:s')));
+        if ($qry->num_rows() == 0){
+            $data_notify = array(
+                'user_id' => $user_id,
+                'title' => 'Your shift will end soon.',
+                'content' => 'Shift end at',
                 'date_created' => date('Y-m-d h:i:s'),
                 'status' => 1
             );

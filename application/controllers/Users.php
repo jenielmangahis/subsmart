@@ -29,14 +29,16 @@ class Users extends MY_Controller {
 		add_css(array(
             "assets/plugins/dropzone/dist/dropzone.css",
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'assets/frontend/css/businessprofile/main.css',
+			'assets/frontend/css/businessprofile/main.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css'
         ));
 
         // JS to add only Job module
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js'
         ));
 
 	}
@@ -109,7 +111,7 @@ class Users extends MY_Controller {
 
 	}
 
-	public function workpictures()
+	public function portfolio()
 	{	
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
@@ -165,7 +167,7 @@ class Users extends MY_Controller {
 			copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$user->id.'/default.png');
 		}
 
-		$this->business_model->update($bid, ['business_name' => $pdata['business_name']]);
+		$this->business_model->update($bid, ['business_name' => $pdata['business_name'], 'business_desc' => $pdata['business_desc']]);
 
 		redirect('users/businessview');
 	}
@@ -320,7 +322,8 @@ class Users extends MY_Controller {
         $shift_duration = null;
         $entry_type = null;
         foreach ($users as $user):
-            $name = $user->FName." ".$user->LName;
+			$name = $user->FName." ".$user->LName;
+			$id = strval($user->id);
             foreach ($user_roles as $role){
                 if ($user->role == $role->id){
                     $emp_role = $role->title;
@@ -346,14 +349,14 @@ class Users extends MY_Controller {
                     $minutes = floor($seconds / 60);
                     $shift_duration = $this->lz($hours).":".$this->lz($minutes);
                 }
-            }
+			}
 	    $display .= '<tr>';
 	    $display .= '<td class="center">'.$clock_in.'</td>';
 	    $display .= '<td class="center">'.$clock_out.'</td>';
 	    $display .= '<td class="center">'.$shift_duration.'</td>';
 	    $display .= '<td>';
 	    $display .= '<div class="employee-section emp-photo">';
-	    $display .= '<img src="'.site_url().'/assets/img/timesheet/default-profile.png" alt="" class="employee-profile">';
+	    $display .= '<img src="'.userProfileImage($user->id).'" alt="" class="employee-profile">';
 	    $display .= '</div>';
 	    $display .= '<div class="employee-section emp-details">';
 	    $display .= '<span class="employee-name">'.$name.'</span><span class="employee-role">'.$emp_role.'</span>';

@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_setting'); ?>
+<?php include viewPath('includes/header'); ?>
 <style>
 .cell-active{
     background-color: #5bc0de;
