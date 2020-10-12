@@ -256,6 +256,30 @@ a.top-1 {
     position: relative;
     bottom: 3px;
   }
+  @media screen and (max-width: 1190px) {
+    div#calender_toolbar div {
+        width: 100%;
+    }
+  }
+  @media screen and (max-width: 1080px) {
+    div.fc-toolbar-chunk div.btn-group {
+      display: contents !important;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    #calender_toolbar {
+      display: block;
+      margin-bottom: 0px;
+    }
+    .stcs-print.cs-float-print {
+      width: 85px !important;
+      float: left;
+    }
+    .stcs-1.cs-float {
+        width: 60% !important;
+        float: left !important;
+    }
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
