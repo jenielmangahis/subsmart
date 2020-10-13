@@ -227,7 +227,7 @@ class Workcalender extends MY_Controller
                     $default_imp_img = base_url('uploads/users/default.png');
                 }*/
 
-                $resources_users[$inc]['id'] = $get_user->id;
+                $resources_users[$inc]['id'] = "user" . $get_user->id;
                 $resources_users[$inc]['building'] = 'Employee';
                 $resources_users[$inc]['title'] = "#" . $get_user->id . " " . $get_user->FName . " " . $get_user->LName;
                 $resources_users[$inc]['imageurl'] = $default_imp_img; 
@@ -946,14 +946,26 @@ class Workcalender extends MY_Controller
                     if( $cl->backgroundColor != '' ){
                         $bgcolor = $cl->backgroundColor;
                     }
-                    
 
                     foreach( $events->items as $event ){  
-                        $resources_user_events[$inc]['resourceId'] = $cl['id'];
+
+                        if( $event->start->dateTime != '' ){
+                            $start_date = $event->start->dateTime;
+                        }else{
+                            $start_date = $event->start->date;
+                        }
+
+                        if( $event->end->dateTime != '' ){
+                            $end_date = $event->end->dateTime;
+                        }else{
+                            $end_date = $event->end->date;
+                        }
+
+                        $resources_user_events[$inc]['resourceId'] = "user17";
                         $resources_user_events[$inc]['title'] = $event->summary;
                         $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
-                        $resources_user_events[$inc]['start'] = $event->start->date;
-                        $resources_user_events[$inc]['end'] = $event->end->date;
+                        $resources_user_events[$inc]['start'] = $start_date;
+                        $resources_user_events[$inc]['end'] = $end_date;
                         $resources_user_events[$inc]['color'] = $bgcolor;
 
                         $inc++;
@@ -1010,17 +1022,28 @@ class Workcalender extends MY_Controller
 
                 //Request
                 $date_to = date("Y-m-d",strtotime($post['gevent_date_to'] . ' +1 day'));
+
+                $rfc_start_date = date("c", strtotime($post['gevent_date_from'] . ' ' . $post['gevent_start_time']));
+                $rfc_end_date   = date("Y-m-d H:i:s", strtotime($post['gevent_date_from'] . ' ' . $post['gevent_start_time']));
+                $rfc_end_date   = date("Y-m-d H:i:s",strtotime($rfc_end_date . ' +1 day'));
+                $rfc_end_date   = date("c", strtotime($rfc_end_date));
+
                 $calendar = new Google_Service_Calendar($client);
                 $event    = new Google_Service_Calendar_Event(array(
                   'summary' => $post['gevent_name'],
                   'location' => '',
                   'description' => $post['gevent_name'],
                   'start' => array(
-                    'date' => $post['gevent_date_from']   
+                    'dateTime' => $rfc_start_date,
+                    'timeZone' => 'America/Los_Angeles'
                   ),
                   'end' => array(
-                    'date' => $date_to
-                  )
+                    'dateTime' => $rfc_end_date,
+                    'timeZone' => 'America/Los_Angeles'
+                  ),
+                  'recurrence' => array(
+                    'RRULE:FREQ=DAILY'
+                  ),
                 ));
 
                 $calendarId = $post['gevent_gcid'];
