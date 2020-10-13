@@ -515,10 +515,10 @@
                         <div id="collapseContainers" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
                           <div class="row" style="overflow-x: auto; heightL 250px;">
                             <div class="col-xs-6 col-sm-6 m-0">
-                              <div class="form-elements-draggable" data-element-id="53">
+                              <div class="form-elements-draggable" data-element-id="55">
                                 <div class="card p-1">
                                   <div class="card-content element-buttons">
-                                    <span><i class="fa fa-cog"></i> Blank Container</span>
+                                    <span><i class="fa fa-cog"></i> Highlight Container</span>
                                   </div>
                                 </div>
                               </div>
@@ -1303,6 +1303,7 @@
 
 <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
 <script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
+<script src="<?= base_url()?>/assets/formbuilder/js/jquery-sortable.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
@@ -1747,6 +1748,7 @@
 
   $('#windowPreviewContent').sortable({
     placeholder: 'col-xs-12 col-sm-3  bg-light card',
+    nested: true,
     update: function(event, ui){
       $(this).sortable("toArray").map((item, i)=>{
         let id = item.split('-')[2];
@@ -1772,7 +1774,7 @@
   $('#windowPreviewContent').disableSelection();
 
   $('#windowPreviewTemplate').droppable({
-    greedy: true,
+    // greedy: true,
     accept: '.form-elements-draggable',
     drop: function(event, ui){
       let elementOrder = $('#windowPreviewContent').sortable("toArray");
@@ -1805,6 +1807,28 @@
       
     }
   })
+
+  $('.droppable').droppable({
+    greedy: true,
+    accept: '.form-elements-draggable',
+    drop: function(event, ui){
+      alert('dropped');
+
+    }
+  })
+
+  $('.droppable').sortable({
+    group: 'droppable',
+    placeholder: '<div> class="droppable col-xs-12 col-sm-3 bg-light card"></div>',
+    placeholderClass: 'draggable',
+    nested: true,
+    onDragStart: function($item, container, _super){
+      alert('sort');
+    },
+    onDrop: function ($item, container, _super, event) {
+      alert('dropped');
+    }
+  });
 
   $('#saveFormStylesBtn').on('click', () => {
     let data = {

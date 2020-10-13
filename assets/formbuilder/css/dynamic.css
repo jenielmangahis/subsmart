@@ -35,8 +35,12 @@
 }
 
 .bg-lgray{ 
-    background-color: lightgray;
+    background-color: #f1f1f1;
 }
 .bg-whitesmoke{ 
     background-color: whitesmoke;
+}
+
+.droppable {
+    min-height: 150px;
 }

@@ -314,11 +314,13 @@ class Workcalender extends MY_Controller
             $calendar_list = $data->getItems(); 
             $email = $google_user_api->google_email;
             $enabled_calendar = unserialize($google_user_api->enabled_calendars);
+            $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);
         }   
 
         $this->load->model('Users_model', 'user_model');
         
         $this->page_data['enabled_calendar'] = $enabled_calendar;
+        $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
         $this->page_data['get_recent_users'] = $get_recent_users;
         
         $this->page_data['resources_users'] = $resources_users;
@@ -931,7 +933,7 @@ class Workcalender extends MY_Controller
             $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
 
             foreach( $calendar_list as $cl ){
-                if(!in_array($cl['id'], $enabled_mini_calendar)){
+                if(in_array($cl['id'], $enabled_mini_calendar)){
                     //Display in events
                     $optParams = array(
                       'orderBy' => 'startTime',

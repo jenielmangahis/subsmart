@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <div class="col-md-12">
                                                                         <div class="form-group" id="customer_type_group">
                                                                             <label for="">Lead Type <span class="required_field">*</span></label>
-                                                                            <a href="<?php echo url('customer/index/tab1') ?>" class=""><span class="fa fa-plus"></span></a><br/>
+                                                                            <a href="<?php echo url('customer/index/tab3/1/mt13') ?>" class=""><span class="fa fa-plus"></span></a><br/>
                                                                             <select id="fk_lead_id" name="fk_lead_id"  class="input_select" required>
                                                                                 <?php foreach ($lead_types as $lt): ?>
                                                                                     <option <?php if(isset($leads_data)){ if($leads_data->fk_lead_id == $lt->lead_id){ echo 'selected'; } } ?> value="<?= $lt->lead_id; ?>"><?= $lt->lead_name; ?></option>

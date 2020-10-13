@@ -20,6 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </td>
                                             <td width="60%" align="right" valign="top">
                                                 <label class="alarm_answer"><?= !empty($custom->field_value) ? $custom->field_value : '' ; ?> </label>
+                                                <a href="<?php echo url('customer/index/tab3/'.$profile_info->prof_id.'/mt12') ?>" class=""><span class="fa fa-pencil"></span></a>
                                             </td>
                                         </tr>
                                         <?php

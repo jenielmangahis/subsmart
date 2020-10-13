@@ -297,15 +297,16 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <?php 
+                            $servicechargecount =0;
                             if(!empty($this->reconcile_model->select_service($rows[0]->chart_of_accounts_id)))
                             {
                             $editrowcount =2;
                             foreach($this->reconcile_model->select_service($rows[0]->chart_of_accounts_id) as $editrowtab)
                             {
-                                
+                                $servicechargecount+=$editrowtab->service_charge_sub;
                             ?>
                             <tr onclick="trClickEdit(<?=$editrowcount?>)">
-                                <td><i class="fa fa-th"></i></td>
+                                <td data-id="<?=$editrowtab->id?>"><i class="fa fa-th"></i></td>
                                 <td><?=$editrowcount?></td>
                                 <td>
                                     <select name='edit_expense_account_<?=$editrowcount?>' id='edit_expense_account_<?=$editrowcount?>' data-id='<?=$editrowtab->id?>' class='up_row' style="display: none;">
@@ -360,6 +361,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <?php } ?>
+                            <input type="hidden" name="servicechargecount" id="servicechargecount" value="<?=$servicechargecount?>">
                             <tr class="pr participantRow hide">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>0</td>
@@ -2206,6 +2208,8 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                              <div class="row" id="filtername" style="margin-bottom: 20px">
                                  
                              </div>
+
+                            <div id="XYZ_id" style="display: none;"><?=$rows[0]->id?></div>
                             <table id="reconcile_table" class="table table-striped table-bordered accordion" style="width:100%;cursor: pointer;">
                                 <thead>
                                 <tr>
@@ -2879,6 +2883,11 @@ function closeFullNav() {
       var tot = $('#total').text().substr(9)-button.closest("tr").find('td:eq(4)').text().trim();
       $('#total').text('Total : $'+tot.toFixed(2));
       $('#amount').text('Amount : $'+tot.toFixed(2));
+      if(button.closest("tr").find('td:eq(2)').find('select').hasClass("up_row"))
+        {
+            var id_to_remove =button.closest("tr").find('td:eq(0)').attr("data-id");
+            remove_func(id_to_remove);
+        }
     }
     /* Doc ready */
     $(".add").on('click', function () {
@@ -3938,4 +3947,52 @@ function closeAddaccount()
         })
       }*/
     }
+    function remove_func(id)
+    {
+        var id = id;
+      var reconcile_id = $('#XYZ_id').text();
+      var mailing_address = $('#mailing_add').val();
+      var date_popup = $('#date_popup').val();
+      var checkno = $('#checkno').val();
+      var memo_sc = $('#memo_sc').val();
+      var descp_sc = $('.edit_descp').text();
+      var expense_account=$('.edit_expense_account').text();
+      var service_charge=$('#total').text().substr(9);
+        if(id!='')
+        {
+            $.ajax({
+                    url:"<?php echo url('accounting/reconcile/servicecharge/remove_sc') ?>",
+                    method: "POST",
+                    data: {id:id},
+                    success:function(data)
+                    {
+                        if(reconcile_id!='')
+                          {
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
+                                method: "POST",
+                                data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
+                                success:function(data)
+                                {
+                                    sweetAlert(
+                                            'Deleted!',
+                                            'Item has been deleted.',
+                                            'success'
+                                        );
+                                }
+                            })
+                          }
+                    }
+                })
+        }
+
+    }
+</script>
+<script type="text/javascript">
+    $( document ).ready(function() {
+       var main = $(".edit_service_charge").text();
+       var maintot = main - $("#servicechargecount").val();
+       $(".edit_service_charge").text(maintot.toFixed(2));
+       $("#edit_service_charge").val(maintot.toFixed(2));
+    });
 </script>

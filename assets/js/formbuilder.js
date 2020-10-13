@@ -1,8 +1,8 @@
 // import "https://formio.github.io/formio.js/#";
 
 
-const formBaseUrl = "http://localhost/nsmartrac/"; // local
-// const formBaseUrl = `${window.location.origin}/` ; // online
+// const formBaseUrl = "http://localhost/nsmartrac/"; // local
+const formBaseUrl = `${window.location.origin}/` ; // online
 
 // =====================================
 //     GLOBAL VALUES AND FUNCTIONS
@@ -274,6 +274,11 @@ const elementsList = [
     type: "zone-information-table",
     category: 'matrix-items'
   },
+  {
+    id: 55,
+    type: "container-block",
+    category: 'containers'
+  },
 ]
 
 // =====================================
@@ -323,7 +328,6 @@ loadFormSettings = (id) => {
   })
 }
 
-
 loadFormElements = (id, mode = null) => {
   document.querySelector("#windowPreviewContent").innerHTML = "";
   // const titlesFontFamily = document.getElementById("fTFontFamily").value;
@@ -335,7 +339,6 @@ loadFormElements = (id, mode = null) => {
     dataType: 'json',
     type: 'GET',
     success: function(res){
-      console.log(res)
       const titlesFontFamily = res.form.forms_title_font_family || '';
       const titlesFontSize = res.form.forms_title_font_size || '';
       const labelsFontFamily = res.form.forms_label_font_family || '';
@@ -353,7 +356,8 @@ loadFormElements = (id, mode = null) => {
         }
 
         if(elementType >= 15 && elementType < 30){
-          document.querySelector('#windowPreviewContent').innerHTML += `
+          let container =  (el.fe_block_id ? `#form-element-${el.fe_block_id} .droppable` : '#windowPreviewContent' );
+          document.querySelector(container).innerHTML += `
           
             ${(elementType == 14)?`
               <!-- Image -->
@@ -464,9 +468,27 @@ loadFormElements = (id, mode = null) => {
             `:""}
 
           `
+        }else if(elementType >= 54 && elementType <= 54 ) {
+          if(el.fe_block_id === null) {
+            const container = '#windowPreviewContent'
+          }
+          let container =  (el.fe_block_id ? `#form-element-${el.fe_block_id} .droppable` : '#windowPreviewContent' );
+          document.querySelector(container).innerHTML += `
+          ${(elementType == 54)?`
+          <!-- Container -->
+          <div id="form-element-${el.fe_id}"class="col-12 px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div class="container">
+                <div class="row droppable bg-lgray py-2">
+                    
+                </div>
+              </div>
+          </div>
+        `:""}
+        `
         }else{
-          document.querySelector('#windowPreviewContent').innerHTML += `
-            <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+          let container =  (el.fe_block_id ? `#form-element-${el.fe_block_id} .droppable` : '#windowPreviewContent' );
+          document.querySelector(container).innerHTML += `
+            <div id="form-element-${el.fe_id}" class="draggable col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
               ${(mode == "edit")?
                 `
                   <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
@@ -569,7 +591,7 @@ loadFormElements = (id, mode = null) => {
 
               ${(elementType == 14)?`
                 <!-- Signature -->
-                <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+                <div el_id="${el.fe_id}" id="form-element-${el.fe_id}" class="signature-canvas-container col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 d-block" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                   <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                     <div class="btn-group" style="margin-y: auto">
                       <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -578,9 +600,9 @@ loadFormElements = (id, mode = null) => {
                     </div>
                   </div>
 
-                    <label class="${labelsFontFamily} ${labelsFontSize}" for="${el.fe_id}">${el.fe_label}</label>
-                    <canvas id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="border" width="${(el.fe_span == 5)?"170":""} ${(el.fe_span == 1)?"260":""}  ${(el.fe_span == 6)?"330":""} ${(el.fe_span == 2)?"530":""}  ${(el.fe_span == 3)?"720":""} ${(el.fe_span == 4)?"1050":""} " height="150" ></canvas>
-                    <button type="button" class="btn btn-sm btn-secondary" onclick="clearCanvas(${el.fe_id})">clear</button>
+                    <label class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-nowrap" for="${el.fe_id}">${el.fe_label}</label>
+                    <canvas id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="border" height="150" ></canvas>
+                    <button type="button" class="mt-1 btn btn-sm btn-secondary" onclick="clearCanvas(${el.fe_id})">clear</button>
                     
                     
                     
@@ -641,6 +663,7 @@ loadFormElements = (id, mode = null) => {
                         <tr>
                             <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Product</th>
                             <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Quantity</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Location</th>
                             <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Price (Tax: +7.5%)</th>
                             <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-right">Total</th>
                         </tr>
@@ -771,8 +794,6 @@ loadFormElements = (id, mode = null) => {
                 </table>
               </div>
             `:""}
-  
-              
             </div>
           `;
         }
@@ -784,6 +805,7 @@ loadFormElements = (id, mode = null) => {
 
       });
       
+      initCanvas();
       return;
     }
   })
@@ -798,9 +820,22 @@ loadSignatureCanvas = (elementType, id, size )=>{
 }
 
 clearCanvas = id => {
-  document.querySelector(`canvas#feInput-${id}`).clear()
+  const canvas = document.getElementById(`feinput-${id}`);
+  const context = canvas.getContext('2d');
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+const initCanvas = () => {
+  const collection = $('.signature-canvas-container');
+  for(let el of collection) {
+    const elID = $(el).attr('el_id');
+    const canvas = $(`#feinput-${elID}`);
+    const containerWidth = $(el).width();
+    canvas.width(containerWidth * 3);
+    canvas.height(150)
+}
+}
 // =====================================
 //            EDIT PAGE
 // =====================================

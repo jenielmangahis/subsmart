@@ -24,12 +24,21 @@ class Esign_model extends MY_Model {
 
 	public function getLibraryCategory($userId = 0){
 		$whereClouser = "(isActive = 1 AND ( isDefault = 1 OR user_id = $userId ) )";
-		$this->db->select(['category_id','categoryName']);
+		$this->db->select(['category_id','categoryName', 'isDefault']);
 		$this->db->from($this->categoryTable);
         $this->db->where($whereClouser);
 		$query = $this->db->get();
         return $query->result_array();
 	}
+
+
+	public function updateLibraryCategory($whereClouser, $dataToUpdate){
+		foreach($whereClouser as $key => $val) {
+			$this->db->where($key, $val);
+		}
+		return $this->db->update($this->categoryTable,$dataToUpdate);
+	}
+
 
 	public function getLibraryWithCategory($userId){
 		return $this->db->from($this->libraryTable . " AS LT")
@@ -40,5 +49,13 @@ class Esign_model extends MY_Model {
 		->get()->result_array();
 	}
 
+	public function updateLibraryTemplate($whereClouser, $dataToUpdate){
+		foreach($whereClouser as $key => $val) {
+			$this->db->where($key, $val);
+		}
+		return $this->db->update($this->libraryTable,$dataToUpdate);
+	}
+
+	
 }
 

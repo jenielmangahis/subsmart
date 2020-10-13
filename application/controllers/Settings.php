@@ -515,6 +515,21 @@ class Settings extends MY_Controller {
             'enabled_calendars' => $enabled_calendars
         ));
     }
+
+    public function ajax_update_enabled_google_mini_calendar()
+    {
+        $this->load->model('GoogleAccounts_model');
+
+        $post          = $this->input->post();
+        $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
+
+        $calendars[] = $post['cid'];
+        $enabled_calendars = serialize($calendars);
+        
+        $this->GoogleAccounts_model->update($googleAccount->id, array(
+            'enabled_mini_calendars' => $enabled_calendars
+        ));
+    }
 	
     public function ajax_get_google_enabled_calendars()
     {
@@ -525,7 +540,7 @@ class Settings extends MY_Controller {
         $post = $this->input->post();
 
         $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
-        $enabled_calendars = unserialize($googleAccount->enabled_calendars);
+        $enabled_calendars = unserialize($googleAccount->enabled_mini_calendars);
 
         $google_user_api = $this->GoogleAccounts_model->getByAuthUser();
         $google_credentials = google_credentials();        

@@ -31,8 +31,9 @@ class Reconcile_model extends MY_Model {
 
 	public function update_sc_records($reconcile_id,$mailing_address,$first_date,$checkno,$memo_sc,$descp_sc,$expense_account,$service_charge)
 	{
-		$query="update accounting_reconcile set mailing_address ='$mailing_address', first_date = '$first_date', checkno ='$checkno', memo_sc = '$memo_sc',descp_sc = '$descp_sc',expense_account = '$expense_account',service_charge = '$service_charge' where id = '$reconcile_id'";;
+		$query="update accounting_reconcile set mailing_address ='$mailing_address', first_date = '$first_date', checkno ='$checkno', memo_sc = '$memo_sc',descp_sc = '$descp_sc',expense_account = '$expense_account',service_charge = '$service_charge' where id = '$reconcile_id'";
 		echo $this->db->query($query);
+		echo $query;
 	}
 
 	public function select()  
@@ -157,6 +158,12 @@ class Reconcile_model extends MY_Model {
 		$this->db->where('chart_of_accounts_id',$id);
 		$result =  $this->db->get()->result();
 	    return $result;	
+	}
+
+	public function remove_sc_records($id)
+	{
+		$this->db->where('id',$id);
+		$this->db->delete('accounting_reconcile_has_servicecharge');  
 	}
 }
 ?>

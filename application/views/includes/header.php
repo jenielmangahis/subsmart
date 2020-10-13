@@ -13,7 +13,6 @@
 
     <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
-    
     <!-- DataTables -->
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
@@ -21,8 +20,6 @@
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="<?php echo $url->assets ?>css/jquery.signaturepad.css" >
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
@@ -49,12 +46,6 @@
         #topnav {
             font-family: "Ubuntu","Trebuchet MS",sans-serif !important;
         }
-
-        .slide-ic img {
-            display: inline-block !important;
-            width: 25px;
-            margin: 0 5px;
-        }
     </style>
 </head>
 
@@ -72,7 +63,7 @@
                 <!-- MENU Start -->
 
                 <?php include viewPath('includes/nav'); ?>
-                <div class="col-auto justify-content-end">
+                <div class="menu-extras topbar-custom col-auto justify-content-end">
                     <ul class="navbar-right list-inline float-right mb-0">
                         <li class="menu-item list-inline-item">
                             <a class="navbar-toggle nav-link">
@@ -104,7 +95,7 @@
                             <!--                                </a>-->
                             <div class="wrapper-bell nav-link dropdown-toggle arrow-none" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0)?'visible':'hidden';?>;z-index: 20" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
-                                <div class="icon-loader" style="display:none">
+                                <div class="icon-loader">
                                     <i class="fa fa-spinner fa-spin" style="font-size:25px"></i>
                                 </div>
                                 <div class="bell" id="bell-1">
@@ -210,7 +201,7 @@
                         $attn_id = null;
                         $expected_endbreak = null;
                         foreach ($attendances as $attn){
-                            if ($attn->shift_duration > 0){
+                            if ($attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
                                 $shift_duration = $attn->shift_duration;
                             }else{
                                 $shift_duration = '-';
@@ -243,7 +234,7 @@
                                         }
                                     }
                                 }
-                                if ($log->action == 'Check out' && $log->attendance_id == $attn->id){
+                                if ($log->action == 'Check out' && $log->attendance_id == $attn->id && $log->date == date('Y-m-d')){
                                     $clock_out = date('h:i A',$log->time);
                                     $analog_active = null;
                                 }
@@ -341,7 +332,7 @@
                                     }*/
                                     $image = base_url('uploads/users/default.png');
                                     ?>
-                                        <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle">
+                                    <img src="<?php echo $image; ?>" alt="user" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                     <a class="dropdown-item" href="<?php echo url('dashboard')?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>

@@ -239,6 +239,7 @@ $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 $route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicecharge';
 $route['accounting/reconcile/change/servicecharge'] = 'reconcile/update_servicecharge';
 $route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
+$route['accounting/reconcile/servicecharge/remove_sc'] = 'reconcile/remove_sc';
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';
@@ -330,6 +331,7 @@ $route['settings/sms_templates'] = 'Settings/sms_templates';
 $route['settings/email_branding'] = 'Settings/email_branding';
 $route['settings/online_payments'] = 'Settings/online_payments';
 $route['settings/_update_enabled_google_calendar'] = 'Settings/ajax_update_enabled_google_calendar';
+$route['settings/_update_enabled_google_mini_calendar'] = 'Settings/ajax_update_enabled_google_mini_calendar';
 $route['settings/_get_google_enabled_calendars'] = 'Settings/ajax_get_google_enabled_calendars';
 $route['settings/calendar_unbind_account'] = 'Settings/calendar_unbind_account';
 
