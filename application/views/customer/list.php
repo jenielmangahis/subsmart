@@ -294,7 +294,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="rb-01">
                                                     <ul class="nav nav-tabs border-0">
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt2'){echo "active";} ?> active" data-toggle="tab" href="#widget1">Widget 1</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt2' || $minitab=='' ){echo "active";} ?>" data-toggle="tab" href="#widget1">Widget 1</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3'){echo "active";} ?>" data-toggle="tab" href="#widget2">Widget 2</a>
@@ -324,17 +324,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#details">Detail Sheet</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#custom">Customizable</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt12'){echo "active";} ?>" data-toggle="tab" href="#custom">Customizable</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#others">Others</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt13'){echo "active";} ?>" data-toggle="tab" href="#others">Others</a>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
 
                                             <div class="tab-content mt-4" >
-                                                <div class="tab-pane active <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget1">
+                                                <div class="tab-pane <?php if($minitab=='mt2' || $minitab=='' ){ echo "active";}else{echo "fade";} ?> <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget1">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
@@ -411,7 +411,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="activity">
+                                                <div class="tab-pane <?php if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="activity">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
@@ -421,7 +421,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="details">
+                                                <div class="tab-pane <?php if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="details">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
@@ -431,7 +431,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if($minitab=='mt11'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="custom">
+                                                <div class="tab-pane <?php if($minitab=='mt12'){ echo "active";} else{echo "fade";} ?> standard-accordion" id="custom">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
@@ -476,7 +476,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         </tbody>
                                                                     </table>
                                                                      <div class="modal-footer">
-                                                                         <button type="submit" class="btn btn-primary">Save</button>
+                                                                         <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save / Update</button>
                                                                      </div>
                                                                      <input type="hidden" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" name="prof_id" id="prof_id" />
                                                                  </form>
@@ -488,7 +488,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane fade standard-accordion" id="others">
+                                                <div class="tab-pane <?php if($minitab=='mt13'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="others">
 
                                                     <div class="row">
                                                         <div class="col-md-12">

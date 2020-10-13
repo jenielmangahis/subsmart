@@ -153,6 +153,7 @@
           <span id="table-product-quantity-text-${temp.id}">1</span>
           <button type="button" id="btnAddQuantity${temp.id}" onclick="addQuantity(${elementId}, ${temp.id})" class="btn btn-secondary btn-sm"><i class="fa fa-plus"></i></button>
         </td>
+        <td>${temp.location ? temp.location : ''}</td>
         <td>$${temp.price}</td>
         <td id="table-product-total-price-${temp.id}" class="text-right">
           <strong>

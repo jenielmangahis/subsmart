@@ -88,6 +88,36 @@ class Esign extends MY_Controller {
 		$this->load->view('esign/files', $this->page_data);
 	}
 	
+	public function changeFavoriteStatus($id,$isFavorite){
+		$this->load->model('Esign_model', 'Esign_model');
+		$whereClouser['user_id'] = logged('id');
+		$whereClouser['isActive'] = 1;
+		$whereClouser['esignLibraryTemplateId'] = $id;
+		$dataToUpdate['isFavorite'] = $isFavorite;
+		$isUpdated = $this->Esign_model->updateLibraryTemplate($whereClouser ,$dataToUpdate);
+		$result['status'] = true;
+		if(!$isUpdated){
+			$result['status'] = false;
+		}
+		echo json_encode($result);
+		return true;
+	}
+	
+	public function deleteLibrary($id){
+		$this->load->model('Esign_model', 'Esign_model');
+		$whereClouser['user_id'] = logged('id');
+		$whereClouser['isActive'] = 1;
+		$whereClouser['esignLibraryTemplateId'] = $id;
+		$dataToUpdate['isActive'] = 0;
+		$isUpdated = $this->Esign_model->updateLibraryTemplate($whereClouser ,$dataToUpdate);
+		$result['status'] = true;
+		if(!$isUpdated){
+			$result['status'] = false;
+		}
+		echo json_encode($result);
+		return true;
+	}
+
 	public function createTemplate(){
 		$this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
@@ -100,6 +130,27 @@ class Esign extends MY_Controller {
 		$this->page_data['templates'] = $this->Esign_model->getLibraryWithCategory($loggedInUser);
 		$this->load->view('esign/templateLibrary', $this->page_data);
 	}
+	public function categoryList(){
+		$this->load->model('Esign_model', 'Esign_model');
+		$loggedInUser = logged('id');
+		$this->page_data['templates'] = $this->Esign_model->getLibraryCategory($loggedInUser);
+		$this->load->view('esign/categoryList', $this->page_data);
+	}
+	public function deleteCategory($id){
+		$this->load->model('Esign_model', 'Esign_model');
+		$whereClouser['user_id'] = logged('id');
+		$whereClouser['isActive'] = 1;
+		$whereClouser['category_id'] = $id;
+		$dataToUpdate['isActive'] = 0;
+		$isUpdated = $this->Esign_model->updateLibraryCategory($whereClouser ,$dataToUpdate);
+		$result['status'] = true;
+		if(!$isUpdated){
+			$result['status'] = false;
+		}
+		echo json_encode($result);
+		return true;
+	}
+
 	public function editTemplate(){
 		$loggedInUser = logged('id');
 		$this->load->model('Esign_model', 'Esign_model');

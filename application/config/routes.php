@@ -239,6 +239,7 @@ $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 $route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicecharge';
 $route['accounting/reconcile/change/servicecharge'] = 'reconcile/update_servicecharge';
 $route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
+$route['accounting/reconcile/servicecharge/remove_sc'] = 'reconcile/remove_sc';
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

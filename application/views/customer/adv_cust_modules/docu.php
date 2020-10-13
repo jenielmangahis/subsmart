@@ -50,7 +50,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </td>
                                     <td align="left" valign="top">
                                         <iframe id="frame1" style="display:none"></iframe>
-                                        action="" style="width:100%;">
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="4">
                                                 <input type="hidden" name="paperworktxt" value="Photo ID Copy">

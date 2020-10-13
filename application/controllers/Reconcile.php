@@ -336,8 +336,15 @@ class Reconcile extends MY_Controller {
         $descp_sc=$this->input->post('descp_sc');
         $expense_account=$this->input->post('expense_account');
         $service_charge=$this->input->post('service_charge');
-
         $this->reconcile_model->update_sc_records($reconcile_id,$mailing_address,$first_date,$checkno,$memo_sc,$descp_sc,$expense_account,$service_charge);
+        
+    }
+
+    public function remove_sc()
+    {
+        $id=$this->input->post('id');
+
+        $this->reconcile_model->remove_sc_records($id);
         
     }
 }

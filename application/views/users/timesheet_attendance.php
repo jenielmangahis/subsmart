@@ -680,12 +680,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 $yesterday_note = null;
                                                                             }
                                                                         }elseif ($log->action == 'Check out'){
-                                                                            $clock_out = date('h:i A',$log->time);
-                                                                            $shift = $attn->shift_duration;
+                                                                            if ($log->date == date('Y-m-d')){
+                                                                                $clock_out = date('h:i A',$log->time);
+                                                                                $shift = $attn->shift_duration;
+                                                                            }
                                                                         }elseif ($log->action == 'Break in'){
-                                                                            $lunch_in = date('h:i A',$log->time);
+                                                                            if ($log->date == date('Y-m-d')){
+                                                                                $lunch_in = date('h:i A',$log->time);
+                                                                            }
                                                                         }elseif ($log->action == 'Break out'){
-                                                                            $lunch_out = date('h:i A',$log->time);
+                                                                            if ($log->date == date('Y-m-d')){
+                                                                                $lunch_out = date('h:i A',$log->time);
+                                                                            }
                                                                         }
                                                                     }
                                                                 }

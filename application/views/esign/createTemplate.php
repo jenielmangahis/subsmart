@@ -173,6 +173,7 @@ input {
                             <option <?=isset($template) && $template->category_id ==  $category['category_id'] ? "selected" : "" ?> value="<?=$category['category_id']?>"><?=$category['categoryName']?></option>
                         <?php } ?>
                     </select>
+                    <a href="categoryList">Manage template category</a>
                 </div>
                 <div class="form-group">
                     <label for="">Status : </label>

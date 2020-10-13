@@ -19,7 +19,7 @@
     
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-    <title>Library</title>
+    <title>Category Management</title>
     <style>
 fieldset {
   background-color: #eeeeee;
@@ -161,32 +161,26 @@ input {
         <br>
         <div class="container">
             <div class="row">
-                <a href="<?=base_url('esign/createTemplate')?>" class="btn btn-info">Add New Letter</a>            
+                <!-- <a href="<?=base_url('esign/addCategory')?>" class="btn btn-info">Add New Category</a>             -->
             </div>
             <table id="myTable" class="display">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Category</th>
-                        <th>Favorite</th>
+                        <th>Category Name</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($templates AS $template){?>
                         <tr>
-                            <td><a href="<?=base_url('esign/editTemplate?id='.$template['esignLibraryTemplateId'])?>"><?=$template['title']?></a></td>
-                            <td><?=$template['isActive'] ? "Active" : "InActive"?></td>
                             <td><?=$template['categoryName']?></td>
                             <td>
-                                <a href="#" class="changeFavorite">
-                                    <i id="<?=$template['esignLibraryTemplateId']?>" class="fa fa-star <?=$template['isFavorite'] ? 'favorite' : 'notFavorite'?> "></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="<?=base_url('esign/editTemplate?id='.$template['esignLibraryTemplateId'])?>"><i class="fa fa-edit"></i></a>
-                                <a class="trashColor" href="#"><i id="deleteId-<?=$template['esignLibraryTemplateId']?>" class="fa fa-trash"></i></a>
+                                <?php if(!$template['isDefault']){?>
+                                    <!-- <a href="<?=base_url('esign/editTemplate?id='.$template['category_id'])?>"><i class="fa fa-edit"></i></a> -->
+                                    <a class="trashColor" href="#"><i id="deleteId-<?=$template['category_id']?>" class="fa fa-trash"></i></a>
+                                <?php }else {?>
+                                    <a><i class="fa fa-lock"></i></a>
+                                <?php }?>
                             </td>
                         </tr>
                     <?php } ?>
@@ -200,38 +194,12 @@ input {
             let table = $('#myTable').DataTable({
                 columnDefs: [
                   { orderable: false, targets: -1 },
-                  { orderable: false, targets: -2 }
                 ]
             });
-            $('.changeFavorite').click(function(){
-                let clickedObj = $(this).children();
-                let templateId = clickedObj.attr('id');
-                if(!clickedObj.hasClass("appling")){
-                    clickedObj.addClass("appling");
-                    if(clickedObj.hasClass("favorite")){
-                        clickedObj.toggleClass('favorite notFavorite');
-                        updateFavorite(clickedObj, templateId, 0)
-                    }else{
-                        // console.log("we are adding favorite : ",clickedObj.attr('id'));
-                        clickedObj.toggleClass('notFavorite favorite');
-                        updateFavorite(clickedObj, templateId, 1)
-                    }
-                }
-            })
-            function updateFavorite(clickedObj, templateId, isFavorite){
-                $.get("changeFavoriteStatus/"+templateId+"/"+isFavorite, function(data, status){
-                    try {
-                        data = JSON.parse(data);
-                        if(status != "success" || !data.status){
-                            throw "errr";
-                        }
-                        clickedObj.removeClass("appling");
-                    } catch (error) {
-                        alert('Something Went Wrong Please Try Again');
-                        location.reload();
-                    }
-                });
-            }
+            
+            $('#myTable').on( 'dblclick', 'tbody td', function (e) {
+                console.log($(this).html())
+            });
 
             $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
                table
@@ -239,10 +207,10 @@ input {
                 .remove()
                 .draw();
                 let id= $(this).prop('id').split('-')[1] || 0;
-                deleteLibrary(id);
+                deleteCategory(id);
             });
-            function deleteLibrary(templateId){
-                $.get("deleteLibrary/"+templateId, function(data, status){
+            function deleteCategory(categoryId){
+                $.get("deleteCategory/"+categoryId, function(data, status){
                     try {
                         data = JSON.parse(data);
                         if(status != "success" || !data.status){
