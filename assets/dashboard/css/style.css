@@ -5607,6 +5607,31 @@ label {
     border-radius: 0.25rem;
     padding: 20px;
 }
+@media (max-width: 1470px) {
+  ul.navigation-menu.d-flex.justify-content-center.active {
+    float: right;
+    padding-right: 52px !important;
+  }
+  .navbar-right {
+    margin: 0;
+    float: right !important;
+  }
+  .clock {
+    width: 30px !important;
+    height: 30px !important;
+    position: relative;
+    left: 10px !important;
+  }
+  a.nav-user img {
+    position: relative;
+    top: 14px;
+  }
+  .menu-extras.topbar-custom.col-auto.justify-content-end {
+    width: 100%;
+    float:right !important;
+    padding-right: 77px;
+  }
+}
 @media (max-width: 1455px) {
   .form-group.a-1 {
       position: relative;
@@ -5664,6 +5689,20 @@ label {
       float: left;
       width: 40%;
   }
+}
+@media (max-width: 767px) {
+    .menu-extras.topbar-custom.col-auto.justify-content-end {
+      float: none !important;
+      padding-right: 0px !important;
+    }
+    a.navbar-toggle.nav-link {
+      position: relative;
+      left: 13px;
+      bottom: 7px !important;
+    }
+    ul.navigation-menu.d-flex.justify-content-center.active {
+      padding-right: 0px !important;
+    }
 }
 @media (min-width: 576px) {
     .card-deck {
