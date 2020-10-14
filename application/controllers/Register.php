@@ -93,6 +93,24 @@ class Register extends MY_Controller {
 
 		$ns_plans = $this->NsmartPlan_model->getAll();      
 
+
+        $ip_address = ip_address();
+        $ip_adds = $this->Clients_model->getByIPAddress($ip_address);
+        
+        $ip_count = 0;
+        if($ip_adds){
+            foreach ($ip_adds as $ip_add) {
+                $ip_count ++;
+            }
+        }    
+
+        if ($ip_count > 0) {
+            $ip_exist = true;
+        }else{
+            $ip_exist = false;
+        }
+
+        $this->page_data['ip_exist'] = $ip_exist; 
 		$this->page_data['payment_complete'] = $payment_complete; 
 		$this->page_data['payment_message']  = $payment_message;
         $this->page_data['payment_status']   = $payment_status;
@@ -173,17 +191,34 @@ class Register extends MY_Controller {
             $edata_business = $this->Clients_model->getByBusinessName($abname); 
             $edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
 
-            $count_exist_email = count($edata);
+          
+            $count_exist_email = 0;
+            if($edata){ 
+                foreach ($edata as $edata_val) {
+                    $count_exist_email++;
+                }
+            }
             if($count_exist_email > 0) {
                 $is_authentic = 0;
             }
 
-            $count_exist_business_name = count($edata_business);
+            $count_exist_business_name = 0;
+            if($edata_business){ 
+                foreach ($edata_business as $edata_business_val) {
+                    $count_exist_business_name++;
+                }
+            }
             if($count_exist_business_name > 0) {
                 $is_authentic = 0;
             }
 
-            $count_exist_ip_address = count($edata_ip);
+
+            $count_exist_ip_address = 0;
+            if($edata_ip){ 
+                foreach ($edata_ip as $edata_ip_val) {
+                    $count_exist_ip_address++;
+                }
+            }
             if($count_exist_ip_address > 0) {
                 $is_authentic = 0;
             }

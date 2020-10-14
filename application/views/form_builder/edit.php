@@ -61,6 +61,8 @@
   
   
 </style>
+<link href="<?php echo $url->assets ?>formbuilder/css/dynamic.css" rel="stylesheet" type="text/css">
+
 <div class="wrapper">
   <div __wrapper_section>
     <div class="card my-2" style="height: 1250px">
@@ -1147,6 +1149,10 @@
                   </div>
                   <h4>Style</h4>
                   <hr/>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="setIsTitle">
+                    <label class="custom-control-label" for="setIsTitle">Title</label>
+                  </div>
                   <div class="form-group">
                     <label for="selElementSize">Element Size</label>
                     <select name="selElementSize" id="selElementSize" class="custom-select">
@@ -1385,11 +1391,14 @@
         document.querySelector('#txtElementSettingsPlaceholderText').value = element.fe_placeholder_text;
         document.querySelector('#txtElementSettingsDefaultValue').value = element.fe_default_value;
         document.querySelector('#selElementSize').value = element.fe_span;
+        document.querySelector('#setIsTitle').value = element.fe_is_title;
         document.querySelector('#chkElementSettingsRequired').checked = (element.fe_is_required == 1)? true : false;
         document.querySelector('#chkElementSettingsReadonly').checked = (element.fe_is_readonly == 1)? true : false;
         document.querySelector('#chkElementSettingsScoringCheck').checked = (element.fe_enable_score == 1)? true : false;
         // document.querySelector('#radElementSettingsQuestionPosition').value = element.fe_question_position;
-        
+        if(element.fe_element_id !== 21) {
+          $("#setIsTitle").addClass("d-none");
+        }
         if(element.fe_element_id == 1 || element.fe_element_id == 2 || element.fe_element_id == 3 ){
           choices = JSON.parse($.ajax({
             url: `${formBaseUrl}formbuilder/form/element/choices/${element.fe_id}`,
@@ -1489,6 +1498,7 @@
       "fe_is_required": (document.querySelector('#chkElementSettingsRequired').checked === true)? 1 : 0,
       "fe_is_readonly": (document.querySelector('#chkElementSettingsReadonly').checked === true)? 1 : 0,
       "fe_enable_score": (document.querySelector('#chkElementSettingsScoringCheck').checked === true)? 1 : 0,
+      "fe_is_title": (document.querySelector('#setIsTitle').checked === true)? 1 : 0,
       // "fe_question_position": document.querySelector('#radElementSettingsQuestionPosition').value,
     }
 

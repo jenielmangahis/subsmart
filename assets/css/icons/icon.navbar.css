@@ -1,0 +1,33 @@
+.icon-settings-navbar{
+    cursor: pointer;
+    position:relative;
+    display:inline-block;
+    padding: 0;
+    margin: 0;
+    height: 32px;
+    width: 32px;
+    vertical-align: middle!important;
+    justify-content: center;
+    box-shadow: inset 0 0 8px rgba(0,0,0,.1), 0 10px 10px rgba(0,0,0,.2), 0 0 0 4px rgb(228,240,249);
+    border-radius: 50%;
+}
+.icon-settings-navbar a{
+    margin: 0 auto;
+    vertical-align: bottom;
+}
+.icon-settings-navbar i:hover{
+    -webkit-transform: rotate(360deg) translateZ(0);
+    -moz-transform: rotate(360deg) translateZ(0);
+    -ms-transform: rotate(360deg) translateZ(0);
+    -o-transform: rotate(360deg) translateZ(0);
+    transform: rotate(360deg) translateZ(0);
+}
+.icon-settings-navbar i{
+    -webkit-transition: transform 1s;
+    -moz-transition: transform 1s;
+    -ms-transition: transform 1s;
+    -o-transition: transform 1s;
+    transition: transform 1s;
+    position: relative!important;
+    font-size: 32px;
+}

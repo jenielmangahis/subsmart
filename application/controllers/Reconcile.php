@@ -347,4 +347,19 @@ class Reconcile extends MY_Controller {
         $this->reconcile_model->remove_sc_records($id);
         
     }
+
+    public function update_pg_sc($id)
+    {
+        $id=$id;
+        $scid=$this->input->post('scid');
+        $first_date=$this->input->post('first_date');
+        $checkno=$this->input->post('checkno');
+        $payee_name=$this->input->post('payee_name');
+        $service_charge_sub=$this->input->post('service_charge_sub');
+        $descp_sc_sub=$this->input->post('descp_sc_sub');
+        $expense_account_sub=$this->input->post('expense_account_sub');
+
+        $this->reconcile_model->updatepgscrecords($id,$scid,$first_date,$checkno,$service_charge_sub,$expense_account_sub,$descp_sc_sub);
+        
+    }
 }

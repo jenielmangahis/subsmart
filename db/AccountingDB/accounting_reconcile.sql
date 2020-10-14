@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2020 at 06:53 PM
+-- Generation Time: Oct 13, 2020 at 03:40 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -55,11 +55,10 @@ CREATE TABLE `accounting_reconcile` (
 
 INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`, `CHRG`, `memo_sc`, `memo_it`, `mailing_address`, `checkno`, `descp_sc`, `active`) VALUES
 (2, 1, '2000', '28.08.2019', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '08.08.2020', 'SVCCHRG', 'Service Charge', 'Interest Earned', NULL, NULL, NULL, 0),
-(4, 2, '10000', '09.06.2020', '11.06.2020', '100', 'Corporate Account (XXXXXX 5850)', '20.06.2020', '300', 'Cash on hand', NULL, 'SVCCHRG', 'Service Charge', 'Interest Earned', 'mailing add', 'SVCCHRG', '', 1);
+(4, 2, '10000', '09.06.2020', '11.06.2020', '100.00', 'Cash on hand', '20.06.2020', '200', 'Cash on hand', NULL, 'SVCCHRG', 'Service Charge', 'Interest Earned', 'mailing add', 'SVCCHRG', '', 1);
 
---
--- Indexes for dumped tables
---
+-- --------------------------------------------------------
+
 
 --
 -- Indexes for table `accounting_reconcile`
@@ -67,18 +66,3 @@ INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balanc
 ALTER TABLE `accounting_reconcile`
   ADD PRIMARY KEY (`id`),
   ADD KEY `chart_of_accounts_id` (`chart_of_accounts_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `accounting_reconcile`
---
-ALTER TABLE `accounting_reconcile`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -587,6 +587,28 @@ a.top-1 {
 				  <label>Date to</label> <span class="form-required">*</span>
 				  <input type="text" name="gevent_date_to" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
 				</div>
+        <div class="form-group" style="text-align: left;">
+          <label>Start Time</label> <span class="form-required">*</span>
+          <div class="form-group">
+            <div class='input-group date' id='gevent-start-time'>
+               <input type='text' name="gevent_start_time" class="form-control" />
+               <span class="input-group-addon">
+               <span class="fa fa-clock"></span>
+               </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label>End Time</label> <span class="form-required">*</span>
+          <div class="form-group">
+            <div class='input-group date' id='gevent-end-time'>
+               <input type='text' name="gevent_end_time" class="form-control" />
+               <span class="input-group-addon">
+               <span class="fa fa-clock"></span>
+               </span>
+            </div>
+          </div>
+        </div>
 				<div class="create-gevent-validation-error" style="text-align: left;"></div>
             </div>
             <div class="modal-footer">
@@ -824,7 +846,8 @@ a.top-1 {
 
 
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
-        var bc_events_url = base_url + "/calendar/_get_main_calendar_events";
+        var bc_events_url    = base_url + "/calendar/_get_main_calendar_events";
+        var bc_resources_url = base_url + "/calendar/_get_main_calendar_resources";
 
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
@@ -1012,20 +1035,23 @@ a.top-1 {
                dataType: 'json',
                success: function(o)
                {
+                  
+
                	  if( o.is_success ){
-               	  	var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
+                    var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
+                    $(".create-gevent-validation-error").html(msg);
+
+                    $("#modalCreateGoogleEvent").modal("hide");
+
+                    //Reload calendar
+                    load_calendar();
+                    var calendarEl = document.getElementById('calendar');
+                    var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+                    render_calender(calendarEl, timeZoneSelectorEl);
                	  }else{
                	  	var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
+                    $(".create-gevent-validation-error").html(msg);
                	  }
-
-                  $(".create-gevent-validation-error").html(msg);
-                  $("#modalCreateGoogleEvent").modal("hide");
-
-                  //Reload calendar
-                  load_calendar();
-	              var calendarEl = document.getElementById('calendar');
-	              var timeZoneSelectorEl = document.getElementById('time-zone-selector');
-	              render_calender(calendarEl, timeZoneSelectorEl);
                }
             });
         }, 1000);
@@ -1159,5 +1185,15 @@ a.top-1 {
     }
 
     load_calendar();
+
+    $('#gevent-start-time').datetimepicker({
+       format: 'LT',
+       allowInputToggle: true
+    });
+
+    $('#gevent-end-time').datetimepicker({
+       format: 'LT',
+       allowInputToggle: true
+    });
 
 </script>

@@ -187,41 +187,48 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							      	<!-- First Step -->
 							      	<div class="row setup-content" id="step-1">
 								        <div class="col-md-12">
-			                      			<div class="reg-s1">
-			  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
-			  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
-			  						          	<option value="prospect">3 months 50% off</option>
-			  						          	<option value="trial">Free Trial (30 Days)</option>
-			  						          </select>
-			  						          <ul class="plan-list">
-			  						          <?php foreach($ns_plans as $p){ ?>
-			  						          	<li>
-			  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
-			  						          			<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
-			  						          		<?php }else{ ?>
-			  						          			<h3 style="font-size: 20px !important;" class="plan-list-text"><?= $p->plan_name; ?></h3>
-			  						          		<?php } ?>
-			  						          		<?php //if($p->plan_name != 'Industry Specific') { ?>
-				  						          		<div class="discounted-price">
-				  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;color: #ffe215;">$<?= number_format($p->price, 2); ?></p>
-				  						          			<?php
-				  						          				$discount_price = $p->price / 2;
-				  						          			?>
-				  						          			<p class="plan-list-price">$<?= number_format($p->discount, 2); ?>/mo</p>
-				  						          		</div>
-				  						          		<div class="trial-price" style="display: none;">
-				  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?>/mo</p>
-				  						          		</div>
-			  						          			<br />
-			  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
-			  						          		<?php //} else { ?>
-			  						          			<!-- <p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
-			  						          			<a class="btn btn-info" href="<?php //echo url('/contact') ?>">Contact Us</a> -->
-			  						          		<?php //} ?>
-			  						          	</li>
-			  						          <?php } ?>
-			  						      	  </ul>
-			                      			</div>
+			                      			<?php if($ip_exist== false){ ?>
+				                      			<div class="reg-s1">
+				  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
+				  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
+				  						          	<option value="prospect">3 months 50% off</option>
+				  						          	<option value="trial">Free Trial (30 Days)</option>
+				  						          </select>
+				  						          <ul class="plan-list">
+				  						          <?php foreach($ns_plans as $p){ ?>
+				  						          	<li>
+				  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
+				  						          			<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
+				  						          		<?php }else{ ?>
+				  						          			<h3 style="font-size: 20px !important;" class="plan-list-text"><?= $p->plan_name; ?></h3>
+				  						          		<?php } ?>
+				  						          		<?php //if($p->plan_name != 'Industry Specific') { ?>
+					  						          		<div class="discounted-price">
+					  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;color: #ffe215;">$<?= number_format($p->price, 2); ?></p>
+					  						          			<?php
+					  						          				$discount_price = $p->price / 2;
+					  						          			?>
+					  						          			<p class="plan-list-price">$<?= number_format($p->discount, 2); ?>/mo</p>
+					  						          		</div>
+					  						          		<div class="trial-price" style="display: none;">
+					  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?>/mo</p>
+					  						          		</div>
+				  						          			<br />
+				  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
+				  						          		<?php //} else { ?>
+				  						          			<!-- <p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
+				  						          			<a class="btn btn-info" href="<?php //echo url('/contact') ?>">Contact Us</a> -->
+				  						          		<?php //} ?>
+				  						          	</li>
+				  						          <?php } ?>
+				  						      	  </ul>
+				                      			</div>
+				                      		<?php }else{ ?>
+				                      			<div class="reg-s1">
+				                      				<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Sorry you can only register once in our system</strong></h4>
+				                      			</div>
+				                      		<?php } ?>	
+
 								        </div>
 							      	</div>
 
@@ -453,7 +460,7 @@ $(function(){
 
 	        setTimeout(function () {
 	            $.ajax({
-	               type: "GET",
+	               type: "POST",
 	               url: authenticating_url,
 	               data: {
 	               		a_email:a_email,
