@@ -16,7 +16,7 @@ class NsmartAddons_model extends MY_Model
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
-                $this->db->like('title', $filters['search'], 'both');
+                $this->db->like('name', $filters['search'], 'both');
             }
         }
 
@@ -26,7 +26,26 @@ class NsmartAddons_model extends MY_Model
         return $query->result();
     }
 
-    
+    public function getAllActive($filters=array())
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('name', $filters['search'], 'both');
+            }
+        }
+
+        $this->db->where('status', 1);
+
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getById($id)
     {
