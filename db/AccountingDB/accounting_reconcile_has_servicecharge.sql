@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2020 at 06:54 PM
+-- Generation Time: Oct 13, 2020 at 07:07 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -32,9 +32,17 @@ CREATE TABLE `accounting_reconcile_has_servicecharge` (
   `id` int(11) NOT NULL,
   `reconcile_id` int(11) NOT NULL,
   `chart_of_accounts_id` int(11) DEFAULT NULL,
+  `expense_account_sub` varchar(255) DEFAULT NULL,
   `service_charge_sub` varchar(255) DEFAULT NULL,
   `descp_sc_sub` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `accounting_reconcile_has_servicecharge`
+--
+
+INSERT INTO `accounting_reconcile_has_servicecharge` (`id`, `reconcile_id`, `chart_of_accounts_id`, `expense_account_sub`, `service_charge_sub`, `descp_sc_sub`) VALUES
+(1, 4, 2, 'Cash on hand', '10.00', 'tendescp');
 
 --
 -- Indexes for dumped tables
@@ -56,7 +64,7 @@ ALTER TABLE `accounting_reconcile_has_servicecharge`
 -- AUTO_INCREMENT for table `accounting_reconcile_has_servicecharge`
 --
 ALTER TABLE `accounting_reconcile_has_servicecharge`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

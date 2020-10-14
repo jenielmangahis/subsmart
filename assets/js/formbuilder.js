@@ -399,7 +399,12 @@ loadFormElements = (id, mode = null) => {
                     <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                   </div>
                 </div>
-                <p class="${titlesFontFamily} ${titlesFontSize}" class="form-user-elements mt-3 ">${el.fe_label}</p>
+                ${(el.fe_is_title == 1)?`
+                  <p class="${titlesFontFamily} ${titlesFontSize}" class="form-user-elements mt-3 ">${el.fe_label}</p>
+                `:""}
+                ${(el.fe_is_title == 0)?`
+                  <p class="${labelsFontFamily} ${labelsFontSize}" class="form-user-elements mt-3 ">${el.fe_label}</p>
+                `:""}                
               </div>
             `:""}
 
@@ -688,7 +693,47 @@ loadFormElements = (id, mode = null) => {
                 </div>
                 
               `:""}
-
+              ${(elementType == 31)?`
+              <!-- equipment table list-->
+                ${
+                  (mode == "edit")?"":`
+                    ${setTimeout(() => {
+                      getProductSelection(el.fe_id)
+                    }, 500)}
+                  `
+                }
+                <div class="container-fluid ">
+                  <p class="${titlesFontFamily} ${titlesFontFamily}">${el.fe_label}</p>
+                  <table class="table form-user-elements" id="table-${el.fe_id}">
+                    <thead>
+                        <tr>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Product</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">QTY</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Price</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-left">Total</th>
+                            <th class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-right">Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-product-list-${el.fe_id}"></tbody>
+                  </table>
+                  <div class="d-flex w-100 justify-content-between">
+                    <div class="form-group">
+                      <select name="selProduct-${el.fe_id}" id="selProduct-${el.fe_id}" class="product-dropdowns custom-select-sm">
+                        
+                      </select>
+                    </div>
+                    <button type="button" onclick="addProductToTable(${el.fe_id})" id="btnAddProduct" class="btn btn-info btn-sm"><i class="fa fa-plus"></i> Add New Product</button>
+                  </div>
+                  <hr/>
+                  <div class="text-right">
+                    <!--
+                      <span id="table-product-tax-addition-${el.fe_id}" class="text-left">Tax: <strong>25%</strong> (+ $0.00)</span><br/>
+                    -->
+                    <span id="table-product-total-price-all-${el.fe_id}" class="text-left">Total: <strong>$0.0</strong></span>
+                  </div>
+                </div>
+                
+              `:""}
               ${(elementType == 48)?`
                 <!-- Checkbox Matrix -->
                 <table class="table table-hover form-user-elements">
@@ -768,7 +813,7 @@ loadFormElements = (id, mode = null) => {
               <!-- Zone Information Table -->
               <div class="bg-lgray p-2">
                 <table class="table table-hover form-user-elements">
-                <p class="${titlesFontFamily} ${titlesFontSize}">${el.fe_label}</p>
+                ${(el.fe_label)?`<p class="${titlesFontFamily} ${titlesFontSize}">${el.fe_label}</p>`:""}
                   <thead>
                     <tr>
                       <th class="text-center ${labelsFontFamily} font-weight-bold" style="width: 10%">Entry/Exit</th>
@@ -783,7 +828,7 @@ loadFormElements = (id, mode = null) => {
                         `<tr>
                           ${(choice.fc_column == null)?`
                             <td class="p-2 text-center"><input type="checkbox" id="entryExitChk-${rowIndex}" name="entryExitChk-${rowIndex}" value="entryExitChk-${rowIndex}">
-                            <td class="p-2 text-center">${rowIndex + 1}</td>
+                            <td class="p-2 text-center">${choice.fc_choice}</td>
                             <td class="p-2 text-center"><input type="checkbox" id="verified-${rowIndex}" name="verified-${rowIndex}" value="verified-${rowIndex}">
                             <td class="p-2"><input class="form-control bg-whitesmoke" type="text" id="location-${rowIndex}" name="location-${rowIndex}">
                           `:""}

@@ -2235,7 +2235,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<tr id='payments' onclick='trClick(".$o.")'>";
                                 echo "<td >".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td class='refno' >".$row->CHRG."</td>";
+                                echo "<td class='refno' >".$row->checkno."</td>";
                                 echo "<td class='account'>".$row->expense_account."</td>";
                                 echo "<td name='payee' class='payee' >";
                                     echo "<select name='payee' class='form-control select2'>";
@@ -2255,7 +2255,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
                                 echo "<td><div class='col-xs-10 date_picker'><input type='text' name='first_date' id='first_date' value='".$row->first_date."' class='form-control'></div></td>";
                                 echo "<td id='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td><input type='text' name='SVCCHRG' id='SVCCHRG' value='".$row->CHRG."' class='form-control'></td>";
+                                echo "<td><input type='text' name='SVCCHRG' id='SVCCHRG' value='".$row->checkno."' class='form-control'></td>";
                                 echo "<td><select name='expense_account' id='expense_account' class='form-control'>";
                                         foreach ($this->account_sub_account_model->get() as $rw)
                                         {
@@ -2350,6 +2350,74 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                               $i++;
                               $o++;
                               }
+                               ?>
+                               <?php
+                                $osc= 1;
+                               if(!empty($this->reconcile_model->select_service($rows[0]->chart_of_accounts_id)))
+                                {
+                                    foreach ($this->reconcile_model->select_service($rows[0]->chart_of_accounts_id) as $row_sc) 
+                                    {
+                                        echo "<input type='hidden' name='scid' id='scid' value='".$row_sc->id."'>";
+                                        echo "<tr id='payments' onclick='trClickSC(".$osc.")'>";
+                                        echo "<td >".$rows[0]->first_date."</td>";
+                                        echo "<td class='type'>".$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)."</td>";
+                                        echo "<td class='refno' >".$rows[0]->CHRG."</td>";
+                                        echo "<td class='account'>".$row_sc->expense_account_sub."</td>";
+                                        echo "<td name='payee' class='payee' >";
+                                            echo "<select name='payee' class='form-control select2'>";
+                                            echo "<option value='' disabled selected>Payee</option>";
+                                            foreach($this->AccountingVendors_model->select() as $ro)
+                                            {
+                                                echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                            }
+                                            echo  "</select>";
+                                        echo "</td>";
+                                        echo "<td class='memo' >".$row_sc->descp_sc_sub."</td>";
+                                        /*echo  "<td class='status'></td>";*/
+                                        echo  "<td >".$row_sc->service_charge_sub."</td>";
+                                        echo  "<td></td>";
+                                        echo "<td><input type='checkbox'></td>";
+                                        echo "</tr>";
+                                         echo "<tr class='tr_sc_class_".$osc."' style='display:none'>";
+                                        echo "<td><div class='col-xs-10 date_picker'><input type='text' name='first_date' id='first_date' value='".$rows[0]->first_date."' class='form-control'></div></td>";
+                                        echo "<td id='type'>".$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)."</td>";
+                                        echo "<td><input type='text' name='SVCCHRG' id='SVCCHRG' value='".$rows[0]->checkno."' class='form-control'></td>";
+                                        echo "<td><select name='expense_account_sub' id='expense_account_sub' class='form-control'>";
+                                                foreach ($this->account_sub_account_model->get() as $rw)
+                                                {
+                                                   echo "<option ";
+                                                   if($row_sc->expense_account_sub == $rw->sub_acc_name){
+                                                    echo "selected";
+                                                    }
+                                                    echo " value='".$rw->sub_acc_name."'>".$rw->sub_acc_name."</option>";
+                                                }
+                                        echo "</select></td>";
+                                        echo "<td><select name='payee_name' id='payee_name' class='form-control'>
+                                                <option value='' disabled selected>Payee</option>";
+                                                foreach($this->AccountingVendors_model->select() as $ro)
+                                                {
+                                                echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                                }
+                                        echo "</select></td>";
+                                        echo "<td><input type='text' name='descp_sc_sub' id='descp_sc_sub' value='".$row_sc->descp_sc_sub."' class='form-control'></td>";
+                                        echo "<td><input type='text' name='service_charge' id='service_charge_sub' value='".$row_sc->service_charge_sub."' class='form-control'></td>";   
+                                        echo "<td></td>";                                
+                                        echo "<td><i class='fa fa-times' onclick='crossClickSC(".$osc.")'></i></td>";    
+                                        echo "</tr>";
+                                        echo "<tr class='tr_sc_class_".$osc."' style='display:none'>";
+                                        echo "<td><a href='#' class='btn-ed' onclick='crossClickSC(".$osc.")'>Cancel</a></td>";
+                                        echo "<td><a href='#' class='btn-ed' onclick='openFullNav()'>Edit</a></td>";
+                                        echo "<td><a href='#' class='btn-ed savebtsc'>Save</a></td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "</tr>";
+                                    $osc++;
+                                    }
+                                }
                                ?>
                                 </tbody>
                             </table>
@@ -2669,6 +2737,14 @@ $('.dropopenbx').on('click', function(){
     {
         $(".tr_class_"+o).hide();
     }
+    function trClickSC(o)
+    {
+        $(".tr_sc_class_"+o).show();
+    }
+    function crossClickSC(o)
+    {
+        $(".tr_sc_class_"+o).hide();
+    }
     function removeTag(val)
     {
         val.remove();
@@ -2820,6 +2896,32 @@ $('.savebt2').on('click', function() {
         url:"<?php echo url('accounting/reconcile/update_pg2/') ?>"+id,
         method: "POST",
         data: {second_date:second_date,income_account:income_account,memo_it:memo_it,interest_earned:interest_earned},
+        success:function(data)
+        {
+            sweetAlert(
+                            'Updated!',
+                            'Reconcile has been updated.',
+                            'success'
+                        );
+        }
+    })
+  }
+});
+$('.savebtsc').on('click', function() {
+  var id = $('#id').val();
+  var scid = $('#scid').val();
+  var first_date = $('#first_date').val();
+  var checkno = $('#SVCCHRG').val();
+  var payee_name = $('#payee_name').val();
+  var expense_account_sub = $('#expense_account_sub').val();
+  var descp_sc_sub = $('#descp_sc_sub').val();
+  var service_charge_sub = $('#service_charge_sub').val();
+  if(id!='')
+  {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/update_pg_sc/') ?>"+id,
+        method: "POST",
+        data: {scid:scid,first_date:first_date,checkno:checkno,payee_name:payee_name,descp_sc_sub:descp_sc_sub,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub},
         success:function(data)
         {
             sweetAlert(
@@ -3882,9 +3984,9 @@ function closeAddaccount()
 
             var expense_account_sub = $('.edit_expense_account_'+i).text();
             var service_charge_sub = $('.edit_service_charge_'+i).text();
-            var descp_sub = $('.edit_descp_'+i).text();
+            var descp_sc_sub = $('.edit_descp_'+i).text();
 
-          if(expense_account_sub!='' || descp_sub!='' || service_charge_sub!='')
+          if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
           {
             if(service_charge_sub!='')
             {
@@ -3894,7 +3996,7 @@ function closeAddaccount()
                     $.ajax({
                         url:"<?php echo url('accounting/reconcile/change/servicecharge') ?>",
                         method: "POST",
-                        data: {id:id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sub:descp_sub},
+                        data: {id:id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
                         success:function(data)
                         {
                         }
@@ -3955,9 +4057,9 @@ function closeAddaccount()
       var date_popup = $('#date_popup').val();
       var checkno = $('#checkno').val();
       var memo_sc = $('#memo_sc').val();
-      var descp_sc = $('.edit_descp').text();
-      var expense_account=$('.edit_expense_account').text();
-      var service_charge=$('#total').text().substr(9);
+      var descp_sc_sub = $('.edit_descp').text();
+      var expense_account_sub=$('.edit_expense_account').text();
+      var service_charge_sub=$('#total').text().substr(9);
         if(id!='')
         {
             $.ajax({
@@ -3971,7 +4073,7 @@ function closeAddaccount()
                             $.ajax({
                                 url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
                                 method: "POST",
-                                data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
+                                data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc_sub:descp_sc_sub,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub},
                                 success:function(data)
                                 {
                                     sweetAlert(

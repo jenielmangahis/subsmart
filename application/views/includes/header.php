@@ -35,6 +35,8 @@
     <link href="<?php echo $url->assets ?>css/timesheet/clock.css" rel="stylesheet" type="text/css">
     <link href="<?php echo $url->assets ?>css/notification/notification.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
+<!--    ICONS CSS-->
+    <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css" rel="stylesheet" type="text/css">
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
     <style type="text/css">
@@ -85,9 +87,14 @@
                             <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa fa-line-chart" aria-hidden="true"></i></a>
                         </li>
                         <li class="dropdown notification-list list-inline-item ml-auto">
-                            <a class="nav-link dropdown-toggle arrow-none" href="<?php echo base_url('settings/email_templates') ?>">
-                                <i class="fa fa-cog" aria-hidden="true"></i>
-                            </a>
+<!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates') ?><!--">-->
+                               <div class="icon-settings-navbar">
+                                   <a href="<?php echo base_url('settings/email_templates') ?>">
+                                       <i class="fa fa-cog" aria-hidden="false" ></i>
+                                   </a>
+                               </div>
+<!--                                <img src="/assets/css/icons/images/479-4794569_settings-cog-gear-optimization-icon-hd-png-download.png" aria-hidden="true" class="icon-settings-navbar" alt="">-->
+<!--                            </a>-->
                         </li>
                         <li class="dropdown notification-list list-inline-item ml-auto">
                             <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="javascript:void (0)" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i>-->
@@ -96,7 +103,7 @@
                             <div class="wrapper-bell nav-link dropdown-toggle arrow-none" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0)?'visible':'hidden';?>;z-index: 20" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
                                 <div class="icon-loader">
-                                    <i class="fa fa-spinner fa-spin" style="font-size:25px"></i>
+                                    <i class="fa fa-spinner fa-pulse" style="font-size:25px"></i>
                                 </div>
                                 <div class="bell" id="bell-1">
                                     <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-1 5000ms infinite':'unset'?>">notifications_active</div>
@@ -151,9 +158,10 @@
                             </div>
                         </li>
                         <?php $newtasks = getNewTasks(); ?>
-                        <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style=""class="fa fa-calendar-check-o" aria-hidden="true"></i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
-                                <?php } ?></a>
+                        <li class="dropdown notification-list list-inline-item ml-auto">
+                            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style="" class="fa fa-calendar-check-o" aria-hidden="true"></i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
+                                <?php } ?>
+                            </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                 <!-- item-->
                                 <h6 class="dropdown-item-text"><?php if(count($newtasks) > 0){ echo 'New Tasks (' . count($newtasks) . ')'; } else { echo 'No New Tasks'; } ?></h6>
@@ -201,13 +209,13 @@
                         $attn_id = null;
                         $expected_endbreak = null;
                         foreach ($attendances as $attn){
-                            if ($attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
-                                $shift_duration = $attn->shift_duration;
-                            }else{
-                                $shift_duration = '-';
-                            }
                             $attn_id = $attn->id;
                             foreach ($ts_logs_h as $log){
+                                if ($log->attendance_id == $attn->id && $attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
+                                    $shift_duration = $attn->shift_duration;
+                                }else{
+                                    $shift_duration = '-';
+                                }
                                 if ($log->action == 'Check in' && $log->attendance_id == $attn->id){
                                     if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
                                         $clock_in = date('h:i A',$log->time);

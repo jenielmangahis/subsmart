@@ -47,7 +47,7 @@
   
   <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
 
-  <div class="container">
+  <div class="<?= ($_GET['preview'] ? 'container' : 'container-fluid') ?>">
     <div class="card">
       <div class="card-body">
         

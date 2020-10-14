@@ -2283,6 +2283,7 @@ class Timesheet extends MY_Controller {
         $data->notifications = $notification;
         echo json_encode($data);
     }
+
     public function notifyStartSchedule(){
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('user_notification',array('user_id' => $user_id,'title' => 'Your shift will start soon.','date_created' => date('Y-m-d h:i:s')));
