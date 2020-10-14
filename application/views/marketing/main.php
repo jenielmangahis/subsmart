@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
 
                 <div class="marketing-card-deck card-deck pl-50 pb-100">
-                    <a href="#" class="card border-gr"> <img
+                    <a href="<?php echo base_url('/sms_campaigns') ?>" class="card border-gr"> <img
                                 class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/sms.png') ?>"
                                 data-holder-rendered="true">
                         <div class="card-body align-left">
@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="card-price bottom-txt">$0.05/SMS + $5.00 service fee</div>
                         </div>
                     </a>
-                    <a href="#" class="card border-gr"> <img
+                    <a href="<?php echo base_url('/sms_automation') ?>" class="card border-gr"> <img
                                 class="marketing-img" alt="SMS Automation - Flaticons"
                                 src="<?php echo base_url('/assets/dashboard/images/mail.png') ?>"
                                 data-holder-rendered="true">
@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="card-price bottom-txt">$0.10/SMS</div>
                         </div>
                     </a>
-                    <a href="#" class="card border-gr"> <img
+                    <a href="<?php echo base_url('/survey') ?>" class="card border-gr"> <img
                                 class="marketing-img" alt="Questionnaire/Survey - Flaticons"
                                 src="<?php echo base_url('/assets/dashboard/images/document.png') ?>"
                                 data-holder-rendered="true">
@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="card-price bottom-txt">$0.20/voicemail + $10.00 service fee</div>
                         </div>
                     </a>
-                    <a href="#" class="card border-gr"> <img
+                    <a href="<?php echo base_url('/email_campaigns') ?>" class="card border-gr"> <img
                                 class="marketing-img" alt="Email Blast - Flaticons"
                                 src="<?php echo base_url('/assets/dashboard/images/email-blast.png') ?>"
                                 data-holder-rendered="true">
@@ -65,7 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="card-price bottom-txt">$5.00/1000 emails</div>
                         </div>
                     </a>
-                    <a href="#" class="card border-gr"> <img
+                    <a href="<?php echo base_url('/email_automation') ?>" class="card border-gr"> <img
                                 class="marketing-img" alt="Email Automation - Flaticons"
                                 src="<?php echo base_url('/assets/dashboard/images/email-automation.png') ?>"
                                 data-holder-rendered="true">
@@ -75,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="card-price bottom-txt">Free</div>
                         </div>
                     </a>
-                    <a href="#" class="card border-gr"> <img
+                    <a href="<?php echo base_url('/promote/deals') ?>" class="card border-gr"> <img
                                 class="marketing-img" alt="Deals & Steals - Flaticons"
                                 src="<?php echo base_url('/assets/dashboard/images/deal.png') ?>"
                                 data-holder-rendered="true">
@@ -106,7 +106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="card-price bottom-txt">$0.90/postcard</div>
                         </div>
                     </a>
-                    <a href="#" class="card border-gr"> <img
+                    <a href="<?php echo base_url('/campaign_blast') ?>" class="card border-gr"> <img
                                 class="marketing-img" alt="Campaign Blast"
                                 src="<?php echo base_url('/assets/dashboard/images/finder.png') ?>"
                                 data-holder-rendered="true">
