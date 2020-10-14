@@ -1040,10 +1040,10 @@ class Workcalender extends MY_Controller
                   'end' => array(
                     'dateTime' => $rfc_end_date,
                     'timeZone' => 'America/Los_Angeles'
-                  ),
+                  )/*,
                   'recurrence' => array(
                     'RRULE:FREQ=DAILY'
-                  ),
+                  ),*/
                 ));
 
                 $calendarId = $post['gevent_gcid'];
