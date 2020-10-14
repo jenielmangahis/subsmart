@@ -1,5 +1,6 @@
 <?php include viewPath('includes/header'); ?>
 <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+<link href="<?php echo $url->assets ?>css/workorder.css" rel="stylesheet">
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
@@ -83,34 +84,14 @@
                                                             
                                                             <div class="tab-content mt-4">
                                                                 <div class="tab-pane standard-accordion active" id="alarmform1">
-                                                                    <div class="row">
-                                                                        <div class="col-xs-12 col-sm-6">
-                                                                            <img src="<?= base_url()?>/assets/formbuilder/forms/adillc.jpg" alt="zone-list-form">
-                                                                        </div>
-                                                                        <div class="col-xs-12 col-sm-6">
-                                                                            <iframe src="<?= base_url()?>/form/15?preview" frameborder="0" class="w-100" style="height: 800px"></iframe>
-                                                                        </div>
-                                                                    </div>
+                                                                    <iframe src="<?= base_url()?>/form/15?preview" frameborder="0" class="workorder-container"></iframe>
                                                                 </div>
                                                                 <div class="tab-pane standard-accordion" id="alarmform2">
-                                                                    <div class="row">
-                                                                        <div class="col-xs-12 col-sm-6">
-                                                                            <img src="<?= base_url()?>/assets/formbuilder/forms/adischedule.jpg" alt="zone-list-form">
-                                                                        </div>
-                                                                        <div class="col-xs-12 col-sm-6">
-                                                                            <iframe src="<?= base_url()?>/form/14?preview" frameborder="0" class="w-100" style="height: 800px"></iframe>
-                                                                        </div>
-                                                                    </div>
+                                                                    <iframe src="<?= base_url()?>/form/14?preview" frameborder="0" class="workorder-container"></iframe>
                                                                 </div>
                                                                 <div class="tab-pane standard-accordion" id="alarmform3">
-                                                                    <div class="row">
-                                                                        <div class="col-xs-12 col-sm-6">
-                                                                            <img src="<?= base_url()?>/assets/formbuilder/forms/adiworkorder.jpg" alt="zone-list-form">
-                                                                        </div>
-                                                                        <div class="col-xs-12 col-sm-6">
-                                                                            <iframe src="<?= base_url()?>/form/13?preview" frameborder="0" class="w-100" style="height: 800px"></iframe>
-                                                                        </div>
-                                                                    </div>
+                                                                    <iframe src="<?= base_url()?>/form/13" frameborder="0" class="workorder-container"></iframe>
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                             
@@ -1797,7 +1778,10 @@
         }
     }
 
+
     $(document).ready(function () {
+        
+
 
         // phone type change, add the value to hiddend field and show the text
         $(document.body).on('click', '.changePhoneType', function () {

@@ -2875,61 +2875,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="container">
                 <div class="addon__box">
                     <div class="addon__list-cnt">
+                      <?php foreach($active_addons_by_price_group as $key_addons => $addons) { ?>
                         <div class="addon__list-row">
                             <div class="addon__price">
-                                <div class="addon__price-base"><span class="addon__price-currency">$</span>5</div>
+                                <div class="addon__price-base"><span class="addon__price-currency">$</span><?php echo $key_addons; ?></div>
                                 <div class="addon__price-label">Add-Ons</div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <ul class="addon__list">
-                                        <li><span class="fa fa-plus"></span> Survey Builder</li>
-                                        <li><span class="fa fa-plus"></span> Online Booking</li>
-                                        <li><span class="fa fa-plus"></span> Lead Contact Form</li>
-                                        <li><span class="fa fa-plus"></span> Email Blast</li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-12">
-                                    <ul class="addon__list">
-                                        <li><span class="fa fa-plus"></span> Employee Access</li>
-                                        <li><span class="fa fa-plus"></span> Virtual Number</li>
-                                        <li><span class="fa fa-plus"></span> SMS Blast</li>
+                                      <?php foreach($addons as $addon) { ?>
+                                        <li><span class="fa fa-plus"></span> <?php echo $addon->name; ?></li>
+                                      <?php } ?>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <br/>
-                        <div class="addon__list-row">
-                            <div class="addon__price">
-                                <div class="addon__price-base"><span class="addon__price-currency">$</span>10</div>
-                                <div class="addon__price-label">Add-Ons</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <ul class="addon__list">
-                                        <li><span class="fa fa-plus"></span> API Connectors</li>
-                                        <li><span class="fa fa-plus"></span> Rewards & Offers</li>
-                                        <li><span class="fa fa-plus"></span> Campaign Builder</li>
-                                        <li><span class="fa fa-plus"></span> Time Sheet & Tracking</li>
-                                        <li><span class="fa fa-plus"></span> Inventory Management</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <br/>
-                        <div class="addon__list-row">
-                            <div class="addon__price">
-                                <div class="addon__price-base"><span class="addon__price-currency">$</span>15</div>
-                                <div class="addon__price-label">Add-Ons</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <ul class="addon__list">
-                                        <li><span class="fa fa-plus"></span> Business form templates</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                      <?php } ?>
                     </div>
                     <div class="addon__btn">
                         <a class="btn btn-primary btn-xl" href="<?php echo url('registration') ?>">Try nSmarTrac Now</a>

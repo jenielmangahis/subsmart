@@ -36,6 +36,14 @@ class Reconcile_model extends MY_Model {
 		echo $query;
 	}
 
+	public function updatepgscrecords($id,$scid,$first_date,$checkno,$service_charge_sub,$expense_account_sub,$descp_sc_sub)
+	{
+		$query="update accounting_reconcile set first_date ='$first_date',checkno = '$checkno' where id = '$id'";;
+		echo $this->db->query($query);
+		$query2 ="update accounting_reconcile_has_servicecharge set service_charge_sub = '$service_charge_sub', expense_account_sub ='$expense_account_sub', descp_sc_sub = '$descp_sc_sub' where id = '$scid'";;
+		echo $this->db->query($query2);
+	}
+
 	public function select()  
 	  {  
 	    /*$query = $this->db->get('accounting_reconcile');  
