@@ -360,7 +360,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="dropdown notification-list list-inline-item">
+                        <li class="dropdown notification-list list-inline-item" style="vertical-align: middle;">
                             <div class="dropdown notification-list nav-pro-img">
                                 <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
                                     <?php /*<img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle">*/ ?>
