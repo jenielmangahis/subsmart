@@ -102,7 +102,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <?php
                                 for ($suffix=0;$suffix<14;$suffix++){
                                     ?>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->suffix == suffix_name($prefix)){ echo 'selected'; } } ?> value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->suffix == suffix_name($suffix)){ echo 'selected'; } } ?> value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
                                     <?php
                                 }
                             ?>

@@ -1,12 +1,4 @@
 $(document).ready(function () {
-    //Check if body is fully loaded
-    var readyStateCheckInterval = setInterval(function() {
-        if (document.readyState === "complete") {
-            $('.bell').css('display','inline-block');
-            $('.icon-loader').hide();
-            clearInterval(readyStateCheckInterval);
-        }
-    }, 10);
     var break_end_time = 0;
     var minutes = 0;
     var seconds = 0;

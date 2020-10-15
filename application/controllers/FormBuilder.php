@@ -50,7 +50,16 @@ class FormBuilder extends MY_Controller {
 	}
 
 	
-	
+	public function getActiveCompanyData() {
+		$user = (object)$this->session->userdata('logged');		
+		$cid=logged('id');
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$res = ($profiledata) ? $profiledata[0] : '';
+		(!empty($res)) ? $res->business_image = businessProfileImage($res->id) : '';
+		echo json_encode($res);
+		exit;
+	}
+
 	// VIEWS
 	public function index(){	
 		$this->page_data["forms"] = $this->formsbuilder_model->getForms();

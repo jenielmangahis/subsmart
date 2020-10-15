@@ -5,9 +5,21 @@ class Pricing extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		//$this->checkLogin(1);
+
+		$this->load->model('NsmartAddons_model');
 		$this->page_data['page']->title = 'nSmart - Pricing';
 	}
+
 	public function index(){
+
+		$get_all_active_addons = $this->NsmartAddons_model->getAllActive();
+
+		$active_addons_by_price_group = array();
+		foreach($get_all_active_addons as $addon) {
+			$active_addons_by_price_group[$addon->price][] = $addon;
+		}
+
+		$this->page_data['active_addons_by_price_group'] = $active_addons_by_price_group;
 		$this->load->view('pricing', $this->page_data);
 	}
 

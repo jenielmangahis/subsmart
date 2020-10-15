@@ -40,12 +40,12 @@
             initComplete: function () {
                 this.api().columns([11]).every( function () {
                     var column = this;
-                    var select = $('<select ><option value=""></option></select>').appendTo( $(column.header()))
+                    var select = $('<select class="input_select" style="padding: 5px;border-radius: 5px;display: inline-block !important;"><option value="">All</option></select>').appendTo($(".dataTables_filter"))
                         .on( 'change', function () {
                             var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
                             );
                             column.search( val ? val : '', false, true ).draw();
+                            $(this).val()
                         } );
                     column.data().unique().sort().each( function ( d, j ) {
                         //var val = $('<div/>').html(d).text();

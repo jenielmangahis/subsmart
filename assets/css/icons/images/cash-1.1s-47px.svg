@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xml:space="preserve" viewBox="0 0 100 100" y="0" x="0" xmlns="http://www.w3.org/2000/svg" id="圖層_1" version="1.1" style="height: 100%; width: 100%; background: none; shape-rendering: auto;" width="47px" height="47px"><g class="ldl-scale" style="transform-origin: 50% 50%; transform: rotate(0deg) scale(0.8, 0.8);"><g class="ldl-ani"><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.444444s 1 normal forwards running bounce-in-53a6d152-a3ae-47db-ac7b-3c85956f66fb;"><path fill="#d1d1d1" d="M86.883 21.922H29.795a5.624 5.624 0 0 0-5.617 5.617v2.637c0 .095.006.19.014.283h-2.854a5.624 5.624 0 0 0-5.617 5.617v2.377h-2.605a5.624 5.624 0 0 0-5.617 5.617v28.39a5.624 5.624 0 0 0 5.617 5.617h57.089a5.623 5.623 0 0 0 5.617-5.617v-2.38c.023.001.046.003.07.003h2.534a5.623 5.623 0 0 0 5.617-5.617V61.53c.101.009.203.016.305.016h2.534a5.624 5.624 0 0 0 5.617-5.617v-28.39a5.622 5.622 0 0 0-5.616-5.617z" style="fill: rgb(209, 209, 209);"></path></g></g><g class="ldl-layer"><g class="ldl-ani"><g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.333333s 1 normal forwards running bounce-in-53a6d152-a3ae-47db-ac7b-3c85956f66fb;"><path fill="#464646" d="M78.427 33.762H21.339a2.314 2.314 0 0 0-2.314 2.315v2.637h50.851a6.024 6.024 0 0 1 6.018 6.017v22.05h2.534a2.315 2.315 0 0 0 2.315-2.314v-28.39a2.317 2.317 0 0 0-2.316-2.315z" style="fill: rgb(70, 70, 70);"></path></g></g></g></g></g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.222222s 1 normal forwards running bounce-in-53a6d152-a3ae-47db-ac7b-3c85956f66fb;"><circle fill="#464646" r="8.552" cy="58.266" cx="41.661" style="fill: rgb(70, 70, 70);"></circle></g></g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.111111s 1 normal forwards running bounce-in-53a6d152-a3ae-47db-ac7b-3c85956f66fb;"><path fill="#464646" d="M70.205 41.756H13.117a2.314 2.314 0 0 0-2.314 2.314v28.391a2.314 2.314 0 0 0 2.314 2.314h57.089a2.315 2.315 0 0 0 2.315-2.314v-28.39a2.317 2.317 0 0 0-2.316-2.315zm-11.292 28.39H23.59c-.143-4.754-3.611-8.671-8.159-9.506v-4.749c4.548-.835 8.016-4.752 8.159-9.506h35.324a10.388 10.388 0 0 0 8.977 9.488v4.784a10.393 10.393 0 0 0-8.978 9.489z" style="fill: rgb(70, 70, 70);"></path></g></g><g class="ldl-layer"><g class="ldl-ani"><g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0s 1 normal forwards running bounce-in-53a6d152-a3ae-47db-ac7b-3c85956f66fb;"><path fill="#464646" d="M86.883 25.225H29.795a2.314 2.314 0 0 0-2.314 2.314v2.637h50.851a6.024 6.024 0 0 1 6.017 6.018v22.05h2.534a2.315 2.315 0 0 0 2.315-2.315v-28.39a2.315 2.315 0 0 0-2.315-2.314z" style="fill: rgb(70, 70, 70);"></path></g></g></g></g></g><metadata xmlns:d="https://loading.io/stock/"><d:name>cash</d:name><d:tags>money,buck,usd,coin,paper money,value,price,currency,cash,map</d:tags><d:license>free</d:license><d:slug>38tmt</d:slug></metadata></g></g><style id="bounce-in-53a6d152-a3ae-47db-ac7b-3c85956f66fb" data-anikit="">@keyframes bounce-in-53a6d152-a3ae-47db-ac7b-3c85956f66fb
+{
+  0% {
+    animation-timing-function: cubic-bezier(0.0383,0.3388,0.0421,0.6652);
+    transform: matrix(0.01,0,0,0.01,0,0);
+    opacity: 1;
+  }
+  4.7% {
+    animation-timing-function: cubic-bezier(0.3296,0.3336,0.5772,0.6672);
+    transform: matrix(0.556,0,0,0.556,0,0);
+    opacity: 1;
+  }
+  8.4% {
+    animation-timing-function: cubic-bezier(0.0781,0.1617,0.0874,0.9301);
+    transform: matrix(0.979,0,0,0.979,0,0);
+    opacity: 1;
+  }
+  12.4% {
+    animation-timing-function: cubic-bezier(0.8341,0.1496,0.8634,0.7673);
+    transform: matrix(1.153,0,0,1.153,0,0);
+    opacity: 1;
+  }
+  16.3% {
+    animation-timing-function: cubic-bezier(0.3264,0.3332,0.5758,0.6695);
+    transform: matrix(1.008,0,0,1.008,0,0);
+    opacity: 1;
+  }
+  21.2% {
+    animation-timing-function: cubic-bezier(0.0921,0.1883,0.3277,1);
+    transform: matrix(0.704,0,0,0.704,0,0);
+    opacity: 1;
+  }
+  24.5% {
+    animation-timing-function: cubic-bezier(0.6905,0.0944,0.8759,0.7624);
+    transform: matrix(0.626,0,0,0.626,0,0);
+    opacity: 1;
+  }
+  27.7% {
+    animation-timing-function: cubic-bezier(0.3688,0.332,0.624,0.6684);
+    transform: matrix(0.704,0,0,0.704,0,0);
+    opacity: 1;
+  }
+  32.6% {
+    animation-timing-function: cubic-bezier(0.1368,0.2364,0.2451,0.9049);
+    transform: matrix(0.958,0,0,0.958,0,0);
+    opacity: 1;
+  }
+  37.4% {
+    animation-timing-function: cubic-bezier(0.5936,0.0846,0.3495,1);
+    transform: matrix(1.085,0,0,1.085,0,0);
+    opacity: 1;
+  }
+  49.5% {
+    animation-timing-function: cubic-bezier(0.5522,0.0981,0.3807,1);
+    transform: matrix(0.802,0,0,0.802,0,0);
+    opacity: 1;
+  }
+  62.4% {
+    animation-timing-function: cubic-bezier(0.4497,0.1349,0.4911,1);
+    transform: matrix(1.044,0,0,1.044,0,0);
+    opacity: 1;
+  }
+  74.1% {
+    animation-timing-function: cubic-bezier(0.429,0,0.5239,1);
+    transform: matrix(0.914,0,0,0.914,0,0);
+    opacity: 1;
+  }
+  87% {
+    animation-timing-function: cubic-bezier(0.3501,0,0.6422,1);
+    transform: matrix(1.013,0,0,1.013,0,0);
+    opacity: 1;
+  }
+  95.8% {
+    animation-timing-function: cubic-bezier(0.3653,0,0.6776,1);
+    transform: matrix(0.992,0,0,0.992,0,0);
+    opacity: 1;
+  }
+  100% {
+    transform: matrix(1,0,0,1,0,0);
+    opacity: 1;
+  }
+}</style><!-- [ldio] generated by https://loading.io/ --></svg>

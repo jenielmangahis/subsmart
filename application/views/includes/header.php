@@ -73,37 +73,95 @@
                             </a>
                         </li>
                         <li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a></li>
-                        <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-
+                        <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+<!--                            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>-->
+                            <div class="icon-loader">
+                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                            </div>
+                            <div class="plus-icon-container">
+                                <img class="plus-icon-static" src="/assets/css/icons/images/add-1.1s-47px.svg" alt="">
+                                <img class="plus-icon-hover" src="/assets/css/icons/images/add-1.1s-47px%20(2).svg" alt="">
+                            </div>
                         </li>
-                        <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-commenting-o" aria-hidden="true"></i></a>
-
+                        <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                            <div class="icon-loader">
+                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                            </div>
+                            <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                <img class="conversation-icon-static" src="/assets/css/icons/images/conversation-1.1s-47px.svg" alt="">
+                                <img class="conversation-icon-hover" src="/assets/css/icons/images/conversation-1.1s-47px%20(2).svg" alt="">
+<!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
+<!--                                    -->
+<!--                                </a>-->
+                            </div>
                         </li>
 
 
-                        <li class="dropdown notification-list list-inline-item ml-auto">
-                            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa fa-line-chart" aria-hidden="true"></i></a>
+                        <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                            <div class="icon-loader">
+                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                            </div>
+                            <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                <img class="growth-icon-static" src="/assets/css/icons/images/growth-1.1s-47px (1).svg" alt="">
+                                <img class="growth-icon-hover" src="/assets/css/icons/images/growth-1.1s-47px (2).svg" alt="">
+<!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
+<!--                                    -->
+<!--                                </a>-->
+                            </div>
                         </li>
-                        <li class="dropdown notification-list list-inline-item ml-auto">
+                        <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
 <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates') ?><!--">-->
-                               <div class="icon-settings-navbar">
+                                <div class="icon-loader">
+                                    <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                                </div>
+                                <div class="settings-icon-container">
                                    <a href="<?php echo base_url('settings/email_templates') ?>">
-                                       <i class="fa fa-cog" aria-hidden="false" ></i>
+                                       <img class="settings-icon-static" src="/assets/css/icons/images/wrench-1.1s-47px.svg" alt="">
+                                       <img class="settings-icon-hover" src="/assets/css/icons/images/wrench-1.1s-47px%20(1).svg" alt="">
                                    </a>
                                </div>
 <!--                                <img src="/assets/css/icons/images/479-4794569_settings-cog-gear-optimization-icon-hd-png-download.png" aria-hidden="true" class="icon-settings-navbar" alt="">-->
 <!--                            </a>-->
                         </li>
-                        <li class="dropdown notification-list list-inline-item ml-auto">
+                        <?php $newtasks = getNewTasks();?>
+                        <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
+                            <div class="icon-loader">
+                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                            </div>
+                            <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                <?php if (count($newtasks) > 0): ?>
+                                <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="z-index: 20;top: 1px;right: 0;" id="notifyBadge"><?php echo (count($newtasks) != 0)?count($newtasks):null; ?></span>
+                                <?php endif;?>
+                                <img class="schedule-icon-static" src="/assets/css/icons/images/schedule-icon.svg" alt="">
+                                <img class="schedule-icon-hover" src="/assets/css/icons/images/schedule-icon2.svg" alt="">
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
+                                <!-- item-->
+                                <h6 class="dropdown-item-text"><?php if(count($newtasks) > 0){ echo 'New Tasks (' . count($newtasks) . ')'; } else { echo 'No New Tasks'; } ?></h6>
+                                <div class="slimscroll notification-item-list">
+                                    <?php foreach ($newtasks as $key => $value) { ?>
+                                        <a href="<?php echo base_url('taskhub/view/' . $value['task_id']); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value['subject']; ?><span class="text-muted">
+                                                <?php
+                                                $date_created = date_create($value['date_created']);
+                                                echo date_format($date_created, "F d, Y h:i:s");
+                                                ?>
+                                            </span></p>
+                                        </a>
+                                    <?php } ?>
+                                </div><!-- All--> <a href="<?php echo base_url('taskhub') ?>"
+                                                     class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
+                            </div>
+                        </li>
+                        <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                             <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="javascript:void (0)" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i>-->
                             <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden'; ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null; ?><!--</span>-->
                             <!--                                </a>-->
-                            <div class="wrapper-bell nav-link dropdown-toggle arrow-none" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0)?'visible':'hidden';?>;z-index: 20" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
+                            <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                <?php if (getNotificationCount() > 0):?>
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="z-index: 20;top: -4px;right: 3px" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
+                                <?php endif;?>
                                 <div class="icon-loader">
-                                    <i class="fa fa-spinner fa-pulse" style="font-size:25px"></i>
+                                    <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
                                 </div>
                                 <div class="bell" id="bell-1">
                                     <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-1 5000ms infinite':'unset'?>">notifications_active</div>
@@ -157,28 +215,6 @@
                                                      class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
                             </div>
                         </li>
-                        <?php $newtasks = getNewTasks(); ?>
-                        <li class="dropdown notification-list list-inline-item ml-auto">
-                            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style="" class="fa fa-calendar-check-o" aria-hidden="true"></i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
-                                <?php } ?>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-                                <!-- item-->
-                                <h6 class="dropdown-item-text"><?php if(count($newtasks) > 0){ echo 'New Tasks (' . count($newtasks) . ')'; } else { echo 'No New Tasks'; } ?></h6>
-                                <div class="slimscroll notification-item-list">
-                                    <?php foreach ($newtasks as $key => $value) { ?>
-                                        <a href="<?php echo base_url('taskhub/view/' . $value['task_id']); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value['subject']; ?><span class="text-muted">
-                                                <?php
-                                                $date_created = date_create($value['date_created']);
-                                                echo date_format($date_created, "F d, Y h:i:s");
-                                                ?>
-                                            </span></p>
-                                        </a>
-                                    <?php } ?>
-                                </div><!-- All--> <a href="<?php echo base_url('taskhub') ?>"
-                                                     class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
-                            </div>
-                        </li>
                         <?php
                         $clock_btn = 'clockIn';
                         $user_id = $this->session->userdata('logged')['id'];
@@ -211,11 +247,6 @@
                         foreach ($attendances as $attn){
                             $attn_id = $attn->id;
                             foreach ($ts_logs_h as $log){
-                                if ($log->attendance_id == $attn->id && $attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
-                                    $shift_duration = $attn->shift_duration;
-                                }else{
-                                    $shift_duration = '-';
-                                }
                                 if ($log->action == 'Check in' && $log->attendance_id == $attn->id){
                                     if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
                                         $clock_in = date('h:i A',$log->time);
@@ -245,6 +276,7 @@
                                 if ($log->action == 'Check out' && $log->attendance_id == $attn->id && $log->date == date('Y-m-d')){
                                     $clock_out = date('h:i A',$log->time);
                                     $analog_active = null;
+                                    $shift_duration = $attn->shift_duration;
                                 }
                             }
 

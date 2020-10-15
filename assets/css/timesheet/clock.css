@@ -1,6 +1,7 @@
 @media (max-width: 1024px) {
     .menu-extras.topbar-custom ul li div.clock{
         height: 50px!important;
+        width: 50px!important;
     }
 }
 .clock{

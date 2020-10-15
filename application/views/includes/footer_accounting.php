@@ -43,6 +43,9 @@ Chartist Chart-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
 <script src="<?php echo $url->assets ?>js/accounting/vendors.js"></script>
+
+<script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
+<script src="<?php echo $url->assets;?>js/icons/icon.navbar.js"></script>
 <!--Accounting JS-->
 <?php echo put_footer_assets();?>
 <script type="text/javascript">

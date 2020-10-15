@@ -72,17 +72,32 @@ $user_id = getLoggedUserID();
 
                 <?php ////if (hasPermissions('plan_list')): ?>
                     <li class="has-submenu">
-                        <a href="<?php echo url('/workcalender') ?>">
-                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>
-                        </a>
+                        <div class="icon-loader-left">
+                            <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                        </div>
+                        <div class="icons-list-navbar">
+                            <a href="<?php echo url('/workcalender') ?>">
+                                <!--                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>-->
+                                <img class="calendar-static" src="/assets/css/icons/images/calendar-1.1s-47px.svg" alt="">
+                                <img class="calendar-active" src="/assets/css/icons/images/calendar-1.1s-47px-active.svg" alt="">
+                                <span>Calendar</span>
+                            </a>
+                        </div>
                     </li>
                 <?php //endif ?>
                 <li class="has-submenu">
-                    <a class="dropdown-toggle" href="<?php echo base_url('dashboard/blank/?page=Sales') ?>"
-                       role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Sales</span>
-                    </a>
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                         aria-expanded="false">
+                        <a href="<?php echo base_url('dashboard/blank/?page=Sales') ?>">
+                            <!--                        <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Sales</span>-->
+                            <img class="bar-static" src="/assets/css/icons/images/bar-1.1s-47px.svg" alt="">
+                            <img class="bar-active" src="/assets/css/icons/images/bar-1.1s-47px-active.svg" alt="">
+                            <span>Sales</span>
+                        </a>
+                    </div>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>
 						<a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Job</a>
@@ -112,10 +127,17 @@ $user_id = getLoggedUserID();
                     </div>
                 </li>
                 <li class="has-submenu">
-                    <a class="" href="<?php echo url('/accounting/banking') ?>"
-                       role="button" >
-                        <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span></a>
-                    </a>
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar">
+                        <a href="<?php echo url('/accounting/banking') ?>" role="button" >
+                            <img class="cash-static" src="/assets/css/icons/images/cash-1.1s-47px.svg" alt="" style="margin: 0 auto">
+                            <img class="cash-active" src="/assets/css/icons/images/cash-1.1s-47px-active.svg" alt="">
+                            <span>Accounting</span>
+    <!--                        <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span>-->
+                        </a>
+                    </div>
 <!--                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">-->
 <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/banking') ?><!--">-->
 <!--                            <i class="mdi mdi-wallet m-r-5"></i> Banking-->
@@ -156,9 +178,17 @@ $user_id = getLoggedUserID();
 <!--                    </div>-->
                 </li>
                 <li class="has-submenu">
-                    <li class="has-submenu">
-                        <a href="<?php echo base_url('vault') ?>"><i class="fa fa-industry" aria-hidden="true"></i><span>Files Vault</span></a>
-                    </li>
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar">
+                        <a href="<?php echo base_url('vault') ?>">
+                            <img class="lock-static" src="/assets/css/icons/images/lock-1.1s-47px.svg" alt="" style="margin: 0 auto">
+                            <img class="lock-active" src="/assets/css/icons/images/lock-1.1s-47px-active.svg" alt="">
+                            <span>Files Vault</span>
+                            <!--                            <i class="fa fa-industry" aria-hidden="true"></i><span>Files Vault</span>-->
+                        </a>
+                    </div>
                     <?php /*<a class="dropdown-toggle" href="<?php //echo base_url('vault') ?>" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-industry" aria-hidden="true"></i> <span>Files Vault</span>
                     </a>
@@ -175,7 +205,17 @@ $user_id = getLoggedUserID();
                     </li>
                 <?php //endif ?>-->
                 <li class="has-submenu">
-                    <a href="<?php echo base_url('marketing') ?>"><i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span></a>
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar">
+                        <a href="<?php echo base_url('marketing') ?>">
+                            <img class="marketing-static" src="/assets/css/icons/images/html-1.1s-47px.svg" alt="" style="margin: 0 auto">
+                            <img class="marketing-active" src="/assets/css/icons/images/html-1.1s-47px-active.svg" alt="">
+                            <span>Marketing</span>
+                            <!--                        <i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span>-->
+                        </a>
+                    </div>
                     <?php /*<a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
                        id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-cog" aria-hidden="true"></i> <span>Marketing</span>
@@ -187,10 +227,17 @@ $user_id = getLoggedUserID();
                 </li>
                 <li class="has-submenu">
                     <!-- <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span></a> -->
-                    <a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
-                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span>
-                    </a>
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
+                            <img class="tools-static" src="/assets/css/icons/images/gear-1.1s-47px.svg" alt="" style="margin: 0 auto">
+                            <img class="tools-active" src="/assets/css/icons/images/gear-1.1s-47px-active.svg" alt="">
+                            <span>Tools</span>
+                            <!--                        <i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span>-->
+                        </a>
+                    </div>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo base_url('/tools/business_tools') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>Business Tools</b></a>
                         <a class="dropdown-item" href="<?php echo base_url('/esignmain') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
@@ -204,10 +251,17 @@ $user_id = getLoggedUserID();
                 </li>
 
                 <li class="has-submenu">
-                    <a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
-                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-building-o" aria-hidden="true"></i> <span>Company</span>
-                    </a>
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>">
+                            <img class="building-static" src="/assets/css/icons/images/building-1.1s-47px.svg" alt="" style="margin: 0 auto">
+                            <img class="building-active" src="/assets/css/icons/images/building-1.1s-47px-active.svg" alt="">
+                            <span>Company</span>
+                            <!--                        <i class="fa fa-building-o" aria-hidden="true"></i> <span>Company</span>-->
+                        </a>
+                    </div>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         
                         <a class="dropdown-item" href="<?php echo url('/users/businessview') ?>">
@@ -224,14 +278,18 @@ $user_id = getLoggedUserID();
                         </a>
                     </div>
                 </li>
-
-
-
                 <li class="has-submenu">
-                    <a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
-                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa fa-ellipsis-h" aria-hidden="true"></i> <span>More</span>
-                    </a>
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
+                            <img class="more-static" src="/assets/css/icons/images/ellipsis-1.1s-47px.svg" alt="" style="margin: 0 auto">
+                            <img class="more-active" src="/assets/css/icons/images/ellipsis-1.1s-47px-active.svg" alt="">
+                            <span>More</span>
+                            <!--                        <i class="fa fa fa-ellipsis-h" aria-hidden="true"></i> <span>More</span>-->
+                        </a>
+                    </div>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo url('/more/upgrades') ?>">
                             <i class="fa fa-level-up"></i> Upgrades

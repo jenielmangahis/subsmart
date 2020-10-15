@@ -1,33 +1,226 @@
-.icon-settings-navbar{
+@media (max-width: 1024px) {
+    .menu-extras.topbar-custom ul li .schedule-icon-container,.growth-icon-container,.conversation-icon-container,.plus-icon-container,.settings-icon-container{
+        height: 47px!important;
+        width: 47px!important;
+    }
+}
+
+.schedule-icon-static,.growth-icon-static,.conversation-icon-static,.settings-icon-static,.plus-icon-static{
+    width: 47px;
+    height: 47px;
+}
+/*Settings icon */
+.settings-icon-container{
     cursor: pointer;
-    position:relative;
-    display:inline-block;
-    padding: 0;
     margin: 0;
-    height: 32px;
-    width: 32px;
-    vertical-align: middle!important;
-    justify-content: center;
-    box-shadow: inset 0 0 8px rgba(0,0,0,.1), 0 10px 10px rgba(0,0,0,.2), 0 0 0 4px rgb(228,240,249);
-    border-radius: 50%;
+    height: auto;
+    width: auto;
+    display: none;
 }
-.icon-settings-navbar a{
-    margin: 0 auto;
-    vertical-align: bottom;
+.settings-icon-container .settings-icon-hover{
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 99;
 }
-.icon-settings-navbar i:hover{
-    -webkit-transform: rotate(360deg) translateZ(0);
-    -moz-transform: rotate(360deg) translateZ(0);
-    -ms-transform: rotate(360deg) translateZ(0);
-    -o-transform: rotate(360deg) translateZ(0);
-    transform: rotate(360deg) translateZ(0);
+.settings-icon-container:hover .settings-icon-hover{
+    display: inline-block;
 }
-.icon-settings-navbar i{
-    -webkit-transition: transform 1s;
-    -moz-transition: transform 1s;
-    -ms-transition: transform 1s;
-    -o-transition: transform 1s;
-    transition: transform 1s;
-    position: relative!important;
-    font-size: 32px;
+.settings-icon-container:hover .settings-icon-static{
+    visibility: hidden;
+}
+
+/*Schedule Icon*/
+.schedule-icon-container{
+    display: none;
+    cursor: pointer;
+    margin: 0;
+    height: auto;
+    width: auto;
+}
+.schedule-icon-container .schedule-icon-hover{
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 19;
+}
+.schedule-icon-container:hover .schedule-icon-hover{
+    display: inline-block;
+}
+/*Growth icon*/
+.growth-icon-container{
+    display: none;
+    cursor: pointer;
+    margin: 0;
+    height: auto;
+    width: auto;
+}
+.growth-icon-container .growth-icon-hover{
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 99;
+}
+.growth-icon-container:hover .growth-icon-hover{
+    display: inline-block;
+}
+/*Conversation icon*/
+.conversation-icon-container{
+    display: none;
+    cursor: pointer;
+    margin: 0;
+    height: auto;
+    width: auto;
+}
+.conversation-icon-container .conversation-icon-hover{
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 99;
+}
+.conversation-icon-container:hover .conversation-icon-hover{
+    display: inline-block;
+}
+/*Plus Icon*/
+.plus-icon-container{
+    display: none;
+    cursor: pointer;
+    margin: 0;
+    height: auto;
+    width: auto;
+}
+.plus-icon-container .plus-icon-hover{
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 99;
+}.plus-icon-container:hover .plus-icon-hover{
+     display: inline-block;
+}
+
+ /*Left side navbar icons*/
+#topnav .navigation-menu > li .dropdown-toggle::after{
+    bottom: 10px!important;
+}
+.has-submenu .icon-loader-left{
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 40px;
+    height: 30px;
+    width: 30px;
+}
+.icons-list-navbar{
+    text-align: center;
+    margin-right: 20px;
+    display: none;
+
+}
+.icons-list-navbar span{
+    color: black!important;
+}
+.icons-list-navbar .calendar-active{
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 99;
+}
+.icons-list-navbar:hover .calendar-active{
+    display: inline-block;
+}
+.icons-list-navbar:hover .calendar-static{
+    visibility: hidden;
+}
+.icons-list-navbar .bar-active{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+.icons-list-navbar:hover .bar-active{
+    display: inline-block;
+}
+.icons-list-navbar:hover .bar-static{
+    visibility: hidden;
+}
+.icons-list-navbar .cash-active{
+    display: none;
+    top: 2px;
+    left: 10px;
+    horiz-align: center;
+    position: absolute;
+    z-index: 10;
+}
+.icons-list-navbar:hover .cash-active{
+    display: inline-block;
+}
+.icons-list-navbar:hover .cash-static{
+    visibility: hidden;
+}
+.icons-list-navbar .lock-active{
+    display: none;
+    top: 2px;
+    left: 10px;
+    horiz-align: center;
+    position: absolute;
+    z-index: 10;
+}
+.icons-list-navbar:hover .lock-active{
+    display: inline-block;
+}
+.icons-list-navbar .marketing-active{
+    display: none;
+    top: 0;
+    left: 7px;
+    horiz-align: center;
+    position: absolute;
+    z-index: 10;
+}
+.icons-list-navbar:hover .marketing-active{
+    display: inline-block;
+}
+.icons-list-navbar:hover .marketing-static{
+    visibility: hidden;
+}
+.icons-list-navbar .tools-active{
+    display: none;
+    top: 0;
+    left: 0;
+    horiz-align: center;
+    position: absolute;
+    z-index: 10;
+}
+.icons-list-navbar:hover .tools-active{
+    display: inline-block;
+}
+.icons-list-navbar:hover .tools-static{
+    visibility: hidden;
+}
+.icons-list-navbar .building-active{
+    display: none;
+    top: 0;
+    left: 5px;
+    horiz-align: center;
+    position: absolute;
+    z-index: 10;
+}
+.icons-list-navbar:hover .building-active{
+    display: inline-block;
+}
+.icons-list-navbar:hover .building-static{
+    visibility: hidden;
+}
+.icons-list-navbar .more-active{
+    display: none;
+    top: 0;
+    left: 0;
+    horiz-align: center;
+    position: absolute;
+    z-index: 10;
+}
+.icons-list-navbar:hover .more-active{
+    display: inline-block;
+}
+.icons-list-navbar:hover .more-static{
+    visibility: hidden;
 }

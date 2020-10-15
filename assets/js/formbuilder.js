@@ -329,6 +329,7 @@ loadFormSettings = (id) => {
 }
 
 loadFormElements = (id, mode = null) => {
+  loadImageHeader();
   document.querySelector("#windowPreviewContent").innerHTML = "";
   // const titlesFontFamily = document.getElementById("fTFontFamily").value;
   // const titlesFontSize = document.getElementById('fTFontSize').value;
@@ -556,7 +557,7 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 6 || elementType == 4)?`
                 <!-- Short answer / Email -->
                 <div class="form-group form-user-elements">
-                  <label class="${labelsFontFamily} ${labelsFontSize}" for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <label class="${labelsFontFamily} ${labelsFontSize} text-nowrap" for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                   <input type="text" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
                 </div>
               `:""}
@@ -607,10 +608,13 @@ loadFormElements = (id, mode = null) => {
 
                     <label class="${labelsFontFamily} ${labelsFontSize} font-weight-bold text-nowrap" for="${el.fe_id}">${el.fe_label}</label>
                     <canvas id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="border" height="150" ></canvas>
-                    <button type="button" class="mt-1 btn btn-sm btn-secondary" onclick="clearCanvas(${el.fe_id})">clear</button>
-                    
-                    
-                    
+                    <div class="container mt-1">
+                      <div class="btn-group mx-auto">
+                          <button onclick="clearCanvas(${el.fe_id})" type="button" class="btn btn-sm btn-secondary">clear</button>
+                          <button onclick="enableCanvas(${el.fe_id})" type="button" class="btn btn-sm btn-primary">Sign</button>
+                          <button onclick="disableCanvas(${el.fe_id})" type="button" class="btn btn-sm btn-success">done</button>
+                      </div>
+                  </div>
                 </div>
               `:""}
               
@@ -858,28 +862,50 @@ loadFormElements = (id, mode = null) => {
 
 loadSignatureCanvas = (elementType, id, size )=>{
   setTimeout(() => {
-    let signaturePad = new SignaturePad(document.querySelector(`canvas#feinput-${id}`),{
+    window[`signPad${id}`] = new SignaturePad(document.querySelector(`canvas#feinput-${id}`),{
       backgroundColor: 'rgb(255, 255, 255)',
     })
   }, 1000);
 }
 
 clearCanvas = id => {
-  const canvas = document.getElementById(`feinput-${id}`);
-  const context = canvas.getContext('2d');
-
-  context.clearRect(0, 0, canvas.width, canvas.height);
+  window[`signPad${id}`].clear();
 }
 
 const initCanvas = () => {
   const collection = $('.signature-canvas-container');
   for(let el of collection) {
     const elID = $(el).attr('el_id');
-    const canvas = $(`#feinput-${elID}`);
-    const containerWidth = $(el).width();
-    canvas.width(containerWidth * 3);
-    canvas.height(150)
+    const canvas = window[`signPad${elID}`];
+    const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+    // canvas.height(150)
 }
+}
+
+const disableCanvas = (id) => {
+  window[`signPad${id}`].off();
+}
+
+const enableCanvas = (id) => {
+  window[`signPad${id}`].on();
+}
+
+const loadImageHeader = () => {
+  $.ajax({
+    url: `${formBaseUrl}formbuilder/get-active-company-data`,
+    dataType: 'json',
+    type: 'GET',
+    success: function(res){
+      document.querySelector('#windowPreviewContent').innerHTML += `
+      <div class="container py-3">
+          <img src="${res.business_image}" alt="${res.business_name} logo" class="mx-auto d-block" width="100px">
+      </div>
+      `
+    }
+  });
 }
 // =====================================
 //            EDIT PAGE

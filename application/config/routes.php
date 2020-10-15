@@ -89,6 +89,7 @@ $route['formbuilder/form/element/choices/(:any)'] = 'formBuilder/getElementChoic
 $route['formbuilder/form/element/images/add'] = 'formBuilder/addElementImages';
 $route['formbuilder/form/element/images/upload'] = 'formBuilder/uploadElementImages';
 $route['formbuilder/form/element/images/(:any)'] = 'formBuilder/getElementImages/$1';
+$route['formbuilder/get-active-company-data'] = 'formBuilder/getActiveCompanyData';
 $route['form/submit/(:any)'] = 'formBuilder/submitForm/$1';
 
 //survey module
