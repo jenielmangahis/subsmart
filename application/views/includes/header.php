@@ -76,34 +76,33 @@
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
 <!--                            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>-->
                             <div class="icon-loader">
-                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                             </div>
                             <div class="plus-icon-container">
-                                <img class="plus-icon-static" src="/assets/css/icons/images/add-1.1s-47px.svg" alt="">
-                                <img class="plus-icon-hover" src="/assets/css/icons/images/add-1.1s-47px%20(2).svg" alt="">
+                                <img class="plus-icon-static" src="<?php echo base_url('assets/css/icons/images/add-1.1s-47px.svg'); ?>" alt="">
+                                <img class="plus-icon-hover" src="<?php echo base_url('assets/css/icons/images/add-1.1s-47px (2).svg'); ?>" alt="">
                             </div>
                         </li>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                             <div class="icon-loader">
-                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                            </div>
+                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
+                            </div> 
                             <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                <img class="conversation-icon-static" src="/assets/css/icons/images/conversation-1.1s-47px.svg" alt="">
-                                <img class="conversation-icon-hover" src="/assets/css/icons/images/conversation-1.1s-47px%20(2).svg" alt="">
+                                <img class="conversation-icon-static" src="<?php echo base_url('assets/css/icons/images/conversation-1.1s-47px.svg'); ?>" alt="">
+                                <img class="conversation-icon-hover" src="<?php echo base_url('assets/css/icons/images/conversation-1.1s-47px (2).svg'); ?>" alt="">
 <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
 <!--                                    -->
 <!--                                </a>-->
-                            </div>
+                            </div> 
                         </li>
-
 
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                             <div class="icon-loader">
-                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                            </div>
+                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
+                            </div> 
                             <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                <img class="growth-icon-static" src="/assets/css/icons/images/growth-1.1s-47px (1).svg" alt="">
-                                <img class="growth-icon-hover" src="/assets/css/icons/images/growth-1.1s-47px (2).svg" alt="">
+                                <img class="growth-icon-static" src="<?php echo base_url('assets/css/icons/images/growth-1.1s-47px (1).svg'); ?>" alt="">
+                                <img class="growth-icon-hover" src="<?php echo base_url('assets/css/icons/images/growth-1.1s-47px (2).svg'); ?>" alt="">
 <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
 <!--                                    -->
 <!--                                </a>-->
@@ -111,13 +110,13 @@
                         </li>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
 <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates') ?><!--">-->
-                                <div class="icon-loader">
-                                    <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                                <div class="icon-loader"> 
+                                    <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                                 </div>
-                                <div class="settings-icon-container">
-                                   <a href="<?php echo base_url('settings/email_templates') ?>">
-                                       <img class="settings-icon-static" src="/assets/css/icons/images/wrench-1.1s-47px.svg" alt="">
-                                       <img class="settings-icon-hover" src="/assets/css/icons/images/wrench-1.1s-47px%20(1).svg" alt="">
+                                <div class="settings-icon-container"> 
+                                   <a href="<?php echo base_url('settings/email_templates') ?>"> 
+                                       <img class="settings-icon-static" src="<?php echo base_url('assets/css/icons/images/wrench-1.1s-47px.svg'); ?>" alt="">
+                                       <img class="settings-icon-hover" src="<?php echo base_url('assets/css/icons/images/wrench-1.1s-47px (1).svg'); ?>" alt="">
                                    </a>
                                </div>
 <!--                                <img src="/assets/css/icons/images/479-4794569_settings-cog-gear-optimization-icon-hd-png-download.png" aria-hidden="true" class="icon-settings-navbar" alt="">-->
@@ -126,14 +125,14 @@
                         <?php $newtasks = getNewTasks();?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
                             <div class="icon-loader">
-                                <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                             </div>
                             <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <?php if (count($newtasks) > 0): ?>
                                 <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="z-index: 20;top: 1px;right: 0;" id="notifyBadge"><?php echo (count($newtasks) != 0)?count($newtasks):null; ?></span>
-                                <?php endif;?>
-                                <img class="schedule-icon-static" src="/assets/css/icons/images/schedule-icon.svg" alt="">
-                                <img class="schedule-icon-hover" src="/assets/css/icons/images/schedule-icon2.svg" alt="">
+                                <?php endif;?>  
+                                <img class="schedule-icon-static" src="<?php echo base_url('assets/css/icons/images/schedule-icon.svg'); ?>" alt="">
+                                <img class="schedule-icon-hover" src="<?php echo base_url('assets/css/icons/images/schedule-icon2.svg'); ?>" alt="">
                             </div>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                 <!-- item-->
@@ -161,7 +160,7 @@
                                     <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="z-index: 20;top: -4px;right: 3px" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
                                 <?php endif;?>
                                 <div class="icon-loader">
-                                    <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                                    <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                                 </div>
                                 <div class="bell" id="bell-1">
                                     <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-1 5000ms infinite':'unset'?>">notifications_active</div>
