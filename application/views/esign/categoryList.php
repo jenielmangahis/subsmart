@@ -173,15 +173,20 @@ input {
                 <tbody>
                     <?php foreach($templates AS $template){?>
                         <tr>
-                            <td><?=$template['categoryName']?></td>
-                            <td>
-                                <?php if(!$template['isDefault']){?>
-                                    <!-- <a href="<?=base_url('esign/editTemplate?id='.$template['category_id'])?>"><i class="fa fa-edit"></i></a> -->
-                                    <a class="trashColor" href="#"><i id="deleteId-<?=$template['category_id']?>" class="fa fa-trash"></i></a>
-                                <?php }else {?>
-                                    <a><i class="fa fa-lock"></i></a>
-                                <?php }?>
-                            </td>
+                            <form class="editCategory" id="formId-<?=$template['category_id']?>">
+                                <td>
+                                    <input type="text" name="categoryName" value="<?=$template['categoryName']?>">
+                                    <input type="hidden" name="categoryId" value="<?=$template['category_id']?>">
+                                </td>
+                                <td>
+                                    <?php if(!$template['isDefault']){?>
+                                        <button type="submit"><i class="fa fa-edit"></i></button>
+                                        <a class="trashColor" href="#"><i id="deleteId-<?=$template['category_id']?>" class="fa fa-trash"></i></a>
+                                    <?php }else {?>
+                                        <a><i class="fa fa-lock"></i></a>
+                                    <?php }?>
+                                </td>
+                            </form>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -222,8 +227,46 @@ input {
                     }
                 });
             }
+
+            $('.editCategory').submit(function (e){
+                e.preventDefault();
+                let submittedData = {};
+                if(!$(this).hasClass('loading')){
+                    $(this).addClass('loading');
+                    let thisEleId = $(this).prop('id');
+                    updateCategory($(this).serialize(),thisEleId)
+                    // for(let subData of $(this).serializeArray()){
+                    //     submittedData[subData.name] = subData.value; 
+                    // }
+                }
+                return true;
+            });
         });
 
+        function updateCategory(data, thisEleId){
+                console.log("before send : "+thisEleId)
+                $.ajax({
+                    url: '<?=base_url('esign/updateCategory') ?>',
+                    type: 'post',
+                    dataType: 'application/json',
+                    data,
+                    success: function(res, status) {
+                        console.log('My Res Data ',res)
+                        console.log("from el ",thisEleId);
+                        // $("#"+thisEleId).removeClass('loading');
+                        // try {
+                        //     data = JSON.parse(data);
+                        //     if(status != "success" || !data.status){
+                        //         throw "errr";
+                        //     }
+                        // } catch (error) {
+                        //     // alert('Something Went Wrong Please Try Again');
+                        //     // location.reload();
+                        // }
+                    }
+                });
+                // return true;
+            }
     </script>
 </body>
 </html>

@@ -67,7 +67,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Purchase'){echo "selected";} } ?> value="Purchase">Purchase</option>
-
                     </select>
                 </div>
             </div>
@@ -216,7 +215,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Monitoring Waived</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="mon_waived" id="mon_waived" value="<?php if(isset($alarm_info)){ echo $alarm_info->mon_waived; } ?>"/>
+                    <select name="mon_waived" id="mon_waived" class="input_select">
+                        <option <?php if(isset($alarm_info)){ if($alarm_info->mon_waived == 'Yes'){echo "selected";} } ?> value="Yes">Yes</option>
+                        <option <?php if(isset($alarm_info)){ if($alarm_info->mon_waived == 'No'){echo "selected";} } ?> value="No">No</option>
+                    </select>
                 </div>
             </div>
         </div>

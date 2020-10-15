@@ -1,5 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,
- 500|Sarabun:400,
+500|Sarabun:400,
 600,
 700);
 
@@ -489,10 +489,10 @@ dt {
     opacity: 0;
     background: rgba(0, 0, 0, 0.2);
     background: radial-gradient(rgba(0, 0, 0, 0.2) 0,
-            rgba(0, 0, 0, 0.3) 40%,
-            rgba(0, 0, 0, 0.4) 50%,
-            rgba(0, 0, 0, 0.5) 60%,
-            rgba(255, 255, 255, 0) 70%);
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.4) 50%,
+    rgba(0, 0, 0, 0.5) 60%,
+    rgba(255, 255, 255, 0) 70%);
     -webkit-transition: all 0.5s ease-out;
     transition: all 0.5s ease-out;
     -webkit-transition-property: -webkit-transform, opacity;
@@ -508,10 +508,10 @@ dt {
 .waves-effect.waves-light .waves-ripple {
     background: rgba(255, 255, 255, 0.4);
     background: radial-gradient(rgba(255, 255, 255, 0.2) 0,
-            rgba(255, 255, 255, 0.3) 40%,
-            rgba(255, 255, 255, 0.4) 50%,
-            rgba(255, 255, 255, 0.5) 60%,
-            rgba(255, 255, 255, 0) 70%);
+    rgba(255, 255, 255, 0.3) 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0) 70%);
 }
 
 .waves-effect.waves-classic .waves-ripple {
@@ -535,23 +535,23 @@ dt {
 }
 
 .align-left {
-  text-align: left;
+    text-align: left;
 }
 
 .border-gr {
-  border: 2px solid #d6d6d6 !important;
+    border: 2px solid #d6d6d6 !important;
 }
 
 .pb-100 {
-  padding-bottom: 100px;
+    padding-bottom: 100px;
 }
 
 .mt-txt {
-  margin-top: 5px;
+    margin-top: 5px;
 }
 
 .border-gr:hover {
-  border: 2px solid #16ce0a !important;
+    border: 2px solid #16ce0a !important;
 }
 
 .waves-button,
@@ -1734,149 +1734,149 @@ button:focus {
 
 @media (max-width: 767px) {
     .smart__grid {
-      height: auto !important;
+        height: auto !important;
     }
     .mobile-form {
-      width: 310px;
+        width: 310px;
     }
     .mobile-form > span {
-      float: left;
-      margin-right: 15px;
-      position: relative;
-      top: 8px;
+        float: left;
+        margin-right: 15px;
+        position: relative;
+        top: 8px;
     }
     .time-clock-mobile div div div#dataTable1_length {
-      float: left;
+        float: left;
     }
     ul.mobile-invoice-ul li {
-      width: 50%;
-      float: left;
-      height: 39px;
-      font-size: 13px;
+        width: 50%;
+        float: left;
+        height: 39px;
+        font-size: 13px;
     }
     .dropdown-toggle.mobile-mt-2::after {
-      display: block;
-      position: absolute;
-      top: 64% !important;
-      right: 6px !important;
+        display: block;
+        position: absolute;
+        top: 64% !important;
+        right: 6px !important;
     }
     .mobile-mt-2 {
-      margin-top: 20px;
+        margin-top: 20px;
     }
     .mobile-form > .form-control, .mobile-form > button {
-      float:left;
+        float:left;
     }
     ::-webkit-scrollbar {
-      display: none;
+        display: none;
     }
     div#accordionExample div.card {
-      margin-bottom: 12px !important;
+        margin-bottom: 12px !important;
     }
     div.st-wrap-mobile {
-      margin-bottom: 60px;
+        margin-bottom: 60px;
     }
     img#welcome-image {
-      display: none;
+        display: none;
     }
     div#welcome-image-container {
-      text-align: center;
-      padding-bottom: 0px !important;
+        text-align: center;
+        padding-bottom: 0px !important;
     }
     .card.p-5 {
-      padding: 15px 20px !important;
+        padding: 15px 20px !important;
     }
     div#list-workspace-index {
-      margin-top: 12px;
-      position: relative;
-      right: 12px;
+        margin-top: 12px;
+        position: relative;
+        right: 12px;
     }
     .row {
-      margin-right: 0px !important;
-      margin-left: 0px !important;
+        margin-right: 0px !important;
+        margin-left: 0px !important;
     }
     .page-title-box.mx-4 {
-      padding: 0px;
-      margin: 0px !important;
+        padding: 0px;
+        margin: 0px !important;
     }
     .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-      padding: 25px 8px;
+        padding: 25px 8px;
     }
     .col-lg-6.px-0 h2 {
-      margin-left: 20px;
+        margin-left: 20px;
     }
     .row.align-items-center.pt-3.bg-white {
-      width: 100% !important;
-      display: table;
-      margin: 0px;
+        width: 100% !important;
+        display: table;
+        margin: 0px;
     }
     .onoffswitch {
-      float: right;
-      margin-bottom: 20px;
+        float: right;
+        margin-bottom: 20px;
     }
     .btn-mobile {
-      margin-top: 20px;
+        margin-top: 20px;
     }
     .mobile-left {
-      float:left !important;
+        float:left !important;
     }
     .padding-mobile-cs {
-      padding: 0px 30px !important;
+        padding: 0px 30px !important;
     }
     .card-mobile {
-      width: 100% !important;
+        width: 100% !important;
     }
     ::-webkit-scrollbar-track {
-      display: none;
+        display: none;
     }
     ul.nav.sidebar-accounting li.nav-header {
-      display: none;
+        display: none;
     }
     ul.nav.sidebar-accounting li i {
-      padding-right: 60px !important;
+        padding-right: 60px !important;
     }
     ul.ul-mobile li {
-      width: 50%;
-      float: left;
-      padding: 0px;
-      min-height: 50px;
+        width: 50%;
+        float: left;
+        padding: 0px;
+        min-height: 50px;
     }
     .sc-2 {
         position: relative;
         bottom: 12px;
     }
     .mb-fix-list {
-      display: block;
-      padding-top: 20px;
-      text-align: left;
+        display: block;
+        padding-top: 20px;
+        text-align: left;
     }
     .container-fluid {
-      padding-top: 15px;
+        padding-top: 15px;
     }
     body .card_holder .page-title {
-      padding-top: 20px;
-      margin-top: 10px;
+        padding-top: 20px;
+        margin-top: 10px;
     }
     div#myTabContent {
-      padding-bottom: 40px !important;
+        padding-bottom: 40px !important;
     }
     .smart__grid > div {
-      height: 115px;
+        height: 115px;
     }
     .marketing-card-deck a {
-      padding-top: 20px !important;
+        padding-top: 20px !important;
     }
     .pl-50 {
-      padding-left: 0px !important;
+        padding-left: 0px !important;
     }
     div[wrapper__section] {
-      padding-top: 0px !important;
-      margin-top: 0px !important;
+        padding-top: 0px !important;
+        margin-top: 0px !important;
     }
     body .page-title-box {
-      padding: 0px 0 !important;
+        padding: 0px 0 !important;
     }
     form#frm_calender_filter_events div.form-group {
-      margin-bottom: 10px !important;
+        margin-bottom: 10px !important;
     }
     .mobile-only {
         display: block;
@@ -1891,24 +1891,24 @@ button:focus {
         border-top: 1px solid #ddd;
     }
     #sidebar {
-      top: 58px;
-      width: 45px !important;
-      z-index: 1;
-      align-items: center;
-      float: right;
-      height: 100vh;
+        top: 58px;
+        width: 45px !important;
+        z-index: 1;
+        align-items: center;
+        float: right;
+        height: 100vh;
     }
     .card-body {
-      padding: 10px;
+        padding: 10px;
     }
     a#addOnHandInventory {
-      display: none;
+        display: none;
     }
     body {
-      overflow-x: scroll !important;
+        overflow-x: scroll !important;
     }
     div#onHandInventory {
-      padding: 5px 33px;
+        padding: 5px 33px;
     }
     span.material-icons.mdc-bottom-navigation__list-item__icon {
         text-align: center;
@@ -1917,79 +1917,64 @@ button:focus {
         margin-bottom: 4px;
     }
     .sc-nearby span svg {
-      position: relative;
-      top: 3px;
+        position: relative;
+        top: 3px;
     }
     .sc-nearby {
-      position: relative;
-      bottom: 7px;
+        position: relative;
+        bottom: 7px;
     }
     .custom__border .row {
-      padding-left: 25px !important;
-      padding-right: 25px !important;
+        padding-left: 25px !important;
+        padding-right: 25px !important;
     }
     .card-body {
-      flex-wrap: wrap !important;
-      width: fit-content !important;
+        flex-wrap: wrap !important;
+        width: fit-content !important;
     }
     body table.dataTable thead th, body table.dataTable thead td {
-      padding: 6px 10px;
-      padding-right: 18px;
-      border-bottom: none;
+        padding: 6px 10px;
+        padding-right: 18px;
+        border-bottom: none;
     }
     .notification-list .nav-link i {
-      font-size: 25px !important;
+        font-size: 25px !important;
     }
     .state-box table thead th {
-      padding: 10px 1px !important;
+        padding: 10px 1px !important;
     }
     .card {
-      padding: 5px !important;
-      width: fit-content;
+        padding: 5px !important;
+        width: fit-content;
     }
     #topnav .navbar-toggle .lines {
-      width: 27px !important;
-      height: 15px !important;
-      position: relative !important;
-      top: 5px !important;
+        width: 27px !important;
+        height: 15px !important;
+        position: relative !important;
+        top: 5px !important;
     }
     #topnav .navbar-right {
-      position: relative;
-      left: 8px;
-    }
-    .clock {
-      width: 30px !important;
-      height: 30px !important;
-      margin-left: 10px;
-    }
-    a.navbar-toggle.nav-link {
-      position: relative;
-      bottom: 3px;
-    }
-    div#bell-1 div {
-      font-size: 26px;
-      margin-top: 3px;
-      box-shadow: none;
-      color: #676767;
+        position: relative;
+        left: 31px;
     }
     .col-xl-12 {
-      padding: 0px !important;
+        padding: 0px !important;
     }
     .menu-extras.topbar-custom {
-      position: fixed !important;
-      top: 0px !important;
-      right: 0;
-      display: flex;
-      align-items: center;
-      height: 60px !important;
-      width: 100% !important;
-      flex-direction: inherit;
-      background: #dfdfe0;
+        position: fixed !important;
+        top: 0px !important;
+        right: 0;
+        display: flex;
+        align-items: center;
+        height: 60px !important;
+        width: 100% !important;
+        flex-direction: inherit;
+        background: #dfdfe0;
     }
     .menu-extras.topbar-custom ul li .badge-pill {
-      position: absolute;
-      top: 16px !important;
-      right: 4px !important;
+        position: absolute;
+        top: 16px !important;
+        right: 4px !important;
     }
     .email-leftbar {
         float: none;
@@ -2189,7 +2174,7 @@ button:focus {
 }
 
 .pl-50 {
-  padding-left: 50px;
+    padding-left: 50px;
 }
 
 .note-btn-group .dropdown-menu>li>a:hover {
@@ -3667,11 +3652,11 @@ table.focus-on tbody tr.focused td {
     top: 18px;
     padding: 2px 10px 2px 32px;
     -webkit-clip-path: polygon(100% 0,
-            100% 50%,
-            100% 100%,
-            0 100%,
-            24% 50%,
-            6% 0);
+    100% 50%,
+    100% 100%,
+    0 100%,
+    24% 50%,
+    6% 0);
     clip-path: polygon(100% 0, 100% 50%, 100% 100%, 0 100%, 24% 50%, 6% 0);
 }
 
@@ -4286,10 +4271,10 @@ a.faq[data-toggle="collapse"]:before {
 
 @media (max-width: 1024px) {
     .list-group {
-      margin-bottom: 30px !important;
+        margin-bottom: 30px !important;
     }
     .mdc-bottom-navigation {
-      display: none;
+        display: none;
     }
 
     body #topnav {
@@ -4341,6 +4326,7 @@ a.faq[data-toggle="collapse"]:before {
     }
 
     .menu-extras.topbar-custom ul li,
+    .menu-extras.topbar-custom ul li *,
     .menu-extras.topbar-custom ul li .lines {
         max-height: initial;
         line-height: initial;
@@ -5607,101 +5593,62 @@ label {
     border-radius: 0.25rem;
     padding: 20px;
 }
-@media (max-width: 1470px) {
-  ul.navigation-menu.d-flex.justify-content-center.active {
-    float: right;
-    padding-right: 52px !important;
-  }
-  .navbar-right {
-    margin: 0;
-    float: right !important;
-  }
-  .clock {
-    width: 30px !important;
-    height: 30px !important;
-    position: relative;
-    left: 10px !important;
-  }
-  a.nav-user img {
-    position: relative;
-    top: 14px;
-  }
-  .menu-extras.topbar-custom.col-auto.justify-content-end {
-    width: 100%;
-    float:right !important;
-    padding-right: 77px;
-  }
-}
 @media (max-width: 1455px) {
-  .form-group.a-1 {
-      position: relative;
-      right: 10px;
-      top: 2px;
-      width: 270px;
-  }
-  .form-group.b-1 {
-      width: 30%;
-      float: left;
-      position: relative;
-      bottom: 11px;
-  }
-  .form-group.margin-left-sec.c-1 {
-      width: 35%;
-      float: left;
-      display: block;
-  }
-  .form-group.margin-left-sec.d-1 {
-      width: 40%;
-      float: left;
-      display: block;
-  }
-  .form-group.margin-left-sec.e-1 {
-      display: block;
-      float: left;
-      width: 30%;
-  }
+    .form-group.a-1 {
+        position: relative;
+        right: 10px;
+        top: 2px;
+        width: 270px;
+    }
+    .form-group.b-1 {
+        width: 30%;
+        float: left;
+        position: relative;
+        bottom: 11px;
+    }
+    .form-group.margin-left-sec.c-1 {
+        width: 35%;
+        float: left;
+        display: block;
+    }
+    .form-group.margin-left-sec.d-1 {
+        width: 40%;
+        float: left;
+        display: block;
+    }
+    .form-group.margin-left-sec.e-1 {
+        display: block;
+        float: left;
+        width: 30%;
+    }
 }
 @media (max-width: 1325px) {
-  .form-group.a-1 {
-      position: relative;
-      right: 10px;
-      top: 2px;
-      width: 270px;
-  }
-  .form-group.b-1 {
-      width: 50%;
-      float: left;
-      position: relative;
-      bottom: 0px;
-  }
-  .form-group.margin-left-sec.c-1 {
-      width: 45%;
-      float: left;
-      display: block;
-  }
-  .form-group.margin-left-sec.d-1 {
-      width: 40%;
-      float: left;
-      display: block;
-  }
-  .form-group.margin-left-sec.e-1 {
-      display: block;
-      float: left;
-      width: 40%;
-  }
-}
-@media (max-width: 767px) {
-    .menu-extras.topbar-custom.col-auto.justify-content-end {
-      float: none !important;
-      padding-right: 0px !important;
+    .form-group.a-1 {
+        position: relative;
+        right: 10px;
+        top: 2px;
+        width: 270px;
     }
-    a.navbar-toggle.nav-link {
-      position: relative;
-      left: 13px;
-      bottom: 7px !important;
+    .form-group.b-1 {
+        width: 50%;
+        float: left;
+        position: relative;
+        bottom: 0px;
     }
-    ul.navigation-menu.d-flex.justify-content-center.active {
-      padding-right: 0px !important;
+    .form-group.margin-left-sec.c-1 {
+        width: 45%;
+        float: left;
+        display: block;
+    }
+    .form-group.margin-left-sec.d-1 {
+        width: 40%;
+        float: left;
+        display: block;
+    }
+    .form-group.margin-left-sec.e-1 {
+        display: block;
+        float: left;
+        width: 40%;
     }
 }
 @media (min-width: 576px) {
@@ -7834,7 +7781,7 @@ input:focus+label {}
     top: 48px;
     right: 0px;
     background: #fff;
-    ;
+;
     color: #000;
 }
 
@@ -8129,7 +8076,7 @@ input:focus+label {}
 .table-name .checkbox-sm {
     margin-top: 0;
     margin-right: 5px;
-     !
+    !
 }
 
 /* multiselect */
@@ -8816,11 +8763,11 @@ a.backstep i{margin: 0 5px 0 0;}
     outline: none;
 }
 div.e-1 div.btn-group .dropdown-toggle::after {
-  position: relative;
-  right: 5px;
+    position: relative;
+    right: 5px;
 }
 ul.text-dark-c1 li a {
-  color: black;
+    color: black;
 }
 .tax-tbl-block .dropdown-toggle::after{display: none;}
 .tax-tbl-block .table tbody td .dropdown-menu{
@@ -9631,7 +9578,7 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     left: 60px;
 }
 .add-new-data-block{
-        top: 70px;
+    top: 70px;
     padding: 15px 15px 0;
     background: #fff;
     border-radius: 10px;
@@ -10018,9 +9965,9 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     color: #333;
 }
 .panel {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
 }
 .edit-action{
     width: 100%;
@@ -10153,199 +10100,199 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
 
 /* Calendar Custom CSS */
 select#select-employee {
-  width: 100% !important;
+    width: 100% !important;
 }
 .text-green {
-  color: #44a73c !important;
+    color: #44a73c !important;
 }
 .text-wite {
-  color: #ffffff !important;
+    color: #ffffff !important;
 }
 .pos-2 {
-  position: relative;
-  bottom: 2px;
+    position: relative;
+    bottom: 2px;
 }
 .stcs-1, .stcs-print {
-  width: auto;
-  float: left;
-  margin-bottom: 10px;
+    width: auto;
+    float: left;
+    margin-bottom: 10px;
 }
 .stcs-2 {
-  width: 20%;
-  float: left;
-  margin-bottom: 10px;
+    width: 20%;
+    float: left;
+    margin-bottom: 10px;
 }
 .stcs-3-full {
-  width: 35%;
-  float: left;
-  margin-bottom: 10px;
+    width: 35%;
+    float: left;
+    margin-bottom: 10px;
 }
 .stcs-3 {
-  width: 35%;
-  float: left;
-  margin-bottom: 10px;
+    width: 35%;
+    float: left;
+    margin-bottom: 10px;
 }
 .stcs-4 {
-  width: 40%;
-  float: left;
-  margin-bottom: 10px;
-  position: relative;
-  top: 10px;
+    width: 40%;
+    float: left;
+    margin-bottom: 10px;
+    position: relative;
+    top: 10px;
 }
 .stcs-cover {
-  width: 80%;
-  float: left;
+    width: 80%;
+    float: left;
 }
 .cs-float, .cs-float-print {
-  float: left;
+    float: left;
 }
 @media (max-width: 1580px) {
-  .stcs-4 {
-    width: 48.5%;
-    float: left;
-  }
+    .stcs-4 {
+        width: 48.5%;
+        float: left;
+    }
 }
 @media (max-width: 1500px) {
-  .fc-left {
-    margin-bottom: 8px;
-  }
-  .stcs-4 {
-    width: 100%;
-    float: left;
-    position: relative;
-    top: 3px;
-  }
-  .stcs-print {
-    width: auto;
-    float: left;
-    margin-bottom: 10px;
-  }
-  .cs-float, .cs-float-print {
-    float: left;
-  }
-  .stcs-3 {
-    width: auto;
-    float: left;
-  }
-  .stcs-3-full {
-    width: 70%;
-    float: left;
-  }
+    .fc-left {
+        margin-bottom: 8px;
+    }
+    .stcs-4 {
+        width: 100%;
+        float: left;
+        position: relative;
+        top: 3px;
+    }
+    .stcs-print {
+        width: auto;
+        float: left;
+        margin-bottom: 10px;
+    }
+    .cs-float, .cs-float-print {
+        float: left;
+    }
+    .stcs-3 {
+        width: auto;
+        float: left;
+    }
+    .stcs-3-full {
+        width: 70%;
+        float: left;
+    }
 }
 @media (min-width: 1501px) {
-  .stcs-3 {
-    width: auto;
-    float: left;
-  }
+    .stcs-3 {
+        width: auto;
+        float: left;
+    }
 }
 @media (min-width: 1581px) {
-  .stcs-4 {
-    width: 46%;
-  }
-  .stcs-3-full {
-    width: 44%;
-    float: left;
-    margin-bottom: 10px;
-  }
-  .stcs-3 {
-    width: auto;
-    float: left;
-  }
+    .stcs-4 {
+        width: 46%;
+    }
+    .stcs-3-full {
+        width: 44%;
+        float: left;
+        margin-bottom: 10px;
+    }
+    .stcs-3 {
+        width: auto;
+        float: left;
+    }
 }
 @media (min-width: 1700px) {
-  .stcs-4 {
-    width: 40%;
-  }
-  .stcs-3 {
-    width: auto;
-    float: left;
-  }
-  .stcs-1, .stcs-print {
-    margin-bottom: 13px;
-  }
-  .stcs-3-full {
-    width: 47.5%;
-    float: left;
-    margin-bottom: 10px;
-  }
+    .stcs-4 {
+        width: 40%;
+    }
+    .stcs-3 {
+        width: auto;
+        float: left;
+    }
+    .stcs-1, .stcs-print {
+        margin-bottom: 13px;
+    }
+    .stcs-3-full {
+        width: 47.5%;
+        float: left;
+        margin-bottom: 10px;
+    }
 }
 @media (min-width: 1790px) {
-  .cs-float {
-    float: right;
-  }
-  .stcs-3 {
-    width: auto;
-    float: left;
-  }
-  .cs-float {
-    float: right;
-  }
-  .stcs-1, .stcs-print {
-    margin-bottom: 13px;
-  }
-  .stcs-3-full {
-    width: 46.6%%;
-    float: left;
-    margin-bottom: 10px;
-  }
+    .cs-float {
+        float: right;
+    }
+    .stcs-3 {
+        width: auto;
+        float: left;
+    }
+    .cs-float {
+        float: right;
+    }
+    .stcs-1, .stcs-print {
+        margin-bottom: 13px;
+    }
+    .stcs-3-full {
+        width: 46.6%%;
+        float: left;
+        margin-bottom: 10px;
+    }
 }
 @media (min-width: 1790px) {
-  .stcs-3 {
-    width: auto;
-    float: left;
-  }
-  .cs-float {
-    float: right;
-  }
-  .stcs-1, .stcs-print {
-    margin-bottom: 13px;
-  }
-  .stcs-3-full {
-    width: 46.6%;
-    float: left;
-    margin-bottom: 10px;
-  }
+    .stcs-3 {
+        width: auto;
+        float: left;
+    }
+    .cs-float {
+        float: right;
+    }
+    .stcs-1, .stcs-print {
+        margin-bottom: 13px;
+    }
+    .stcs-3-full {
+        width: 46.6%;
+        float: left;
+        margin-bottom: 10px;
+    }
 }
 @media (min-width: 1820px) {
-  .stcs-3-full {
-    width: 47%;
-    float: left;
-    margin-bottom: 10px;
-  }
+    .stcs-3-full {
+        width: 47%;
+        float: left;
+        margin-bottom: 10px;
+    }
 }
 @media (min-width: 1870px) {
-  .stcs-3-full {
-    width: 47.5%;
-    float: left;
-    margin-bottom: 10px;
-  }
+    .stcs-3-full {
+        width: 47.5%;
+        float: left;
+        margin-bottom: 10px;
+    }
 }
 @media (max-width: 1000px) {
-  .stcs-2 {
-    width: 100%;
-    float: left;
-    margin-bottom: 10px;
-  }
-  span.text-ter.left {
-    font-size: 14px;
-  }
-  #calender_toolbar form .margin-left-sec .btn {
-    width: 100%;
-    background: #45a73c;
-    border: none;
-    padding: 12px 12px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 12px;
-  }
-  .stcs-3-full {
-    width: 100%;
-    float: left;
-  }
-  .stcs-3 {
-    width: auto;
-    float: left;
-  }
+    .stcs-2 {
+        width: 100%;
+        float: left;
+        margin-bottom: 10px;
+    }
+    span.text-ter.left {
+        font-size: 14px;
+    }
+    #calender_toolbar form .margin-left-sec .btn {
+        width: 100%;
+        background: #45a73c;
+        border: none;
+        padding: 12px 12px;
+        color: #fff;
+        font-weight: bold;
+        font-size: 12px;
+    }
+    .stcs-3-full {
+        width: 100%;
+        float: left;
+    }
+    .stcs-3 {
+        width: auto;
+        float: left;
+    }
 }
 
 /* ***** Table Listing ***** */
@@ -10368,7 +10315,7 @@ select#select-employee {
 }
 .table-wrapper .table tbody tr td{
     padding: 10px 15px;
-     border-right: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
     font-size: 15px;
     font-weight: bold;

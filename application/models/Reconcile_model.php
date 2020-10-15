@@ -160,10 +160,11 @@ class Reconcile_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
-	public function select_service($id)
+	public function select_service($id,$chart_of_accounts_id)
 	{
 		$this->db->from('accounting_reconcile_has_servicecharge');  
-		$this->db->where('chart_of_accounts_id',$id);
+		$this->db->where('reconcile_id',$id);
+		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id);
 		$result =  $this->db->get()->result();
 	    return $result;	
 	}

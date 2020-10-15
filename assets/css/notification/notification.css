@@ -1,4 +1,17 @@
+@media (max-width: 1024px) {
+    .menu-extras.topbar-custom ul li .notify-badge {
+        z-index: 20;
+        top: -4px!important;
+        right: 3px!important;
+        font-size: 11px;
+    }
+    .menu-extras.topbar-custom ul li{
+        height: revert!important;
+    }
+}
+
 .notify-badge{
+    visibility: hidden;
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -33,11 +46,11 @@
 .bell {
     position:relative;
     display:none;
-    margin:0;
     padding:0;
     height: 30px;
     width: 30px;
-    vertical-align: middle!important;
+    margin-right: 13px;
+    vertical-align: bottom!important;
 }
 
 .bell .anchor-bell {

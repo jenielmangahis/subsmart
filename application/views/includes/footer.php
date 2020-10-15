@@ -51,6 +51,7 @@
 	?>
 </script>
 <script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
+<script src="<?php echo $url->assets;?>js/icons/icon.navbar.js"></script>
 <script src="<?php echo $url->assets;?>plugins/sweetalert/sweetalert2@10.js"></script>
 
 <?php echo put_footer_assets(); ?>

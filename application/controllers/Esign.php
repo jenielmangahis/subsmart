@@ -150,6 +150,21 @@ class Esign extends MY_Controller {
 		echo json_encode($result);
 		return true;
 	}
+	public function updateCategory(){
+		$this->load->model('Esign_model', 'Esign_model');
+		extract($this->input->post());
+		$whereClouser['user_id'] = logged('id');
+		$whereClouser['isActive'] = 1;
+		$whereClouser['category_id'] = $categoryId;
+		$dataToUpdate['categoryName'] = $categoryName;
+		$isUpdated = $this->Esign_model->updateLibraryCategory($whereClouser ,$dataToUpdate);
+		$result['status'] = true;
+		if(!$isUpdated){
+			$result['status'] = false;
+		}
+		echo json_encode($result);
+		return true;
+	}
 
 	public function editTemplate(){
 		$loggedInUser = logged('id');

@@ -171,6 +171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .right{
         float: right;
     }
+
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -649,7 +650,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     }
                                 }
                             ?>
-                            <div class="row">
+                                <div class="row">
                                 <div class="col-md-4">
                                     <div class="tile-container user-logs-container">
                                         <div class="inner-container">
@@ -806,6 +807,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
+
     //DataTable Table Attendance
     $('#ts-attendance').DataTable({
         "sort": false
