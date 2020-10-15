@@ -73,13 +73,13 @@ $user_id = getLoggedUserID();
                 <?php ////if (hasPermissions('plan_list')): ?>
                     <li class="has-submenu">
                         <div class="icon-loader-left">
-                            <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                            <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                         </div>
                         <div class="icons-list-navbar">
-                            <a href="<?php echo url('/workcalender') ?>">
-                                <!--                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>-->
-                                <img class="calendar-static" src="/assets/css/icons/images/calendar-1.1s-47px.svg" alt="">
-                                <img class="calendar-active" src="/assets/css/icons/images/calendar-1.1s-47px-active.svg" alt="">
+                            <a href="<?php echo url('/workcalender') ?>"> 
+                                <!-- <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>-->
+                                <img class="calendar-static" src="<?php echo base_url('assets/css/icons/images/calendar-1.1s-47px.svg'); ?>" alt="">
+                                <img class="calendar-active" src="<?php echo base_url('assets/css/icons/images/calendar-1.1s-47px-active.svg'); ?>" alt="">
                                 <span>Calendar</span>
                             </a>
                         </div>
@@ -87,14 +87,14 @@ $user_id = getLoggedUserID();
                 <?php //endif ?>
                 <li class="has-submenu">
                     <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                        <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                     </div>
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                         aria-expanded="false">
-                        <a href="<?php echo base_url('dashboard/blank/?page=Sales') ?>">
-                            <!--                        <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Sales</span>-->
-                            <img class="bar-static" src="/assets/css/icons/images/bar-1.1s-47px.svg" alt="">
-                            <img class="bar-active" src="/assets/css/icons/images/bar-1.1s-47px-active.svg" alt="">
+                         aria-expanded="false">  
+                        <a href="<?php echo base_url('dashboard/blank/?page=Sales') ?>">  
+                            <!-- <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Sales</span>-->
+                            <img class="bar-static" src="<?php echo base_url('assets/css/icons/images/bar-1.1s-47px.svg'); ?>" alt="">
+                            <img class="bar-active" src="<?php echo base_url('assets/css/icons/images/bar-1.1s-47px-active.svg'); ?>" alt="">
                             <span>Sales</span>
                         </a>
                     </div>
@@ -128,12 +128,12 @@ $user_id = getLoggedUserID();
                 </li>
                 <li class="has-submenu">
                     <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                        <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                     </div>
-                    <div class="icons-list-navbar">
+                    <div class="icons-list-navbar"> 
                         <a href="<?php echo url('/accounting/banking') ?>" role="button" >
-                            <img class="cash-static" src="/assets/css/icons/images/cash-1.1s-47px.svg" alt="" style="margin: 0 auto">
-                            <img class="cash-active" src="/assets/css/icons/images/cash-1.1s-47px-active.svg" alt="">
+                            <img class="cash-static" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px.svg'); ?>" alt="" style="margin: 0 auto">
+                            <img class="cash-active" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px-active.svg'); ?>" alt="">
                             <span>Accounting</span>
     <!--                        <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span>-->
                         </a>
@@ -179,12 +179,12 @@ $user_id = getLoggedUserID();
                 </li>
                 <li class="has-submenu">
                     <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                        <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                     </div>
                     <div class="icons-list-navbar">
-                        <a href="<?php echo base_url('vault') ?>">
-                            <img class="lock-static" src="/assets/css/icons/images/lock-1.1s-47px.svg" alt="" style="margin: 0 auto">
-                            <img class="lock-active" src="/assets/css/icons/images/lock-1.1s-47px-active.svg" alt="">
+                        <a href="<?php echo base_url('vault') ?>"> 
+                            <img class="lock-static" src="<?php echo base_url('assets/css/icons/images/lock-1.1s-47px.svg'); ?>" alt="" style="margin: 0 auto">
+                            <img class="lock-active" src="<?php echo base_url('assets/css/icons/images/lock-1.1s-47px-active.svg'); ?>" alt="">
                             <span>Files Vault</span>
                             <!--                            <i class="fa fa-industry" aria-hidden="true"></i><span>Files Vault</span>-->
                         </a>
@@ -206,14 +206,14 @@ $user_id = getLoggedUserID();
                 <?php //endif ?>-->
                 <li class="has-submenu">
                     <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                        <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                     </div>
-                    <div class="icons-list-navbar">
+                    <div class="icons-list-navbar"> 
                         <a href="<?php echo base_url('marketing') ?>">
-                            <img class="marketing-static" src="/assets/css/icons/images/html-1.1s-47px.svg" alt="" style="margin: 0 auto">
-                            <img class="marketing-active" src="/assets/css/icons/images/html-1.1s-47px-active.svg" alt="">
+                            <img class="marketing-static" src="<?php echo base_url('assets/css/icons/images/html-1.1s-47px.svg'); ?>" alt="" style="margin: 0 auto">
+                            <img class="marketing-active" src="<?php echo base_url('assets/css/icons/images/html-1.1s-47px-active.svg'); ?>" alt="">
                             <span>Marketing</span>
-                            <!--                        <i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span>-->
+                            <!-- <i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span>-->
                         </a>
                     </div>
                     <?php /*<a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
@@ -228,14 +228,14 @@ $user_id = getLoggedUserID();
                 <li class="has-submenu">
                     <!-- <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span></a> -->
                     <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                        <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                     </div>
-                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
-                            <img class="tools-static" src="/assets/css/icons/images/gear-1.1s-47px.svg" alt="" style="margin: 0 auto">
-                            <img class="tools-active" src="/assets/css/icons/images/gear-1.1s-47px-active.svg" alt="">
+                            <img class="tools-static" src="<?php echo base_url('assets/css/icons/images/gear-1.1s-47px.svg'); ?>" alt="" style="margin: 0 auto">
+                            <img class="tools-active" src="<?php echo base_url('assets/css/icons/images/gear-1.1s-47px-active.svg'); ?>" alt="">
                             <span>Tools</span>
-                            <!--                        <i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span>-->
+                            <!-- <i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span>-->
                         </a>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
@@ -252,12 +252,12 @@ $user_id = getLoggedUserID();
 
                 <li class="has-submenu">
                     <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                        <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                     </div>
-                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>">
-                            <img class="building-static" src="/assets/css/icons/images/building-1.1s-47px.svg" alt="" style="margin: 0 auto">
-                            <img class="building-active" src="/assets/css/icons/images/building-1.1s-47px-active.svg" alt="">
+                            <img class="building-static" src="<?php echo base_url('assets/css/icons/images/building-1.1s-47px.svg'); ?>" alt="" style="margin: 0 auto">
+                            <img class="building-active" src="<?php echo base_url('assets/css/icons/images/building-1.1s-47px-active.svg'); ?>" alt="">
                             <span>Company</span>
                             <!--                        <i class="fa fa-building-o" aria-hidden="true"></i> <span>Company</span>-->
                         </a>
@@ -279,13 +279,13 @@ $user_id = getLoggedUserID();
                     </div>
                 </li>
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    <div class="icon-loader-left"> 
+                        <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
                     </div>
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
-                            <img class="more-static" src="/assets/css/icons/images/ellipsis-1.1s-47px.svg" alt="" style="margin: 0 auto">
-                            <img class="more-active" src="/assets/css/icons/images/ellipsis-1.1s-47px-active.svg" alt="">
+                            <img class="more-static" src="<?php echo base_url('assets/css/icons/images/ellipsis-1.1s-47px.svg'); ?>" alt="" style="margin: 0 auto">
+                            <img class="more-active" src="<?php echo base_url('assets/css/icons/images/ellipsis-1.1s-47px-active.svg'); ?>" alt="">
                             <span>More</span>
                             <!--                        <i class="fa fa fa-ellipsis-h" aria-hidden="true"></i> <span>More</span>-->
                         </a>
