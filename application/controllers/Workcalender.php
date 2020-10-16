@@ -984,7 +984,7 @@ class Workcalender extends MY_Controller
         $is_success = false;
         $message    = 'Cannot create event';
 
-        if( $post['gevent_name'] != '' && $post['gevent_date_from'] != '' && $post['gevent_date_to'] != '' ){
+        if( $post['gevent_name'] != '' && $post['gevent_date_from'] != '' && $post['gevent_date_to'] != '' && $post['gevent_start_time'] != '' && $post['gevent_end_time'] != '' ){
             $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
             if( $google_user_api ){
                 $google_credentials = google_credentials();        
@@ -1024,7 +1024,7 @@ class Workcalender extends MY_Controller
                 $date_to = date("Y-m-d",strtotime($post['gevent_date_to'] . ' +1 day'));
 
                 $rfc_start_date = date("c", strtotime($post['gevent_date_from'] . ' ' . $post['gevent_start_time']));
-                $rfc_end_date   = date("Y-m-d H:i:s", strtotime($post['gevent_date_from'] . ' ' . $post['gevent_start_time']));
+                $rfc_end_date   = date("Y-m-d H:i:s", strtotime($post['gevent_date_to'] . ' ' . $post['gevent_end_time']));
                 $rfc_end_date   = date("Y-m-d H:i:s",strtotime($rfc_end_date . ' +1 day'));
                 $rfc_end_date   = date("c", strtotime($rfc_end_date));
 
