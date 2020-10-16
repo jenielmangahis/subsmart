@@ -142,13 +142,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     .user-clock-in-title,.user-clock-out-title,.user-lunch-in-title,.user-lunch-out-title{
         font-weight: bold;
-        margin-bottom: 10px;
+        min-height: 31px;
         color: #92969d;
     }
     .user-clock-in,.user-clock-out,.user-lunch-in,.user-lunch-out,.user-shift-duration{
-        margin-bottom: 10px;
+        min-height: 31px;
         display: block;
         text-align: right;
+    }
+    .user-clock-in span{
+        font-size: 12px;
+        display: inline-block;
+        float: left;
     }
     .user-logs{
         width: 100%;
@@ -671,25 +676,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             foreach ($emp_attendance as $attn){
                                                                 foreach ($emp_logs as $log){
                                                                     if ($log->attendance_id == $attn->id){
-                                                                        if ($log->action == 'Check in'){
-                                                                            if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                                                                $clock_in = date('h:i A',$log->time);
-                                                                                $yesterday_note = '(Yesterday)';
-                                                                            }elseif ($attn->date_in == date('Y-m-d')){
-                                                                                $clock_in = date('h:i A',$log->time);
-                                                                                $yesterday_note = null;
-                                                                            }
-                                                                        }elseif ($log->action == 'Check out'){
-                                                                            if ($log->date == date('Y-m-d')){
+                                                                        if ($attn->status == 1){
+                                                                            if ($log->action == 'Check in'){
+                                                                                if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                                                                    $clock_in = date('h:i A',$log->time);
+                                                                                    $yesterday_note = '(Yesterday)';
+                                                                                    $shift = '-';
+                                                                                }elseif ($attn->date_in == date('Y-m-d')){
+                                                                                    $clock_in = date('h:i A',$log->time);
+                                                                                    $yesterday_note = null;
+                                                                                }
+                                                                            }elseif ($log->action == 'Check out'){
                                                                                 $clock_out = date('h:i A',$log->time);
                                                                                 $shift = $attn->shift_duration;
-                                                                            }
-                                                                        }elseif ($log->action == 'Break in'){
-                                                                            if ($log->date == date('Y-m-d')){
+                                                                            }elseif ($log->action == 'Break in'){
                                                                                 $lunch_in = date('h:i A',$log->time);
+                                                                            }elseif ($log->action == 'Break out'){
+                                                                                $lunch_out = date('h:i A',$log->time);
                                                                             }
-                                                                        }elseif ($log->action == 'Break out'){
-                                                                            if ($log->date == date('Y-m-d')){
+                                                                        }else{
+                                                                            if ($log->action == 'Check in'){
+                                                                                $clock_in = date('h:i A',$log->time);
+                                                                                if ($attn->date_out > $attn->date_in){
+                                                                                    $yesterday_note = '(Yesterday)';
+                                                                                }elseif ($attn->date_in == date('Y-m-d')){
+                                                                                    $yesterday_note = null;
+                                                                                }
+                                                                            }elseif ($log->action == 'Check out'){
+                                                                                $clock_out = date('h:i A',$log->time);
+                                                                                $shift = $attn->shift_duration;
+                                                                            }elseif ($log->action == 'Break in'){
+                                                                                $lunch_in = date('h:i A',$log->time);
+                                                                            }elseif ($log->action == 'Break out'){
                                                                                 $lunch_out = date('h:i A',$log->time);
                                                                             }
                                                                         }
@@ -710,10 +728,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         $set_date->setTimestamp($unix_ts);
                                                         foreach ($schedules as $scheds){
                                                                 foreach ($tasks as $task){
-                                                                    if ($task->ts_settings_id == $scheds->id && $scheds->user_id == $this->session->userdata('logged')['id']){
+                                                                    if ($task->ts_settings_id == $scheds->id && $scheds->user_id == $this->session->userdata('logged')['id'] && $task->start_date == $set_date->format('Y-m-d')){
                                                                         $task_name = $scheds->project_name;
-                                                                    }
-                                                                    if ($scheds->user_id == $this->session->userdata('logged')['id'] && $task->start_date == $set_date->format('Y-m-d')){
                                                                         $start_time = date('h:i A',strtotime($task->start_time));
                                                                         $end_time = date('h:i A',strtotime($task->end_time));
                                                                         $task_duration = $task->duration."hour/s";

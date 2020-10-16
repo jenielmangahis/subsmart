@@ -1026,7 +1026,6 @@ i.icon-plus-cz {
 .page-title-box .breadcrumb .active {
     color: rgba(42, 49, 66, 0.7);
 }
-
 @media (min-width: 992px) {
     #topnav .topbar-main {
         padding: 10px 0;
@@ -1951,11 +1950,20 @@ button:focus {
         width: 27px !important;
         height: 15px !important;
         position: relative !important;
-        top: 5px !important;
+        top: 0px !important;
+        left: 15px;
+    }
+    li.dropdown.notification-list.list-inline-item.ml-auto {
+      width: 43px;
+    }
+    .wrapper-bell.dropdown-toggle {
+      position: relative;
+      left: 7px;
     }
     #topnav .navbar-right {
         position: relative;
-        left: 31px;
+        left: 73px;
+        top: 7px;
     }
     .col-xl-12 {
         padding: 0px !important;
@@ -5651,6 +5659,51 @@ label {
         width: 40%;
     }
 }
+@media (max-width: 415px) {
+  .menu-extras.topbar-custom.col-auto.justify-content-end {
+    padding-right: 95px !important;
+  }
+}
+@media (max-width: 378px) {
+  .menu-extras.topbar-custom.col-auto.justify-content-end {
+    padding-right: 77px !important;
+  }
+}
+@media (max-width: 1272px) {
+  .navbar-custom.col.active {
+      max-width: 100%;
+      float: left;
+  }
+  .menu-extras.topbar-custom.col-auto.justify-content-end {
+    max-width: 100%;
+    float: right;
+  }
+  ul.navigation-menu.d-flex.justify-content-center.active {
+    float: right;
+    padding-right: 52px !important;
+  }
+  .navbar-right {
+    margin: 0;
+    float: right !important;
+  }
+  .clock {
+    width: 30px !important;
+    height: 30px !important;
+    position: relative;
+    left: 10px !important;
+  }
+  a.nav-user img {
+    position: relative;
+    top: 14px;
+  }
+  .menu-extras.topbar-custom.col-auto.justify-content-end {
+    width: 100%;
+    float:right !important;
+    padding-right: 77px;
+  }
+}
+
+
 @media (min-width: 576px) {
     .card-deck {
         flex-flow: row wrap;

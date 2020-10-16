@@ -1106,6 +1106,13 @@
                     </div>
 
                   </div>
+
+                  <div id="model-element-settings-zone-section" style="display: none">
+                      <div class="col-6">
+                        <h4>Zone Length</h4>
+                        <input type="number" name="zone-length" id="setZoneLength" min="1" class="form-control">
+                      </div>
+                  </div>
                   
                   <div id="modal-element-settings-choices-row-section" style="display: none">
                     <h4>Rows</h4>
@@ -1396,8 +1403,10 @@
         document.querySelector('#chkElementSettingsReadonly').checked = (element.fe_is_readonly == 1)? true : false;
         document.querySelector('#chkElementSettingsScoringCheck').checked = (element.fe_enable_score == 1)? true : false;
         // document.querySelector('#radElementSettingsQuestionPosition').value = element.fe_question_position;
-        if(element.fe_element_id !== 21) {
-          $("#setIsTitle").addClass("d-none");
+        if(element.fe_element_id == 21) {
+          document.querySelector("#setIsTitle").style.display = "block";
+        } else {
+          document.querySelector("#setIsTitle").style.display = "none";
         }
         if(element.fe_element_id == 1 || element.fe_element_id == 2 || element.fe_element_id == 3 ){
           choices = JSON.parse($.ajax({
@@ -1457,6 +1466,13 @@
           document.querySelector('#modal-element-settings-images-section').style.display = "none"
         }
 
+        if(element.fe_element_id == 53){
+          document.querySelector('#modal-element-settings-choices-row-section').style.display = "none"
+          document.querySelector('#modal-element-settings-choices-column-section').style.display = "none"
+          document.querySelector('#model-element-settings-zone-section').style.display = "block"
+        } else {
+          document.querySelector('#model-element-settings-zone-section').style.display = "none"
+        }
 
       }
     })
@@ -1499,6 +1515,7 @@
       "fe_is_readonly": (document.querySelector('#chkElementSettingsReadonly').checked === true)? 1 : 0,
       "fe_enable_score": (document.querySelector('#chkElementSettingsScoringCheck').checked === true)? 1 : 0,
       "fe_is_title": (document.querySelector('#setIsTitle').checked === true)? 1 : 0,
+      "fe_zone_length": document.querySelector('#setZoneLength').value,
       // "fe_question_position": document.querySelector('#radElementSettingsQuestionPosition').value,
     }
 

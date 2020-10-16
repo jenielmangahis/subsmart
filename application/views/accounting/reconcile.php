@@ -558,7 +558,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
 
         <div class="save-act" style="position: unset !important;">
             <button type="button" class="btn-cmn" onclick="closePrintNav()">Cancel</button>
-            <button type="submit" class="savebtn">Done</button>
+            <button type="submit" class="savebtn">Preview and print</button>
         </div>
     </div>
     <!-- End Print popup -->
@@ -613,18 +613,18 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-2">
                         <label>Mailing Address:</label>
-                        <textarea name="check_mailing_add" rows="4"></textarea>
+                        <textarea name="recurr_mailing_add" id="recurr_mailing_add" rows="4"><?=$rows[0]->mailing_address?></textarea>
                     </div>
                     <div class="col-md-2">
                         <label>Payment date:</label>
                         <div class="col-xs-10 date_picker">
-                            <input type="text" name="check_date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                            <input type="text" name="recurr_date_popup" id="recurr_date_popup" class="form-control" value="<?=$rows[0]->first_date?>"/>
                         </div>
                     </div>
                     <div class="col-md-4"></div>
                     <div class="col-md-2">
                         <label>Check no.</label>
-                        <input type="text" name="check_checkno" value=""/>
+                        <input type="text" name="recurr_checkno" id="recurr_checkno" value="<?=$rows[0]->checkno?>"/>
                         </br>
                         </br>
                         <input type="checkbox" name="check_print_check">Print Later
@@ -1075,6 +1075,43 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove_recurr"><i class="fa fa-trash"></i></a></td>
                             </tr>
+                            <?php 
+                            $recurrservicechargecount =0;
+                            if(!empty($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id)))
+                            {
+                            $recurrrowcount =2;
+                            foreach($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id) as $recurrrowtab)
+                            {
+                                $recurrservicechargecount+=$recurrrowtab->service_charge_sub;
+                            ?>
+                            <tr onclick="trClickRecurr(<?=$recurrrowcount?>)">
+                                <td data-id="<?=$recurrrowtab->id?>"><i class="fa fa-th"></i></td>
+                                <td><?=$recurrrowcount?></td>
+                                <td>
+                                    <select name='recurr_expense_account_<?=$recurrrowcount?>' id='recurr_expense_account_<?=$recurrrowcount?>' data-id='<?=$recurrrowtab->id?>' class='up_row' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($recurrrowtab->expense_account_sub == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_expense_account_<?=$recurrrowcount?>"><?=$recurrrowtab->expense_account_sub?></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp_<?=$recurrrowcount?>" name="recurr_descp_<?=$recurrrowcount?>" value="<?=$recurrrowtab->descp_sc_sub?>" placeholder="What did you paid for?" value="<?=$recurrrowtab->descp_sc_sub?>">
+                                    <div class="recurr_descp_<?=$recurrrowcount?>"><?=$recurrrowtab->descp_sc_sub?></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_service_charge_<?=$recurrrowcount?>" name="recurr_service_charge_<?=$recurrrowcount?>" value="<?=number_format($recurrrowtab->service_charge_sub,2)?>">
+                                    <div class="recurr_service_charge_<?=$recurrrowcount?>"><?=number_format($recurrrowtab->service_charge_sub,2)?></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php $recurrrowcount++; }}else{ ?>
                             <tr onclick="trClickRecurr(2)">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>2</td>
@@ -1102,6 +1139,8 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove_recurr"><i class="fa fa-trash"></i></a></td>
                             </tr>
+                            <?php } ?>
+                            <input type="hidden" name="recurrservicechargecount" id="recurrservicechargecount" value="<?=$recurrservicechargecount?>">
                             <tr class="pr participantRecurrRow Recurrhide">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>0</td>
@@ -1963,9 +2002,9 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <div class="col-md-3">
                         <h4><?=$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)?></h4>
                     </div>
-                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->service_charge?>.00</h4></div>
-                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->interest_earned?>.00</h4></div>
-                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?>.00</h4></div>
+                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->service_charge?></h4></div>
+                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->interest_earned?></h4></div>
+                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?></h4></div>
                     <div class="diff" style="display: none;"><?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?></div>
                     <div class="col-sm-4">
                         <div class="float-right d-none d-md-block">
@@ -3529,6 +3568,11 @@ function closeRecurr()
       buttonrecurr.closest("tr").remove();
       var totrecurr = $('#recurrtotal').text().substr(9)-buttonrecurr.closest("tr").find('td:eq(4)').text().trim();
       $('#recurrtotal').text('Total : $'+totrecurr.toFixed(2));
+      if(buttonrecurr.closest("tr").find('td:eq(2)').find('select').hasClass("up_row"))
+        {
+            var id_to_remove =buttonrecurr.closest("tr").find('td:eq(0)').attr("data-id");
+            remove_func_recurr(id_to_remove);
+        }
     }
     /* Doc ready */
     $(".add_recurr").on('click', function () {
@@ -4025,7 +4069,7 @@ function closeAddaccount()
         $.ajax({
             url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
             method: "POST",
-            data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc_sub:descp_sc_sub,expense_account:expense_account,service_charge:service_charge},
+            data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
             success:function(data)
             {
                 closeFullNav();
@@ -4060,9 +4104,9 @@ function closeAddaccount()
       var date_popup = $('#date_popup').val();
       var checkno = $('#checkno').val();
       var memo_sc = $('#memo_sc').val();
-      var descp_sc_sub = $('.edit_descp').text();
-      var expense_account_sub=$('.edit_expense_account').text();
-      var service_charge_sub=$('#total').text().substr(9);
+      var descp_sc = $('.edit_descp').text();
+      var expense_account=$('.edit_expense_account').text();
+      var service_charge=$('#total').text().substr(9);
         if(id!='')
         {
             $.ajax({
@@ -4076,7 +4120,49 @@ function closeAddaccount()
                             $.ajax({
                                 url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
                                 method: "POST",
-                                data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc_sub:descp_sc_sub,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub},
+                                data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
+                                success:function(data)
+                                {
+                                    sweetAlert(
+                                            'Deleted!',
+                                            'Item has been deleted.',
+                                            'success'
+                                        );
+                                }
+                            })
+                          }
+                    }
+                })
+        }
+
+    }
+</script>
+<script type="text/javascript">
+    function remove_func_recurr(id)
+    {
+        var id = id;
+      var reconcile_id = $('#XYZ_id').text();
+      var mailing_address = $('#recurr_mailing_add').val();
+      var date_popup = $('#recurr_date_popup').val();
+      var checkno = $('#recurr_checkno').val();
+      var memo_sc = $('#recurr_memo_sc').val();
+      var descp_sc = $('.recurr_descp').text();
+      var expense_account=$('.recurr_expense_account').text();
+      var service_charge=$('#recurrtotal').text().substr(9);
+        if(id!='')
+        {
+            $.ajax({
+                    url:"<?php echo url('accounting/reconcile/servicecharge/remove_sc') ?>",
+                    method: "POST",
+                    data: {id:id},
+                    success:function(data)
+                    {
+                        if(reconcile_id!='')
+                          {
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
+                                method: "POST",
+                                data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
                                 success:function(data)
                                 {
                                     sweetAlert(
@@ -4099,5 +4185,10 @@ function closeAddaccount()
        var maintot = main - $("#servicechargecount").val();
        $(".edit_service_charge").text(maintot.toFixed(2));
        $("#edit_service_charge").val(maintot.toFixed(2));
+
+       var main_recurr = $(".recurr_service_charge").text();
+       var maintot_recurr = main_recurr - $("#recurrservicechargecount").val();
+       $(".recurr_service_charge").text(maintot_recurr.toFixed(2));
+       $("#recurr_service_charge").val(maintot_recurr.toFixed(2));
     });
 </script>

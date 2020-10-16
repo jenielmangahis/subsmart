@@ -346,7 +346,19 @@ loadFormElements = (id, mode = null) => {
       const labelsFontSize = res.form.forms_label_font_size || '';
       res.form_elements.forEach(el => {
         const elementType = el.fe_element_id;
-        let choices = []
+        let choices = [];
+        let zoneLength = el.fe_zone_length;
+        let zoneTBody = '';
+        for (let index = 0; index < zoneLength; index++) {
+          zoneTBody += `
+              <tr>
+                <td class="p-2 text-center"><input type="checkbox" id="entryExitChk${el.fe_id}I${index}" name="entryExitChk${el.fe_id}I${index}" value="entryExitChk${el.fe_id}I${index}">
+                <td class="p-2 text-center">${index + 1}</td>
+                <td class="p-2 text-center"><input type="checkbox" id="verified${el.fe_id}I${index}" name="verified${el.fe_id}I${index}" value="verified${el.fe_id}I${index}">
+                <td class="p-2"><input class="form-control bg-whitesmoke" type="text" id="location${el.fe_id}I${index}" name="location${el.fe_id}I${index}">
+              </tr>
+          `;
+        }
         if(elementType == 1 || elementType == 2 || elementType == 3 || elementType >= 44 ){
           choices = JSON.parse($.ajax({
             url: `${formBaseUrl}formbuilder/form/element/choices/${el.fe_id}`,
@@ -828,16 +840,7 @@ loadFormElements = (id, mode = null) => {
                   </thead>
                   <tbody>
                     <tr>
-                      ${choices.map((choice, rowIndex) => 
-                        `<tr>
-                          ${(choice.fc_column == null)?`
-                            <td class="p-2 text-center"><input type="checkbox" id="entryExitChk-${rowIndex}" name="entryExitChk-${rowIndex}" value="entryExitChk-${rowIndex}">
-                            <td class="p-2 text-center">${choice.fc_choice}</td>
-                            <td class="p-2 text-center"><input type="checkbox" id="verified-${rowIndex}" name="verified-${rowIndex}" value="verified-${rowIndex}">
-                            <td class="p-2"><input class="form-control bg-whitesmoke" type="text" id="location-${rowIndex}" name="location-${rowIndex}">
-                          `:""}
-                        </tr>`
-                      ).join('')}
+                      ${zoneTBody}
                     </tr>
                   </tbody>
                 </table>

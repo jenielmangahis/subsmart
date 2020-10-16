@@ -162,5 +162,7 @@ $autoload['model'] = array(
     'timesheet_model',
     'AccountingVendors_model',
     'file_folders_permissions_roles_model',
-    'file_folders_permissions_users_model'
+    'file_folders_permissions_users_model',
+    'users_geographic_positions_model',
+    'users_geographic_positions_categories_model'
 );

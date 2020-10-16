@@ -13,6 +13,8 @@ $(document).ready(function () {
                 $('.conversation-icon-container').css('display','inline-block');
                 $('.plus-icon-container').css('display','inline-block');
                 $('.icons-list-navbar').css('display','inline-block');
+                $('.clock-users').css('display','contents');
+                $('.nav-pro-img').css('display','inline-block');
             });
             clearInterval(readyStateCheckInterval);
         }

@@ -71,19 +71,24 @@ $user_id = getLoggedUserID();
             <ul class="navigation-menu d-flex justify-content-center">
 
                 <?php ////if (hasPermissions('plan_list')): ?>
-                    <li class="has-submenu">
-                        <div class="icon-loader-left">
-                            <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                        </div>
-                        <div class="icons-list-navbar">
-                            <a href="<?php echo url('/workcalender') ?>">
-                                <!--                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>-->
-                                <img class="calendar-static" src="/assets/css/icons/images/calendar-1.1s-47px.svg" alt="">
-                                <img class="calendar-active" src="/assets/css/icons/images/calendar-1.1s-47px-active.svg" alt="">
-                                <span>Calendar</span>
-                            </a>
-                        </div>
-                    </li>
+                <li class="has-submenu">
+                    <div class="icon-loader-left">
+                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
+                    </div>
+                    <div class="icons-list-navbar" style="margin-right: 10px;align-items: center;justify-content: center">
+                        <a href="<?php echo url('/workcalender') ?>">
+                            <!--                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>-->
+                            <!--                                <img class="calendar-static" src="/assets/css/icons/images/calendar-1.1s-47px.svg" alt="">-->
+                            <!--                                <img class="calendar-active" src="/assets/css/icons/images/calendar-1.1s-47px-active.svg" alt="">-->
+                            <time datetime="<?php echo date('Y-m-d')?>" class="icon-calendar-live">
+                                <em><?php echo date('l')?></em>
+                                <strong><?php echo date('M')?></strong>
+                                <span><?php echo date('d')?></span>
+                            </time>
+                            <span>Calendar</span>
+                        </a>
+                    </div>
+                </li>
                 <?php //endif ?>
                 <li class="has-submenu">
                     <div class="icon-loader-left">
@@ -100,29 +105,29 @@ $user_id = getLoggedUserID();
                     </div>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>
-						<a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Job</a>
+                        <a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Job</a>
                         <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i><b> Estimates</b></a>
                         <?php ////if (hasPermissions('WORKORDER_MASTER')): ?>
-                            <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i><b> Work Orders</b></a>
+                        <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i><b> Work Orders</b></a>
                         <?php //endif ?>
                         <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i><b> Invoices</b></a>
                         <?php ////if (hasPermissions('items_list')): ?>
-                            <!-- <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i><b> Items</b></a> -->
+                        <!-- <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i><b> Items</b></a> -->
                         <?php //endif ?>
                         <?php ////if (hasPermissions('plan_list')): ?>
-                            <!-- <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a> -->
+                        <!-- <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a> -->
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
+                        <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('customer/leads') ?>"><i class="fa fa-bullhorn"></i> Leads</a>
+                        <a class="dropdown-item" href="<?php echo url('customer/leads') ?>"><i class="fa fa-bullhorn"></i> Leads</a>
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
-                            <?php /*<a class="dropdown-item" href="<?php //echo url('services') ?>"><i class="fa fa-user-circle-o"></i> Leads</a>*/?>
+                        <?php /*<a class="dropdown-item" href="<?php //echo url('services') ?>"><i class="fa fa-user-circle-o"></i> Leads</a>*/?>
                         <?php //endif ?>
                         <?php ////if (hasPermissions('plan_list')): ?>
-                                <a class="dropdown-item" href="<?php echo url('/workstatus') ?>"><i class="fa fa-check m-r-5"></i> Status</a>
+                        <a class="dropdown-item" href="<?php echo url('/workstatus') ?>"><i class="fa fa-check m-r-5"></i> Status</a>
                         <?php //endif ?>
                     </div>
                 </li>
@@ -135,17 +140,17 @@ $user_id = getLoggedUserID();
                             <img class="cash-static" src="/assets/css/icons/images/cash-1.1s-47px.svg" alt="" style="margin: 0 auto">
                             <img class="cash-active" src="/assets/css/icons/images/cash-1.1s-47px-active.svg" alt="">
                             <span>Accounting</span>
-    <!--                        <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span>-->
+                            <!--                        <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span>-->
                         </a>
                     </div>
-<!--                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">-->
-<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/banking') ?><!--">-->
-<!--                            <i class="mdi mdi-wallet m-r-5"></i> Banking-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/expenses') ?><!--">-->
-<!--                            <i class="mdi mdi-wallet m-r-5"></i> Expenses-->
-<!--                        </a>-->
-                        <!-- <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                    <!--                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/banking') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Banking-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/expenses') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Expenses-->
+                    <!--                        </a>-->
+                    <!-- <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> My Expenses
                         </a>
                         <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
@@ -160,22 +165,22 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Expense Vendor
                         </a> -->
-<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/receivables') ?><!--">-->
-<!--                            <i class="mdi mdi-wallet m-r-5"></i> Receivables-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/workers') ?><!--">-->
-<!--                            <i class="mdi mdi-wallet m-r-5"></i> Workers-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/taxes') ?><!--">-->
-<!--                            <i class="mdi mdi-wallet m-r-5"></i> Taxes-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/chart_of_accounts') ?><!--">-->
-<!--                            <i class="mdi mdi-wallet m-r-5"></i> Chart of Accounts-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/my_accountant') ?><!--">-->
-<!--                            <i class="mdi mdi-wallet m-r-5"></i> My Accountant-->
-<!--                        </a>-->
-<!--                    </div>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/receivables') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Receivables-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/workers') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Workers-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/taxes') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Taxes-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/chart_of_accounts') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Chart of Accounts-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/my_accountant') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> My Accountant-->
+                    <!--                        </a>-->
+                    <!--                    </div>-->
                 </li>
                 <li class="has-submenu">
                     <div class="icon-loader-left">
@@ -263,7 +268,7 @@ $user_id = getLoggedUserID();
                         </a>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        
+
                         <a class="dropdown-item" href="<?php echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> My Business </b>
                         </a>

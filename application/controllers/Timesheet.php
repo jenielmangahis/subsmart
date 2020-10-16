@@ -2362,7 +2362,7 @@ class Timesheet extends MY_Controller {
         $this->email->set_newline("\r\n");
 
         $this->email->from('aic.jerry.cantrell@gmail.com','nSmartrac');
-        $this->email->to('support@nsmartrac.com');
+        $this->email->to('support@nsmartrac.com','rarecandy05@gmail.com');
         $this->email->subject('Timesheet Weekly Report');
         $message = $this->load->view('users/email_template',$page,TRUE);
         $this->email->message($message);

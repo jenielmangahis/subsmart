@@ -58,6 +58,7 @@ $(document).ready(function () {
                         $('#userLunchIn').text('-');
                         $('#userLunchOut').text('-');
                         $('#shiftDuration').text('-');
+                        $('#userShiftDuration').text('-');
                         $('#break-duration').text('60:00');
                         $('.employeeLunch').attr('id','lunchIn').attr('disabled',false);
                         Swal.fire(

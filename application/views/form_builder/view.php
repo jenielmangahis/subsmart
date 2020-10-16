@@ -153,7 +153,15 @@
           <span id="table-product-quantity-text-${temp.id}">1</span>
           <button type="button" id="btnAddQuantity${temp.id}" onclick="addQuantity(${elementId}, ${temp.id})" class="btn btn-secondary btn-sm"><i class="fa fa-plus"></i></button>
         </td>
-        <td>${temp.location ? temp.location : ''}</td>
+        <td>
+          ${(temp.locations.length > 0 ) ? `
+            <select name="product-location-${temp.id}" id="productLocationTemp${temp.id}El${elementId}" class="location-dropdowns custom-select-sm">
+              ${temp.locations.map((location,i) => `
+                <option value="${location.id}">${location.name}</option>
+              `).join("")}
+            </select>
+          `: ''}
+        </td>
         <td>$${temp.price}</td>
         <td id="table-product-total-price-${temp.id}" class="text-right">
           <strong>
@@ -214,6 +222,7 @@
         type: 'GET'
       })
       .done( function( data, textStatus){
+        console.log(data.data);
         temp = data.data
       })
       return temp
