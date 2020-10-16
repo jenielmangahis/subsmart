@@ -187,6 +187,40 @@ class Sms_Campaigns extends MY_Controller {
         {
                 $this->load->view('sms_campaigns/build_sms', $this->page_data);
         }
+
+        public function create_sms_message()
+        {
+                $json_data = [
+                        'is_success' => false,
+                        'err_msg' => 'Please enter Campaign Name'
+                ];
+
+
+                $post = $this->input->post(); 
+                $sms_blast_id = $this->session->userdata('smsBlastId');
+
+                $data = ['sms_text' => $post['sms_text']];
+                $smsBlast = $this->SmsBlast_model->updateSmsBlast($sms_blast_id,$data);
+
+                $json_data = [
+                        'is_success' => true,
+                        'err_msg' => ''
+                ];
+
+                echo json_encode($json_data);
+
+        }
+
+        public function preview_sms_message()
+        {
+                $sms_blast_id = $this->session->userdata('smsBlastId');
+
+                $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
+                $sms_text = $smsBlast->sms_text;
+
+                $this->page_data['sms_text'] = $sms_text;
+                $this->load->view('sms_campaigns/preview_sms', $this->page_data);
+        }
 }
 
 

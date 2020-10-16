@@ -38,6 +38,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     margin-top: 20px;
     margin-bottom: 10px;
 }
+.phone {
+    display: inline-block;
+    background: url(<?php echo base_url() ?>/assets/img/sms_preview_phone.png) no-repeat 0 0;
+    width: 350px;
+    height: 530px;
+}
+.phone__cnt {
+    margin: 190px 65px 0 50px;
+}
+.sms-blast-msg {
+    background: #e5e5ea;
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 10px;
+    text-align: left;
+    position: relative;
+}
+.sms-blast-msg:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 20%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-right-color: #e5e5ea;
+    border-left: 0;
+    border-bottom: 0;
+    margin-top: -5px;
+    margin-left: -10px;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -64,14 +95,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'id' => 'create_sms_blast', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'id' => 'build_sms', 'autocomplete' => 'off']); ?>
             <div class="card">
                 <div class="card-body">
+                    <div class="validation-error" style="display: none;"></div>
+                    <div class="tabs-menu">
+                        <ul class="clearfix">
+                          <li>1. Edit Campaign</li>
+                          <li>2. Select Customers</li>
+                          <li class="active">3. Build SMS</li>
+                          <li>4. Preview</li>
+                          <li>5. Purchase</li>
+                        </ul>
+                    </div>
+                    <hr />  
                     <div class="row">
                         <div class="col-md-6">
                             <div class="campaign__text">
                                 <label>SMS message</label>
-                                <textarea name="text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off">Sms from ADi</textarea>
+                                <textarea name="sms_text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off">Sms from ADi</textarea>
                             </div>
                             <div class="help help-sm margin-bottom-sec">
                                 message characters: <span class="margin-right-sec char-counter">0</span>
@@ -93,11 +135,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <hr>
                     <div class="row margin-top">
                         <div class="col-sm-12">
-                            <button class="btn btn-default margin-right" data-form="sms-preview" data-on-click-label="Preview...">Preview SMS</button>
+                            <a class="btn btn-default margin-right btn-preview-sms" href="javascript:void(0);">Preview SMS</a>
                         </div>
                         <div class="col-sm-12 text-right">
-                            <a class="btn btn-default margin-right" href="https://www.markate.com/pro/marketing/sms_campaigns/main/send_to/id/1161">&laquo; Back</a>
-                            <button class="btn btn-primary" data-form="submit" data-on-click-label="Saving...">Continue &raquo;</button>
+                            <a class="btn btn-default margin-right" href="javascript:void(0);">&laquo; Back</a>
+                            <button class="btn btn-primary btn-create-sms-msg" type="submit">Continue &raquo;</button>
                         </div>
                     </div>
                 </div>
@@ -153,6 +195,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
 
+            <div class="modal fade" id="modalPreviewSms" tabindex="-1" role="dialog" aria-labelledby="modalPreviewSmsTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Preview SMS</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="padding: 0px 30px;">
+                        <div class="phone">
+                            <div class="phone__cnt">
+                                <div class="sms-blast-msg"></div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -198,28 +263,33 @@ $(function(){
         $("#modalSmartTags").modal('show');
     });
 
-    $("#create_sms_blast").submit(function(e){
+    $(".btn-preview-sms").click(function(){
+        $("#modalPreviewSms").modal('show');
+        $(".sms-blast-msg").html($("#sms-txt").val());
+    });
+
+    $("#build_sms").submit(function(e){
         e.preventDefault();
-        var url = base_url + '/sms_campaigns/save_draft_campaign';
-        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
+        var url = base_url + '/sms_campaigns/create_sms_message';
+        $(".btn-create-sms-msg").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,    
              dataType: "json",      
-             data: $("#create_sms_blast").serialize(),
+             data: $("#build_sms").serialize(),
              success: function(o)
              {
                 if( o.is_success ){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "/sms_campaigns/add_campaign_send_to";
+                    location.href = base_url + "/sms_campaigns/preview_sms_message";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);
                 }
-                $(".btn-campaign-save-draft").html('Save as Draft');
+                $(".btn-create-sms-msg").html('Continue »');
              }
           });
         }, 1000);

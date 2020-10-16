@@ -78,6 +78,14 @@ class SmsBlast_model extends MY_Model
         return $this->ctype_residential;
     }
 
+    public function updateSmsBlast($sms_blast_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('id', $sms_blast_id);
+        $this->db->update();
+    }
+
 }
 
 /* End of file SmsBlast_model.php */
