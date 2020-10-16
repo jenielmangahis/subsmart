@@ -1,7 +1,16 @@
 @media (max-width: 1024px) {
     .menu-extras.topbar-custom ul li div.clock{
-        height: 50px!important;
-        width: 50px!important;
+        height: 40px!important;
+        width: 40px!important;
+    }
+    .menu-extras.topbar-custom ul li div.clock .hour, .hr{
+        transform: rotateZ(180deg);
+    }
+    .menu-extras.topbar-custom ul li div.clock .minute, .min{
+        transform: rotateZ(180deg);
+    }
+    .menu-extras.topbar-custom ul li div.clock .second, .sec{
+        transform: rotateZ(180deg);
     }
 }
 .clock{
@@ -92,7 +101,8 @@
 /*Clock preview css*/
 .clock-users {
     position: relative;
-    display: contents;
+    display: none;
+    /*display: contents;*/
 }
 
 .clock-users + .preview-clock-details {

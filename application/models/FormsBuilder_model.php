@@ -164,9 +164,14 @@ class FormsBuilder_model extends MY_Model {
 	}
 
 	public function getProductsList(){
-		$this->db->select("*");
-		$query=  $this->db->get('items');
-		return $query->result();
+		$this->db->select('*');
+		$items = $this->db->get('items')->result_array();
+		foreach ($items as $i => $item) {
+			$this->db->where('item_id', $item['id']);
+			$locations = $this->db->get('items_has_storage_loc')->result_array();
+			$items[$i]['locations'] = $locations;
+		}
+		return $items;
 	}
 
 

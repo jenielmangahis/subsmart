@@ -3,10 +3,22 @@
         z-index: 20;
         top: -4px!important;
         right: 3px!important;
-        font-size: 11px;
+        font-size: 13px;
+        width: 15px;
+        height: 15px;
+        padding: 0;
+        text-align: center;
     }
-    .menu-extras.topbar-custom ul li{
-        height: revert!important;
+    .menu-extras.topbar-custom ul li .wrapper-bell {
+        margin-right: 5px!important;
+        margin-left: 5px!important;
+    }
+    .menu-extras.topbar-custom ul li .wrapper-bell .bell {
+        width: 20px!important;
+        height: 20px!important;
+    }
+    .menu-extras.topbar-custom ul li .wrapper-bell .bell .layer-1,.layer-2,.layer-3 {
+        font-size: 25px !important;
     }
 }
 
@@ -19,18 +31,27 @@
     text-align: justify;
     background-color: red;
     padding-top: 4px;
+    margin-top: -10px;
 }
 /*Icon loader*/
 .icon-loader{
     position: relative;
     display: inline-block;
-    margin: 0;
+    margin-right: auto;
+    margin-left: auto;
     padding: 0;
-    height: 30px;
-    width: 30px;
+    height: 47px;
+    width: 47px;
 }
 .wrapper-bell{
     cursor: pointer;
+}
+.wrapper-bell + .prev-icon-title{
+    visibility: hidden;
+    top: 45px !important;
+}
+.wrapper-bell:hover + .prev-icon-title{
+    visibility: visible;
 }
 .bell .material-icons {
     font-size:32px;
@@ -49,6 +70,7 @@
     padding:0;
     height: 30px;
     width: 30px;
+    margin-top: -10px;
     margin-right: 13px;
     vertical-align: bottom!important;
 }

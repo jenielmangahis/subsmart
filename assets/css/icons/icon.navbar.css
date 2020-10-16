@@ -1,13 +1,112 @@
 @media (max-width: 1024px) {
     .menu-extras.topbar-custom ul li .schedule-icon-container,.growth-icon-container,.conversation-icon-container,.plus-icon-container,.settings-icon-container{
-        height: 47px!important;
-        width: 47px!important;
+        height: 37px!important;
+        width: 37px!important;
     }
+    .icon-logo-nav{
+        visibility: hidden;
+    }
+    .menu-extras.topbar-custom ul li .nav-pro-img{
+        width: 40px!important;
+        height: 40px!important;
+        margin-right: 25px;
+    }
+    .menu-extras.topbar-custom ul li .nav-pro-img img{
+        min-width: 36px!important;
+        min-height: 36px!important;
+    }
+}
+
+.nav-pro-img{
+    display: none;
+}
+/*Calendar live icon*/
+time.icon-calendar-live
+{
+    font-size: 5px; /* change icon size */
+    display: block;
+    position: relative;
+    width: 7em;
+    height: 7em;
+    background-color: #fff;
+    border-radius: 0.6em;
+    /*box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;*/
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 7px;
+    margin-top: 5px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,.1), 0 6px 6px rgba(0,0,0,.2), 0 0 0 4px rgb(228,240,249);
+}
+time.icon-calendar-live *
+{
+    display: block;
+    width: 100%;
+    font-size: 1em;
+    font-weight: bold;
+    font-style: normal;
+    text-align: center;
+}
+
+time.icon-calendar-live strong
+{
+    position: absolute;
+    top: 0;
+    padding: 0.4em 0;
+    color: #fff;
+    background-color: #4eb245;
+    border-bottom: 1px dashed #ffffff;
+    box-shadow: 0 2px 0 #04bd0a;
+    text-transform: uppercase;
+}
+time.icon-calendar-live em
+{
+    position: absolute;
+    bottom: 0.3em;
+    color: #6fbcf7;
+}
+time.icon-calendar-live span
+{
+    font-size: 2.8em;
+    letter-spacing: -0.05em;
+    padding-top: 0.8em;
+    color: #2f2f2f;
+}
+time.icon-calendar-live:hover, time.icon-calendar-live:focus
+{
+    -webkit-animation: swing 0.6s ease-out;
+    animation: swing 0.6s ease-out;
+}
+@-webkit-keyframes swing {
+    0%   { -webkit-transform: rotate(0deg)  skewY(0deg); }
+    20%  { -webkit-transform: rotate(12deg) skewY(4deg); }
+    60%  { -webkit-transform: rotate(-9deg) skewY(-3deg); }
+    80%  { -webkit-transform: rotate(6deg)  skewY(-2deg); }
+    100% { -webkit-transform: rotate(0deg)  skewY(0deg); }
+}
+@keyframes swing {
+    0%   { transform: rotate(0deg)  skewY(0deg); }
+    20%  { transform: rotate(12deg) skewY(4deg); }
+    60%  { transform: rotate(-9deg) skewY(-3deg); }
+    80%  { transform: rotate(6deg)  skewY(-2deg); }
+    100% { transform: rotate(0deg)  skewY(0deg); }
 }
 
 .schedule-icon-static,.growth-icon-static,.conversation-icon-static,.settings-icon-static,.plus-icon-static{
     width: 47px;
     height: 47px;
+}
+
+.prev-icon-title{
+    min-width: 100px;
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 2px;
+    background-color: #0000008a;
+    color: #ffffff;
+    position: absolute;
+    z-index: 20;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 /*Settings icon */
 .settings-icon-container{
@@ -16,6 +115,12 @@
     height: auto;
     width: auto;
     display: none;
+}
+.settings-icon-container + .prev-icon-title{
+    visibility: hidden;
+}
+.settings-icon-container:hover + .prev-icon-title{
+    visibility: visible;
 }
 .settings-icon-container .settings-icon-hover{
     display: none;
@@ -37,6 +142,12 @@
     margin: 0;
     height: auto;
     width: auto;
+}
+.schedule-icon-container + .prev-icon-title{
+    visibility: hidden;
+}
+.schedule-icon-container:hover + .prev-icon-title{
+    visibility: visible;
 }
 .schedule-icon-container .schedule-icon-hover{
     display: none;
@@ -103,11 +214,9 @@
     bottom: 10px!important;
 }
 .has-submenu .icon-loader-left{
-    display: inline-block;
-    margin-top: 10px;
-    margin-right: 40px;
-    height: 30px;
-    width: 30px;
+    margin-right: 20px;
+    height: 47px;
+    width: 47px;
 }
 .icons-list-navbar{
     text-align: center;
@@ -118,18 +227,18 @@
 .icons-list-navbar span{
     color: black!important;
 }
-.icons-list-navbar .calendar-active{
-    display: none;
-    position: absolute;
-    top: 0;
-    z-index: 99;
-}
-.icons-list-navbar:hover .calendar-active{
-    display: inline-block;
-}
-.icons-list-navbar:hover .calendar-static{
-    visibility: hidden;
-}
+/*.icons-list-navbar .calendar-active{*/
+    /*display: none;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*z-index: 99;*/
+/*}*/
+/*.icons-list-navbar:hover .calendar-active{*/
+    /*display: inline-block;*/
+/*}*/
+/*.icons-list-navbar:hover .calendar-static{*/
+    /*visibility: hidden;*/
+/*}*/
 .icons-list-navbar .bar-active{
     display: none;
     position: absolute;
@@ -223,4 +332,8 @@
 }
 .icons-list-navbar:hover .more-static{
     visibility: hidden;
+}
+/*User navbar icon/image */
+.nav-user-img:active{
+   border: 2px solid greenyellow;
 }

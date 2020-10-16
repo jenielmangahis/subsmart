@@ -10,58 +10,65 @@ class Trac360 extends MY_Controller {
 		$this->page_data['page']->title = 'Trac360';
 	}
 
+        public function getUsersCategories(){
+                $company_id = logged('company_id');
+
+                $return = array(
+                        'categories' => $this->db->query('select * from users_geo_positions_categories where company_id = ' . $company_id . ' order by id')->result_array(),
+                        'users' => $this->db->query(
+                                        'select '.
+
+                                        'a.user_id, '.
+                                        'a.latitude, '.
+                                        'a.longitude, '.
+                                        'a.category_id, '.
+                                        'b.FName, '.
+                                        'b.LName, '.
+                                        'c.category_tag '.
+
+                                        'from users_geo_positions a '.
+
+                                        'left join users b on b.id = a.user_id '.
+                                        'left join users_geo_positions_categories c on c.id = a.category_id '.
+
+                                        'where a.company_id = ' . $company_id . ' ' .
+
+                                        'order by a.category_id'
+                        )->result_array()
+                );
+
+                echo json_encode($return);
+        }
+
 	public function index(){
 		$company_id = logged('company_id');
 
-        $users_geo = $this->db->query(
-			'select '.
+                $marker = array();
+                $marker['title'] = 'Test Marker';
+                $marker['position'] = '49.164911,-123.17792';
 
-			'a.user_id, '.
-			'a.latitude, '.
-			'a.longitude, '.
-			'b.FName, '.
-			'b.LName '.
+                $this->googlemaps->add_marker($marker);
 
-			'from users_geo_positions a '.
+                $config['center'] = '49.164911,-123.17792';
+                $config['zoom'] = 13;
+                $config['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
 
-			'left join users b on b.id = a.user_id '.
+                $this->googlemaps->initialize($config);
 
-			'where a.company_id = ' . $company_id . ''
-        )->result();
+                $data = $this->googlemaps->create_map();
 
-        $first = true;
+                $this->page_data['map'] = $data['html'];
+                $this->page_data['map_js'] = $data['js'];
+                $this->page_data['trac360_manager'] = $this->load->view('modals/trac360_manager', array(), true);
 
-        $c_latitude = 0;
-        $c_longitude = 0;
-
-        foreach ($users_geo as $user_geo) {
-        	if($first){
-        		$c_latitude = $user_geo->latitude;
-        		$c_longitude = $user_geo->longitude;
-
-        		$first = !$first;
-        	}
-
-        	$marker = array();
-        	$marker['id'] = $user_geo->user_id;
-        	$marker['title'] = $user_geo->FName . ' ' . $user_geo->LName;
-        	$marker['position'] = $user_geo->latitude . ',' . $user_geo->longitude;
-
-        	$this->googlemaps->add_marker($marker);
-        }
-
-        $config['center'] = $c_latitude . ', ' . $c_longitude;
-        $config['zoom'] = 13;
-        $config['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
-
-        $this->googlemaps->initialize($config);
-
-        $data = $this->googlemaps->create_map();
-
-        $this->page_data['map'] = $data['html'];
-        $this->page_data['map_js'] = $data['js'];
-
-        $this->page_data['users_geo'] = $users_geo;
-	       $this->load->view('trac360/main', $this->page_data);
+	        $this->load->view('trac360/main', $this->page_data);
 	}
+
+        public function getUserGeoPosition($uid){
+                $company_id = logged('company_id');
+
+                $return = $this->users_geographic_positions_model->getRowByWhere(array('user_id' => $uid,'company_id' => $company_id), 0, true);
+
+                echo json_encode($return);
+        }
 }
