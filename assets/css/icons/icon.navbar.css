@@ -14,8 +14,10 @@
     .menu-extras.topbar-custom ul li .nav-pro-img img{
         min-width: 36px!important;
         min-height: 36px!important;
+        top: 0!important;
     }
 }
+
 
 .nav-pro-img{
     display: none;

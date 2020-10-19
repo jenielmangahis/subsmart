@@ -22,6 +22,7 @@ class Trac360 extends MY_Controller {
                                         'a.latitude, '.
                                         'a.longitude, '.
                                         'a.category_id, '.
+                                        'b.img_type, '.
                                         'b.FName, '.
                                         'b.LName, '.
                                         'c.category_tag '.
@@ -43,11 +44,15 @@ class Trac360 extends MY_Controller {
 	public function index(){
 		$company_id = logged('company_id');
 
-                $marker = array();
-                $marker['title'] = 'Test Marker';
-                $marker['position'] = '49.164911,-123.17792';
+                if(false){
+                        $marker = array();
+                        $marker['title'] = 'Test Marker';
+                        $marker['position'] = '49.164911,-123.17792';
+                        $marker['icon'] = base_url() . "uploads/users/default.png";
+                        $marker['icon_scaledSize'] = '30,30';
 
-                $this->googlemaps->add_marker($marker);
+                        $this->googlemaps->add_marker($marker);
+                }
 
                 $config['center'] = '49.164911,-123.17792';
                 $config['zoom'] = 13;

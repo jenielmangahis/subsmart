@@ -613,18 +613,18 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-2">
                         <label>Mailing Address:</label>
-                        <textarea name="recurr_mailing_add" id="recurr_mailing_add" rows="4"><?=$rows[0]->mailing_address?></textarea>
+                        <textarea name="check_mailing_add" id="check_mailing_add" rows="4"><?=$rows[0]->mailing_address?></textarea>
                     </div>
                     <div class="col-md-2">
                         <label>Payment date:</label>
                         <div class="col-xs-10 date_picker">
-                            <input type="text" name="recurr_date_popup" id="recurr_date_popup" class="form-control" value="<?=$rows[0]->first_date?>"/>
+                            <input type="text" name="check_date_popup" id="check_date_popup" class="form-control" value="<?=$rows[0]->first_date?>"/>
                         </div>
                     </div>
                     <div class="col-md-4"></div>
                     <div class="col-md-2">
                         <label>Check no.</label>
-                        <input type="text" name="recurr_checkno" id="recurr_checkno" value="<?=$rows[0]->checkno?>"/>
+                        <input type="text" name="check_checkno" id="check_checkno" value="<?=$rows[0]->checkno?>"/>
                         </br>
                         </br>
                         <input type="checkbox" name="check_print_check">Print Later
@@ -1007,28 +1007,28 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-2">
                         <label>Mailing Address:</label>
-                        <textarea name="check_mailing_add" rows="4"></textarea>
+                        <textarea name="recurr_mailing_add" id="recurr_mailing_add" class="form-control" rows="4"><?=$rows[0]->mailing_address?></textarea>
                     </div>
                     <div class="col-md-2">
                         <label>Payment date:</label>
                         <div class="col-xs-10 date_picker">
-                            <input type="text" name="check_date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                            <input type="text" name="recurr_date_popup" id="recurr_date_popup" class="form-control" value="<?=$rows[0]->first_date?>"/>
                         </div>
                     </div>
                     <div class="col-md-4"></div>
                     <div class="col-md-2">
                         <label>Check no.</label>
-                        <input type="text" name="recurr_checkno" value=""/>
+                        <input type="text" name="recurr_checkno" id="recurr_checkno" class="form-control" value="<?=$rows[0]->checkno?>"/>
                         </br>
                         </br>
-                        <input type="checkbox" name="recurr_print_check">Print Later
+                        <input type="checkbox" class="form-control" name="recurr_print_check">Print Later
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-8"></div>
                     <div class="col-md-2">
                         <label>Permit no.</label>
-                        <input type="text" name="recurr_permitno" value=""/>
+                        <input type="text" name="recurr_permitno" id="recurr_permitno" class="form-control" value=""/>
                     </div>
                 </div>
             </div>
@@ -1187,7 +1187,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-4">
                     <label>Memo</label>
                     </br>
-                    <textarea name="recurr_memo" rows="4"><?=$rows[0]->memo_sc?></textarea>
+                    <textarea name="recurr_memo_sc" id="recurr_memo_sc" rows="4"><?=$rows[0]->memo_sc?></textarea>
                 </div>
                 <div class="col-md-6"></div>
                 <div class="col-md-2">
@@ -1217,7 +1217,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         <div class="save-act" style="position: unset !important;">
             <button type="button" class="btn-cmn" onclick="closeRecurr()">Cancel</button>
             <button type="button" class="btn-cmn" onclick="openRecurr()" style="margin-left: 5% ">Revert</button>
-            <button type="submit" class="savebtn">Save template</button>
+            <button type="button" class="savebtn" onclick="save_recurr(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)">Save template</button>
         </div>
     </div>
     <!-- End Make recurring -->
@@ -4138,6 +4138,73 @@ function closeAddaccount()
     }
 </script>
 <script type="text/javascript">
+    function save_recurr(id,chart_of_accounts_id)
+    {
+      var reconcile_id = id;
+      var chart_of_accounts_id = chart_of_accounts_id;
+      var mailing_address = $('#recurr_mailing_add').val();
+      var date_popup = $('#recurr_date_popup').val();
+      var checkno = $('#recurr_checkno').val();
+      var memo_sc = $('#recurr_memo_sc').val();
+      var descp_sc = $('.recurr_descp').text();
+      var expense_account=$('.recurr_expense_account').text();
+      //var service_charge=$('.recurr_service_charge').text();
+      var service_charge=$('#recurrtotal').text().substr(9);
+
+      var tablelength = $('#participantRecurrTable tr').length -2;
+
+      for(var i = 2 ; i <= tablelength ; i++)
+        {
+
+            var expense_account_sub = $('.recurr_expense_account_'+i).text();
+            var service_charge_sub = $('.recurr_service_charge_'+i).text();
+            var descp_sc_sub = $('.recurr_descp_'+i).text();
+
+          if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
+          {
+            if(service_charge_sub!='')
+            {
+                if($('#recurr_expense_account_'+i).hasClass('up_row'))
+                {
+                    var id = $('#recurr_expense_account_'+i).data('id');
+                    $.ajax({
+                        url:"<?php echo url('accounting/reconcile/change/servicecharge') ?>",
+                        method: "POST",
+                        data: {id:id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                        success:function(data)
+                        {
+                        }
+                    })
+                }
+                else
+                {
+                    $.ajax({
+                        url:"<?php echo url('accounting/reconcile/add/servicecharge') ?>",
+                        method: "POST",
+                        data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                        success:function(data)
+                        {
+                        }
+                    })
+                }
+            }
+          }
+        }
+
+      if(reconcile_id!='')
+      {
+        $.ajax({
+            url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
+            method: "POST",
+            data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
+            success:function(data)
+            {
+                closeRecurr();
+                location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+            }
+        })
+      }
+    }
     function remove_func_recurr(id)
     {
         var id = id;

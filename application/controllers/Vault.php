@@ -146,7 +146,7 @@ class Vault extends MY_Controller {
 			$file_id = $_POST['file_id'];
 			$file = $this->vault_model->getById($file_id);
 			
-			if(($file->file_id != $uid) && (($section == 'sharedlibrary')||($section == 'businessformtemplates'))){
+			if(($file->user_id != $uid) && (($section == 'sharedlibrary')||($section == 'businessformtemplates'))){
 				$return['error'] = 'Cannot delete file. File is not yours.';
 			} else {
 				$data = array(
@@ -499,12 +499,12 @@ class Vault extends MY_Controller {
 		$type = $_POST['vptype'];
 
 		$data = array(
-			'create_folder' => (($_POST['create_folder'] == 'true') ? '1' : '0'),
-			'add_file' => (($_POST['add_file'] == 'true') ? '1' : '0'),
-			'edit_folder_file' => (($_POST['edit_folder_file'] == 'true') ? '1' : '0'),
-			'move_folder_file' => (($_POST['move_folder_file'] == 'true') ? '1' : '0'),
-			'trash_folder_file' => (($_POST['trash_folder_file'] == 'true') ? '1' : '0'),
-			'remove_folder_file' => (($_POST['remove_folder_file'] == 'true') ? '1' : '0'),
+			'create_folder' => $_POST['create_folder'],
+			'add_file' => $_POST['add_file'],
+			'edit_folder_file' => $_POST['edit_folder_file'],
+			'move_folder_file' => $_POST['move_folder_file'],
+			'trash_folder_file' => $_POST['trash_folder_file'],
+			'remove_folder_file' => $_POST['remove_folder_file'],
 			'company_id' => $company_id
 		);
 		
@@ -539,8 +539,13 @@ class Vault extends MY_Controller {
 		}
 
 		if(empty($return['error'])){
-			$return['cu_user_permissions'] = $this->getUserPermissions($uid, true);
-			$return['cu_role_permissions'] = $this->getRolePermissions($role_id, true);
+			$user_permissions = $this->getUserPermissions($uid, true);
+			$role_permissions = $this->getRolePermissions($role_id, true);
+			if(empty($user_permissions)){
+				$return['permissions'] = $role_permissions;
+			} else {
+				$return['permissions'] = $user_permissions;
+			}
 		}
 
 		echo json_encode($return);

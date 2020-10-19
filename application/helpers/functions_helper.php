@@ -41,8 +41,7 @@ function days_of_month($index=0){
     return $days[$index];
 }
 
-function string_max_length($string, $max_length)
-{
+function string_max_length($string, $max_length) {
     if (!is_string($string)) {
        return "";
     }
@@ -54,6 +53,10 @@ function string_max_length($string, $max_length)
     } else {
         return $string;
     }
+}
+
+function time_selector($index=0){
+
 }
 
 ?>

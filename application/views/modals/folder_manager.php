@@ -549,7 +549,7 @@
           <h6 id="upload_counter" class="d-none">Uploading . . . 0/0</h6>
           <button type="button" class="btn btn-default" id="upload_dropped_files">Upload</button>
           <button type="button" class="btn btn-default" id="clear_dropped_files" onclick="clearDroppedFiles()">Reset</button>
-          <button type="button" class="btn btn-default" id="cancel_dropped_files">Cancel</button>
+          <button type="button" class="btn btn-default" id="cancel_dropped_files">Done</button>
         </div>
       </div>
 

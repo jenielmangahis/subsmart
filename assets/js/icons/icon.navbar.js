@@ -6,7 +6,7 @@ $(document).ready(function () {
                 $('.icon-loader').hide();
                 $('.icon-loader-left').hide();
                 $('.bell').css('display','inline-block');
-                $('.notify-badge').css('visibility','visible');
+                // $('.notify-badge').css('visibility','visible');
                 $('.settings-icon-container').css('display','inline-block');
                 $('.schedule-icon-container').css('display','inline-block');
                 $('.growth-icon-container').css('display','inline-block');
