@@ -540,7 +540,6 @@ a.top-1 {
 <!-- end container-fluid -->
 </div>
 
-
 <!-- MODAL CREATE EVENT -->
 <div id="modalCreateEvent" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -562,6 +561,7 @@ a.top-1 {
 
     </div>
 </div>
+
 <!-- MODAL CREATE GOOGLE CALENDAR EVENT -->
 <div id="modalCreateGoogleEvent" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
