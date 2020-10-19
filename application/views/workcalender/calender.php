@@ -516,8 +516,8 @@ a.top-1 {
                                             <span class="visible-xs"> <span class="text-muted"></span>
                                         </div>
                                         <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
-                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-phone"></i></a>
-                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-envelope-o"></i></a>
+                                            <a href="tel:<?= $recent_user->phone; ?>" class="calendar-profile-contact"><i class="fa fa-phone"></i></a>
+                                            <a href="mailto:<?= $recent_user->email; ?>" class="calendar-profile-contact"><i class="fa fa-envelope-o"></i></a>
                                             <a href="#" class="calendar-profile-contact"><i class="fa fa-comments-o"></i></a>
                                             <a href="#" class="calendar-profile-contact"><i class="fa fa-print"></i></a>
                                             <!-- <a class="btn-calendar-small btn btn-default" href="javascript:void(0)">Contact</a> -->
