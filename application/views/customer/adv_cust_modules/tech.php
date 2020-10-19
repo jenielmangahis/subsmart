@@ -84,7 +84,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <?php if(isset($profile_info)): ?>
                     <img alt="" src="<?php echo base_url()."assets/img/customer/qr/".$profile_info->prof_id.".png"?>" width="80" />
                 <?php endif; ?>
-                <a href="#" style="color:#58bc4f;">Send QR</a>&nbsp;&nbsp
+                <a target="_blank" href="/customer/send_qr/<?= $profile_info->prof_id; ?>" style="color:#58bc4f;">Send QR</a>&nbsp;&nbsp
             </div>
 
         </div>

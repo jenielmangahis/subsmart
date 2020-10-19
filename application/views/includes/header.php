@@ -136,9 +136,7 @@
                                 <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
                             </div>
                             <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                <?php if (count($newtasks) > 0): ?>
-                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="z-index: 20;top: 1px;right: 0;" id="notifyBadge"><?php echo (count($newtasks) != 0)?count($newtasks):null; ?></span>
-                                <?php endif;?>
+                                <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0)?'visible':'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0)?count($newtasks):null; ?></span>
                                 <img class="schedule-icon-static" src="/assets/css/icons/images/schedule-icon.svg" alt="">
                                 <img class="schedule-icon-hover" src="/assets/css/icons/images/schedule-icon2.svg" alt="">
                             </div>
@@ -165,9 +163,7 @@
                             <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden'; ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null; ?><!--</span>-->
                             <!--                                </a>-->
                             <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                <?php if (getNotificationCount() > 0):?>
-                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="z-index: 20;top: -4px;right: 3px" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
-                                <?php endif;?>
+                                <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0)?'visible':'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
                                 <div class="icon-loader">
                                     <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
                                 </div>
@@ -297,6 +293,7 @@
                         $expected_endshift = 0;
                         $sched_notify = 1;
                         $over_notify = 1;
+                        $start = 0;
                         $tz = 'Asia/Manila';
                         $timestamp = time();
                         $dt = new DateTime("now", new DateTimeZone($tz));
@@ -305,21 +302,22 @@
                             if ($sched->user_id == $this->session->userdata('logged')['id'] && $sched->start_date == $dt->format('Y-m-d')){
                                 $expected_shift = strtotime($sched->start_date." ".$sched->start_time);
                                 $expected_endshift = strtotime($sched->start_date." ".$sched->end_time);
-                            }else{
-                                $expected_shift = 0;
-                                $expected_endshift = 0;
+                                $start = $sched->start_date;
                             }
                             foreach ($notification as $u_notify){
-                                if ($u_notify->title == 'Your shift will start soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $sched->start_date){
-                                    $sched_notify = 0;
-                                    $expected_shift = 0;
+                                if ($u_notify->user_id == $sched->user_id){
+                                    if ($u_notify->title == 'Your shift will start soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
+                                        $sched_notify = 0;
+                                        $expected_shift = 0;
+                                    }
                                 }
-                                if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $sched->start_date){
+                                if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
                                     $over_notify = 0;
                                     $expected_endshift = 0;
                                 }
                             }
                         }
+
                         ?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                             <input type="hidden" id="clock-end-time" value="<?php echo ($expected_endbreak)?$expected_endbreak:null; ?>">

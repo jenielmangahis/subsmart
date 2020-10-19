@@ -841,12 +841,41 @@ $(document).ready(function(){
         showFolderManagerNotif('Information',vError,'info'); 
       }
     } else if(current_process == 'general_permissions'){
-      var gpec_create_folder = $('#gpec_create_folder').is(':checked');
-      var gpec_add_file = $('#gpec_add_file').is(':checked');
-      var gpec_edit_folder_file = $('#gpec_edit_folder_file').is(':checked');
-      var gpec_move_folder_file = $('#gpec_move_folder_file').is(':checked');
-      var gpec_trash_folder_file = $('#gpec_trash_folder_file').is(':checked');
-      var gpec_remove_folder_file = $('#gpec_remove_folder_file').is(':checked');
+      if($('#gpec_create_folder').is(':checked')){
+        var gpec_create_folder = '1';
+      } else {
+        var gpec_create_folder = '0';
+      }
+
+      if($('#gpec_add_file').is(':checked')){
+        var gpec_add_file = '1';
+      } else {
+        var gpec_add_file = '0';
+      }
+
+      if($('#gpec_edit_folder_file').is(':checked')){
+        var gpec_edit_folder_file = '1';
+      } else {
+        var gpec_edit_folder_file = '0';
+      }
+      
+      if($('#gpec_move_folder_file').is(':checked')){
+        var gpec_move_folder_file = '1';
+      } else {
+        var gpec_move_folder_file = '0';
+      }
+
+      if($('#gpec_trash_folder_file').is(':checked')){
+        var gpec_trash_folder_file = '1';
+      } else {
+        var gpec_trash_folder_file = '0';
+      }
+
+      if($('#gpec_remove_folder_file').is(':checked')){
+        var gpec_remove_folder_file = '1';
+      } else {
+        var gpec_remove_folder_file = '0';
+      }
 
       if($('#gpe_table_roles > tbody > tr.table-primary').length){
         var vPId = $('#gpe_table_roles > tbody > tr.table-primary').children('td:eq(1)').text();
@@ -1588,7 +1617,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
 
         if((folder.category_desc != "") && (folder.category_desc != null)){
           card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: rgba(0,0,0,.03)"></i><small>'+ folder.category_desc +
+                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ folder.category_desc +
                          '</small></a>';
         }
         
@@ -1680,13 +1709,13 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         card_append = '<div class="card" id="bft_' + category + '">';
 
         card_append += '<div class="card-header">'+
-                       '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                       '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'">'+
                        '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
-                       '</a>';
+                       '</a><br>';
 
         if((file.category_desc != "") && (file.category_desc != null)){
           card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: rgba(0,0,0,.03)"></i><small>'+ file.category_desc +
+                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ file.category_desc +
                          '</small></a>';
         }
         

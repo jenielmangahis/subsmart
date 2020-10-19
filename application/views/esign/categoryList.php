@@ -19,6 +19,10 @@
     
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/css/toastr.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/js/toastr.js"></script>
+    
     <title>Category Management</title>
     <style>
 fieldset {
@@ -248,24 +252,24 @@ input {
                 $.ajax({
                     url: '<?=base_url('esign/updateCategory') ?>',
                     type: 'post',
-                    dataType: 'application/json',
                     data,
                     success: function(res, status) {
                         console.log('My Res Data ',res)
                         console.log("from el ",thisEleId);
-                        // $("#"+thisEleId).removeClass('loading');
-                        // try {
-                        //     data = JSON.parse(data);
-                        //     if(status != "success" || !data.status){
-                        //         throw "errr";
-                        //     }
-                        // } catch (error) {
-                        //     // alert('Something Went Wrong Please Try Again');
-                        //     // location.reload();
-                        // }
+                        $("#"+thisEleId).removeClass('loading');
+                        try {
+                            res = JSON.parse(res);
+                            if(status != "success" || !res.status){
+                                throw "errr";
+                            }
+                            toastr.success("Data Has Been Updated Successfully");
+                        } catch (error) {
+                            console.error('Execption Generated : ',error)
+                            alert('Something Went Wrong Please Try Again');
+                            location.reload();
+                        }
                     }
                 });
-                // return true;
             }
     </script>
 </body>

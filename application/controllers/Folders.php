@@ -473,7 +473,8 @@ class Folders extends MY_Controller {
 
 		$fid = $_POST['fid'];
 		$isFolder = $_POST['isFolder'];
-
+		$folder_id = 0;
+		
 		$data = array(
 			'softdelete' => 0
 		);
@@ -501,7 +502,7 @@ class Folders extends MY_Controller {
 			}
 		} else {
 			$f = $this->vault_model->getById($fid);
-			if($f->file_id == $uid){
+			if($f->user_id == $uid){
 				$folder_id = $f->folder_id;
 
 				$continue = true;

@@ -7,12 +7,12 @@ class Filefolderscategories extends MY_Controller {
 	}
 
 	public function getCategories($internal = false){
-		$uid = logged('id');
+		$company_id = logged('company_id');
 
 		if($internal){
-			return $this->db->get_where('file_folders_categories', array('created_by' => $uid))->result_array();
+			return $this->db->get_where('file_folders_categories', array('company_id' => $company_id))->result_array();
 		} else {
-			echo json_encode($this->db->get_where('file_folders_categories', array('created_by' => $uid))->result_array());
+			echo json_encode($this->db->get_where('file_folders_categories', array('company_id' => $company_id))->result_array());
 		}
 	}
 

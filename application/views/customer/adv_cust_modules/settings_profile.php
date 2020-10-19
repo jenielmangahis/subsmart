@@ -198,7 +198,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Assigned to</label>
                 </div>
                 <div class="col-md-5">
-                    <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" required/>
+                    <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" />
                 </div>
             </div>
         </div>
@@ -208,7 +208,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Start Date</label>
                 </div>
                 <div class="col-md-5">
-                    <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" required/>
+                    <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" />
                 </div>
             </div>
         </div>
@@ -218,7 +218,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Referred By</label>
                 </div>
                 <div class="col-md-5">
-                    <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" required/>
+                    <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" />
                 </div>
             </div>
         </div>
@@ -239,7 +239,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Client's User ID (Email)</label>
                 </div>
                 <div class="col-md-5">
-                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                    <input type="text" class="form-control" name="contact_name" id="contact_name" />
                 </div>
             </div>
         </div>
@@ -249,7 +249,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Language</label>
                 </div>
                 <div class="col-md-5">
-                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                    <input type="text" value="<?php //if(isset($profile_info)){ echo $profile_info->language; } ?>" class="form-control" name="language" id="language" />
                 </div>
             </div>
         </div>

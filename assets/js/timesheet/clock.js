@@ -319,8 +319,8 @@ $(document).ready(function () {
         };
     })();
     function overtimeTimer(){
-        let timerInterval;
         var attn_id = $('#attendanceId').val();
+        let timerInterval;
         Swal.fire({
             title: 'Do you want to overtime?',
             icon:'question',
@@ -329,7 +329,7 @@ $(document).ready(function () {
             confirmButtonText: `Yes,I want to`,
             denyButtonText: `Let's call it a day`,
             allowOutsideClick: false,
-            timer: 5000,
+            timer: 600000,
             timerProgressBar: true,
             willOpen: () => {
             const content = Swal.getContent();
@@ -405,7 +405,7 @@ $(document).ready(function () {
         var over_notify = $('#employeePingEnd').val();
         var current_time = day.getTime();
 
-        if (emp_shift != 0 && parseInt(sched_notify) > 0){
+        if (emp_shift > 0 && parseInt(sched_notify) > 0){
             var a = new Date(emp_shift * 1000);
             a.setMinutes(a.getMinutes() - 10);
             var b = a.setHours(a.getHours() - 13);
@@ -414,7 +414,7 @@ $(document).ready(function () {
             }
         }
         // End shift
-        if (emp_overtime != 0 && parseInt(over_notify) > 0){
+        if (emp_overtime > 0 && parseInt(over_notify) > 0){
             var c = new Date(emp_overtime * 1000);
             c.setMinutes(c.getMinutes() - 10);
             var d = c.setHours(c.getHours() - 13);
@@ -423,8 +423,6 @@ $(document).ready(function () {
                 overtimeTimer();
             }
         }
-
-
 
         });
     }

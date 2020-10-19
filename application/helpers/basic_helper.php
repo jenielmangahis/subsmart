@@ -1009,11 +1009,7 @@ if (!function_exists('getNotificationCount')){
 
     function getNotificationCount(){
         $CI = &get_instance();
-        $uid = logged('id');
-
-        $sql = 'select * from user_notification where user_id ='.$uid.' and status = 1';
-
-        return $CI->db->query($sql)->num_rows();
+        return $CI->timesheet_model->getNotifyCount();
     }
 }
 if (!function_exists('getClockInSession')){

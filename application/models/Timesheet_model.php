@@ -14,6 +14,12 @@ class Timesheet_model extends MY_Model {
 //    {
 //        $this->db->insert($this->table, $data);
 //    }
+    public function getNotifyCount(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->get_where('user_notification',array('user_id'=>$user_id,'status'=>1))->num_rows();
+        return $qry;
+    }
+
     public function getTSNotification(){
         $user_id = $this->session->userdata('logged')['id'];
         $this->db->order_by('id',"desc");
@@ -937,12 +943,11 @@ class Timesheet_model extends MY_Model {
         return true;
     }
 
-    public function updateProjectName($id,$name){
+    public function updateTSProject($id,$update){
         $qry = $this->db->get_where('timesheet_settings',array('id'=>$id));
         if ($qry->num_rows() == 1){
-            $rename = array('projects'=>$name);
             $this->db->where('id',$id);
-            $this->db->update('timesheet_settings',$rename);
+            $this->db->update('timesheet_settings',$update);
             return true;
         }else{
             return false;

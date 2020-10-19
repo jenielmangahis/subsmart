@@ -15,22 +15,22 @@ class Timesheet extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-		add_css(array(
-            "assets/css/timesheet.css",
-        ));
 
 		$this->page_data['page']->title = 'Timesheet Management';
 
 		$this->page_data['page']->menu = 'users';
 
         add_css(array(
+            "assets/css/timesheet.css",
             "assets/plugins/dropzone/dist/dropzone.css",
+            "assets/plugins/country-picker-flags/build/css/countrySelect.css"
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css",
         ));
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.js",
+            "assets/plugins/country-picker-flags/build/js/countrySelect.js",
 //            "assets/js/accounting/sweetalert2@9.js",
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
@@ -1720,7 +1720,7 @@ class Timesheet extends MY_Controller {
 	    $start_time = $this->input->post('values[start_time]');
 	    $end_time = $this->input->post('values[end_time]');
 	    $user_id = $this->input->post('values[team_member]');
-	    $location = $this->input->post('values[location]');
+	    $location = $this->input->post('location');
 	    $notes = $this->input->post('values[notes]');
 	    $duration = $this->input->post('duration');
         $week = $this->input->post('values[week]');
@@ -1857,12 +1857,32 @@ class Timesheet extends MY_Controller {
 	    $this->timesheet_model->updateTotalDuration($update,$week,$twd_id,$user_id);
     }
 
-    public function updateProjectName(){
+    public function getProjectData(){
+	    $id = $this->input->get('id');
+	    $project = $this->db->get_where('timesheet_settings',array('id'=>$id))->result();
+
+	    $data = new stdClass();
+	    $data->name = $project[0]->project_name;
+	    $data->user_id = $project[0]->user_id;
+	    $data->location = $project[0]->location;;
+	    $data->notes = $project[0]->notes;
+
+	    echo json_encode($data);
+    }
+
+    public function updateTSProject(){
 	    $id = $this->input->post('id');
-	    $name = $this->input->post('name');
-	    $query = $this->timesheet_model->updateProjectName($id,$name);
+	    $name = $this->input->post('values[project]');
+        $notes = $this->input->post('values[notes]');
+        $location = $this->input->post('location');
+        $update = array(
+            'project_name' => $name,
+            'location' => $location,
+            'notes' => $notes
+        );
+	    $query = $this->timesheet_model->updateTSProject($id,$update);
 	    if ($query == true){
-	        echo json_encode($name);
+	        echo json_encode(1);
         }else{
             echo json_encode(0);
         }
@@ -1966,7 +1986,7 @@ class Timesheet extends MY_Controller {
             }
 
             $display .= '<tr data-id="'.$timesheet_id.'" id="tsSettingsRow">';
-                $display .= '<td><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->project_name).'</span><a href="#" id="editProjectName" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->project_name).'"><i class="fa fa-pencil-alt"></i></a></td>';
+                $display .= '<td style="min-width: 100px"><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->project_name).'</span><a href="#" id="showProjectData" data-toggle="tooltip" title="Edit/View" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->project_name).'"><i class="fa fa-pencil-alt"></i></a></td>';
                 $display .= '<td><input type="text" name="monday" data-day="Monday" id="tsMonday" data-date="'.$date_week_check[0].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_mon.'" data-user="'.$user_id.'" value="'.$monday.'" readonly></td>';
                 $display .= '<td><input type="text" name="tuesday" data-day="Tuesday" id="tsTuesday" data-date="'.$date_week_check[1].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_tue.'" data-user="'.$user_id.'" value="'.$tuesday.'" readonly></td>';
                 $display .= '<td><input type="text" name="wednesday" data-day="Wednesday" id="tsWednesday" data-date="'.$date_week_check[2].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_wed.'" data-user="'.$user_id.'" value="'.$wednesday.'" readonly></td>';
@@ -2081,11 +2101,11 @@ class Timesheet extends MY_Controller {
 	    $users = $this->users_model->getUsersByName($name);
 	    $roles = $this->users_model->getRoles();
         $data = array();
-        $data[] = array(
-            'id' =>   '0',
-            'text' => 'Teammates',
-            'subtext' => 'Default'
-        );
+//        $data[] = array(
+//            'id' =>   '0',
+//            'text' => 'Teammates',
+//            'subtext' => 'Default'
+//        );
 	    foreach ($users as $employee){
 	        $users_role = '';
 	        foreach ($roles as $role){

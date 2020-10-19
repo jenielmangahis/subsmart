@@ -495,6 +495,25 @@ class Customer extends MY_Controller
         }
     }
 
+    public function add_task_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['task_id'])){
+            unset($input['task_id']);
+            if($this->customer_ad_model->add($input,"acs_tasks")){
+                echo "Success";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"acs_tasks","task_id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
     // for addling of Lead Type (ac_leadtypes table)
     public function add_leadtype_ajax(){
         $input = $this->input->post();
@@ -596,6 +615,64 @@ class Customer extends MY_Controller
         }
     }
 
+    public function send_qr($id=null)
+    {
+        $info = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
+        $to = $info->email;
+        $this->load->library('email');
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'nsmartrac@gmail.com',
+            'smtp_pass' => 'nSmarTrac2020',
+            'mailtype' => 'html',
+            'charset' => 'utf-8'
+        );
+        $this->email->initialize($config);
+        $this->email->set_newline("\r\n");
+        $this->email->from('no-reply@nsmartrac.com', 'nSmarTrac');
+        $this->email->to($to);
+        $this->email->subject('QR Details');
+        $this->email->message('This is customer QR.');
+        $this->email->attach($_SERVER['DOCUMENT_ROOT'] . '/assets/img/customer/qr/'.$id.'.png');
+
+        if ($this->email->send()) {
+            echo json_encode("Congratulation Email Sent Successfully.");
+        } else {
+            echo json_encode($this->email->send());
+        }
+    }
+
+    public function sendqr(){
+        $config = Array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'welyelfhisula@gmail.com',
+            'smtp_pass' => 'wrhisula1123',
+            'mailtype' => 'html',
+            'charset' => 'iso-8859-1',
+            'starttls'  => true,
+            'smtp_timeout' =>'60',
+            'crlf'     => "\n",
+            'validation'  => TRUE,
+            'wordwrap' => TRUE,
+    );
+        $this->load->library('email',$config);
+        //$this->email->initialize($config);
+       // $this->email->set_mailtype("html");
+        //Email content
+        $this->email->set_newline("\r\n");
+        $this->email->to('wrhisula1123@gmail.com');
+        $this->email->from('welyelfhisula@gmail.com','MyWebsite');
+        $this->email->subject('QR Details');
+        $this->email->message('Testing the email class.');
+        //Send email
+       $this->email->send();
+       show_error($this->email->print_debugger());
+    }
+
     public function index($status_index = 0)
     {
 
@@ -694,8 +771,10 @@ class Customer extends MY_Controller
             $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
             $this->customer_ad_model->add($input,"ac_module_sort");
         }
-        $user_id = logged('id');
         $userid = $this->uri->segment(4);
+
+        echo $userid;
+
         if(!isset($userid) || empty($userid)){
             $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
             if(!empty($get_id)){
@@ -713,12 +792,13 @@ class Customer extends MY_Controller
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
            // print_r($this->page_data['alarm_info']);
         }
+        $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['minitab'] = $this->uri->segment(5);
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
-
+        $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
         $this->load->view('customer/list', $this->page_data);
     }

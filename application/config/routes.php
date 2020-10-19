@@ -351,6 +351,8 @@ $route['sms_campaigns/save_draft_campaign'] = 'Sms_Campaigns/create_draft_campai
 $route['sms_campaigns/add_campaign_send_to'] = 'Sms_Campaigns/add_campaign_send_to';
 $route['sms_campaigns/create_campaign_send_to'] = 'Sms_Campaigns/create_campaign_send_to';
 $route['sms_campaigns/build_sms'] = 'Sms_Campaigns/build_sms';
+$route['sms_campaigns/create_sms_message'] = 'Sms_Campaigns/create_sms_message';
+$route['sms_campaigns/preview_sms_message'] = 'Sms_Campaigns/preview_sms_message';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';

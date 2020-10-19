@@ -60,6 +60,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         border-left: 0;
         text-align: center;
     }
+    .countrySectionEmp .country-select{
+        display: block;
+        max-width: 212px;
+    }
+
     .ts-duration{
         width: 90px;
         height: 36px!important;
@@ -69,6 +74,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .ts-project-name{
         font-weight: bold;
         cursor: pointer;
+        width: 80%;
+
     }
     .ts-project-name:hover{
         text-decoration: underline;
@@ -76,9 +83,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     .ts-status{
         color: greenyellow;
-        margin-right: 10px;
+        margin-right: 5px;
         font-size: 8px;
         vertical-align: middle;
+        display: inline-block;
     }
     .ts-settings-menu{
         float: right;
@@ -136,7 +144,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         text-decoration: underline;
         color: #0b97c4;
     }
-    #tsSettingsRow #editProjectName{
+    #tsSettingsRow #showProjectData{
         display: none;
         margin-left: 5px;
     }
@@ -273,21 +281,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card">
+                    <div class="card" style="padding: 0">
                         <div class="card-body">
                             <h4 class="mt-0 header-title">Settings Overview</h4>
                             <!-- Date Selector -->
                             <div class="row">
-                                <div class="col-lg-12 table-responsive">
+                                <div class="col-lg-12">
                                     <div class="ts-settings-menu">
                                         <div class="form-group">
                                             <select name="" id="tsUsersList" class="form-control select2-employee-list">
-                                                <option value="0" selected>Teammates</option>
+                                                <option></option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <button class="btn btn-default" type="button"><i class="fa fa-list"></i></button>
+<!--                                            <button class="btn btn-default" type="button"><i class="fa fa-list"></i></button>-->
                                         </div>
+<!--                                        Present day-->
+                                        <input type="hidden" id="presentDay" value="<?php echo date('m/d/Y')?>">
                                         <div class="form-group">
 <!--                                            <select name="" id="ts-sorting-week" class="form-control ts-sorting">-->
 <!--                                                <option value="this week" selected>This week</option>-->
@@ -295,8 +305,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!--                                                <option value="next week">Next week</option>-->
 <!--                                            </select>-->
                                             <input type="text" id="ts-sorting-week" class="form-control ts-settings-datepicker" value="<?php echo date('m/d/Y')?>">
-                                            <button class="btn btn-default"><i class="fa fa-angle-left fa-lg"></i></button>
-                                            <button class="btn btn-default right"><i class="fa fa-angle-right fa-lg"></i></button>
+<!--                                            <button class="btn btn-default"><i class="fa fa-angle-left fa-lg"></i></button>-->
+<!--                                            <button class="btn btn-default right"><i class="fa fa-angle-right fa-lg"></i></button>-->
                                         </div>
                                     </div>
                                     <table id="timesheet_settings" class="timesheet_settings-table"></table>
@@ -311,7 +321,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <button class="btn btn-default"><i class="fa fa-save" style="color: #56bb4d;"></i>&nbsp;Save as template</button>
                                         </div>
                                     </div>
-<!--                                    --><?php //echo $this->session->userdata('logged')['id'];?>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -346,11 +355,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <label for="">Project name</label>
                         <input type="text" name="project" id="tsProjectName" class="form-control">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group hiddenSection">
                         <label for="">Start Date</label>
                         <input type="text" name="start_date" id="tsStartDate" class="form-control ts-start-date" value="<?php echo date('m/d/Y')?>">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group hiddenSection">
                         <div class="ts-time-section">
                             <label for="">Start time</label>
                             <input type="text" name="start_time" id="tsStartTime" class="form-control ts-time start-time">
@@ -363,20 +372,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span class="total-duration"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group hiddenSection">
                         <label for="">Team members</label>
                         <select name="team_member" id="tsTeamMember" class="form-control ts-team-member" >
                             <option></option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group countrySectionEmp">
                         <label for="">Location</label>
-                        <select name="location" id="tsLocation" class="form-control">
-                            <option value=""></option>
-                            <option value="ph">Philippines</option>
-                            <option value="ml">Malaysia</option>
-                            <option value="tw">Taiwan</option>
-                        </select>
+                        <input type="text" name="location" class="form-control tsSettings-country" id="tsLocation">
+<!--                        <select name="location" id="tsLocation" class="form-control">-->
+<!--                            <option value=""></option>-->
+<!--                            <option value="ph">Philippines</option>-->
+<!--                            <option value="my">Malaysia</option>-->
+<!--                            <option value="tw">Taiwan</option>-->
+<!--                        </select>-->
                     </div>
                     <div class="form-group">
                         <label for="">Notes</label>
@@ -405,75 +415,70 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#tsSettingsTblTbody tr:last').prev('tr').clone('#tsSettingsRow').insertBefore('#tsSettingsTblTbody tr:last');
         $('td > .ts-project-name').last().text('Unnamed');
     });
-    //Select2 employee list
-    $('.select2-employee-list').select2({
-        placeholder: 'Select employee',
-        width: 'resolve',
-        ajax:{
-            url:'/timesheet/getEmployees',
-            type:"GET",
-            dataType:"json",
-            delay:250,
-            data:function (params) {
-                var query = {
-                    search: params.term
-                };
-                return query;
-            },
-            processResults:function (response) {
-                return{results:response};
-            },
-            cache:true
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        },
-        templateResult: function (d) {
-            var subtext = d.subtext;
-            if(subtext == undefined){subtext=''}
-            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
-        }
-    });
 
-    $('.ts-team-member').select2({
-        placeholder: 'Select employee',
-        width: 'resolve',
-        ajax:{
-            url:'/timesheet/getEmployees',
-            type:"GET",
-            dataType:"json",
-            delay:250,
-            data:function (params) {
-                var query = {
-                    search: params.term
-                };
-                return query;
-            },
-            processResults:function (response) {
-                return{results:response};
-            },
-            cache:true
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        },
-        templateResult: function (d) {
-            var subtext = d.subtext;
-            if(subtext == undefined){subtext=''}
-            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
-        }
-    });
-
-    $(document).ready(function () {
-        // DataTables
-        $('.timesheet_settings-table').DataTable({
-            "paging": false,
-            "filter":false,
-            "info":false,
-            "sort": false
-        });
-    });
     $(document).ready(function() {
+        //Select2 employee list
+        $('.select2-employee-list').select2({
+            placeholder: 'Select employee',
+            width: 'resolve',
+            ajax:{
+                url:'/timesheet/getEmployees',
+                type:"GET",
+                dataType:"json",
+                delay:250,
+                data:function (params) {
+                    var query = {
+                        search: params.term
+                    };
+                    return query;
+                },
+                processResults:function (response) {
+                    return{results:response};
+                },
+                cache:true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: function (d) {
+                var subtext = d.subtext;
+                if(subtext == undefined){subtext=''}
+                return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+            }
+        });
+
+        $('.ts-team-member').select2({
+            placeholder: 'Select employee',
+            width: 'resolve',
+            ajax:{
+                url:'/timesheet/getEmployees',
+                type:"GET",
+                dataType:"json",
+                delay:250,
+                data:function (params) {
+                    var query = {
+                        search: params.term
+                    };
+                    return query;
+                },
+                processResults:function (response) {
+                    return{results:response};
+                },
+                cache:true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: function (d) {
+                var subtext = d.subtext;
+                if(subtext == undefined){subtext=''}
+                return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+            }
+        });
+
+        //Country selector
+        $('.tsSettings-country').countrySelect();
+
         var selected_week = $('#ts-sorting-week').val();
         var user_id = $('#tsUsersList').val();
         $('#timesheet_settings').ready(showWeekList(selected_week,user_id));
@@ -482,6 +487,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(".ts-settings-datepicker").datepicker();
         $(".start-time").timepicker({interval: 60,change: differenceTime});
         $(".end-time").timepicker({change: differenceTime,interval: 60});
+
+        //Show Timesheet settings table
+        function showWeekList(week,user_id) {
+            if(week != null){
+                $.ajax({
+                    url:"/timesheet/showTimesheetSettings",
+                    type:"GET",
+                    dataType:"json",
+                    data:{week:week,user:user_id},
+                    success:function (data) {
+                        $('#timesheet_settings').html(data).DataTable({"paging": false, "filter":false, "info":false, "sort": false});;
+                        // Restriction of input field
+                        // var options =  {
+                        //     onKeyPress: function(cep, e, field, options) {
+                        //         var masks = ['00:00'];
+                        //         var mask = (cep.length>4) ? masks[1] : masks[0];
+                        //         $('.ts-duration').mask(mask, options);
+                        //     }};
+                        // $('.ts-duration').mask("00:00",options);
+                    }
+                });
+            }
+        }
+
+        const convertTime12to24 = (time12h) => {
+            const [time, modifier] = time12h.split(' ');
+
+            let [hours, minutes] = time.split(':');
+
+            if (hours === '12') {
+                hours = '00';
+            }
+
+            if (modifier === 'PM') {
+                hours = parseInt(hours, 10) + 12;
+            }
+
+            return `${hours}:${minutes}`;
+        }
+
         function differenceTime() {
             var start_hour = null;
             var end_hour = null;
@@ -501,31 +546,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('.total-duration').text(duration);
 
         }
-        const convertTime12to24 = (time12h) => {
-            const [time, modifier] = time12h.split(' ');
-
-            let [hours, minutes] = time.split(':');
-
-            if (hours === '12') {
-                hours = '00';
-            }
-
-            if (modifier === 'PM') {
-                hours = parseInt(hours, 10) + 12;
-            }
-
-            return `${hours}:${minutes}`;
-        }
-
         // Adding Project
         $(document).on('click','#addProject',function () {
             $('#createProject').modal({backdrop: 'static', keyboard: false});
-            $('#tsProjectName').attr('disabled',null);
-            $('#tsTeamMember').attr('disabled',null);
+            $('.hiddenSection').show();
+            $('#tsProjectName').attr('disabled',null).val(null);
+            $('#tsTeamMember').attr('disabled',null).select2('val','All');
             $('#tsLocation').attr('disabled',null);
             $('#tsNotes').attr('disabled',null);
             var week = $('#ts-sorting-week').val();
             $('#weekType').val(week);
+            // Clear fields
+            $('#tsStartTime').val(null);
+            $('#tsEndTime').val(null);
+            $('#tsNotes').val(null);
+            $('#tsStartDate').attr('disabled',false).val($('#presentDay').val());
+            $('.total-duration').text('0h');
+            if($('#updateTSProject').length == 1){
+                $('#updateTSProject').attr('id','savedProject').text('Save');
+            }else if($('#updateSchedule').length == 1){
+                $('#updateSchedule').attr('id','savedProject').text('Save');
+            }
 
         });
         $(document).on('click','#savedProject',function () {
@@ -536,11 +577,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 values[field.name] = field.value;
             });
             var duration = $('.total-duration').text();
+            var country = values['location'].replace(/\s*\(.*?\)\s*/g, '');
             $.ajax({
                 url:"/timesheet/addingProjects",
                 type:"POST",
                 dataType:"json",
-                data:{values:values,duration:duration},
+                data:{values:values,location:country,duration:duration},
                 cache:false,
                 success:function (data) {
                     $("#createProject").modal('hide');
@@ -575,35 +617,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $(this).next('a').css('display','none');
             }
         });
-        function showWeekList(week,user_id) {
-            if(week != null){
-                $.ajax({
-                    url:"/timesheet/showTimesheetSettings",
-                    type:"GET",
-                    dataType:"json",
-                    data:{week:week,user:user_id},
-                    success:function (data) {
-                        $('#timesheet_settings').html(data);
-                        // Restriction of input field
-                        // var options =  {
-                        //     onKeyPress: function(cep, e, field, options) {
-                        //         var masks = ['00:00'];
-                        //         var mask = (cep.length>4) ? masks[1] : masks[0];
-                        //         $('.ts-duration').mask(mask, options);
-                        //     }};
-                        // $('.ts-duration').mask("00:00",options);
-                    }
-                });
-            }
-        }
+
         $(document).on('change','#tsUsersList',function () {
              var user = $(this).val();
              var week = $('#ts-sorting-week').val();
+            $('#timesheet_settings').DataTable().destroy();
             showWeekList(week,user);
         });
         $(document).on('change','#ts-sorting-week',function () {
             var week = $(this).val();
             var user = $('#tsUsersList').val();
+            $('#timesheet_settings').DataTable().destroy();
             showWeekList(week,user);
         });
         $.date = function(dateObject,text) {
@@ -667,13 +691,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('#tsNotes').attr('disabled','disabled');
             $('#tsStartDate').val($.date(date,1)).attr('disabled','disabled');
             $('#tsDate').text($.date(date,0));
-            $('#savedProject').text('Update').attr('id','updateSchedule');
+            if($('#updateTSProject').length == 1){
+                $('#updateProject').attr('id','updateSchedule').text('Update');
+            }else if($('#savedProject').length == 1){
+                $('#savedProject').text('Update').attr('id','updateSchedule');
+            }
             $('#timesheetId').val(timesheet_id);
             $('#userId').val(user_id);
             $('#selectedDay').val(day);
             $('#totalWeekDuration').val(twd_id);
             $('#tsScheduleId').val(day_id);
             $('#weekType').val(week);
+            $('.hiddenSection').show();
 
             $.ajax({
                 url:"/timesheet/getTimesheetData",
@@ -937,42 +966,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             return output;
         }
 
-        //Updating Project name
-        $(document).on('click','#editProjectName',function () {
+        //Updating Project data
+        $(document).on('click','#showProjectData',function () {
             var id = $(this).attr('data-id');
-            var project_name = $(this).attr('data-name');
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
+            $('.hiddenSection').hide();
+            $.ajax({
+                url:'/timesheet/getProjectData',
+                type:"GET",
+                dataType:"json",
+                data:{id:id},
+                success:function (data) {
+                    $('#tsProjectName').val(data.name).attr('disabled',false);
+                    $('#tsNotes').val(data.notes).attr('disabled',false);
+                    $('#tsLocation').attr('disabled',false).val(data.location).next('.flag-dropdown').children('.selected-flag').attr('title',data.location).children('.flag').removeClass('us').addClass('ph');
+                    if ($('#savedProject').length == 1){
+                        $('#savedProject').attr('id','updateTSProject').text('Update').attr('data-id',id);
+                    }else if($('#updateSchedule').length == 1){
+                        $('#updateSchedule').attr('id','updateTSProject').attr('data-id',id);
+                    }
+                }
+            });
+        });
+        $(document).on('click','#updateTSProject',function () {
             var week = $('#ts-sorting-week').val();
             var user = $('#tsUsersList').val();
-            Swal.fire({
-                title: 'Do you want to rename this project?',
-                input: 'text',
-                inputValue: project_name,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#2ca01c',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, rename it!',
-            }).then((result) => {
-                if (result.value) {
-                $.ajax({
-                    url:'/timesheet/updateProjectName',
-                    method:"POST",
-                    data:{id:id,name:result.value},
-                    success:function (data) {
+            var id = $(this).attr('data-id');
+            var values = {};
+            $.each($('#formNewProject').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            var country = values['location'].replace(/\s*\(.*?\)\s*/g, '');
+            $.ajax({
+                url:"/timesheet/updateTSProject",
+                type:"POST",
+                dataType:'json',
+                data:{values:values,location:country,id:id},
+                success:function (data) {
+                    if (data == 1){
+                        $('#timesheet_settings').DataTable().destroy();
                         showWeekList(week,user);
+                        $("#createProject").modal('hide');
                         Swal.fire(
                             {
                                 showConfirmButton: false,
                                 timer: 2000,
                                 title: 'Success',
-                                html: "Project: <strong>"+project_name+"</strong> has been updated to <strong>"+data+"</strong>",
+                                html: "Project <strong>"+values['project']+"</strong> has been updated",
                                 icon: 'success'
                             });
+                    }else{
+                        console.log('test');
                     }
-                });
-            }
+                }
+            });
         });
-        });
+
         //Deleting Project
         $(document).on('click','#removeProject',function () {
             var id = $(this).attr('data-id');
@@ -994,6 +1043,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     method:"POST",
                     data:{id:id},
                     success:function () {
+                        $('#timesheet_settings').DataTable().destroy();
                         showWeekList(week,user);
                         Swal.fire(
                             {

@@ -263,6 +263,30 @@
             $('#modal_lead_source').modal('show');
         });
 
+        $("#add_task").on( "click", function( event ) {
+            $('#task_form')[0].reset();
+            //$('#lead_source_header').text('Add Lead Source');
+            $('#modal_task').modal('show');
+        });
+
+        $("#task_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_task_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        window.location.reload();
+                    }else {
+                        console.log(data);
+                    }
+                }
+            });
+        });
 
         $("#leadTypeForm").submit(function(e) {
                 e.preventDefault(); // avoid to execute the actual submit of the form.
