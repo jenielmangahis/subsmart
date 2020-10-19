@@ -60,6 +60,19 @@ class IndustryModules_model extends MY_Model
         return $query;
     }
 
+    public function getByName($name)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('name', $name);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
   
     public function updateIndustryModules($industryModules_id, $data)
     {

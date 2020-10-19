@@ -67,5 +67,9 @@
             <span class="fa fa-list"></span>Addons</a>
         </li>
 
+        <li class="submenus <?= $is_active_industry_module; ?>"><a href="<?php echo base_url('industry_modules/index') ?>" title="Industry Modules" style="color: #fff;">
+            <span class="fa fa-list"></span>Industry Modules</a>
+        </li>
+
     </ul>
 </nav>
