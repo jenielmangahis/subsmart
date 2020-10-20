@@ -961,14 +961,16 @@ class Workcalender extends MY_Controller
                             $end_date = $event->end->date;
                         }
 
-                        $resources_user_events[$inc]['resourceId'] = "user17";
-                        $resources_user_events[$inc]['title'] = $event->summary;
-                        $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
-                        $resources_user_events[$inc]['start'] = $start_date;
-                        $resources_user_events[$inc]['end'] = $end_date;
-                        $resources_user_events[$inc]['color'] = $bgcolor;
+                        if( $event->summary != '' ){
+                            $resources_user_events[$inc]['resourceId'] = "user17";
+                            $resources_user_events[$inc]['title'] = $event->summary;
+                            $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
+                            $resources_user_events[$inc]['start'] = $start_date;
+                            $resources_user_events[$inc]['end'] = $end_date;
+                            $resources_user_events[$inc]['color'] = $bgcolor;
 
-                        $inc++;
+                            $inc++;
+                        }
                     }
                 }
             }

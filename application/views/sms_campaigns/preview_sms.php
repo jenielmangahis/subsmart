@@ -129,21 +129,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="hide" id="scheduled">
                                     <div class="row">
                                         <div class="col-sm-8">
-                                            <div class="input-group">
-                                                <input type="text" name="valid_from_date" value="17-Oct-2020"  class="form-control" id="valid_from_date" />
-                                                <div class="input-group-addon calendar-button" data-for="valid_from_date">
-                                                    <span class="fa fa-calendar"></span>
-                                                </div>
+                                            <div class="form-group" style="text-align: left;">
+                                              <input type="text" name="gevent_date_from" value="<?= date("Y-m-d"); ?>"  class="form-control default-datepicker" required="" autocomplete="off" required />
                                             </div>
                                         </div>
                                         <div class="col-sm-8">
-                                            <div data-calendar="time-start-container">
-                                                <div class="input-group">
-                                                    <input type="text" name="valid_from_time" value="6:00am"  class="form-control" id="valid_from_time" />
-                                                    <div class="input-group-addon calendar-button" data-for="valid_from_time">
-                                                        <span class="fa fa-clock-o"></span>
-                                                    </div>
+                                            <div class="form-group" style="text-align: left;">
+                                              <div class="form-group">
+                                                <div class='input-group date' id='campaign-time'>
+                                                   <input type='text' value="6:00am" name="gevent_start_time" class="form-control" />
+                                                   <span class="input-group-addon">
+                                                   </span>
                                                 </div>
+                                              </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-8">
@@ -240,6 +238,15 @@ $(function(){
              }
           });
         }, 1000);
+    });
+
+    $('#campaign-time').datetimepicker({
+       format: 'LT',
+       allowInputToggle: true
+    });
+    $('.default-datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
     });
 });
 </script>
