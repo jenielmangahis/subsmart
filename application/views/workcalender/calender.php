@@ -890,11 +890,11 @@ a.top-1 {
             eventLimit: true, // allow "more" link when too many events
             events: events,
             eventClick: function (arg) {
-                // console.log(arg);
-                console.log(arg.event._def.extendedProps);
+                
+                console.log(arg);
+                //console.log(arg.event._def.extendedProps);
 
                 $("#modalEventDetails").modal('show');
-
                 $('#modalEventDetails .modal-body').html("loading...");
 
                 var apiUrl = '';

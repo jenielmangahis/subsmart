@@ -52,6 +52,10 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByUserId();
         }
 
+        /*echo '<pre>';
+        print_r($events);
+        echo '</pre>';*/
+
         $this->page_data['events'] = array();
 
         // setting of the calender
@@ -84,7 +88,6 @@ class Workcalender extends MY_Controller
                 $this->page_data['events'][$key]['title'] = (!empty($customer)) ? $title : '';
                 $this->page_data['events'][$key]['start'] = date('Y-m-d', strtotime($event->start_date));
                 $this->page_data['events'][$key]['end'] = date('Y-m-d', strtotime($event->end_date));
-                // $this->page_data['events'][$key]['userName']         = ($user) ? $user->name : '';
                 $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
             }
         }
@@ -146,7 +149,6 @@ class Workcalender extends MY_Controller
 
             $this->page_data['events'] = array_merge($this->page_data['events'], $workorder_events);
         }*/
-
 
         $this->page_data['wordorders'] = array();
 
@@ -220,8 +222,9 @@ class Workcalender extends MY_Controller
             $inc = 0;
             $default_imp_img = base_url('uploads/users/default.png');
             foreach($get_users as $get_user) {
-                $default_imp_img = userProfileImage($get_user->id);/*
-                if( $get_user->profile_img != null ) {
+                $default_imp_img = userProfileImage($get_user->id);
+
+                /*if( $get_user->profile_img != null ) {
                         $default_imp_img = base_url('uploads/users/'.$get_user->profile_img ."." . $get_user->img_type );                     
                 } else {
                     $default_imp_img = base_url('uploads/users/default.png');
@@ -858,16 +861,19 @@ class Workcalender extends MY_Controller
                 if($event->employee_id > 0) {
                     $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                     $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                    $resources_user_events[$inc]['eventId'] = $event->id;
                     $resources_user_events[$inc]['resourceId'] = $event->employee_id;
                     $resources_user_events[$inc]['title'] = $event->event_description;
                     $resources_user_events[$inc]['start'] = $start_date_time;
                     $resources_user_events[$inc]['end'] = $start_date_end;
                     $resources_user_events[$inc]['eventColor'] = $event->event_color;
+
                 $inc++;
                 }elseif($event->employee_id == 0) {
                     foreach($get_users as $get_user) {
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                        $resources_user_events[$inc]['eventId'] = $event->id;
                         $resources_user_events[$inc]['resourceId'] = $get_user->id;
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
