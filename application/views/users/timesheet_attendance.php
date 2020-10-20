@@ -190,26 +190,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h1 class="page-title">Attendance</h1>
                     </div>
                     <div class="col-sm-6">
-<!--                        <div class="float-right d-none d-md-block">-->
-<!--                            <div class="dropdown">-->
-<!--                                --><?php //if (hasPermissions('users_add')): ?>
-<!--                                    <a href="--><?php //echo url('users/add_timesheet_entry') ?><!--" class="btn btn-primary"-->
-<!--                                       aria-expanded="false">-->
-<!--                                        <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry-->
-<!--                                    </a>-->
-<!--                                --><?php //endif ?>
-<!--                            </div>-->
-<!--                        </div>-->
+                        <!--                        <div class="float-right d-none d-md-block">-->
+                        <!--                            <div class="dropdown">-->
+                        <!--                                --><?php //if (hasPermissions('users_add')): ?>
+                        <!--                                    <a href="--><?php //echo url('users/add_timesheet_entry') ?><!--" class="btn btn-primary"-->
+                        <!--                                       aria-expanded="false">-->
+                        <!--                                        <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry-->
+                        <!--                                    </a>-->
+                        <!--                                --><?php //endif ?>
+                        <!--                            </div>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="attendance")?:'-active';?>" style="text-decoration: none">Attendance</a>
                         <?php if ($this->session->userdata('logged')['role'] < 5):?>
-                        <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab">Employee</a>
-                        <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab">Schedule</a>
-                        <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
-                        <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab">Settings</a>
+                            <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab">Employee</a>
+                            <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab">Schedule</a>
+                            <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
+                            <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab">Settings</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -224,23 +224,96 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y')." ".date_default_timezone_get();?></span></h6>
                             </div>
                             <?php if ($this->session->userdata('logged')['role'] < 5):?>
-                            <div class="row" style="margin-bottom: 20px">
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>In Now</span>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>In Now</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span id="employee-in-now"></span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow=""
+                                                                     aria-valuemin="0" aria-valuemax="100" style="">
+                                                                    <!--                                                                --><?php //echo round(($in_now / $total_users) * 100,2).'%';?>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="card-data">
-                                                            <span id="employee-in-now"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>Out Now</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span id="employee-out-now"><?php echo $out_now?></span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $out_now?>"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(($out_now / $total_users) * 100,2).'%';?>">
+                                                                    <?php echo round(($out_now / $total_users) * 100,2).'%';?>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="progress">
-                                                            <div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow=""
-                                                                 aria-valuemin="0" aria-valuemax="100" style="">
-<!--                                                                --><?php //echo round(($in_now / $total_users) * 100,2).'%';?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>Not Logged-in Today</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span id="employee-not-loggedin"><?php echo $no_logged_in;?></span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $no_logged_in;?>"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100),2).'%';?>;">
+                                                                    <?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100),2).'%';?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>Employees</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span><?php echo $total_users;?></span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="100"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+                                                                    100%
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -249,22 +322,96 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>Out Now</span>
+                                <div class="row" style="margin-bottom: 50px">
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>On Approved Leave</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span>0</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width:0;">
+                                                                    0%
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="card-data">
-                                                            <span id="employee-out-now"><?php echo $out_now?></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>On Unapproved Leave</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span>0</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width:0;">
+                                                                    0%
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="progress">
-                                                            <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $out_now?>"
-                                                                 aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(($out_now / $total_users) * 100,2).'%';?>">
-                                                                <?php echo round(($out_now / $total_users) * 100,2).'%';?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>On Leave</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span>0</span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width:0;">
+                                                                    0%
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>On Business Travel</span>
+                                                            </div>
+                                                            <div class="card-data" style="vertical-align: top">
+                                                                <span>0</span>
+                                                            </div>
+                                                            <div class="progress" style="margin-top: 0">
+                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width:0;">
+                                                                    0%
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -273,337 +420,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>Not Logged-in Today</span>
-                                                        </div>
-                                                        <div class="card-data">
-                                                            <span id="employee-not-loggedin"><?php echo $no_logged_in;?></span>
-                                                        </div>
-                                                        <div class="progress">
-                                                            <div id="progressNotLoggedIn" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $no_logged_in;?>"
-                                                                 aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100),2).'%';?>;">
-                                                                <?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100),2).'%';?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>Employees</span>
-                                                        </div>
-                                                        <div class="card-data">
-                                                            <span><?php echo $total_users;?></span>
-                                                        </div>
-                                                        <div class="progress">
-                                                            <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="100"
-                                                                 aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-                                                                100%
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 50px">
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>On Approved Leave</span>
-                                                        </div>
-                                                        <div class="card-data">
-                                                            <span>0</span>
-                                                        </div>
-                                                        <div class="progress">
-                                                            <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
-                                                                 aria-valuemin="0" aria-valuemax="100" style="width:0;">
-                                                                0%
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>On Unapproved Leave</span>
-                                                        </div>
-                                                        <div class="card-data">
-                                                            <span>0</span>
-                                                        </div>
-                                                        <div class="progress">
-                                                            <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
-                                                                 aria-valuemin="0" aria-valuemax="100" style="width:0;">
-                                                                0%
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>On Leave</span>
-                                                        </div>
-                                                        <div class="card-data">
-                                                            <span>0</span>
-                                                        </div>
-                                                        <div class="progress">
-                                                            <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
-                                                                 aria-valuemin="0" aria-valuemax="100" style="width:0;">
-                                                                0%
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="tile-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title">
-                                                            <span>On Business Travel</span>
-                                                        </div>
-                                                        <div class="card-data" style="vertical-align: top">
-                                                            <span>0</span>
-                                                        </div>
-                                                        <div class="progress" style="margin-top: 0">
-                                                            <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0"
-                                                                 aria-valuemin="0" aria-valuemax="100" style="width:0;">
-                                                                0%
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 table-responsive">
-                                    <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
-                                        <thead>
-                                        <tr>
-                                            <th rowspan="2">ID</th>
-                                            <th rowspan="2">Employee Name</th>
-                                            <th rowspan="2">In</th>
-                                            <th rowspan="2">Out</th>
-                                            <th colspan="2">Lunch</th>
-                                            <th rowspan="2">Action</th>
-                                            <th rowspan="2">Comments/Location</th>
-                                        </tr>
-                                        <tr>
-                                            <th>In</th>
-                                            <th>Out</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                        $u_role = null;
-                                        $status = 'fa-times-circle';
-                                        $tooltip_status = 'Not logged in';
-                                        $time_in = null;
-                                        $time_out = null;
-                                        $btn_action = 'employeeCheckIn';
-                                        $disabled = null;
-                                        $break = 'disabled="disabled"';
-                                        $break_id = null;
-                                        $break_in = null;
-                                        $break_out = null;
-                                        $indicator_in = 'display:none';
-                                        $indicator_out = 'display:none';
-                                        $indicator_in_break = 'display:none';
-                                        $indicator_out_break = 'display:none';
-                                        $week_id = null;
-                                        $attn_id = null;
-                                        $yesterday_in = null;
-                                        $yesterday_out = null;
-                                        $clock_in_2nd = 0;
-                                        $out_count = 0;
-                                        $in_count = 0;
-                                        ?>
-                                        <?php foreach ($users as $cnt => $user): ?>
-                                            <?php
-                                            foreach ($user_roles as $role){
-                                                if ($role->id == $user->role){
-                                                    $u_role = $role->title;
-                                                }
-                                            }
-                                            foreach ($attendance as $attn){
-                                                if ($attn->user_id == $user->id){
-                                                    $attn_id = $attn->id;
-                                                    foreach ($logs as $log){
-                                                        if ($log->action == 'Check in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                            if ($attn->date_in == date('Y-m-d')){
-                                                                $time_in = date('h:i A',$log->time);
-                                                                $time_out = null;
-                                                                $break_in = null;
-                                                                $break_out = null;
-                                                                $btn_action = 'employeeCheckOut';
-                                                                $status = 'fa-check';
-                                                                $break = null;
-                                                                $disabled = null;
-                                                                $break_id = 'employeeBreakIn';
-                                                                $indicator_in = 'display:block';
-                                                                $indicator_out = 'display:none';
-                                                                $indicator_in_break = 'display:none';
-                                                                $indicator_out_break = 'display:none';
-                                                                $yesterday_in = null;
-                                                                $clock_in_2nd = 0;
-                                                                $tooltip_status = 'Logged in';
-                                                                $in_count++;
-                                                            }
-                                                            if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->date_out == date('Y-m-d') && $attn->status == 0){
-                                                                $time_in = date('h:i A',$log->time);
-                                                                $yesterday_in = "(Yesterday)";
-                                                                $in_count++;
-                                                            }
-                                                            if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 1){
-                                                                $time_in = date('h:i A',$log->time);
-                                                                $yesterday_in = "(Yesterday)";
-                                                                $btn_action = 'employeeCheckOut';
-                                                                $indicator_in = 'display:block';
-                                                                $break = null;
-                                                                $break_id = 'employeeBreakIn';
-                                                                $clock_in_2nd = 1;
-                                                                $status = 'fa-check';
-                                                                $tooltip_status = 'Logged in';
-                                                                $in_count++;
-                                                            }
-                                                        }elseif($log->action == 'Check out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                            if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
-                                                                $status = 'fa-times-circle';
-                                                                $btn_action = 'employeeCheckIn';
-//                                                                $btn_action = null;
-                                                                $time_out = date('h:i A',$log->time);
-                                                                $disabled = null;
-//                                                                $disabled = 'disabled="disabled"';
-                                                                $break = 'disabled="disabled"';
-                                                                $break_id = null;
-                                                                $indicator_in = 'display:none';
-                                                                $indicator_out = 'display:block';
-                                                                $indicator_in_break = 'display:none';
-                                                                $indicator_out_break = 'display:none';
-                                                                $tooltip_status = 'Logged out';
-                                                                $in_count--;
-                                                                $out_count++;
-                                                            }
-//                                                            if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-//                                                                $disabled = null;
-//                                                                $btn_action = 'employeeCheckIn';
-//                                                            }
-                                                        }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                            if ($attn->status == 1 && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                                                $break_id = 'employeeBreakOut';
-                                                                $status = 'fa-mug-hot';
-                                                                $break_in = date('h:i A',$log->time);
-                                                                $indicator_in = 'display:none';
-                                                                $indicator_out = 'display:none';
-                                                                $indicator_in_break = 'display:block';
-                                                                $indicator_out_break = 'display:none';
-                                                                $tooltip_status = 'On break';
-                                                            }elseif ($attn->status == 1 && $attn->date_in == date('Y-m-d')){
-                                                                $break_id = 'employeeBreakOut';
-                                                                $status = 'fa-mug-hot';
-                                                                $break_in = date('h:i A',$log->time);
-                                                                $indicator_in = 'display:none';
-                                                                $indicator_out = 'display:none';
-                                                                $indicator_in_break = 'display:block';
-                                                                $indicator_out_break = 'display:none';
-                                                                $tooltip_status = 'On break';
-                                                            }
-                                                        }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                            if ($attn->status == 1 && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                                                $status = 'fa-check';
-                                                                $break_out = date('h:i A',$log->time);
-                                                                $break = 'disabled="disabled"';
-                                                                $break_id = null;
-                                                                $indicator_in = 'display:none';
-                                                                $indicator_out = 'display:none';
-                                                                $indicator_in_break = 'display:none';
-                                                                $indicator_out_break = 'display:block';
-                                                                $tooltip_status = 'Back to work';
-                                                            }elseif ($attn->status == 1 && $attn->date_in == date('Y-m-d')){
-                                                                $status = 'fa-check';
-                                                                $break_out = date('h:i A',$log->time);
-                                                                $break = 'disabled="disabled"';
-                                                                $break_id = null;
-                                                                $indicator_in = 'display:none';
-                                                                $indicator_out = 'display:none';
-                                                                $indicator_in_break = 'display:none';
-                                                                $indicator_out_break = 'display:block';
-                                                                $tooltip_status = 'Back to work';
-                                                            }
-                                                        }
-
-                                                    }
-                                                    foreach ($week_duration as $week){
-                                                        if ($week->user_id == $user->id){
-                                                            $week_id = $week->id;
-                                                        }
-                                                    }
-                                                }
-
-                                            }
-                                            ?>
+                                <div class="row">
+                                    <div class="col-lg-12 table-responsive">
+                                        <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
+                                            <thead>
                                             <tr>
-                                                <td class="tbl-id-number"><?php echo $user->id?></td>
-                                                <td>
-                                                    <span class="tbl-employee-name"><?php echo $user->FName;?></span> <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
-                                                    <span class="tbl-emp-role"><?php echo $u_role;?></span>
-                                                </td>
-                                                <td class="tbl-chk-in" ><div class="red-indicator" style="<?php echo $indicator_in?>"></div> <span class="clock-in-time"><?php echo $time_in?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in;?></span></td>
-                                                <td class="tbl-chk-out" ><div class="red-indicator" style="<?php echo $indicator_out?>"></div> <span class="clock-out-time"><?php echo $time_out?></span><input type="hidden" id="clockIn2nd" value="<?php echo $clock_in_2nd;?>"></td>
-                                                <td class="tbl-lunch-in"><div class="red-indicator" style="<?php echo $indicator_in_break?>"></div> <span class="break-in-time"><?php echo $break_in;?></span></td>
-                                                <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span class="break-out-time"><?php echo $break_out;?></span></td>
-                                                <td class="tbl-emp-action">
-                                                    <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-coffee fa-lg"></i></a>
-                                                    <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-week="<?php echo $week_id?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-user-clock fa-lg"></i></a>
-                                                    <i class="fa <?php echo $status;?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
-                                                </td>
-                                                <td></td>
+                                                <th rowspan="2">ID</th>
+                                                <th rowspan="2">Employee Name</th>
+                                                <th rowspan="2">In</th>
+                                                <th rowspan="2">Out</th>
+                                                <th colspan="2">Lunch</th>
+                                                <th rowspan="2">Action</th>
+                                                <th rowspan="2">Comments/Location</th>
                                             </tr>
+                                            <tr>
+                                                <th>In</th>
+                                                <th>Out</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
                                             <?php
                                             $u_role = null;
                                             $status = 'fa-times-circle';
@@ -624,19 +459,185 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $attn_id = null;
                                             $yesterday_in = null;
                                             $yesterday_out = null;
-                                            $clock_in_2nd = 0
+                                            $clock_in_2nd = 0;
+                                            $out_count = 0;
+                                            $in_count = 0;
                                             ?>
-                                        <?php endforeach;?>
-                                        </tbody>
-                                    </table>
-                                    <input type="hidden" id="outCounter" value="<?php echo $out_count?>">
-                                    <input type="hidden" id="inCounter" value="<?php echo $in_count?>">
+                                            <?php foreach ($users as $cnt => $user): ?>
+                                                <?php
+                                                $user_photo = userProfileImage($user->id);
+                                                foreach ($user_roles as $role){
+                                                    if ($role->id == $user->role){
+                                                        $u_role = $role->title;
+                                                    }
+                                                }
+                                                foreach ($attendance as $attn){
+                                                    if ($attn->user_id == $user->id){
+                                                        $attn_id = $attn->id;
+                                                        foreach ($logs as $log){
+                                                            if ($log->action == 'Check in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->date_in == date('Y-m-d')){
+                                                                    $time_in = date('h:i A',$log->time);
+                                                                    $time_out = null;
+                                                                    $break_in = null;
+                                                                    $break_out = null;
+                                                                    $btn_action = 'employeeCheckOut';
+                                                                    $status = 'fa-check';
+                                                                    $break = null;
+                                                                    $disabled = null;
+                                                                    $break_id = 'employeeBreakIn';
+                                                                    $indicator_in = 'display:block';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:none';
+                                                                    $yesterday_in = null;
+                                                                    $clock_in_2nd = 0;
+                                                                    $tooltip_status = 'Logged in';
+                                                                    $in_count++;
+                                                                }
+                                                                if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->date_out == date('Y-m-d') && $attn->status == 0){
+                                                                    $time_in = date('h:i A',$log->time);
+                                                                    $yesterday_in = "(Yesterday)";
+                                                                    $in_count++;
+                                                                }
+                                                                if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 1){
+                                                                    $time_in = date('h:i A',$log->time);
+                                                                    $yesterday_in = "(Yesterday)";
+                                                                    $btn_action = 'employeeCheckOut';
+                                                                    $indicator_in = 'display:block';
+                                                                    $break = null;
+                                                                    $break_id = 'employeeBreakIn';
+                                                                    $clock_in_2nd = 1;
+                                                                    $status = 'fa-check';
+                                                                    $tooltip_status = 'Logged in';
+                                                                    $in_count++;
+                                                                }
+                                                            }elseif($log->action == 'Check out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+                                                                    $status = 'fa-times-circle';
+                                                                    $btn_action = 'employeeCheckIn';
+//                                                                $btn_action = null;
+                                                                    $time_out = date('h:i A',$log->time);
+                                                                    $disabled = null;
+//                                                                $disabled = 'disabled="disabled"';
+                                                                    $break = 'disabled="disabled"';
+                                                                    $break_id = null;
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:block';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:none';
+                                                                    $tooltip_status = 'Logged out';
+                                                                    $in_count--;
+                                                                    $out_count++;
+                                                                }
+//                                                            if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+//                                                                $disabled = null;
+//                                                                $btn_action = 'employeeCheckIn';
+//                                                            }
+                                                            }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->status == 1 && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                                                    $break_id = 'employeeBreakOut';
+                                                                    $status = 'fa-mug-hot';
+                                                                    $break_in = date('h:i A',$log->time);
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:block';
+                                                                    $indicator_out_break = 'display:none';
+                                                                    $tooltip_status = 'On break';
+                                                                }elseif ($attn->status == 1 && $attn->date_in == date('Y-m-d')){
+                                                                    $break_id = 'employeeBreakOut';
+                                                                    $status = 'fa-mug-hot';
+                                                                    $break_in = date('h:i A',$log->time);
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:block';
+                                                                    $indicator_out_break = 'display:none';
+                                                                    $tooltip_status = 'On break';
+                                                                }
+                                                            }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->status == 1 && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                                                    $status = 'fa-check';
+                                                                    $break_out = date('h:i A',$log->time);
+                                                                    $break = 'disabled="disabled"';
+                                                                    $break_id = null;
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:block';
+                                                                    $tooltip_status = 'Back to work';
+                                                                }elseif ($attn->status == 1 && $attn->date_in == date('Y-m-d')){
+                                                                    $status = 'fa-check';
+                                                                    $break_out = date('h:i A',$log->time);
+                                                                    $break = 'disabled="disabled"';
+                                                                    $break_id = null;
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:block';
+                                                                    $tooltip_status = 'Back to work';
+                                                                }
+                                                            }
+
+                                                        }
+//                                                        foreach ($week_duration as $week){
+//                                                            if ($week->user_id == $user->id){
+//                                                                $week_id = $week->id;
+//                                                            }
+//                                                        }
+                                                    }
+
+                                                }
+                                                ?>
+                                                <tr>
+                                                    <td class="tbl-id-number"><?php echo $user->id?></td>
+                                                    <td>
+                                                        <span class="tbl-employee-name"><?php echo $user->FName;?></span> <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
+                                                        <span class="tbl-emp-role"><?php echo $u_role;?></span>
+                                                    </td>
+                                                    <td class="tbl-chk-in" ><div class="red-indicator" style="<?php echo $indicator_in?>"></div> <span class="clock-in-time"><?php echo $time_in?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in;?></span></td>
+                                                    <td class="tbl-chk-out" ><div class="red-indicator" style="<?php echo $indicator_out?>"></div> <span class="clock-out-time"><?php echo $time_out?></span><input type="hidden" id="clockIn2nd" value="<?php echo $clock_in_2nd;?>"></td>
+                                                    <td class="tbl-lunch-in"><div class="red-indicator" style="<?php echo $indicator_in_break?>"></div> <span class="break-in-time"><?php echo $break_in;?></span></td>
+                                                    <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span class="break-out-time"><?php echo $break_out;?></span></td>
+                                                    <td class="tbl-emp-action">
+                                                        <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>" data-photo="<?php echo $user_photo;?>"><i class="fa fa-coffee fa-lg"></i></a>
+                                                        <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>" data-photo="<?php echo $user_photo;?>"><i class="fa fa-user-clock fa-lg"></i></a>
+                                                        <i class="fa <?php echo $status;?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <?php
+                                                $u_role = null;
+                                                $status = 'fa-times-circle';
+                                                $tooltip_status = 'Not logged in';
+                                                $time_in = null;
+                                                $time_out = null;
+                                                $btn_action = 'employeeCheckIn';
+                                                $disabled = null;
+                                                $break = 'disabled="disabled"';
+                                                $break_id = null;
+                                                $break_in = null;
+                                                $break_out = null;
+                                                $indicator_in = 'display:none';
+                                                $indicator_out = 'display:none';
+                                                $indicator_in_break = 'display:none';
+                                                $indicator_out_break = 'display:none';
+                                                $week_id = null;
+                                                $attn_id = null;
+                                                $yesterday_in = null;
+                                                $yesterday_out = null;
+                                                $clock_in_2nd = 0
+                                                ?>
+                                            <?php endforeach;?>
+                                            </tbody>
+                                        </table>
+                                        <input type="hidden" id="outCounter" value="<?php echo $out_count?>">
+                                        <input type="hidden" id="inCounter" value="<?php echo $in_count?>">
+                                    </div>
                                 </div>
-                            </div>
-                            <?php endif; ?>
+                            <?php endif;?>
                             <!-- end row -->
                             <?php if ($this->session->userdata('logged')['role'] > 5): ?>
-                            <?php
+                                <?php
                                 $lunch_active = null;
                                 $employee_logs = getEmployeeLogs();
                                 $employee_attn = getClockInSession();
@@ -655,19 +656,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     }
                                 }
 
-                            ?>
+                                ?>
                                 <div class="row">
-                                <div class="col-md-4">
-                                    <div class="tile-container user-logs-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title user-card-title">
-                                                            <span class="user-logs-title">Today's logs</span>
-                                                            <span class="user-logs-title right"><a href="javascript:void(0)" class="employeeLunch" id="<?php echo $lunch_active; ?>" <?php echo ($lunch_active == null)?"disabled=disabled":null; ?>><i class="fa <?php echo ($lunch_active == 'lunchOut')?'fa-mug-hot':'fa-coffee' ?> fa-lg"></i></a></span>
-                                                        </div>
-                                                        <?php
+                                    <div class="col-md-4">
+                                        <div class="tile-container user-logs-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title user-card-title">
+                                                                <span class="user-logs-title">Today's logs</span>
+                                                                <span class="user-logs-title right"><a href="javascript:void(0)" class="employeeLunch" id="<?php echo $lunch_active; ?>" <?php echo ($lunch_active == null)?"disabled=disabled":null; ?>><i class="fa <?php echo ($lunch_active == 'lunchOut')?'fa-mug-hot':'fa-coffee' ?> fa-lg"></i></a></span>
+                                                            </div>
+                                                            <?php
                                                             $clock_in = '-';
                                                             $clock_out = '-';
                                                             $lunch_in = '-';
@@ -716,92 +717,98 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 }
                                                             }
 
-//                                                        $session = array('active', 'clock-in-time','clock-out-time','attn-id','clock-btn','lunch-in','lunch-btn','lunch-active','end_break','shift_duration','remaining_time');
-//                                                        $this->session->unset_userdata($session);
-                                                        //Employee's task
-                                                        $task_name = '-';
-                                                        $start_time = '-';
-                                                        $end_time = '-';
-                                                        $task_duration = '-';
-                                                        $timezone = 'Asia/Manila';
-                                                        $unix_ts = time();
-                                                        $set_date = new DateTime("now", new DateTimeZone($timezone));
-                                                        $set_date->setTimestamp($unix_ts);
-                                                        foreach ($schedules as $scheds){
-                                                                foreach ($tasks as $task){
-                                                                    if ($task->ts_settings_id == $scheds->id && $scheds->user_id == $this->session->userdata('logged')['id'] && $task->start_date == $set_date->format('Y-m-d')){
-                                                                        $task_name = $scheds->project_name;
-                                                                        $start_time = date('h:i A',strtotime($task->start_time));
-                                                                        $end_time = date('h:i A',strtotime($task->end_time));
-                                                                        $task_duration = $task->duration."hour/s";
+                                                            //                                                        $session = array('active', 'clock-in-time','clock-out-time','attn-id','clock-btn','lunch-in','lunch-btn','lunch-active','end_break','shift_duration','remaining_time');
+                                                            //                                                        $this->session->unset_userdata($session);
+                                                            //Employee's task
+                                                            $task_name = '-';
+                                                            $start_time = '-';
+                                                            $end_time = '-';
+                                                            $task_duration = '-';
+                                                            $timezone = '-';
+                                                            foreach ($schedules as $scheds){
+                                                                if($scheds->user_id == $this->session->userdata('logged')['id']){
+                                                                    $timezone = $scheds->timezone;
+                                                                    $unix_ts = time();
+                                                                    $set_date = new DateTime("now", new DateTimeZone($timezone));
+                                                                    $set_date->setTimestamp($unix_ts);
+                                                                    foreach ($tasks as $task){
+                                                                        if ($task->ts_settings_id == $scheds->id && $task->start_date == $set_date->format('Y-m-d')){
+                                                                            $task_name = $scheds->project_name;
+                                                                            $start_time = date('h:i A',strtotime($task->start_time));
+                                                                            $end_time = date('h:i A',strtotime($task->end_time));
+                                                                            $task_duration = $task->duration."hour/s";
+                                                                        }
                                                                     }
                                                                 }
-                                                        }
-                                                        ?>
-                                                        <div class="user-logs">
-                                                            <div class="user-logs-section">
-                                                                <div class="user-clock-in-title">Clock-in: </div>
-                                                                <div class="user-clock-out-title">Clock-out: </div>
-                                                                <div class="user-lunch-in-title">Lunch-in: </div>
-                                                                <div class="user-lunch-out-title">Lunch-out: </div>
-                                                                <div class="user-lunch-out-title">Shift Duration: </div>
-                                                            </div>
-                                                            <div class="user-logs-section">
-                                                                <div class="user-clock-in" id="userClockIn"><?php echo $clock_in;?> <span style="color: grey"><?php echo $yesterday_note?></span></div>
-                                                                <div class="user-clock-out" id="userClockOut"><?php echo $clock_out?></div>
-                                                                <div class="user-lunch-in" id="userLunchIn"><?php echo $lunch_in?></div>
-                                                                <div class="user-lunch-out" id="userLunchOut"><?php echo $lunch_out?></div>
-                                                                <div class="user-shift-duration" id="userShiftDuration"><?php echo $shift?></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="tile-container user-logs-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title user-card-title">
-                                                            <span>Today's Task</span>
-                                                        </div>
-                                                        <div class="user-logs">
-                                                            <div class="user-logs-section">
-                                                                <div class="user-clock-in-title">Timezone: </div>
-                                                                <div class="user-clock-in-title">Task: </div>
-                                                                <div class="user-clock-out-title">Start time: </div>
-                                                                <div class="user-lunch-in-title">End time: </div>
-                                                                <div class="user-lunch-out-title">Estimated time duration: </div>
-                                                            </div>
-                                                            <div class="user-logs-section" style="vertical-align: top">
-                                                                <div class="user-clock-in"><?php echo $timezone;?></div>
-                                                                <div class="user-clock-in"><i class="fa fa-info-circle"></i> <?php echo $task_name?></div>
-                                                                <div class="user-clock-out"><?php echo $start_time;?></div>
-                                                                <div class="user-lunch-in"><?php echo $end_time?></div>
-                                                                <div class="user-lunch-out"><?php echo $task_duration?></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="tile-container user-logs-container">
-                                        <div class="inner-container">
-                                            <div class="tileContent">
-                                                <div class="clear">
-                                                    <div class="inner-content">
-                                                        <div class="card-title user-card-title">
-                                                            <span>Yesterday worked comment</span>
-                                                        </div>
-                                                        <div class="user-logs">
+                                                            }
+                                                            //1603077000
 
+                                                            ?>
+                                                            <div class="user-logs">
+                                                                <div class="user-logs-section">
+                                                                    <div class="user-clock-in-title">Clock-in: </div>
+                                                                    <div class="user-clock-out-title">Clock-out: </div>
+                                                                    <div class="user-lunch-in-title">Lunch-in: </div>
+                                                                    <div class="user-lunch-out-title">Lunch-out: </div>
+                                                                    <div class="user-lunch-out-title">Shift Duration: </div>
+                                                                </div>
+                                                                <div class="user-logs-section">
+                                                                    <div class="user-clock-in" id="userClockIn"><?php echo $clock_in;?> <span style="color: grey"><?php echo $yesterday_note?></span></div>
+                                                                    <div class="user-clock-out" id="userClockOut"><?php echo $clock_out?></div>
+                                                                    <div class="user-lunch-in" id="userLunchIn"><?php echo $lunch_in?></div>
+                                                                    <div class="user-lunch-out" id="userLunchOut"><?php echo $lunch_out?></div>
+                                                                    <div class="user-shift-duration" id="userShiftDuration"><?php echo $shift?></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="tile-container user-logs-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title user-card-title">
+                                                                <span>Today's Task</span>
+                                                            </div>
+                                                            <div class="user-logs">
+                                                                <div class="user-logs-section">
+                                                                    <div class="user-clock-in-title">Timezone: </div>
+                                                                    <div class="user-clock-in-title">Task: </div>
+                                                                    <div class="user-clock-out-title">Start time: </div>
+                                                                    <div class="user-lunch-in-title">End time: </div>
+                                                                    <div class="user-lunch-out-title">Estimated time duration: </div>
+                                                                </div>
+                                                                <div class="user-logs-section" style="vertical-align: top">
+                                                                    <div class="user-clock-in"><?php echo $timezone;?></div>
+                                                                    <div class="user-clock-in"><i class="fa fa-info-circle"></i> <?php echo $task_name?></div>
+                                                                    <div class="user-clock-out"><?php echo $start_time;?></div>
+                                                                    <div class="user-lunch-in"><?php echo $end_time?></div>
+                                                                    <div class="user-lunch-out"><?php echo $task_duration?></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="tile-container user-logs-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title user-card-title">
+                                                                <span>Yesterday worked comment</span>
+                                                            </div>
+                                                            <div class="user-logs">
+
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -809,7 +816,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             <?php endif;?>
                         </div>
                     </div>
@@ -905,133 +911,135 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var selected = this;
             var entry = 'Manual';
             var approved_by = $(this).attr('data-approved');
+            let photo = $(this).attr('data-photo');
             Swal.fire({
-                title: 'Checking in?',
+                title: 'Clock in?',
                 html: "Are you sure you want to Clock-in this person?<br> <strong>"+emp_name+"</strong>",
-                imageUrl:"/assets/img/timesheet/default-profile.png",
+                imageUrl:photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, Clock-in!'
             }).then((result) => {
                 if (result.value) {
-                $.ajax({
-                    url:'/timesheet/checkingInEmployee',
-                    method:"POST",
-                    dataType:"json",
-                    data:{id:id,entry:entry,approved_by:approved_by},
-                    success:function (data) {
-                        if (data != 0){
-                            inNow();
-                            notLoggedIn();
-                            var time = serverTime ();
-                            $(selected).attr('data-attn',data);
-                            $(selected).next('i').removeClass('fa-times-circle');
-                            $(selected).next('i').addClass('fa-check');
-                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-time').text(time);
-                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-yesterday').text(null);
-                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
-                            $(selected).attr('id','employeeCheckOut');
-                            $(selected).prev('a').attr('disabled',null);
-                            $(selected).prev('a').attr('id','employeeBreakIn');
-                            $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(null);
-                            $(selected).parent('td').prev('td').children('.break-out-time').text(null);
-                            $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(null);
-                            $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
-                            clearTimeout(real_time);
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Success',
-                                    html: '<strong>'+emp_name+"</strong> has been Clock-in",
-                                    icon: 'success'
-                                });
-                        }else if(data == false){
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Failed',
-                                    text: "Something is wrong in the process",
-                                    icon: 'warning'
-                                });
-                        }
+                    $.ajax({
+                        url:'/timesheet/checkingInEmployee',
+                        method:"POST",
+                        dataType:"json",
+                        data:{id:id,entry:entry,approved_by:approved_by},
+                        success:function (data) {
+                            if (data != 0){
+                                inNow();
+                                notLoggedIn();
+                                var time = serverTime ();
+                                $(selected).attr('data-attn',data);
+                                $(selected).next('i').removeClass('fa-times-circle');
+                                $(selected).next('i').addClass('fa-check');
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-time').text(time);
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-yesterday').text(null);
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
+                                $(selected).attr('id','employeeCheckOut');
+                                $(selected).prev('a').attr('disabled',null);
+                                $(selected).prev('a').attr('id','employeeBreakIn');
+                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(null);
+                                $(selected).parent('td').prev('td').children('.break-out-time').text(null);
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(null);
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
+                                clearTimeout(real_time);
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: '<strong>'+emp_name+"</strong> has been Clock-in",
+                                        icon: 'success'
+                                    });
+                            }else if(data == false){
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Failed',
+                                        text: "Something is wrong in the process",
+                                        icon: 'warning'
+                                    });
+                            }
 
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
         });
         // Checking OUT
         $(document).on('click','#employeeCheckOut',function () {
             var id = $(this).attr('data-id');
             var emp_name = $(this).attr('data-name');
             var selected = this;
-            var week_id = $(this).attr('data-week');
+            // var week_id = $(this).attr('data-week');
             var attn_id = $(this).attr('data-attn');
             var entry = 'Manual';
             var approved_by = $(this).attr('data-approved');
+            let photo = $(this).attr('data-photo');
             Swal.fire({
                 title: 'Clock out?',
                 html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",
-                imageUrl:"/assets/img/timesheet/default-profile.png",
+                imageUrl:photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, Clock-out!'
             }).then((result) => {
                 if (result.value) {
-                $.ajax({
-                    url:'/timesheet/checkingOutEmployee',
-                    method:"POST",
-                    dataType:"json",
-                    data:{id:id,week_id:week_id,attn_id:attn_id,entry:entry,approved_by:approved_by},
-                    success:function (data) {
-                        if (data == 1){
-                            inNow();
-                            outNow();
-                            var time = serverTime ();
-                            $(selected).next('i').removeClass('fa-check');
-                            $(selected).next('i').addClass('fa-times-circle');
-                            $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(time);
-                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
-                            $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
-                            $(selected).parent('td').prev('td').children('.red-indicator').hide();
-                            var second_in = $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val();
-                            clearTimeout(real_time);
-                            if (second_in == 0){
-                                $(selected).attr('id',null);
-                                $(selected).attr('disabled','disabled');
-                                $(selected).prev('a').attr('disabled','disabled');
-                                $(selected).prev('a').attr('id',null);
+                    $.ajax({
+                        url:'/timesheet/checkingOutEmployee',
+                        method:"POST",
+                        dataType:"json",
+                        data:{id:id,attn_id:attn_id,entry:entry,approved_by:approved_by},
+                        success:function (data) {
+                            if (data === 1){
+                                inNow();
+                                outNow();
+                                var time = serverTime ();
+                                $(selected).next('i').removeClass('fa-check');
+                                $(selected).next('i').addClass('fa-times-circle');
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(time);
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
+                                $(selected).parent('td').prev('td').children('.red-indicator').hide();
+                                var second_in = $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val();
+                                clearTimeout(real_time);
+                                if (second_in == 0){
+                                    $(selected).attr('id',null);
+                                    $(selected).attr('disabled','disabled');
+                                    $(selected).prev('a').attr('disabled','disabled');
+                                    $(selected).prev('a').attr('id',null);
+                                }else{
+                                    $(selected).attr('id','employeeCheckIn');
+                                    $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val(0);
+                                }
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: '<strong>'+emp_name+"</strong> has been Clock-out",
+                                        icon: 'success'
+                                    });
                             }else{
-                                $(selected).attr('id','employeeCheckIn');
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val(0);
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Failed',
+                                        text: "Something is wrong in the process",
+                                        icon: 'warning'
+                                    });
                             }
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Success',
-                                    html: '<strong>'+emp_name+"</strong> has been Clock-out",
-                                    icon: 'success'
-                                });
-                        }else{
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Failed',
-                                    text: "Something is wrong in the process",
-                                    icon: 'warning'
-                                });
-                        }
 
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
         });
         // Break In
         $(document).on('click','#employeeBreakIn',function () {
@@ -1042,54 +1050,55 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var approved_by = $(this).attr('data-approved');
             var time = new Date();
             var end_of_break = time.setMinutes(time.getMinutes() + 60);
+            let photo = $(this).attr('data-photo');
             Swal.fire({
                 title: 'Take a break?',
                 html: "Are you sure you want to take a break this person?<br> <strong>"+emp_name+"</strong>",
-                imageUrl:"/assets/img/timesheet/default-profile.png",
+                imageUrl:photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, take a break!'
             }).then((result) => {
                 if (result.value) {
-                $.ajax({
-                    url:'/timesheet/breakIn',
-                    method:"POST",
-                    dataType:"json",
-                    data:{id:id,approved_by:approved_by,entry:entry,end_of_break:end_of_break},
-                    success:function (data) {
-                        if (data == 1){
-                            var time = serverTime();
-                            $(selected).next('a').next('i').removeClass('fa-check');
-                            $(selected).next('a').next('i').addClass('fa-mug-hot');
-                            $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(time);
-                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
-                            $(selected).parent('td').prev('td').prev('td').children('.red-indicator').show();
-                            $(selected).attr('id','employeeBreakOut');
-                            clearTimeout(real_time);
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Success',
-                                    html: '<strong>'+emp_name+"</strong> is taking a break.",
-                                    icon: 'success'
-                                });
-                        }else{
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Failed',
-                                    text: "Something is wrong in the process",
-                                    icon: 'warning'
-                                });
-                        }
+                    $.ajax({
+                        url:'/timesheet/breakIn',
+                        method:"POST",
+                        dataType:"json",
+                        data:{id:id,approved_by:approved_by,entry:entry,end_of_break:end_of_break},
+                        success:function (data) {
+                            if (data == 1){
+                                var time = serverTime();
+                                $(selected).next('a').next('i').removeClass('fa-check');
+                                $(selected).next('a').next('i').addClass('fa-mug-hot');
+                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(time);
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').children('.red-indicator').show();
+                                $(selected).attr('id','employeeBreakOut');
+                                clearTimeout(real_time);
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: '<strong>'+emp_name+"</strong> is taking a break.",
+                                        icon: 'success'
+                                    });
+                            }else{
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Failed',
+                                        text: "Something is wrong in the process",
+                                        icon: 'warning'
+                                    });
+                            }
 
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
         });
 
         //Break out
@@ -1099,55 +1108,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var selected = this;
             var entry = 'Manual';
             var approved_by = $(this).attr('data-approved');
+            let photo = $(this).attr('data-photo');
             Swal.fire({
                 title: 'Back to work?',
                 html: "Are you sure you want to get back to work this person?<br> <strong>"+emp_name+"</strong>",
-                imageUrl:"/assets/img/timesheet/default-profile.png",
+                imageUrl:photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, back to work!'
             }).then((result) => {
                 if (result.value) {
-                $.ajax({
-                    url:'/timesheet/breakOut',
-                    method:"POST",
-                    dataType:"json",
-                    data:{id:id,approved_by:approved_by,entry:entry},
-                    success:function (data) {
-                        if (data == 1){
-                            var time = serverTime();
-                            $(selected).next('a').next('i').removeClass('fa-mug-hot');
-                            $(selected).next('a').next('i').addClass('fa-check');
-                            $(selected).parent('td').prev('td').children('.break-out-time').text(time);
-                            $(selected).parent('td').prev('td').prev('td').children('.red-indicator').hide();
-                            $(selected).parent('td').prev('td').children('.red-indicator').show();
-                            $(selected).attr('id',null);
-                            $(selected).attr('disabled','disabled');
-                            clearTimeout(real_time);
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Success',
-                                    html: '<strong>'+emp_name+"</strong> is now back to work.",
-                                    icon: 'success'
-                                });
-                        }else{
-                            Swal.fire(
-                                {
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: 'Failed',
-                                    text: "Something is wrong in the process",
-                                    icon: 'warning'
-                                });
-                        }
+                    $.ajax({
+                        url:'/timesheet/breakOut',
+                        method:"POST",
+                        dataType:"json",
+                        data:{id:id,approved_by:approved_by,entry:entry},
+                        success:function (data) {
+                            if (data == 1){
+                                var time = serverTime();
+                                $(selected).next('a').next('i').removeClass('fa-mug-hot');
+                                $(selected).next('a').next('i').addClass('fa-check');
+                                $(selected).parent('td').prev('td').children('.break-out-time').text(time);
+                                $(selected).parent('td').prev('td').prev('td').children('.red-indicator').hide();
+                                $(selected).parent('td').prev('td').children('.red-indicator').show();
+                                $(selected).attr('id',null);
+                                $(selected).attr('disabled','disabled');
+                                clearTimeout(real_time);
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: '<strong>'+emp_name+"</strong> is now back to work.",
+                                        icon: 'success'
+                                    });
+                            }else{
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Failed',
+                                        text: "Something is wrong in the process",
+                                        icon: 'warning'
+                                    });
+                            }
 
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

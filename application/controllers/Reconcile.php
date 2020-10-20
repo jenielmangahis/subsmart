@@ -147,9 +147,14 @@ class Reconcile extends MY_Controller {
             $config['max_width'] = '1024';
             $config['max_height'] = '1024';
 
+            
+            $reconcile_id=$this->input->post('reconcile_id');
+            $subfix=$this->input->post('subfix');
+            $filepath = $config['upload_path'];
+
             $this->load->library('upload', $config);
 
-            if ( ! $this->upload->do_upload('userfile'))
+            if ( ! $this->upload->do_upload('userfile_'.$subfix))
             {
                     $error = array('error' => $this->upload->display_errors());
 
@@ -161,6 +166,11 @@ class Reconcile extends MY_Controller {
                     $success = array('success' => "successfully added");
                     //$this->load->view('accounting/upload_success', $success);
             }
+            $upload_data = $this->upload->data(); 
+            $filename = $upload_data['file_name'];
+
+            $this->reconcile_model->uploadfile($reconcile_id,$id,$filename,$filepath);
+
             $this->index($id);
     }
 
@@ -297,7 +307,47 @@ class Reconcile extends MY_Controller {
 
     public function showData()
     {
+        $datas = array();
+        
+        //get files from database
+        $datas['files'] = $this->reconcile_model->getUploads();
+        
+        //load the view
+        $html = "";
+        //print_r($datas);die();
+        foreach ($datas['files'] as $data) {
 
+        $html .= "<div class='existing-box'>
+                    <h4>".$data['filename']." <span>08/12/2020</span></h4>
+
+                    <div class='priview-img'>
+                        <img src='". base_url().'uploads/'.$data['filename']."' alt='' style='    max-height: 64px;max-width: 64px;'>
+                    </div>
+
+                    <div class='act-br'>
+                        <a href='#' class='txbtn'>Add</a>
+                        <a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Preview</a>
+                    </div>
+                </div>";
+        }
+        echo $html;
+
+    }
+
+    public function download($id){
+        if(!empty($id)){
+            //load download helper
+            $this->load->helper('download');
+            
+            //get file info from database
+            $fileInfo = $this->reconcile_model->getUploads(array('id' => $id));
+            
+            //file path
+            $file = 'uploads/'.$fileInfo['filename'];
+            
+            //download file from directory
+            force_download($file, NULL);
+        }
     }
 
     public function insert_servicecharge()

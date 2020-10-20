@@ -92,6 +92,10 @@ $route['formbuilder/form/element/images/(:any)'] = 'formBuilder/getElementImages
 $route['formbuilder/get-active-company-data'] = 'formBuilder/getActiveCompanyData';
 $route['form/submit/(:any)'] = 'formBuilder/submitForm/$1';
 
+// terms and conditions - Gene
+$route['terms-and-conditions/view'] = 'TermsAndConditions/view';
+
+
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
 $route['survey/(:num)']['GET'] = 'survey/preview/$1';
@@ -235,6 +239,7 @@ $route['accounting/reconcile/view/reportajax/(:any)'] = 'reconcile/reportajax/$1
 $route['accounting/reconcile/view/history'] = 'reconcile/history';
 $route['accounting/reconcile/view/report_print/(:any)'] = 'reconcile/report_print/$1';
 $route['accounting/reconcile/view/showData'] = 'reconcile/showData';
+$route['accounting/reconcile/view/download/(:any)'] = 'reconcile/download/$1';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 

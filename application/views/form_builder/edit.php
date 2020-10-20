@@ -1156,7 +1156,7 @@
                   </div>
                   <h4>Style</h4>
                   <hr/>
-                  <div class="custom-control custom-switch">
+                  <div class="custom-control custom-switch" id="setIstitleContainer" style="display: none;">
                     <input type="checkbox" class="custom-control-input" id="setIsTitle">
                     <label class="custom-control-label" for="setIsTitle">Title</label>
                   </div>
@@ -1398,16 +1398,12 @@
         document.querySelector('#txtElementSettingsPlaceholderText').value = element.fe_placeholder_text;
         document.querySelector('#txtElementSettingsDefaultValue').value = element.fe_default_value;
         document.querySelector('#selElementSize').value = element.fe_span;
-        document.querySelector('#setIsTitle').value = element.fe_is_title;
+        document.querySelector('#setIsTitle').value = (element.fe_is_title == 1) ? true : false;
         document.querySelector('#chkElementSettingsRequired').checked = (element.fe_is_required == 1)? true : false;
         document.querySelector('#chkElementSettingsReadonly').checked = (element.fe_is_readonly == 1)? true : false;
         document.querySelector('#chkElementSettingsScoringCheck').checked = (element.fe_enable_score == 1)? true : false;
+        document.querySelector('#setZoneLength').value = element.fe_zone_length;
         // document.querySelector('#radElementSettingsQuestionPosition').value = element.fe_question_position;
-        if(element.fe_element_id == 21) {
-          document.querySelector("#setIsTitle").style.display = "block";
-        } else {
-          document.querySelector("#setIsTitle").style.display = "none";
-        }
         if(element.fe_element_id == 1 || element.fe_element_id == 2 || element.fe_element_id == 3 ){
           choices = JSON.parse($.ajax({
             url: `${formBaseUrl}formbuilder/form/element/choices/${element.fe_id}`,
@@ -1458,8 +1454,6 @@
           document.querySelector('#modal-element-settings-choices-column-section').style.display = "block"
         }
 
-        
-        console.log(element);
         if(element.fe_element_id == 15 ){
           document.querySelector('#modal-element-settings-images-section').style.display = "block"
         }else{
@@ -1472,6 +1466,12 @@
           document.querySelector('#model-element-settings-zone-section').style.display = "block"
         } else {
           document.querySelector('#model-element-settings-zone-section').style.display = "none"
+        }
+        if(element.fe_element_id == 21) {
+          document.querySelector("#setIsTitleContainer").style.display = "block";
+          console.log('CONTAINER',document.querySelector('#setIsTitleContainer'));
+        } else {
+          document.querySelector("#setIsTitleContainer").style.display = "none";
         }
 
       }

@@ -362,35 +362,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="form-group hiddenSection">
                         <div class="ts-time-section">
                             <label for="">Start time</label>
-                            <input type="text" name="start_time" id="tsStartTime" class="form-control ts-time start-time">
+                            <input type="text" name="start_time" id="tsStartTime" class="form-control ts-time start-time" autocomplete="off">
                         </div>
                         <div class="ts-time-section">
                             <label for="">End time</label>
-                            <input type="text" name="end_time" id="tsEndTime" class="form-control ts-time end-time">
+                            <input type="text" name="end_time" id="tsEndTime" class="form-control ts-time end-time" autocomplete="off">
                         </div>
                         <div class="ts-time-section">
                             <span class="total-duration"></span>
                         </div>
                     </div>
                     <div class="form-group hiddenSection">
-                        <label for="">Team members</label>
+                        <label for="tsTeamMember">Team members</label>
                         <select name="team_member" id="tsTeamMember" class="form-control ts-team-member" >
                             <option></option>
                         </select>
                     </div>
                     <div class="form-group countrySectionEmp">
-                        <label for="">Location</label>
-                        <input type="text" name="location" class="form-control tsSettings-country" id="tsLocation">
-<!--                        <select name="location" id="tsLocation" class="form-control">-->
-<!--                            <option value=""></option>-->
-<!--                            <option value="ph">Philippines</option>-->
-<!--                            <option value="my">Malaysia</option>-->
-<!--                            <option value="tw">Taiwan</option>-->
-<!--                        </select>-->
+                        <label for="tsTimezone">Timezone</label>
+                        <select name="timezone" class="form-control" id="tsTimezone">
+                            <option></option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="">Notes</label>
-                        <textarea name="notes" id="tsNotes" cols="30" rows="5" class="form-control" style="height: 100%!important;"></textarea>
+                        <label for="tsNotes">Notes</label>
+                        <textarea name="notes" id="tsNotes" cols="30" rows="5" class="form-control" placeholder="(Optional)" style="height: 100%!important;"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -402,6 +398,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+
 
 <div class="alert-message">
     <div class="alert alert-success">
@@ -477,7 +474,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
 
         //Country selector
-        $('.tsSettings-country').countrySelect();
+        // $('#tsLocation').countrySelect();
+        // Timezone picker
+        $('#tsTimezone').select2({placeholder: 'Select Timezone',allowClear: true}).timezones().val(null);
+
 
         var selected_week = $('#ts-sorting-week').val();
         var user_id = $('#tsUsersList').val();
@@ -552,8 +552,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('.hiddenSection').show();
             $('#tsProjectName').attr('disabled',null).val(null);
             $('#tsTeamMember').attr('disabled',null).select2('val','All');
-            $('#tsLocation').attr('disabled',null);
-            $('#tsNotes').attr('disabled',null);
+            $('#tsTimezone').attr('disabled',false);
+            $('#tsNotes').attr('disabled',false);
             var week = $('#ts-sorting-week').val();
             $('#weekType').val(week);
             // Clear fields
@@ -576,16 +576,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $.each($('#formNewProject').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
-            var duration = $('.total-duration').text();
-            var country = values['location'].replace(/\s*\(.*?\)\s*/g, '');
+            let duration = $('.total-duration').text();
+            let timezone = values['timezone'].replace(/\s*\(.*?\)\s*/g, '');
             $.ajax({
                 url:"/timesheet/addingProjects",
                 type:"POST",
                 dataType:"json",
-                data:{values:values,location:country,duration:duration},
+                data:{values:values,timezone:timezone,duration:duration},
                 cache:false,
                 success:function (data) {
                     $("#createProject").modal('hide');
+                    $('#timesheet_settings').DataTable().destroy();
                     showWeekList(week,user_id);
                     if(data == 1){
                         Swal.fire(
@@ -611,7 +612,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         //Toggle edit pen
         $(document).on('click','#showEditPen',function () {
-            if($(this).next('a').css('display') =='none'){
+            if($(this).next('a').css('display') === 'none'){
                 $(this).next('a').css('display','inline-block');
             }else{
                 $(this).next('a').css('display','none');
@@ -670,7 +671,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 data:{values:values,duration:duration,date:date},
                 success:function (data) {
                     showWeekList(week,user_id);
-                    if(data == 1){
+                    if(data === 1){
                         $("#createProject").modal('hide');
                         Swal.fire(
                             {
@@ -687,13 +688,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         function getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week) {
             $('#tsProjectName').attr('disabled','disabled');
             $('#tsTeamMember').attr('disabled','disabled');
-            $('#tsLocation').attr('disabled','disabled');
+            $('#tsTimezone').attr('disabled','disabled');
             $('#tsNotes').attr('disabled','disabled');
             $('#tsStartDate').val($.date(date,1)).attr('disabled','disabled');
             $('#tsDate').text($.date(date,0));
-            if($('#updateTSProject').length == 1){
+            if($('#updateTSProject').length === 1){
                 $('#updateProject').attr('id','updateSchedule').text('Update');
-            }else if($('#savedProject').length == 1){
+            }else if($('#savedProject').length === 1){
                 $('#savedProject').text('Update').attr('id','updateSchedule');
             }
             $('#timesheetId').val(timesheet_id);
@@ -711,7 +712,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 success:function (data) {
                     $('#tsProjectName').val(data.project_name);
-                    $('#tsLocation').val(data.location);
+                    // $('#tsLocation').val(data.location);
                     $('#tsNotes').val(data.notes);
                     $('#tsTeamMember').next($('#select2-tsTeamMember-container').attr('title',data.team_member).html(data.team_member));
                     $('#tsStartTime').val(data.start_time);
@@ -979,7 +980,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 success:function (data) {
                     $('#tsProjectName').val(data.name).attr('disabled',false);
                     $('#tsNotes').val(data.notes).attr('disabled',false);
-                    $('#tsLocation').attr('disabled',false).val(data.location).next('.flag-dropdown').children('.selected-flag').attr('title',data.location).children('.flag').removeClass('us').addClass('ph');
+                    $('#tsTimezone').attr('disabled',false).val(data.location).next('.flag-dropdown').children('.selected-flag').attr('title',data.location).children('.flag').removeClass('us').addClass('ph');
                     if ($('#savedProject').length == 1){
                         $('#savedProject').attr('id','updateTSProject').text('Update').attr('data-id',id);
                     }else if($('#updateSchedule').length == 1){
@@ -996,12 +997,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $.each($('#formNewProject').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
-            var country = values['location'].replace(/\s*\(.*?\)\s*/g, '');
+            let timezone = null;
+            if (values['timezone'] != null){
+                timezone = values['timezone'].replace(/\s*\(.*?\)\s*/g, '');
+            }else{
+                timezone = null;
+            }
             $.ajax({
                 url:"/timesheet/updateTSProject",
                 type:"POST",
                 dataType:'json',
-                data:{values:values,location:country,id:id},
+                data:{values:values,timezone:timezone,id:id},
                 success:function (data) {
                     if (data == 1){
                         $('#timesheet_settings').DataTable().destroy();

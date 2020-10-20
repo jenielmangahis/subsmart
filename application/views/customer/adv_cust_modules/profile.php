@@ -43,10 +43,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="contactrighttab" style="margin-top:1px;">
                             <div class="widget_tab">
                                 <div class="contactrightimg">
-                                    <img src="https://app.creditrepaircloud.com/application/images/dashboard-new.png" alt="1-click-import" width="25" height="35" style="padding-left: 2px;margin-top: -4px;">
+                                    <img src="/assets/img/customer/images/dashboard-new.png" alt="1-click-import" width="25" height="35" style="padding-left: 2px;margin-top: -4px;">
                                 </div>
                                 <div class="contactrighttxt">
-                                    <a href="https://app.creditrepaircloud.com/importcreditreport/simple_audit/NTk=?from=quick_import" class="js-qwynlraxz">
+                                    <a href="#" class="js-qwynlraxz">
                                         1-Click Import and Audit</a><br>
                                     Pull reports &amp; create audit
                                 </div>
@@ -55,7 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="contactrighttab" >
                             <div class="widget_tab">
                                 <div class="contactrightimg">
-                                    <img src="https://app.creditrepaircloud.com/application/images/dashboard1.png" alt="wzardimg">
+                                    <img src="/assets/img/customer/images/dashboard1.png" alt="wzardimg">
                                 </div>
                                 <div class="contactrighttxt" >
                                     <a href="https://app.creditrepaircloud.com/wizard/index/NTk=" class="js-qwynlraxz">
@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="contactrighttab" style="position:relative">
                             <div class="widget_tab">
                                 <div class="contactrightimg">
-                                    <img src="https://app.creditrepaircloud.com/application/images/dashboard2.png" alt="securemailimg" style="height:33px;">
+                                    <img src="/assets/img/customer/images/dashboard2.png" alt="securemailimg" style="height:33px;">
                                 </div>
                                 <div class="contactrighttxt">
                                     <a href="#" class="js-qwynlraxz">Send Secure Message</a><br>
