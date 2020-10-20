@@ -269,7 +269,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $(".week-timepicker").timepicker({interval: 60});
             var radio = $('input[name="selected"]:checked');
             var emp_name = radio.attr('data-name');
-            var week_id = radio.attr('data-week');
+            // var week_id = radio.attr('data-week');
             var attn_id = radio.attr('data-attn');
             var day_id = [];
             day_id.push(radio.parent('td').next('td').next('td').next('td').attr('data-id'));
@@ -452,29 +452,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(document).on('click','#listClockInOut',function () {
             var radio = $('input[name="selected"]:checked');
             var approved_by = $(this).attr('data-approved');
-            if (radio.length == 0){
+            if (radio.length === 0){
 
             }else{
                 var user_id = radio.val();
                 var status = radio.parent('td').next('td').next('td').children('span').text();
                 var emp_name = radio.attr('data-name');
-                var week_id = radio.attr('data-week');
+                let photo = radio.attr('data-photo');
+                // var week_id = radio.attr('data-week');
                 var attn_id = radio.attr('data-attn');
                 if (status == 'In'){
-                    clockOut(emp_name,user_id,week_id,attn_id,approved_by);
+                    clockOut(emp_name,user_id,attn_id,approved_by,photo);
                 }else if(status == ''){
-                    clockIn(emp_name,user_id,approved_by);
+                    clockIn(emp_name,user_id,approved_by,photo);
                 }else if(status == 'On Lunch'){
-                    backToWork(emp_name,user_id,approved_by);
+                    backToWork(emp_name,user_id,approved_by,photo);
                 }
             }
         });
-        function clockIn(emp_name,user_id,approved_by) {
+        function clockIn(emp_name,user_id,approved_by,photo) {
             var entry = 'Manual';
             Swal.fire({
                 title: 'Clock in?',
                 html: "Are you sure you want to Clock-in this person?<br> <strong>"+emp_name+"</strong>",
-                imageUrl:"/assets/img/timesheet/default-profile.png",
+                imageUrl:photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
@@ -514,12 +515,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
             });
         }
-        function clockOut(emp_name,user_id,week_id,attn_id,approved_by) {
+        function clockOut(emp_name,user_id,attn_id,approved_by,photo) {
             var entry = 'Manual';
             Swal.fire({
                 title: 'Clock out?',
                 html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",
-                imageUrl:"/assets/img/timesheet/default-profile.png",
+                imageUrl:photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
@@ -530,7 +531,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/checkingOutEmployee',
                     method:"POST",
                     dataType:"json",
-                    data:{id:user_id,week_id:week_id,attn_id:attn_id,entry:entry,approved_by:approved_by},
+                    data:{id:user_id,attn_id:attn_id,entry:entry,approved_by:approved_by},
                     success:function (data) {
                         if (data == 1){
                             $("#tbl-list").DataTable().destroy();
@@ -559,12 +560,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
             });
         }
-        function backToWork(emp_name,user_id,approved_by) {
+        function backToWork(emp_name,user_id,approved_by,photo) {
             var entry = 'Manual';
             Swal.fire({
                 title: 'Back to work?',
                 html: "Are you sure you want to get back to work this person?<br> <strong>"+emp_name+"</strong>",
-                imageUrl:"/assets/img/timesheet/default-profile.png",
+                imageUrl:photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',

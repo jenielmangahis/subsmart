@@ -50,27 +50,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div style="padding-top:10px;">
                             <table width="90%" border="0" cellspacing="0" cellpadding="0">
-
                                 <tbody>
                                 <tr>
                                     <td>
                                         <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
                                             <a href="#" style="color:#58bc4f;">View completed tasks</a>&nbsp;&nbsp;
-
-                                            <!--  <a href="javascript:void(0);">Action/Notes</a>-->
-                                        </div></td>
-                                    <td align="right" valign="top" class="normaltext1">
-                                        <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
-                                            <a id="add_task" title="Add Task" href="javascript:void(0);"  style="color:#58bc4f;">Add task</a>&nbsp;&nbsp;
-
                                             <!--  <a href="javascript:void(0);">Action/Notes</a>-->
                                         </div>
                                     </td>
-
+                                    <td align="right" valign="top" class="normaltext1">
+                                        <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
+                                            <a id="add_task" title="Add Task" href="javascript:void(0);"  style="color:#58bc4f;">Add task</a>&nbsp;&nbsp;
+                                            <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+                                        </div>
+                                    </td>
                                     <td align="right" valign="top" class="normaltext1">
                                         <div style="margin-right:15px; padding-top:20px;" align="right" class="normaltext1">
                                             <a href="#" style="color:#bc1440;"><?= isset($task_info) ? count($task_info) : '0'; ?> task(s)</a>&nbsp;&nbsp;
-
                                             <!--  <a href="javascript:void(0);">Action/Notes</a>-->
                                         </div>
                                     </td>

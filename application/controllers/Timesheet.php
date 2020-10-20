@@ -31,6 +31,7 @@ class Timesheet extends MY_Controller {
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.js",
             "assets/plugins/country-picker-flags/build/js/countrySelect.js",
+            "assets/plugins/timezone-picker/dist/timezones.full.js",
 //            "assets/js/accounting/sweetalert2@9.js",
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
@@ -88,7 +89,7 @@ class Timesheet extends MY_Controller {
 //        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
-        $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
+        $this->page_data['week_duration'] = $this->timesheet_model->getLastWeekTotalDuration();
 		$date_this_week = array(
             "Monday" => date("M d,y",strtotime('monday this week')),
             "Tuesday" => date("M d,y",strtotime('tuesday this week')),
@@ -602,7 +603,7 @@ class Timesheet extends MY_Controller {
         $user_roles= $this->users_model->getRoles();
         $ts_logs = $this->timesheet_model->getTSByDate($week_check);
         $attendance = $this->timesheet_model->employeeAttendance();
-        $week_duration = $this->timesheet_model->getWeekTotalDuration();
+        $week_duration = $this->timesheet_model->getLastWeekTotalDuration();
 
         $name = null;
         $role = null;
@@ -615,7 +616,7 @@ class Timesheet extends MY_Controller {
         $fri_duration = null;
         $sat_duration = null;
         $sun_duration = null;
-        $shift_duration = '0.00';
+        $shift_duration = number_format(0,2);
 
         $display .= '<thead>';
         $display .= '<tr>';
@@ -659,6 +660,11 @@ class Timesheet extends MY_Controller {
             }
             foreach ($attendance as $attn){
                 if ($attn->user_id == $user->id && $attn->shift_duration > 0){
+                    for ($x = 0; $x < count($week_check);$x++){
+                        if ($week_check[$x] == $attn->date_out){
+                            $shift_duration += $attn->shift_duration;
+                        }
+                    }
                     switch ($attn->date_out){
                         case ($week_check[0]):
                             $mon_duration = $attn->shift_duration;
@@ -684,11 +690,11 @@ class Timesheet extends MY_Controller {
                     }
                 }
             }
-            foreach ($week_duration as $week){
-                if ($user->id == $week->user_id && $week->week_of == $week_check[0]){
-                    $shift_duration = $week->total_shift;
-                }
-            }
+//            foreach ($week_duration as $week){
+//                if ($user->id == $week->user_id && $week->week_of == $week_check[0]){
+//                    $shift_duration = $week->total_shift;
+//                }
+//            }
         $display .= '<tr>';
         $display .= '<td><span class="tbl-emp-name">'.$name.'</span><span class="tbl-emp-role">'.$role.'</span></td>';
         $display .= '<td class="center" style="background-color:'.$bg_color.'"><span class="tbl-emp-status">'.$status.'</span></td>';
@@ -894,7 +900,7 @@ class Timesheet extends MY_Controller {
         $users = $this->users_model->getUsers();
         $user_roles = $this->users_model->getRoles();
         $ts_logs = $this->timesheet_model->getTSByDate($week_check);
-        $week_duration = $this->timesheet_model->getWeekTotalDuration();
+//        $week_duration = $this->timesheet_model->getWeekTotalDuration();
         $attendance = $this->timesheet_model->employeeAttendance();
         $display .= '<thead>';
         $display .= '<tr>';
@@ -939,6 +945,7 @@ class Timesheet extends MY_Controller {
         $sun_id = null;
         foreach ($users as $user):
             $user_id = $user->id;
+            $user_photo = userProfileImage($user->id);
             $name = $user->FName." ".$user->LName;
             foreach ($user_roles as $roles){
                 if ($roles->id == $user->role){
@@ -1201,11 +1208,11 @@ class Timesheet extends MY_Controller {
                 }
 
             }
-            foreach ($week_duration as $week){
-                if ($week->user_id == $user_id){
-                    $week_id = $week->id;
-                }
-            }
+//            foreach ($week_duration as $week){
+//                if ($week->user_id == $user_id){
+//                    $week_id = $week->id;
+//                }
+//            }
             foreach ($attendance as $attn){
                 if ($attn->user_id == $user_id){
                     $attn_id = $attn->id;
@@ -1213,7 +1220,7 @@ class Timesheet extends MY_Controller {
             }
 
         $display .= '<tr>';
-        $display .= '<td class="center"><input type="radio" name="selected" data-week="'.$week_id.'" data-attn="'.$attn_id.'" data-name="'.$name.'" value="'.$user_id.'"></td>';
+        $display .= '<td class="center"><input type="radio" name="selected" data-photo="'.$user_photo.'" data-attn="'.$attn_id.'" data-name="'.$name.'" value="'.$user_id.'"></td>';
         $display .= '<td><span class="list-emp-name">'.$name.'</span><span class="list-emp-role">'.$role.'</span></td>';
         $display .= '<td class="center"><span class="list-emp-status">'.$status.'</span></td>';
         $display .= '<td class="center" style="background: '.$mon_status.'" data-id="'.$mon_id.'">'.$mon_logtime.'</td>';
@@ -1379,7 +1386,7 @@ class Timesheet extends MY_Controller {
         $this->page_data['in_now'] = $this->timesheet_model->getInNow();
         $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['logs'] = $this->timesheet_model->getTimesheetLogs();
-        $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
+//        $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
         $this->page_data['schedules'] = $this->timesheet_model->getTimeSheetSettings();
         $this->page_data['tasks'] = $this->timesheet_model->getTimeSheetDay();
@@ -1422,10 +1429,10 @@ class Timesheet extends MY_Controller {
     public function checkingOutEmployee(){
         $user_id = $this->input->post('id');
         $attn_id = $this->input->post('attn_id');
-        $week_id = $this->input->post('week_id');
+//        $week_id = $this->input->post('week_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $query = $this->timesheet_model->checkingOutEmployee($user_id,$week_id,$attn_id,$entry,$approved_by);
+        $query = $this->timesheet_model->checkingOutEmployee($user_id,$attn_id,$entry,$approved_by);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -1720,7 +1727,7 @@ class Timesheet extends MY_Controller {
 	    $start_time = $this->input->post('values[start_time]');
 	    $end_time = $this->input->post('values[end_time]');
 	    $user_id = $this->input->post('values[team_member]');
-	    $location = $this->input->post('location');
+	    $timezone = $this->input->post('timezone');
 	    $notes = $this->input->post('values[notes]');
 	    $duration = $this->input->post('duration');
         $week = $this->input->post('values[week]');
@@ -1731,7 +1738,7 @@ class Timesheet extends MY_Controller {
             'start_time' => date('H:i',strtotime($start_time)),
             'end_time' => date('H:i',strtotime($end_time)),
             'user_id' => $user_id,
-            'location' => $location,
+            'timezone' => $timezone,
             'notes' => $notes,
             'duration' => $duration,
             'day' => date('l',strtotime($start_date)),
@@ -1761,7 +1768,7 @@ class Timesheet extends MY_Controller {
         $data = new stdClass();
 	    $data->project_name = $ts_query->row()->project_name;
 	    $data->team_member = $employee_name;
-	    $data->location = $ts_query->row()->location;
+	    $data->timezone = $ts_query->row()->timezone;
 	    $data->notes = $ts_query->row()->notes;
 	    $data->start_time = (!empty($day_id))?date('h:i A',strtotime($ts_day->row()->start_time)):null;
 	    $data->end_time = (!empty($day_id))?date('h:i A',strtotime($ts_day->row()->end_time)):null;
@@ -1864,7 +1871,7 @@ class Timesheet extends MY_Controller {
 	    $data = new stdClass();
 	    $data->name = $project[0]->project_name;
 	    $data->user_id = $project[0]->user_id;
-	    $data->location = $project[0]->location;;
+	    $data->timezone = $project[0]->timezone;;
 	    $data->notes = $project[0]->notes;
 
 	    echo json_encode($data);
@@ -1874,10 +1881,10 @@ class Timesheet extends MY_Controller {
 	    $id = $this->input->post('id');
 	    $name = $this->input->post('values[project]');
         $notes = $this->input->post('values[notes]');
-        $location = $this->input->post('location');
+        $timezone = $this->input->post('timezone');
         $update = array(
             'project_name' => $name,
-            'location' => $location,
+            'timezone' => $timezone,
             'notes' => $notes
         );
 	    $query = $this->timesheet_model->updateTSProject($id,$update);
@@ -2143,20 +2150,20 @@ class Timesheet extends MY_Controller {
     public function clockInEmployee(){
 	    $clock_in = time();
 	    $user_id = $this->session->userdata('logged')['id'];
-        $check_week = $this->db->get_where('ts_weekly_total_shift',array('user_id' => $user_id,'week_of'=>date('Y-m-d',strtotime('monday this week'))));
-        if ($check_week->num_rows() == 1){
-            $week_id = $check_week->row()->id;
-        }else{
-            $week_insert = array(
-                'user_id' => $user_id,
-                'week_of' => date('Y-m-d',strtotime('monday this week')),
-                'total_shift' => 0
-            );
-            $this->db->insert('ts_weekly_total_shift',$week_insert);
-            $week_id = $this->db->insert_id();
-        }
+//        $check_week = $this->db->get_where('ts_weekly_total_shift',array('user_id' => $user_id,'week_of'=>date('Y-m-d',strtotime('monday this week'))));
+//        if ($check_week->num_rows() == 1){
+//            $week_id = $check_week->row()->id;
+//        }else{
+//            $week_insert = array(
+//                'user_id' => $user_id,
+//                'week_of' => date('Y-m-d',strtotime('monday this week')),
+//                'total_shift' => 0
+//            );
+//            $this->db->insert('ts_weekly_total_shift',$week_insert);
+//            $week_id = $this->db->insert_id();
+//        }
         $attendance = array(
-            'week_id' => $week_id,
+//            'week_id' => $week_id,
             'user_id' => $user_id,
             'date_in' => date('Y-m-d'),
             'date_out' => date('Y-m-d'),
@@ -2217,7 +2224,7 @@ class Timesheet extends MY_Controller {
             $this->db->update('timesheet_attendance',$update);
             $affected_row = $this->db->affected_rows();
             //Update weekly total duration
-            $this->timesheet_model->updateWeeklyReport($check_attn->row()->week_id);
+//            $this->timesheet_model->updateWeeklyReport($check_attn->row()->week_id,$user_id,$attn_id);
 
             if($affected_row != 1){
                 echo json_encode(0);
@@ -2305,13 +2312,25 @@ class Timesheet extends MY_Controller {
     }
 
     public function notifyStartSchedule(){
+        $ts_settings = getEmpTSsettings();
+        $schedule = getEmpSched();
+        $time = 0;
+        $tz = null;
+        foreach ($ts_settings as $setting){
+            foreach ($schedule as $item){
+                if ($setting->id == $item->ts_settings_id){
+                    $tz = $setting->timezone;
+                    $time= ltrim(date('hA',strtotime($item->start_time)), 0);
+                }
+            }
+        }
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('user_notification',array('user_id' => $user_id,'title' => 'Your shift will start soon.','date_created' => date('Y-m-d h:i:s')));
         if ($qry->num_rows() == 0){
             $data_notify = array(
                 'user_id' => $user_id,
-                'title' => 'Your shift will start soon.',
-                'content' => 'Shift start at',
+                'title' => 'Your shift will begin soon.',
+                'content' => 'Shift start at '.$time." (".$tz.")",
                 'date_created' => date('Y-m-d h:i:s'),
                 'status' => 1
             );
@@ -2321,13 +2340,25 @@ class Timesheet extends MY_Controller {
     }
 
     public function notifyEndSchedule(){
+        $ts_settings = getEmpTSsettings();
+        $schedule = getEmpSched();
+        $time = 0;
+        $tz = null;
+        foreach ($ts_settings as $setting){
+            foreach ($schedule as $item){
+                if ($setting->id == $item->ts_settings_id){
+                    $tz = $setting->timezone;
+                    $time= ltrim(date('hA',strtotime($item->end_time)), 0);
+                }
+            }
+        }
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('user_notification',array('user_id' => $user_id,'title' => 'Your shift will end soon.','date_created' => date('Y-m-d h:i:s')));
         if ($qry->num_rows() == 0){
             $data_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Your shift will end soon.',
-                'content' => 'Shift end at',
+                'content' => 'Shift end at '.$time." (".$tz.")",
                 'date_created' => date('Y-m-d h:i:s'),
                 'status' => 1
             );
@@ -2365,7 +2396,7 @@ class Timesheet extends MY_Controller {
 
     public function timesheetWeeklyReport(){
         $page = array(
-            'last_week' => $this->timesheet_model->getWeekTotalDuration()
+            'last_week' => $this->timesheet_model->getLastWeekTotalDuration()
         );
         //Load email library
         $this->load->library('email');
@@ -2382,7 +2413,7 @@ class Timesheet extends MY_Controller {
         $this->email->set_newline("\r\n");
 
         $this->email->from('aic.jerry.cantrell@gmail.com','nSmartrac');
-        $this->email->to('support@nsmartrac.com','rarecandy05@gmail.com');
+        $this->email->to('support@nsmartrac.com','meggiechawn@gmail.com');
         $this->email->subject('Timesheet Weekly Report');
         $message = $this->load->view('users/email_template',$page,TRUE);
         $this->email->message($message);
@@ -2403,8 +2434,7 @@ class Timesheet extends MY_Controller {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename=Timesheet Report '.$start_date.' - '.$end_date.'.csv');
 
-        $week_of = date('Y-m-d',strtotime('monday last week'));
-        $data = $this->db->get_where('ts_weekly_total_shift',array('week_of' => $week_of))->result();
+        $data = $this->timesheet_model->getLastWeekTotalDuration();
         $users = $this->users_model->getUsers();
         $fp = fopen('php://output', 'wb');
         $shift = 0;
@@ -2416,9 +2446,9 @@ class Timesheet extends MY_Controller {
             $name = $user->FName." ".$user->LName;
             foreach ($data as $line) {
                 if ($user->id == $line->user_id){
-                    $shift = $line->total_shift;
-                    $break = $line->total_break;
-                    $overtime = $line->total_overtime;
+                    $shift = $line->shift_duration;
+                    $break = $line->break_duration;
+                    $overtime = $line->overtime;
                 }
             }
             $report = array($name,$shift,$break,$overtime);
@@ -2452,8 +2482,8 @@ class Timesheet extends MY_Controller {
         $obj_pdf->setFontSubsetting(false);
         $obj_pdf->AddPage();
         ob_start();
-        $week_of = date('Y-m-d',strtotime('monday last week'));
-        $data = $this->db->get_where('ts_weekly_total_shift',array('week_of' => $week_of))->result();
+
+        $data = $this->timesheet_model->getLastWeekTotalDuration();
         $users = $this->users_model->getUsers();
        $display = '';
        $display .= '<table>';
@@ -2474,9 +2504,9 @@ class Timesheet extends MY_Controller {
             $name = $user->FName." ".$user->LName;
             foreach ($data as $line) {
                 if ($user->id == $line->user_id){
-                    $shift = $line->total_shift;
-                    $break = $line->total_break;
-                    $overtime = $line->total_overtime;
+                    $shift = $line->shift_duration;
+                    $break = $line->break_duration;
+                    $overtime = $line->overtime;
                 }
             }
             $display .= '<tr>';
@@ -2503,7 +2533,7 @@ class Timesheet extends MY_Controller {
 //    Email Report for Timesheet
     public function email(){
 	    $page = array(
-	        'last_week' => $this->timesheet_model->getWeekTotalDuration()
+	        'last_week' => $this->timesheet_model->getLastWeekTotalDuration()
         );
         $this->load->view('users/email_template',$page);
     }

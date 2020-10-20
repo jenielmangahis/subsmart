@@ -231,9 +231,9 @@
 //                                    if ($in->user_id == $user_id && $in->status == 0){
 //                                        $clock_btn = null;
 //                                    }
-                            if($in->user_id == $user_id && $in->date_in == date('Y-m-d',strtotime('yesterday')) && $in->date_out == date('Y-m-d')){
-                                $clock_btn = 'clockIn';
-                            }
+//                            if($in->user_id == $user_id && $in->date_in == date('Y-m-d',strtotime('yesterday')) && $in->date_out == date('Y-m-d')){
+//                                $clock_btn = 'clockIn';
+//                            }
                             if ($in->user_id == $user_id && $in->status == 0 && $in->date_in == date('Y-m-d',strtotime('yesterday'))){
                                 $clock_btn = 'clockIn';
                             }
@@ -294,27 +294,39 @@
                         $sched_notify = 1;
                         $over_notify = 1;
                         $start = 0;
-                        $tz = 'Asia/Manila';
-                        $timestamp = time();
-                        $dt = new DateTime("now", new DateTimeZone($tz));
-                        $dt->setTimestamp($timestamp);
-                        foreach ($schedule as $sched){
-                            if ($sched->user_id == $this->session->userdata('logged')['id'] && $sched->start_date == $dt->format('Y-m-d')){
-                                $expected_shift = strtotime($sched->start_date." ".$sched->start_time);
-                                $expected_endshift = strtotime($sched->start_date." ".$sched->end_time);
-                                $start = $sched->start_date;
-                            }
-                            foreach ($notification as $u_notify){
-                                if ($u_notify->user_id == $sched->user_id){
-                                    if ($u_notify->title == 'Your shift will start soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
-                                        $sched_notify = 0;
-                                        $expected_shift = 0;
+                        $time_difference = 0;
+                        foreach ($ts_settings as $setting){
+                            foreach ($schedule as $sched){
+                                if ($setting->id == $sched->ts_settings_id){
+                                    if ($setting->timezone == null){
+                                        $tz = 'America/Chicago';
+                                    }else{
+                                        $tz = $setting->timezone;
+                                    }
+                                    $timestamp = time();
+                                    $dt = new DateTime("now", new DateTimeZone($tz));
+                                    $dt->setTimestamp($timestamp);
+                                    if ($sched->start_date == $dt->format('Y-m-d')){
+                                        $expected_shift = strtotime($sched->start_date." ".$sched->start_time);
+                                        $expected_endshift = strtotime($sched->start_date." ".$sched->end_time);
+                                        $start = $sched->start_date;
+//                                        Time Difference from server time to employee's set timezone
+                                        $time_difference = $dt->format('H') - date('H');
+                                    }
+                                    foreach ($notification as $u_notify){
+                                        if ($u_notify->user_id == $sched->user_id){
+                                            if ($u_notify->title == 'Your shift will begin soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
+                                                $sched_notify = 0;
+                                                $expected_shift = 0;
+                                            }
+                                        }
+                                        if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
+                                            $over_notify = 0;
+                                            $expected_endshift = 0;
+                                        }
                                     }
                                 }
-                                if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
-                                    $over_notify = 0;
-                                    $expected_endshift = 0;
-                                }
+
                             }
                         }
 
@@ -328,6 +340,7 @@
                             <input type="hidden" id="employeePingStart" value="<?php echo $sched_notify;?>">
                             <input type="hidden" id="employeePingEnd" value="<?php echo $over_notify;?>">
                             <input type="hidden" id="employeeOvertime" value="<?php echo $expected_endshift;?>">
+                            <input type="hidden" id="timeDifference" value="<?php echo $time_difference;?>">
                             <div class="icon-loader">
                                 <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
                             </div>

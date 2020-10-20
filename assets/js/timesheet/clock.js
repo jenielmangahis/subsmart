@@ -346,7 +346,6 @@ $(document).ready(function () {
             clearInterval(timerInterval)
         }
     }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
             Swal.fire('Work more!', '', 'success');
         } else if (result.isDenied) {
@@ -398,26 +397,27 @@ $(document).ready(function () {
         min.style.transform = 'rotateZ(' + mm + 'deg)';
         sec.style.transform = 'rotateZ(' + ss + 'deg)';
         //Check if there is an schedule
-        //Start shift
-        var emp_shift = $('#employeeShiftStart').val();
-        var emp_overtime = $('#employeeOvertime').val();
-        var sched_notify = $('#employeePingStart').val();
-        var over_notify = $('#employeePingEnd').val();
-        var current_time = day.getTime();
+        //Start shift notify
+        let emp_shift = $('#employeeShiftStart').val();
+        let emp_overtime = $('#employeeOvertime').val();
+        let sched_notify = $('#employeePingStart').val();
+        let over_notify = $('#employeePingEnd').val();
+        let current_time = day.getTime();
+        let time_diff = $('#timeDifference').val();
 
         if (emp_shift > 0 && parseInt(sched_notify) > 0){
             var a = new Date(emp_shift * 1000);
             a.setMinutes(a.getMinutes() - 10);
-            var b = a.setHours(a.getHours() - 13);
+            var b = a.setHours(a.getHours() - (time_diff));
             if (b <= current_time){
                 start_sched();
             }
         }
-        // End shift
+        // End shift notify
         if (emp_overtime > 0 && parseInt(over_notify) > 0){
             var c = new Date(emp_overtime * 1000);
             c.setMinutes(c.getMinutes() - 10);
-            var d = c.setHours(c.getHours() - 13);
+            var d = c.setHours(c.getHours() - (time_diff));
             if(current_time >= d){
                 overtime();
                 overtimeTimer();

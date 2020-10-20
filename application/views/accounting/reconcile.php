@@ -166,7 +166,9 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         <i class="fa fa-cloud-upload"></i>
                         <h6>Drag and drop files here or <span>browse to upload</span></h6>
                     </button>
-                    <input type="file" name="userfile" />
+                    <input type="file" name="userfile_sidebar" />
+                    <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                    <input type="hidden" name="subfix" value="sidebar">
                 </div>
             </div>
         </div>
@@ -175,6 +177,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <button type="button" class="btn-cmn" onclick="closeSideNav3()">Cancel</button>
             <button type="submit" class="savebtn">Done</button>
         </div>
+        <?php echo form_close(); ?>
     </div>
     <!-- End Add Custom Tax Sidebar -->
 
@@ -426,10 +429,11 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
                             <input type="file" name="userfile" />
+                            <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
                         </div>
                     </div>
                     </br>
-                    <a href="#" onclick="openSideNav()">Show existing</a>
+                    <a href="#" onclick="showData()">Show existing</a>
                 </div>
             </div>
         </div>
@@ -774,6 +778,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
                             <input type="file" name="userfile" />
+                            <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
                         </div>
                     </div>
                     </br>
@@ -1206,6 +1211,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
                             <input type="file" name="userfile" />
+                            <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
                         </div>
                     </div>
                     </br>
@@ -1325,6 +1331,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             </div>
             <?php echo form_close(); ?>
     </div>
+    
     <!-- End Make account -->
 
     <!-- Add payee -->
@@ -1527,6 +1534,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
                             <input type="file" name="userfile" />
+                            <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
                         </div>
                     </div>
                     </br>
@@ -1824,6 +1832,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                         <h6>Drag and drop files here or <span>browse to upload</span></h6>
                                     </button>
                                     <input type="file" name="userfile" />
+                                    <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
                                 </div>
                             </div>
                             </br>
@@ -1879,70 +1888,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
                 </div>
 
-                <div class="existing-box">
-                    <h4>data_entry.docx <span>08/12/2020</span></h4>
-
-                    <div class="priview-img">
-                        <img src="img/download.svg" alt="">
-                    </div>
-
-                    <div class="act-br">
-                        <a href="#" class="txbtn">Add</a>
-                        <a href="#" class="txbtn previewbtn">Preview</a>
-                    </div>
-                </div>
-
-                <div class="existing-box">
-                    <h4>data_entry.docx <span>08/12/2020</span></h4>
-
-                    <div class="priview-img">
-                        <img src="img/download.svg" alt="">
-                    </div>
-
-                    <div class="act-br">
-                        <a href="#" class="txbtn">Add</a>
-                        <a href="#" class="txbtn previewbtn">Preview</a>
-                    </div>
-                </div>
-
-                <div class="existing-box">
-                    <h4>data_entry.docx <span>08/12/2020</span></h4>
-
-                    <div class="priview-img">
-                        <img src="img/download.svg" alt="">
-                    </div>
-
-                    <div class="act-br">
-                        <a href="#" class="txbtn">Add</a>
-                        <a href="#" class="txbtn previewbtn">Preview</a>
-                    </div>
-                </div>
-
-                <div class="existing-box">
-                    <h4>data_entry.docx <span>08/12/2020</span></h4>
-
-                    <div class="priview-img">
-                        <img src="img/download.svg" alt="">
-                    </div>
-
-                    <div class="act-br">
-                        <a href="#" class="txbtn">Add</a>
-                        <a href="#" class="txbtn previewbtn">Preview</a>
-                    </div>
-                </div>
-
-                <div class="existing-box">
-                    <h4>data_entry.docx <span>08/12/2020</span></h4>
-
-                    <div class="priview-img">
-                        <img src="img/download.svg" alt="">
-                    </div>
-
-                    <div class="act-br">
-                        <a href="#" class="txbtn">Add</a>
-                        <a href="#" class="txbtn previewbtn">Preview</a>
-                    </div>
-                </div>
+                <div id="ajax_upload_data"></div>
             </div>
         </div>
     </div>
@@ -3106,12 +3052,14 @@ function closeSideNav() {
 </script>
 <script type="text/javascript">
 function showData() {
+    jQuery("#side-menu").addClass("open-side-nav");
+    jQuery("#overlay").addClass("overlay");
     $.ajax({
         url:"<?php echo url('accounting/reconcile/view/showData') ?>",
         method: "POST",
         success:function(data)
         {
-            
+            $('#ajax_upload_data').html(data);
         }
     })
 }

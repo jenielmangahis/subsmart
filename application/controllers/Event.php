@@ -37,8 +37,6 @@ class Event extends MY_Controller
     {
         $company_id = logged('company_id');
 
-        // echo '<pre>'; print_r($this->input->post()); die;
-
         $data = array(
 
             'company_id' => $company_id,
@@ -58,7 +56,6 @@ class Event extends MY_Controller
         if (!empty(post('event_id'))) {
 
             if ($this->event_model->update(post('event_id'), $data)) {
-
                 $event_id = post('event_id');
             } else {
                 $event_id = 0;
@@ -151,7 +148,6 @@ class Event extends MY_Controller
 
             // load one user for the event
             if (!empty($users)) {
-
                 $this->page_data['event']->user = current($users);
             }
         }

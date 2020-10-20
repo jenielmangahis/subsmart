@@ -174,5 +174,36 @@ class Reconcile_model extends MY_Model {
 		$this->db->where('id',$id);
 		$this->db->delete('accounting_reconcile_has_servicecharge');  
 	}
+
+	public function uploadfile($reconcile_id,$id,$filename,$filepath)
+	{
+		$query="insert into accounting_uploadfiles values('',$reconcile_id,'$id','$filename','$filepath')";
+		echo $this->db->query($query);	
+	}
+
+	public function getUploads($params = array())
+	{
+		$this->db->select('*');
+        $this->db->from('accounting_uploadfiles');
+        $this->db->where('reconcile_id','4');
+        if(array_key_exists('id',$params) && !empty($params['id'])){
+            $this->db->where('id',$params['id']);
+            //get records
+            $query = $this->db->get();
+            $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
+        }else{
+            //set start and limit
+            if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                $this->db->limit($params['limit'],$params['start']);
+            }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                $this->db->limit($params['limit']);
+            }
+            //get records
+            $query = $this->db->get();
+            $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+        }
+        //return fetched data
+        return $result;
+	}
 }
 ?>

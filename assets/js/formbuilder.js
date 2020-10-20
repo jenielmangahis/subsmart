@@ -328,14 +328,14 @@ loadFormSettings = (id) => {
   })
 }
 
-loadFormElements = (id, mode = null) => {
-  loadImageHeader();
-  document.querySelector("#windowPreviewContent").innerHTML = "";
+loadFormElements = async (id, mode = null) => {
+  // document.querySelector("#windowPreviewContent").innerHTML = "";
   // const titlesFontFamily = document.getElementById("fTFontFamily").value;
   // const titlesFontSize = document.getElementById('fTFontSize').value;
   // const labelsFontFamily = document.getElementById('fLFontFamily').value;
   // const labelsFontSize = document.getElementById('fLFontSize').value;
-  $.ajax({
+  loadImageHeader();
+  await $.ajax({
     url: `${formBaseUrl}formbuilder/form/element/get/${id}`,
     dataType: 'json',
     type: 'GET',
@@ -861,6 +861,15 @@ loadFormElements = (id, mode = null) => {
       return;
     }
   })
+  document.querySelector("#windowPreviewContent").innerHTML += `
+    <div class="col-12 mt-2 text-center form-group">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="companyTNCs">
+        <label class="form-check-label" for="companyTNCs">I have read and agree to the <a class="text-info" target="_blank" onclick="window.open('${formBaseUrl}terms-and-conditions/view', '_blank')">Terms and Conditions</a>.
+        </label>
+      </div>
+    </div>
+  `
 }
 
 loadSignatureCanvas = (elementType, id, size )=>{
@@ -896,8 +905,8 @@ const enableCanvas = (id) => {
   window[`signPad${id}`].on();
 }
 
-const loadImageHeader = () => {
-  $.ajax({
+const loadImageHeader = async () => {
+  await $.ajax({
     url: `${formBaseUrl}formbuilder/get-active-company-data`,
     dataType: 'json',
     type: 'GET',

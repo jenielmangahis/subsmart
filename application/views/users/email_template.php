@@ -147,12 +147,13 @@
                                     $total_break = 0;
                                     $total_pto = 0;
                                     foreach ($last_week as $week){
-                                        if ($week_of == $week->week_of){
-                                            $total_shift += $week->total_shift;
-                                            $total_overtime += $week->total_overtime;
-                                            $total_break += $week->total_break;
-                                            $total_pto += $week->pto;
-                                        }
+                                            $total_shift += $week->shift_duration;
+                                            $total_overtime += $week->overtime;
+                                            $total_break += $week->break_duration;
+                                            $total_pto += 0;
+                                    }
+                                    if ($total_overtime < 0){
+                                        $total_overtime = 0;
                                     }
                                     $work_hours = $total_shift + $total_overtime + $total_break + $total_pto;
                                 ?>

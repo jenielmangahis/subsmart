@@ -69,3 +69,27 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Delete Addon  -->
+<div class="modal fade bd-example-modal-sm" id="modalDeleteIndustryModule" tabindex="-1" role="dialog" aria-labelledby="modalDeleteAddonTitle" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <?php echo form_open_multipart('industry_modules/delete_module', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <?php echo form_input(array('name' => 'mid', 'type' => 'hidden', 'value' => '', 'id' => 'mid'));?>
+      <div class="modal-body">        
+          <p>Delete selected Module?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="submit" class="btn btn-danger">Yes</button>
+      </div>
+      <?php echo form_close(); ?>
+    </div>
+  </div>
+</div>

@@ -1034,13 +1034,13 @@ if (!function_exists('getEmployeeAttendance')){
 if (!function_exists('getEmpTSsettings')){
     function getEmpTSsettings(){
         $CI = &get_instance();
-        return $CI->timesheet_model->getTimeSheetSettings();
+        return $CI->timesheet_model->getTimeSettingsByUser();
     }
 }
 if (!function_exists('getEmpSched')){
     function getEmpSched(){
         $CI = &get_instance();
-        return $CI->timesheet_model->getTimeSheetDay();
+        return $CI->timesheet_model->getTimesheetDayByUser();
     }
 }
 if (!function_exists('getNewTasks')){
