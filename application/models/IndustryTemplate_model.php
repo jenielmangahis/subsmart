@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class IndustryTemplate_model extends MY_Model
 {
-    public $table = 'industry_template';
+    public $table = 'industry_templates';
     public $status_active   = 1;
     public $status_inactive = 0;
 
@@ -60,6 +60,18 @@ class IndustryTemplate_model extends MY_Model
         return $query;
     }
 
+    public function getByName($name)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('name', $name);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
   
     public function updateIndustryTemplate($industryTemplate_id, $data)
     {

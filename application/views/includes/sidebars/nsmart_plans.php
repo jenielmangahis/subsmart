@@ -37,6 +37,8 @@
             $is_active_plans    = "";
             $is_active_features = "";
             $is_active_addons   = "";
+            $is_active_industry_module = "";
+            $is_active_industry_template = "";
             if($this->uri->uri_string() == 'nsmart_plans/index') {
                 $is_active_plans = "active";
             }elseif($this->uri->uri_string() == 'nsmart_features/index') {
@@ -69,6 +71,9 @@
 
         <li class="submenus <?= $is_active_industry_module; ?>"><a href="<?php echo base_url('industry_modules/index') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Industry Modules</a>
+        </li>
+         <li class="submenus <?= $is_active_industry_template; ?>"><a href="<?php echo base_url('industry_template/index') ?>" title="Industry Modules" style="color: #fff;">
+            <span class="fa fa-list"></span>Industry Template</a>
         </li>
 
     </ul>
