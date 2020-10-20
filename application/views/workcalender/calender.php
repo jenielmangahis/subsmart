@@ -649,16 +649,15 @@ a.top-1 {
     </div>
 </div>
 
-
 <!-- MODAL EVENT DETAILS -->
-<div id="modalEventDetails" class="modal fade" role="dialog">
+<div id="modalEventDetails" class="modal fade" role="dialog" style="">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
+                <h4 style="" class="modal-title">Schedule</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Schedule</h4>
             </div>
             <div class="modal-body">
                 <p>loading...</p>

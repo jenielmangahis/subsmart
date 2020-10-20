@@ -160,12 +160,9 @@ class Event extends MY_Controller
 
     public function modal_details($id)
     {
-
         $this->page_data['event'] = $this->event_model->getEvent($id);
-
         die($this->load->view('event/modal_details', $this->page_data, true));
     }
-
 
     public function filter_events()
     {
