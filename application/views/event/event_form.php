@@ -8,7 +8,7 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-6 col-sm-12">
-                <label>Customer</label> <span class="form-required">*</span>
+                <label>Customer1</label> <span class="form-required">*</span>
                 <select name="customer_id" id="business-customer" class="form-control select2-hidden-accessible"
                         placeholder="Select customer" tabindex="-1" aria-hidden="true">
                 </select>
@@ -379,5 +379,5 @@
                 .text("<?php echo get_user_by_id($event->user->user_id)->name ?>")) //set a text for show in select
             .val("<?php echo $event->user->user_id ?>") //select option of select2
             .trigger("change"); //apply to select2
-    });
+        });
 </script>

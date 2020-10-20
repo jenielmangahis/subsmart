@@ -844,7 +844,7 @@ class Workcalender extends MY_Controller
         $post = $this->input->post();
         $role = logged('role');
         
-        if ($role == 2 || $role == 3) {
+        if ($role == 2 || $role == 3 || $role == 22) {
             $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
         }
@@ -862,7 +862,7 @@ class Workcalender extends MY_Controller
                     $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                     $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                     $resources_user_events[$inc]['eventId'] = $event->id;
-                    $resources_user_events[$inc]['resourceId'] = $event->employee_id;
+                    $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
                     $resources_user_events[$inc]['title'] = $event->event_description;
                     $resources_user_events[$inc]['start'] = $start_date_time;
                     $resources_user_events[$inc]['end'] = $start_date_end;
@@ -874,7 +874,7 @@ class Workcalender extends MY_Controller
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                         $resources_user_events[$inc]['eventId'] = $event->id;
-                        $resources_user_events[$inc]['resourceId'] = $get_user->id;
+                        $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
                         $resources_user_events[$inc]['end'] = $start_date_end;
@@ -955,27 +955,31 @@ class Workcalender extends MY_Controller
 
                     foreach( $events->items as $event ){  
 
-                        if( $event->start->dateTime != '' ){
-                            $start_date = $event->start->dateTime;
-                        }else{
-                            $start_date = $event->start->date;
-                        }
+                        $gevent = $this->event_model->getEventByGoogleEventId($event->id);
+                        
+                        if( empty($gevent) ){
+                            if( $event->start->dateTime != '' ){
+                                $start_date = $event->start->dateTime;
+                            }else{
+                                $start_date = $event->start->date;
+                            }
 
-                        if( $event->end->dateTime != '' ){
-                            $end_date = $event->end->dateTime;
-                        }else{
-                            $end_date = $event->end->date;
-                        }
+                            if( $event->end->dateTime != '' ){
+                                $end_date = $event->end->dateTime;
+                            }else{
+                                $end_date = $event->end->date;
+                            }
 
-                        if( $event->summary != '' ){
-                            $resources_user_events[$inc]['resourceId'] = "user17";
-                            $resources_user_events[$inc]['title'] = $event->summary;
-                            $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
-                            $resources_user_events[$inc]['start'] = $start_date;
-                            $resources_user_events[$inc]['end'] = $end_date;
-                            $resources_user_events[$inc]['color'] = $bgcolor;
+                            if( $event->summary != '' ){
+                                $resources_user_events[$inc]['resourceId'] = "user17";
+                                $resources_user_events[$inc]['title'] = $event->summary;
+                                $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
+                                $resources_user_events[$inc]['start'] = $start_date;
+                                $resources_user_events[$inc]['end'] = $end_date;
+                                $resources_user_events[$inc]['color'] = $bgcolor;
 
-                            $inc++;
+                                $inc++;
+                            }
                         }
                     }
                 }
@@ -987,6 +991,8 @@ class Workcalender extends MY_Controller
 
     public function ajax_create_google_event()
     {   
+        $this->load->model('Event_model', 'event_model');
+
         $post = $this->input->post();
 
         $is_success = false;
@@ -1056,6 +1062,34 @@ class Workcalender extends MY_Controller
 
                 $calendarId = $post['gevent_gcid'];
                 $event = $calendar->events->insert($calendarId, $event);
+
+                //Save to db
+                $company_id = logged('company_id');
+
+                if( isset($post['is_recurring']) ){
+                    $is_recurring = 1;
+                }else{
+                    $is_recurring = 0;
+                }
+
+                $data = array(
+                    'company_id' => $company_id,
+                    'customer_id' => $post['customer_id'],
+                    'employee_id' => $post['user_id'][0],
+                    'gevent_id' => $event->id,
+                    'what_of_even' => ($post['what_of_even']) ? $post['what_of_even'] : '',
+                    'description' => $post['gevent_description'],
+                    'start_date' => date('Y-m-d', strtotime($post['gevent_date_from'])),
+                    'start_time' => $post['gevent_start_time'],
+                    'end_date' => date('Y-m-d', strtotime($post['gevent_date_to'])),
+                    'end_time' => $post['gevent_end_time'],
+                    'event_color' => '',
+                    'notify_at' => $post['notify_at'],
+                    'event_description' => $post['gevent_description'],
+                    'instructions' => '',
+                    'is_recurring' => $is_recurring
+                );
+                $event_id = $this->event_model->create($data);
 
                 $is_success = true;
                 $message    = 'Google event was successfully created.';

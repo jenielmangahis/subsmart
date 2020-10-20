@@ -36,21 +36,30 @@ class Event extends MY_Controller
     public function save()
     {
         $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        if( isset($post['is_recurring']) ){
+            $is_recurring = 1;
+        }else{
+            $is_recurring = 0;
+        }
 
         $data = array(
-
             'company_id' => $company_id,
-            'customer_id' => post('customer_id'),
-            'what_of_even' => (post('what_of_even')) ? post('what_of_even') : '',
-            'description' => post('description'),
-            'start_date' => date('Y-m-d', strtotime(post('start_date'))),
-            'start_time' => post('start_time'),
-            'end_date' => date('Y-m-d', strtotime(post('end_date'))),
-            'end_time' => post('end_time'),
-            'event_color' => post('event_color'),
-            'notify_at' => post('notify_at'),
-            'instructions' => post('instructions'),
-            'is_recurring' => post('is_recurring')
+            'customer_id' => $post['customer_id'],
+            'gevent_id' => 0,
+            'employee_id' => $post['user_id'][0],
+            'what_of_even' => ($post['what_of_even']) ? $post['what_of_even'] : '',
+            'description' => $post['description'],
+            'start_date' => date('Y-m-d', strtotime($post['start_date'])),
+            'start_time' => $post['start_time'],
+            'end_date' => date('Y-m-d', strtotime($post['end_date'])),
+            'end_time' => $post['end_time'],
+            'event_color' => $post['event_color'],
+            'notify_at' => $post['notify_at'],
+            'event_description' => $post['description'],
+            'instructions' => $post['instructions'],
+            'is_recurring' => $is_recurring
         );
 
         if (!empty(post('event_id'))) {

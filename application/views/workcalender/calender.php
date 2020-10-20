@@ -280,6 +280,16 @@ a.top-1 {
         float: left !important;
     }
   }
+  .fc th, .fc td {
+    height: 108px;
+  }
+  .fc-direction-ltr .fc-timeline-slot {
+    vertical-align: middle;
+    text-align: center;
+  }
+  .fc-timeline-slot-cushion{
+    margin: 0 auto;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -574,42 +584,79 @@ a.top-1 {
             </div>
             <?php echo form_open_multipart('', ['id' => 'create-google-event', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="modal-body">
-                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
-				<div class="form-group" style="text-align: left;">
-				  <label>Event Name</label> <span class="form-required">*</span>
-				  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
-				</div>
-				<div class="form-group" style="text-align: left;">
-				  <label>Date from</label> <span class="form-required">*</span>
-				  <input type="text" name="gevent_date_from" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
-				</div>
-				<div class="form-group" style="text-align: left;">
-				  <label>Date to</label> <span class="form-required">*</span>
-				  <input type="text" name="gevent_date_to" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
-				</div>
-        <div class="form-group" style="text-align: left;">
-          <label>Start Time</label> <span class="form-required">*</span>
-          <div class="form-group">
-            <div class='input-group date' id='gevent-start-time'>
-               <input type='text' name="gevent_start_time" class="form-control" />
-               <span class="input-group-addon">
-               <span class="fa fa-clock"></span>
-               </span>
-            </div>
-          </div>
-        </div>
-        <div class="form-group" style="text-align: left;">
-          <label>End Time</label> <span class="form-required">*</span>
-          <div class="form-group">
-            <div class='input-group date' id='gevent-end-time'>
-               <input type='text' name="gevent_end_time" class="form-control" />
-               <span class="input-group-addon">
-               <span class="fa fa-clock"></span>
-               </span>
-            </div>
-          </div>
-        </div>
-				<div class="create-gevent-validation-error" style="text-align: left;"></div>
+                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">                
+        				<div class="form-group" style="text-align: left;">
+        				  <label>Event Name</label> <span class="form-required">*</span>
+        				  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
+        				</div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Event Description</label> <span class="form-required">*</span>
+                  <input type="text" name="gevent_description" value=""  class="form-control" required="" autocomplete="off" required />
+                </div>
+        				<div class="form-group" style="text-align: left;">
+        				  <label>Date from</label> <span class="form-required">*</span>
+        				  <input type="text" name="gevent_date_from" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
+        				</div>
+        				<div class="form-group" style="text-align: left;">
+        				  <label>Date to</label> <span class="form-required">*</span>
+        				  <input type="text" name="gevent_date_to" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
+        				</div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Start Time</label> <span class="form-required">*</span>
+                  <div class="form-group">
+                    <div class='input-group date' id='gevent-start-time'>
+                       <input type='text' name="gevent_start_time" class="form-control" />
+                       <span class="input-group-addon">
+                       <span class="fa fa-clock"></span>
+                       </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                  <label>End Time</label> <span class="form-required">*</span>
+                  <div class="form-group">
+                    <div class='input-group date' id='gevent-end-time'>
+                       <input type='text' name="gevent_end_time" class="form-control" />
+                       <span class="input-group-addon">
+                       <span class="fa fa-clock"></span>
+                       </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Customer Reminder Notification</label>
+                  <select name="notify_at" class="form-control">
+                      <?php foreach (get_notification_details() as $key => $notification) { ?>
+                          <?php if ($event->notify_at == $key) { ?>
+                              <option value="<?php echo $key ?>" selected><?php echo $notification ?></option>
+                          <?php } else { ?>
+                              <option value="<?php echo $key ?>"><?php echo $notification ?></option>
+                          <?php } ?>
+                      <?php } ?>
+                      <option value="0">None</option>
+                  </select>
+                </div>
+                <hr />
+                <div class="form-group" style="text-align: left;">
+                  <label>Customer</label> <span class="form-required">*</span>
+                  <select name="customer_id" id="google-business-customer" class="form-control select2-hidden-accessible" placeholder="Select customer" tabindex="-1" aria-hidden="true"></select>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Assigned to</label> <span class="form-required">*</span>
+                  <select name="user_id[]" id="google-assign-users" class="form-control">
+                      <option value="0" selected="selected">All employees</option>
+                  </select>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Type of Event</label> <span class="form-required">*</span>
+                  <select name="what_of_even" id="what_of_even" class="form-control">
+                      <option>SELECT</option>
+                      <option value="Service">Service</option>
+                      <option value="Service">Reasign</option>
+                      <option value="Service">Install</option>
+                  </select>
+                </div>
+				        <div class="create-gevent-validation-error" style="text-align: left;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -1193,6 +1240,72 @@ a.top-1 {
     $('#gevent-end-time').datetimepicker({
        format: 'LT',
        allowInputToggle: true
+    });
+
+    $('#google-business-customer').select2({
+        ajax: {
+            url: base_url + 'customer/json_dropdown_customer_list',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+        
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            cache: true
+          },
+          placeholder: 'Select customer',
+          minimumInputLength: 0,
+          templateResult: formatRepo,
+          templateSelection: formatRepoSelection
+    });
+
+    $('#google-assign-users').select2({
+        ajax: {
+            url: base_url + 'users/json_dropdown_user_list',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+        
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            cache: true
+          },
+          placeholder: 'Select user',
+          minimumInputLength: 0,
+          templateResult: formatRepoUser,
+          templateSelection: formatRepoSelectionUser
     });
 
 </script>

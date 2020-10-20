@@ -60,4 +60,14 @@ class Event_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getEventByGoogleEventId($google_event_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('gevent_id', $google_event_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
