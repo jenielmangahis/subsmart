@@ -280,7 +280,7 @@ a.top-1 {
         float: left !important;
     }
   }
-  .fc th, .fc td {
+  /*.fc th, .fc td {
     height: 108px;
   }
   .fc-direction-ltr .fc-timeline-slot {
@@ -289,7 +289,7 @@ a.top-1 {
   }
   .fc-timeline-slot-cushion{
     margin: 0 auto;
-  }
+  }*/
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
