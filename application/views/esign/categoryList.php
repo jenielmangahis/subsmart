@@ -195,6 +195,8 @@ input {
                     <?php } ?>
                 </tbody>
             </table>
+        <br/>
+        <a href="<?=base_url('esign/templateLibrary')?>">Back To Library</a>
         </div>    
     </section>
 

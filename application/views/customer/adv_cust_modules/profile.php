@@ -46,9 +46,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <img src="/assets/img/customer/images/dashboard-new.png" alt="1-click-import" width="25" height="35" style="padding-left: 2px;margin-top: -4px;">
                                 </div>
                                 <div class="contactrighttxt">
-                                    <a href="#" class="js-qwynlraxz">
-                                        1-Click Import and Audit</a><br>
+                                    <a href="<?= isset($profile_info) ? '/customer/index/tab3/'.  $profile_info->prof_id  .'/mt2' : '#' ?>" class="js-qwynlraxz">
+                                        1-Click Import and Audit<br>
                                     Pull reports &amp; create audit
+                                    </a>
                                 </div>
                             </div>
                         </div>

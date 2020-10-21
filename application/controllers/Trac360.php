@@ -54,7 +54,6 @@ class Trac360 extends MY_Controller {
                         $this->googlemaps->add_marker($marker);
                 }
 
-                $config['center'] = '49.164911,-123.17792';
                 $config['zoom'] = 13;
                 $config['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
 
@@ -73,6 +72,47 @@ class Trac360 extends MY_Controller {
                 $company_id = logged('company_id');
 
                 $return = $this->users_geographic_positions_model->getRowByWhere(array('user_id' => $uid,'company_id' => $company_id), 0, true);
+
+                echo json_encode($return);
+        }
+
+        public function getNewUsersGeoPosition(){
+                $company_id = logged('company_id');
+
+                $return = array(
+                        'users' => array(),
+                        'count' => 0
+                        );
+
+                if(isset($_POST['ids'])){
+                        $ids = $_POST['ids'];
+
+                        $sql = 'select '.
+
+                                'a.user_id, '.
+                                'a.latitude, '.
+                                'a.longitude, '.
+                                'a.category_id, '.
+                                'b.img_type, '.
+                                'b.FName, '.
+                                'b.LName, '.
+                                'c.category_tag '.
+
+                                'from users_geo_positions a '.
+
+                                'left join users b on b.id = a.user_id '.
+                                'left join users_geo_positions_categories c on c.id = a.category_id '.
+
+                                'where a.company_id = ' . $company_id . ' ' .
+                                  'and a.user_id not in('. $ids .') '.
+                                  
+                                'order by a.category_id';
+
+                        $users = $this->db->query($sql);
+
+                        $return['count'] = $users->num_rows();
+                        $return['users'] = $users->result_array();        
+                } 
 
                 echo json_encode($return);
         }

@@ -187,6 +187,7 @@ input {
                             <td>
                                 <a href="<?=base_url('esign/editTemplate?id='.$template['esignLibraryTemplateId'])?>"><i class="fa fa-edit"></i></a>
                                 <a class="trashColor" href="#"><i id="deleteId-<?=$template['esignLibraryTemplateId']?>" class="fa fa-trash"></i></a>
+                                <!-- <a><i class="fa fa-eye"></i></a> -->
                             </td>
                         </tr>
                     <?php } ?>
@@ -233,6 +234,9 @@ input {
                 });
             }
 
+            // $('#myTable tbody').on( 'click', 'i.fa-eye', function () {
+               
+            // });
             $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
                table
                 .row( $(this).parents('tr') )

@@ -93,8 +93,16 @@ $route['formbuilder/get-active-company-data'] = 'formBuilder/getActiveCompanyDat
 $route['form/submit/(:any)'] = 'formBuilder/submitForm/$1';
 
 // terms and conditions - Gene
-$route['terms-and-conditions/view'] = 'TermsAndConditions/view';
-
+$route['terms-and-conditions'] = 'TermsAndConditionsController';
+$route['terms-and-conditions/(:num)'] = 'TermsAndConditionsController/view/$1';
+$route['terms-and-conditions/edit/(:num)'] = 'TermsAndConditionsController/edit/$1';
+$route['terms-and-conditions/add'] = 'TermsAndConditionsController/add';
+// api
+$route['terms-and-conditions/get-all'] = 'TermsAndConditionsController/getAll';
+$route['terms-and-conditions/get-one-by-id/(:num)'] = 'TermsAndConditionsController/getOneByID/$1';
+$route['terms-and-conditions/update/(:num)'] = 'TermsAndConditionsController/update/$1';
+$route['terms-and-conditions/destroy/(:num)'] = 'TermsAndConditionsController/destroy/$1';
+$route['terms-and-conditions/create'] = 'TermsAndConditionsController/create';
 
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';

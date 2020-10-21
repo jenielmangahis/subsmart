@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>esign/css/responsive.css" />
     <!-- <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/    .min.css" rel="stylesheet"> -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://app.creditrepaircloud.com/application/js/jQuery/jqprint.js" language="javascript" type="text/javascript"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -37,6 +38,13 @@ legend {
 input {
   margin: 5px;
 }
+/* 
+@media screen,print
+{
+  .test {
+            background:#0F0; width:500px; height:200px;
+        }
+} */
 </style>
 </head>
 
@@ -188,11 +196,12 @@ input {
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
+                <div id="print" class="print form-group">
                     <textarea id="summernote" name="template"></textarea>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Submit">
+                    <button onclick="printHtml()"> Print </button>
                 </div>
             <?=form_close(); ?>
             <?php if(isset($_GET['isSuccess']) && $_GET['isSuccess'] == 1){ ?>
@@ -215,25 +224,29 @@ input {
                     {client_middle_name} - <b>Middle name of client</b><br>
                     {client_last_name} - <b>Last name of client</b><br>
                     {client_address} - <b>Address of client</b><br>
-                    {client_previous_address} - <b>Previous address of client</b><br>
-                    {bdate} - <b>Birth date of client</b><br>
-                    {ss_number} - <b>Last 4 of SSN of client</b><br>
-                    {t_no} - <b>Telephone number of client</b><br>
-                    {curr_date} - <b>Current date</b><br>
-                    {client_signature} - <b>Client's signature</b><br>
+                    {client_city} - <b>City of Client</b></br>
+                    {client_state} - <b>State of Client</b></br>
+                    {client_zip} - <b>Client Zip Code</b></br>
+                    {client_previous_address} - <b>Previous address of client</b></br>
+                    {bdate} - <b>Birth date of client</b></br>
+                    {ss_number} - <b>Last 4 of SSN of client</b></br>
+                    {t_no} - <b>Telephone number of client</b></br>
+                    {curr_date} - <b>Current date</b></br>
+                    {client_signature} - <b>Client's signature</b></br>
                 </div>	
                 <div style="padding-left:10px; float:left"> 	
-                    {bureau_name} - <b>Credit bureau name</b><br>
-                    {bureau_address} - <b>Credit bureau name and address</b><br>
-                    {account_number} - <b>Account number</b><br>	
-                    {dispute_item_and_explanation} - <b>Dispute items and explanation</b><br>
-                    {creditor_name} - <b>Creditor/Furnisher name</b><br>
-                    {creditor_address} - <b>Creditor/Furnisher address</b><br>
-                    {creditor_phone} - <b>Creditor/Furnisher phone number</b><br>
-                    {creditor_city} - <b>Creditor/Furnisher city</b><br>
-                    {creditor_state} - <b>Creditor/Furnisher state</b><br>
-                    {creditor_zip} - <b>Creditor/Furnisher zip</b><br>
-                    {report_number} - <b>Report number</b><br>
+                    {bureau_name} - <b>Credit bureau name</b></br>
+                    {bureau_address} - <b>Credit bureau name and address</b></br>
+                    {account_number} - <b>Account number</b></br>
+                    {dispute_item_and_explanation} - <b>Dispute items and explanation</b></br>
+                    {creditor_name} - <b>Creditor/Furnisher name</b></br>
+                    {creditor_address} - <b>Creditor/Furnisher address</b></br>
+                    {creditor_phone} - <b>Creditor/Furnisher phone number</b></br>
+                    {creditor_city} - <b>Creditor/Furnisher city</b></br>
+                    {creditor_state} - <b>Creditor/Furnisher state</b></br>
+                    {creditor_zip} - <b>Creditor/Furnisher zip</b></br>
+                    {report_number} - <b>Report number</b></br>
+                    {business_name} - <b>Clients Business name</b></br>
                 </div>
             </fieldset>
         </div>
@@ -266,9 +279,18 @@ input {
             }
             ?>
         });
+
+        function printHtml(){
+            let currentHtml = $('#summernote').summernote('code');
+            var a = window.open('', '_selfs', ''); 
+            a.document.write('<html>'); 
+            a.document.write('<body>'); 
+            a.document.write(currentHtml); 
+            a.document.write('</body></html>'); 
+            a.document.close(); 
+            a.print(); 
+        }
     </script>
 </body>
 </html>
-       
- <!--                // code : `<?=isset($template) ? $template->content : ""?>`
-  -->
+      

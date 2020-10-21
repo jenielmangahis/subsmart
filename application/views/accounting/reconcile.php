@@ -421,17 +421,23 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-4">
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
-                    <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+                    <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" id="myForm" method="post" name="myForm" enctype="multipart/form-data" target="hiddenFrame">
+                    
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
                                 <i class="fa fa-cloud-upload"></i>
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
-                            <input type="file" name="userfile" />
+                            <input type="file" name="userfile_editpopup" />
                             <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                            <input type="hidden" name="subfix" value="editpopup">
                         </div>
                     </div>
+                    </br>
+                    <button type="submit" class="form-control">Upload</button>
+                    </form>
                     </br>
                     <a href="#" onclick="showData()">Show existing</a>
                 </div>
