@@ -249,14 +249,19 @@
                         $analog_active = null;
                         $attn_id = null;
                         $expected_endbreak = null;
+                        $shift_end = 0;
+                        $overtime_status = 1;
                         foreach ($attendances as $attn){
                             $attn_id = $attn->id;
+                            $overtime_status = $attn->overtime_status;
                             foreach ($ts_logs_h as $log){
                                 if ($log->action == 'Check in' && $log->attendance_id == $attn->id){
                                     if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
                                         $clock_in = date('h:i A',$log->time);
+                                        $shift_end = $log->time;
                                     }elseif ($attn->date_in == date('Y-m-d')){
                                         $clock_in = date('h:i A',$log->time);
+                                        $shift_end = $log->time;
                                     }
                                     if ($attn->status == 1){
                                         $clock_out = 'Pending...';
@@ -284,9 +289,13 @@
                                     $shift_duration = $attn->shift_duration;
                                 }
                             }
-
-
                         }
+                        if (empty($expected_shift)){
+                            $shift_end += 28800 /* Clock-in time plus 8 hours */;
+                        }else{
+                            $shift_end = 0;
+                        }
+
                         $ts_settings = getEmpTSsettings();
                         $schedule = getEmpSched();
                         $expected_shift = 0;
@@ -329,7 +338,6 @@
 
                             }
                         }
-
                         ?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                             <input type="hidden" id="clock-end-time" value="<?php echo ($expected_endbreak)?$expected_endbreak:null; ?>">
@@ -341,6 +349,8 @@
                             <input type="hidden" id="employeePingEnd" value="<?php echo $over_notify;?>">
                             <input type="hidden" id="employeeOvertime" value="<?php echo $expected_endshift;?>">
                             <input type="hidden" id="timeDifference" value="<?php echo $time_difference;?>">
+                            <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end;?>">
+                            <input type="hidden" id="autoClockOut" value="<?php echo $overtime_status;?>">
                             <div class="icon-loader">
                                 <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
                             </div>

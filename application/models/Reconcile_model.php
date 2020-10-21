@@ -175,9 +175,9 @@ class Reconcile_model extends MY_Model {
 		$this->db->delete('accounting_reconcile_has_servicecharge');  
 	}
 
-	public function uploadfile($reconcile_id,$id,$filename,$filepath)
+	public function uploadfile($reconcile_id,$id,$filename,$filepath,$fileexe,$filedate)
 	{
-		$query="insert into accounting_uploadfiles values('',$reconcile_id,'$id','$filename','$filepath')";
+		$query="insert into accounting_uploadfiles values('',$reconcile_id,'$id','$filename','$filepath','$fileexe','$filedate')";
 		echo $this->db->query($query);	
 	}
 

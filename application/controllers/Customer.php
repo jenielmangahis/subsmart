@@ -61,6 +61,7 @@ class Customer extends MY_Controller
            // 'assets/frontend/js/creditcard.js',
            // 'assets/frontend/js/customer/add.js',
         ));
+       error_reporting(0);
     }
 
     public function leads()
@@ -771,10 +772,9 @@ class Customer extends MY_Controller
             $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
             $this->customer_ad_model->add($input,"ac_module_sort");
         }
+
+
         $userid = $this->uri->segment(4);
-
-        echo $userid;
-
         if(!isset($userid) || empty($userid)){
             $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
             if(!empty($get_id)){

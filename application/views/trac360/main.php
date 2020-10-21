@@ -91,12 +91,17 @@
 <script>
   $(document).ready(function(){
     initialAllLoadStateDone = false;
+    initialMapCenter = null;
 
     last_category_open = 0;
 
     groups = {};
     tracking = {};
     requests = {};
+
+    all_users = [];
+
+    new_records_checker = null;
 
     InitializeBody();
     InitializeMarkers();
@@ -165,8 +170,10 @@
           var category_id = 0;
           
           $.each(users, function(index, user){
+            all_users.push(user.user_id);
+
             if(category_id == user.category_id){
-              append += '<tr class="marker_'+ user.user_id +'">';
+              append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
                 append += '<td class="d-none">'+ user.user_id +'</td>';
                 append += '<td style="width: 65%">' + user.FName + ' ' + user.LName + '</td>';
                 append += '<td style="width: 17.5%" class="text-center">'+ user.latitude +'</td>';
@@ -209,7 +216,7 @@
                     append += '</tr>';
                   append += '</thead>';
                   append += '<tbody>';
-                    append += '<tr class="marker_'+ user.user_id +'">';
+                    append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
                       append += '<td class="d-none">'+ user.user_id +'</td>';
                       append += '<td style="width: 65%">' + user.FName + ' ' + user.LName + '</td>';
                       append += '<td style="width: 17.5%" class="text-center">'+ user.latitude +'</td>';
@@ -225,6 +232,12 @@
 
               addNewUserMarkerToMap(user, first_show);
 
+              if(initialMapCenter == null){
+                initialMapCenter = new google.maps.LatLng(user.latitude, user.longitude);
+
+                $("#trac360_table_"+ category_id + " > tbody").children('tr:eq(0)').addClass('table-primary');
+              }
+
               $("#trac360_card_table_"+ category_id).on('shown.bs.collapse', function () {
                 if(last_category_open > 0){
                   var last_group = groups[last_category_open]['members'];
@@ -235,11 +248,19 @@
                   });
                 }  
 
+                $('tr[gtype="user_trace"].table-primary').removeClass('table-primary');
+
                 var cur_group = groups[$(this).attr('categoryid')]['members'];
                 $.each(cur_group, function(index, member){
                   var cur_marker = markers_map[member.idx];
 
                   cur_marker.setVisible(true);
+
+                  if(index == 0){
+                    map.setCenter(cur_marker.position);
+
+                    $("#trac360_table_"+ category_id + " > tbody").children('tr:eq(0)').addClass('table-primary');
+                  }
                 });
 
                 last_category_open = $(this).attr('categoryid');
@@ -262,8 +283,36 @@
             });
 
             initialAllLoadStateDone = true;
+
+            map.setCenter(initialMapCenter);
           }  
         });
+
+        new_records_checker = setInterval(function(){
+          var ids = '';
+          for(var i = 0; i < all_users.length; i++){
+            if(ids == ''){
+              ids = all_users[i];
+            } else {
+              ids += ',' + all_users[i]; 
+            }
+          }
+
+          $.ajax({
+            type: 'POST',
+            url: base_url + "trac360/getnewusersgeoposition",
+            data: {ids:ids},
+            success: function(data){
+              var result = jQuery.parseJSON(data);
+              if(result.count > 0){
+                $.each(result.users, function(index, user){
+                  var table = $('#trac360_table_' + user.category_id);
+                   
+                });
+              }
+            }
+          });
+        }, 1500);
 
         hideProcessing();  
       }
@@ -334,10 +383,26 @@
     }, 1000);
 
     $('#trac360_table_'+ vUser.category_id +' > tbody').children('tr.marker_' + vUser.user_id).children('td').click(function(){
-      var marker_index = groups[vUser.category_id]['members'][vUser.user_id].idx;
-      var marker_user = markers_map[marker_index];
+      var table = $(this).closest('table');
+      var row = $(this).parent('tr');
 
-      
+      if(!row.hasClass('table-primary')){
+        if(table.children('tbody').children('tr.table-primary').length){
+          table.children('tbody').children('tr.table-primary').removeClass('table-primary');  
+        }
+
+        var lat = row.children('td:eq(2)').text();
+        var lng = row.children('td:eq(3)').text();
+
+        lat = lat.trim();
+        lng = lng.trim();
+
+        map.setCenter(new google.maps.LatLng(lat, lng));
+
+        row.addClass('table-primary');
+      } else {
+        row.removeClass('table-primary');
+      }
     });
   }
 

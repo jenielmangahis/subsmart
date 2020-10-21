@@ -168,8 +168,10 @@ class Reconcile extends MY_Controller {
             }
             $upload_data = $this->upload->data(); 
             $filename = $upload_data['file_name'];
+            $fileexe = pathinfo($filename, PATHINFO_EXTENSION);
+            $filedate = date('Y-d-m');
 
-            $this->reconcile_model->uploadfile($reconcile_id,$id,$filename,$filepath);
+            $this->reconcile_model->uploadfile($reconcile_id,$id,$filename,$filepath,$fileexe,$filedate);
 
             $this->index($id);
     }
@@ -318,16 +320,24 @@ class Reconcile extends MY_Controller {
         foreach ($datas['files'] as $data) {
 
         $html .= "<div class='existing-box'>
-                    <h4>".$data['filename']." <span>08/12/2020</span></h4>
-
-                    <div class='priview-img'>
+                    <h4>".$data['filename']." <span>".$data['filedate']."</span></h4>";
+                    if($data['fileexe']=='jpg' || $data['fileexe']=='jpeg' || $data['fileexe']=='png'){
+                    $html .="<div class='priview-img'>
                         <img src='". base_url().'uploads/'.$data['filename']."' alt='' style='    max-height: 64px;max-width: 64px;'>
-                    </div>
-
-                    <div class='act-br'>
-                        <a href='#' class='txbtn'>Add</a>
-                        <a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Preview</a>
-                    </div>
+                    </div>";
+                    }else{
+                    $html .="<div class='priview-img'>
+                        <img src='". base_url().'uploads/'.$data['filename']."' alt='' style='    max-height: 64px;max-width: 64px;'>
+                    </div>";
+                    }
+                    $html .="<div class='act-br'>
+                        <a href='#' class='txbtn'>Add</a>";
+                        if($data['fileexe']=='jpg' || $data['fileexe']=='jpeg' || $data['fileexe']=='png'){
+                            $html .="<a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Preview</a>";
+                            }else{
+                                $html .="<a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Download</a>";
+                                }
+                                $html .="</div>
                 </div>";
         }
         echo $html;
