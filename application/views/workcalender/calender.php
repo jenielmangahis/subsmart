@@ -711,10 +711,10 @@ a.top-1 {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="delete_schedule">Delete</button>
-                <button type="button" class="btn btn-primary" id="edit_schedule" style="display: none">Edit Schedule
+                <button type="button" class="btn btn-danger btn-event-delete" id="delete_schedule">Delete</button>
+                <button type="button" class="btn btn-primary btn-event-edit" id="edit_schedule" style="display: none">Edit Schedule
                 </button>
-                <button type="button" class="btn btn-primary" id="edit_workorder" style="display: none">Edit Wordorder
+                <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
                 </button>
             </div>
         </div>
@@ -936,15 +936,13 @@ a.top-1 {
             eventLimit: true, // allow "more" link when too many events
             events: events,
             eventClick: function (arg) {
-                
-                console.log(arg);
                 //console.log(arg.event._def.extendedProps);
 
                 $("#modalEventDetails").modal('show');
                 $('#modalEventDetails .modal-body').html("loading...");
 
                 var apiUrl = '';
-
+                var isGet  = 1;
                 if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
 
                     apiUrl = base_url + 'event/modal_details/' + arg.event._def.extendedProps.eventId;
@@ -953,6 +951,15 @@ a.top-1 {
                     $("#edit_workorder").hide();
 
                     $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);
+                }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
+                    apiUrl = base_url + 'workcalender/modal_gevent_details';
+                    isGet = 0;
+                    var gData = {
+                      'gevent_id' : arg.event._def.extendedProps.geventID,
+                      'title' : arg.event._def.extendedProps.description,
+                      'start_date' : arg.event._def.extendedProps.start,
+                      'end_date' : arg.event._def.extendedProps.end,
+                    };
                 } else {
 
                     apiUrl = base_url + 'workcalender/short_details/' + arg.event._def.extendedProps.wordOrderId;
@@ -963,20 +970,42 @@ a.top-1 {
                     $("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
                 }
 
-                jQuery.ajax({
-                    url: apiUrl,
-                    // dataType: 'json',
-                    data: '',
-                    beforeSend: function () {
-                        jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
-                    },
-                    success: function (response) {
+                if( isGet == 1 ){
+                  jQuery.ajax({
+                      url: apiUrl,
+                      // dataType: 'json',
+                      data: '',
+                      beforeSend: function () {
+                          jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
+                      },
+                      success: function (response) {
 
-                        // console.log(response);
+                          // console.log(response);
+                          $(".btn-event-edit").show();
+                          $(".btn-event-delete").show();
+                          $(".btn-event-edit-workorder").show();
+                          $("#modalEventDetails").find('.modal-body').html(response);
+                      }
+                  });
+                }else{
+                  jQuery.ajax({
+                      url: apiUrl,
+                      type: "POST",
+                      data: gData,
+                      beforeSend: function () {
+                          jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
+                      },
+                      success: function (response) {
 
-                        $("#modalEventDetails").find('.modal-body').html(response);
-                    }
-                });
+                          // console.log(response);
+                          $(".btn-event-edit").hide();
+                          $(".btn-event-delete").hide();
+                          $(".btn-event-edit-workorder").hide();
+                          $("#modalEventDetails").find('.modal-body').html(response);
+                      }
+                  });
+                }
+                
             },
             loading: function (isLoading) {
               if (isLoading) {
