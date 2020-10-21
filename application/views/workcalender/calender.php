@@ -280,16 +280,16 @@ a.top-1 {
         float: left !important;
     }
   }
-  /*.fc th, .fc td {
-    height: 108px;
+  .fc-timeline-lane, .fc-resource {
+    height: 102px;
   }
-  .fc-direction-ltr .fc-timeline-slot {
+  #calendar .fc-direction-ltr .fc-timeline-slot {
     vertical-align: middle;
     text-align: center;
   }
-  .fc-timeline-slot-cushion{
+  #calendar .fc-timeline-slot-cushion{
     margin: 0 auto;
-  }*/
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
