@@ -381,6 +381,14 @@ class Users_model extends MY_Model {
     public function addProfilePhoto($photo){
 	    $this->db->insert('user_profile_photo',$photo);
 	    return $this->db->insert_id();
+	}
+	
+
+	public function getAllUserId(){
+        $this->db->select('id');
+        $this->db->from($this->table);
+        $query = $this->db->get();
+        return $query->result_array();
     }
 }
 

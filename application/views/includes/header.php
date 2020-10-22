@@ -257,11 +257,11 @@
                             foreach ($ts_logs_h as $log){
                                 if ($log->action == 'Check in' && $log->attendance_id == $attn->id){
                                     if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                        $clock_in = date('h:i A',$log->time);
-                                        $shift_end = $log->time;
+                                        $clock_in = date('h:i A',$log->date_created);
+                                        $shift_end = $log->date_created;
                                     }elseif ($attn->date_in == date('Y-m-d')){
-                                        $clock_in = date('h:i A',$log->time);
-                                        $shift_end = $log->time;
+                                        $clock_in = date('h:i A',$log->date_created);
+                                        $shift_end = $log->date_created;
                                     }
                                     if ($attn->status == 1){
                                         $clock_out = 'Pending...';
@@ -283,17 +283,12 @@
                                         }
                                     }
                                 }
-                                if ($log->action == 'Check out' && $log->attendance_id == $attn->id && $log->date == date('Y-m-d')){
-                                    $clock_out = date('h:i A',$log->time);
+                                if ($log->action == 'Check out' && $log->attendance_id == $attn->id && date('Y-m-d',$log->date_created) == date('Y-m-d')){
+                                    $clock_out = date('h:i A',$log->date_created);
                                     $analog_active = null;
-                                    $shift_duration = $attn->shift_duration;
+                                    $shift_duration = floatval($attn->shift_duration);
                                 }
                             }
-                        }
-                        if (empty($expected_shift)){
-                            $shift_end += 28800 /* Clock-in time plus 8 hours */;
-                        }else{
-                            $shift_end = 0;
                         }
 
                         $ts_settings = getEmpTSsettings();
@@ -326,22 +321,30 @@
                                         if ($u_notify->user_id == $sched->user_id){
                                             if ($u_notify->title == 'Your shift will begin soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
                                                 $sched_notify = 0;
-                                                $expected_shift = 0;
                                             }
                                         }
                                         if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d',strtotime($u_notify->date_created)) == $start){
                                             $over_notify = 0;
-                                            $expected_endshift = 0;
                                         }
                                     }
                                 }
 
                             }
                         }
+                        if (empty($expected_shift) && $shift_end > 0 && empty($expected_endshift)){
+                            $shift_end += (28800); /* Clock-in time plus 8 hours */;
+                        }else{
+                            $shift_end = null;
+                        }
+                        if ($analog_active == null){
+                            $shift_end = null;
+                            $overtime_status = null;
+                            $expected_endshift = null;
+                        }
+
                         ?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                             <input type="hidden" id="clock-end-time" value="<?php echo ($expected_endbreak)?$expected_endbreak:null; ?>">
-                            <!--                                <input type="hidden" id="clock-server-time" value="">-->
                             <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break')?1:0; ?>">
                             <input type="hidden" id="attendanceId" value="<?php echo $attn_id;?>">
                             <input type="hidden" id="employeeShiftStart" value="<?php echo (!empty($expected_shift))?$expected_shift:0;?>">
@@ -398,9 +401,11 @@
                                     if( !@getimagesize($image) ){
                                         $image = base_url('uploads/users/default.png');
                                     }*/
-                                    $image = base_url('uploads/users/default.png');
+                                    // $image = base_url('uploads/users/default.png');
                                     ?>
-                                    <img src="<?php echo $image; ?>" alt="user" class="rounded-circle nav-user-img">
+                                    <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle nav-user-img">
+
+                                    <!-- <img src="<?php //echo $image; ?>" alt="user" class="rounded-circle nav-user-img"> -->
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                     <a class="dropdown-item" href="<?php echo url('dashboard')?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>

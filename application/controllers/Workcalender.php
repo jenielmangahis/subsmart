@@ -268,6 +268,7 @@ class Workcalender extends MY_Controller
         }  
 
         $enabled_calendar = array();
+        $enabled_mini_calendar = array();
         $calendar_list    = array();
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
         if( $google_user_api ){
@@ -971,6 +972,7 @@ class Workcalender extends MY_Controller
                             }
 
                             if( $event->summary != '' ){
+                                $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['resourceId'] = "user17";
                                 $resources_user_events[$inc]['title'] = $event->summary;
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
@@ -1171,6 +1173,13 @@ class Workcalender extends MY_Controller
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function modal_gevent_details()
+    {
+        $post = $this->input->post();
+        $this->page_data['gevent'] = $post;
+        $this->load->view('workcalender/gevent_details', $this->page_data);
     }
 }
 

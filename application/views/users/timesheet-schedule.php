@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         text-align: center!important;
         font-size: 14px!important;
         font-weight: bold!important;
+        padding: 10px;
     }
     #ts_schedule_tbl .day{
         background: #d6e6f3;

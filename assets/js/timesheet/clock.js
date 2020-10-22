@@ -30,7 +30,7 @@ $(document).ready(function () {
         });
     });
     $(document).on('click','#clockIn',function () {
-        var selected = this;
+        let selected = this;
         Swal.fire({
             title: 'Clock in?',
             html: "Are you sure you want to Clock-in?",
@@ -47,6 +47,7 @@ $(document).ready(function () {
                dataType:'json',
                // data:{clock_in:clock_in},
                success:function (data) {
+                   console.log('test');
                     if (data != null){
                         $(selected).attr('id','clockOut');
                         $('.clock').addClass('clock-active');
@@ -102,6 +103,8 @@ $(document).ready(function () {
                         $('#shiftDuration').text(data.shift_duration);
                         $('#userShiftDuration').text(data.shift_duration);
                         $('.employeeLunch').attr('id',null).attr('disabled',true);
+                        $('#unScheduledShift').val(null);
+                        $('#autoClockOut').val(null);
                         Swal.fire(
                             {
                                 showConfirmButton: false,
@@ -180,7 +183,7 @@ $(document).ready(function () {
                 url:'/timesheet/lunchOutEmployee',
                 type:"POST",
                 dataType:'json',
-                data:{attn_id:attn_id,remaining_time:remaining_time},
+                data:{attn_id:attn_id,remaining_time:remaining_time,end:end},
                 success:function (data) {
                     if (data != null){
                         notificationRing();
@@ -264,8 +267,8 @@ $(document).ready(function () {
         }
     });
     });
-    var start_sched = (function() {
-        var executed = false;
+    let start_sched = (function() {
+        let executed = false;
         return function() {
             if (!executed) {
                 executed = true;
@@ -291,8 +294,8 @@ $(document).ready(function () {
             }
         };
     })();
-    var overtime = (function() {
-        var executed = false;
+    let overtime = (function() {
+        let executed = false;
         return function() {
             if (!executed) {
                 executed = true;
@@ -318,68 +321,169 @@ $(document).ready(function () {
             }
         };
     })();
-    function overtimeTimer(){
-        var attn_id = $('#attendanceId').val();
-        let timerInterval;
-        Swal.fire({
-            title: 'Do you want to overtime?',
-            icon:'question',
-            html:'Auto close after <strong></strong> seconds',
-            showDenyButton: true,
-            confirmButtonText: `Yes,I want to`,
-            denyButtonText: `Let's call it a day`,
-            allowOutsideClick: false,
-            timer: 600000,
-            timerProgressBar: true,
-            willOpen: () => {
-            const content = Swal.getContent();
-        const $ = content.querySelector.bind(content);
-        timerInterval = setInterval(() => {
-            if((Swal.getTimerLeft() / 1000).toFixed(0) >= 0){
-            Swal.getContent().querySelector('strong').textContent = (Swal.getTimerLeft() / 1000).toFixed(0);
-            }else{
-                clearInterval(timerInterval);
-            }
-        }, 100);
-    },
-        willClose: () => {
-            clearInterval(timerInterval)
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire('Work more!', '', 'success');
-        } else if (result.isDenied) {
-            Swal.fire('To tired, I am out for now.', '', 'info');
-        }
-        if (result.dismiss === Swal.DismissReason.timer) {
-            $.ajax({
-                url:'/timesheet/clockOutEmployee',
-                type:"POST",
-                dataType:'json',
-                data:{attn_id:attn_id},
-                success:function (data) {
-                    if (data != null){
-                        $(selected).attr('id',null);
-                        $('.clock').removeClass('clock-active');
-                        $('.out').text(data.clock_out_time);
-                        $('#userClockOut').text(data.clock_out_time);
-                        $('#shiftDuration').text(data.shift_duration);
-                        $('#userShiftDuration').text(data.shift_duration);
-                        $('.employeeLunch').attr('id',null).attr('disabled',true);
-                        Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                html: "You are now Clock-out",
-                                icon: 'success'
-                            });
+
+    let overtimeTimer = (function() {
+        let executed = false;
+        return function() {
+            if (!executed) {
+                executed = true;
+                let attn_id = $('#attendanceId').val();
+                let timerInterval;
+                Swal.fire({
+                    title: 'Do you want to overtime?',
+                    icon:'question',
+                    html:'Auto close after <strong></strong> seconds',
+                    showDenyButton: true,
+                    confirmButtonText: `Yes,I want to`,
+                    denyButtonText: `Let's call it a day`,
+                    allowOutsideClick: false,
+                    timer: 600000,
+                    timerProgressBar: true,
+                    willOpen: () => {
+                        const content = Swal.getContent();
+                        const $ = content.querySelector.bind(content);
+                        timerInterval = setInterval(() => {
+                            if((Swal.getTimerLeft() / 1000).toFixed(0) >= 0){
+                                Swal.getContent().querySelector('strong').textContent = (Swal.getTimerLeft() / 1000).toFixed(0);
+                            }else{
+                                clearInterval(timerInterval);
+                            }
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
                     }
+                }).then((result) => {
+                    let status = 0;
+                    if (result.isConfirmed) {
+                        status = 1;
+                        $.ajax({
+                            url:"/timesheet/overtimeApproval",
+                            type:"POST",
+                            dataType:"json",
+                            data:{attn_id:attn_id,status:status},
+                            success:function (data) {
+                                if (data == 1){
+                                    $('#autoClockOut').val(1);
+                                    Swal.fire(
+                                        {
+                                            showConfirmButton: false,
+                                            timer: 2000,
+                                            title: 'Success',
+                                            html: "You can now work more without auto Clock-out.",
+                                            icon: 'success'
+                                        });
+                                }
+                            }
+                        });
+                    } else if (result.isDenied) {
+                        status = 0;
+                        $.ajax({
+                            url:"/timesheet/overtimeApproval",
+                            type:"POST",
+                            dataType:"json",
+                            data:{attn_id:attn_id,status:status},
+                            success:function (data) {
+                                if (data == 1){
+                                    $('#autoClockOut').val(0);
+                                    Swal.fire(
+                                        {
+                                            showConfirmButton: false,
+                                            timer: 2000,
+                                            title: 'Success',
+                                            html: "You will automatically Clock-out once the end of shift comes.",
+                                            icon: 'success'
+                                        });
+                                }
+                            }
+                        });
+                    }
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        $.ajax({
+                            url:'/timesheet/clockOutEmployee',
+                            type:"POST",
+                            dataType:'json',
+                            data:{attn_id:attn_id},
+                            success:function (data) {
+                                if (data != null){
+                                    // $(selected).attr('id',null);
+                                    $('.clock').removeClass('clock-active');
+                                    $('.out').text(data.clock_out_time);
+                                    $('#userClockOut').text(data.clock_out_time);
+                                    $('#shiftDuration').text(data.shift_duration);
+                                    $('#userShiftDuration').text(data.shift_duration);
+                                    $('.employeeLunch').attr('id',null).attr('disabled',true);
+                                    Swal.fire(
+                                        {
+                                            showConfirmButton: false,
+                                            timer: 2000,
+                                            title: 'Success',
+                                            html: "You are now Clock-out",
+                                            icon: 'success'
+                                        });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        };
+    })();
+
+
+    let autoClockOut = (function() {
+        let executed = false;
+        return function() {
+            if (!executed) {
+                executed = true;
+                let attn_id = $('#attendanceId').val();
+                let expected_end_shift = $('#employeeOvertime').val();
+                if (expected_end_shift == '' || expected_end_shift < 1){
+                    expected_end_shift = $('#unScheduledShift').val();
                 }
-            });
-        }
-    });
-    }
+                let time_diff = $('#timeDifference').val();
+                let end_shift = new Date(expected_end_shift * 1000);
+                let time = end_shift.setHours(end_shift.getHours() - (time_diff));
+                $.ajax({
+                    url:"/timesheet/clockOutEmployee",
+                    type:"POST",
+                    dataType:'json',
+                    data:{attn_id:attn_id,time:time},
+                    success:function (data) {
+                        console.log(time);
+                        if (data != null){
+                            // $(selected).attr('id',null);
+                            $('#unScheduledShift').val(null);
+                            $('.clock').removeClass('clock-active');
+                            $('.out').text(data.clock_out_time);
+                            $('#userClockOut').text(data.clock_out_time);
+                            $('#shiftDuration').text(data.shift_duration);
+                            $('#userShiftDuration').text(data.shift_duration);
+                            $('.employeeLunch').attr('id',null).attr('disabled',true);
+                            $('#employeeOvertime').val(null);
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    html: "You are now Clock-out",
+                                    icon: 'success'
+                                });
+                        }else{
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Failed',
+                                    html: "Something is wrong in the process",
+                                    icon: 'warning'
+                                });
+                        }
+                    }
+                })
+            }
+        };
+    })();
 
 
     //Live Clock JS
@@ -398,12 +502,13 @@ $(document).ready(function () {
         sec.style.transform = 'rotateZ(' + ss + 'deg)';
         //Check if there is an schedule
         //Start shift notify
+        let current_time = day.getTime();
         let emp_shift = $('#employeeShiftStart').val();
         let emp_overtime = $('#employeeOvertime').val();
         let sched_notify = $('#employeePingStart').val();
         let over_notify = $('#employeePingEnd').val();
-        let current_time = day.getTime();
         let time_diff = $('#timeDifference').val();
+        let overtime_status = $('#autoClockOut').val();
 
         if (emp_shift > 0 && parseInt(sched_notify) > 0){
             var a = new Date(emp_shift * 1000);
@@ -414,15 +519,43 @@ $(document).ready(function () {
             }
         }
         // End shift notify
-        if (emp_overtime > 0 && parseInt(over_notify) > 0){
-            var c = new Date(emp_overtime * 1000);
+        if (emp_overtime > 0 && overtime_status > 0){
+            let c = new Date(emp_overtime * 1000);
             c.setMinutes(c.getMinutes() - 10);
-            var d = c.setHours(c.getHours() - (time_diff));
+            let d = c.setHours(c.getHours() - (time_diff));
             if(current_time >= d){
+                overtimeTimer();
+            }
+            if (current_time >= d && parseInt(over_notify) > 0){
                 overtime();
+            }
+        }
+        //Employee without schedule
+            let shift_end = $('#unScheduledShift').val();
+        if (overtime_status > 0 && shift_end > 0){
+            let f = new Date(shift_end * 1000);
+            f.setMinutes(f.getMinutes() - 10);
+            let g = f.setHours(f.getHours() - (time_diff));
+            if (current_time >= g){
+                // overtime();
                 overtimeTimer();
             }
         }
+
+        //Auto Clock out
+            if (shift_end != '' && overtime_status < 1){
+               let end_shift = new Date(shift_end * 1000);
+               let end_of_shift = end_shift.setHours(end_shift.getHours());
+               if (end_of_shift <=  current_time){
+                    autoClockOut();
+               }
+            }else if(emp_overtime != '' && overtime_status < 1){
+                let end_shift = new Date(emp_overtime * 1000);
+                let end_of_shift = end_shift.setHours(end_shift.getHours() - (time_diff));
+                if (end_of_shift <= current_time){
+                    autoClockOut();
+                }
+            }
 
         });
     }

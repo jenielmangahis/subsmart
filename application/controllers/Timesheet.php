@@ -39,37 +39,37 @@ class Timesheet extends MY_Controller {
 	}
 
 	// added for tracking Timesheet of employees: Single Employee View
-	public function timesheet_user()
-	{	
-		$this->load->model('timesheet_model');
-		$this->load->model('users_model');
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		$this->page_data['users'] = $this->users_model->getUsers();
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-		
-		$this->load->view('users/timesheet-user', $this->page_data);
-	}
+//	public function timesheet_user()
+//	{
+//		$this->load->model('timesheet_model');
+//		$this->load->model('users_model');
+//		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+//		$this->page_data['users'] = $this->users_model->getUsers();
+//		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+//
+//		$this->load->view('users/timesheet-user', $this->page_data);
+//	}
 
 	// added for tracking Timesheet of employees: Attendance View / Admin View
-	public function timesheet()
-	{	
-		$this->load->model('timesheet_model');
-		$this->load->model('users_model');
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		$this->page_data['users'] = $this->users_model->getUsers();
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-
-		// get total numbers of "In" employees
-		$this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
-		// get total numbers of "Out" employees
-		$this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
-		// get total numbers of "Not Logged In Today" employees
-		$this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
-		// get total numbers of "Not Logged In Today" employees
-		$this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
-		
-		$this->load->view('users/timesheet-admin', $this->page_data);
-	}
+//	public function timesheet()
+//	{
+//		$this->load->model('timesheet_model');
+//		$this->load->model('users_model');
+//		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+//		$this->page_data['users'] = $this->users_model->getUsers();
+////		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+//
+//		// get total numbers of "In" employees
+//		$this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
+//		// get total numbers of "Out" employees
+//		$this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
+//		// get total numbers of "Not Logged In Today" employees
+//		$this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
+//		// get total numbers of "Not Logged In Today" employees
+//		$this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
+//
+//		$this->load->view('users/timesheet-admin', $this->page_data);
+//	}
 
 	// added for tracking Timesheet of employees: Schedule View
 	public function employee()
@@ -82,7 +82,6 @@ class Timesheet extends MY_Controller {
 
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
 //        $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
 //        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
@@ -116,7 +115,7 @@ class Timesheet extends MY_Controller {
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+//		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		$date_this_week = array(
             "Monday" => date("M d,y",strtotime('monday this week')),
             "Tuesday" => date("M d,y",strtotime('tuesday this week')),
@@ -139,7 +138,7 @@ class Timesheet extends MY_Controller {
         $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
         $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
 
-        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+//        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
@@ -167,12 +166,11 @@ class Timesheet extends MY_Controller {
         $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
         $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
 
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+//		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['timesheet_settings'] = $this->timesheet_model->getTimeSheetSettings();
         $this->page_data['timesheet_day'] = $this->timesheet_model->getTimeSheetDay();
-        $this->page_data['user_logged'] = $this->checkLogin();
+//        $this->page_data['user_logged'] = $this->checkLogin();
 
 		$date_this_week = array(
             "Monday" => date("M d",strtotime('monday this week')),
@@ -201,8 +199,7 @@ class Timesheet extends MY_Controller {
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
 		$this->page_data['users'] = $this->users_model->getUsers();
-		
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+
 
 		$this->load->view('users/timelog', $this->page_data);
 	}
@@ -216,31 +213,6 @@ class Timesheet extends MY_Controller {
 		$total_clockin = $this->timesheet_model->getTotalClockinDay($data);
 	}
 
-	// function to calculate total logged time of user: weekly
-	public function total_logged_week(){
-		$this->load->model('timesheet_model');
-		$data = array(
-			'user_id' => $this->input->post('clockin_user_id'),
-		);
-		$total_clockin = $this->timesheet_model->getTotalClockinWeek($data);
-	}
-
-	// function to calculate total logged time of user: monthly
-	public function total_logged_month(){
-		$this->load->model('timesheet_model');
-		$data = array(
-			'user_id' => $this->input->post('clockin_user_id'),
-		);
-		$total_clockin = $this->timesheet_model->getTotalClockinMonth($data);
-	}
-
-	
-
-	public function add_timesheet_entry()
-	{
-		//ifPermissions('users_add');
-		$this->load->view('users/add_timesheet_entry', $this->page_data);
-	}
 
 	public function tracklocation()
 	{	
@@ -879,13 +851,13 @@ class Timesheet extends MY_Controller {
         $week = $this->input->get('week');
         $week_convert = date('Y-m-d',strtotime($week));
         $date_this_week = array(
-            "Monday" => date("M d,y",strtotime('monday this week',strtotime($week_convert))),
-            "Tuesday" => date("M d,y",strtotime('tuesday this week',strtotime($week_convert))),
-            "Wednesday" => date("M d,y",strtotime('wednesday this week',strtotime($week_convert))),
-            "Thursday" => date("M d,y",strtotime('thursday this week',strtotime($week_convert))),
-            "Friday" => date("M d,y",strtotime('friday this week',strtotime($week_convert))),
-            "Saturday" => date("M d,y",strtotime('saturday this week',strtotime($week_convert))),
-            "Sunday" => date("M d,y",strtotime('sunday this week',strtotime($week_convert))),
+            "Monday" => date("M d",strtotime('monday this week',strtotime($week_convert))),
+            "Tuesday" => date("M d",strtotime('tuesday this week',strtotime($week_convert))),
+            "Wednesday" => date("M d",strtotime('wednesday this week',strtotime($week_convert))),
+            "Thursday" => date("M d",strtotime('thursday this week',strtotime($week_convert))),
+            "Friday" => date("M d",strtotime('friday this week',strtotime($week_convert))),
+            "Saturday" => date("M d",strtotime('saturday this week',strtotime($week_convert))),
+            "Sunday" => date("M d",strtotime('sunday this week',strtotime($week_convert))),
         );
         $week_check = array(
             0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
@@ -1379,7 +1351,6 @@ class Timesheet extends MY_Controller {
 
         $this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
         $this->page_data['users'] = $this->users_model->getUsers();
-//        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
         $this->page_data['total_users'] = $this->users_model->getTotalUsers();
         $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
@@ -1416,9 +1387,10 @@ class Timesheet extends MY_Controller {
 
     public function checkingInEmployee(){
         $user_id = $this->input->post('id');
+        $company_id = $this->input->post('company_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $query = $this->timesheet_model->checkInEmployee($user_id,$entry,$approved_by);
+        $query = $this->timesheet_model->checkInEmployee($user_id,$entry,$approved_by,$company_id);
         if ($query != 0){
             echo json_encode($query);
         }elseif($query == false){
@@ -1428,11 +1400,12 @@ class Timesheet extends MY_Controller {
 
     public function checkingOutEmployee(){
         $user_id = $this->input->post('id');
+        $company_id = $this->input->post('company_id');
         $attn_id = $this->input->post('attn_id');
 //        $week_id = $this->input->post('week_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $query = $this->timesheet_model->checkingOutEmployee($user_id,$attn_id,$entry,$approved_by);
+        $query = $this->timesheet_model->checkingOutEmployee($user_id,$attn_id,$entry,$approved_by,$company_id);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -1442,10 +1415,11 @@ class Timesheet extends MY_Controller {
 
     public function breakIn(){
         $user_id = $this->input->post('id');
+        $company_id = $this->input->post('company_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
         $end_break = $this->input->post('end_of_break');
-        $query = $this->timesheet_model->breakIn($user_id,$entry,$approved_by,$end_break);
+        $query = $this->timesheet_model->breakIn($user_id,$entry,$approved_by,$end_break,$company_id);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -1454,9 +1428,10 @@ class Timesheet extends MY_Controller {
     }
     public function breakOut(){
         $user_id = $this->input->post('id');
+        $company_id = $this->input->post('company_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $query = $this->timesheet_model->breakOut($user_id,$entry,$approved_by);
+        $query = $this->timesheet_model->breakOut($user_id,$entry,$approved_by,$company_id);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -1917,6 +1892,13 @@ class Timesheet extends MY_Controller {
         $friday = null;
         $saturday = null;
         $sunday = null;
+        $monday_sched = 'No data';
+        $tuesday_sched = 'No data';
+        $wednesday_sched ='No data';
+        $thursday_sched = 'No data';
+        $friday_sched = 'No data';
+        $saturday_sched = 'No data';
+        $sunday_sched = 'No data';
         $day_id_mon = null;
         $day_id_tue = null;
         $day_id_wed = null;
@@ -1925,13 +1907,13 @@ class Timesheet extends MY_Controller {
         $day_id_sat = null;
         $day_id_sun = null;
         $date_this_week = array(
-            "Monday" => date("M d,y",strtotime('monday this week',strtotime($week_convert))),
-            "Tuesday" => date("M d,y",strtotime('tuesday this week',strtotime($week_convert))),
-            "Wednesday" => date("M d,y",strtotime('wednesday this week',strtotime($week_convert))),
-            "Thursday" => date("M d,y",strtotime('thursday this week',strtotime($week_convert))),
-            "Friday" => date("M d,y",strtotime('friday this week',strtotime($week_convert))),
-            "Saturday" => date("M d,y",strtotime('saturday this week',strtotime($week_convert))),
-            "Sunday" => date("M d,y",strtotime('sunday this week',strtotime($week_convert))),
+            "Monday" => date("M d",strtotime('monday this week',strtotime($week_convert))),
+            "Tuesday" => date("M d",strtotime('tuesday this week',strtotime($week_convert))),
+            "Wednesday" => date("M d",strtotime('wednesday this week',strtotime($week_convert))),
+            "Thursday" => date("M d",strtotime('thursday this week',strtotime($week_convert))),
+            "Friday" => date("M d",strtotime('friday this week',strtotime($week_convert))),
+            "Saturday" => date("M d",strtotime('saturday this week',strtotime($week_convert))),
+            "Sunday" => date("M d",strtotime('sunday this week',strtotime($week_convert))),
         );
         $date_week_check = array(
             0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
@@ -1970,37 +1952,44 @@ class Timesheet extends MY_Controller {
             foreach ($timesheet_day as $days){
                     if ($days->day == "Monday"){
                         $day_id_mon = $days->id;
-                        $monday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $monday_sched = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $monday = $days->duration."h";;
                     }elseif ($days->day == "Tuesday"){
                         $day_id_tue = $days->id;
-                        $tuesday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $tuesday_sched = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $tuesday = $days->duration."h";;
                     }elseif ($days->day == "Wednesday"){
                         $day_id_wed = $days->id;
-                        $wednesday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $wednesday_sched = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $wednesday = $days->duration."h";
                     }elseif ($days->day == "Thursday"){
                         $day_id_thu = $days->id;
-                        $thursday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $thursday_sched = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $thursday = $days->duration."h";;
                     }elseif ($days->day == "Friday"){
                         $day_id_fri = $days->id;
-                        $friday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $friday_sched = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $friday = $days->duration."h";;
                     }elseif ($days->day == "Saturday"){
                         $day_id_sat = $days->id;
-                        $saturday =date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $saturday_sched =date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $saturday = $days->duration."h";;
                     }elseif ($days->day == "Sunday"){
                         $day_id_sun = $days->id;
-                        $sunday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $sunday_sched = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
+                        $sunday = $days->duration."h";
                     }
             }
 
             $display .= '<tr data-id="'.$timesheet_id.'" id="tsSettingsRow">';
-                $display .= '<td style="min-width: 100px"><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->project_name).'</span><a href="#" id="showProjectData" data-toggle="tooltip" title="Edit/View" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->project_name).'"><i class="fa fa-pencil-alt"></i></a></td>';
-                $display .= '<td><input type="text" name="monday" data-day="Monday" id="tsMonday" data-date="'.$date_week_check[0].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_mon.'" data-user="'.$user_id.'" value="'.$monday.'" readonly></td>';
-                $display .= '<td><input type="text" name="tuesday" data-day="Tuesday" id="tsTuesday" data-date="'.$date_week_check[1].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_tue.'" data-user="'.$user_id.'" value="'.$tuesday.'" readonly></td>';
-                $display .= '<td><input type="text" name="wednesday" data-day="Wednesday" id="tsWednesday" data-date="'.$date_week_check[2].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_wed.'" data-user="'.$user_id.'" value="'.$wednesday.'" readonly></td>';
-                $display .= '<td><input type="text" name="thursday" data-day="Thursday" id="tsThursday" data-date="'.$date_week_check[3].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_thu.'" data-user="'.$user_id.'" value="'.$thursday.'" readonly></td>';
-                $display .= '<td><input type="text" name="friday" data-day="Friday" id="tsFriday" data-date="'.$date_week_check[4].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_fri.'" data-user="'.$user_id.'" value="'.$friday.'" readonly></td>';
-                $display .= '<td><input type="text" name="saturday" data-day="Saturday" id="tsSaturday" data-date="'.$date_week_check[5].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sat.'" data-user="'.$user_id.'" value="'.$saturday.'" readonly></td>';
-                $display .= '<td><input type="text" name="sunday" data-day="Sunday" id="tsSunday" data-date="'.$date_week_check[6].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sun.'" data-user="'.$user_id.'" value="'.$sunday.'" readonly></td>';
+                $display .= '<td style="min-width: 100px"><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->project_name).'</span><a href="#" id="showProjectData" data-toggle="tooltip" title="" data-original-title="test" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->project_name).'"><i class="fa fa-pencil-alt"></i></a></td>';
+                $display .= '<td><input type="text" name="monday" data-day="Monday" id="tsMonday" data-date="'.$date_week_check[0].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_mon.'" data-user="'.$user_id.'" value="'.$monday.'" readonly><span class="duration-tip">'.$monday_sched.'</span></td>';
+                $display .= '<td><input type="text" name="tuesday" data-day="Tuesday" id="tsTuesday" data-date="'.$date_week_check[1].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_tue.'" data-user="'.$user_id.'" value="'.$tuesday.'" readonly><span class="duration-tip">'.$tuesday_sched.'</span></td>';
+                $display .= '<td><input type="text" name="wednesday" data-day="Wednesday" id="tsWednesday" data-date="'.$date_week_check[2].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_wed.'" data-user="'.$user_id.'" value="'.$wednesday.'" readonly><span class="duration-tip">'.$wednesday_sched.'</span></td>';
+                $display .= '<td><input type="text" name="thursday" data-day="Thursday" id="tsThursday" data-date="'.$date_week_check[3].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_thu.'" data-user="'.$user_id.'" value="'.$thursday.'" readonly><span class="duration-tip">'.$thursday_sched.'</span></td>';
+                $display .= '<td><input type="text" name="friday" data-day="Friday" id="tsFriday" data-date="'.$date_week_check[4].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_fri.'" data-user="'.$user_id.'" value="'.$friday.'" readonly><span class="duration-tip">'.$friday_sched.'</span></td>';
+                $display .= '<td><input type="text" name="saturday" data-day="Saturday" id="tsSaturday" data-date="'.$date_week_check[5].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sat.'" data-user="'.$user_id.'" value="'.$saturday.'" readonly><span class="duration-tip">'.$saturday_sched.'</span></td>';
+                $display .= '<td><input type="text" name="sunday" data-day="Sunday" id="tsSunday" data-date="'.$date_week_check[6].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sun.'" data-user="'.$user_id.'" value="'.$sunday.'" readonly><span class="duration-tip">'.$sunday_sched.'</span></td>';
                 $display .= '<td><span class="totalWeek" id="totalWeekDuration'.$timesheet_id.'">'.$timesheet_duration_w.'h</span></td>';
                 $display .= '<td><a href="#" id="removeProject" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->project_name).'"><i class="fa fa-times fa-lg"></i></a></td>';
             $display .= '</tr>';
@@ -2012,6 +2001,13 @@ class Timesheet extends MY_Controller {
             $friday = null;
             $saturday = null;
             $sunday = null;
+            $monday_sched = 'No data';
+            $tuesday_sched = 'No data';
+            $wednesday_sched ='No data';
+            $thursday_sched = 'No data';
+            $friday_sched = 'No data';
+            $saturday_sched = 'No data';
+            $sunday_sched = 'No data';
             $day_id_mon = null;
             $day_id_tue = null;
             $day_id_wed = null;
@@ -2131,39 +2127,27 @@ class Timesheet extends MY_Controller {
 
 
     }
-    public function serverTime(){
-	    $duration = '60 minute';
-	    $query = $this->db->get_where('user_break',array('user_id'=>$this->session->userdata('logged')['id'],'date'=>date('Y-m-d')));
-	    if ($query->num_rows() == 1){
-            $result = $query->result();
-            $remaining_time = explode(":",$result[0]->duration);
-            $duration = $remaining_time[0].' minute '.$remaining_time[1].' second';
-        }
-
-	    $date_time = date('M d, Y H:i:s');
-        $end_time = date('M d, Y H:i:s', strtotime($duration));
-	    $data = new stdClass();
-	    $data->date_time = $date_time;
-	    $data->end_time = $end_time;
-	    echo json_encode($data);
-    }
+//    public function serverTime(){
+//	    $duration = '60 minute';
+//	    $query = $this->db->get_where('user_break',array('user_id'=>$this->session->userdata('logged')['id'],'date'=>date('Y-m-d')));
+//	    if ($query->num_rows() == 1){
+//            $result = $query->result();
+//            $remaining_time = explode(":",$result[0]->duration);
+//            $duration = $remaining_time[0].' minute '.$remaining_time[1].' second';
+//        }
+//
+//	    $date_time = date('M d, Y H:i:s');
+//        $end_time = date('M d, Y H:i:s', strtotime($duration));
+//	    $data = new stdClass();
+//	    $data->date_time = $date_time;
+//	    $data->end_time = $end_time;
+//	    echo json_encode($data);
+//    }
     public function clockInEmployee(){
 	    $clock_in = time();
 	    $user_id = $this->session->userdata('logged')['id'];
-//        $check_week = $this->db->get_where('ts_weekly_total_shift',array('user_id' => $user_id,'week_of'=>date('Y-m-d',strtotime('monday this week'))));
-//        if ($check_week->num_rows() == 1){
-//            $week_id = $check_week->row()->id;
-//        }else{
-//            $week_insert = array(
-//                'user_id' => $user_id,
-//                'week_of' => date('Y-m-d',strtotime('monday this week')),
-//                'total_shift' => 0
-//            );
-//            $this->db->insert('ts_weekly_total_shift',$week_insert);
-//            $week_id = $this->db->insert_id();
-//        }
+
         $attendance = array(
-//            'week_id' => $week_id,
             'user_id' => $user_id,
             'date_in' => date('Y-m-d'),
             'date_out' => date('Y-m-d'),
@@ -2171,17 +2155,19 @@ class Timesheet extends MY_Controller {
         );
         $this->db->insert('timesheet_attendance',$attendance);
         $attn_id = $this->db->insert_id();
+        $check_attendance = $this->db->get_where('timesheet_attendance',array('id'=>$attn_id));
+        if ($check_attendance->num_rows() == 1){
+            $logs_insert = array(
+                'attendance_id' => $attn_id,
+                'user_id' => $user_id,
+                'action' => 'Check in',
+                'date_created' => $clock_in,
+                'entry_type' => 'Normal',
+                'company_id' => getLoggedCompanyID()
+            );
+            $this->db->insert('timesheet_logs',$logs_insert);
+        }
 
-        $logs_insert = array(
-            'attendance_id' => $attn_id,
-            'user_id' => $user_id,
-            'action' => 'Check in',
-            'date' => date('Y-m-d'),
-            'time' => $clock_in,
-            'entry_type' => 'Normal',
-            'status' => 1
-        );
-        $this->db->insert('timesheet_logs',$logs_insert);
         if($this->db->affected_rows() != 1){
             echo json_encode(0);
         }else{
@@ -2196,7 +2182,14 @@ class Timesheet extends MY_Controller {
 
     public function clockOutEmployee(){
         $attn_id = $this->input->post('attn_id');
-        $clock_out = time();
+        $clock_out = 0;
+        $sched_clockOut = $this->input->post('time');
+        if ($sched_clockOut == 0 || $sched_clockOut == null){
+            $clock_out = time();
+        }else{
+            $clock_out = ($sched_clockOut / 1000);
+        }
+
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance',array('id' => $attn_id,'user_id' => $user_id));
         if ($check_attn->num_rows() == 1){
@@ -2204,10 +2197,9 @@ class Timesheet extends MY_Controller {
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
-                'date' => date('Y-m-d'),
-                'time' => $clock_out,
+                'date_created' => $clock_out,
                 'entry_type' => 'Normal',
-                'status' => 1
+                'company_id' => getLoggedCompanyID()
             );
             $this->db->insert('timesheet_logs',$out);
             $shift_duration = $this->timesheet_model->calculateShiftDuration($attn_id);
@@ -2223,8 +2215,6 @@ class Timesheet extends MY_Controller {
             $this->db->where('id',$attn_id);
             $this->db->update('timesheet_attendance',$update);
             $affected_row = $this->db->affected_rows();
-            //Update weekly total duration
-//            $this->timesheet_model->updateWeeklyReport($check_attn->row()->week_id,$user_id,$attn_id);
 
             if($affected_row != 1){
                 echo json_encode(0);
@@ -2251,7 +2241,7 @@ class Timesheet extends MY_Controller {
             'date' => date('Y-m-d'),
             'time' => $lunch_in,
             'entry_type' => 'Normal',
-            'status' => 1
+            'company_id' => getLoggedCompanyID()
         );
         $this->db->insert('timesheet_logs',$lunch);
         //Update timesheet_attendance end of lunch break
@@ -2268,6 +2258,11 @@ class Timesheet extends MY_Controller {
     public function lunchOutEmployee(){
         $attn_id = $this->input->post('attn_id');
         $remaining_time = $this->input->post('remaining_time');
+        if (explode(':',$remaining_time)[1] <= 0){
+            $lunch_out = $this->input->post('end');
+        }else{
+            $lunch_out = time();
+        }
         $lunch_out = time();
         $user_id = $this->session->userdata('logged')['id'];
         $check = $this->db->get_where('timesheet_logs',array('attendance_id'=>$attn_id,'action'=>'Break out'));
@@ -2279,7 +2274,7 @@ class Timesheet extends MY_Controller {
                 'date' => date('Y-m-d'),
                 'time' => $lunch_out,
                 'entry_type' => 'Normal',
-                'status' => 1
+                'company_id' => getLoggedCompanyID()
             );
             $this->db->insert('timesheet_logs',$lunch);
         }
@@ -2309,6 +2304,19 @@ class Timesheet extends MY_Controller {
         $data->remaining = $remaining_time;
         $data->notifications = $notification;
         echo json_encode($data);
+    }
+
+    public function overtimeApproval(){
+	    $status = $this->input->post('status');
+	    $attn_id = $this->input->post('attn_id');
+        $attendance = $this->db->get_where('timesheet_attendance',array('id'=>$attn_id));
+        if ($attendance->num_rows() == 1){
+            $update=array('overtime_status'=>$status);
+            $this->db->where('id',$attn_id);
+            $this->db->update('timesheet_attendance',$update);
+            echo json_encode(1);
+        }
+
     }
 
     public function notifyStartSchedule(){

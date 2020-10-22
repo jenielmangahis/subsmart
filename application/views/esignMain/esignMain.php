@@ -2,14 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
-<style type="text/css">
-	img{
-		min-width: 75px;
-		padding: 20px;
-	}
-	div.col-md-2{
-	}
-</style>
 <!-- page wrapper start -->
 <div class="wrapper">
 	<br/>

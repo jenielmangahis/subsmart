@@ -10,10 +10,6 @@ class Timesheet_model extends MY_Model {
     private $attn_tbl = 'timesheet_attendance';
     private $tbl_ts_settings = 'timesheet_settings';
 
-//    public function clockIn($data)
-//    {
-//        $this->db->insert($this->table, $data);
-//    }
     public function getNotifyCount(){
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('user_notification',array('user_id'=>$user_id,'status'=>1))->num_rows();
@@ -110,7 +106,7 @@ class Timesheet_model extends MY_Model {
         }
     }
 
-    public function checkInEmployee($user_id,$entry,$approved_by){
+    public function checkInEmployee($user_id,$entry,$approved_by,$company_id){
         $attn_id = $this->attendance($user_id,1,0,null,null,null);
         $qry = $this->db->get_where($this->db_table,array('attendance_id'=>$attn_id,'action' => 'Check in'));
         if ($qry->num_rows() == 0){
@@ -118,11 +114,10 @@ class Timesheet_model extends MY_Model {
                 'attendance_id'=> $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check in',
-                'date' => date('Y-m-d'),
-                'time' => time(),
+                'date_created' => time(),
                 'entry_type' => $entry,
                 'approved_by' => $approved_by,
-                'status' => 1,
+                'company_id' => $company_id
             );
             $this->db->insert($this->db_table,$data);
             return $attn_id;
@@ -130,18 +125,17 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
-    public function checkingOutEmployee($user_id,$attn_id,$entry,$approved_by){
+    public function checkingOutEmployee($user_id,$attn_id,$entry,$approved_by,$company_id){
         $qry = $this->db->get_where($this->db_table,array('attendance_id'=> $attn_id,'action' => 'Check in'));
         if ($qry->num_rows() == 1){
             $data = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
-                'date' => date('Y-m-d'),
-                'time' => time(),
+                'date_created' => time(),
                 'entry_type' => $entry,
                 'approved_by' => $approved_by,
-                'status' => 1,
+                'company_id' => $company_id
             );
             $this->db->insert($this->db_table,$data);
             $shift = $this->calculateShiftDuration($attn_id);
@@ -154,59 +148,59 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
-    public function updateWeeklyReport($week_ID,$user_id,$attn_id){
-        $weekly_duration = 0;
-        $weekly_break = 0;
-        $weekly_overtime = 0;
-        $get_attendance = $this->db->get_where('timesheet_attendance',array('week_id'=>$week_ID))->result();
-        foreach ($get_attendance as $total){
-            $weekly_duration += $total->shift_duration;
-            $weekly_break += $total->break_duration;
-            $weekly_overtime += $total->overtime;
-        }
-        $get_weekly = $this->db->get_where('ts_weekly_total_shift',array('id'=>$week_ID));
-        if ($get_weekly->week_of != date("Y-m-d",strtotime('monday this week'))){
-            $insert = array(
-                'user_id' => $user_id,
-                'week_of' => date("Y-m-d",strtotime('monday this week')),
-            );
-            $this->db->insert('ts_weekly_total_shift',$insert);
-            $w_ID = $this->db->insert_id();
-            //update week id
-            $update_attn = array(
-                'week_id' => $w_ID,
-            );
-            $this->db->where('id',$attn_id);
-            $this->db->update('timesheet_attendance',$update_attn);
-            //Recalculate total
-            $update_week = array(
-                'total_shift' => $this->calculateShiftDuration($attn_id),
-                'total_break' => $this->calculateBreakDuration($attn_id),
-                'total_overtime' => $this->calculateOvertime($user_id,$attn_id)
-            );
-            $this->db->where('id',$w_ID);
-            $this->db->update('ts_weekly_total_shift',$update_week);
-
-        }else{
-            $weekly_update = array(
-                'total_shift' => $weekly_duration,
-                'total_break' => $weekly_break,
-                'total_overtime' => $weekly_overtime
-            );
-            $this->db->where('id',$week_ID);
-            $this->db->update('ts_weekly_total_shift',$weekly_update);
-        }
-
-    }
+//    public function updateWeeklyReport($week_ID,$user_id,$attn_id){
+//        $weekly_duration = 0;
+//        $weekly_break = 0;
+//        $weekly_overtime = 0;
+//        $get_attendance = $this->db->get_where('timesheet_attendance',array('week_id'=>$week_ID))->result();
+//        foreach ($get_attendance as $total){
+//            $weekly_duration += $total->shift_duration;
+//            $weekly_break += $total->break_duration;
+//            $weekly_overtime += $total->overtime;
+//        }
+//        $get_weekly = $this->db->get_where('ts_weekly_total_shift',array('id'=>$week_ID));
+//        if ($get_weekly->week_of != date("Y-m-d",strtotime('monday this week'))){
+//            $insert = array(
+//                'user_id' => $user_id,
+//                'week_of' => date("Y-m-d",strtotime('monday this week')),
+//            );
+//            $this->db->insert('ts_weekly_total_shift',$insert);
+//            $w_ID = $this->db->insert_id();
+//            //update week id
+//            $update_attn = array(
+//                'week_id' => $w_ID,
+//            );
+//            $this->db->where('id',$attn_id);
+//            $this->db->update('timesheet_attendance',$update_attn);
+//            //Recalculate total
+//            $update_week = array(
+//                'total_shift' => $this->calculateShiftDuration($attn_id),
+//                'total_break' => $this->calculateBreakDuration($attn_id),
+//                'total_overtime' => $this->calculateOvertime($user_id,$attn_id)
+//            );
+//            $this->db->where('id',$w_ID);
+//            $this->db->update('ts_weekly_total_shift',$update_week);
+//
+//        }else{
+//            $weekly_update = array(
+//                'total_shift' => $weekly_duration,
+//                'total_break' => $weekly_break,
+//                'total_overtime' => $weekly_overtime
+//            );
+//            $this->db->where('id',$week_ID);
+//            $this->db->update('ts_weekly_total_shift',$weekly_update);
+//        }
+//
+//    }
     public function calculateShiftDuration($attn_id){
         $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
         $start_time = 0;
         $end_time = 0;
         foreach ($qry as $time){
             if ($time->action == 'Check in'){
-                $start_time = $time->time;
+                $start_time = $time->date_created;
             }elseif($time->action == 'Check out'){
-                $end_time = $time->time;
+                $end_time = $time->date_created;
             }
         }
         $diff = ($end_time - $start_time)/3600;
@@ -218,9 +212,9 @@ class Timesheet_model extends MY_Model {
         $end_time = 0;
         foreach ($qry as $time){
             if ($time->action == 'Break in'){
-                $start_time = $time->time;
+                $start_time = $time->date_created;
             }elseif($time->action == 'Break out'){
-                $end_time = $time->time;
+                $end_time = $time->date_created;
             }
         }
         $diff = ($end_time - $start_time)/3600;
@@ -237,6 +231,7 @@ class Timesheet_model extends MY_Model {
         $query = $this->db->get_where('ts_settings_day',array('user_id'=>$user_id,'start_date'=>date('Y-m-d')));
         $hired_type = $this->db->get_where('users',array('id'=>$user_id));
         $min_duration = 0;
+        $overtime = 0;
         if ($hired_type->row()->status == 1){
             $min_duration = 8;
         }else{
@@ -244,58 +239,53 @@ class Timesheet_model extends MY_Model {
         }
         if ($query->num_rows() == 1){
             $sched = $query->row()->duration;
-            if ($shift >= $sched){
-                $overtime = $shift - $sched;
-            }else{
-                $overtime = 0;
-            }
+            $overtime = $shift - $sched;
         }else{
             $overtime = $shift - $min_duration;
         }
         return round($overtime,2);
     }
-    private function totalHoursShift($user_id,$week_ID){
-        $total_shift = 0;
-        if ($week_ID != 0){
-            $qry = $this->db->get_where($this->attn_tbl,array('week_id'=>$week_ID))->result();
-            foreach ($qry as $shift){
-                $total_shift += $shift->shift_duration;
-            }
-        }
-
-        //Inserting or Updating weekly total shift
-        $tbl_total_shift = $this->db->get_where('ts_weekly_total_shift',array('user_id'=>$user_id,'week_of'=>date("Y-m-d",strtotime('monday this week'))));
-        if ($tbl_total_shift->num_rows() == 0){
-            $insert = array(
-                'user_id' => $user_id,
-                'week_of' => (date('D',strtotime('tomorrow')) == "Mon")?date("Y-m-d",strtotime('monday next week')):date("Y-m-d",strtotime('monday this week')),
-                'total_shift' => $total_shift
-            );
-            $this->db->insert('ts_weekly_total_shift',$insert);
-            return $this->db->insert_id();
-        }else{
-            if ($week_ID != 0){
-                $update = array(
-                    'total_shift' => $total_shift
-                );
-                $this->db->where('id',$week_ID);
-                $this->db->update('ts_weekly_total_shift',$update);
-            }
-            return $tbl_total_shift->row()->id;
-        }
-    }
-    public function breakIn($user_id,$entry,$approved_by,$end_break){
+//    private function totalHoursShift($user_id,$week_ID){
+//        $total_shift = 0;
+//        if ($week_ID != 0){
+//            $qry = $this->db->get_where($this->attn_tbl,array('week_id'=>$week_ID))->result();
+//            foreach ($qry as $shift){
+//                $total_shift += $shift->shift_duration;
+//            }
+//        }
+//
+//        //Inserting or Updating weekly total shift
+//        $tbl_total_shift = $this->db->get_where('ts_weekly_total_shift',array('user_id'=>$user_id,'week_of'=>date("Y-m-d",strtotime('monday this week'))));
+//        if ($tbl_total_shift->num_rows() == 0){
+//            $insert = array(
+//                'user_id' => $user_id,
+//                'week_of' => (date('D',strtotime('tomorrow')) == "Mon")?date("Y-m-d",strtotime('monday next week')):date("Y-m-d",strtotime('monday this week')),
+//                'total_shift' => $total_shift
+//            );
+//            $this->db->insert('ts_weekly_total_shift',$insert);
+//            return $this->db->insert_id();
+//        }else{
+//            if ($week_ID != 0){
+//                $update = array(
+//                    'total_shift' => $total_shift
+//                );
+//                $this->db->where('id',$week_ID);
+//                $this->db->update('ts_weekly_total_shift',$update);
+//            }
+//            return $tbl_total_shift->row()->id;
+//        }
+//    }
+    public function breakIn($user_id,$entry,$approved_by,$end_break,$company_id){
         //Get timesheet_attendance id
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
         $data = array(
             'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break in',
-            'date' => date('Y-m-d'),
-            'time' => time(),
+            'date_created' => time(),
             'entry_type' => $entry,
             'approved_by' => $approved_by,
-            'status' => 1
+            'company_id' => $company_id
         );
         $this->db->insert($this->db_table,$data);
         //Update timesheet_attendance expected end break
@@ -305,17 +295,16 @@ class Timesheet_model extends MY_Model {
         return true;
     }
 
-    public function breakOut($user_id,$entry,$approved_by){
+    public function breakOut($user_id,$entry,$approved_by,$company_id){
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
         $data = array(
             'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break out',
-            'date' => date('Y-m-d'),
-            'time' => time(),
+            'date_created' => time(),
             'entry_type' => $entry,
             'approved_by' => $approved_by,
-            'status' => 1
+            'company_id' => $company_id
         );
         $this->db->insert($this->db_table,$data);
         return true;
@@ -336,424 +325,6 @@ class Timesheet_model extends MY_Model {
         }
         $qry = $this->db->get('timesheet_logs');
         return $qry->result();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function clockOut($data)
-    {
-        $this->db->insert($this->table, $data);
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function manualClockIn($data)
-    {
-        //dd($data);die;
-        $this->db->insert($this->table, $data);
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getClockIn($data)
-    {
-        $user_id = $data['user_id'];
-        //$sql = "SELECT * FROM timesheet WHERE id = ? LIMIT 1";
-        //$query = $db->query($sql, [$user_id]);
-
-
-        $todaysDate = date("Y-m-d"); # or any other date
-
-        $this->db->select('*');
-        //$this->db->distinct();
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->like('timestamp', $todaysDate);
-        //$this->db->where('action', "Clock In");
-        $this->db->order_by('timestamp', 'ASC');
-        $this->db->limit(2);
-        $query = $this->db->get();
-        // $this->db->select('*');
-        // $this->db->from($this->table);
-        // $this->db->where('employees_id', $user_id);
-        // $this->db->where('action', 'Clock In');
-        // $this->db->order_by('timestamp', 'DESC');
-        // $this->db->limit(1);
-        // $query = $this->db->get();
-
-        return $query->result();
-
-        // dd($query->result());die;
-        
-    }
-    /**
-     * @return mixed
-     */
-    public function getClockInTimelog($data)
-    {
-        $user_id = $data['user_id'];
-        //$sql = "SELECT * FROM timesheet WHERE id = ? LIMIT 1";
-        //$query = $db->query($sql, [$user_id]);
-
-
-        $todaysDate = date("Y-m-d"); # or any other date
-
-        $this->db->select('*');
-        //$this->db->distinct();
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->like('timestamp', $todaysDate);
-        //$this->db->where('action', "Clock In");
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(2);
-        $query = $this->db->get();
-        // $this->db->select('*');
-        // $this->db->from($this->table);
-        // $this->db->where('employees_id', $user_id);
-        // $this->db->where('action', 'Clock In');
-        // $this->db->order_by('timestamp', 'DESC');
-        // $this->db->limit(1);
-        // $query = $this->db->get();
-
-        return $query->result();
-
-        // dd($query->result());die;
-        
-    }
-    /**
-     * @return mixed
-     */
-    public function getClockInToday($data)
-    {
-        $user_id = $data['user_id'];
-        //$sql = "SELECT * FROM timesheet WHERE id = ? LIMIT 1";
-        //$query = $db->query($sql, [$user_id]);
-
-
-        $todaysDate = date("Y-m-d"); # or any other date
-
-        $this->db->select('*');
-        //$this->db->distinct();
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        //$this->db->like('timestamp', $todaysDate);
-        //$this->db->where('action', "Clock In");
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(6);
-        $query = $this->db->get();
-        // $this->db->select('*');
-        // $this->db->from($this->table);
-        // $this->db->where('employees_id', $user_id);
-        // $this->db->where('action', 'Clock In');
-        // $this->db->order_by('timestamp', 'DESC');
-        // $this->db->limit(1);
-        // $query = $this->db->get();
-
-        return $query->result();
-
-        // dd($query->result());die;
-        
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClockOut($data)
-    {
-        $user_id = $data['user_id'];
-        //$sql = "SELECT * FROM timesheet WHERE id = ? LIMIT 1";
-        //$query = $db->query($sql, [$user_id]);
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->where('action', "Clock Out");
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();
-
-       /*$this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('id', $user_id);
-        $this->db->order_by('clock_in', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();*/
-        
-
-        return $query->result();
-        
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClockIns()
-    {
-
-        /*$parent_id = getLoggedUserID();
-        $cid=logged('comp_id');
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('company_id', $parent_id);
-        $this->db->or_where('id', $parent_id);
-        $this->db->or_where('company_id',$cid );
-        // $this->db->where('role !=', 1);
-        $query = $this->db->get();
-        // echo $this->db->last_query(); die;
-        return $query->result();*/
-
-        // edited using the new column names
-        $parent_id = getLoggedUserID();
-        $cid=logged('company_id');
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $parent_id);
-        $this->db->or_where('company_id',$cid );
-        // $this->db->where('role !=', 1);
-        $query = $this->db->get();
-        // echo $this->db->last_query(); die;
-        return $query->result();
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClockOuts($id)
-    {
-        $parent_id = getLoggedUserID();
-        $cid=logged('company_id');
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('company_id', $parent_id);
-        $this->db->or_where('id', $parent_id);
-        $this->db->or_where('company_id',$cid );
-        // $this->db->where('role !=', 1);
-        $query = $this->db->get();
-        // echo $this->db->last_query(); die;
-        return $query->result();
-    }
-
-    
-    /**
-     * @return mixed
-     */
-    public function updateClockin($id)
-    {
-        $parent_id = getLoggedUserID();
-        $cid=logged('company_id');
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('company_id', $parent_id);
-        $this->db->or_where('id', $parent_id);
-        $this->db->or_where('company_id',$cid );
-        // $this->db->where('role !=', 1);
-        $query = $this->db->get();
-        // echo $this->db->last_query(); die;
-        return $query->result();
-    }    
-
-    /**
-     * @return mixed
-     */
-    public function getLastClockin($data)
-    {
-        $user_id = $data['user_id'];
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->where('action', "Clock In");
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();
-
-       /*$this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('id', $user_id);
-        $this->db->order_by('clock_in', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();*/
-        
-
-        return $query->result();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLastClockout($data)
-    {
-        $user_id = $data['user_id'];
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->where('action', "Clock Out");
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();
-
-       /*$this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('id', $user_id);
-        $this->db->order_by('clock_in', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();*/
-        
-
-        return $query->result();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTotalClockinDay($data){
-        $user_id = $data['user_id'];
-        $date = $data['date'];
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->where('action', "Clock In");
-        $this->db->like('timestamp', $date);
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
-        $query_clockin = $this->db->get();
-        $query_clockin = $query_clockin->result();
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->where('action', "Clock Out");
-        $this->db->like('timestamp', $date);
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
-        $query_clockout = $this->db->get();
-        $query_clockout = $query_clockout->result();
-
-        if( !empty($query_clockin) && !empty($query_clockout)){
-            // Convert each date to its equivalent timestamp
-            $clockin_date = strtotime($query_clockin[0]->timestamp);
-            $clockout_date = strtotime($query_clockout[0]->timestamp);
-            // Divide the timestamp by (60*60) to get the number of hours.
-            //As the difference between two dates might be negative, we use absolute function, abs(), to get the value only. Then, we divided it by 60*60 to get the hours.
-            $totalhours = abs($clockout_date - $clockin_date)/(60*60);
-        }
-        else{
-            $totalhours = 0;
-        }
-
-        
-        //print_r($totalhours);
-        return $totalhours;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTotalClockinWeek($data){
-        $user_id = $data['user_id'];
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->where('action', "Clock In");
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTotalClockinMonth($data){
-        $user_id = $data['user_id'];
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('employees_id', $user_id);
-        $this->db->where('action', "Clock In");
-        $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTotalInEmployees(){
-        $todaysDate = date("Y-m-d"); # or any other date
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->like('timestamp', $todaysDate);
-        $this->db->where('action', "Clock In");
-        $query = $this->db->get();
-
-        return $query->num_rows();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTotalOutEmployees(){
-        $todaysDate = date("Y-m-d"); # or any other date
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->like('timestamp', $todaysDate);
-        $this->db->where('action', "Clock Out");
-        $query = $this->db->get();
-
-        return $query->num_rows();
-    }
-    /**
-     * @return mixed
-     */
-    public function getTotalNotLoggedInTodayEmployees(){
-        //$this->load->model('users_model');
-        $todaysDate = date("Y-m-d"); # or any other date
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->like('timestamp', $todaysDate);
-        $this->db->where('action', "Clock In");
-        $query = $this->db->get();
-        $loggedintoday = $query->num_rows();
-
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('id !=', 1);
-        $query = $this->db->get();
-        $totalemployees = $query->num_rows();
-
-        $totalnotloggedintoday = $totalemployees - $loggedintoday;
-        return $totalnotloggedintoday;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTotalEmployees(){
-        //$this->load->model('users_model');
-        //$todaysDate = date("Y-m-d"); # or any other date
-
-        $this->db->select('*');
-        $this->db->from('users');
-        /*$this->db->where('id !=', 1);*/
-        $query = $this->db->get();
-        return $query->num_rows();
     }
 
     public function getTotalUsersLoggedIn(){
@@ -782,10 +353,6 @@ class Timesheet_model extends MY_Model {
         $query = $this->db->get('timesheet_attendance')->result();
         return $query;
     }
-//    public function getInNowData(){
-//        $query = $this->db->get_where($this->db_table,array('action'=>'Check in'));
-//        return $query->result();
-//    }
     public function getTimeSettingsByUser(){
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('timesheet_settings',array('user_id'=>$user_id));
