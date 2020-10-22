@@ -268,6 +268,7 @@ class Workcalender extends MY_Controller
         }  
 
         $enabled_calendar = array();
+        $enabled_mini_calendar = array();
         $calendar_list    = array();
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
         if( $google_user_api ){

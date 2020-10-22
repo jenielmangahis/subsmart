@@ -237,10 +237,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #addProject:hover{
         text-decoration: underline;
     }
+    #tsSettingsRow .ts-duration + .duration-tip{
+        display: none;
+        min-width: 90px;
+        padding: 10px 0;
+        text-align: center;
+        border-radius: 2px;
+        background-color: #0000008a;
+        color: #ffffff;
+        position: absolute;
+        z-index: 20;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        margin-top: 10px;
+    }
+    #tsSettingsRow .ts-duration + .duration-tip::after{
+        content: " ";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #0000008a transparent;
+    }
+    #tsSettingsRow .ts-duration:hover + .duration-tip{
+        display: block;
+    }
 </style>
-<?php
-    //dd(logged());die;
-?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
     <!-- page wrapper start -->
@@ -255,18 +278,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol> -->
                     </div>
-                    <!-- <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php if (hasPermissions('users_add')): ?>
-                                    <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
-                                    </a>
-                                <?php endif ?>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
@@ -378,7 +389,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <option></option>
                         </select>
                     </div>
-                    <div class="form-group countrySectionEmp">
+                    <div class="form-group countrySectionEmp hiddenSection">
                         <label for="tsTimezone">Timezone</label>
                         <select name="timezone" class="form-control" id="tsTimezone">
                             <option></option>
@@ -396,13 +407,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </form>
             </div>
         </div>
-    </div>
-</div>
-
-
-<div class="alert-message">
-    <div class="alert alert-success">
-        <strong>Success!</strong> You've updated a duration.
     </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
@@ -472,16 +476,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
             }
         });
+        //Load dataTable
+        let selected_week = $('#ts-sorting-week').val();
+        let user_id = $('#tsUsersList').val();
+        $('#timesheet_settings').ready(showWeekList(selected_week,user_id));
 
         //Country selector
         // $('#tsLocation').countrySelect();
         // Timezone picker
         $('#tsTimezone').select2({placeholder: 'Select Timezone',allowClear: true}).timezones().val(null);
 
-
-        var selected_week = $('#ts-sorting-week').val();
-        var user_id = $('#tsUsersList').val();
-        $('#timesheet_settings').ready(showWeekList(selected_week,user_id));
         //Datetime picker
         $(".ts-start-date").datepicker();
         $(".ts-settings-datepicker").datepicker();
@@ -670,6 +674,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 data:{values:values,duration:duration,date:date},
                 success:function (data) {
+                    $('#timesheet_settings').DataTable().destroy();
                     showWeekList(week,user_id);
                     if(data === 1){
                         $("#createProject").modal('hide');

@@ -333,7 +333,8 @@ class Reconcile extends MY_Controller {
                     $html .="<div class='act-br'>
                         <a href='#' class='txbtn'>Add</a>";
                         if($data['fileexe']=='jpg' || $data['fileexe']=='jpeg' || $data['fileexe']=='png'){
-                            $html .="<a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Preview</a>";
+                            //$html .="<a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Preview</a>";
+                             $html .="<a href='#preview' onClick='show_preview(".$data['id'].")' class='txbtn previewbtn' data-toggle='modal' data-target='#previewModal' data-image='".$data['filename']."' id='previewid_".$data['id']."'>Preview</a>";
                             }else{
                                 $html .="<a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Download</a>";
                                 }

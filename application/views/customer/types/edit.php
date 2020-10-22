@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <input type="text" class="form-control"
                                                        name="title"
                                                        id="title"
-                                                       value="<?php echo (isset($old_data['title']))?$old_data['title']:(!empty($customerTypes)) ? $customerTypes->title : '' ?>"
+                                                       value="<?php echo (isset($old_data['title'])) ? $old_data['title'] : ((!empty($customerTypes)) ? $customerTypes->name : '') ?>"
                                                        required
                                                        placeholder="Enter title" autofocus/>
                                                 <?php if(isset($custom_errors['title']) && $custom_errors['title']!='' ) { ?>

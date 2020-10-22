@@ -148,6 +148,20 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     </div>
     <!-- End Hold Popup -->
 
+    <!-- Preview Popup -->
+    <div id="overlay-preview-tx" class=""></div>
+    <div id="side-menu-preview-tx" class="main-side-nav">
+        <div class="side-title">
+            <a id="close-menu-preview-tx" class="menuCloseButton" onclick="closePreview()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        
+        <div class="mainMenu nav">
+            <img src="" name="previewImage" class="img-responsive" id="previewImage">
+        </div>
+    </div>
+    <!-- End Preview Popup -->
+
 
     <!-- Add Custom Tax Sidebar -->
     <div id="overlay-cus-tx" class=""></div>
@@ -422,7 +436,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
                     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
-                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" id="myForm" method="post" name="myForm" enctype="multipart/form-data" target="hiddenFrame">
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" id="uploadmy" method="post" name="myForm" enctype="multipart/form-data" target="hiddenFrame">
                     
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
@@ -4212,4 +4226,40 @@ function closeAddaccount()
        $(".recurr_service_charge").text(maintot_recurr.toFixed(2));
        $("#recurr_service_charge").val(maintot_recurr.toFixed(2));
     });
+</script>
+<script type="text/javascript">
+    function show_preview(id)
+    {
+        var image=$('#previewid_'+id).data('image');
+        $("#previewImage").attr('src','<?php echo base_url()?>uploads/'+image);
+        openPreview();
+    }
+    function openPreview() {
+     
+    jQuery("#side-menu-preview-tx").addClass("open-side-nav");
+    jQuery("#side-menu-preview-tx").css("width","100%");
+    jQuery("#side-menu-preview-tx").css("overflow-y","auto");
+    jQuery("#side-menu-preview-tx").css("overflow-x","hidden");
+    jQuery("#overlay-preview-tx").addClass("overlay");
+    }
+
+    function closePreview() {
+       
+        jQuery("#side-menu-preview-tx").removeClass("open-side-nav");
+        jQuery("#side-menu-preview-tx").css("width","0%");
+        jQuery("#overlay-preview-tx").removeClass("overlay");
+    }
+
+    $( "#uploadmy" ).submit(function(e) {
+        e.preventDefault();
+        this.submit();
+        setTimeout(function () { 
+                    sweetAlert(
+                            'Uploaded!',
+                            'File has been uploaded.',
+                            'success'
+                        );
+                    showData();
+                }, 100); 
+});
 </script>

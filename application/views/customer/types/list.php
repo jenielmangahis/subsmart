@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <?php foreach ($customerTypes as $customerTypes): ?>
                                         <tr>
                                             <td>
-                                                <?php echo $customerTypes->title ?>
+                                                <?php echo $customerTypes->name ?>
                                             </td>
                                             <td>
                                                 <?php //if (hasPermissions('plan_edit')): ?>

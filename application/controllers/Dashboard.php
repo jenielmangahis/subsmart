@@ -16,6 +16,7 @@ class Dashboard extends MY_Controller {
 
         add_footer_js(array(
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'assets/frontend/js/dashboard/main.js'
         ));
     }
 
@@ -49,6 +50,28 @@ class Dashboard extends MY_Controller {
 	    $get = $this->input->get();
         $this->page_data['page_name'] = $get['page'];
         $this->load->view('blank', $this->page_data);
+    }
+
+    public function saveFeed()
+    {
+        postAllowed();
+
+        $comp_id = logged('company_id');
+
+        $id = $this->feeds_model->create([
+            'company_id' => $comp_id,
+            'customer_id' => post('customer_id'),
+            'title' => post('title'),
+            'date' => date('Y-m-d', strtotime(post('date'))),
+            'subject' => post('subject'),
+            'description' => post('description')
+        ]);
+            
+        $this->activity_model->add('New Feeds Added Created by User:' . logged('name'), logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'New Feed Added Successfully');
+
+        redirect('invoice/genview/'.post('invoice_id'));
     }
 
 }

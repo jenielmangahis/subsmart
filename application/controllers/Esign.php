@@ -7,7 +7,17 @@ class Esign extends MY_Controller {
 	public function __construct()
     {
         parent::__construct();
-        $this->checkLogin();
+		$this->checkLogin();
+		$this->load->model('Esign_model', 'Esign_model');
+		add_css(array( 
+            'https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css',
+        ));
+
+        // JS to add only Job module
+        add_footer_js(array(
+			'https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js',
+            'https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js'
+        ));
     }
 
 	public function index()
@@ -26,6 +36,47 @@ class Esign extends MY_Controller {
 		$this->load->view('esign/esign', $this->page_data);
 	}
 
+	public function addDefaultEsignTemplate($userId){
+		try {
+			$defaultData = $this->Esign_model->getAllDefaultLibrary($userId);		
+			$insertedData = $this->Esign_model->insertBatchUserWiseTemplate($defaultData);
+			if($insertedData){
+				return true;
+			}else {
+				return false;
+			}
+			
+		}
+		catch(Exception $e) {
+			return false;
+		}
+	}
+	
+	public function addDefaultEsignTemplateToExistingUsers(){
+		try {
+			$this->load->model('Users_model', 'Users_model');
+			$getAllId = $this->Users_model->getAllUserId();
+			$defaultData = $this->Esign_model->getAllDefaultLibrary(0);		
+			$allData = [];
+			foreach($getAllId as $id ){
+				$currentDefaultData = $defaultData;
+				foreach($currentDefaultData as $cdd ){
+					$cdd['user_id'] = $id['id'];
+					array_push($allData, $cdd);
+				}
+			}
+			$insertedData = $this->Esign_model->insertBatchUserWiseTemplate($allData);
+			if($insertedData){
+				echo "All Data imported successfully Kindly Close this tab";
+				return true;
+			}else {
+				return false;
+			}
+		}
+		catch(Exception $e) {
+			return false;
+		}
+	}
 
 	public function blank() {
 		$get = $this->input->get();
@@ -89,7 +140,7 @@ class Esign extends MY_Controller {
 	}
 	
 	public function changeFavoriteStatus($id,$isFavorite){
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 		$whereClouser['user_id'] = logged('id');
 		$whereClouser['isActive'] = 1;
 		$whereClouser['esignLibraryTemplateId'] = $id;
@@ -104,7 +155,7 @@ class Esign extends MY_Controller {
 	}
 	
 	public function deleteLibrary($id){
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 		$whereClouser['user_id'] = logged('id');
 		$whereClouser['isActive'] = 1;
 		$whereClouser['esignLibraryTemplateId'] = $id;
@@ -119,25 +170,25 @@ class Esign extends MY_Controller {
 	}
 
 	public function createTemplate(){
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
 		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
 	public function templateLibrary(){
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
 		$this->page_data['templates'] = $this->Esign_model->getLibraryWithCategory($loggedInUser);
 		$this->load->view('esign/templateLibrary', $this->page_data);
 	}
 	public function categoryList(){
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
 		$this->page_data['templates'] = $this->Esign_model->getLibraryCategory($loggedInUser);
 		$this->load->view('esign/categoryList', $this->page_data);
 	}
 	public function deleteCategory($id){
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 		$whereClouser['user_id'] = logged('id');
 		$whereClouser['isActive'] = 1;
 		$whereClouser['category_id'] = $id;
@@ -151,7 +202,7 @@ class Esign extends MY_Controller {
 		return true;
 	}
 	public function updateCategory(){
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 		extract($this->input->post());
 		$whereClouser['user_id'] = logged('id');
 		$whereClouser['isActive'] = 1;
@@ -168,7 +219,7 @@ class Esign extends MY_Controller {
 
 	public function editTemplate(){
 		$loggedInUser = logged('id');
-		$this->load->model('Esign_model', 'Esign_model');
+		// $this->load->model('Esign_model', 'Esign_model');
 
 		$queryParams = $this->input->get();
 		if(!isset($queryParams['id'])){

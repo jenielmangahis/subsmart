@@ -6,6 +6,7 @@ class Esign_model extends MY_Model {
 	public $table = 'esign';
 	public $categoryTable = 'esign_library_category';
 	public $libraryTable = 'esign_library_template';
+	public $defaultLibraryTable = 'esign_default_library_template';
 
 	public function __construct()
 	{
@@ -56,6 +57,17 @@ class Esign_model extends MY_Model {
 		return $this->db->update($this->libraryTable,$dataToUpdate);
 	}
 
+	public function getAllDefaultLibrary($userId = 0){
+		return $this->db->from($this->defaultLibraryTable)
+		->where('isActive', 1)
+		->select("title, content, category_id, status,  $userId as user_id ")
+		->get()->result_array();
+	}
+
+	public function insertBatchUserWiseTemplate($data){
+		// return $this->db->insert_batch($this->libraryTable, $data); 
+		return $this->db->insert_batch($this->libraryTable, $data); 
+	}
 	
 }
 
