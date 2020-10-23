@@ -48,7 +48,32 @@ class Event_model extends MY_Model
         return false;
     }
 
-    
+    public function getAllUpComingEvents($user_id = 0)
+    {
+        $this->db->select('
+                events.id, company_id, customer_id, employee_id, 
+                workorder_id, description, event_description, 
+                start_date, start_time, end_date, end_time, event_color, 
+                notify_at, instructions, is_recurring, status'
+            );
+
+        $this->db->from($this->table);
+        $this->db->join('user_events', 'user_events.event_id = events.id');
+
+        $start_date = date('Y-m-d');
+        $end_date = date('Y-m-d', strtotime($start_date . ' +5 day'));
+
+        $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->limit(5);
+        $query = $this->db->get();
+
+        if ( $query ) {
+            return $query->result();
+        }
+    }
 
     public function getEvent($event_id)
     {
