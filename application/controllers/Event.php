@@ -406,4 +406,38 @@ class Event extends MY_Controller
 
         die(json_encode($this->page_data['events']));
     }
+
+    public function import_outlook_calendar($event_id)
+    {
+        $event = $this->event_model->getEvent($event_id);
+        if($event){
+            if( $event->description != '' ){
+                $details = get_customer_by_id($event->customer_id)->contact_name . " - " . $event->description;
+            }else{  
+                $details = get_customer_by_id($event->customer_id)->contact_name;
+            }
+            $event_date_from = date("Ymd\THis\Z", strtotime($event->start_date . ' ' . $event->start_time));
+            $event_date_to   = date("Ymd\THis\Z", strtotime($event->end_date . ' ' . $event->end_time));
+            
+            header('Content-type: text/calendar; charset=utf-8');
+            header('Content-Disposition: attachment; filename=calendar.ics');
+
+            // Build the ics file
+            echo "BEGIN:VCALENDAR\n";
+            echo "VERSION:2.0\n";
+            echo "PRODID:-//nsmartrac v1.0//EN\n";
+            echo "DTSTART:".$event_date_from."\n";
+            echo "DTEND:".$event_date_to."\n";
+            echo "SUMMARY:".$details."\n";
+            echo "DESCRIPTION:".$details."\n";
+            echo "END:VEVENT\n";
+            echo "END:VCALENDAR";
+        } else {
+            // If $id isn't set, then kick the user back to home. Do not pass go, and do not collect $200.
+            header('Location: /');
+        }
+
+        exit;
+        
+    }
 }

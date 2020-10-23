@@ -290,6 +290,15 @@ a.top-1 {
   #calendar .fc-timeline-slot-cushion{
     margin: 0 auto;
   }
+  .fc-daygrid-event:hover, .fc-timeline-event:hover{
+    cursor: pointer;
+  }
+  .fc-datagrid-cell-cushion{
+    width: 100%;
+  }
+  .fc-datagrid-cell-main{
+    text-align: center;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -1016,6 +1025,12 @@ a.top-1 {
               }
 
             },
+            resourceAreaColumns: [
+              {
+                field: 'title',
+                headerContent: 'Employees'
+              }
+            ],
             resources: <?php echo json_encode($resources_users); ?>,
             events: {
               url: bc_events_url,
