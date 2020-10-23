@@ -20,6 +20,19 @@ class IndustryTemplateModules_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByTemplateId($template_id)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('industry_template_id', $template_id);
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllActive($filters=array())
     {
         $id = logged('id');
@@ -66,6 +79,11 @@ class IndustryTemplateModules_model extends MY_Model
     public function deleteIndustryTemplateModules($id){
         $user_id = logged('id');
         $this->db->delete($this->table, array('id' => $id));
+    } 
+
+    public function deleteIndustryTemplateModulesByTemplateId($template_id){
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('industry_template_id' => $template_id));
     } 
 
     public function isActive()

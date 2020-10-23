@@ -55,6 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td><?= $indTemplate->name; ?></td>
                                         <td class="<?= $cell; ?>"><?= $status; ?></td>
                                         <td>
+                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('industry_template/assign_template_modules/'.$indTemplate->id); ?>"><i class="fa fa-pencil"></i> Assign Template Modules</a>
                                             <a class="btn btn-info btn-sm" href="<?php echo base_url('industry_template/edit_template/'.$indTemplate->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
                                             <a class="btn btn-sm btn-danger btn-delete-template" href="javascript:void(0);" data-id="<?= $indTemplate->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
