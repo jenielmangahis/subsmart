@@ -335,7 +335,6 @@ class Event extends MY_Controller
             $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
         }
 
-
         // workorders
         $this->load->model('Workorder_model', 'workorder_model');
         $role = logged('role');
@@ -343,7 +342,12 @@ class Event extends MY_Controller
             $company_id = logged('company_id');
             $workorders = $this->workorder_model->getAllOrderByCompany($company_id);
         }
+
         if ($role == 4) {
+            $workorders = $this->workorder_model->getAllByUserId();
+        }
+
+        if(empty($workorders)) {
             $workorders = $this->workorder_model->getAllByUserId();
         }
 

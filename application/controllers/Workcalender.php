@@ -849,7 +849,12 @@ class Workcalender extends MY_Controller
             $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
         }
+
         if ($role == 4) {
+            $events = $this->event_model->getAllByUserId();
+        }
+
+        if(empty($events) && $role == 1) {
             $events = $this->event_model->getAllByUserId();
         }
 
