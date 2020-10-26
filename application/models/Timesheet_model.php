@@ -275,40 +275,68 @@ class Timesheet_model extends MY_Model {
 //            return $tbl_total_shift->row()->id;
 //        }
 //    }
-    public function breakIn($user_id,$entry,$approved_by,$end_break,$company_id){
+    public function breakIn($user_id,$entry,$approved_by,$company_id){
         //Get timesheet_attendance id
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
+        $time = time();
         $data = array(
             'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break in',
-            'date_created' => time(),
+            'date_created' => $time,
             'entry_type' => $entry,
             'approved_by' => $approved_by,
             'company_id' => $company_id
         );
         $this->db->insert($this->db_table,$data);
-        //Update timesheet_attendance expected end break
-        $update = array('expected_endbreak'=>$end_break);
-        $this->db->where('id',$attn_id);
-        $this->db->update('timesheet_attendance',$update);
-        return true;
+        return $time;
     }
 
     public function breakOut($user_id,$entry,$approved_by,$company_id){
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
+        $time = time();
         $data = array(
             'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break out',
-            'date_created' => time(),
+            'date_created' => $time,
             'entry_type' => $entry,
             'approved_by' => $approved_by,
             'company_id' => $company_id
         );
         $this->db->insert($this->db_table,$data);
-        return true;
+        //Update break duration
+        $break = $this->updateBreakDuration($attn_id);
+        if ($break == true){
+            return $time;
+        }else{
+            return 0;
+        }
+
     }
+    public function updateBreakDuration($attn_id){
+        $query = $this->db->get_where($this->attn_tbl,array('id' => $attn_id));
+        $this->db->order_by('date_created','DESC')->limit(1);
+        $break_in = $this->db->get_where($this->db_table,array('attendance_id'=>$attn_id,'action'=>'Break in'));
+        $this->db->order_by('date_created','DESC')->limit(1);
+        $break_out = $this->db->get_where($this->db_table,array('attendance_id'=>$attn_id,'action'=>'Break out'));
+//        $break_duration = ($break_out->row()->date_created - $break_in->row()->date_created) / 3600;
+        $total_time = $break_out->row()->date_created - $break_in->row()->date_created;
+        $hours      = floor($total_time /3600);
+        $minutes    = intval(($total_time/60) % 60);
+        $seconds    = intval($total_time % 60);
+        $break_diff = "$hours".":".$minutes.":".$seconds.":";
+        $timeArr = explode(':', $break_diff);
+        $decTime = ($timeArr[0]*60) + ($timeArr[1]) + ($timeArr[2]/60);
+        if ($query->num_rows() == 1){
+            $this->db->set('break_duration', 'break_duration+'.$decTime, FALSE);
+            $this->db->where('id',$attn_id)->update($this->attn_tbl);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function getTSLogsByUser(){
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where($this->db_table,array('user_id' => $user_id,'status'=>1))->result();

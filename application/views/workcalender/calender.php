@@ -290,6 +290,15 @@ a.top-1 {
   #calendar .fc-timeline-slot-cushion{
     margin: 0 auto;
   }
+  .fc-daygrid-event:hover, .fc-timeline-event:hover{
+    cursor: pointer;
+  }
+  .fc-datagrid-cell-cushion{
+    width: 100%;
+  }
+  .fc-datagrid-cell-main{
+    text-align: center;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -418,6 +427,44 @@ a.top-1 {
                                     <div id='calendar'></div>
                                     <a class="btn btn-primary btn-add-gcalendar" title="Add Calendar" href="javascript:void(0);" style="margin-top: 15px;"><i class="far fa-calendar-plus"></i> Add Calendar</a>
                                 </div>
+
+                              <div class="calendar-menu" style="text-align: left;">
+                                  <div style="background: #f2f2f2; padding: 20px;">
+
+                                      <div class="margin-bottom">
+                                          <div class="bold margin-bottom">Upcoming Events</div>
+                                          <div data-calendar="upcoming-events">
+                                              <?php if ( !empty($upcoming_events) ) { ?>
+                                                <?php foreach($upcoming_events as $upcoming_event) { ?>
+                                                  <div class="cue-event" data-calendar="view-event" data-calendar-event-id="<?php echo $upcoming_event->id; ?>">
+                                                      <span class="cue-date">
+                                                          <?php 
+                                                            $month = date('m', strtotime($upcoming_event->start_date));
+                                                            $day  = date('d', strtotime($upcoming_event->start_date));
+                                                            $year  = date('Y', strtotime($upcoming_event->start_date));
+                                                            $start_time = $upcoming_event->start_time;
+                                                            $end_time = $upcoming_event->end_time;
+                                                          ?>
+                                                          <span class="cue-day"><?php echo $day; ?></span>
+                                                          <span><?php echo $month; ?> <?php echo $year; ?></span>
+                                                      </span>
+                                                      <div class="cue-event-name">
+                                                          <?php echo get_customer_by_id($upcoming_event->customer_id)->contact_name; ?>
+                                                      </div> 
+                                                      <div class="cue-event-time text-ter">
+                                                          <?php echo $start_time; ?> - <?php echo $end_time; ?>
+                                                      </div>  
+                                                  </div>     
+                                                  <hr /> 
+                                                <?php } ?>
+                                              <?php }else{ ?>
+                                                      <div class="cue-event-name">NO UPCOMING EVENTS</div>
+                                              <?php } ?>
+                                          </div>
+                                          
+                                      </div>
+                                  </div>
+                              </div>                                
                             </div>
                             <!-- end card -->
                         </div>
@@ -1016,6 +1063,12 @@ a.top-1 {
               }
 
             },
+            resourceAreaColumns: [
+              {
+                field: 'title',
+                headerContent: 'Employees'
+              }
+            ],
             resources: <?php echo json_encode($resources_users); ?>,
             events: {
               url: bc_events_url,

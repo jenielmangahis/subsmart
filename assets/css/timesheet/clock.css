@@ -108,7 +108,7 @@
 .clock-users + .preview-clock-details {
     visibility: hidden;
     width: 170px;
-    height: 100px;
+    height: 110px;
     background-color: #ffffff;
     color: black;
     text-align: center;

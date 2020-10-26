@@ -1418,10 +1418,9 @@ class Timesheet extends MY_Controller {
         $company_id = $this->input->post('company_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $end_break = $this->input->post('end_of_break');
-        $query = $this->timesheet_model->breakIn($user_id,$entry,$approved_by,$end_break,$company_id);
-        if ($query == true){
-            echo json_encode(1);
+        $query = $this->timesheet_model->breakIn($user_id,$entry,$approved_by,$company_id);
+        if ($query != null){
+            echo json_encode(date('h:i A',$query));
         }else{
             echo json_encode(0);
         }
@@ -1432,8 +1431,8 @@ class Timesheet extends MY_Controller {
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
         $query = $this->timesheet_model->breakOut($user_id,$entry,$approved_by,$company_id);
-        if ($query == true){
-            echo json_encode(1);
+        if ($query != 0){
+            echo json_encode(date('h:i A',$query));
         }else{
             echo json_encode(0);
         }
@@ -1445,256 +1444,6 @@ class Timesheet extends MY_Controller {
 	    $meridies = date('A');
 	    echo json_encode($hours.$minutes.$meridies);
     }
-
-
-
-	// timesheet 
-//	public function clock_in()
-//	{
-//		print_r($this->input->post());
-//		$this->load->model('timesheet_model');
-//		$data = array(
-//			'employees_id' => $this->input->post('clockin_user_id'),
-//			'action' => 'Clock In',
-//			'timestamp' => $this->input->post('current_time_in'),
-//			'entry_type' => 'Normal'
-//			/*'user_id' => $this->input->post('clockin_user_id'),
-//			'company_id' => $this->input->post('clockin_company_id'),
-//			'clock_in' => $this->input->post('current_time_in'),
-//			'session_key' => $this->input->post('clockin_sess'),
-//			'status' => $this->input->post('clockin_status')*/
-//		);
-//
-//
-//
-//		$this->timesheet_model->clockIn($data);
-//
-//	}
-//	public function clock_out()
-//	{
-//		$this->load->model('timesheet_model');
-//		$data = array(
-//			'employees_id' => $this->input->post('clockin_user_id'),
-//			'action' => 'Clock Out',
-//			'timestamp' => $this->input->post('current_time_in'),
-//			'entry_type' => 'Normal'
-//			/*'user_id' => $this->input->post('clockin_user_id'),
-//			'company_id' => $this->input->post('clockin_company_id'),
-//			'clock_out' => $this->input->post('current_time_in'),
-//			'session_key' => $this->input->post('clockin_sess'),
-//			'status' => $this->input->post('clockin_status')*/
-//		);
-//
-//		$this->timesheet_model->clockOut($data);
-//
-//	}
-
-
-	// timesheet 
-	public function lunch_in()
-	{
-		print_r($this->input->post());
-		$this->load->model('timesheet_model');
-		$data = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Lunch In',
-			'timestamp' => $this->input->post('current_time_in'),
-			'entry_type' => 'Normal'
-			/*'user_id' => $this->input->post('clockin_user_id'),
-			'company_id' => $this->input->post('clockin_company_id'),
-			'clock_in' => $this->input->post('current_time_in'),
-			'session_key' => $this->input->post('clockin_sess'),
-			'status' => $this->input->post('clockin_status')*/
-		);
-		$this->timesheet_model->clockIn($data);
-	}
-
-
-	public function lunch_out()
-	{
-		$this->load->model('timesheet_model');
-		$data = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Lunch Out',
-			'timestamp' => $this->input->post('current_time_in'),
-			'entry_type' => 'Normal'
-			/*'user_id' => $this->input->post('clockin_user_id'),
-			'company_id' => $this->input->post('clockin_company_id'),
-			'clock_out' => $this->input->post('current_time_in'),
-			'session_key' => $this->input->post('clockin_sess'),
-			'status' => $this->input->post('clockin_status')*/
-		);
-
-		$this->timesheet_model->clockOut($data);
-	}
-
-	public function break_in()
-	{
-		print_r($this->input->post());
-		$this->load->model('timesheet_model');
-		$data = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Break In',
-			'timestamp' => $this->input->post('current_time_in'),
-			'entry_type' => 'Normal'
-			/*'user_id' => $this->input->post('clockin_user_id'),
-			'company_id' => $this->input->post('clockin_company_id'),
-			'clock_in' => $this->input->post('current_time_in'),
-			'session_key' => $this->input->post('clockin_sess'),
-			'status' => $this->input->post('clockin_status')*/
-		);
-		$this->timesheet_model->clockIn($data);
-	}
-
-	public function break_out()
-	{
-		print_r($this->input->post());
-		$this->load->model('timesheet_model');
-		$data = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Break Out',
-			'timestamp' => $this->input->post('current_time_in'),
-			'entry_type' => 'Normal'
-			/*'user_id' => $this->input->post('clockin_user_id'),
-			'company_id' => $this->input->post('clockin_company_id'),
-			'clock_in' => $this->input->post('current_time_in'),
-			'session_key' => $this->input->post('clockin_sess'),
-			'status' => $this->input->post('clockin_status')*/
-		);
-		$this->timesheet_model->clockIn($data);
-	}
-
-	public function manual_clock_in()
-	{
-		date_default_timezone_set('US/Central');
-		$this->load->model('timesheet_model');
-		/*print_r($this->input->post('clock_in_from'));
-		echo "<br />";
-		print_r($this->input->post('clock_in_to'));
-		$t1 = str_replace(':', ',', $this->input->post('clock_in_from'));
-		$t2 = str_replace(':', ',', $this->input->post('clock_in_to'));
-		echo $t1; echo $t2;
-		die;*/
-		/*$data = $this->input->post();
-		$date = $this->input->post('entry_date');
-		$time = $this->input->post('clock_in_from');
-		$clockin_datetime = */
-		$d1 = str_replace('/', ',', $this->input->post('entry_date'));
-		$t1 = str_replace(':', ',', $this->input->post('clock_in_from'));
-		$date1 = $t1.',0,'.$d1;
-		$fulldate1 = explode(',',$date1);
-		$h1 = $fulldate1[0];
-		$i1 = $fulldate1[1];
-		$s1 = $fulldate1[2];
-		$m1 = $fulldate1[3];
-		$d1 = $fulldate1[4];
-		$y1 = $fulldate1[5];
-		$clockin_datetime = date("Y-m-d h:i:s",mktime($h1,$i1,$s1,$m1,$d1,$y1));
-		$d2 = str_replace('/', ',', $this->input->post('entry_date'));
-		$t2 = str_replace(':', ',', $this->input->post('clock_in_to'));
-		$date2 = $t2.',0,'.$d2;
-		$fulldate2 = explode(',',$date2);
-		$h2 = $fulldate2[0];
-		$i2 = $fulldate2[1];
-		$s2 = $fulldate2[2];
-		$m2 = $fulldate2[3];
-		$d2 = $fulldate2[4];
-		$y2 = $fulldate2[5];
-		$clockout_datetime = date("Y-m-d h:i:s",mktime($h2,$i2,$s2,$m2,$d2,$y2));
-		//dd($clockin_datetime);echo "<br />";
-		//dd($clockout_datetime);
-		//die;
-
-		// for Clock In
-		$data_clockin = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Clock In',
-			'entry_type' => 'Manual Entry',
-			//'timestamp' => $this->input->post('entry_date'),
-			'timestamp' => $clockin_datetime,
-			'job_code' => $this->input->post('job_code'),
-			'notes' => $this->input->post('notes')
-		);
-		//dd($data);die;
-		$this->timesheet_model->manualClockIn($data_clockin);
-
-		// for Clock In
-		$data_clockout = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Clock Out',
-			'entry_type' => 'Manual Entry',
-			//'timestamp' => $this->input->post('entry_date'),
-			'timestamp' => $clockout_datetime,
-			'job_code' => $this->input->post('job_code'),
-			'notes' => $this->input->post('notes')
-		);
-		//dd($data);die;
-		$this->timesheet_model->manualClockIn($data_clockout);
-
-		/*$this->load->model('timesheet_model');
-		$data = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Clock In',
-			'timestamp' => $this->input->post('current_time_in'),
-			'entry_type' => 'Manual'
-		);
-
-		$this->timesheet_model->checkClockIn($data);*/
-
-		$this->session->set_flashdata('alert-type', 'success');
-		$this->session->set_flashdata('alert', 'New Time Log Added Successfully');	
-
-		redirect('users/timelog');
-
-	}
-
-	public function update_clockin($id){
-		$this->load->model('timesheet_model');
-
-		//$this->timesheet_model->updateClockin($id, ['clockin' => get('clockIn') == 'true' ? 1 : 0 ]);
-
-		//echo 'done';
-
-	}
-
-
-	public function getClockIn(){
-		$this->load->model('timesheet_model');
-		$data = array(
-			'user_id' => $this->input->post('clockin_user_id'),
-			'session_key' => $this->input->post('clockin_sess'),
-		);
-
-		$this->timesheet_model->checkClockIn($data);
-	}
-
-	public function change_status($id)
-
-	{
-
-		$this->users_model->update($id, ['status' => get('status') == 'true' ? 1 : 0 ]);
-
-		echo 'done';
-
-	}
-
-
-	public function ajax_user_dropdown() {
-
-		$users = $this->users_model->getUsers();
-		// print_r($users);
-
-		echo $this->load->view('users/ajax_user_dropdown', array('users' => $users), true);
-	}
-
-
-	public function json_dropdown_user_list() {
-
-		$users = $this->users_model->getUsers();
-		// print_r($users);
-
-		die(json_encode($users));
-	}
 
 	public function addingProjects(){
 	    $project = $this->input->post('values[project]');
@@ -1714,7 +1463,7 @@ class Timesheet extends MY_Controller {
             'end_time' => date('H:i',strtotime($end_time)),
             'user_id' => $user_id,
             'timezone' => $timezone,
-            'notes' => $notes,
+            'notes' => strip_tags($notes),
             'duration' => $duration,
             'day' => date('l',strtotime($start_date)),
             'week' => $week,
@@ -1860,7 +1609,7 @@ class Timesheet extends MY_Controller {
         $update = array(
             'project_name' => $name,
             'timezone' => $timezone,
-            'notes' => $notes
+            'notes' => strip_tags($notes)
         );
 	    $query = $this->timesheet_model->updateTSProject($id,$update);
 	    if ($query == true){
@@ -2203,11 +1952,11 @@ class Timesheet extends MY_Controller {
             );
             $this->db->insert('timesheet_logs',$out);
             $shift_duration = $this->timesheet_model->calculateShiftDuration($attn_id);
-            $break_duration = $this->timesheet_model->calculateBreakDuration($attn_id);
+//            $break_duration = $this->timesheet_model->calculateBreakDuration($attn_id);
             $overtime = $this->timesheet_model->calculateOvertime($user_id,$attn_id);
             $update = array(
                 'shift_duration' => $shift_duration,
-                'break_duration' => $break_duration,
+//                'break_duration' => $break_duration,
                 'overtime' => $overtime,
                 'date_out' => date('Y-m-d'),
                 'status' => 0
@@ -2230,79 +1979,67 @@ class Timesheet extends MY_Controller {
     }
 
     public function lunchInEmployee(){
-	    $end_break = $this->input->post('end_of_break');
+//	    $end_break = $this->input->post('end_of_break');
         $attn_id = $this->input->post('attn_id');
         $lunch_in = time();
+        $timestamp = 0;
+        $latest_in = 0;
         $user_id = $this->session->userdata('logged')['id'];
         $lunch = array(
             'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break in',
-            'date' => date('Y-m-d'),
-            'time' => $lunch_in,
+            'date_created' => $lunch_in,
             'entry_type' => 'Normal',
             'company_id' => getLoggedCompanyID()
         );
         $this->db->insert('timesheet_logs',$lunch);
-        //Update timesheet_attendance end of lunch break
-        $lunch_update = array('expected_endbreak'=>$end_break);
-        $this->db->where('id',$attn_id);
-        $this->db->update('timesheet_attendance',$lunch_update);
+        $break_duration = $this->db->get_where('timesheet_attendance',array('id'=>$attn_id));
+        if ($break_duration->num_rows() == 1){
+            if ($break_duration->row()->break_duration > 0){
+                $timestamp = $lunch_in - ($break_duration->row()->break_duration * 60);
+                $latest_in = $lunch_in;
+            }else{
+                $timestamp = $lunch_in;
+            }
+        }
 
         $data = new stdClass();
-        $data->lunch_in_time = date('h:i A',$lunch_in);
-        $data->end_break = $end_break;
+        $data->lunch_in = date('h:i A',$lunch_in);
+        $data->timestamp = $timestamp;
+        $data->latest_in = $latest_in;
         echo json_encode($data);
     }
 
     public function lunchOutEmployee(){
         $attn_id = $this->input->post('attn_id');
-        $remaining_time = $this->input->post('remaining_time');
-        if (explode(':',$remaining_time)[1] <= 0){
-            $lunch_out = $this->input->post('end');
-        }else{
-            $lunch_out = time();
-        }
+        $pause_time = $this->input->post('pause_time');
         $lunch_out = time();
         $user_id = $this->session->userdata('logged')['id'];
-        $check = $this->db->get_where('timesheet_logs',array('attendance_id'=>$attn_id,'action'=>'Break out'));
-        if ($check->num_rows() == 0){
+//        $check = $this->db->get_where('timesheet_logs',array('attendance_id'=>$attn_id,'action'=>'Break out'));
+//        if ($check->num_rows() == 0){
             $lunch = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Break out',
-                'date' => date('Y-m-d'),
-                'time' => $lunch_out,
+                'date_created' => $lunch_out,
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
             );
             $this->db->insert('timesheet_logs',$lunch);
+//        }
+        //Update break duration
+        $update = $this->db->get_where('timesheet_attendance',array('id'=>$attn_id));
+        if ($update->num_rows() == 1){
+            $timeArr = explode(':', $pause_time);
+            $decTime = ($timeArr[0]*60) + ($timeArr[1]) + ($timeArr[2]/60);
+            $this->db->set('break_duration', 'break_duration+'.$decTime, FALSE);
+            $this->db->where('id',$attn_id)->update('timesheet_attendance');
         }
-
-        //Employee Notification
-        $notification = null;
-        if (explode(':',$remaining_time)[1] <= 0){
-            $data_notify = array(
-                'user_id' => $user_id,
-                'title' => 'Lunch break had ended.',
-                'content' => 'Your lunch break ended at '.date('h:i A',$lunch_out),
-                'date_created' => date('Y-m-d h:i:s'),
-                'status' => 1
-            );
-            $this->db->insert('user_notification',$data_notify);
-            $remaining_time = '00:00';
-            $notification = $this->notificationBell();
-        }
-
-//        Update break remaining time
-        $update_lunch = array('break_remaining_time'=>$remaining_time);
-        $this->db->where('id',$attn_id);
-        $this->db->update('timesheet_attendance',$update_lunch);
 
         $data = new stdClass();
-        $data->lunch_out_time = date('h:i A',$lunch_out);
-        $data->remaining = $remaining_time;
-        $data->notifications = $notification;
+        $data->lunch_time = date('h:i A',$lunch_out);
+
         echo json_encode($data);
     }
 

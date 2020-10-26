@@ -1,10 +1,13 @@
 $(document).ready(function () {
-    var break_end_time = 0;
-    var minutes = 0;
-    var seconds = 0;
-    var remaining_time = 0;
-    var countdown;
-    var difference = 0;
+    let counter;
+    let break_content = $('#break-duration').text();
+    let hours=parseInt(break_content.slice(0,1)),minutes=parseInt(break_content.slice(4,5)),seconds=parseInt(break_content.slice(7,8));
+    let pause_time;
+    let lunch_h = 0;
+    let lunch_m = 0;
+    let lunch_s = 0;
+    let difference = 0,latest_diff = 0;
+
     async function notificationRing() {
         const audio = new Audio();
         audio.src = '../assets/css/notification/notification_tone2.mp3';
@@ -103,8 +106,8 @@ $(document).ready(function () {
                         $('#shiftDuration').text(data.shift_duration);
                         $('#userShiftDuration').text(data.shift_duration);
                         $('.employeeLunch').attr('id',null).attr('disabled',true);
-                        $('#unScheduledShift').val(null);
-                        $('#autoClockOut').val(null);
+                        $('#unScheduledShift').val(0);
+                        $('#autoClockOut').val(2);
                         Swal.fire(
                             {
                                 showConfirmButton: false,
@@ -120,8 +123,8 @@ $(document).ready(function () {
     });
     });
     $(document).on('click','#lunchIn',function () {
-        var selected = this;
-        var attn_id = $('#attendanceId').val();
+        let selected = this;
+        let attn_id = $('#attendanceId').val();
         Swal.fire({
             title: 'Lunch in?',
             html: "Are you sure you want to Lunch-in?",
@@ -132,21 +135,25 @@ $(document).ready(function () {
             confirmButtonText: 'Yes, I want to Lunch-in!'
         }).then((result) => {
             if (result.value) {
-            var time = new Date();
-            var end_of_break = time.setMinutes(time.getMinutes() + 60);
             $.ajax({
                 url:'/timesheet/lunchInEmployee',
                 type:"POST",
                 dataType:'json',
-                data:{attn_id:attn_id,end_of_break:end_of_break},
+                data:{attn_id:attn_id},
                 success:function (data) {
                     if (data != null){
+                        console.log('clock-out')
                         $(selected).attr('id','lunchOut');
                         $('.clock').removeClass('clock-active').addClass('clock-break');
-                        $('#userLunchIn').text(data.lunch_in_time);
-                        $(selected).children('.fa-coffee').removeClass('fa-coffee').addClass('fa-mug-hot');
-                        break_end_time = data.end_break;
-                        $('#clock-end-time').val(break_end_time);
+                        $('#userLunchIn').text(data.lunch_in);
+                        $('#userLunchOut').text(null);
+                        $('#lunchStartTime').val(data.timestamp);
+                        $('#latestLunchTime').val(data.latest_in);
+                        $(selected).children('.btn-lunch').attr('src','/assets/css/timesheet/images/coffee-active.svg');
+                        $('#clock-status').val(1);
+                        $('#autoClockOut').val(0);
+                        // break_end_time = data.end_break;
+                        // $('#clock-end-time').val(break_end_time);
                         breakTime();
                         Swal.fire(
                             {
@@ -163,73 +170,47 @@ $(document).ready(function () {
     });
     });
     function breakTime() {
-        var end =  $('#clock-end-time').val();
-        // Get today's date and time
-        var now = new Date().getTime();
-        // clearTimeout(get_server_time);
-        // Find the distance between now an the count down date
-        difference = end - now;
+        let latest_lunch = $('#latestLunchTime').val();
+        let start = $('#lunchStartTime').val();
+        let now = Date.now() ;
+        let output = parseInt(start) * 1000;
+        difference = now - output;
 
-        // Time calculations for minutes and seconds
-        minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        hours = Math.floor(difference / 60 / 60 / 1000);
+        minutes =  Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        if (seconds >= 0){
-            $('#break-duration').text(remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
-            remaining_time = remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2);
-        }else{
-            remaining_time = remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2);
-            var attn_id = $('#attendanceId').val();
-            $.ajax({
-                url:'/timesheet/lunchOutEmployee',
-                type:"POST",
-                dataType:'json',
-                data:{attn_id:attn_id,remaining_time:remaining_time,end:end},
-                success:function (data) {
-                    if (data != null){
-                        notificationRing();
-                        $('.clock').removeClass('clock-break').addClass('clock-active');
-                        $('#userLunchOut').text(data.lunch_out_time);
-                        $('#clock-end-time').val(data.remaining);
-                        $('.employeeLunch').attr('id',null).children('i').removeClass('fa-mug-hot').addClass('fa-coffee').attr('disabled',true).css('cursor','not-allowed');
-                        var notify_count = $('#notifyBadge').text();
-                        if (notify_count == ''){
-                            notify_count = 0;
-                        }
-                        var count = parseInt(notify_count) + 1;
-                        $('#notifyBadge').css('visibility','visible').text(count);
-                        $('#notificationList').prepend(data.notifications);
-                        $('.layer-1').css('animation','animation-layer-1 5000ms infinite');
-                        $('.layer-2').css('animation','animation-layer-2 5000ms infinite');
-                        $('.layer-3').css('animation','animation-layer-3 5000ms infinite');
-                        stopCountdown();
-                        Swal.fire(
-                            {
-                                showConfirmButton: true,
-                                title: 'Success',
-                                html: "You are now Lunch-out",
-                                icon: 'success'
-                            });
-                    }
-                }
-            });
+        //Get the present lunch in difference
+        if (latest_lunch > 0){
+            latest_diff = now - (parseInt(latest_lunch) * 1000)
+            lunch_h = Math.floor(latest_diff / 60 / 60 / 1000);
+            lunch_m =  Math.floor((latest_diff % (1000 * 60 * 60)) / (1000 * 60));
+            lunch_s = Math.floor((latest_diff % (1000 * 60)) / 1000);
         }
-        countdown = setTimeout(breakTime, 1000);
+
+        $('#break-duration').text(remainTwoDigit(hours,2)+":"+remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
+        if (latest_lunch > 0){
+            pause_time = remainTwoDigit(lunch_h,2)+":"+remainTwoDigit(lunch_m,2)+":"+remainTwoDigit(lunch_s,2);
+        }else{
+            pause_time = remainTwoDigit(hours,2)+":"+remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2);
+        }
+
+        counter = setTimeout(breakTime, 1000);
     }
-    // clearTimeout(countdown);
+
     function stopCountdown() {
-        clearTimeout(countdown);
+        clearTimeout(counter);
     }
-    // clearTimeout(countdown);
+
     function remainTwoDigit(number, targetLength) {
-        var output = number + '';
+        let output = number + '';
         while (output.length < targetLength) {
             output = '0' + output;
         }
         return output;
     }
     $(document).on('click','#lunchOut',function () {
-        var selected = this;
-        var attn_id = $('#attendanceId').val();
+        let selected = this;
+        let attn_id = $('#attendanceId').val();
         Swal.fire({
             title: 'Lunch out?',
             html: "Are you sure you want to Lunch-out?",
@@ -244,15 +225,14 @@ $(document).ready(function () {
                 url:'/timesheet/lunchOutEmployee',
                 type:"POST",
                 dataType:'json',
-                data:{attn_id:attn_id,remaining_time:remaining_time},
+                data:{attn_id:attn_id,pause_time:pause_time},
                 success:function (data) {
                     if (data != null){
-                        $(selected).attr('id',null);
+                        $(selected).attr('id','lunchIn');
                         $('.clock').removeClass('clock-break').addClass('clock-active');
-                        $('#userLunchOut').text(data.lunch_out_time);
-                        $(selected).children('.fa-mug-hot').removeClass('fa-mug-hot').addClass('fa-coffee');
-                        $('#clock-end-time').val(data.remaining);
-                        clearTimeout(countdown);
+                        $('#userLunchOut').text(data.lunch_time);
+                        $(selected).children('.btn-lunch').attr('src','/assets/css/timesheet/images/coffee-static.svg');
+                        clearTimeout(counter);
                         Swal.fire(
                             {
                                 showConfirmButton: false,
@@ -321,6 +301,7 @@ $(document).ready(function () {
             }
         };
     })();
+
 
     let overtimeTimer = (function() {
         let executed = false;
@@ -429,11 +410,10 @@ $(document).ready(function () {
             }
         };
     })();
-
-
+    //Auto clock out
     let autoClockOut = (function() {
         let executed = false;
-        return function() {
+        return function () {
             if (!executed) {
                 executed = true;
                 let attn_id = $('#attendanceId').val();
@@ -450,7 +430,6 @@ $(document).ready(function () {
                     dataType:'json',
                     data:{attn_id:attn_id,time:time},
                     success:function (data) {
-                        console.log(time);
                         if (data != null){
                             // $(selected).attr('id',null);
                             $('#unScheduledShift').val(null);
@@ -482,8 +461,9 @@ $(document).ready(function () {
                     }
                 })
             }
-        };
+        }
     })();
+    // end of auto clock out
 
 
     //Live Clock JS
@@ -519,7 +499,7 @@ $(document).ready(function () {
             }
         }
         // End shift notify
-        if (emp_overtime > 0 && overtime_status > 0){
+        if (emp_overtime > 0 && overtime_status == 1){
             let c = new Date(emp_overtime * 1000);
             c.setMinutes(c.getMinutes() - 10);
             let d = c.setHours(c.getHours() - (time_diff));
@@ -532,7 +512,7 @@ $(document).ready(function () {
         }
         //Employee without schedule
             let shift_end = $('#unScheduledShift').val();
-        if (overtime_status > 0 && shift_end > 0){
+        if (overtime_status == 1 && shift_end > 0){
             let f = new Date(shift_end * 1000);
             f.setMinutes(f.getMinutes() - 10);
             let g = f.setHours(f.getHours() - (time_diff));
@@ -543,16 +523,18 @@ $(document).ready(function () {
         }
 
         //Auto Clock out
-            if (shift_end != '' && overtime_status < 1){
+            if (shift_end > 0 && overtime_status < 1){
                let end_shift = new Date(shift_end * 1000);
                let end_of_shift = end_shift.setHours(end_shift.getHours());
                if (end_of_shift <=  current_time){
+                   console.log('unsched');
                     autoClockOut();
                }
-            }else if(emp_overtime != '' && overtime_status < 1){
+            }else if(emp_overtime > 0 && overtime_status < 1){
                 let end_shift = new Date(emp_overtime * 1000);
                 let end_of_shift = end_shift.setHours(end_shift.getHours() - (time_diff));
                 if (end_of_shift <= current_time){
+                    console.log('sched');
                     autoClockOut();
                 }
             }

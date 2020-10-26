@@ -49,10 +49,36 @@
                     </a>
                 </li> -->
                 <li style="text-align: left !important;">
+                    <?php 
+                        $event_date_from = date("Ymd\THis\Z", strtotime($event->start_date . ' ' . $event->start_time));
+                        $event_date_to   = date("Ymd\THis\Z", strtotime($event->end_date . ' ' . $event->end_time));
+                        if( $event->description != '' ){
+                            $details = get_customer_by_id($event->customer_id)->contact_name . " - " . $event->description;
+                        }else{  
+                            $details = get_customer_by_id($event->customer_id)->contact_name;
+                        }                        
+
+                        $url_add_google_event = "https://www.google.com/calendar/event?action=TEMPLATE&text=".$event->description."&dates=".$event_date_from."/".$event_date_to."&details=".$details."&location=";
+                    ?>
                     <!-- <img src="<?php echo base_url('assets/img/export_google.png') ?>"> -->
-                    <a class="a-default" href="javascript:void(0);" target="_blank">
-                        <span class="badge badge-primary">+ Google Calendar</span>
-                    </a>
+                    <ul>
+                        <li>
+                            <a class="a-default" href="<?= $url_add_google_event; ?>" target="_blank" style="font-size: 21px;">
+                                <span class="badge badge-primary" style="padding-top: 10px;padding-bottom:10px;padding-left:10px;width: 166px;text-align: left;"><i class="fa fa-calendar"></i> Google Calendar</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="a-default" href="<?= base_url("/event/import_outlook_calendar/".$event->id); ?>" target="_blank" style="font-size: 21px;">
+                                <span class="badge badge-primary" style="padding-top: 10px;padding-bottom:10px;padding-left:10px;width: 166px;text-align: left;"><i class="fa fa-calendar"></i> Outlook Calendar</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="a-default" href="<?= base_url("/event/import_outlook_calendar/".$event->id); ?>" target="_blank" style="font-size: 21px;">
+                                <span class="badge badge-primary" style="padding-top: 10px;padding-bottom:10px;padding-left:10px;width: 166px;text-align: left;"><i class="fa fa-calendar"></i> Apple Calendar</span>
+                            </a>
+                        </li>
+                    </ul>
+                    
                 </li>
                 <!-- <li>
                     <a class="a-default" href="javascript:void(0);" target="_blank">

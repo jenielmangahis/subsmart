@@ -33,10 +33,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <td height="15" width="27%" class="" align="left" valign="top" style="padding:1px 2px 1px 2px; line-height:17px!important;  ">
                                                     <?= $task->subject; ?>
                                                 <td height="15" align="left" valign="top" class="normaltext1" width="30%" style="padding:1px 2px 1px 2px; line-height:17px!important;  ">
-                                                    10/17/2020 12:00 AM
+                                                    <?= $task->due_date.' '.$task->due_time ?>
                                                 </td>
                                                 <td height="15" align="right" valign="top" width="13%" style="padding:1px 2px 1px 2px; line-height:17px!important;  ">
-                                                    <a href="" onclick="return deleteReminder('35');" class="js-qwynlraxz">
+                                                    <a id="<?= $task->task_id; ?>"  href=""  class="remove_task">
                                                         <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16" height="16">
                                                     </a>
                                                 </td>

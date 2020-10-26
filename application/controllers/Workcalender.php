@@ -52,9 +52,7 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByUserId();
         }
 
-        /*echo '<pre>';
-        print_r($events);
-        echo '</pre>';*/
+        $upcoming_events = $this->event_model->getAllUpComingEvents();
 
         $this->page_data['events'] = array();
 
@@ -333,6 +331,7 @@ class Workcalender extends MY_Controller
         $this->page_data['users'] = $this->user_model->getUsers();
 
         $this->page_data['calendar_list'] = $calendar_list;
+        $this->page_data['upcoming_events'] = $upcoming_events;
 
         $this->load->view('workcalender/calender', $this->page_data);
     }
@@ -849,7 +848,12 @@ class Workcalender extends MY_Controller
             $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
         }
+
         if ($role == 4) {
+            $events = $this->event_model->getAllByUserId();
+        }
+
+        if(empty($events) && $role == 1) {
             $events = $this->event_model->getAllByUserId();
         }
 

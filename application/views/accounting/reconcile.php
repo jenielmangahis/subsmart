@@ -436,7 +436,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
                     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
-                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" id="uploadmy" method="post" name="myForm" enctype="multipart/form-data" target="hiddenFrame">
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="myForm" enctype="multipart/form-data" target="hiddenFrame">
                     
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
@@ -790,17 +790,22 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-4">
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
-                    <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+                    <iframe name="hiddenFramecheck" width="0" height="0" border="0" style="display: none;"></iframe>
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="checkForm" enctype="multipart/form-data" target="hiddenFramecheck">
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
                                 <i class="fa fa-cloud-upload"></i>
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
-                            <input type="file" name="userfile" />
+                            <input type="file" name="userfile_newcheck" />
                             <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                            <input type="hidden" name="subfix" value="newcheck">
                         </div>
                     </div>
+                    </br>
+                    <button type="submit" class="form-control">Upload</button>
+                    </form>
                     </br>
                     <a href="#" onclick="openSideNav()">Show existing</a>
                 </div>
@@ -820,7 +825,6 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <div id="side-menu-recurr-tx" class="main-side-nav">
         <div style="background-color: #f4f5f8">
             <div class="side-title">
-                <h4>#check</h4>
                 <a id="close-menu-recurr-tx" class="menuCloseButton" onclick="closeRecurr()"><span id="side-menu-close-text">
                 <i class="fa fa-times"></i></span></a>
             </div>
@@ -925,7 +929,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <option value="saturday">Saturday</option>
                                 <option value="sunday">Sunday</option>
                             </select>
-                            of every<input type="number" name="monthly_days" id="monthly_days" size="1" class="form-control" style="width: 5% !important;display: inline;">month(s)
+                            of every<input type="number" name="monthly_days" id="monthly_days" size="1" class="form-control" style="width: 8% !important;display: inline;">month(s)
                         </div>
                         <div id="yearly" style="display: none;">
                             every
@@ -1223,17 +1227,22 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-4">
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
-                    <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+                    <iframe name="hiddenFramerecurr" width="0" height="0" border="0" style="display: none;"></iframe>
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="recurrForm" enctype="multipart/form-data" target="hiddenFramerecurr">
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
                                 <i class="fa fa-cloud-upload"></i>
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
-                            <input type="file" name="userfile" />
+                            <input type="file" name="userfile_recurr" />
                             <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                            <input type="hidden" name="subfix" value="recurr">
                         </div>
                     </div>
+                    </br>
+                    <button type="submit" class="form-control">Upload</button>
+                    </form>
                     </br>
                     <a href="#" onclick="openSideNav()">Show existing</a>
                 </div>
@@ -1546,17 +1555,22 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-6">
                     <label>Attachment</label>
                     </br>
-                    <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+                    <iframe name="hiddenFramevendor" width="0" height="0" border="0" style="display: none;"></iframe>
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="vendorForm" enctype="multipart/form-data" target="hiddenFramevendor">
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
                                 <i class="fa fa-cloud-upload"></i>
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
-                            <input type="file" name="userfile" />
+                            <input type="file" name="userfile_vendor" />
                             <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                            <input type="hidden" name="subfix" value="vendor">
                         </div>
                     </div>
+                    </br>
+                    <button type="submit" class="form-control">Upload</button>
+                    </form>
                     </br>
                 </div>
                 <div class="col-md-6">
@@ -1844,17 +1858,22 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         <div class="col-md-6">
                             <label>Attachment</label>
                             </br>
-                            <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+                            <iframe name="hiddenFramecus" width="0" height="0" border="0" style="display: none;"></iframe>
+                            <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="cusForm" enctype="multipart/form-data" target="hiddenFramecus">
                             <div class="file-upload-block">
                                 <div class="upload-btn-wrapper">
                                     <button class="btn ubw">
                                         <i class="fa fa-cloud-upload"></i>
                                         <h6>Drag and drop files here or <span>browse to upload</span></h6>
                                     </button>
-                                    <input type="file" name="userfile" />
+                                    <input type="file" name="userfile_cus" />
                                     <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                                    <input type="hidden" name="subfix" value="cus">
                                 </div>
                             </div>
+                            </br>
+                            <button type="submit" class="form-control">Upload</button>
+                            </form>
                             </br>
                         </div>
                     </div>
@@ -4167,6 +4186,61 @@ function closeAddaccount()
             data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
             success:function(data)
             {
+               // closeRecurr();
+               // location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+            }
+        })
+      }
+
+      var template_name = $('#template_name').val();
+      var template_type = $('#type_scheduled').val();
+      var template_interval = $('#interval').val();
+      var advanced_day='';
+      if($('#create_days').val()!='')
+      { advanced_day = $('#create_days').val();}
+      if($('#remine_days').val()!='')
+      { advanced_day = $('#remine_days').val();}
+
+      var day =$('#daily_days').val();
+      var dayname =$('#monthlymain_option').val();
+
+      var daynum='';
+      if($('#monthlyday_option').val()!='')
+      {var daynum =$('#monthlyday_option').val();}
+      if($('#yearlyday_option').val()!='')
+      {var daynum =$('#yearlyday_option').val();}
+
+      var weekday =$('#daily_weeks').val();
+
+      var weekname='';
+      if($('#weekly_option').val()!='')
+      {var weekname =$('#weekly_option').val();}
+      if($('#monthlyweek_option').val()!='')
+      {var weekname =$('#weekly_option').val();}
+
+      var monthday =$('#monthly_days').val();
+      var monthname =$('yearlymonth_option').val();
+
+      var startdate =$('#recurr_start_date').val();
+      var endtype =$('#recurr_select').val();
+      var enddate =$('#recurr_end_date').val();
+      var occurrence =$('#recurr_after_occurrences').val();
+      var payeename =$('#recurr_payee_popup').val();
+      var account_type =$('#recurr_account_popup').val();
+      var payment_date =$('#recurr_date_popup').val();
+      var mailing_address =$('#recurr_mailing_add').val();
+      var checkno =$('#recurr_checkno').val();
+      var permitno =$('#recurr_permitno').val();
+      var memo_recurr_sc =$('#recurr_memo_sc').val();
+
+      if(template_name!='')
+      {
+        $.ajax({
+            url:"<?php echo url('accounting/reconcile/recurr/save') ?>",
+            method: "POST",
+            data: {template_name:template_name,template_type:template_type,template_interval:template_interval,advanced_day:advanced_day,day:day,dayname:dayname,daynum:daynum,weekday:weekday,weekname:weekname,monthday:monthday,monthname:monthname,startdate:startdate,endtype:endtype,enddate:enddate,occurrence:occurrence,payeename:payeename,account_type:account_type,payment_date:payment_date,mailing_address:mailing_address,checkno:checkno,permitno:permitno,memo_recurr_sc:memo_recurr_sc},
+            success:function(data)
+            {
                 closeRecurr();
                 location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
             }
@@ -4250,7 +4324,7 @@ function closeAddaccount()
         jQuery("#overlay-preview-tx").removeClass("overlay");
     }
 
-    $( "#uploadmy" ).submit(function(e) {
+    $( ".uploadmy" ).submit(function(e) {
         e.preventDefault();
         this.submit();
         setTimeout(function () { 
