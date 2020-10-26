@@ -16,7 +16,7 @@ class IndustryType_model extends MY_Model
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
-                $this->db->like('business_type_name', $filters['search'], 'both');
+                $this->db->like('name', $filters['search'], 'both');
             }
         }
 
@@ -54,6 +54,19 @@ class IndustryType_model extends MY_Model
         $this->db->from($this->table);
 
         $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByName($name)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('name', $name);
 
         $query = $this->db->get()->row();
         return $query;
