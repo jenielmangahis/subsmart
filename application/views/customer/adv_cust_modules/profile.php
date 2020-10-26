@@ -59,10 +59,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <img src="/assets/img/customer/images/dashboard1.png" alt="wzardimg">
                                 </div>
                                 <div class="contactrighttxt" >
-                                    <a href="https://app.creditrepaircloud.com/wizard/index/NTk=" class="js-qwynlraxz">
-                                        Run Dispute Wizard</a>
+                                    <a href="<?= isset($profile_info) ? '/customer/index/tab3/'.  $profile_info->prof_id  .'/mt3' : '#' ?>" class="js-qwynlraxz">
+                                        Run Dispute Wizard
                                     <br>
                                     Create letters/correct errors
+                                    </a>
                                 </div>
                             </div>
                         </div>

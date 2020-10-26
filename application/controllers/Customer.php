@@ -61,7 +61,6 @@ class Customer extends MY_Controller
            // 'assets/frontend/js/creditcard.js',
            // 'assets/frontend/js/customer/add.js',
         ));
-       error_reporting(0);
     }
 
     public function leads()
@@ -392,6 +391,15 @@ class Customer extends MY_Controller
         echo "Done";
     }
 
+    public function remove_task(){
+        $input = array();
+        $input['field_name'] = "task_id";
+        $input['id'] = $_POST['id'];
+        $input['tablename'] = "acs_tasks";
+        $this->customer_ad_model->delete($input);
+        echo "Done";
+    }
+
     public function update_custom_fields(){
         $input = $this->input->post();
         $file_array = array();
@@ -492,6 +500,25 @@ class Customer extends MY_Controller
                 $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
                 $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_salesarea", "sa_id");
                 $this->load->view('customer/add_lead', $this->page_data);
+            }
+        }
+    }
+
+    public function add_audit_import_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['ai_id'])){
+            unset($input['ai_id']);
+            if($this->customer_ad_model->add($input,"acs_audit_import")){
+                echo "Success";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"acs_audit_import","ai_id")){
+                echo "Updated";
+            }else{
+                echo "Error";
             }
         }
     }
@@ -790,12 +817,14 @@ class Customer extends MY_Controller
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
            // print_r($this->page_data['alarm_info']);
         }
         $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['minitab'] = $this->uri->segment(5);
+        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         $this->page_data['users'] = $this->users_model->getUsers();

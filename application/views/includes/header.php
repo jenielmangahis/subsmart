@@ -243,54 +243,78 @@
                         $clock_in = '-';
                         $clock_out = '-';
                         $shift_duration = '-';
-                        $remaining_time = '60:00';
+                        $lunch_time = '00:00:00';
+                        $lunch_in = 0;
+                        $lunch_out = 0;
+                        $latest_lunch_in = 0;
                         $attendances = getEmployeeAttendance();
                         $ts_logs_h = getEmployeeLogs();
                         $analog_active = null;
                         $attn_id = null;
-                        $expected_endbreak = null;
+                        //                        $expected_endbreak = null;
                         $shift_end = 0;
                         $overtime_status = 1;
-                        foreach ($attendances as $attn){
-                            $attn_id = $attn->id;
-                            $overtime_status = $attn->overtime_status;
-                            foreach ($ts_logs_h as $log){
-                                if ($log->action == 'Check in' && $log->attendance_id == $attn->id){
-                                    if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                        $clock_in = date('h:i A',$log->date_created);
-                                        $shift_end = $log->date_created;
-                                    }elseif ($attn->date_in == date('Y-m-d')){
-                                        $clock_in = date('h:i A',$log->date_created);
-                                        $shift_end = $log->date_created;
-                                    }
-                                    if ($attn->status == 1){
-                                        $clock_out = 'Pending...';
-                                        $analog_active = 'clock-active';
-                                    }
-                                }
-                                if ($log->action == 'Break in' && $log->attendance_id == $attn->id){
-                                    if ($attn->status == 1){
-                                        $analog_active = 'clock-break';
-                                        $remaining_time = $attn->break_remaining_time;
-                                        $expected_endbreak = $attn->expected_endbreak;
-                                    }
-                                }
-                                if ($log->action == 'Break out' && $log->attendance_id == $attn->id){
-                                    if ($attn->status == 1){
-                                        $analog_active = 'clock-active';
-                                        if ($attn->break_remaining_time != null){
-                                            $remaining_time = $attn->break_remaining_time;
+                        if(!empty($attendances)) {
+                            foreach ($attendances as $attn) {
+                                $attn_id = $attn->id;
+
+                                $overtime_status = isset($attn->overtime_status) ? $attn->overtime_status : 0;
+                                foreach ($ts_logs_h as $log) {
+                                    if ($log->attendance_id == $attn->id && $attn->status == 1) {
+                                        if ($log->action == 'Check in') {
+                                            $clock_in = date('h:i A', $log->date_created);
+                                            $shift_end = $log->date_created;
+
+                                            $hours = floor($attn->break_duration / 60);
+                                            $minutes = floor($attn->break_duration % 60);
+                                            $seconds = $attn->break_duration - (int)$attn->break_duration;
+                                            $seconds = round($seconds * 60);
+                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
                                         }
+                                        if ($log->action == 'Break in') {
+                                            $analog_active = 'clock-break';
+                                            if ($attn->break_duration > 0) {
+                                                $lunch_in = $log->date_created - (floor($attn->break_duration * 60));
+                                                $latest_lunch_in = $log->date_created;
+                                            } else {
+                                                $lunch_in = $log->date_created;
+                                                $latest_lunch_in = 0;
+                                            }
+                                        }
+                                        if ($log->action == 'Break out') {
+                                            if ($attn->status == 1) {
+                                                $analog_active = 'clock-active';
+                                            }
+                                        }
+                                    } else {
+                                        if ($log->action == 'Check in') {
+                                            $clock_in = isset($log->date_created) ? date('h:i A', $log->date_created) : '';
+                                            $shift_end = isset($log->date_created) ? $log->date_created : '';
+
+                                            $hours = floor($attn->break_duration / 60);
+                                            $minutes = floor($attn->break_duration % 60);
+                                            $seconds = $attn->break_duration - (int)$attn->break_duration;
+                                            $seconds = round($seconds * 60);
+                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                        }
+                                        if ($log->action == 'Check out') {
+                                            $clock_out = isset($log->date_created) ? date('h:i A', $log->date_created) : '';
+                                            $analog_active = null;
+                                            $shift_s = ($attn->shift_duration * 3600);
+                                            $shift_h = floor($attn->shift_duration);
+                                            $shift_s -= $shift_h * 3600;
+                                            $shift_m = floor($shift_s / 60);
+                                            $shift_s -= $minutes * 60;
+                                            $shift_duration = str_pad($shift_h, 2, '0', STR_PAD_LEFT) . ":" . str_pad($shift_m, 2, '0', STR_PAD_LEFT);
+                                        }
+
                                     }
+
                                 }
-                                if ($log->action == 'Check out' && $log->attendance_id == $attn->id && date('Y-m-d',$log->date_created) == date('Y-m-d')){
-                                    $clock_out = date('h:i A',$log->date_created);
-                                    $analog_active = null;
-                                    $shift_duration = floatval($attn->shift_duration);
-                                }
+
+
                             }
                         }
-
                         $ts_settings = getEmpTSsettings();
                         $schedule = getEmpSched();
                         $expected_shift = 0;
@@ -302,11 +326,7 @@
                         foreach ($ts_settings as $setting){
                             foreach ($schedule as $sched){
                                 if ($setting->id == $sched->ts_settings_id){
-                                    if ($setting->timezone == null){
-                                        $tz = 'America/Chicago';
-                                    }else{
-                                        $tz = $setting->timezone;
-                                    }
+                                    $tz = isset($setting->timezone) && $setting->timezone != null ? $setting->timezone : 'America/Chicago';
                                     $timestamp = time();
                                     $dt = new DateTime("now", new DateTimeZone($tz));
                                     $dt->setTimestamp($timestamp);
@@ -337,14 +357,16 @@
                             $shift_end = null;
                         }
                         if ($analog_active == null){
-                            $shift_end = null;
-                            $overtime_status = null;
-                            $expected_endshift = null;
+                            $shift_end = 0;
+                            $overtime_status = 2;
+                            $expected_endshift = 0;
                         }
 
                         ?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
-                            <input type="hidden" id="clock-end-time" value="<?php echo ($expected_endbreak)?$expected_endbreak:null; ?>">
+                            <!--                            <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null; ?><!--">-->
+                            <input type="hidden" id="lunchStartTime" value="<?php echo $lunch_in;?>" data-value="<?php echo date('h:i A',$lunch_in)?>">
+                            <input type="hidden" id="latestLunchTime" value="<?php echo $latest_lunch_in;?>" data-value="<?php echo date('h:i A',$latest_lunch_in)?>">
                             <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break')?1:0; ?>">
                             <input type="hidden" id="attendanceId" value="<?php echo $attn_id;?>">
                             <input type="hidden" id="employeeShiftStart" value="<?php echo (!empty($expected_shift))?$expected_shift:0;?>">
@@ -381,11 +403,12 @@
                                 </div>
                                 <div class="clock-section">
                                     <span class="clock-details-title">Lunch:</span>
-                                    <span class="clock-details-text"><span id="break-duration"><?php echo $remaining_time;?></span>
+                                    <span class="clock-details-text"><span id="break-duration"><?php echo $lunch_time;?></span>
                                 </div>
                                 <div class="clock-section">
                                     <span class="clock-details-title">Shift Duration:</span>
                                     <span class="clock-details-text" id="shiftDuration"><?php echo $shift_duration; ?></span>
+                                    <span style="display: block;float: right;width: 50%;color: grey; font-size: 10px">(HH:MM)</span>
                                 </div>
                             </div>
                         </li>
@@ -401,11 +424,9 @@
                                     if( !@getimagesize($image) ){
                                         $image = base_url('uploads/users/default.png');
                                     }*/
-                                    // $image = base_url('uploads/users/default.png');
+                                    $image = base_url('uploads/users/default.png');
                                     ?>
-                                    <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle nav-user-img">
-
-                                    <!-- <img src="<?php //echo $image; ?>" alt="user" class="rounded-circle nav-user-img"> -->
+                                    <img src="<?php echo $image; ?>" alt="user" class="rounded-circle nav-user-img">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                     <a class="dropdown-item" href="<?php echo url('dashboard')?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>

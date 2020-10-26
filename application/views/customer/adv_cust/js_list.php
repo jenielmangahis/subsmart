@@ -269,6 +269,31 @@
             $('#modal_task').modal('show');
         });
 
+        $("#import_audit").on( "click", function( event ) {
+            $('#audit_import_form')[0].reset();
+            //$('#lead_source_header').text('Add Lead Source');
+            $('#modal_import_credit').modal('show');
+        });
+
+        $("#audit_import_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_audit_import_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        window.location.reload();
+                    }else {
+                        console.log(data);
+                    }
+                }
+            });
+        });
+
         $("#task_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
