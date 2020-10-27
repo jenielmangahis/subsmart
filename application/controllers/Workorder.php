@@ -670,52 +670,28 @@ class Workorder extends MY_Controller
 
     public function settings()
     {
-        $post = $this->input->post();
+        $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
 
-        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_WORKORDER);
-        $this->page_data['settings'] = unserialize($settings);
+        $company_id        = logged('company_id');
+        $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id); 
 
-        if (!empty($post)) {
+        //Default values
+        $prefix = 'WO-';
+        $order_num_next = str_pad(1, 5, '0', STR_PAD_LEFT);
 
-            $this->load->model('Settings_model', 'setting_model');
-            if (!empty($settings)) {
-
-                $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_WORKORDER]);
-
-                if (!empty($settings)) {
-
-                    // as where return multiple result as an array
-                    // we need only first result
-                    $setting = current($settings);
-
-                    $this->setting_model->update($setting->id, [
-                        'key' => DB_SETTINGS_TABLE_KEY_WORKORDER,
-                        'value' => serialize($post)
-                    ]);
-                }
-
-                $this->session->set_flashdata('alert', 'Workorder Settings Updated Successfully');
-            } else {
-
-                $this->setting_model->create([
-                    'key' => DB_SETTINGS_TABLE_KEY_WORKORDER,
-                    'value' => serialize($post)
-                ]);
-
-                $this->session->set_flashdata('alert', 'Workorder Settings Created Successfully');
-            }
-
-            $this->session->set_flashdata('alert-type', 'success');
-
-            redirect('settings/workorder');
-
-            exit();
-
-        } else {
-
-            $this->page_data['page']->menu = 'settings';
-            $this->load->view('workorder/settings', $this->page_data);
+        if( $workorderSettings ){
+            //Load company settings
+            $prefix = $workorderSettings->work_order_num_prefix;
+            $order_num_next    = $workorderSettings->work_order_num_next;
+            $capture_signature = $workorderSettings->capture_customer_signature;
         }
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['order_num_next'] = $order_num_next;
+        $this->page_data['capture_signature'] = $capture_signature;
+        $this->page_data['page']->menu = 'settings';
+
+        $this->load->view('workorder/settings', $this->page_data);
     }
 
 
@@ -860,6 +836,58 @@ class Workorder extends MY_Controller
 //        print_r($this->page_data['workorders']); die;
 
         $this->load->view('workorder/print/list', $this->page_data);
+    }
+
+    public function ajax_update_workoder_settings()
+    {
+        postAllowed();
+        $post = $this->input->post();
+        $hide_from_email = 0;
+        if( isset($post['hide_from_email']) ){
+            $hide_from_email = 1;
+        }
+
+        $json_data = [
+                'is_success' => 0,
+                'msg' => 'Cannot update settings'
+        ];
+
+        $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
+
+        $company_id        = logged('company_id');
+        $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id); 
+
+        if( $workorderSettings ){
+            $data = [
+                'work_order_num_prefix' => $post['next_custom_number_prefix'],
+                'work_order_num_next' => $post['next_custom_number_base'],
+                'capture_customer_signature' => $hide_from_email,
+            ];
+
+            $workorderSettings = $this->WorkorderSettings->updateByCompanyId($company_id,$data);
+
+            $json_data = [
+                    'is_success' => 1,
+                    'msg' => 'Settings saved.'
+            ];
+
+        }else{
+            $data = [
+                'work_order_num_prefix' => $post['next_custom_number_prefix'],
+                'work_order_num_next' => $post['next_custom_number_base'],
+                'capture_customer_signature' => $hide_from_email,
+                'company_id' => $company_id
+            ];
+
+            $workorderSettings = $this->WorkorderSettings->create($data);
+
+            $json_data = [
+                    'is_success' => 1,
+                    'msg' => 'Settings saved.'
+            ];
+        }
+
+        echo json_encode($json_data);
     }
 }
 
