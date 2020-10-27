@@ -63,6 +63,10 @@ class Trac360 extends MY_Controller {
 
                 $this->page_data['map'] = $data['html'];
                 $this->page_data['map_js'] = $data['js'];
+
+                $this->page_data['categories'] = $this->users_geographic_positions_categories_model->getByWhere(array('company_id' => $company_id));
+                $this->page_data['users'] = $this->users_model->getByWhere(array('company_id' => $company_id));   
+
                 $this->page_data['trac360_manager'] = $this->load->view('modals/trac360_manager', array(), true);
 
 	        $this->load->view('trac360/main', $this->page_data);
@@ -96,6 +100,8 @@ class Trac360 extends MY_Controller {
                                 'b.img_type, '.
                                 'b.FName, '.
                                 'b.LName, '.
+                                'c.category_name, '.
+                                'c.category_desc, '.
                                 'c.category_tag '.
 
                                 'from users_geo_positions a '.

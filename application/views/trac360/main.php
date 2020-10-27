@@ -64,13 +64,61 @@
         <div class="col-md-4 trac360_main_sections">
           <div class="card p-0 ToFit">
             <div class="card-header pl-1 pr-1">
-              <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="trac360_new_person" title="Add New Person"><i class="fa fa-plus"></i></a>
-              <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="trac360_del_person" title="Remove Person"><i class="fa fa-trash"></i></a>  
+              <div class="row">
+                <div class="col-md-6">
+                  <h5 class="m-0" id="cur_tab_title" style="padding-left: 10px"></h5>
+                  <button class="btn btn-sm btn-default border-0 font-weight-bold d-none" style="background-color: transparent !important;" id="prev_tab" prev_tab=""><i class="fa fa-arrow-circle-o-left mr-1"></i>Go Back</button>
+                </div>
+                <div class="col-md-6">
+                  <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="trac360_add_record" title="Add New Record"><i class="fa fa-plus"></i></a>
+                  <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="trac360_del_record" title="Remove Record"><i class="fa fa-trash"></i></a>
+                  <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 d-none" control="trac360_save_record" title="Save Record"><i class="fa fa-check"></i></a> 
+                </div>
+              </div>
             </div>
             <div class="card-body pt-0 pb-0 pl-1 pr-1">
-              <div id="trac360_groups_people">
+              <div class="tab-content">
+                <div class="tab-pane container pl-0 pr-0 active" diventry="people_entry" id="trac360_groups_people">
 
+                </div>
+                <div class="tab-pane container pl-0 pr-0 fade" id="groups_tab">
+                </div>
+                <div class="tab-pane container pl-0 pr-0 fade" id="places_tab">
+                </div>
+                <div class="tab-pane container fade" id="people_entry" title="People Form">
+                  <div class="row mt-2">
+                    <div class="col-md-7 form-group">
+                      <label for="trac360_people_entry_categories"><strong>Group</strong><small> Select group to add user</small></label>
+                      <select class="form-control" name="trac360_people_entry_categories" id="trac360_people_entry_categories">
+                        <option value="">Select Group</option>
+                        <?php 
+                          foreach($categories as $category){
+                        ?>
+                          <option value="<?php echo $category->id; ?>" catdesc="<?php echo $category->category_desc; ?>"><?php echo $category->category_name; ?></option>
+                      <?php } ?>
+                      </select>
+                    </div>
+                    <div class="col-md-5 form-group">
+                      <label for="trac360_people_entry_users"><strong>User</strong><small> Select user to trace</small></label>
+                      <select class="form-control" name="trac360_people_entry_users" id="trac360_people_entry_users">
+                        <option value="">Select User</option>
+                        <?php 
+                          foreach($users as $user){
+                        ?>
+                          <option value="<?php echo $user->id; ?>"><?php echo $user->FName . ' ' . $user->LName; ?></option>
+                      <?php } ?>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane container pl-0 pr-0 fade" id="groups_entry">
+                </div>
+                <div class="tab-pane container pl-0 pr-0 fade" id="places_entry">
+                </div>
               </div>
+            </div>
+            <div class="card-footer">
+
             </div>
           </div>
         </div>
@@ -103,8 +151,65 @@
 
     new_records_checker = null;
 
+    current_theme = '';
+
     InitializeBody();
     InitializeMarkers();
+
+    $('a[control="trac360_add_record"]').click(function(e){
+      e.preventDefault();
+
+      var button = $('#prev_tab');
+      var tab = $('div.tab-pane.active');
+      var entry = 'div#' + tab.attr('diventry');
+
+      tab.removeClass('active');
+      tab.addClass('fade');
+
+      $(entry).removeClass('fade');
+      $(entry).addClass('active');
+      $('#cur_tab_title').text($(entry).attr("title"));
+
+      button.attr("prev_tab",tab.attr("id"));
+      button.removeClass('d-none');
+
+      $(this).addClass('d-none');
+      $('a[control="trac360_del_record"]').addClass('d-none');
+      $('a[control="trac360_save_record"]').removeClass('d-none');
+    });
+
+    $('a[control="trac360_del_record"]').click(function(e){
+      e.preventDefault();
+    });
+
+    $('btn-modal-trac360-entry-save').click(function(){
+
+    });
+
+    $('btn-modal-trac360-entry-cancel').click(function(){
+      $('a[control="trac360_del_record"]').addClass('d-none');
+      $('a[control="trac360_save_record"]').removeClass('d-none');
+    });
+
+    $('#prev_tab').click(function(){
+      var prev_tab = 'div#' + $(this).attr("prev_tab");
+      var tab = $('div.tab-pane.active');
+
+      tab.removeClass('active');
+      tab.addClass('fade');
+
+      $(prev_tab).removeClass('fade');
+      $(prev_tab).addClass('active');
+
+      $('a[control="trac360_add_record"]').removeClass('d-none');
+      $('a[control="trac360_del_record"]').removeClass('d-none');
+      $('a[control="trac360_save_record"]').addClass('d-none');
+
+      $(this).attr("prev_tab","");
+      $(this).addClass('d-none');
+
+      $('#cur_tab_title').empty();
+    });
   });
 
   function InitializeBody(){
@@ -175,9 +280,9 @@
             if(category_id == user.category_id){
               append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
                 append += '<td class="d-none">'+ user.user_id +'</td>';
-                append += '<td style="width: 65%">' + user.FName + ' ' + user.LName + '</td>';
-                append += '<td style="width: 17.5%" class="text-center">'+ user.latitude +'</td>';
-                append += '<td style="width: 17.5%" class="text-center">'+ user.longitude +'</td>';
+                append += '<td style="width: 60%">' + user.FName + ' ' + user.LName + '</td>';
+                append += '<td style="width: 20%" class="text-center">'+ user.latitude +'</td>';
+                append += '<td style="width: 20%" class="text-center">'+ user.longitude +'</td>';
               append += '</tr>';
 
               $('#trac360_table_' + category_id + ' > tbody > tr:last').after(append);
@@ -210,17 +315,17 @@
                   append += '<thead>';
                     append += '<tr>';
                       append += '<th class="d-none"></th>';
-                      append += '<th style="width: 65%" class="font-weight-bold">' + user.category_tag + '</th>';
-                      append += '<th style="width: 17.5%" class="font-weight-bold text-center">Latitude</th>';
-                      append += '<th style="width: 17.5%" class="font-weight-bold text-center">Longitude</th>';
+                      append += '<th style="width: 60%" class="font-weight-bold">' + user.category_tag + '</th>';
+                      append += '<th style="width: 20%" class="font-weight-bold text-center">Latitude</th>';
+                      append += '<th style="width: 20%" class="font-weight-bold text-center">Longitude</th>';
                     append += '</tr>';
                   append += '</thead>';
                   append += '<tbody>';
                     append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
                       append += '<td class="d-none">'+ user.user_id +'</td>';
-                      append += '<td style="width: 65%">' + user.FName + ' ' + user.LName + '</td>';
-                      append += '<td style="width: 17.5%" class="text-center">'+ user.latitude +'</td>';
-                      append += '<td style="width: 17.5%" class="text-center">'+ user.longitude +'</td>';
+                      append += '<td style="width: 60%">' + user.FName + ' ' + user.LName + '</td>';
+                      append += '<td style="width: 20%" class="text-center">'+ user.latitude +'</td>';
+                      append += '<td style="width: 20%" class="text-center">'+ user.longitude +'</td>';
                     append += '</tr>';
                   append += '</tbody>';
                 append += '</table>';
@@ -245,6 +350,8 @@
                     var last_marker = markers_map[member.idx];
 
                     last_marker.setVisible(false);
+
+                    requests[member.idx]['visible'] = false;
                   });
                 }  
 
@@ -255,6 +362,8 @@
                   var cur_marker = markers_map[member.idx];
 
                   cur_marker.setVisible(true);
+
+                  requests[member.idx]['visible'] = true;
 
                   if(index == 0){
                     map.setCenter(cur_marker.position);
@@ -306,8 +415,69 @@
               var result = jQuery.parseJSON(data);
               if(result.count > 0){
                 $.each(result.users, function(index, user){
+                  var append = '';
+                  var InGroups = (user.category_id in groups);
+                  if(!InGroups){
+                    append += '<div class="card mb-0 p-1" id="trac360_card_'+ user.category_id +'">';
+                    append += '<div class="card-header">';
+                    append += '<a class="card-link" data-toggle="collapse" href="#trac360_card_table_'+ user.category_id +'">';
+                    append += '<i class="fa fa-plus mr-2"></i><strong>' + user.category_name + '</strong>';
+                    append += '</a><br>';
+
+                    if(user.category_desc != ''){
+                      append += '<a class="card-link" data-toggle="collapse" href="#trac360_card_table_'+ user.category_id +'">'+
+                                '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ user.category_desc +
+                                '</small></a>';  
+                    }
+
+                    append += '</div>';     
+                    append += '</div>';
+
+                    $('#trac360_groups_people').append(append);
+
+                    append = '';
+
+                    append += '<div id="trac360_card_table_'+ user.category_id +'" categoryid='+ user.category_id +' class="collapse" data-parent="#trac360_groups_people">';
+                    append += '<div class="card-body p-1">';
+                    append += '<div class="table-responsive">';
+                      append += '<table class="table table-bordered mb-0" id="trac360_table_'+ user.category_id +'">';
+                        append += '<thead>';
+                          append += '<tr>';
+                            append += '<th class="d-none"></th>';
+                            append += '<th style="width: 60%" class="font-weight-bold">' + user.category_tag + '</th>';
+                            append += '<th style="width: 20%" class="font-weight-bold text-center">Latitude</th>';
+                            append += '<th style="width: 20%" class="font-weight-bold text-center">Longitude</th>';
+                          append += '</tr>';
+                        append += '</thead>';
+                        append += '<tbody>';
+                        append += '</tbody>';
+                      append += '</table>';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '</div>';
+
+                    $('#trac360_card_' + user.category_id + ' > div.card-header').after(append);
+
+                    groups[user.category_id] = {count:0,members:{}};    
+                  }
+
+                  append = '';
+
                   var table = $('#trac360_table_' + user.category_id);
-                   
+                  var tbody = table.children('tbody');
+                  
+                    append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
+                      append += '<td class="d-none">'+ user.user_id +'</td>';
+                      append += '<td style="width: 60%">' + user.FName + ' ' + user.LName + '</td>';
+                      append += '<td style="width: 20%" class="text-center">'+ user.latitude +'</td>';
+                      append += '<td style="width: 20%" class="text-center">'+ user.longitude +'</td>';
+                    append += '</tr>';
+
+                  tbody.children('tr:last').after(append);
+
+                  all_users.push(user.user_id);
+
+                  addNewUserMarkerToMap(user, false); 
                 });
               }
             }
@@ -344,7 +514,7 @@
     var tMarker = createMarker_map(UserMarker);
     
     var cmmi = markers_map.length - 1;
-    var cmmi_info = {'process':'idle','visible':vShowOnMap};
+    var cmmi_info = {'process':'idle','visible':vShowOnMap,'removed':false};
 
     var vUserInfo = {'idx':cmmi,'info':vUser};
 
@@ -353,7 +523,7 @@
  
     requests[cmmi] = cmmi_info;
     tracking[cmmi] = setInterval(function(){
-      if((requests[cmmi]['process'] == 'idle') && (requests[cmmi]['visible'])){
+      if((requests[cmmi]['process'] == 'idle') && (requests[cmmi]['visible']) && (!requests[cmmi]['removed'])){
         requests[cmmi]['process'] = 'ongoing';
         var user_geo = $('#trac360_table_'+ vUser.category_id +' > tbody').children('tr.marker_' + vUser.user_id);
         var user_old_lat = user_geo.children('td:eq(2)').text();
@@ -413,4 +583,9 @@
   function hideProcessing(){
     $('#modal-trac360-processing').modal('hide');  
   }
+
+  function showAlert(vTheme, vText){
+    current_theme = vTheme;
+  }
+
 </script>

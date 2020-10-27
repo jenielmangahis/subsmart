@@ -423,4 +423,34 @@ class Reconcile extends MY_Controller {
         $this->reconcile_model->updatepgscrecords($id,$scid,$first_date,$checkno,$service_charge_sub,$expense_account_sub,$descp_sc_sub);
         
     }
+
+    public function recurr_save()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $template_name=$this->input->post('template_name');
+        $template_type=$this->input->post('template_type');
+        $template_interval=$this->input->post('template_interval');
+        $advanced_day=$this->input->post('advanced_day');
+        $day=$this->input->post('day');
+        $dayname=$this->input->post('dayname');
+        $daynum=$this->input->post('daynum');
+        $weekday=$this->input->post('weekday');
+        $weekname=$this->input->post('weekname');
+        $monthday=$this->input->post('monthday');
+        $monthname=$this->input->post('monthname');
+        $startdate=$this->input->post('startdate');
+        $endtype=$this->input->post('endtype');
+        $enddate=$this->input->post('enddate');
+        $occurrence=$this->input->post('occurrence');
+        $payeename=$this->input->post('payeename');
+        $account_type=$this->input->post('account_type');
+        $payment_date=$this->input->post('payment_date');
+        $mailing_address=$this->input->post('mailing_address');
+        $checkno=$this->input->post('checkno');
+        $permitno=$this->input->post('permitno');
+        $memo_recurr_sc=$this->input->post('memo_recurr_sc');
+
+        $this->reconcile_model->recurr_save($reconcile_id,$chart_of_accounts_id,$template_name,$template_type,$template_interval,$advanced_day,$day,$dayname,$daynum,$weekday,$weekname,$monthday,$monthname,$startdate,$endtype,$enddate,$occurrence,$payeename,$account_type,$payment_date,$mailing_address,$checkno,$permitno,$memo_recurr_sc);
+    }
 }
