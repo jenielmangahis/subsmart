@@ -290,14 +290,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 											<div class="col-md-6 float-left">
 												<div class="input-group">
-													<select class="reg-select z-100 cmb-industry" id="industry" name="industry" required="">
+													<select class="reg-select z-100 cmb-industry" id="industry_type_id" name="industry_type_id" required="">
 														<option>--Select your Industry--</option>
-						                                <?php foreach( $business as $key => $values ){ ?>
-						                                    <optgroup label="<?php echo $key; ?>">
-						                                    <?php foreach( $values as $value ){ ?>
-						                                        <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
-						                                    <?php } ?>
-						                                <?php } ?>
+						                                <?php $businessTypeName  = "";
+						                                     foreach($industryTypes  as $industryType ){ ?>
+						                                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
+						                                           			<optgroup label="<?php echo $industryType->business_type_name; ?>">
+						                                           <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
+						                                            <option value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
+						                                <?php  }   ?>						                                
 													</select>
 												</div>
 											</div>

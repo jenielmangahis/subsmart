@@ -20,7 +20,7 @@ class IndustryType_model extends MY_Model
             }
         }
 
-        $this->db->order_by('id', 'ASC');
+        $this->db->order_by('business_type_name', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }
