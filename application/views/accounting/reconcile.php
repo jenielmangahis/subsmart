@@ -35,6 +35,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .gmail:not(.show) {
     display: none;
 }
+@media print {
+    .print_disnone {
+        display: none;
+    }
+    .print_disshow{
+        display: block !important;
+    }
+}
 </style>
 <?php 
 $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id);
@@ -470,13 +478,13 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <!-- Print popup -->
     <div id="overlay-print-tx" class=""></div>
     <div id="side-menu-print-tx" class="main-side-nav" style="background-color: #f4f5f8">
-        <div class="side-title">
+        <div class="side-title print_disnone">
             <h4>Print Checks</h4>
             <a id="close-menu-print-tx" class="menuCloseButton" onclick="closePrintNav()"><span id="side-menu-close-text">
             <i class="fa fa-times"></i></span></a>
         </div>
         <div style="margin-left: 20px;">
-            <div class="row">
+            <div class="row print_disnone">
                 <div class="col-md-3">
                     <select class="form-control" id="account_printpopup">
                         <?php
@@ -503,7 +511,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <button type="button" class="form-control" onclick="addCheck()">Add checks</button>
                 </div>
             </div>
-            <div class="row">
+            <div class="row print_disnone">
                 <div class="col-md-2">
                     <button type="button" class="form-control">Remove from list</button>
                 </div>
@@ -549,7 +557,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row print_disnone">
                 <section class="table-wrapper">
                     <div class="container">
                         <table class="table" id="print_table">
@@ -577,12 +585,59 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
                 </section>
             </div>
+            <div style="display: none;" class="print_disshow">
+                <?php
+                function AmountInWords(float $amount)
+                {
+                   $amount_after_decimal = round($amount - ($num = floor($amount)), 2) * 100;
+                   // Check if there is any number after decimal
+                   $amt_hundred = null;
+                   $count_length = strlen($num);
+                   $x = 0;
+                   $string = array();
+                   $change_words = array(0 => '', 1 => 'One', 2 => 'Two',
+                     3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six',
+                     7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
+                     10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve',
+                     13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
+                     16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen',
+                     19 => 'Nineteen', 20 => 'Twenty', 30 => 'Thirty',
+                     40 => 'Forty', 50 => 'Fifty', 60 => 'Sixty',
+                     70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety');
+                    $here_digits = array('', 'Hundred','Thousand','Lakh', 'Crore');
+                    while( $x < $count_length ) {
+                      $get_divider = ($x == 2) ? 10 : 100;
+                      $amount = floor($num % $get_divider);
+                      $num = floor($num / $get_divider);
+                      $x += $get_divider == 10 ? 1 : 2;
+                      if ($amount) {
+                       $add_plural = (($counter = count($string)) && $amount > 9) ? 's' : null;
+                       $amt_hundred = ($counter == 1 && $string[0]) ? ' and ' : null;
+                       $string [] = ($amount < 21) ? $change_words[$amount].' '. $here_digits[$counter]. $add_plural.' 
+                       '.$amt_hundred:$change_words[floor($amount / 10) * 10].' '.$change_words[$amount % 10]. ' 
+                       '.$here_digits[$counter].$add_plural.' '.$amt_hundred;
+                        }
+                   else $string[] = null;
+                   }
+                   $implode_to_Rupees = implode('', array_reverse($string));
+                   $get_paise = ($amount_after_decimal > 0) ? "And " . ($change_words[$amount_after_decimal / 10] . " 
+                   " . $change_words[$amount_after_decimal % 10]) . ' Paise' : '';
+                   return ($implode_to_Rupees ? $implode_to_Rupees . 'Rupees ' : '') . $get_paise;
+                }
+                ?>
+                <p>
+                    <?=$rows[0]->first_date?><br>
+                    **<?=number_format($rows[0]->service_charge,2)?><br>
+                    <?php echo AmountInWords(number_format($rows[0]->service_charge,2));?> <br>*********************************************************************************************
+                    Service Charge edit
+                </p>
+            </div>
         </div>
     
 
-        <div class="save-act" style="position: unset !important;">
+        <div class="save-act print_disnone" style="position: unset !important;">
             <button type="button" class="btn-cmn" onclick="closePrintNav()">Cancel</button>
-            <button type="submit" class="savebtn">Preview and print</button>
+            <button type="button" class="savebtn" onclick="window.print()">Preview and print</button>
         </div>
     </div>
     <!-- End Print popup -->
@@ -4238,11 +4293,16 @@ function closeAddaccount()
         $.ajax({
             url:"<?php echo url('accounting/reconcile/recurr/save') ?>",
             method: "POST",
-            data: {template_name:template_name,template_type:template_type,template_interval:template_interval,advanced_day:advanced_day,day:day,dayname:dayname,daynum:daynum,weekday:weekday,weekname:weekname,monthday:monthday,monthname:monthname,startdate:startdate,endtype:endtype,enddate:enddate,occurrence:occurrence,payeename:payeename,account_type:account_type,payment_date:payment_date,mailing_address:mailing_address,checkno:checkno,permitno:permitno,memo_recurr_sc:memo_recurr_sc},
+            data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,template_name:template_name,template_type:template_type,template_interval:template_interval,advanced_day:advanced_day,day:day,dayname:dayname,daynum:daynum,weekday:weekday,weekname:weekname,monthday:monthday,monthname:monthname,startdate:startdate,endtype:endtype,enddate:enddate,occurrence:occurrence,payeename:payeename,account_type:account_type,payment_date:payment_date,mailing_address:mailing_address,checkno:checkno,permitno:permitno,memo_recurr_sc:memo_recurr_sc},
             success:function(data)
             {
+                //location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+                sweetAlert(
+                                            'Saved!',
+                                            'Recurring has been saved.',
+                                            'success'
+                                        );
                 closeRecurr();
-                location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
             }
         })
       }

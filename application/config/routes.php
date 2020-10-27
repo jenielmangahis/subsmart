@@ -255,6 +255,8 @@ $route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicechar
 $route['accounting/reconcile/change/servicecharge'] = 'reconcile/update_servicecharge';
 $route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
 $route['accounting/reconcile/servicecharge/remove_sc'] = 'reconcile/remove_sc';
+$route['accounting/reconcile/recurr/save'] = 'reconcile/recurr_save';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

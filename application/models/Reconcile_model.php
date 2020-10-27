@@ -205,5 +205,11 @@ class Reconcile_model extends MY_Model {
         //return fetched data
         return $result;
 	}
+
+	public function recurr_save($reconcile_id,$chart_of_accounts_id,$template_name,$template_type,$template_interval,$advanced_day,$day,$dayname,$daynum,$weekday,$weekname,$monthday,$monthname,$startdate,$endtype,$enddate,$occurrence,$payeename,$account_type,$payment_date,$mailing_address,$checkno,$permitno,$memo_recurr_sc)
+	{
+		$query="insert into accounting_recurr values('','$reconcile_id','$chart_of_accounts_id','$template_name','$template_type','$template_interval','$advanced_day','$day','$dayname','$daynum','$weekday','$weekname','$monthday','$monthname','$startdate','$endtype','$enddate','$occurrence','$payeename','$account_type','$payment_date','$mailing_address','$checkno','$permitno','$memo_recurr_sc')";
+		echo $this->db->query($query);
+	}
 }
 ?>
