@@ -19,8 +19,12 @@
 
 <script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <script src="<?php echo $url->assets ?>js/plan_builder.js"></script>
-<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+<!-- <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> -->
+
+<script src="<?php echo $url->assets ?>plugins/datatables.net/js/1.10.20/jquery.dataTables.min.js"></script>
+<script src="<?php echo $url->assets ?>plugins/moment/2.24.0/moment.min.js"></script>
 
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js"></script>
@@ -28,6 +32,7 @@
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/pdfmake.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/vfs_fonts.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.html5.min.js"></script>
+
 <!-- Validate  -->
 <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/jquery.validate.min.js"></script>
@@ -35,6 +40,10 @@
 <script src="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
+
+<script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
+<script src="<?php echo $url->assets;?>js/icons/icon.navbar.js"></script>
+<script src="<?php echo $url->assets;?>plugins/sweetalert/sweetalert2@10.js"></script>
 
 <!-- dynamic assets goes  -->
 <?php echo put_footer_assets(); ?>
