@@ -45,9 +45,7 @@ class MY_Controller extends CI_Controller {
 		}
 	}
 
-
 	protected function checkLogin($is_front = '') {
-
 		$user_id =  logged('id');		
 		if( $is_front == 1 ){
 			return true;
@@ -59,6 +57,22 @@ class MY_Controller extends CI_Controller {
 				exit();
 			}
 		}
+	}
+
+	protected function isCheckLoginAndRole($user_role_id = '') {
+		$role_id =  logged('role');
+		$user_id =  logged('id');		
+
+		if ( empty($user_id) ) {
+			redirect('login');
+			exit();
+		} else {
+			if($role_id != $user_role_id) {
+				redirect('page/no_access');
+				exit();
+			}
+		}
+
 	}
 }
 
