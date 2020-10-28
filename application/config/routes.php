@@ -387,3 +387,5 @@ $route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_ca
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
+
+$route['page/no_access'] = 'page/no_access';
