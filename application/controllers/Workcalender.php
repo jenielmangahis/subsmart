@@ -1189,6 +1189,7 @@ class Workcalender extends MY_Controller
     public function debug_google_events()
     {
         $this->load->model('GoogleAccounts_model');
+        $this->load->model('Event_model', 'event_model');
 
         //Google Events
         $resources_user_events = array();
@@ -1199,7 +1200,7 @@ class Workcalender extends MY_Controller
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
         $post['start'] = '2020-09-27T00:00:00+08:00';
         $post['end'] = '2020-11-08T00:00:00+08:00';
-        
+
         if( $google_user_api ){
             $google_credentials = google_credentials();        
 
