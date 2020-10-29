@@ -358,7 +358,16 @@ a.top-1 {
                                                         <option value='local' selected>local</option>
                                                         <option value='UTC'>UTC</option>
                                                     </select>-->
-                                                    <span class="text-ter left">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec left text-green" href="<?= base_url()?>settings/schedule"><span class="fa fa-cog left"></span> Change</a>
+                                                    <?php 
+                                                      $a_settings = unserialize($settings[0]->value);
+                                                      if( $a_settings ){
+                                                        $timezone = $a_settings['calendar_timezone'];
+                                                      }else{
+                                                        $timezone = 'Central Time (UTC -5)';
+                                                      }
+                                                    ?>
+                                                    <input type="hidden" id="time-zone-selector" value="<?= $timezone; ?>">
+                                                    <span class="text-ter left"><?= $timezone; ?> &nbsp;</span><a class="margin-right-sec left text-green" href="<?= base_url()?>settings/schedule"><span class="fa fa-cog left"></span> Change</a>
                                                 </div>
                                               </div>
                                               <?php if (!empty($users)) { ?>

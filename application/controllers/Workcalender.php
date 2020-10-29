@@ -319,8 +319,11 @@ class Workcalender extends MY_Controller
             $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);
         }   
 
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+
         $this->load->model('Users_model', 'user_model');
         
+        $this->page_data['settings'] = $settings;
         $this->page_data['enabled_calendar'] = $enabled_calendar;
         $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
         $this->page_data['get_recent_users'] = $get_recent_users;
@@ -857,6 +860,14 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByUserId();
         }
 
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+        $a_settings = unserialize($settings[0]->value);
+        if( $a_settings ){
+            $user_timezone = $a_settings['calendar_timezone'];
+        }else{
+            $user_timezone = 'UTC';
+        }
+
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
@@ -963,23 +974,44 @@ class Workcalender extends MY_Controller
                         $gevent = $this->event_model->getEventByGoogleEventId($event->id);
                         
                         if( empty($gevent) ){
-                            if( $event->start->dateTime != '' ){
-                                $start_date = $event->start->dateTime;
+
+                            if( $event->start->timeZone != '' ){
+                                $tz = new DateTimeZone($event->start->timeZone);
+                                $timezone = $event->start->timeZone;
                             }else{
-                                $start_date = $event->start->date;
+                                $tz = new DateTimeZone($user_timezone);
+                                $timezone = $user_timezone;
+                            }
+
+                            if( $event->start->dateTime != '' ){
+                                $date = new DateTime($event->start->dateTime);
+                                $date->setTimezone($tz);
+
+                                $start_date = $date->format('Y-m-d H:i:s');
+                            }else{
+                                $date = new DateTime($event->start->date);
+                                $date->setTimezone($tz);
+
+                                $start_date = $date->format('Y-m-d H:i:s');
                             }
 
                             if( $event->end->dateTime != '' ){
-                                $end_date = $event->end->dateTime;
+                                $date = new DateTime($event->end->dateTime);
+                                $date->setTimezone($tz);
+
+                                $end_date = $date->format('Y-m-d H:i:s');
                             }else{
-                                $end_date = $event->end->date;
+                                $date = new DateTime($event->end->date);
+                                $date->setTimezone($tz);
+                                
+                                $end_date = $date->format('Y-m-d H:i:s');
                             }
 
                             if( $event->summary != '' ){
                                 $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['resourceId'] = "user17";
                                 $resources_user_events[$inc]['title'] = $event->summary;
-                                $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
+                                $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
                                 $resources_user_events[$inc]['start'] = $start_date;
                                 $resources_user_events[$inc]['end'] = $end_date;
                                 $resources_user_events[$inc]['color'] = $bgcolor;
@@ -1201,6 +1233,14 @@ class Workcalender extends MY_Controller
         $post['start'] = '2020-09-27T00:00:00+08:00';
         $post['end'] = '2020-11-08T00:00:00+08:00';
 
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+        $a_settings = unserialize($settings[0]->value);
+        if( $a_settings ){
+            $user_timezone = $a_settings['calendar_timezone'];
+        }else{
+            $user_timezone = 'UTC';
+        }
+
         if( $google_user_api ){
             $google_credentials = google_credentials();        
 
@@ -1247,8 +1287,7 @@ class Workcalender extends MY_Controller
 
             $calendar_list = $data->getItems(); 
             $email = $google_user_api->google_email;
-            $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
-
+            $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);            
             foreach( $calendar_list as $cl ){
                 if(in_array($cl['id'], $enabled_mini_calendar)){
                     //Display in events
@@ -1269,26 +1308,48 @@ class Workcalender extends MY_Controller
                         $gevent = $this->event_model->getEventByGoogleEventId($event->id);
                         
                         if( empty($gevent) ){
-                            if( $event->start->dateTime != '' ){
-                                $start_date = $event->start->dateTime;
+                            if( $event->start->timeZone != '' ){
+                                $tz = new DateTimeZone($event->start->timeZone);
+                                $timezone = $event->start->timeZone;
                             }else{
-                                $start_date = $event->start->date;
+                                $tz = new DateTimeZone($user_timezone);
+                                $timezone = $user_timezone;
+                            }
+
+                            if( $event->start->dateTime != '' ){
+                                $date = new DateTime($event->start->dateTime);
+                                $date->setTimezone($tz);
+
+                                $start_date = $date->format('Y-m-d H:i:s');
+                            }else{
+                                $date = new DateTime($event->start->date);
+                                $date->setTimezone($tz);
+
+                                $start_date = $date->format('Y-m-d H:i:s');
                             }
 
                             if( $event->end->dateTime != '' ){
-                                $end_date = $event->end->dateTime;
+                                $date = new DateTime($event->end->dateTime);
+                                $date->setTimezone($tz);
+
+                                $end_date = $date->format('Y-m-d H:i:s');
                             }else{
-                                $end_date = $event->end->date;
+                                $date = new DateTime($event->end->date);
+                                $date->setTimezone($tz);
+                                
+                                $end_date = $date->format('Y-m-d H:i:s');
                             }
 
                             if( $event->summary != '' ){
                                 $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['resourceId'] = "user17";
+                                $resources_user_events[$inc]['timezone'] = $timezone;
                                 $resources_user_events[$inc]['title'] = $event->summary;
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
                                 $resources_user_events[$inc]['start'] = $start_date;
                                 $resources_user_events[$inc]['end'] = $end_date;
                                 $resources_user_events[$inc]['color'] = $bgcolor;
+                                $resources_user_events[$inc]['events'] = $event;
 
                                 $inc++;
                             }
