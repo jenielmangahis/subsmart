@@ -30,6 +30,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .week-label{
         font-weight: bold;
     }
+    /*Table loader*/
+    #ts_schedule_tbl_wrapper{
+        display: none;
+    }
+    .table-ts-loader{
+        display: block;
+        margin: 0 auto;
+        clear: both;
+        position: relative;
+        z-index: 20;
+        width: 100%;
+        min-height: 100px;
+        background:rgb(128 128 128 / 18%);
+    }
+    .table-ts-loader img{
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -85,66 +109,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="ts_schedule_tbl" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <td>Dept</td>
-                                                <td>Employee</td>
-                                                <td>Status</td>
-                                                <td class="day"><span class="week-day">Mon</span><span class="week-date"><?php echo $date_this_week['Monday']?></span></td>
-                                                <td class="day"><span class="week-day">Tue</span><span class="week-date"><?php echo $date_this_week['Tuesday']?></span></td>
-                                                <td class="day"><span class="week-day">Wed</span><span class="week-date"><?php echo $date_this_week['Wednesday']?></span></td>
-                                                <td class="day"><span class="week-day">Thu</span><span class="week-date"><?php echo $date_this_week['Thursday']?></span></td>
-                                                <td class="day"><span class="week-day">Fri</span><span class="week-date"><?php echo $date_this_week['Friday']?></span></td>
-                                                <td class="day"><span class="week-day">Sat</span><span class="week-date"><?php echo $date_this_week['Saturday']?></span></td>
-                                                <td class="day"><span class="week-day">Sun</span><span class="week-date"><?php echo $date_this_week['Sunday']?></span></td>
-                                                <td>Hours</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                            $roles = null;
-                                            $name = null;
-                                            $status = null;
-                                        ?>
-                                        <?php foreach ($users as $user): ?>
-                                            <?php
-                                                $name = $user->FName." ".$user->LName;
-                                                foreach ($user_roles as $role){
-                                                    if ($user->role == $role->id){
-                                                        $roles = $role->title;
-                                                    }
-                                                }
-
-                                            switch ($user->status) {
-                                                case 1:
-                                                    $status = 'Fulltime';
-                                                    break;
-                                                default:
-                                                    $status = null;
-                                            }
-                                            ?>
-                                            <tr>
-                                                <td class="center"><?php echo $roles;?></td>
-                                                <td><span class="employee-name"><?php echo $name;?></span><span class="sub-text"><?php echo $roles?></span></td>
-                                                <td class="center"><?php echo $status;?></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td></td>
-                                            </tr>
-                                            <?php
-                                            $roles = null;
-                                            $name = null;
-                                            $status = null;
-                                            ?>
-                                        <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                    <div class="table-wrapper-settings">
+                                        <table id="ts_schedule_tbl" class="table table-bordered table-striped"></table>
+                                        <div class="table-ts-loader">
+                                            <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -166,15 +136,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Datepicker
         $(".ts_schedule").datepicker();
 
-        var selected_week = $('#scheduleWeek').val();
+        let selected_week = $('#scheduleWeek').val();
         $('#ts_schedule_tbl').ready(showScheduleTable(selected_week));
         $(document).on('change','#scheduleWeek',function () {
-            var week = $(this).val();
-            console.log(week);
+            let week = $(this).val();
+            $("#ts_schedule_tbl").DataTable().destroy();
             showScheduleTable(week);
         });
         function showScheduleTable(week) {
-            $("#ts_schedule_tbl").DataTable().destroy();
+            $('#ts_schedule_tbl_wrapper').css('display','none');
+            $('#ts_schedule_tbl').css('display','none');
+            $(".table-ts-loader").fadeIn('fast',function(){
+                $('.table-ts-loader').css('display','block');
+            });
             if(week != null){
                 $.ajax({
                     url: "/timesheet/showScheduleTable",
@@ -182,7 +156,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     data:{week:week},
                     dataType:"json",
                     success:function (data) {
-                        $('#ts_schedule_tbl').html(data).DataTable({"sort": false});
+                        $(".table-ts-loader").fadeOut('fast',function(){
+                            $('#ts_schedule_tbl').html(data).removeAttr('style').css('width','100%').DataTable({"sort": false});
+                            $('#ts_schedule_tbl_wrapper').css('display','block');
+                            $('.table-ts-loader').css('display','none');
+                        });
                     }
                 });
             }

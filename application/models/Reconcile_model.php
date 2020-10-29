@@ -209,7 +209,59 @@ class Reconcile_model extends MY_Model {
 	public function recurr_save($reconcile_id,$chart_of_accounts_id,$template_name,$template_type,$template_interval,$advanced_day,$day,$dayname,$daynum,$weekday,$weekname,$monthday,$monthname,$startdate,$endtype,$enddate,$occurrence,$payeename,$account_type,$payment_date,$mailing_address,$checkno,$permitno,$memo_recurr_sc)
 	{
 		$query="insert into accounting_recurr values('','$reconcile_id','$chart_of_accounts_id','$template_name','$template_type','$template_interval','$advanced_day','$day','$dayname','$daynum','$weekday','$weekname','$monthday','$monthname','$startdate','$endtype','$enddate','$occurrence','$payeename','$account_type','$payment_date','$mailing_address','$checkno','$permitno','$memo_recurr_sc')";
+		$this->db->query($query);
+		$insert_id = $this->db->insert_id();
+
+   		echo $insert_id;
+	}
+
+	 public function save_recurr_service($mainid,$reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub)
+	{
+		$query="insert into accounting_reconcile_has_servicecharge_recurr values('','$mainid','$reconcile_id','$chart_of_accounts_id','$expense_account_sub','$service_charge_sub','$descp_sc_sub')";
 		echo $this->db->query($query);
+	}
+
+	public function update_recurr_service($id,$expense_account_sub,$service_charge_sub,$descp_sc_sub)
+	{
+		$query="update accounting_reconcile_has_servicecharge_recurr set expense_account_sub = '$expense_account_sub',service_charge_sub = '$service_charge_sub',descp_sc_sub = '$descp_sc_sub' where id = '$id'";
+		echo $this->db->query($query);
+	}
+
+	public function remove_sc_recurr_records($id)
+	{
+		$this->db->where('id',$id);
+		$this->db->delete('accounting_reconcile_has_servicecharge_recurr');  
+	}
+
+	public function select_recurr_service($id,$chart_of_accounts_id)
+	{
+		$this->db->from('accounting_reconcile_has_servicecharge_recurr');  
+		$this->db->where('reconcile_id',$id);
+		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id);
+		$result =  $this->db->get()->result();
+	    return $result;	
+	}
+
+	public function check_save($reconcile_id,$chart_of_accounts_id,$check_payee_popup,$check_account_popup,$mailing_address,$checkno,$permitno,$memo_sc)
+	{
+		$query="insert into accounting_addcheck values('','$reconcile_id','$chart_of_accounts_id','$check_payee_popup','$check_account_popup','$mailing_address','$checkno','$permitno','$memo_sc')";
+		 $this->db->query($query);
+		 $insert_id = $this->db->insert_id();
+
+   		echo $insert_id;
+	}
+
+	 public function save_check_service($mainid,$reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub)
+	{
+		$query="insert into accounting_reconcile_has_servicecharge_check values('','$mainid','$reconcile_id','$chart_of_accounts_id','$expense_account_sub','$service_charge_sub','$descp_sc_sub')";
+		echo $this->db->query($query);
+	}
+
+
+	public function remove_sc_check_records($id)
+	{
+		$this->db->where('id',$id);
+		$this->db->delete('accounting_reconcile_has_servicecharge_check');  
 	}
 }
 ?>

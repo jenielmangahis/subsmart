@@ -9,7 +9,7 @@ class Register extends MY_Controller {
         $this->load->model('NsmartPlan_model');
         $this->load->model('Clients_model');
         $this->load->model('Users_model');
-
+        $this->load->model('IndustryType_model');
         $this->load->helper(array('paypal_helper'));
 
         // Load Paypal SDK
@@ -110,6 +110,9 @@ class Register extends MY_Controller {
             $ip_exist = false;
         }
 
+        $industryTypes = $this->IndustryType_model->getAll();
+
+        $this->page_data['industryTypes'] = $industryTypes; 
         $this->page_data['ip_exist'] = $ip_exist; 
 		$this->page_data['payment_complete'] = $payment_complete; 
 		$this->page_data['payment_message']  = $payment_message;
@@ -244,7 +247,7 @@ class Register extends MY_Controller {
             'business_name' => $post['business_name'],
             'business_address' => $post['business_address'],
             'number_of_employee' => $post['number_of_employee'],
-            'industry' => $post['industry'],
+            'industry_type_id' => $post['industry_type_id'],
             'password' => $post['password'],
             'ip_address' => ip_address(),
             'date_created'  => date("Y-m-d H:i:s"),

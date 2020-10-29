@@ -73,8 +73,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <img src="/assets/img/customer/images/dashboard2.png" alt="securemailimg" style="height:33px;">
                                 </div>
                                 <div class="contactrighttxt">
-                                    <a href="#" class="js-qwynlraxz">Send Secure Message</a><br>
+                                    <a href="#" class="js-qwynlraxz">Send Secure Message<br>
                                     Via Client Portal
+                                    </a>
                                 </div>
                             </div>
                             <div id="portal_tip" class="tooltipbox" style="top: 3em; margin-left: -10px ; width: 225px; line-height: 18px; display: none;">

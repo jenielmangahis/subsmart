@@ -951,80 +951,40 @@ class Customer extends MY_Controller
     }
 
     public function save()
-
     {
-
-
         $user = (object)$this->session->userdata('logged');
-
         $company_id = logged('company_id');
-
-
-
         $data = array(
-
-
             'customer_type' => post('customer_type'),
-
             'contact_name' => post('contact_name'),
-
             'contact_email' => post('contact_email'),
-
             'mobile' => post('contact_mobile'),
-
             'phone' => post('contact_phone'),
-
             'notification_method' => post('notify_by'),
-
             'street_address' => post('street_address'),
-
             'suite_unit' => post('suite_unit'),
-
             'city	' => post('city'),
-
             'postal_code' => post('zip'),
-
             'state' => post('state'),
-
             'birthday' => post('birthday'),
-
             'source_id' => post('customer_source_id'),
-
             'comments' => post('notes'),
-
             'user_id' => $user->id,
-
             'additional_info' => (!empty(post('additional'))) ? serialize(post('additional')) : NULL,
-
             'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
-
             'company_id' => $company_id,
-
             'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize(array()),
-
         );
 
-
         // previously generated customer id
-
         // this id will be present on session if addition contact or service address has been added
-
         $cid = $this->session->userdata('customer_id');
-
-
         // if no addition contact or service address has been added
-
         // create() will be called insted of update()
-
         // if (!empty($cid)) {
-
-
         //     $id = $this->customer_model->update($cid, $data);
-
         // } else {
-
             $id = $this->customer_model->create($data);
-
             if(!empty($this->input->post('service_address')))
             {
                 foreach($this->input->post('service_address') as $key => $value)

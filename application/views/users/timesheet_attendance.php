@@ -303,12 +303,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>Out Now</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-out-now"><?php echo $out_now?></span>
+                                                                <span id="employee-out-now"></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $out_now?>"
-                                                                     aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(($out_now / $total_users) * 100,2).'%';?>">
-                                                                    <?php echo round(($out_now / $total_users) * 100,2).'%';?>
+                                                                <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow=""
+                                                                     aria-valuemin="0" aria-valuemax="100"">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -528,7 +527,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 }
                                                                 if ($attn_id == $log->attendance_id){
                                                                     if ($log->action == 'Check in'){
-                                                                        $time_in = date('h:i A',$log->date_created);
+                                                                        $time_in = date('h:i A',strtotime($log->date_created));
                                                                         $time_out = null;
                                                                         $break_in = null;
                                                                         $break_out = null;
@@ -542,12 +541,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         $indicator_in_break = 'display:none';
                                                                         $indicator_out_break = 'display:none';
                                                                         $tooltip_status = 'Logged in';
-                                                                        $in_count++;
                                                                     }
                                                                     if ($log->action == 'Break in'){
                                                                         $break_id = 'employeeBreakOut';
                                                                         $status = 'fa-mug-hot';
-                                                                        $break_in = date('h:i A',$log->date_created);
+                                                                        $break_in = date('h:i A',strtotime($log->date_created));
                                                                         $indicator_in = 'display:none';
                                                                         $indicator_out = 'display:none';
                                                                         $indicator_in_break = 'display:block';
@@ -557,7 +555,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     }
                                                                     if ($log->action == 'Break out'){
                                                                         $status = 'fa-check';
-                                                                        $break_out = date('h:i A',$log->date_created);
+                                                                        $break_out = date('h:i A',strtotime($log->date_created));
 //                                                                    $break = 'disabled="disabled"';
                                                                         $break_id = 'employeeBreakIn';
                                                                         $indicator_in = 'display:none';
@@ -569,7 +567,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     if($log->action == 'Check out'){
                                                                         $status = 'fa-times-circle';
                                                                         $btn_action = 'employeeCheckIn';
-                                                                        $time_out = date('h:i A',$log->date_created);
+                                                                        $time_out = date('h:i A',strtotime($log->date_created));
                                                                         $disabled = null;
                                                                         $break = 'disabled="disabled"';
                                                                         $break_id = null;
@@ -578,12 +576,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         $indicator_in_break = 'display:none';
                                                                         $indicator_out_break = 'display:none';
                                                                         $tooltip_status = 'Logged out';
-                                                                        $in_count--;
-                                                                        $out_count++;
                                                                     }
                                                                 }
                                                             }
                                                         }
+                                                }
+                                                if ($indicator_in == 'display:block' || $indicator_in_break == 'display:block' || $indicator_out_break == 'display:block'){
+                                                    $in_count++;
+                                                }
+                                                if ($indicator_out == 'display:block'){
+                                                    $out_count++;
                                                 }
                                                 ?>
                                                 <tr>
@@ -592,8 +594,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <span class="tbl-employee-name"><?php echo $user->FName;?></span> <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
                                                         <span class="tbl-emp-role"><?php echo $u_role;?></span>
                                                     </td>
-                                                    <td class="tbl-chk-in" ><div class="red-indicator" style="<?php echo $indicator_in?>"></div> <span class="clock-in-time"><?php echo $time_in?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in;?></span></td>
-                                                    <td class="tbl-chk-out" ><div class="red-indicator" style="<?php echo $indicator_out?>"></div> <span class="clock-out-time"><?php echo $time_out?></span></td>
+                                                    <td class="tbl-chk-in" data-count="<?php echo $in_count?>"><div class="red-indicator" style="<?php echo $indicator_in?>"></div> <span class="clock-in-time"><?php echo $time_in?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in;?></span></td>
+                                                    <td class="tbl-chk-out" data-count="<?php echo $time_out?>"><div class="red-indicator" style="<?php echo $indicator_out?>"></div> <span class="clock-out-time"><?php echo $time_out?></span></td>
                                                     <td class="tbl-lunch-in"><div class="red-indicator" style="<?php echo $indicator_in_break?>"></div> <span class="break-in-time"><?php echo $break_in;?></span></td>
                                                     <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span class="break-out-time"><?php echo $break_out;?></span></td>
                                                     <td class="tbl-emp-action">
@@ -695,29 +697,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         if ($attn->status == 1){
                                                                             if ($log->action == 'Check in'){
                                                                                 if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                                                                    $clock_in = date('h:i A',$log->date_created);
+                                                                                    $clock_in = date('h:i A',strtotime($log->date_created));
                                                                                     $yesterday_note = '(Yesterday)';
                                                                                     $shift = '-';
                                                                                 }elseif ($attn->date_in == date('Y-m-d')){
-                                                                                    $clock_in = date('h:i A',$log->date_created);
+                                                                                    $clock_in = date('h:i A',strtotime($log->date_created));
                                                                                     $yesterday_note = null;
                                                                                 }
                                                                             }elseif ($log->action == 'Break in'){
-                                                                                $lunch_in = date('h:i A',$log->date_created);
+                                                                                $lunch_in = date('h:i A',strtotime($log->date_created));
                                                                                 $lunch_out = null;
                                                                             }elseif ($log->action == 'Break out'){
-                                                                                $lunch_out = date('h:i A',$log->date_created);
+                                                                                $lunch_out = date('h:i A',strtotime($log->date_created));
                                                                             }
                                                                         }else{
                                                                             if ($log->action == 'Check in'){
-                                                                                $clock_in = date('h:i A',$log->date_created);
+                                                                                $clock_in = date('h:i A',strtotime($log->date_created));
                                                                                 if ($attn->date_out > $attn->date_in){
                                                                                     $yesterday_note = '(Yesterday)';
                                                                                 }elseif ($attn->date_in == date('Y-m-d')){
                                                                                     $yesterday_note = null;
                                                                                 }
                                                                             }elseif ($log->action == 'Check out'){
-                                                                                $clock_out = date('h:i A',$log->date_created);
+                                                                                $clock_out = date('h:i A',strtotime($log->date_created));
                                                                                 $seconds = ($attn->shift_duration * 3600);
                                                                                 $hours = floor($attn->shift_duration);
                                                                                 $seconds -= $hours * 3600;
@@ -725,9 +727,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 $seconds -= $minutes * 60;
                                                                                 $shift =  str_pad($hours, 2, '0', STR_PAD_LEFT).":".str_pad($minutes, 2, '0', STR_PAD_LEFT);
                                                                             }elseif ($log->action == 'Break in'){
-                                                                                $lunch_in = date('h:i A',$log->date_created);
+                                                                                $lunch_in = date('h:i A',strtotime($log->date_created));
                                                                             }elseif ($log->action == 'Break out'){
-                                                                                $lunch_out = date('h:i A',$log->date_created);
+                                                                                $lunch_out = date('h:i A',strtotime($log->date_created));
                                                                             }
                                                                         }
                                                                     }
@@ -866,17 +868,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     $(document).ready(function () {
         // In/Out Counter
-        var out_log = $('#outCounter').val();
-        var in_log = $('#inCounter').val();
-        var total_user = $('#employeeTotal').val();
-        var in_log_cal = (in_log / total_user);
-        var in_ans = in_log_cal.toFixed(2) * 100
+        let out_log = $('#outCounter').val();
+        let in_log = $('#inCounter').val();
+        let total_user = $('#employeeTotal').val();
+        let in_log_cal = (in_log / total_user);
+        let in_ans = in_log_cal.toFixed(2) * 100
+        let out_log_cal = (out_log / total_user);
+        let out_ans =  out_log_cal.toFixed(2) * 100
         $('#employee-in-now').text(in_log);
         $('#progressInNow').attr('aria-valuenow',in_log).css('width',in_ans+"%").text(in_ans+"%");
         $('#employee-out-now').text(out_log);
+        $('#progressOutNow').attr('aria-valuenow',out_log).css('width',out_ans+"%").text(out_ans+"%");
 
 
-        var total_employee = $('#employeeTotal').val();
+        let total_employee = $('#employeeTotal').val();
         function inNow() {
             $.ajax({
                 url:"/timesheet/inNow",

@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <th>Id</th>
                                     <th>Title</th>
-                                    <th>Action</th>
+                                    <th style="width: 10%;">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -55,14 +55,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td>
                                                 <?php //if (hasPermissions('plan_edit')): ?>
                                                     <a href="<?php echo url('workorder/job_type/edit/' . $jobType->id) ?>"
-                                                       class="btn btn-sm btn-default" title="Edit item"
-                                                       data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                       class="btn btn-sm btn-info" title="Edit item"
+                                                       data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit</a>
                                                 <?php //endif ?>
                                                 <?php //if (hasPermissions('plan_delete')): ?>
                                                     <a href="<?php echo url('workorder/job_type/delete/' . $jobType->id) ?>"
-                                                       class="btn btn-sm btn-default remove-data-item"
+                                                       class="btn btn-sm btn-danger remove-data-item"
                                                        title="Delete item" data-toggle="tooltip"><i
-                                                                class="fa fa-trash"></i></a>
+                                                                class="fa fa-trash"></i> Delete</a>
                                                 <?php //endif ?>
                                             </td>
                                         </tr>

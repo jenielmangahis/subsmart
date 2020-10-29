@@ -128,7 +128,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <?php echo form_open_multipart('industry_template/delete_template', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <?php echo form_open_multipart('industry_type/delete_type', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
       <?php echo form_input(array('name' => 'type_id', 'type' => 'hidden', 'value' => '', 'id' => 'type_id'));?>
       <div class="modal-body">        
           <p>Delete selected Industry Type?</p>

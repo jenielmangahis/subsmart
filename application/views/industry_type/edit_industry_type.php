@@ -19,11 +19,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card" style="min-height: 400px !important;">
                         <hr />
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('industry_template/update_template', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                          <input type="hidden" name="template_id" value="<?= $industryTemplate->id; ?>">
+                        <?php echo form_open_multipart('industry_type/update_type', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                          <input type="hidden" name="type_id" value="<?= $industryType->id; ?>">
                           <div class="form-group">
-                              <label>Template Name</label> <span class="form-required">*</span>
-                              <input type="text" name="name" value="<?= $industryTemplate->name; ?>" class="form-control" required="" autocomplete="off" />
+                              <label>Type Name</label> <span class="form-required">*</span>
+                              <input type="text" name="name" value="<?= $industryType->name; ?>" class="form-control" required="" autocomplete="off" />
+                          </div>
+                          <br />
+                          <div class="form-group">
+                              <label>Business Type Name</label> <span class="form-required">*</span>
+                              <select class="reg-select z-100 cmb-industry" id="business_type_name" name="business_type_name" required="">
+                                 <?php $businessTypeName = $industryType->business_type_name;
+                                     foreach( $businessTypes as $businessType ){ ?>
+                                      <option  <?php if($businessTypeName==$businessType){ ?> selected  <?php  } ?>   value="<?php echo $businessType; ?>"><?php echo $businessType; ?></option>
+                                  <?php } ?>
+                              </select>
+                          </div>
+                          <br />
+                          <div class="col-md-6 float-left">
+                            <div class="input-group">
+                              <label>Industry Template Name</label> <span class="form-required">*</span>
+                              <select class="reg-select z-100 cmb-industry" id="industry_template_id" name="industry_template_id" required="">
+                                <option>--Select your Industry--</option>
+                                  <?php $industryTemplateId = $industryType->industry_template_id;  
+                                       foreach( $industryTemplate as $indTemplate ){ ?>
+                                      <option <?php if($industryTemplateId==$indTemplate->id){ ?> selected  <?php  } ?> value="<?php echo $indTemplate->id; ?>"><?php echo $indTemplate->name; ?></option>
+                                  <?php } ?>
+                              </select>
+                            </div>
                           </div>
                           <br />
                           <div class="form-group">
@@ -32,8 +55,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                       <div class="form-group">
                                           <label>Status</label> <span class="form-required">*</span>
                                           <select name="status" class="form-control" autocomplete="off">
-                                                <option <?= $industryTemplate->status == 1? 'selected="selected"' : ''; ?> value="1">Active</option>
-                                                <option <?= $industryTemplate->status == 0 ? 'selected="selected"' : ''; ?> value="0">Inactive</option>
+                                                <option <?= $industryType->status == 1? 'selected="selected"' : ''; ?> value="1">Active</option>
+                                                <option <?= $industryType->status == 0 ? 'selected="selected"' : ''; ?> value="0">Inactive</option>
                                           </select>
                                       </div>
                                   </div>
@@ -41,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           </div>
 
                           <div class="col-md-">
-                            <a class="btn btn-default" href="<?php echo base_url('industry_template/index'); ?>">Cancel</a>
+                            <a class="btn btn-default" href="<?php echo base_url('industry_type/index'); ?>">Cancel</a>
                             
                             <button type="submit" class="btn btn-primary">Update</button>
                           </div>

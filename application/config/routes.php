@@ -255,7 +255,15 @@ $route['accounting/reconcile/add/servicecharge'] = 'reconcile/insert_servicechar
 $route['accounting/reconcile/change/servicecharge'] = 'reconcile/update_servicecharge';
 $route['accounting/reconcile/servicecharge/update_sc'] = 'reconcile/update_sc';
 $route['accounting/reconcile/servicecharge/remove_sc'] = 'reconcile/remove_sc';
+
 $route['accounting/reconcile/recurr/save'] = 'reconcile/recurr_save';
+$route['accounting/reconcile/addrecurr/servicecharge'] = 'reconcile/insert_recurr_servicecharge';
+$route['accounting/reconcile/changerecurr/servicecharge'] = 'reconcile/update_recurr_servicecharge';
+$route['accounting/reconcile/servicecharge/remove_sc_recurr'] = 'reconcile/remove_sc_recurr';
+
+$route['accounting/reconcile/check/save'] = 'reconcile/check_save';
+$route['accounting/reconcile/addcheck/servicecharge'] = 'reconcile/insert_check_servicecharge';
+$route['accounting/reconcile/servicecharge/remove_sc_check'] = 'reconcile/remove_sc_check';
 
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
@@ -384,3 +392,8 @@ $route['offers/update_draft_offer'] = 'Offers/update_draft_offer';
 $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';
 $route['calendar/_create_google_event'] = 'Workcalender/ajax_create_google_event';
 $route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_calendar';
+
+//workorder
+$route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
+
+$route['page/no_access'] = 'page/no_access';

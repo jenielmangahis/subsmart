@@ -66,7 +66,7 @@
             <div class="card-header pl-1 pr-1">
               <div class="row">
                 <div class="col-md-6">
-                  <h5 class="m-0" id="cur_tab_title" style="padding-left: 10px"></h5>
+                  <h5 class="m-0" id="cur_tab_title" style="padding-left: 10px">People</h5>
                   <button class="btn btn-sm btn-default border-0 font-weight-bold d-none" style="background-color: transparent !important;" id="prev_tab" prev_tab=""><i class="fa fa-arrow-circle-o-left mr-1"></i>Go Back</button>
                 </div>
                 <div class="col-md-6">
@@ -78,15 +78,15 @@
             </div>
             <div class="card-body pt-0 pb-0 pl-1 pr-1">
               <div class="tab-content">
-                <div class="tab-pane container pl-0 pr-0 active" diventry="people_entry" id="trac360_groups_people">
+                <div class="tab-pane container pl-0 pr-0 active" diventry="people_entry" title="People" id="trac360_groups_people" prev_tab="">
 
                 </div>
-                <div class="tab-pane container pl-0 pr-0 fade" id="groups_tab">
+                <div class="tab-pane container pl-0 pr-0 fade" diventry="groups_entry" title="Groups" id="groups_tab" prev_tab="">
                 </div>
-                <div class="tab-pane container pl-0 pr-0 fade" id="places_tab">
+                <div class="tab-pane container pl-0 pr-0 fade" diventry="places_entry" title="Places" id="places_tab" prev_tab="">
                 </div>
-                <div class="tab-pane container fade" id="people_entry" title="People Form">
-                  <div class="row mt-2">
+                <div class="tab-pane container trac360_entry fade" id="people_entry" title="People Form" prev_tab="">
+                  <div class="row mt-4">
                     <div class="col-md-7 form-group">
                       <label for="trac360_people_entry_categories"><strong>Group</strong><small> Select group to add user</small></label>
                       <select class="form-control" name="trac360_people_entry_categories" id="trac360_people_entry_categories">
@@ -109,11 +109,19 @@
                       <?php } ?>
                       </select>
                     </div>
+                    <div class="col-md-6">
+                      <label for="trac360_people_entry_latitude"><strong>Latitude</strong><small> Initial latitude position</small></label>
+                      <input type="number" class="form-control" name="trac360_people_entry_latitude" id="trac360_people_entry_latitude" value="0" required autofocus />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="trac360_people_entry_longitude"><strong>Longitude</strong><small> Initial longitude position</small></label>
+                      <input type="number" class="form-control" name="trac360_people_entry_longitude" id="trac360_people_entry_longitude" value="0" required autofocus />
+                    </div>
                   </div>
                 </div>
-                <div class="tab-pane container pl-0 pr-0 fade" id="groups_entry">
+                <div class="tab-pane container trac360_entry fade" id="groups_entry" title="Groups Form" prev_tab="">
                 </div>
-                <div class="tab-pane container pl-0 pr-0 fade" id="places_entry">
+                <div class="tab-pane container trac360_entry fade" id="places_entry" title="Places Form" prev_tab="">
                 </div>
               </div>
             </div>
@@ -138,6 +146,15 @@
 <?php echo $map_js; ?>
 <script>
   $(document).ready(function(){
+
+    $(document).on('show.bs.modal', '.modal', function (event) {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function() {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    });
+
     initialAllLoadStateDone = false;
     initialMapCenter = null;
 
@@ -156,6 +173,7 @@
     InitializeBody();
     InitializeMarkers();
 
+// node controls -------------------------------------------------------------
     $('a[control="trac360_add_record"]').click(function(e){
       e.preventDefault();
 
@@ -168,29 +186,41 @@
 
       $(entry).removeClass('fade');
       $(entry).addClass('active');
-      $('#cur_tab_title').text($(entry).attr("title"));
-
+    
       button.attr("prev_tab",tab.attr("id"));
       button.removeClass('d-none');
 
-      $(this).addClass('d-none');
-      $('a[control="trac360_del_record"]').addClass('d-none');
-      $('a[control="trac360_save_record"]').removeClass('d-none');
+      processNodeControlButtons(tab.attr('diventry'));
     });
 
     $('a[control="trac360_del_record"]').click(function(e){
       e.preventDefault();
+
+      var row = $('tr.trac360_row.table-primary');
+      if(row.length){
+        var table_type = row.attr("card");
+        if(table_type == "people"){
+          var vName = row.children('td:eq(1)').text();
+
+          showAlert('confirm','Are you sure you want to stop tracking <strong>' + vName + '</strong>?','Confirm Stop Tracking');
+        }
+      } else {
+        showAlert('info','No record selected','Delete Record');
+      }
     });
 
     $('btn-modal-trac360-entry-save').click(function(){
+      var tab = $('div.tab-pane.active');
 
+      if(tab.hasClass('trac360_entry')){
+        var id = tab.attr("id");
+        
+        processSave(id);  
+      }  
     });
+// ----------------------------------------------------------------------------------
 
-    $('btn-modal-trac360-entry-cancel').click(function(){
-      $('a[control="trac360_del_record"]').addClass('d-none');
-      $('a[control="trac360_save_record"]').removeClass('d-none');
-    });
-
+// Other controls -------------------------------------------------------------------
     $('#prev_tab').click(function(){
       var prev_tab = 'div#' + $(this).attr("prev_tab");
       var tab = $('div.tab-pane.active');
@@ -201,17 +231,91 @@
       $(prev_tab).removeClass('fade');
       $(prev_tab).addClass('active');
 
+      processNodeControlButtons($(this).attr("prev_tab"));
+
+      if($(prev_tab).attr('prev_tab') != ""){
+        $(this).attr("prev_tab",$(prev_tab).attr('prev_tab'));
+      } else {
+        $(this).attr("prev_tab","");
+      }
+    });
+
+    $('#btn-modal-trac360-alert-ok,#btn-modal-trac360-alert-cancel').click(function(){
+      hideAlert();
+    });
+// ----------------------------------------------------------------------------------
+
+// People Entries events ------------------------------------------------------------
+    $('#trac360_people_entry_latitude').on('change', function(){
+      if($(this).val() == ""){
+        $(this).val(0);  
+      }
+    });
+
+    $('#trac360_people_entry_longitude').on('change', function(){
+      if($(this).val() == ""){
+        $(this).val(0);  
+      }
+    });
+// ----------------------------------------------------------------------------------
+  });
+
+// ----------------------------------------------------------------------------------
+  function processSave(vEntry){
+    if(vEntry == 'people_entry'){
+      var category = $('#trac360_people_entry_categories').val();
+      var user = $('#trac360_people_entry_users').val();
+      var latitude = $('#trac360_people_entry_latitude').val();
+      var longitude = $('#trac360_people_entry_longitude').val();
+
+       
+    }  
+  }
+// ----------------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------------
+  function processNodeControlButtons(vCurTab){
+    if((vCurTab == "trac360_groups_people") ||
+       (vCurTab == "groups_tab") ||
+       (vCurTab == "places_tab")){
+
       $('a[control="trac360_add_record"]').removeClass('d-none');
       $('a[control="trac360_del_record"]').removeClass('d-none');
       $('a[control="trac360_save_record"]').addClass('d-none');
 
-      $(this).attr("prev_tab","");
-      $(this).addClass('d-none');
+      if((vCurTab == "groups_tab") || (vCurTab == "places_tab")){
+        if($('#prev_tab').hasClass("d-none")){
+          $('#prev_tab').removeClass("d-none");
+        }
+      } else {
+        if(!$('#prev_tab').hasClass("d-none")){
+          $('#prev_tab').addClass("d-none");  
+        }
+      }
+    } else if((vCurTab == "people_entry") ||
+              (vCurTab == "groups_entry") ||
+              (vCurTab == "places_tab")){
 
-      $('#cur_tab_title').empty();
-    });
-  });
+      $('a[control="trac360_add_record"]').addClass('d-none');
+      $('a[control="trac360_del_record"]').addClass('d-none');
+      $('a[control="trac360_save_record"]').removeClass('d-none');
+      $('#prev_tab').removeClass('d-none');
+    }
 
+    $('#cur_tab_title').text($('#' + vCurTab).attr("title"));
+  }
+// ----------------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------------
+  function clearPeopleEntries(){
+    $('#trac360_people_entry_categories').val("");
+    $('#trac360_people_entry_users').val("");
+    $('#trac360_people_entry_latitude').val(0);
+    $('#trac360_people_entry_longitude').val(0);   
+  }
+// ----------------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------------
   function InitializeBody(){
     var header_height = $('header').css('height');
 
@@ -221,7 +325,9 @@
 
     $('#main_body').css('padding-top',header_height);
   }
+// ----------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------- 
   function InitializeMarkers(){
     $.ajax({
       xhr: function() {
@@ -278,7 +384,7 @@
             all_users.push(user.user_id);
 
             if(category_id == user.category_id){
-              append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
+              append += '<tr class="marker_'+ user.user_id +' trac360_row" gtype="user_trace" card="people">';
                 append += '<td class="d-none">'+ user.user_id +'</td>';
                 append += '<td style="width: 60%">' + user.FName + ' ' + user.LName + '</td>';
                 append += '<td style="width: 20%" class="text-center">'+ user.latitude +'</td>';
@@ -321,7 +427,7 @@
                     append += '</tr>';
                   append += '</thead>';
                   append += '<tbody>';
-                    append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
+                    append += '<tr class="marker_'+ user.user_id +' trac360_row" gtype="user_trace" card="people">';
                       append += '<td class="d-none">'+ user.user_id +'</td>';
                       append += '<td style="width: 60%">' + user.FName + ' ' + user.LName + '</td>';
                       append += '<td style="width: 20%" class="text-center">'+ user.latitude +'</td>';
@@ -466,7 +572,7 @@
                   var table = $('#trac360_table_' + user.category_id);
                   var tbody = table.children('tbody');
                   
-                    append += '<tr class="marker_'+ user.user_id +'" gtype="user_trace">';
+                    append += '<tr class="marker_'+ user.user_id +' trac360_row" gtype="user_trace" card="people">';
                       append += '<td class="d-none">'+ user.user_id +'</td>';
                       append += '<td style="width: 60%">' + user.FName + ' ' + user.LName + '</td>';
                       append += '<td style="width: 20%" class="text-center">'+ user.latitude +'</td>';
@@ -488,7 +594,9 @@
       }
     });
   }
+// ----------------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------------
   function addNewUserMarkerToMap(vUser, vShowOnMap){
     var UserPhoto = '';
     if(vUser.img_type != ""){
@@ -576,16 +684,104 @@
     });
   }
 
+// ----------------------------------------------------------------------------------
   function showProcessing(){
     $('#modal-trac360-processing').modal('show');   
   }
+// ----------------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------------
   function hideProcessing(){
     $('#modal-trac360-processing').modal('hide');  
   }
+// ----------------------------------------------------------------------------------
 
-  function showAlert(vTheme, vText){
+// ----------------------------------------------------------------------------------
+  function showAlert(vTheme, vText, vTitle){
     current_theme = vTheme;
+
+    var bg_color = '';
+    var show_ok = false;
+    var show_confirm = false;
+    var show_cancel = false;
+
+    if(vTheme == 'info'){
+      bg_color = 'bg-info';
+
+      show_ok = true;
+    } else if(vTheme == 'warning'){
+      bg_color = 'bg-warning';
+
+      show_ok = true;
+    } else if(vTheme == 'confirm'){
+      bg_color = 'bg-warning';
+
+      show_confirm = true;
+      show_cancel = true;
+    }
+
+    if(bg_color != ''){
+      $('#modal-trac360-alert-title-div').addClass(bg_color);
+    }
+
+    $('#modal-trac360-alert-text').append(vText);
+    $('#modal-trac360-alert-title').text(vTitle);
+
+    if(show_ok){
+      $('#btn-modal-trac360-alert-ok').removeClass('d-none');
+    }
+
+    if(show_confirm){
+      $('#btn-modal-trac360-alert-confirm').removeClass('d-none');
+    }
+
+    if(show_cancel){
+      $('#btn-modal-trac360-alert-cancel').removeClass('d-none');
+    }
+
+    $('#modal-trac360-alert').modal('show');
   }
 
+  function hideAlert(){
+    var bg_color = '';
+    var hide_ok = false;
+    var hide_confirm = false;
+    var hide_cancel = false;
+
+    if(current_theme == 'info'){
+      bg_color = 'bg-info';
+
+      hide_ok = true;
+    } else if(current_theme == 'warning'){
+      bg_color = 'bg-warning';
+
+      hide_ok = true;
+    } else if(current_theme == 'confirm'){
+      bg_color = 'bg-warning';
+
+      hide_confirm = true;
+      hide_cancel = true;
+    }
+
+    $('#modal-trac360-alert-title-div').removeClass(bg_color);
+    $('#modal-trac360-alert-text').empty();
+    $('#modal-trac360-alert-title').empty();
+
+    if(hide_ok){
+      $('#btn-modal-trac360-alert-ok').addClass('d-none');
+    }
+
+    if(hide_confirm){
+      $('#btn-modal-trac360-alert-confirm').addClass('d-none');
+    }
+
+    if(hide_cancel){
+      $('#btn-modal-trac360-alert-cancel').addClass('d-none');
+    }
+
+    current_theme = '';
+
+    $('#modal-trac360-alert').modal('hide');
+  }
+// ----------------------------------------------------------------------------------
 </script>

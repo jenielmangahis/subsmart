@@ -57,7 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td><?= $industryType->business_type_name; ?></td>
                                         <td class="<?= $cell; ?>"><?= $status; ?></td>
                                         <td>
-                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('industry_template/edit_template/'.$industryType->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('industry_type/edit_industry_type/'.$industryType->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
                                             <a class="btn btn-sm btn-danger btn-delete-type" href="javascript:void(0);" data-id="<?= $industryType->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>

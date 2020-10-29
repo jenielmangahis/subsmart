@@ -71,6 +71,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         margin: 0 auto;
         text-align: center;
     }
+    .ts-duration[disabled]{
+        cursor: not-allowed;
+    }
     .ts-project-name{
         font-weight: bold;
         cursor: pointer;
@@ -89,8 +92,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         display: inline-block;
     }
     .ts-settings-menu{
-        float: right;
-        margin-bottom: 10px;
+        margin-bottom: 30px;
+        position: relative;
+        width: 100%;
     }
     .ts-settings-menu .form-group{
         display: inline-block;
@@ -263,6 +267,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #tsSettingsRow .ts-duration:hover + .duration-tip{
         display: block;
     }
+    /*Loader*/
+    .table-wrapper-settings{
+        width: 100%;
+        position: sticky;
+        display: block;
+        margin: 0 auto;
+    }
+    #timesheet_settings_wrapper{
+        display: none;
+    }
+    .table-ts-loader{
+        display: block;
+        margin: 0 auto;
+        clear: both;
+        position: relative;
+        z-index: 20;
+        width: 100%;
+        min-height: 100px;
+        background:rgb(128 128 128 / 18%);
+    }
+    .table-ts-loader img{
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -299,7 +333,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="ts-settings-menu">
-                                        <div class="form-group">
+                                        <div class="form-group" style="float: right">
                                             <select name="" id="tsUsersList" class="form-control select2-employee-list">
                                                 <option></option>
                                             </select>
@@ -309,7 +343,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
 <!--                                        Present day-->
                                         <input type="hidden" id="presentDay" value="<?php echo date('m/d/Y')?>">
-                                        <div class="form-group">
+                                        <div class="form-group" style="float: right">
 <!--                                            <select name="" id="ts-sorting-week" class="form-control ts-sorting">-->
 <!--                                                <option value="this week" selected>This week</option>-->
 <!--                                                <option value="last week">Last week</option>-->
@@ -320,11 +354,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!--                                            <button class="btn btn-default right"><i class="fa fa-angle-right fa-lg"></i></button>-->
                                         </div>
                                     </div>
-                                    <table id="timesheet_settings" class="timesheet_settings-table"></table>
-                                    <div class="ts-bottom-btn-section">
-                                        <div class="form-group">
-                                            <button class="btn btn-default" id="btnAddRow"><i class="fa fa-plus" style="color: #0b97c4;"></i>&nbsp;Add new row</button>
+                                    <div class="table-wrapper-settings">
+                                        <table id="timesheet_settings" class="timesheet_settings-table"></table>
+                                        <div class="table-ts-loader">
+                                            <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
                                         </div>
+                                    </div>
+                                    <div class="ts-bottom-btn-section">
+<!--                                        <div class="form-group">-->
+<!--                                            <button class="btn btn-default" id="btnAddRow"><i class="fa fa-plus" style="color: #0b97c4;"></i>&nbsp;Add new row</button>-->
+<!--                                        </div>-->
                                         <div class="form-group">
                                             <button class="btn btn-default"><i class="fa fa-copy" style="color: #9da5af;"></i>&nbsp;Copy last week</button>
                                         </div>
@@ -457,7 +496,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 delay:250,
                 data:function (params) {
-                    var query = {
+                    let query = {
                         search: params.term
                     };
                     return query;
@@ -494,6 +533,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Show Timesheet settings table
         function showWeekList(week,user_id) {
+            $('#timesheet_settings_wrapper').css('display','none');
+            $('#timesheet_settings').css('display','none');
+            $(".table-ts-loader").fadeIn('fast',function(){
+                $('.table-ts-loader').css('display','block');
+            });
             if(week != null){
                 $.ajax({
                     url:"/timesheet/showTimesheetSettings",
@@ -501,7 +545,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     dataType:"json",
                     data:{week:week,user:user_id},
                     success:function (data) {
-                        $('#timesheet_settings').html(data).DataTable({"paging": false, "filter":false, "info":false, "sort": false});;
+                        $(".table-ts-loader").fadeOut('fast',function(){
+                            $('#timesheet_settings').html(data).removeAttr('style').DataTable({"paging": false, "filter":false, "info":false, "sort": false});
+                            $('#timesheet_settings_wrapper').css('display','block');
+                            $('.table-ts-loader').css('display','none');
+                            totalPerDay();
+                            totalWeekDuration();
+                        });
                         // Restriction of input field
                         // var options =  {
                         //     onKeyPress: function(cep, e, field, options) {
@@ -660,14 +710,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             return date;
         };
         $(document).on('click','#updateSchedule',function () {
-            var week = $('#ts-sorting-week').val();
-            var user_id = $('#tsUsersList').val();
-            var values = {};
+            let week = $('#ts-sorting-week').val();
+            let user_id = $('#tsUsersList').val();
+            let values = {};
             $.each($('#formNewProject').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
-            var duration = $('.total-duration').text();
-            var date = $('#tsStartDate').val();
+            let duration = $('.total-duration').text();
+            let date = $('#tsStartDate').val();
             $.ajax({
                 url:'/timesheet/updateSchedule',
                 type:"POST",
@@ -720,6 +770,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     // $('#tsLocation').val(data.location);
                     $('#tsNotes').val(data.notes);
                     $('#tsTeamMember').next($('#select2-tsTeamMember-container').attr('title',data.team_member).html(data.team_member));
+                    $('#tsTimezone').next($('#select2-tsTimezone-container').attr('title',data.timezone).html(data.timezone));
                     $('#tsStartTime').val(data.start_time);
                     $('#tsEndTime').val(data.end_time);
                     $('.total-duration').text(data.total_duration+"h");
@@ -730,13 +781,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         // Monday
         $(document).on('click','#tsMonday',function () {
             $('#createProject').modal({backdrop: 'static', keyboard: false});
-            var day_id = $(this).attr('data-id');
-            var timesheet_id = $(this).closest('tr').attr('data-id');
-            var date = $(this).attr('data-date');
-            var user_id = $(this).attr('data-user');
-            var day = $(this).attr('data-day');
-            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
-            var week = $('#ts-sorting-week').val();
+            let day_id = $(this).attr('data-id');
+            let timesheet_id = $(this).closest('tr').attr('data-id');
+            let date = $(this).attr('data-date');
+            let user_id = $(this).attr('data-user');
+            let day = $(this).attr('data-day');
+            let twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            let week = $('#ts-sorting-week').val();
             getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         // Tuesday
@@ -802,170 +853,117 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Sunday
         $(document).on('click','#tsSunday',function () {
             $('#createProject').modal({backdrop: 'static', keyboard: false});
-            var day_id = $(this).attr('data-id');
-            var timesheet_id = $(this).closest('tr').attr('data-id');
-            var date = $(this).attr('data-date');
-            var user_id = $(this).attr('data-user');
-            var day = $(this).attr('data-day');
-            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
-            var week = $('#ts-sorting-week').val();
+            let day_id = $(this).attr('data-id');
+            let timesheet_id = $(this).closest('tr').attr('data-id');
+            let date = $(this).attr('data-date');
+            let user_id = $(this).attr('data-user');
+            let day = $(this).attr('data-day');
+            let twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            let week = $('#ts-sorting-week').val();
             getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         //Calculation total duration
-        $(document).on('change','.ts-duration',function () {
-            $(".alert-message").fadeIn('fast',function(){
-                $('.alert-message').show();
-            });
-            var day = $(this).attr('name');
-            var day_date = $(this).attr('data-date');
-            var total = 0;
-            var total_mins = 0;
-            var total_hrs = 0;
-            var hrs = 0;
-            var min = 0;
-            var id = $(this).closest('tr').attr('data-id');
-            $('td > .ts-duration'+id).each(function () {
-                var duration = $(this).val();
-                var split = duration.split(":");
-                var hours = parseInt(split[0]);
-                var mins = parseInt(split[1]);
-                if (!isNaN(mins)){
-                    total_mins += mins;
+        function totalPerDay() {
+            let mon_total = 0,tue_total=0,wed_total=0,thu_total=0,fri_total=0,sat_total=0,sun_total=0;
+            //Monday total
+            $("input[name$='monday']").each(function () {
+                let monday = parseInt($(this).val());
+                if (isNaN(monday)){
+                    monday = 0;
                 }
-                if (!isNaN(hours)){
-                    total_hrs += hours;
-                }
+                mon_total += parseInt($(this).val());
             });
-            hrs = Math.floor(total_mins / 60);
-            min = total_mins % 60;
-            total_hrs += hrs;
-            total = total_hrs+':'+leftPad(min,2);
-            $('#totalWeekDuration'+id).text(total);
-            totalPerDay(id,day,day_date);
-            totalWeekDuration(day_date,day);
-            $.ajax({
-               url:"/timesheet/updateTotalWeekDuration",
-               type:"POST",
-               dataType:"json",
-               data:{id:id,total:total},
-               success:function (data) {
-                   if (data == 1){
-                       $(".alert-message").fadeOut(5000,function(){
-                           $('.alert-message').hide();
-                       });
-                   }
-
-               }
-            });
-        });
-        function totalPerDay(id,day,day_date) {
-            var total = 0;
-            var total_mins = 0;
-            var total_hrs = 0;
-            var hrs = 0;
-            var min = 0;
-            var user = $('#tsUsersList').val();
-            $("input[name$='"+day+"']").each(function () {
-               var duration = $(this).val();
-               var split = duration.split(":");
-                var hours = parseInt(split[0]);
-                var mins = parseInt(split[1]);
-                if (!isNaN(mins)){
-                    total_mins += mins;
-                }
-                if (!isNaN(hours)){
-                    total_hrs += hours;
-                }
-            });
-            hrs = Math.floor(total_mins / 60);
-            min = total_mins % 60;
-            total_hrs += hrs;
-            total = total_hrs+':'+leftPad(min,2);
-            var day_total_id = 0;
-            switch(day) {
-                case "monday":
-                    $('#totalMonday').text(total);
-                    day_total_id = $('#totalMonday').attr('data-id');
-                    break;
-                case "tuesday":
-                    $('#totalTuesday').text(total);
-                    day_total_id = $('#totalTuesday').attr('data-id');
-                    break;
-                case "wednesday":
-                    $('#totalWednesday').text(total);
-                    day_total_id = $('#totalWednesday').attr('data-id');
-                    break;
-                case "thursday":
-                    $('#totalThursday').text(total);
-                    day_total_id = $('#totalThursday').attr('data-id');
-                    break;
-                case "friday":
-                    $('#totalFriday').text(total);
-                    day_total_id = $('#totalFriday').attr('data-id');
-                    break;
-                case "saturday":
-                    $('#totalSaturday').text(total);
-                    day_total_id = $('#totalSaturday').attr('data-id');
-                    break;
-                case "sunday":
-                    $('#totalSunday').text(total);
-                    day_total_id = $('#totalSunday').attr('data-id');
-                    break;
-                default:
-                break;
+            if (isNaN(mon_total)){
+                mon_total = 0;
             }
-            $.ajax({
-                url:"/timesheet/addingTotalInDay",
-                type:"POST",
-                dataType:"json",
-                data:{id:day_total_id,total:total,day_date:day_date,day:day,user_id:user},
-                success:function () {
-                    var week = $('#ts-sorting-week').val();
-                    var user = $('#tsUsersList').val();
-                    showWeekList(week,user);
+            $('#totalMonday').text(mon_total+"h");
+            //Tuesday total
+            $("input[name$='tuesday']").each(function () {
+                let tuesday = parseInt($(this).val());
+                if (isNaN(tuesday)){
+                    tuesday = 0
                 }
+                tue_total += tuesday;
             });
+            if (isNaN(tue_total)){
+                tue_total = 0;
+            }
+            $('#totalTuesday').text(tue_total+"h");
+            //Wednesday total
+            $("input[name$='wednesday']").each(function () {
+                let wednesday = parseInt($(this).val());
+                if (isNaN(wednesday)){
+                    wednesday = 0;
+                }
+                wed_total += wednesday;
+            });
+            if (isNaN(wed_total)){
+                wed_total = 0;
+            }
+            $('#totalWednesday').text(wed_total+"h");
+            //Thursday total
+            $("input[name$='thursday']").each(function () {
+                let thursday = parseInt($(this).val());
+                if(isNaN(thursday)){
+                    thursday = 0;
+                }
+                thu_total += thursday;
+            });
+            if (isNaN(thu_total)){
+                thu_total = 0;
+            }
+            $('#totalThursday').text(thu_total+"h");
+            //Friday total
+            $("input[name$='friday']").each(function () {
+                let friday = parseInt($(this).val());
+                if (isNaN(friday)){
+                    friday = 0;
+                }
+                fri_total += friday;
+            });
+            if (isNaN(fri_total)){
+                fri_total = 0;
+            }
+            $('#totalFriday').text(fri_total+"h");
+            //Saturday total
+            $("input[name$='saturday']").each(function () {
+                let saturday = parseInt($(this).val());
+                if (isNaN(saturday)){
+                    saturday = 0;
+                }
+                sat_total += saturday;
+            });
+            if (isNaN(sat_total)){
+                sat_total = 0;
+            }
+            $('#totalSaturday').text(sat_total+"h");
+            //Sunday total
+            $("input[name$='sunday']").each(function () {
+                let sunday = parseInt($(this).val());
+                if (isNaN(sunday)){
+                    sunday = 0;
+                }
+                sun_total += sunday;
+            });
+            if (isNaN(sun_total)){
+                sun_total = 0;
+            }
+            $('#totalSunday').text(sun_total+"h");
 
         }
 
-        function totalWeekDuration(day_date) {
-            var week = $('#ts-sorting-week').val();
-            var user = $('#tsUsersList').val();
-            var total = 0;
-            var total_mins = 0;
-            var total_hrs = 0;
-            var hrs = 0;
-            var min = 0;
+        function totalWeekDuration() {
+            let total_week = 0;
             $('.totalWeek').each(function () {
-                var duration = $(this).text();
-                var split = duration.split(":");
-                var hours = parseInt(split[0]);
-                var mins = parseInt(split[1]);
-                if (!isNaN(mins)){
-                    total_mins += mins;
-                }
-                if (!isNaN(hours)){
-                    total_hrs += hours;
-                }
+                total_week += parseInt($(this).text());
             });
-            hrs = Math.floor(total_mins / 60);
-            min = total_mins % 60;
-            total_hrs += hrs;
-            total = total_hrs+':'+leftPad(min,2);
-            $('#totalWeekDuration-'+user).text(total);
-            var twd_id = $('#totalWeekDuration-'+user).attr('data-id');
-            $.ajax({
-               url:'/timesheet/updateTotalDuration',
-               type:"POST",
-               dataType:"json",
-               data:{total:total,date:day_date,week:week,user_id:user,twd_id:twd_id},
-               success:function (data) {
-
-               }
-            });
+            if (isNaN(total_week)){
+                total_week = 0;
+            }
+            $('#totalWeekDuration').text(total_week+"h");
         }
         function leftPad(number, targetLength) {
-            var output = number + '';
+            let output = number + '';
             while (output.length < targetLength) {
                 output = '0' + output;
             }
@@ -974,7 +972,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Updating Project data
         $(document).on('click','#showProjectData',function () {
-            var id = $(this).attr('data-id');
+            let id = $(this).attr('data-id');
             $('#createProject').modal({backdrop: 'static', keyboard: false});
             $('.hiddenSection').hide();
             $.ajax({
@@ -995,10 +993,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
         });
         $(document).on('click','#updateTSProject',function () {
-            var week = $('#ts-sorting-week').val();
-            var user = $('#tsUsersList').val();
-            var id = $(this).attr('data-id');
-            var values = {};
+            let week = $('#ts-sorting-week').val();
+            let user = $('#tsUsersList').val();
+            let id = $(this).attr('data-id');
+            let values = {};
             $.each($('#formNewProject').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
@@ -1035,10 +1033,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Deleting Project
         $(document).on('click','#removeProject',function () {
-            var id = $(this).attr('data-id');
-            var project_name = $(this).attr('data-name');
-            var week = $('#ts-sorting-week').val();
-            var user = $('#tsUsersList').val();
+            let id = $(this).attr('data-id');
+            let project_name = $(this).attr('data-name');
+            let week = $('#ts-sorting-week').val();
+            let user = $('#tsUsersList').val();
             Swal.fire({
                 title: 'Are you sure to delete this?',
                 html: "Project name: <strong>"+project_name+"</strong>",

@@ -451,6 +451,73 @@ class Reconcile extends MY_Controller {
         $permitno=$this->input->post('permitno');
         $memo_recurr_sc=$this->input->post('memo_recurr_sc');
 
-        $this->reconcile_model->recurr_save($reconcile_id,$chart_of_accounts_id,$template_name,$template_type,$template_interval,$advanced_day,$day,$dayname,$daynum,$weekday,$weekname,$monthday,$monthname,$startdate,$endtype,$enddate,$occurrence,$payeename,$account_type,$payment_date,$mailing_address,$checkno,$permitno,$memo_recurr_sc);
+        echo $this->reconcile_model->recurr_save($reconcile_id,$chart_of_accounts_id,$template_name,$template_type,$template_interval,$advanced_day,$day,$dayname,$daynum,$weekday,$weekname,$monthday,$monthname,$startdate,$endtype,$enddate,$occurrence,$payeename,$account_type,$payment_date,$mailing_address,$checkno,$permitno,$memo_recurr_sc);
+    }
+
+    public function insert_recurr_servicecharge()
+    {
+        $mainid=$this->input->post('mainid');
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $expense_account_sub=$this->input->post('expense_account_sub');
+        $service_charge_sub=$this->input->post('service_charge_sub');
+        $descp_sc_sub=$this->input->post('descp_sc_sub');
+        $this->reconcile_model->save_recurr_service($mainid,$reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub);
+        
+    }
+
+    public function update_recurr_servicecharge()
+    {
+        $id=$this->input->post('id');
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $expense_account_sub=$this->input->post('expense_account_sub');
+        $service_charge_sub=$this->input->post('service_charge_sub');
+        $descp_sc_sub=$this->input->post('descp_sc_sub');
+        $this->reconcile_model->update_recurr_service($id,$expense_account_sub,$service_charge_sub,$descp_sc_sub);
+    }
+
+    public function remove_sc_recurr()
+    {
+        $id=$this->input->post('id');
+
+        $this->reconcile_model->remove_sc_recurr_records($id);
+        
+    }
+
+    public function check_save()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $check_payee_popup=$this->input->post('check_payee_popup');
+        $check_account_popup=$this->input->post('check_account_popup');
+        $mailing_address=$this->input->post('mailing_address');
+        $date_popup=$this->input->post('date_popup');
+        $checkno=$this->input->post('checkno');
+        $permitno=$this->input->post('permitno');
+        $memo_sc=$this->input->post('memo_sc');
+        
+
+        echo $this->reconcile_model->check_save($reconcile_id,$chart_of_accounts_id,$check_payee_popup,$check_account_popup,$mailing_address,$checkno,$permitno,$memo_sc);
+    }
+
+    public function insert_check_servicecharge()
+    {
+        $mainid=$this->input->post('mainid');
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $expense_account_sub=$this->input->post('expense_account_sub');
+        $service_charge_sub=$this->input->post('service_charge_sub');
+        $descp_sc_sub=$this->input->post('descp_sc_sub');
+        $this->reconcile_model->save_check_service($mainid,$reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub);
+        
+    }
+
+    public function remove_sc_check()
+    {
+        $id=$this->input->post('id');
+
+        $this->reconcile_model->remove_sc_check_records($id);
+        
     }
 }

@@ -310,6 +310,16 @@ $(document).ready(function () {
                 executed = true;
                 let attn_id = $('#attendanceId').val();
                 let timerInterval;
+                let current_time = new Date();
+                let shift_end = $('#unScheduledShift').val();
+                let set_time = new Date(shift_end * 1000);
+                set_time.setMinutes(set_time.getMinutes() - 10);
+                // set_time.setHours(set_time.getHours() + 1);
+                let timer = set_time.setSeconds(set_time.getSeconds());
+                let difference = timer - current_time.getTime();
+                if (difference <= 0){
+                    difference = 1000;
+                }
                 Swal.fire({
                     title: 'Do you want to overtime?',
                     icon:'question',
@@ -318,7 +328,7 @@ $(document).ready(function () {
                     confirmButtonText: `Yes,I want to`,
                     denyButtonText: `Let's call it a day`,
                     allowOutsideClick: false,
-                    timer: 600000,
+                    timer: difference,
                     timerProgressBar: true,
                     willOpen: () => {
                         const content = Swal.getContent();
@@ -380,31 +390,7 @@ $(document).ready(function () {
                         });
                     }
                     if (result.dismiss === Swal.DismissReason.timer) {
-                        $.ajax({
-                            url:'/timesheet/clockOutEmployee',
-                            type:"POST",
-                            dataType:'json',
-                            data:{attn_id:attn_id},
-                            success:function (data) {
-                                if (data != null){
-                                    // $(selected).attr('id',null);
-                                    $('.clock').removeClass('clock-active');
-                                    $('.out').text(data.clock_out_time);
-                                    $('#userClockOut').text(data.clock_out_time);
-                                    $('#shiftDuration').text(data.shift_duration);
-                                    $('#userShiftDuration').text(data.shift_duration);
-                                    $('.employeeLunch').attr('id',null).attr('disabled',true);
-                                    Swal.fire(
-                                        {
-                                            showConfirmButton: false,
-                                            timer: 2000,
-                                            title: 'Success',
-                                            html: "You are now Clock-out",
-                                            icon: 'success'
-                                        });
-                                }
-                            }
-                        });
+                        autoClockOut();
                     }
                 });
             }
@@ -418,7 +404,7 @@ $(document).ready(function () {
                 executed = true;
                 let attn_id = $('#attendanceId').val();
                 let expected_end_shift = $('#employeeOvertime').val();
-                if (expected_end_shift == '' || expected_end_shift < 1){
+                if (expected_end_shift < 1 || expected_end_shift == ''){
                     expected_end_shift = $('#unScheduledShift').val();
                 }
                 let time_diff = $('#timeDifference').val();
@@ -491,9 +477,9 @@ $(document).ready(function () {
         let overtime_status = $('#autoClockOut').val();
 
         if (emp_shift > 0 && parseInt(sched_notify) > 0){
-            var a = new Date(emp_shift * 1000);
+            let a = new Date(emp_shift * 1000);
             a.setMinutes(a.getMinutes() - 10);
-            var b = a.setHours(a.getHours() - (time_diff));
+            let b = a.setHours(a.getHours() - (time_diff));
             if (b <= current_time){
                 start_sched();
             }
@@ -527,14 +513,12 @@ $(document).ready(function () {
                let end_shift = new Date(shift_end * 1000);
                let end_of_shift = end_shift.setHours(end_shift.getHours());
                if (end_of_shift <=  current_time){
-                   console.log('unsched');
                     autoClockOut();
                }
             }else if(emp_overtime > 0 && overtime_status < 1){
                 let end_shift = new Date(emp_overtime * 1000);
                 let end_of_shift = end_shift.setHours(end_shift.getHours() - (time_diff));
                 if (end_of_shift <= current_time){
-                    console.log('sched');
                     autoClockOut();
                 }
             }

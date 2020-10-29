@@ -12,12 +12,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <h1>Settings</h1>
 
-                        <?php echo form_open('workorder/settings', ['class' => 'form-validate require-validation', 'id' => 'workorder_settings_form', 'autocomplete' => 'off']); ?>
-
-
-                        <div class="validation-error hide"></div>
-
+                        <?php echo form_open('workorder/settings', ['class' => 'form-validate require-validation', 'id' => 'workorder-settings', 'autocomplete' => 'off']); ?>
                         <div class="card p-3">
+                            <div class="err-msg hide" style="display: none;"></div>
                             <div class="form-group">
                                 <label>Work Order Number</label>
                                 <div class="help help-sm help-block">Set the prefix and the next auto-generated
@@ -26,19 +23,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="row">
                                     <div class="col-sm-3">
                                         <div class="margin-bottom-qui">Prefix</div>
-                                        <input type="text" name="next_custom_number_prefix" value="WO-"
-                                               class="form-control" autocomplete="off">
-                                        <span class="validation-error-field hide"
-                                              data-formerrors-for-name="next_custom_number_prefix"
-                                              data-formerrors-message="true"></span>
+                                        <input type="text" name="next_custom_number_prefix" id="number-prefix" value="<?php echo $prefix ?>" class="form-control" autocomplete="off">
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="margin-bottom-qui">Next number</div>
-                                        <input type="text" name="next_custom_number_base" value="00434"
-                                               class="form-control" autocomplete="off">
-                                        <span class="validation-error-field hide"
-                                              data-formerrors-for-name="next_custom_number_base"
-                                              data-formerrors-message="true"></span>
+                                        <input type="text" name="next_custom_number_base" id="number-base" value="<?php echo $order_num_next; ?>" class="form-control" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
@@ -53,8 +42,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="checkbox" name="hide_from_email" value="1"
-                                                           id="hide_from_email">
+                                                    <input type="checkbox" <?= $capture_signature > 0 ? 'checked="checked"' : ''; ?> name="hide_from_email" value="1" id="hide_from_email">
                                                     <label for="hide_from_email"><span>Hide business email</span></label>
                                                 </div>
                                             </div>
@@ -62,15 +50,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
+                            <hr class="card-hr">
+                            <a href="www.google.com" style="padding: 10px;width: 18%;" class="btn btn-outline-secondary">Manage work order notifications</a>
+                            <hr class="card-hr">
+                            <button class="btn btn-primary btn-update-workorder-settings" name="btn-submit" type="button" style="width: 10%;">Save Changes</button>                            
 
-                        </div>
-
-                        <hr class="card-hr">
-
-                        <div class="card">
-                            <button class="btn btn-primary btn-lg" name="btn-submit" type="button"
-                                    data-on-click-label="Save Changes..." disabled>Save Changes
-                            </button>
                         </div>
 
                         <?php echo form_close(); ?>
@@ -83,56 +67,50 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
     <!-- end container-fluid -->
     </div>
-
-
-    <!-- MODAL CREATE EVENT -->
-    <div id="modalCreateEvent" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Set Up a Schedule</h4>
-                </div>
-                <div class="modal-body">
-                    <p>loading...</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="button_submit_form">Confirm</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-    <!-- MODAL EVENT DETAILS -->
-    <div id="modalEventDetails" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Schedule</h4>
-                </div>
-                <div class="modal-body">
-                    <p>loading...</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="delete_schedule">Delete</button>
-                    <button type="button" class="btn btn-primary" id="edit_schedule" style="display: none">Edit Schedule
-                    </button>
-                    <button type="button" class="btn btn-primary" id="edit_workorder" style="display: none">Edit
-                        Wordorder
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
     <!-- page wrapper end -->
-<?php include viewPath('includes/footer'); ?><?php
+<?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+    $(".btn-update-workorder-settings").click(function(){
+        var url      = base_url + '/workorder/_update_workorder_settings';
+        var is_saved = 0;
+        var msg = '<div class="alert alert-danger" role="alert">Cannot update setting</div>';
+
+        $(this).html('Saving...');
+
+        if( $("#number-prefix").val() == '' ){
+            msg = '<div class="alert alert-danger" role="alert">Please enter Work Order number prefix.</div>';
+            $(".err-msg").html(msg);
+            $(".err-msg").fadeIn();
+            $(this).html('Save Changes');
+        }else if( $("#number-base").val() == '' ){
+            msg = '<div class="alert alert-danger" role="alert">Please enter Work Order number.</div>';
+            $(".err-msg").html(msg);
+            $(".err-msg").fadeIn();
+            $(this).html('Save Changes');
+        }else{
+            setTimeout(function () {
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   data: $("#workorder-settings").serialize(),
+                   dataType: "json",
+                   success: function(o)
+                   {
+                        if( o.is_success == 1 ){
+                            msg = '<div class="alert alert-info" role="alert">'+o.msg+'</div>';
+                        }else{
+                            msg = '<div class="alert alert-danger" role="alert">'+o.msg+'</div>';
+                        }
+
+                        $(".err-msg").html(msg);
+                        $(".err-msg").fadeIn();
+
+                        $('.btn-update-workorder-settings').html('Save Changes');
+                   }
+                });
+            }, 1000);
+        }    
+    });
+});
+</script>

@@ -58,6 +58,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .label-datepicker{
         font-weight: bold;
     }
+    /*Table loader*/
+    #tsEmployeeDataTable_wrapper{
+        display: none;
+    }
+
+    .table-ts-loader{
+        display: block;
+        margin: 0 auto;
+        clear: both;
+        position: relative;
+        z-index: 20;
+        width: 100%;
+        height: 100%;
+        min-height: 100px;
+        background:rgb(128 128 128 / 18%);
+    }
+    .table-ts-loader img{
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -113,7 +139,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="tsEmployeeDataTable" class="table table-bordered table-striped"></table>
+                                    <div class="table-wrapper-settings">
+                                        <table id="tsEmployeeDataTable" class="table table-bordered table-striped"></table>
+                                        <div class="table-ts-loader">
+                                            <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -133,22 +164,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $(document).ready(function () {
         // Datepicker
         $("#tsEmployeeDatepicker").datepicker();
-        var week_of = $('#tsEmployeeDatepicker').val();
+        let week_of = $('#tsEmployeeDatepicker').val();
         $('#tsEmployeeDataTable').ready(showEmployeeTable(week_of));
 
         $(document).on('change','#tsEmployeeDatepicker',function () {
             $("#tsEmployeeDataTable").DataTable().destroy();
-            var week = $(this).val();
+            let week = $(this).val();
             showEmployeeTable(week);
         });
         function showEmployeeTable(week) {
+            $('#tsEmployeeDataTable_wrapper').css('display','none');
+            $('#tsEmployeeDataTable').css('display','none');
+            $(".table-ts-loader").fadeIn('fast',function(){
+                $('.table-ts-loader').css('display','block');
+            });
             $.ajax({
                 url:"/timesheet/showEmployeeTable",
                 type:"GET",
                 dataType:"json",
                 data:{week:week},
                 success:function (data) {
-                    $('#tsEmployeeDataTable').html(data).DataTable({"sort": false});
+                    $(".table-ts-loader").fadeOut('fast',function(){
+                        $('#tsEmployeeDataTable').html(data).removeAttr('style').DataTable({"sort": false});
+                        $('#tsEmployeeDataTable_wrapper').css('display','block');
+                        $('.table-ts-loader').css('display','none');
+                    });
                 }
             });
         }

@@ -118,6 +118,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         display: none;
         width: 103px;
     }
+    /*Table loader*/
+    .table-wrapper-settings{
+        width: 100%;
+        position: relative;
+        display: block;
+        margin: 0 auto;
+    }
+    #tbl-list_wrapper{
+        display: none;
+    }
+    .table-ts-loader{
+        display: block;
+        margin: 0 auto;
+        clear: both;
+        position: relative;
+        z-index: 20;
+        width: 100%;
+        min-height: 100px;
+        background:rgb(128 128 128 / 18%);
+    }
+    .table-ts-loader img{
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
 </style>
 <?php
     //dd(logged());die;
@@ -187,7 +218,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="tbl-list" class="table table-bordered table-striped"></table>
+                                    <div class="table-wrapper-settings">
+                                        <table id="tbl-list" class="table table-bordered table-striped"></table>
+                                        <div class="table-ts-loader">
+                                            <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -261,17 +297,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
     $(document).ready(function () {
-        var week_of = $('.list_datepicker').val();
+        let week_of = $('.list_datepicker').val();
         $('#tbl-list').ready(showListTable(week_of));
 
         $(document).on('click','#listAdjustEntry',function () {
             // Timepicker
             $(".week-timepicker").timepicker({interval: 60});
-            var radio = $('input[name="selected"]:checked');
-            var emp_name = radio.attr('data-name');
+            let radio = $('input[name="selected"]:checked');
+            let emp_name = radio.attr('data-name');
             // var week_id = radio.attr('data-week');
-            var attn_id = radio.attr('data-attn');
-            var day_id = [];
+            let attn_id = radio.attr('data-attn');
+            let day_id = [];
             day_id.push(radio.parent('td').next('td').next('td').next('td').attr('data-id'));
             day_id.push(radio.parent('td').next('td').next('td').next('td').next('td').attr('data-id'));
             day_id.push(radio.parent('td').next('td').next('td').next('td').next('td').next('td').attr('data-id'));
@@ -439,28 +475,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
            showListTable(week);
         });
         function showListTable(week) {
+            $('#tbl-list_wrapper').css('display','none');
+            $('#tbl-list').css('display','none');
+            $(".table-ts-loader").fadeIn('fast',function(){
+                $('.table-ts-loader').css('display','block');
+            });
             $.ajax({
                 url:"/timesheet/showListTable",
                 type:"GET",
                 dataType:"json",
                 data:{week:week},
                 success:function (data) {
-                    $('#tbl-list').html(data).DataTable({"sort": false});
+                    $(".table-ts-loader").fadeOut('fast',function(){
+                        $('#tbl-list').html(data).removeAttr('style').DataTable({"sort": false});
+                        $('#tbl-list_wrapper').css('display','block');
+                        $('.table-ts-loader').css('display','none');
+                    });
                 }
             });
         }
         $(document).on('click','#listClockInOut',function () {
-            var radio = $('input[name="selected"]:checked');
-            var approved_by = $(this).attr('data-approved');
+            let radio = $('input[name="selected"]:checked');
+            let approved_by = $(this).attr('data-approved');
             if (radio.length === 0){
 
             }else{
-                var user_id = radio.val();
-                var status = radio.parent('td').next('td').next('td').children('span').text();
-                var emp_name = radio.attr('data-name');
+                let user_id = radio.val();
+                let status = radio.parent('td').next('td').next('td').children('span').text();
+                let emp_name = radio.attr('data-name');
                 let photo = radio.attr('data-photo');
                 // var week_id = radio.attr('data-week');
-                var attn_id = radio.attr('data-attn');
+                let attn_id = radio.attr('data-attn');
                 if (status == 'In'){
                     clockOut(emp_name,user_id,attn_id,approved_by,photo);
                 }else if(status == ''){
@@ -471,7 +516,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
         function clockIn(emp_name,user_id,approved_by,photo) {
-            var entry = 'Manual';
+            let entry = 'Manual';
             Swal.fire({
                 title: 'Clock in?',
                 html: "Are you sure you want to Clock-in this person?<br> <strong>"+emp_name+"</strong>",
@@ -516,7 +561,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
         }
         function clockOut(emp_name,user_id,attn_id,approved_by,photo) {
-            var entry = 'Manual';
+            let entry = 'Manual';
             Swal.fire({
                 title: 'Clock out?',
                 html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",

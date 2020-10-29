@@ -654,7 +654,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <div style="margin-left: 20px;">
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-3">
-                        <select name="check_payee_popup" class="form-control">
+                        <select name="check_payee_popup" id="check_payee_popup" class="form-control">
                             <option value="" disabled="" selected>Payee</option>
                             <?php
                             foreach($this->AccountingVendors_model->select() as $ro)
@@ -667,7 +667,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-control" id="check_account_popup">
+                        <select class="form-control" name="check_account_popup" id="check_account_popup">
                             <?php
                                $i=1;
                                foreach($this->chart_of_accounts_model->select() as $row)
@@ -703,17 +703,17 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <div class="col-md-4"></div>
                     <div class="col-md-2">
                         <label>Check no.</label>
-                        <input type="text" name="check_checkno" id="check_checkno" value="<?=$rows[0]->checkno?>"/>
+                        <input type="text" name="check_checkno" id="check_checkno" value="<?=$rows[0]->checkno?>" class="form-control"/>
                         </br>
-                        </br>
-                        <input type="checkbox" name="check_print_check">Print Later
+                        </br> 
+                        <input type="checkbox" name="check_print_check" class="form-control">Print Later
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-8"></div>
                     <div class="col-md-2">
-                        <label>Check no.</label>
-                        <input type="text" name="check_checkno" value=""/>
+                        <label>Permit no.</label>
+                        <input type="text" name="check_permitno" value="" class="form-control" />
                     </div>
                 </div>
             </div>
@@ -734,7 +734,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </tr>
                         </thead>
                         <tbody>
-                            <tr onclick="trClickCheckMain()">
+                            <tr onclick="trClickCheckMain()" style="display: none;">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>1</td>
                                 <td>
@@ -763,7 +763,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </tr>
                             <tr onclick="trClickCheck(2)">
                                 <td><i class="fa fa-th"></i></td>
-                                <td>2</td>
+                                <td>1</td>
                                 <td>
                                     <select name='check_expense_account_2' id='check_expense_account_2' class='' style="display: none;">
                                         <option value=""></option>
@@ -834,7 +834,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-4">
                     <label>Memo</label>
                     </br>
-                    <textarea name="check_memo" rows="4"></textarea>
+                    <textarea name="check_memo_sc" id="check_memo_sc" rows="4"></textarea>
                 </div>
                 <div class="col-md-6"></div>
                 <div class="col-md-2">
@@ -870,7 +870,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         <div class="save-act" style="position: unset !important;">
             <button type="button" class="btn-cmn" onclick="closeCheck()">Cancel</button>
             <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
-            <button type="submit" class="savebtn">Done</button>
+            <button type="button" class="savebtn" onclick="save_check(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" >Done</button>
         </div>
     </div>
     <!-- End Add Check -->
@@ -892,7 +892,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-2">
                         <label>Template name</label>
-                        <input type="text" name="template_name" id="template_name" class="form-control">
+                        <input type="text" name="template_name" id="template_name" class="form-control" required="required">
                     </div>
                     <div class="col-md-2">
                         <label>Type</label>
@@ -1161,10 +1161,10 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </tr>
                             <?php 
                             $recurrservicechargecount =0;
-                            if(!empty($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id)))
+                            if(!empty($this->reconcile_model->select_recurr_service($rows[0]->id,$rows[0]->chart_of_accounts_id)))
                             {
                             $recurrrowcount =2;
-                            foreach($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id) as $recurrrowtab)
+                            foreach($this->reconcile_model->select_recurr_service($rows[0]->id,$rows[0]->chart_of_accounts_id) as $recurrrowtab)
                             {
                                 $recurrservicechargecount+=$recurrrowtab->service_charge_sub;
                             ?>
@@ -3273,7 +3273,7 @@ function showData() {
       var index_check =$('#participantCheckTable tr').length -1;
       var final_index_check = index_check-1;
       $('#participantCheckTable tr:eq('+index_check+')').attr("onclick","trClickCheck("+final_index_check+")");
-      $('#participantCheckTable tr:eq('+index_check+') td:eq(1)').text(index_check-1);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(1)').text(index_check-2);
       $('#participantCheckTable tr:eq('+index_check+') td:eq(2)').find('select').attr("id","check_expense_account_"+final_index_check);
       $('#participantCheckTable tr:eq('+index_check+') td:eq(2)').find('select').attr("name","check_expense_account_"+final_index_check);
       $('#participantCheckTable tr:eq('+index_check+') td:eq(2)').find('div').attr("class","check_expense_account_"+final_index_check);
@@ -3291,6 +3291,11 @@ function showData() {
       var totcheck = $('#checktotal').text().substr(9)-buttoncheck.closest("tr").find('td:eq(4)').text().trim();
       $('#checktotal').text('Total : $'+totcheck.toFixed(2));
       $('#checkamount').text('Amount : $'+totcheck.toFixed(2));
+      if(buttoncheck.closest("tr").find('td:eq(2)').find('select').hasClass("up_row"))
+        {
+            var id_to_remove =buttoncheck.closest("tr").find('td:eq(0)').attr("data-id");
+            remove_func_check(id_to_remove);
+        }
     }
     /* Doc ready */
     $(".add_check").on('click', function () {
@@ -3425,7 +3430,7 @@ function showData() {
         }
 
         var total_check = 0;
-        total_check += parseInt($('.check_service_charge').text());
+       // total_check += parseInt($('.check_service_charge').text());
         for(var i = 2 ; i <= length_check ; i++)
         {
             if($('.check_service_charge_'+i).text() != '')
@@ -3436,6 +3441,7 @@ function showData() {
     }
     function crossClickCheck()
     {
+        length_check =$('#participantCheckTable tr').length -2;
         $('.check_expense_account').show();
         $('#check_expense_account').css('display','none');
         $('.check_service_charge').show();
@@ -3608,8 +3614,9 @@ function closeRecurr()
     function removeRowRecurr(buttonrecurr) {
         console.log(buttonrecurr.closest("tr").text());
       buttonrecurr.closest("tr").remove();
-      var totrecurr = $('#recurrtotal').text().substr(9)-buttonrecurr.closest("tr").find('td:eq(4)').text().trim();
-      $('#recurrtotal').text('Total : $'+totrecurr.toFixed(2));
+      //var totrecurr = $('#recurrtotal').text().substr(9)-buttonrecurr.closest("tr").find('td:eq(4)').text().trim();
+      var totrecurr = $('#recurrtotal').text().substr(9);
+      $('#recurrtotal').text('Total : $'+totrecurr);
       if(buttonrecurr.closest("tr").find('td:eq(2)').find('select').hasClass("up_row"))
         {
             var id_to_remove =buttonrecurr.closest("tr").find('td:eq(0)').attr("data-id");
@@ -3758,6 +3765,7 @@ function closeRecurr()
     }
     function crossClickRecurr()
     {
+        length_recurr =$('#participantRecurrTable tr').length -2;
         $('.recurr_expense_account').show();
         $('#recurr_expense_account').css('display','none');
         $('.recurr_service_charge').show();
@@ -4195,57 +4203,7 @@ function closeAddaccount()
 
       var tablelength = $('#participantRecurrTable tr').length -2;
 
-      for(var i = 2 ; i <= tablelength ; i++)
-        {
-
-            var expense_account_sub = $('.recurr_expense_account_'+i).text();
-            var service_charge_sub = $('.recurr_service_charge_'+i).text();
-            var descp_sc_sub = $('.recurr_descp_'+i).text();
-
-          if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
-          {
-            if(service_charge_sub!='')
-            {
-                if($('#recurr_expense_account_'+i).hasClass('up_row'))
-                {
-                    var id = $('#recurr_expense_account_'+i).data('id');
-                    $.ajax({
-                        url:"<?php echo url('accounting/reconcile/change/servicecharge') ?>",
-                        method: "POST",
-                        data: {id:id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
-                        success:function(data)
-                        {
-                        }
-                    })
-                }
-                else
-                {
-                    $.ajax({
-                        url:"<?php echo url('accounting/reconcile/add/servicecharge') ?>",
-                        method: "POST",
-                        data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
-                        success:function(data)
-                        {
-                        }
-                    })
-                }
-            }
-          }
-        }
-
-      if(reconcile_id!='')
-      {
-        $.ajax({
-            url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
-            method: "POST",
-            data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
-            success:function(data)
-            {
-               // closeRecurr();
-               // location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
-            }
-        })
-      }
+      
 
       var template_name = $('#template_name').val();
       var template_type = $('#type_scheduled').val();
@@ -4296,7 +4254,44 @@ function closeAddaccount()
             data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,template_name:template_name,template_type:template_type,template_interval:template_interval,advanced_day:advanced_day,day:day,dayname:dayname,daynum:daynum,weekday:weekday,weekname:weekname,monthday:monthday,monthname:monthname,startdate:startdate,endtype:endtype,enddate:enddate,occurrence:occurrence,payeename:payeename,account_type:account_type,payment_date:payment_date,mailing_address:mailing_address,checkno:checkno,permitno:permitno,memo_recurr_sc:memo_recurr_sc},
             success:function(data)
             {
-                //location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+                var mainid = data;
+                for(var i = 2 ; i <= tablelength ; i++)
+                {
+
+                    var expense_account_sub = $('.recurr_expense_account_'+i).text();
+                    var service_charge_sub = $('.recurr_service_charge_'+i).text();
+                    var descp_sc_sub = $('.recurr_descp_'+i).text();
+
+                  if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
+                  {
+                    if(service_charge_sub!='')
+                    {
+                        if($('#recurr_expense_account_'+i).hasClass('up_row'))
+                        {
+                            var id = $('#recurr_expense_account_'+i).data('id');
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/changerecurr/servicecharge') ?>",
+                                method: "POST",
+                                data: {id:id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                                success:function(data)
+                                {
+                                }
+                            })
+                        }
+                        else
+                        {
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/addrecurr/servicecharge') ?>",
+                                method: "POST",
+                                data: {mainid:mainid,reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                                success:function(data)
+                                {
+                                }
+                            })
+                        }
+                    }
+                  }
+                }
                 sweetAlert(
                                             'Saved!',
                                             'Recurring has been saved.',
@@ -4321,27 +4316,97 @@ function closeAddaccount()
         if(id!='')
         {
             $.ajax({
-                    url:"<?php echo url('accounting/reconcile/servicecharge/remove_sc') ?>",
+                    url:"<?php echo url('accounting/reconcile/servicecharge/remove_sc_recurr') ?>",
                     method: "POST",
                     data: {id:id},
                     success:function(data)
                     {
-                        if(reconcile_id!='')
-                          {
-                            $.ajax({
-                                url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
-                                method: "POST",
-                                data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
-                                success:function(data)
-                                {
-                                    sweetAlert(
+                        sweetAlert(
                                             'Deleted!',
                                             'Item has been deleted.',
                                             'success'
                                         );
-                                }
-                            })
-                          }
+                    }
+                })
+        }
+
+    }
+</script>
+<script type="text/javascript">
+    function save_check(id,chart_of_accounts_id)
+    {
+      var reconcile_id = id;
+      var chart_of_accounts_id = chart_of_accounts_id;
+      var check_payee_popup = $('#check_payee_popup').val();
+      var check_account_popup = $('#check_account_popup').val();
+      var mailing_address = $('#check_mailing_add').val();
+      var date_popup = $('#check_date_popup').val();
+      var checkno = $('#check_checkno').val();
+      var permitno = $('#check_permitno').val();
+      var memo_sc = $('#check_memo_sc').val();
+      var descp_sc = $('.check_descp').text();
+      var expense_account=$('.check_expense_account').text();
+      //var service_charge=$('.check_service_charge').text();
+      var service_charge=$('#checktotal').text().substr(9);
+
+      var tablelength = $('#participantCheckTable tr').length -2;
+
+      $.ajax({
+            url:"<?php echo url('accounting/reconcile/check/save') ?>",
+            method: "POST",
+            data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,check_payee_popup:check_payee_popup,check_account_popup:check_account_popup,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,permitno:permitno,memo_sc:memo_sc},
+            success:function(data)
+            {
+                var mainid = data;
+                for(var i = 2 ; i <= tablelength ; i++)
+                {
+
+                    var expense_account_sub = $('.check_expense_account_'+i).text();
+                    var service_charge_sub = $('.check_service_charge_'+i).text();
+                    var descp_sc_sub = $('.check_descp_'+i).text();
+
+                  if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
+                  {
+                    if(service_charge_sub!='')
+                    {
+                        
+                        $.ajax({
+                            url:"<?php echo url('accounting/reconcile/addcheck/servicecharge') ?>",
+                            method: "POST",
+                            data: {mainid:mainid,reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                            success:function(data)
+                            {
+                            }
+                        })
+                    }
+                  }
+                }
+                sweetAlert(
+                                'Saved!',
+                                'New check has been saved.',
+                                'success'
+                            );
+                closeCheck();
+            }
+        })
+        
+    }
+    function remove_func_check(id)
+    {
+        var id = id;
+        if(id!='')
+        {
+            $.ajax({
+                    url:"<?php echo url('accounting/reconcile/servicecharge/remove_sc_check') ?>",
+                    method: "POST",
+                    data: {id:id},
+                    success:function(data)
+                    {
+                        sweetAlert(
+                                            'Deleted!',
+                                            'Item has been deleted.',
+                                            'success'
+                                        );
                     }
                 })
         }
@@ -4354,11 +4419,6 @@ function closeAddaccount()
        var maintot = main - $("#servicechargecount").val();
        $(".edit_service_charge").text(maintot.toFixed(2));
        $("#edit_service_charge").val(maintot.toFixed(2));
-
-       var main_recurr = $(".recurr_service_charge").text();
-       var maintot_recurr = main_recurr - $("#recurrservicechargecount").val();
-       $(".recurr_service_charge").text(maintot_recurr.toFixed(2));
-       $("#recurr_service_charge").val(maintot_recurr.toFixed(2));
     });
 </script>
 <script type="text/javascript">
@@ -4395,5 +4455,5 @@ function closeAddaccount()
                         );
                     showData();
                 }, 100); 
-});
+    });
 </script>
