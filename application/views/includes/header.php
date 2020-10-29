@@ -254,67 +254,65 @@
                         //                        $expected_endbreak = null;
                         $shift_end = 0;
                         $overtime_status = 1;
-                        if(!empty($attendances)) {
-                            foreach ($attendances as $attn) {
-                                $attn_id = $attn->id;
+                        foreach ($attendances as $attn){
+                            $attn_id = $attn->id;
+                            $overtime_status = isset($attn->overtime_status) ? $attn->overtime_status : '';
+                            foreach ($ts_logs_h as $log){
+                                if ($log->attendance_id == $attn->id && $attn->status == 1){
+                                    if ($log->action == 'Check in'){
+                                        $clock_in = date('h:i A',strtotime($log->date_created));
+                                        $shift_end = strtotime($log->date_created);
 
-                                $overtime_status = isset($attn->overtime_status) ? $attn->overtime_status : 0;
-                                foreach ($ts_logs_h as $log) {
-                                    if ($log->attendance_id == $attn->id && $attn->status == 1) {
-                                        if ($log->action == 'Check in') {
-                                            $clock_in = date('h:i A', $log->date_created);
-                                            $shift_end = $log->date_created;
+                                        $hours = floor($attn->break_duration / 60);
+                                        $minutes = floor($attn->break_duration % 60);
+                                        $seconds = $attn->break_duration - (int)$attn->break_duration;
+                                        $seconds = round($seconds * 60);
+                                        $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                    }
+                                    if ($log->action == 'Break in'){
+                                        $analog_active = 'clock-break';
+                                        if ($attn->break_duration > 0){
+                                            $lunch_in = strtotime($log->date_created)  - (floor($attn->break_duration * 60));
+                                            $latest_lunch_in = strtotime($log->date_created);
+                                        }else{
+                                            $lunch_in = strtotime($log->date_created);
+                                            $latest_lunch_in = 0;
+                                        }
+                                    }
+                                    if ($log->action == 'Break out'){
+                                        if ($attn->status == 1){
+                                            $analog_active = 'clock-active';
+                                        }
+                                    }
+                                }else if($log->attendance_id == $attn->id && $attn->status == 0){
+                                    if ($log->action == 'Check in'){
+                                        $clock_in = isset($log->date_created) ? date('h:i A',strtotime($log->date_created)) : '';
+                                        $shift_end = isset($log->date_created) ? strtotime($log->date_created) : '';
 
-                                            $hours = floor($attn->break_duration / 60);
-                                            $minutes = floor($attn->break_duration % 60);
-                                            $seconds = $attn->break_duration - (int)$attn->break_duration;
-                                            $seconds = round($seconds * 60);
-                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
-                                        }
-                                        if ($log->action == 'Break in') {
-                                            $analog_active = 'clock-break';
-                                            if ($attn->break_duration > 0) {
-                                                $lunch_in = $log->date_created - (floor($attn->break_duration * 60));
-                                                $latest_lunch_in = $log->date_created;
-                                            } else {
-                                                $lunch_in = $log->date_created;
-                                                $latest_lunch_in = 0;
-                                            }
-                                        }
-                                        if ($log->action == 'Break out') {
-                                            if ($attn->status == 1) {
-                                                $analog_active = 'clock-active';
-                                            }
-                                        }
-                                    } else {
-                                        if ($log->action == 'Check in') {
-                                            $clock_in = isset($log->date_created) ? date('h:i A', $log->date_created) : '';
-                                            $shift_end = isset($log->date_created) ? $log->date_created : '';
-
-                                            $hours = floor($attn->break_duration / 60);
-                                            $minutes = floor($attn->break_duration % 60);
-                                            $seconds = $attn->break_duration - (int)$attn->break_duration;
-                                            $seconds = round($seconds * 60);
-                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
-                                        }
-                                        if ($log->action == 'Check out') {
-                                            $clock_out = isset($log->date_created) ? date('h:i A', $log->date_created) : '';
-                                            $analog_active = null;
-                                            $shift_s = ($attn->shift_duration * 3600);
-                                            $shift_h = floor($attn->shift_duration);
-                                            $shift_s -= $shift_h * 3600;
-                                            $shift_m = floor($shift_s / 60);
-                                            $shift_s -= $minutes * 60;
-                                            $shift_duration = str_pad($shift_h, 2, '0', STR_PAD_LEFT) . ":" . str_pad($shift_m, 2, '0', STR_PAD_LEFT);
-                                        }
-
+                                        $hours = floor($attn->break_duration / 60);
+                                        $minutes = floor($attn->break_duration % 60);
+                                        $seconds = $attn->break_duration - (int)$attn->break_duration;
+                                        $seconds = round($seconds * 60);
+                                        $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                    }
+                                    if ($log->action == 'Check out'){
+                                        $clock_out = isset($log->date_created) ? date('h:i A',strtotime($log->date_created)) : '';
+                                        $analog_active = null;
+                                        $shift_s = ($attn->shift_duration * 3600);
+                                        $shift_h = floor($attn->shift_duration);
+                                        $shift_s -= $shift_h * 3600;
+                                        $shift_m = floor($shift_s / 60);
+                                        $shift_s -= $minutes * 60;
+                                        $shift_duration =  str_pad($shift_h, 2, '0', STR_PAD_LEFT).":".str_pad($shift_m, 2, '0', STR_PAD_LEFT);
                                     }
 
                                 }
 
-
                             }
+
+
                         }
+
                         $ts_settings = getEmpTSsettings();
                         $schedule = getEmpSched();
                         $expected_shift = 0;
@@ -326,7 +324,11 @@
                         foreach ($ts_settings as $setting){
                             foreach ($schedule as $sched){
                                 if ($setting->id == $sched->ts_settings_id){
-                                    $tz = isset($setting->timezone) && $setting->timezone != null ? $setting->timezone : 'America/Chicago';
+                                    if( !isset($setting->timezone) || $setting->timezone == null){
+                                        $tz = date_default_timezone_get();
+                                    }else{
+                                        $tz = $setting->timezone;
+                                    }
                                     $timestamp = time();
                                     $dt = new DateTime("now", new DateTimeZone($tz));
                                     $dt->setTimestamp($timestamp);
@@ -374,7 +376,7 @@
                             <input type="hidden" id="employeePingEnd" value="<?php echo $over_notify;?>">
                             <input type="hidden" id="employeeOvertime" value="<?php echo $expected_endshift;?>">
                             <input type="hidden" id="timeDifference" value="<?php echo $time_difference;?>">
-                            <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end;?>">
+                            <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end;?>" data-value="<?php echo date('h:i A',$shift_end)?>">
                             <input type="hidden" id="autoClockOut" value="<?php echo $overtime_status;?>">
                             <div class="icon-loader">
                                 <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">

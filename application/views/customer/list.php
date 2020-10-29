@@ -303,7 +303,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3'){echo "active";} ?>" data-toggle="tab" href="#widget2">Dispute Wizard</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4'){echo "active";} ?>" data-toggle="tab" href="#widget3">Widget 3</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4'){echo "active";} ?>" data-toggle="tab" href="#widget3">Dispute Items</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt5'){echo "active";} ?>" data-toggle="tab" href="#profle">Profile</a>
@@ -335,7 +335,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </ul>
                                                 </div>
                                             </div>
-
                                             <div class="tab-content mt-4" >
                                                 <div class="tab-pane <?php if($minitab=='mt2' || $minitab=='' ){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget1">
                                                     <?php
