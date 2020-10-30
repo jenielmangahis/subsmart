@@ -40,6 +40,8 @@
             $is_active_industry_module = "";
             $is_active_industry_template = "";
             $is_active_industry_type = "";
+            $is_active_admin_management = "";
+            
             if($this->uri->uri_string() == 'nsmart_plans/index') {
                 $is_active_plans = "active";
             }elseif($this->uri->uri_string() == 'nsmart_features/index') {
@@ -54,8 +56,29 @@
                 $is_active_addons = "active";
             }elseif($this->uri->uri_string() == 'nsmart_addons/edit_addon') {
                 $is_active_addons = "active";
+            }elseif($this->uri->uri_string() == 'industry_modules/index') {
+                $is_active_industry_module = "active";
+            }elseif($this->uri->uri_string() == 'industry_modules/add_new_module') {
+                $is_active_industry_module = "active";
+            }elseif($this->uri->uri_string() == 'industry_modules/edit_module') {
+                $is_active_industry_module = "active";
+            }elseif($this->uri->uri_string() == 'industry_template/index') {
+                $is_active_industry_template = "active";
+            }elseif($this->uri->uri_string() == 'industry_template/add_new_template') {
+                $is_active_industry_template = "active";
+            }elseif($this->uri->uri_string() == 'industry_template/edit_template') {
+                $is_active_industry_template = "active";
+            }elseif($this->uri->uri_string() == 'industry_type/index') {
+                $is_active_industry_type = "active";
+            }elseif($this->uri->uri_string() == 'industry_type/add_new_industry_type') {
+                $is_active_industry_type = "active";
+            }elseif($this->uri->uri_string() == 'industry_type/edit_industry_type') {
+                $is_active_industry_type = "active";
+            }elseif($this->uri->uri_string() == 'nsmart_adminmgt/subscribers') {
+                $is_active_admin_management = "active";
             }
 
+            
 
         ?>
         <li class="submenus <?= $is_active_plans; ?>"><a href="<?php echo base_url('nsmart_plans/index') ?>" title="Plans" style="color: #fff;">
@@ -79,6 +102,8 @@
         <li class="submenus <?= $is_active_industry_type; ?>"><a href="<?php echo base_url('industry_type/index') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Industry Type</a>
         </li>
-
+        <li class="submenus <?= $is_active_admin_management; ?>"><a href="<?php echo base_url('nsmart_adminmgt/subscribers') ?>" title="Industry Modules" style="color: #fff;">
+            <span class="fa fa-list"></span>Admin Management</a>
+        </li>
     </ul>
 </nav>

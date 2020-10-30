@@ -336,6 +336,8 @@ $route['nsmart_features/create_feature'] = 'Nsmart_Features/create_feature';
 $route['nsmart_features/edit_feature/(:any)'] = 'Nsmart_Features/edit_feature/$1';
 $route['nsmart_features/update_feature'] = 'Nsmart_Features/update_feature';
 
+$route['nsmart_adminmgt/subscribers'] = 'Nsmart_AdminMgt/subscribers';
+
 $route['notification/calendar_notification_counter'] = 'Notification_Counter/calendar_notification_counter';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
