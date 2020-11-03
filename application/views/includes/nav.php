@@ -72,9 +72,6 @@ $user_id = getLoggedUserID();
 
                 <?php ////if (hasPermissions('plan_list')): ?>
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar" style="margin-right: 10px;align-items: center;justify-content: center">
                         <a href="<?php echo url('/workcalender') ?>">
                             <!--                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>-->
@@ -91,9 +88,6 @@ $user_id = getLoggedUserID();
                 </li>
                 <?php //endif ?>
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
                          aria-expanded="false">
                         <a href="<?php echo base_url('dashboard/blank/?page=Sales') ?>">
@@ -132,9 +126,6 @@ $user_id = getLoggedUserID();
                     </div>
                 </li>
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar">
                         <a href="<?php echo url('/accounting/banking') ?>" role="button" >
                             <img class="cash-static" src="/assets/css/icons/images/cash-1.1s-47px.svg" alt="" style="margin: 0 auto">
@@ -183,9 +174,6 @@ $user_id = getLoggedUserID();
                     <!--                    </div>-->
                 </li>
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar">
                         <a href="<?php echo base_url('vault') ?>">
                             <img class="lock-static" src="/assets/css/icons/images/lock-1.1s-47px.svg" alt="" style="margin: 0 auto">
@@ -210,9 +198,6 @@ $user_id = getLoggedUserID();
                     </li>
                 <?php //endif ?>-->
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar">
                         <a href="<?php echo base_url('marketing') ?>">
                             <img class="marketing-static" src="/assets/css/icons/images/html-1.1s-47px.svg" alt="" style="margin: 0 auto">
@@ -232,9 +217,6 @@ $user_id = getLoggedUserID();
                 </li>
                 <li class="has-submenu">
                     <!-- <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span></a> -->
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
                             <img class="tools-static" src="/assets/css/icons/images/gear-1.1s-47px.svg" alt="" style="margin: 0 auto">
@@ -256,9 +238,6 @@ $user_id = getLoggedUserID();
                 </li>
 
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>">
                             <img class="building-static" src="/assets/css/icons/images/building-1.1s-47px.svg" alt="" style="margin: 0 auto">
@@ -287,9 +266,6 @@ $user_id = getLoggedUserID();
                     </div>
                 </li>
                 <li class="has-submenu">
-                    <div class="icon-loader-left">
-                        <img src="/assets/css/icons/images/spinner-1.1s-47px.svg" alt="">
-                    </div>
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
                             <img class="more-static" src="/assets/css/icons/images/ellipsis-1.1s-47px.svg" alt="" style="margin: 0 auto">

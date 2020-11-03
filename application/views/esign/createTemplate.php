@@ -37,11 +37,15 @@ ini_set('max_input_vars', 30000);
                     <!-- Main Selection -->
                         <!-- Main Selection -->
                     <div class="container">
+                    <a href="<?=base_url('esign/templateLibrary')?>"> Go Back To Library </a>
+                    <a style="float:right" href="categoryList">Manage template category</a>
+
+                    <br>
+                    <br>
                         <?=form_open_multipart('esign/saveCreatedTemplate', ['id' => 'createTemplate']); ?>
                             <div class="form-group">
                                 <label for="letterTitle">Title : </label>
                                 <input type="text" class="form-control" value="<?=isset($template) ? $template->title : ""?>" name="letterTitle" id="">
-                    <a style="float: right;" href="<?=base_url('esign/templateLibrary')?>"> Go Back To Library </a>
                             </div>
                             <?php
                                 if(isset($template)){
@@ -51,13 +55,18 @@ ini_set('max_input_vars', 30000);
                                 }
                             ?>
                             <div class="form-group">
-                                <label for="category">Category : </label>
-                                <select name="category_id" id="category" class="dropdown form-control">
-                                    <?php foreach($categories as $category){ ?>
-                                        <option <?=isset($template) && $template->category_id ==  $category['category_id'] ? "selected" : "" ?> value="<?=$category['category_id']?>"><?=$category['categoryName']?></option>
+                                <label for="library">Library : </label>
+                                <select name="libraryId" id="library" class="select2LibrarySelection dropdown form-control">
+                                    <option></option>
+                                    <?php foreach($libraries as $library){ ?>
+                                        <option value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
                                     <?php } ?>
                                 </select>
-                                <a href="categoryList">Manage template category</a>
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Category : </label>
+                                <select required name="category_id" id="category" class="select2CategoorySelection dropdown form-control"> 
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="">Status : </label>
@@ -77,7 +86,8 @@ ini_set('max_input_vars', 30000);
                             </div>
                             <div class="form-group">
                                 <input type="submit" class="btn btn-primary" value="Submit">
-                    <button onclick="printHtml()"> Print </button>
+                                <input type="button" class="btn btn-info" onclick="printHtml()" value="Print">
+                                <input type="button" class="btn btn-warning" value="Upload">
                             </div>
                         <?=form_close(); ?>
                         <?php if(isset($_GET['isSuccess']) && $_GET['isSuccess'] == 1){ ?>
@@ -135,7 +145,6 @@ ini_set('max_input_vars', 30000);
 <!-- Signature MODAL -->
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-
 <script>
         let defaultText = `<p>{client_first_name}&nbsp;{client_last_name}<br />{client_address}<br />{client_previous_address}<br />{bdate}<br />{ss_number}&nbsp;<br /><br />{bureau_address}</p>
 <p>Attn.: Consumer Relations&nbsp;</p>
@@ -146,6 +155,29 @@ ini_set('max_input_vars', 30000);
 <p><br />Sincerely,&nbsp;<br /><br />{client_signature}<br />_____________________________</p>
 <p>{client_first_name}&nbsp;{client_last_name}</p>`;
         $(document).ready(function() {
+            // $('.select2CategoorySelection').select2();
+            $('.select2LibrarySelection').select2({
+                placeholder: 'Please Select',
+                allowClear: true
+            });
+            $('.select2LibrarySelection').change(function(){
+                let id = $(this).val();
+                $('.select2CategoorySelection').val('');
+                $('.select2CategoorySelection').select2({
+                    placeholder: 'Please Select',
+                    ajax: {
+                        url: "<?=base_url('esign/getCategories/')?>"+id,
+                        dataType: 'json',
+                        delay: 0,
+                        processResults: function (data) {
+                            return {
+                                results: data
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            });
             $('#summernote').summernote({
                 placeholder: 'Type Here ... ',
                 tabsize: 2,

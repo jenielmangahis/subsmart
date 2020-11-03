@@ -17,6 +17,14 @@
             "pageLength": 5
         });
 
+        var table_dispute_items =$('#dispute_table').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 20,
+            "info": false,
+            "order": [],
+        });
+
         var table_quick_list =$('#customer_list_quick').DataTable({
             "lengthChange": false,
             "searching" : false,
@@ -267,6 +275,18 @@
             $('#task_form')[0].reset();
             //$('#lead_source_header').text('Add Lead Source');
             $('#modal_task').modal('show');
+        });
+
+        $("#add_furnishers").on( "click", function( event ) {
+            $('#form_creditor_furnisher')[0].reset();
+            //$('#lead_source_header').text('Add Lead Source');
+            $('#modal_furnishers').modal('show');
+        });
+
+        $("#add_reasons").on( "click", function( event ) {
+            $('#form_reasons')[0].reset();
+            //$('#lead_source_header').text('Add Lead Source');
+            $('#modal_reasons').modal('show');
         });
 
         $("#import_audit").on( "click", function( event ) {

@@ -163,40 +163,63 @@ input {
     <!-- Main Selection -->
     <section class="main-wrapper" id="custome-fileup" style="background: white;padding-bottom: 15px;">
         <br>
+        <br>
         <div class="container">
             <div class="row">
-                <!-- <a href="<?=base_url('esign/addCategory')?>" class="btn btn-info">Add New Category</a>             -->
+                <div class="col-md-12">
+                    <a href="<?=base_url('esign/addCategory')?>">Add Category</a>
+                    <a style="float: right;" href="<?=base_url('esign/libraryList')?>">Manage Library</a>
+                </div>
             </div>
-            <table id="myTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Category Name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($templates AS $template){?>
-                        <tr>
-                            <form class="editCategory" id="formId-<?=$template['category_id']?>">
-                                <td>
-                                    <input type="text" name="categoryName" value="<?=$template['categoryName']?>">
-                                    <input type="hidden" name="categoryId" value="<?=$template['category_id']?>">
-                                </td>
-                                <td>
-                                    <?php if(!$template['isDefault']){?>
-                                        <button type="submit"><i class="fa fa-edit"></i></button>
-                                        <a class="trashColor" href="#"><i id="deleteId-<?=$template['category_id']?>" class="fa fa-trash"></i></a>
-                                    <?php }else {?>
-                                        <a><i class="fa fa-lock"></i></a>
-                                    <?php }?>
-                                </td>
-                            </form>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="myTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Library</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($categories AS $category){?>
+                                <tr>
+                                    <form class="editCategory" id="formId-<?=$category['category_id']?>">
+                                        <td>
+                                            <span style="display: none;"><?=$category['categoryName']?>  </span>
+                                            <input type="text" name="categoryName" value="<?=$category['categoryName']?>">
+                                            <input type="hidden" name="categoryId" value="<?=$category['category_id']?>">
+                                        </td>
+                                        <td>
+                                            <span style="display: none;"><?=$category['libraryName']?></span>
+                                            <?php if($category['isDefault']){?>
+                                                <?=$category['libraryName']?>
+                                            <?php }else { ?>
+                                                <select name="fk_esignLibraryMaster" id="">
+                                                    <?php foreach($libraries AS $library){?>
+                                                        <option <?=$library['pk_esignLibraryMaster'] == $category['fk_esignLibraryMaster'] ? "selected" : ""?> value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            <?php } ?>
+                                        </td>
+                                        <td>
+                                            <?php if(!$category['isDefault']){?>
+                                                <button type="submit"><i class="fa fa-edit"></i></button>
+                                                <a class="trashColor" href="#"><i id="deleteId-<?=$category['category_id']?>" class="fa fa-trash"></i></a>
+                                            <?php }else {?>
+                                                <a><i class="fa fa-lock"></i></a>
+                                            <?php }?>
+                                        </td>
+                                    </form>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
         <br/>
-        <a href="<?=base_url('esign/templateLibrary')?>">Back To Library</a>
+        
         </div>    
     </section>
 
@@ -208,9 +231,9 @@ input {
                 ]
             });
             
-            $('#myTable').on( 'dblclick', 'tbody td', function (e) {
-                console.log($(this).html())
-            });
+            // $('#myTable').on( 'dblclick', 'tbody td', function (e) {
+            //     console.log($(this).html())
+            // });
 
             $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
                table
@@ -255,10 +278,10 @@ input {
                     url: '<?=base_url('esign/updateCategory') ?>',
                     type: 'post',
                     data,
+                    complete: function (compl) {
+                        $("#"+thisEleId).removeClass('loading'); 
+                    },
                     success: function(res, status) {
-                        console.log('My Res Data ',res)
-                        console.log("from el ",thisEleId);
-                        $("#"+thisEleId).removeClass('loading');
                         try {
                             res = JSON.parse(res);
                             if(status != "success" || !res.status){

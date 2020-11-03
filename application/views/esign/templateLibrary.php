@@ -10,18 +10,33 @@ ini_set('max_input_vars', 30000);
 		height: auto;
 		border: 1px solid black;
 	}
+    .favorite {
+        color : yellow;
+    }
+    .notFavorite {
+        color : black;
+    }
 </style>
 <div class="wrapper" role="wrapper">
-		<?php  /* include viewPath('includes/sidebars/signature'); */ ?>
-		<?php /* include viewPath('includes/notifications'); */ ?>
-		<div >
+		<div>
 		<!-- wrapper__section -->
-			<?php /* include viewPath('includes/notifications'); */?>
 			<div class="card">
 				<div class="container-fluid">
                         <!-- Main Selection -->
             <div class="row mb-5">
                 <a href="<?=base_url('esign/createTemplate')?>" class="btn btn-info">Add New Letter</a>            
+                <div style="display: flex;">
+                    <select class="librarySelect" name="" id="">
+                        <option value="0">All</option>
+                        <?php
+                            foreach($libraries as $library){
+                        ?>
+                            <option value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
+                        <?php
+                            }
+                        ?>
+                    </select>
+                </div>
             </div>
             <table id="myTable" class="display">
                 <thead>
@@ -34,23 +49,6 @@ ini_set('max_input_vars', 30000);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($templates AS $template){?>
-                        <tr>
-                            <td><a href="<?=base_url('esign/editTemplate?id='.$template['esignLibraryTemplateId'])?>"><?=$template['title']?></a></td>
-                            <td><?=$template['isActive'] ? "Active" : "InActive"?></td>
-                            <td><?=$template['categoryName']?></td>
-                            <td>
-                                <a href="#" class="changeFavorite">
-                                    <i id="<?=$template['esignLibraryTemplateId']?>" class="fa fa-star <?=$template['isFavorite'] ? 'favorite' : 'notFavorite'?> "></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="<?=base_url('esign/editTemplate?id='.$template['esignLibraryTemplateId'])?>"><i class="fa fa-edit"></i></a>
-                                <a class="trashColor" href="#"><i id="deleteId-<?=$template['esignLibraryTemplateId']?>" class="fa fa-trash"></i></a>
-                                <!-- <a><i class="fa fa-eye"></i></a> -->
-                            </td>
-                        </tr>
-                    <?php } ?>
                 </tbody>
             </table>
                 </div>
@@ -64,48 +62,64 @@ ini_set('max_input_vars', 30000);
 <?php include viewPath('includes/footer'); ?>
 
 <script>
+        function changeFavorite(event){
+            console.log('Bar Function callled');
+            let clickedObj = $(event).children();
+            let templateId = clickedObj.attr('id');
+            if(!clickedObj.hasClass("appling")){
+                clickedObj.addClass("appling");
+                if(clickedObj.hasClass("favorite")){
+                    clickedObj.toggleClass('favorite notFavorite');
+                    updateFavorite(clickedObj, templateId, 0)
+                }else{
+                    // console.log("we are adding favorite : ",clickedObj.attr('id'));
+                    clickedObj.toggleClass('notFavorite favorite');
+                    updateFavorite(clickedObj, templateId, 1)
+                }
+            }
+        }
+        
+        function updateFavorite(clickedObj, templateId, isFavorite){
+            $.get("changeFavoriteStatus/"+templateId+"/"+isFavorite, function(data, status){
+                try {
+                    data = JSON.parse(data);
+                    if(status != "success" || !data.status){
+                        throw "errr";
+                    }
+                    clickedObj.removeClass("appling");
+                } catch (error) {
+                    alert('Something Went Wrong Please Try Again');
+                    location.reload();
+                }
+            });
+        }
+
         $(document).ready(function() {
+            var selected = "0";
+
+            $( ".librarySelect" ).change(function() {
+                selected = $('.librarySelect').find(":selected").val();
+                reloadDataTable();
+            });
+
             let table = $('#myTable').DataTable({
                 columnDefs: [
                   { orderable: false, targets: -1 },
                   { orderable: false, targets: -2 }
-                ]
-            });
-            $('.changeFavorite').click(function(){
-                let clickedObj = $(this).children();
-                let templateId = clickedObj.attr('id');
-                if(!clickedObj.hasClass("appling")){
-                    clickedObj.addClass("appling");
-                    if(clickedObj.hasClass("favorite")){
-                        clickedObj.toggleClass('favorite notFavorite');
-                        updateFavorite(clickedObj, templateId, 0)
-                    }else{
-                        // console.log("we are adding favorite : ",clickedObj.attr('id'));
-                        clickedObj.toggleClass('notFavorite favorite');
-                        updateFavorite(clickedObj, templateId, 1)
-                    }
+                ],
+                "processing": true,
+                "serverSide": true,
+                "order": [],
+                "ajax": {
+                    "url": "<?php echo base_url('esign/dtGetLibrary'); ?>?libraryId="+selected,
+                    "type": "POST"
                 }
-            })
-            function updateFavorite(clickedObj, templateId, isFavorite){
-                $.get("changeFavoriteStatus/"+templateId+"/"+isFavorite, function(data, status){
-                    try {
-                        data = JSON.parse(data);
-                        if(status != "success" || !data.status){
-                            throw "errr";
-                        }
-                        clickedObj.removeClass("appling");
-                    } catch (error) {
-                        alert('Something Went Wrong Please Try Again');
-                        location.reload();
-                    }
-                });
-            }
-
-            // $('#myTable tbody').on( 'click', 'i.fa-eye', function () {
-               
-            // });
+            });
+             
+ 
             $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
-               table
+                console.log('Delete');   
+                table
                 .row( $(this).parents('tr') )
                 .remove()
                 .draw();
@@ -119,11 +133,16 @@ ini_set('max_input_vars', 30000);
                         if(status != "success" || !data.status){
                             throw "errr";
                         }
+                        reloadDataTable()
                     } catch (error) {
                         alert('Something Went Wrong Please Try Again');
                         location.reload();
                     }
                 });
+            }
+            function reloadDataTable(){
+                table.ajax.url( "<?php echo base_url('esign/dtGetLibrary'); ?>/"+selected);
+                table.ajax.reload();
             }
         });
 

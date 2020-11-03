@@ -588,7 +588,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $("#modalAddEmployee").modal('hide');
         });
         $(document).on('click','#savedNewEmployee',function () {
-            var values = {};
+            let values = {};
             $.each($('#addEmployeeForm').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });

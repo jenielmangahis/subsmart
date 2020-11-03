@@ -702,7 +702,6 @@ $config['lead_source'] = array(
 
 
 $config['calendar_timezone'] = array(
-
     'Pacific/Honolulu' => 'Hawaii Time (UTC -10)',
     'America/Adak' => 'Hawaii Daylight Time (UTC -9)',
     'America/Anchorage' => 'Alaska Time (UTC -8)',
@@ -710,7 +709,8 @@ $config['calendar_timezone'] = array(
     'America/Phoenix' => 'Arizona Time (UTC -7)',
     'America/Denver' => 'Mountain Time (UTC -6)',
     'America/Chicago' => 'Central Time (UTC-5)',
-    'America/New_York' => 'Eastern Time (UTC -4)'
+    'America/New_York' => 'Eastern Time (UTC -4)',
+    'Asia/Manila' => 'GMT/UTC (UTC +8)',
 );
 
 // calender views

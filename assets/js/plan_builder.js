@@ -19,4 +19,28 @@ $(function(){
 
         $("#modalDeleteAddon").modal("show");
     });
+
+    $(".btn-view-subscription-details").click(function(){
+        $("#modalViewSubscriptionDetails").modal('show');
+
+        //var siid = $(this).attr("data-id");
+        
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        //var url = base_url + '/booking/ajax_edit_service_item';
+
+        $(".modal-view-subscription-details-container").html(msg);
+        /*setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {siid:siid},
+               success: function(o)
+               {
+                  $(".modal-view-subscription-details-container").html(o);
+               }
+            });
+        }, 500);*/
+
+    });
+
 });

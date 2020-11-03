@@ -5,7 +5,10 @@ class Industry_Type extends MY_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->checkLogin();
+
+		//$this->checkLogin();
+		$role_id = 1; //this is for nsmart admin user
+		$this->isCheckLoginAndRole($role_id);
 
 		$this->page_data['page_title'] = 'Industry Template';
 
@@ -67,138 +70,91 @@ class Industry_Type extends MY_Controller {
         		$this->session->set_flashdata('alert_class', 'alert-success');
         	}
         }else{
-        	$this->session->set_flashdata('message', 'Please enter module name');
+        	$this->session->set_flashdata('message', 'Please enter type name');
         	$this->session->set_flashdata('alert_class', 'alert-danger');
         }
 
         redirect('industry_type/add_new_industry_type');
 	}
 
-	public function edit_template($template_id) {
+	public function edit_industry_type($type_id) {
 
-		$industryTemplate = $this->IndustryTemplate_model->getById($template_id);
+		$industryType = $this->IndustryType_model->getById($type_id);
+		$industryTemplate   = $this->IndustryTemplate_model->getAll();
+		$businessTypes = [ 
+					  'Building Contractors' => 'Building Contractors',
+					  'Financial Services' => 'Financial Services',
+					  'Technical Services' => 'Technical Services',
+					  'Health And Beauty' => 'Health And Beauty',
+					  'Transportation' => 'Transportation',
+					  'Organization / Cleaning' => 'Organization / Cleaning',
+					  'Entertainment Services' => 'Entertainment Services',
+					  'Design Services' => 'Design Services',
+					  'Other' => 'Other',
+		            ];
 
-		if( $industryTemplate ){
-			$this->page_data['industryTemplate'] = $industryTemplate;
-			$this->load->view('industry_template/edit_template', $this->page_data);
+		if( $industryType ){
+			$this->page_data['businessTypes'] = $businessTypes;
+			$this->page_data['industryType'] = $industryType;
+		    $this->page_data['industryTemplate'] = $industryTemplate;
+		    $this->load->view('industry_type/edit_industry_type', $this->page_data);
 		}else{
 			$this->session->set_flashdata('message', 'Cannot find data');
         	$this->session->set_flashdata('alert_class', 'alert-danger');
-        	redirect('industry_modules/index');
+        	redirect('industry_type/index');
 		}
 	}
 
-	public function update_template() {
+	public function update_type() {
 		postAllowed();
 
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
-        $industryTemplate = $this->IndustryTemplate_model->getById($post['template_id']);
+        $industryTemplate = $this->IndustryType_model->getById($post['type_id']);
 
         if( $industryTemplate ){
         	if( $post['name'] != '' ){
 	        	$data = [
         			'name' => $post['name'],
+        			'business_type_name' => $post['business_type_name'],
+        			'industry_template_id' => $post['industry_template_id'],
         			'status' => $post['status'],
         			'date_modified' => date("Y-m-d H:i:s")
         		];
-        		$industryTemplateUpdate = $this->IndustryTemplate_model->updateIndustryTemplate($post['template_id'],$data);
+        		$industryTemplateUpdate = $this->IndustryType_model->updateIndustryType($post['type_id'],$data);
 
-        		$this->session->set_flashdata('message', 'Template was successfully updated');
+        		$this->session->set_flashdata('message', 'Type was successfully updated');
         		$this->session->set_flashdata('alert_class', 'alert-success');
 	        }else{
-	        	$this->session->set_flashdata('message', 'Please enter module name');
+	        	$this->session->set_flashdata('message', 'Please enter type name');
 	        	$this->session->set_flashdata('alert_class', 'alert-danger');
 	        }
 
-	        redirect('industry_template/edit_template/'.$post['template_id']);
+	        redirect('industry_type/edit_industry_type/'.$post['type_id']);
 
         }else{
         	$this->session->set_flashdata('message', 'Cannot find data');
 	        $this->session->set_flashdata('alert_class', 'alert-danger');
 
-	        redirect('industry_template/index');
+	        redirect('industry_type/index');
         }
 	}
 
-	public function assign_template_modules($template_id) {
-
-		$industryTemplate = $this->IndustryTemplate_model->getById($template_id);
-		$industryModules = $this->IndustryModules_model->getAll();
-		$industryTemplateModules = $this->IndustryTemplateModules_model->getAllByTemplateId($template_id);
-		// echo "<pre>";
-		// print_r($industryModules);
-		// echo "</pre>";
-		// exit();
-
-		if( $industryTemplate ){
-			$this->page_data['industryTemplate'] = $industryTemplate;
-			$this->page_data['industryModules'] = $industryModules;
-			$this->page_data['industryTemplateModules']  = $industryTemplateModules;
-			$this->load->view('industry_template/assign_template_modules', $this->page_data);
-		}else{
-			$this->session->set_flashdata('message', 'Cannot find data');
-        	$this->session->set_flashdata('alert_class', 'alert-danger');
-        	redirect('industry_modules/index');
-		}
-	}
-
-	public function update_template_modules() {
-		postAllowed();
-
-        $user = $this->session->userdata('logged');
-        $post = $this->input->post();
-
-        $industryTemplate = $this->IndustryTemplate_model->getById($post['template_id']);
-
-        if( $industryTemplate ){
-        	if( $post['name'] != '' ){
-
-        		if(is_array($post['modules'])){
-        			$this->IndustryTemplateModules_model->deleteIndustryTemplateModulesByTemplateId($post['template_id']);
-        			foreach ($post['modules'] as $key => $module_id) {
-	        			$data = [
-		        			'industry_template_id' => $post['template_id'],
-		        			'industry_module_id ' => $module_id,
-		        			'status' => 1, 	 
-		        			'date_created' => date("Y-m-d H:i:s"),
-		        			'date_modified' => date("Y-m-d H:i:s")
-		        		];
-		        		$industryTemplateModules = $this->IndustryTemplateModules_model->create($data);
-		        	}	
-        		}
-	        	
-
-        		$this->session->set_flashdata('message', 'Template Modules was successfully updated');
-        		$this->session->set_flashdata('alert_class', 'alert-success');
-	        }else{
-	        	$this->session->set_flashdata('message', 'Please enter module name');
-	        	$this->session->set_flashdata('alert_class', 'alert-danger');
-	        }
-
-	        redirect('industry_template/assign_template_modules/'.$post['template_id']);
-
-        }else{
-        	$this->session->set_flashdata('message', 'Cannot find data');
-	        $this->session->set_flashdata('alert_class', 'alert-danger');
-
-	        redirect('industry_template/index');
-        }
-	}
-
-	public function delete_template()
+	
+	
+	public function delete_type()
     {
     	$post = $this->input->post();
 
-    	$id = $this->IndustryTemplate_model->deleteIndustryTemplate(post('tid'));
+    	$id = $this->IndustryType_model->deleteIndustryType(post('type_id'));
 
-		$this->session->set_flashdata('message', 'Template has been Deleted Successfully');
+		$this->session->set_flashdata('message', 'Industry Type has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
-		redirect('industry_template/index');
+		redirect('industry_type/index');
     }
 }
 
-/* End of file Industry_Template.php */
-/* Location: ./application/controllers/Industry_Template.php */
+/* End of file Industry_Type.php */
+/* Location: ./application/controllers/Industry_Type.php */

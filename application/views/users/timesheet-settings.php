@@ -2,8 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style type="text/css">
-    .red{
-        background-color: red;
+    .card-body{
+        min-height: 446px;
+    }
+    .center{
+        text-align: center;
     }
     input[type='radio']:after {
         width: 25px;
@@ -32,7 +35,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         visibility: visible;
         border: 2px solid white;
     }
-    th{
+    /*Datatable for Schedule table*/
+    #timesheet_settings th{
         text-align: center;
     }
     #tsSettingsRow > td > input:read-only{
@@ -297,6 +301,119 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         right: 0;
         margin: auto;
     }
+    /*Tabs*/
+    .tab-pane{
+        margin-top: 20px;
+    }
+    .nav-item .active{
+        border-bottom: 3px solid #498002!important;
+        background-color: transparent!important;
+        font-weight: bold;
+    }
+    .nav-tabs .nav-link{
+        border: 0;
+    }
+    /*PTO datatable*/
+    #pto-table-list_wrapper{
+        max-width: 1046px;
+    }
+    #pto-table-list_wrapper .dataTables_filter{
+        float: left!important;
+    }
+    #pto-table-list_wrapper .dataTables_filter label{
+        text-indent: 9999px;
+        width: 100%;
+        display: block;
+        overflow: hidden;
+        z-index: 1;
+    }
+    #pto-table-list_wrapper .dataTables_filter input[type="search"]{
+        display: block;
+    }
+    #pto-table-list_wrapper .dataTables_filter input[type="search"]::placeholder{
+        font-style: italic;
+    }
+    #pto-table-list_wrapper .dataTables_length{
+        margin-top:25px ;
+        right: 0;
+        position: absolute;
+    }
+    .ptoTable thead > tr > th{
+        font-weight: bold!important;
+        text-align: center;
+        color: #0b0b0b;
+        border-bottom: 2px solid #dee2e6!important;
+    }
+    .ptoTable tr > td{
+        border-right: 1px solid black;
+    }
+    .ptoTable{
+        border-bottom: 1px solid #dee2e6!important;
+    }
+
+    .ptoTable .fa-times{
+        font-weight: lighter!important;
+        color: #92969d;
+    }
+    .ptoTable .fa-times:hover{
+        color: orangered;
+    }
+    .ptoTable .fa-thumbs-up{
+        font-weight: lighter!important;
+        color: #017cde;
+    }
+    .ptoTable .fa-thumbs-up:hover{
+        color: #498002;
+    }
+    /*Modal effect*/
+    .md-effect-11 .modal-content {
+        -webkit-transform: scale(2);
+        -moz-transform: scale(2);
+        -ms-transform: scale(2);
+        transform: scale(2);
+        opacity: 0;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .show.md-effect-11 .modal-content {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+    /*Leave modal css*/
+    #listLeaveType .modal-content{
+        border-radius: 0;
+        border-color: transparent;
+        min-width: 700px;
+    }
+    @media (min-width: 576px){
+        #listLeaveType .modal-dialog {
+            max-width: 700px!important;
+        }
+    }
+    .modal-backdrop{
+        backdrop-filter: blur(3px);
+        background-color: rgba(0, 7, 10, 0.44);
+    }
+    .modal-backdrop.in{
+        opacity: 1 !important;
+    }
+    .display{
+        display: inline-block;
+    }
+    .hidden{
+        display: none;
+    }
+    #leaveTableList tbody tr{
+        cursor: pointer;
+    }
+    #leaveTableList tbody tr input.form-control{
+        height: 36px!important;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -332,44 +449,110 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- Date Selector -->
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="ts-settings-menu">
-                                        <div class="form-group" style="float: right">
-                                            <select name="" id="tsUsersList" class="form-control select2-employee-list">
-                                                <option></option>
-                                            </select>
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#empSchedule">Schedule</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#empPTO">PTO</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#empSettings">Settings</a>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div class="tab-pane container fade" id="empSchedule">
+                                            <div class="ts-settings-menu">
+                                                <div class="form-group" style="float: right">
+                                                    <select name="" id="tsUsersList" class="form-control select2-employee-list">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <!--                                            <button class="btn btn-default" type="button"><i class="fa fa-list"></i></button>-->
+                                                </div>
+                                                <!--                                        Present day-->
+                                                <input type="hidden" id="presentDay" value="<?php echo date('m/d/Y')?>">
+                                                <div class="form-group" style="float: right">
+                                                    <!--                                            <select name="" id="ts-sorting-week" class="form-control ts-sorting">-->
+                                                    <!--                                                <option value="this week" selected>This week</option>-->
+                                                    <!--                                                <option value="last week">Last week</option>-->
+                                                    <!--                                                <option value="next week">Next week</option>-->
+                                                    <!--                                            </select>-->
+                                                    <input type="text" id="ts-sorting-week" class="form-control ts-settings-datepicker" value="<?php echo date('m/d/Y')?>">
+                                                    <!--                                            <button class="btn btn-default"><i class="fa fa-angle-left fa-lg"></i></button>-->
+                                                    <!--                                            <button class="btn btn-default right"><i class="fa fa-angle-right fa-lg"></i></button>-->
+                                                </div>
+                                            </div>
+                                            <div class="table-wrapper-settings">
+                                                <table id="timesheet_settings" class="timesheet_settings-table"></table>
+                                                <div class="table-ts-loader">
+                                                    <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="ts-bottom-btn-section">
+                                                <!--                                        <div class="form-group">-->
+                                                <!--                                            <button class="btn btn-default" id="btnAddRow"><i class="fa fa-plus" style="color: #0b97c4;"></i>&nbsp;Add new row</button>-->
+                                                <!--                                        </div>-->
+                                                <div class="form-group">
+                                                    <button class="btn btn-default"><i class="fa fa-copy" style="color: #9da5af;"></i>&nbsp;Copy last week</button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button class="btn btn-default"><i class="fa fa-save" style="color: #56bb4d;"></i>&nbsp;Save as template</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-<!--                                            <button class="btn btn-default" type="button"><i class="fa fa-list"></i></button>-->
+                                        <div class="tab-pane container active" id="empPTO">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <button class="btn btn-info" id="leaveList" style="float: right"><i class="fa fa-plus"></i> Add Leave Type</button>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table id="pto-table-list" class="ptoTable cell-border hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Employee</th>
+                                                                <th>Type</th>
+                                                                <th>Date of Request</th>
+                                                                <th>Status</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="center" style="border-left: 0;">1</td>
+                                                                <td>Sample</td>
+                                                                <td class="center">Sick</td>
+                                                                <td class="center">Oct 29,2020</td>
+                                                                <td class="center">Pending</td>
+                                                                <td class="center" style="border-right: 0;">
+                                                                    <a href="javascript:void (0)" title="Approve" data-toggle="tooltip" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
+                                                                    <a href="javascript:void (0)" title="Decline" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="center" style="border-left: 0;">2</td>
+                                                                <td>Sample</td>
+                                                                <td class="center">Maternity</td>
+                                                                <td class="center">Oct 29,2020</td>
+                                                                <td class="center">Pending</td>
+                                                                <td class="center" style="border-right: 0;">
+                                                                    <a href="javascript:void (0)" title="Approve" data-toggle="tooltip" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
+                                                                    <a href="javascript:void (0)" title="Decline" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
-<!--                                        Present day-->
-                                        <input type="hidden" id="presentDay" value="<?php echo date('m/d/Y')?>">
-                                        <div class="form-group" style="float: right">
-<!--                                            <select name="" id="ts-sorting-week" class="form-control ts-sorting">-->
-<!--                                                <option value="this week" selected>This week</option>-->
-<!--                                                <option value="last week">Last week</option>-->
-<!--                                                <option value="next week">Next week</option>-->
-<!--                                            </select>-->
-                                            <input type="text" id="ts-sorting-week" class="form-control ts-settings-datepicker" value="<?php echo date('m/d/Y')?>">
-<!--                                            <button class="btn btn-default"><i class="fa fa-angle-left fa-lg"></i></button>-->
-<!--                                            <button class="btn btn-default right"><i class="fa fa-angle-right fa-lg"></i></button>-->
-                                        </div>
-                                    </div>
-                                    <div class="table-wrapper-settings">
-                                        <table id="timesheet_settings" class="timesheet_settings-table"></table>
-                                        <div class="table-ts-loader">
-                                            <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="ts-bottom-btn-section">
-<!--                                        <div class="form-group">-->
-<!--                                            <button class="btn btn-default" id="btnAddRow"><i class="fa fa-plus" style="color: #0b97c4;"></i>&nbsp;Add new row</button>-->
-<!--                                        </div>-->
-                                        <div class="form-group">
-                                            <button class="btn btn-default"><i class="fa fa-copy" style="color: #9da5af;"></i>&nbsp;Copy last week</button>
-                                        </div>
-                                        <div class="form-group">
-                                            <button class="btn btn-default"><i class="fa fa-save" style="color: #56bb4d;"></i>&nbsp;Save as template</button>
-                                        </div>
+                                        <div class="tab-pane container fade" id="empSettings">3</div>
                                     </div>
                                 </div>
                             </div>
@@ -385,6 +568,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
+<!--Adding Project Schedule-->
 <div class="modal-right-side">
     <div class="modal right fade" id="createProject" tabindex="" role="dialog" aria-labelledby="newProjectSettings">
         <div class="modal-dialog" role="document">
@@ -448,15 +632,164 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+<!--end of modal-->
+<!--Leave type modal-->
+<div class="modal md-effect-11" id="listLeaveType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h6 class="modal-title">Types of Leave</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <button class="btn btn-default" id="addLeaveRow"><i class="fa fa-plus"></i> Add leave</button>
+                <table id="leaveTableList" class="ptoTable cell-border hover">
+                    <thead>
+                    <tr>
+                        <th style="width: 15px">#</th>
+                        <th style="width: 247px">Type</th>
+                        <th style="width: 248px">Description</th>
+                        <th style="width: 50px">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <form action="" method="post" id="formLeaveType">
+                    <tr class="leave-type-row">
+                        <td class="center" style="border-left: 0;"><input type="hidden" class="leave-id" name="id[]" value="1">1</td>
+                        <td class="center leave-type-column">
+                            <span class="display">Vacation</span>
+                            <input type="text" name="type[]" class="leave-type-data form-control hidden" value="Vacation" required>
+                        </td>
+                        <td class="center">
+                            <span class="display">Hello world1</span>
+                            <textarea name="description[]"  class="leave-desc-data form-control hidden" cols="30" rows="10" required>Hello world1</textarea>
+                        </td>
+                        <td class="center" style="border-right: 0;">
+                            <a href="javascript:void (0)" class="removeLeaveRow" title="Remove" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="leave-type-row">
+                        <td class="center" style="border-left: 0;"><input type="hidden" class="leave-id" name="id[]" value="2" required>2</td>
+                        <td class="center leave-type-column">
+                            <span class="display">Sick</span>
+                            <input type="text" name="type[]" class="leave-type-data form-control hidden" value="Sick">
+                        </td>
+                        <td class="center">
+                            <span class="display">Hello world2</span>
+                            <textarea name="description[]" class="leave-desc-data form-control hidden" cols="30" rows="10" required>Hello world2</textarea>
+                        </td>
+                        <td class="center" style="border-right: 0;">
+                            <a href="javascript:void (0)" class="removeLeaveRow" title="Remove" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                        </td>
+                    </tr>
+                    </form>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="savedLeaveType">Save & Exit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end of modal-->
 <?php include viewPath('includes/footer'); ?>
 <script>
     //Add row
-    $(document).on('click','#btnAddRow',function () {
-        $('#tsSettingsTblTbody tr:last').prev('tr').clone('#tsSettingsRow').insertBefore('#tsSettingsTblTbody tr:last');
-        $('td > .ts-project-name').last().text('Unnamed');
-    });
+    // $(document).on('click','#btnAddRow',function () {
+    //     $('#tsSettingsTblTbody tr:last').prev('tr').clone('#tsSettingsRow').insertBefore('#tsSettingsTblTbody tr:last');
+    //     $('td > .ts-project-name').last().text('Unnamed');
+    // });
 
     $(document).ready(function() {
+        // Leave list modal
+        $(document).on('click','#leaveList',function () {
+            $('#listLeaveType').modal({backdrop: 'static', keyboard: false});
+        });
+        //Leave modal dataTable
+        $('#leaveTableList').DataTable({"paging":false,"sort":false});
+        //Row add/edit
+        $(document).on('click','.leave-type-row',function () {
+            $(this).parent('tbody').children('tr').children('td').children('input').addClass('hidden');
+            $(this).parent('tbody').children('tr').children('td').children('textarea').addClass('hidden');
+            $(this).parent('tbody').children('tr').children('td').children('span').removeClass('hidden').addClass('display');
+
+            $(this).children('td').children('span').removeClass('display').addClass('hidden');
+            $(this).children('td').children('input').removeClass('hidden').addClass('display');
+            $(this).children('td').children('textarea').removeClass('hidden').addClass('display');
+        });
+        //Add row Leave type
+        $(document).on('click','#addLeaveRow',function () {
+            let last = $('#leaveTableList tbody tr:last td:first').text();
+            let counter = parseInt(last) + 1;
+            let row = '     <tr class="leave-type-row">\n' +
+                '                        <td class="center" style="border-left: 0;"><input type="hidden" class="leave-id" name="id[]" value="0">'+counter+'</td>\n' +
+                '                        <td class="center leave-type-column">\n' +
+                '                            <span class="display"></span>\n' +
+                '                            <input type="text" name="type[]" class="leave-type-data form-control hidden" value="">\n' +
+                '                        </td>\n' +
+                '                        <td class="center">\n' +
+                '                            <span class="display"></span>\n' +
+                '                            <textarea name="description[]" class="leave-desc-data form-control hidden" id="" cols="30" rows="10"></textarea>\n' +
+                '                        </td>\n' +
+                '                        <td class="center" style="border-right: 0;">\n' +
+                '                            <a href="javascript:void (0)" class="removeLeaveRow" title="Remove" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>\n' +
+                '                        </td>\n' +
+                '                    </tr>'
+            $('#leaveTableList tbody tr:last').after(row);
+        });
+        //Remove leave row
+        $(document).on('click','.removeLeaveRow',function () {
+            let type = $(this).parent('td').parent('tr').children('td.leave-type-column').children('span').text();
+            if (type == ''){
+                $(this).parent('td').parent('tr').remove();
+            }else{
+                console.log(type);
+            }
+        });
+        //Save Leave type
+        $(document).on('click','#savedLeaveType',function () {
+            let type = getArrayType($('.leave-type-data'));
+            let desc = getArrayDesc($('.leave-desc-data'));
+            let id = getArrayID($('.leave-id'));
+            console.log($('.leave-type-data').length);
+            // $.ajax({
+            //     url:'/timesheet/savedPTO',
+            //     type:"POST",
+            //     dataType:"json",
+            //     data:{id:id,type:type,desc:desc},
+            //     success:function (data) {
+            //
+            //     }
+            // });
+        });
+        function getArrayDesc(description) {
+            let list = [];
+            $(description).each(function(index, element) {
+                list.push($(element).val());
+            });
+            return list;
+        }
+        function getArrayType(type) {
+            let list = [];
+            $(type).each(function(index, element) {
+                list.push($(element).val());
+            });
+            return list;
+        }
+        function getArrayID(id) {
+            let list = [];
+            $(id).each(function(index, element) {
+                list.push($(element).val());
+            });
+            return list;
+        }
+
         //Select2 employee list
         $('.select2-employee-list').select2({
             placeholder: 'Select employee',
@@ -467,7 +800,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 delay:250,
                 data:function (params) {
-                    var query = {
+                    let query = {
                         search: params.term
                     };
                     return query;
@@ -510,11 +843,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 return markup;
             },
             templateResult: function (d) {
-                var subtext = d.subtext;
+                let subtext = d.subtext;
                 if(subtext == undefined){subtext=''}
                 return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
             }
         });
+
+        // PTO DataTable
+        $('#pto-table-list').DataTable({"paging":false});
+        // PTO placeholder
+        $('#pto-table-list_filter').children('label').children('input').attr('placeholder','Search...');
+
         //Load dataTable
         let selected_week = $('#ts-sorting-week').val();
         let user_id = $('#tsUsersList').val();
@@ -582,8 +921,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
 
         function differenceTime() {
-            var start_hour = null;
-            var end_hour = null;
+            let start_hour = null;
+            let end_hour = null;
             if ($(this).attr('id') == 'tsStartTime'){
                 start_hour = convertTime12to24($(this).val()).split(':')[0];
                 end_hour = convertTime12to24($(this).parent('div').next('div').children('input').val()).split(':')[0];
@@ -591,7 +930,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 start_hour = convertTime12to24($(this).parent('div').prev('div').children('input').val()).split(':')[0];
                 end_hour = convertTime12to24($(this).val()).split(':')[0];
             }
-            var duration = "0h";
+            let duration = "0h";
             if(end_hour > start_hour || duration > 0){
                 duration = end_hour - start_hour+"h";
             }else{
@@ -608,7 +947,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('#tsTeamMember').attr('disabled',null).select2('val','All');
             $('#tsTimezone').attr('disabled',false);
             $('#tsNotes').attr('disabled',false);
-            var week = $('#ts-sorting-week').val();
+            let week = $('#ts-sorting-week').val();
             $('#weekType').val(week);
             // Clear fields
             $('#tsStartTime').val(null);
@@ -624,9 +963,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         });
         $(document).on('click','#savedProject',function () {
-            var week = $('#ts-sorting-week').val();
-            var user_id = $('#tsUsersList').val();
-            var values = {};
+            let week = $('#ts-sorting-week').val();
+            let user_id = $('#tsUsersList').val();
+            let values = {};
             $.each($('#formNewProject').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });

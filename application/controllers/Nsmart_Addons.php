@@ -5,7 +5,10 @@ class Nsmart_Addons extends MY_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->checkLogin();
+		
+		//$this->checkLogin();
+		$role_id = 1; //this is for nsmart admin user
+		$this->isCheckLoginAndRole($role_id);
 
 		$this->page_data['page_title'] = 'Nsmart Addons';
 

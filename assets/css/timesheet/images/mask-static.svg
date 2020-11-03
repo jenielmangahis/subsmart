@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="height: 100%; width: 100%; background: rgb(255, 255, 255); shape-rendering: auto;" width="47px" height="47px"><g class="ldl-scale" style="transform-origin: 50% 50%; transform: rotate(0deg) scale(0.8, 0.8);"><g class="ldl-ani"><linearGradient y2="79.344" x2="50" y1="22.624" x1="50" gradientUnits="userSpaceOnUse" id="a"><stop stop-color="#f5e6c8" offset="0" style="stop-color: rgb(245, 230, 200); fill: rgb(0, 0, 0);"></stop><stop stop-color="#f8c788" offset=".509" style="stop-color: rgb(248, 199, 136); fill: rgb(0, 0, 0);"></stop><stop stop-color="#f5e6c8" offset="1" style="stop-color: rgb(245, 230, 200); fill: rgb(0, 0, 0);"></stop></linearGradient><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.462963s 1 normal forwards running bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050;"><circle stroke-miterlimit="10" stroke-width="3" stroke="#f8b26a" fill="url(#a)" r="40" cy="50" cx="50" style="stroke: rgb(248, 178, 106);"></circle></g></g><g class="ldl-layer"><g class="ldl-ani"><g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.37037s 1 normal forwards running bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050;"><path d="M72.862 60.25L90 50.85" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="4" stroke="#fff" fill="none" style="stroke: rgb(255, 255, 255);"></path></g></g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.277778s 1 normal forwards running bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050;"><path d="M26.802 60.25l-17.138-9.4" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="4" stroke="#fff" fill="none" style="stroke: rgb(255, 255, 255);"></path></g></g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.185185s 1 normal forwards running bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050;"><path fill="#fff" d="M72.603 83.324a239.347 239.347 0 0 1-45.076-.003c-1.65-.157-2.952-1.463-3.157-3.108-1-8.044-1.023-16.015-.014-23.908.21-1.64 1.51-2.939 3.156-3.096a239.495 239.495 0 0 1 45.09-.005c1.649.155 2.984 1.454 3.157 3.102.838 7.972.838 15.944 0 23.916-.171 1.648-1.506 2.947-3.156 3.102z" style="fill: rgb(255, 255, 255);"></path></g></g></g></g></g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0.0925926s 1 normal forwards running bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050;"><path stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="3.693" stroke="#000" fill="none" d="M28.387 48.123c-5.771-5.039-6.98-12.321-1.509-18.286 4.19-4.568 11.229-4.044 15.604.303 3.518 3.495 3.445 9.575-.269 12.861-2.971 2.629-8.016 2.165-10.645-.806a5.747 5.747 0 0 1 .496-8.112c1.901-1.683 4.85-1.347 6.182.814.624 1.014.304 2.919-1.093 3.754" style="stroke: rgb(0, 0, 0);"></path></g></g><g class="ldl-layer"><g class="ldl-ani" style="transform-origin: 50px 50px; transform: matrix(0.01, 0, 0, 0.01, 0, 0); animation: 1.11111s linear 0s 1 normal forwards running bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050;"><path stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="3.693" stroke="#000" fill="none" d="M68.301 49.447c-7.652-.38-13.112-5.348-12.514-13.418.459-6.182 6.309-10.131 12.436-9.43 4.927.564 8.636 5.382 7.757 10.262-.703 3.904-4.951 6.666-8.855 5.963a5.748 5.748 0 0 1-4.637-6.674c.45-2.499 2.972-4.062 5.357-3.191 1.118.409 2.048 2.103 1.468 3.624" style="stroke: rgb(0, 0, 0);"></path></g></g><metadata xmlns:d="https://loading.io/stock/">
+<d:name>mask</d:name>
+<d:tags>mask,cough,flu,sick,cold,sneeze,allergy,ill,runny nose,sore throat,headache</d:tags>
+<d:license>by</d:license>
+<d:slug>6kgne7</d:slug>
+</metadata></g></g><style id="bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050" data-anikit="">@keyframes bounce-in-f9945bfe-3393-4736-a7c6-a86d67417050
+{
+  0% {
+    animation-timing-function: cubic-bezier(0.0383,0.3388,0.0421,0.6652);
+    transform: matrix(0.01,0,0,0.01,0,0);
+    opacity: 1;
+  }
+  4.7% {
+    animation-timing-function: cubic-bezier(0.3296,0.3336,0.5772,0.6672);
+    transform: matrix(0.556,0,0,0.556,0,0);
+    opacity: 1;
+  }
+  8.4% {
+    animation-timing-function: cubic-bezier(0.0781,0.1617,0.0874,0.9301);
+    transform: matrix(0.979,0,0,0.979,0,0);
+    opacity: 1;
+  }
+  12.4% {
+    animation-timing-function: cubic-bezier(0.8341,0.1496,0.8634,0.7673);
+    transform: matrix(1.153,0,0,1.153,0,0);
+    opacity: 1;
+  }
+  16.3% {
+    animation-timing-function: cubic-bezier(0.3264,0.3332,0.5758,0.6695);
+    transform: matrix(1.008,0,0,1.008,0,0);
+    opacity: 1;
+  }
+  21.2% {
+    animation-timing-function: cubic-bezier(0.0921,0.1883,0.3277,1);
+    transform: matrix(0.704,0,0,0.704,0,0);
+    opacity: 1;
+  }
+  24.5% {
+    animation-timing-function: cubic-bezier(0.6905,0.0944,0.8759,0.7624);
+    transform: matrix(0.626,0,0,0.626,0,0);
+    opacity: 1;
+  }
+  27.7% {
+    animation-timing-function: cubic-bezier(0.3688,0.332,0.624,0.6684);
+    transform: matrix(0.704,0,0,0.704,0,0);
+    opacity: 1;
+  }
+  32.6% {
+    animation-timing-function: cubic-bezier(0.1368,0.2364,0.2451,0.9049);
+    transform: matrix(0.958,0,0,0.958,0,0);
+    opacity: 1;
+  }
+  37.4% {
+    animation-timing-function: cubic-bezier(0.5936,0.0846,0.3495,1);
+    transform: matrix(1.085,0,0,1.085,0,0);
+    opacity: 1;
+  }
+  49.5% {
+    animation-timing-function: cubic-bezier(0.5522,0.0981,0.3807,1);
+    transform: matrix(0.802,0,0,0.802,0,0);
+    opacity: 1;
+  }
+  62.4% {
+    animation-timing-function: cubic-bezier(0.4497,0.1349,0.4911,1);
+    transform: matrix(1.044,0,0,1.044,0,0);
+    opacity: 1;
+  }
+  74.1% {
+    animation-timing-function: cubic-bezier(0.429,0,0.5239,1);
+    transform: matrix(0.914,0,0,0.914,0,0);
+    opacity: 1;
+  }
+  87% {
+    animation-timing-function: cubic-bezier(0.3501,0,0.6422,1);
+    transform: matrix(1.013,0,0,1.013,0,0);
+    opacity: 1;
+  }
+  95.8% {
+    animation-timing-function: cubic-bezier(0.3653,0,0.6776,1);
+    transform: matrix(0.992,0,0,0.992,0,0);
+    opacity: 1;
+  }
+  100% {
+    transform: matrix(1,0,0,1,0,0);
+    opacity: 1;
+  }
+}</style><!-- [ldio] generated by https://loading.io/ --></svg>

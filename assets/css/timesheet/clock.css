@@ -101,8 +101,7 @@
 /*Clock preview css*/
 .clock-users {
     position: relative;
-    display: none;
-    /*display: contents;*/
+    display: contents;
 }
 
 .clock-users + .preview-clock-details {

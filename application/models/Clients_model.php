@@ -18,7 +18,11 @@ class Clients_model extends MY_Model
             }
         }
 
-        $this->db->order_by('id', 'ASC');
+        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+
+        //table "nsmart_plans" field nsmart_plans_id
+
+        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();

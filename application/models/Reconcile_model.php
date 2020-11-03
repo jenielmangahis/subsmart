@@ -263,5 +263,14 @@ class Reconcile_model extends MY_Model {
 		$this->db->where('id',$id);
 		$this->db->delete('accounting_reconcile_has_servicecharge_check');  
 	}
+
+	public function select_interest($id,$chart_of_accounts_id)
+	{
+		$this->db->from('accounting_reconcile_has_interestearned');  
+		$this->db->where('reconcile_id',$id);
+		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id);
+		$result =  $this->db->get()->result();
+	    return $result;	
+	}
 }
 ?>
