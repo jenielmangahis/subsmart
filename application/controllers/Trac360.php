@@ -80,16 +80,18 @@ class Trac360 extends MY_Controller {
                 echo json_encode($return);
         }
 
-        public function getNewUsersGeoPosition(){
+        public function getNewGeoInfos(){
                 $company_id = logged('company_id');
 
                 $return = array(
                         'users' => array(),
-                        'count' => 0
+                        'groups' => array(),
+                        'users_count' => 0,
+                        'groups_count' => 0
                         );
 
-                if(isset($_POST['ids'])){
-                        $ids = $_POST['ids'];
+                if(isset($_POST['user_ids'])){
+                        $ids = $_POST['user_ids'];
 
                         $sql = 'select '.
 
@@ -116,10 +118,64 @@ class Trac360 extends MY_Controller {
 
                         $users = $this->db->query($sql);
 
-                        $return['count'] = $users->num_rows();
+                        $return['users_count'] = $users->num_rows();
                         $return['users'] = $users->result_array();        
+                }
+
+                if(isset($_POST['group_ids'])){
+                    $ids = $_POST['group_ids'];
+
+                    $sql = 'select * from users_geo_positions_categories where company_id = ' . $company_id . ' and id not in('. $ids .')';
+
+                    $groups = $this->db->query($sql);
+
+                    $return['groups_count'] = $groups->num_rows();
+                    $return['groups'] = $groups->result_array();
                 } 
 
                 echo json_encode($return);
+        }
+
+        public function addNewPeople(){
+            $return = array(
+                'error' => ""
+            );
+
+            $exists = $this->db->query('select count(*) as `total` from users_geo_positions where user_id = ' . $_POST['user_id'])->row();
+            if($exists->total > 0){
+                $return['error'] = 'User already added to the tracking list';
+            } else {
+                $company_id = logged('company_id');
+
+                $data = array(
+                    'category_id' => $_POST['category_id'],
+                    'user_id' => $_POST['user_id'],
+                    'latitude' => $_POST['latitude'],
+                    'longitude' => $_POST['longitude'],
+                    'company_id' => $company_id,
+                    'date_added' => date('Y-m-d h:i:s')
+                );
+
+                if(!$this->users_geographic_positions_model->trans_create($data)){
+                    $return['error'] = 'Error in adding person';
+                }
+            }
+
+            echo json_encode($return);
+        }
+
+        public function deletePeople(){
+            $return = array(
+                'error' => ""
+            );
+            
+            $exists = $this->db->query('select count(*) as `total` from users_geo_positions where user_id = ' . $_POST['user_id'])->row();
+            if($exists->total > 0){
+                if(!$this->users_geographic_positions_model->trans_delete(array(),array('user_id' => $_POST['user_id']))){
+                    $return['error'] = 'Error in deleting person';
+                }
+            }
+
+            echo json_encode($return);    
         }
 }

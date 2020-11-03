@@ -1903,7 +1903,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             dataType:"json",
             delay:250,
             data:function (params) {
-                    var query = {
+                    let query = {
                         search: params.term
                     };
                 return query;

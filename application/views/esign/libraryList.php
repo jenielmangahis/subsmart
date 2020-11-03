@@ -23,7 +23,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/css/toastr.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/js/toastr.js"></script>
     
-    <title>Category Management</title>
+    <title>Library Management</title>
     <style>
 fieldset {
   background-color: #eeeeee;
@@ -167,8 +167,8 @@ input {
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="<?=base_url('esign/addCategory')?>">Add Category</a>
-                    <a style="float: right;" href="<?=base_url('esign/libraryList')?>">Manage Library</a>
+                    <a href="<?=base_url('esign/addLibrary')?>">Add Library</a>
+                    <!-- <a style="float: right;" href="<?=base_url('esign/libraryList')?>">Manage Library</a> -->
                 </div>
             </div>
             <div class="row">
@@ -176,36 +176,25 @@ input {
                     <table id="myTable" class="display">
                         <thead>
                             <tr>
-                                <th>Category Name</th>
                                 <th>Library</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($categories AS $category){?>
+                            <?php foreach($libraries AS $library){?>
                                 <tr>
-                                    <form class="editCategory" id="formId-<?=$category['category_id']?>">
+                                    <form class="editLibrary" id="formId-<?=$library['pk_esignLibraryMaster']?>">
                                         <td>
-                                            <span style="display: none;"><?=$category['categoryName']?>  </span>
-                                            <input type="text" name="categoryName" value="<?=$category['categoryName']?>">
-                                            <input type="hidden" name="categoryId" value="<?=$category['category_id']?>">
+                                            <span style="display: none;">
+                                                <?=$library['libraryName']?>  
+                                            </span>
+                                            <input type="text" name="libraryName" value="<?=$library['libraryName']?>">
+                                            <input type="hidden" name="pk_esignLibraryMaster" value="<?=$library['pk_esignLibraryMaster']?>">
                                         </td>
                                         <td>
-                                            <span style="display: none;"><?=$category['libraryName']?></span>
-                                            <?php if($category['isDefault']){?>
-                                                <?=$category['libraryName']?>
-                                            <?php }else { ?>
-                                                <select name="fk_esignLibraryMaster" id="">
-                                                    <?php foreach($libraries AS $library){?>
-                                                        <option <?=$library['pk_esignLibraryMaster'] == $category['fk_esignLibraryMaster'] ? "selected" : ""?> value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            <?php } ?>
-                                        </td>
-                                        <td>
-                                            <?php if(!$category['isDefault']){?>
+                                            <?php if($library['userId']){?>
                                                 <button type="submit"><i class="fa fa-edit"></i></button>
-                                                <a class="trashColor" href="#"><i id="deleteId-<?=$category['category_id']?>" class="fa fa-trash"></i></a>
+                                                <a class="trashColor" href="#"><i id="deleteId-<?=$library['pk_esignLibraryMaster']?>" class="fa fa-trash"></i></a>
                                             <?php }else {?>
                                                 <a><i class="fa fa-lock"></i></a>
                                             <?php }?>
@@ -231,20 +220,18 @@ input {
                 ]
             });
             
-            // $('#myTable').on( 'dblclick', 'tbody td', function (e) {
-            //     console.log($(this).html())
-            // });
-
             $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
                table
                 .row( $(this).parents('tr') )
                 .remove()
                 .draw();
                 let id= $(this).prop('id').split('-')[1] || 0;
-                deleteCategory(id);
+                if(id){
+                    deleteLibrary(id);
+                }
             });
-            function deleteCategory(categoryId){
-                $.get("deleteCategory/"+categoryId, function(data, status){
+            function deleteLibrary(libraryId){
+                $.get("deleteLibraryMaster/"+libraryId, function(data, status){
                     try {
                         data = JSON.parse(data);
                         if(status != "success" || !data.status){
@@ -257,45 +244,41 @@ input {
                 });
             }
 
-            $('.editCategory').submit(function (e){
+            $('.editLibrary').submit(function (e){
                 e.preventDefault();
                 let submittedData = {};
                 if(!$(this).hasClass('loading')){
                     $(this).addClass('loading');
                     let thisEleId = $(this).prop('id');
-                    updateCategory($(this).serialize(),thisEleId)
-                    // for(let subData of $(this).serializeArray()){
-                    //     submittedData[subData.name] = subData.value; 
-                    // }
+                    updateLibrary($(this).serialize(),thisEleId)
                 }
                 return true;
             });
         });
 
-        function updateCategory(data, thisEleId){
-                console.log("before send : "+thisEleId)
-                $.ajax({
-                    url: '<?=base_url('esign/updateCategory') ?>',
-                    type: 'post',
-                    data,
-                    complete: function (compl) {
-                        $("#"+thisEleId).removeClass('loading'); 
-                    },
-                    success: function(res, status) {
-                        try {
-                            res = JSON.parse(res);
-                            if(status != "success" || !res.status){
-                                throw "errr";
-                            }
-                            toastr.success("Data Has Been Updated Successfully");
-                        } catch (error) {
-                            console.error('Execption Generated : ',error)
-                            alert('Something Went Wrong Please Try Again');
-                            location.reload();
+        function updateLibrary(data, thisEleId){
+            $.ajax({
+                url: '<?=base_url('esign/updateLibraryMaster') ?>',
+                type: 'post',
+                data,
+                complete: function (compl) {
+                    $("#"+thisEleId).removeClass('loading'); 
+                },
+                success: function(res, status) {
+                    try {
+                        res = JSON.parse(res);
+                        if(status != "success" || !res.status){
+                            throw "errr";
                         }
+                        toastr.success("Data Has Been Updated Successfully");
+                    } catch (error) {
+                        console.error('Execption Generated : ',error)
+                        alert('Something Went Wrong Please Try Again');
+                        location.reload();
                     }
-                });
-            }
+                }
+            });
+        }
     </script>
 </body>
 </html>

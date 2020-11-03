@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
     height: 150px !important;
 }
-.hide,.Checkhide,.Recurrhide
+.hide,.Checkhide,.Recurrhide,.hideint,.hidemefinal
 {
     display: none;
 }
@@ -203,7 +203,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     </div>
     <!-- End Add Custom Tax Sidebar -->
 
-    <!-- Add New -->
+    <!-- Edit New -->
     <div id="overlay-full-tx" class=""></div>
     <div id="side-menu-full-tx" class="main-side-nav">
         <div style="background-color: #f4f5f8">
@@ -473,7 +473,288 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <button type="button" onclick="save_close_edit(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
     </div>
-    <!-- End Add New -->
+    <!-- End Edit New -->
+
+    <!-- Edit New -->
+    <div id="overlay-fullint-tx" class=""></div>
+    <div id="side-menu-fullint-tx" class="main-side-nav">
+        <div style="background-color: #f4f5f8">
+            <div class="side-title">
+                <h4 id="memo_int_nm"></h4>
+                <a id="close-menu-fullint-tx" class="menuCloseButton" onclick="closeFullNav_int()"><span id="side-menu-close-text">
+                <i class="fa fa-times"></i></span></a>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-3">
+                        <select class="form-control" id="int_account_popup">
+                            <?php
+                               $i=1;
+                               foreach($this->chart_of_accounts_model->select() as $row)
+                               {
+                                ?>
+                                <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                <?php endif ?> <?php if($row->id == $rows[0]->chart_of_accounts_id): echo "selected"; endif?> value="<?=$row->id?>"><?=$row->name?></option>
+                              <?php
+                              $i++;
+                              }
+                               ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Balance:<?=number_format($this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id),2);?></h6>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Payment date:</label>
+                        <div class="col-xs-10 date_picker">
+                            <input type="text" name="int_date_popup" id="int_date_popup" class="form-control" value="<?=$rows[0]->second_date?>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <h6 id="intamount">Amount:$<?=number_format($rows[0]->interest_earned,2);?></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-left: 20px">
+            <section class="table-wrapper">
+                <div class="container">
+                    <table class="table" id="participantIntTable">
+                        <thead>
+                            <tr>
+                               <th></th>
+                               <th>#</th>
+                               <th>Category</th>
+                               <th>Description</th>
+                               <th>Amount</th>
+                               <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="trClickEditMain_int()">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>1</td>
+                                <td>
+                                    <select name='edit_income_account' id='edit_income_account' class='' style="display: none;">
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($rows[0]->income_account == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="edit_income_account"><?=$rows[0]->income_account?></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_descp_it" name="edit_descp_it" value="" placeholder="What did you paid for?" value="<?=$rows[0]->descp_it?>">
+                                    <div class="edit_descp_it"><?=$rows[0]->descp_sc?></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="edit_interest_earned" name="edit_interest_earned" value="<?=number_format($rows[0]->interest_earned,2)?>">
+                                    <div class="edit_interest_earned"><?=number_format($rows[0]->interest_earned,2)?></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php 
+                            $interestearnedcount =0;
+                            if(!empty($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id)))
+                            {
+                            $editrowcount =2;
+                            foreach($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id) as $editrowtab)
+                            {
+                                $interestearnedcount+=$editrowtab->interest_earned_sub;
+                            ?>
+                            <tr onclick="trClickEdit_int(<?=$editrowcount?>)">
+                                <td data-id="<?=$editrowtab->id?>"><i class="fa fa-th"></i></td>
+                                <td><?=$editrowcount?></td>
+                                <td>
+                                    <select name='edit_income_account_<?=$editrowcount?>' id='edit_income_account_<?=$editrowcount?>' data-id='<?=$editrowtab->id?>' class='up_row' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($editrowtab->income_account_sub == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="edit_income_account_<?=$editrowcount?>"><?=$editrowtab->income_account_sub?></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_descp_it_<?=$editrowcount?>" name="edit_descp_it_<?=$editrowcount?>" value="<?=$editrowtab->descp_sc_sub?>" placeholder="What did you paid for?" value="<?=$editrowtab->descp_it_sub?>">
+                                    <div class="edit_descp_it_<?=$editrowcount?>"><?=$editrowtab->descp_sc_sub?></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="edit_interest_earned_<?=$editrowcount?>" name="edit_interest_earned_<?=$editrowcount?>" value="<?=number_format($editrowtab->interest_earned_sub,2)?>">
+                                    <div class="edit_interest_earned_<?=$editrowcount?>"><?=number_format($editrowtab->interest_earned_sub,2)?></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php $editrowcount++; }}else{ ?>
+                            <tr onclick="trClickEdit_int(2)">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>2</td>
+                                <td>
+                                    <select name='edit_income_account_2' id='edit_income_account_2' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="edit_income_account_2"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_descp_it_2" name="edit_descp_it_2" value="" placeholder="">
+                                    <div class="edit_descp_it_2"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_interest_earned_2" name="edit_interest_earned_2" value="">
+                                    <div class="edit_interest_earned_2"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php } ?>
+                            <input type="hidden" name="interestearnedcount" id="interestearnedcount" value="<?=$interestearnedcount?>">
+                            <tr class="pr participantIntRow hideint">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>0</td>
+                                <td>
+                                    <select name='edit_income_account_' id='edit_income_account_' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="edit_income_account_"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_descp_it_" name="edit_descp_it_" value="" placeholder="">
+                                    <div class="edit_descp_it_"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_interest_earned_" name="edit_interest_earned_" value="">
+                                    <div class="edit_interest_earned_"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    
+                    <div class="row" style="margin-bottom:20px">
+                        <div class="col-md-10">
+                            <div class="btn-group">
+                                <a href="javascript:void(0);" class="btn-add-bx add_int">Add Lines</a>
+                                <a href="javascript:void(0);" class="btn-add-bx clear_int">Clear All Lines</a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <h6 id="inttotal">Other Fund Total : $<?=number_format($rows[0]->interest_earned,2)?></h6>
+                        </div>
+                    </div>
+                    <div class="btn-group hideme" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx" onclick="rightclick_int()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickEdit_int()">Cancel<i class="fa fa-close"></i></a>
+                    </div>
+                </div>
+            </section>
+
+            
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-2">
+                    <label>Memo</label>
+                    </br>
+                    <textarea name="memo_it" id="memo_it" rows="4"><?=$rows[0]->memo_it?></textarea>
+                </div>
+                 <div class="col-md-3">
+                    <label>Cash back goes to</label>
+                    </br>
+                    <select class="form-control" id="int_cashback_popup">
+                        <?php
+                           $i=1;
+                           foreach($this->chart_of_accounts_model->select() as $row)
+                           {
+                            ?>
+                            <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                            <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                          <?php
+                          $i++;
+                          }
+                           ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Cash back memo</label>
+                    </br>
+                    <textarea name="cash_back_memo" id="cash_back_memo" rows="4"></textarea>
+                </div>
+                <div class="col-md-3">
+                    <label>Cash back amount</label>
+                    </br>
+                    <input type="number" name="cash_back_amount" id="cash_back_amount" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <h6 id="inttotal_final">Total : $<?=number_format($rows[0]->interest_earned,2)?></h6>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <div class="btn-group hidemefinal" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx" onclick="rightclick_int_final()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickEdit_int_final()">Cancel<i class="fa fa-close"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label><i class="fa fa-paperclip"></i>Attachment</label>
+                    </br>
+                    <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="myForm" enctype="multipart/form-data" target="hiddenFrame">
+                    
+                    <div class="file-upload-block">
+                        <div class="upload-btn-wrapper">
+                            <button class="btn ubw">
+                                <i class="fa fa-cloud-upload"></i>
+                                <h6>Drag and drop files here or <span>browse to upload</span></h6>
+                            </button>
+                            <input type="file" name="userfile_editpopupit" />
+                            <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                            <input type="hidden" name="subfix" value="editpopupit">
+                        </div>
+                    </div>
+                    </br>
+                    <button type="submit" class="form-control">Upload</button>
+                    </form>
+                    </br>
+                    <a href="#" onclick="showData()">Show existing</a>
+                </div>
+            </div>
+        </div>
+     
+        <div class="save-act" style="position: unset !important;">
+            <button type="button" class="btn-cmn" onclick="closeFullNav_int()">Cancel</button>
+            <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
+            <a href="#" style="margin-left: 5%" onclick="OpenRecurr()">Make Recurring</a>
+            <button type="button" onclick="save_close_edit_int(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
+        </div>
+    </div>
+    <!-- End Edit New -->
 
     <!-- Print popup -->
     <div id="overlay-print-tx" class=""></div>
@@ -2417,7 +2698,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "</tr>";
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
                                 echo "<td><a href='#' class='btn-ed'>Cancel</a></td>";
-                                echo "<td><a href='#' class='btn-ed' onclick='openFullNav()'>Edit</a></td>";
+                                echo "<td><a href='#' class='btn-ed' onclick='openFullNav_int()'>Edit</a></td>";
                                 echo "<td><a href='#' class='btn-ed savebt2'>Save</a></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
@@ -3032,6 +3313,22 @@ function closeFullNav() {
     jQuery("#side-menu-full-tx").css("width","0%");
     jQuery("#overlay-full-tx").removeClass("overlay");
 }
+
+function openFullNav_int() {
+    jQuery("#side-menu-fullint-tx").addClass("open-side-nav");
+    jQuery("#side-menu-fullint-tx").css("width","100%");
+    jQuery("#side-menu-fullint-tx").css("overflow-y","auto");
+    jQuery("#side-menu-fullint-tx").css("overflow-x","hidden");
+    jQuery("#overlay-fullint-tx").addClass("overlay");
+    $("#memo_int_nm").text("Check - #"+$("#INTEREST").val());
+}
+
+function closeFullNav_int() {
+   
+    jQuery("#side-menu-fullint-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-fullint-tx").css("width","0%");
+    jQuery("#overlay-fullint-tx").removeClass("overlay");
+}
 </script>
 <script type="text/javascript">
     /* Variables */
@@ -3133,6 +3430,102 @@ function closeFullNav() {
     });
 </script>
 <script type="text/javascript">
+    /* Variables */
+    var p = 1;
+    var row_int = $(".participantIntRow");
+
+    function addRowInt() {
+      row_int.clone(true, true).removeClass('hideint table-line').appendTo("#participantIntTable");
+      var index_int =$('#participantIntTable tr').length -1;
+      var final_index_int = index_int-1;
+      $('#participantIntTable tr:eq('+index_int+')').attr("onclick","trClickEdit_int("+final_index_int+")");
+      $('#participantIntTable tr:eq('+index_int+') td:eq(1)').text(index_int-1);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(2)').find('select').attr("id","edit_income_account_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(2)').find('select').attr("name","edit_income_account_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(2)').find('div').attr("class","edit_income_account_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(3)').find('input').attr("id","edit_descp_it_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(3)').find('input').attr("name","edit_descp_it_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(3)').find('div').attr("class","edit_descp_it_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(4)').find('input').attr("id","edit_interest_earned_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(4)').find('input').attr("name","edit_interest_earned_"+final_index_int);
+      $('#participantIntTable tr:eq('+index_int+') td:eq(4)').find('div').attr("class","edit_interest_earned_"+final_index_int);
+    }
+
+    function removeRowInt(buttonint) {
+        console.log(buttonint.closest("tr").text());
+      buttonint.closest("tr").remove();
+      var totint = $('#inttotal').text().substr(20)-buttonint.closest("tr").find('td:eq(4)').text().trim();
+      var totint_final = $('#inttotal_final').text().substr(9)-buttonint.closest("tr").find('td:eq(4)').text().trim();
+      $('#inttotal').text('Other Fund Total : $'+totint.toFixed(2));
+      $('#inttotal_final').text('Total : $'+totint_final.toFixed(2));
+      $('#intamount').text('Amount : $'+totint.toFixed(2));
+      if(buttonint.closest("tr").find('td:eq(2)').find('select').hasClass("up_row"))
+        {
+            var id_to_remove =buttonint.closest("tr").find('td:eq(0)').attr("data-id");
+            remove_func_int(id_to_remove);
+        }
+    }
+    /* Doc ready */
+    $(".add_int").on('click', function () {
+      getP();
+      if($("#participantIntTable tr").length < 17) {
+        addRowInt();
+        var i = Number(p)+1;
+        $("#participants").val(i);
+      }
+      $(this).closest("tr").appendTo("#participantIntTable");
+      if ($("#participantIntTable tr").length === 3) {
+        $(".remove_int").hide();
+      } else {
+        $(".remove_int").show();
+      }
+    });
+    $(".remove_int").on('click', function () {
+      getP();
+      if($("#participantIntTable tr").length === 3) {
+        //alert("Can't remove row.");
+        $(".remove_int").hide();
+      } else if($("#participantIntTable tr").length - 1 ==3) {
+        $(".remove_int").hide();
+        removeRowInt($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      } else {
+        removeRowInt($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      }
+    });
+    $("#participants").change(function () {
+      var i = 0;
+      p = $("#participants").val();
+      var rowCount = $("#participantIntTable tr").length - 2;
+      if(p > rowCount) {
+        for(i=rowCount; i<p; i+=1){
+          addRowInt();
+        }
+        $("#participantIntTable #addButtonRow").appendTo("#participantIntTable");
+      } else if(p < rowCount) {
+      }
+    });
+    $(".clear_int").on('click', function () {
+      if($("#participantIntTable tr").length - 1 >3) {
+        x = 1;
+        $('#participantIntTable > tbody  > tr').each(function() {
+            if(x >3)
+            {
+                $(this).remove();
+                var totint_clear = $('#inttotal').text().substr(20)-$(this).closest("tr").find('td:eq(4)').text().trim();
+                $('#inttotal').text('Other Fund Total : $'+totint_clear.toFixed(2));
+                $('#inttotal_final').text('Total : $'+totint_clear.toFixed(2));
+                $('#intamount').text('Amount : $'+totint_clear.toFixed(2));
+            }
+            x = x+1;
+        });
+      }
+    });
+</script>
+<script type="text/javascript">
 function openSideNav() {
      
     jQuery("#side-menu").addClass("open-side-nav");
@@ -3181,8 +3574,6 @@ function showData() {
             $('.hideme').show();
         }
     }
-</script>
-<script type="text/javascript">
     function trClickEdit(index)
     {
         if($('#edit_expense_account_'+index).css("display")== 'none')
@@ -3261,6 +3652,135 @@ function showData() {
             $('.edit_descp_'+i).show();
             $('#edit_descp_'+i).attr('type','hidden');
         }
+    }
+</script>
+<script type="text/javascript">
+    function trClickEditMain_int()
+    {
+        if($('#edit_income_account').css("display")== 'none')
+        {
+            $('.edit_income_account').css('display','none');
+            $('#edit_income_account').show();
+            $('.hideme').show();
+        }
+        if($('#edit_interest_earned').attr("type")== 'hidden')
+        {
+            $('.edit_interest_earned').css('display','none');
+            $('#edit_interest_earned').removeAttr('type','hidden');
+            $('#edit_interest_earned').attr('type','number');
+            $('.hideme').show();
+        }
+        if($('#edit_descp_it').attr("type")== 'hidden')
+        {
+            $('.edit_descp_it').css('display','none');
+            $('#edit_descp_it').removeAttr('type','hidden');
+            $('.hideme').show();
+        }
+    }
+    function trClickEdit_int(index)
+    {
+        if($('#edit_income_account_'+index).css("display")== 'none')
+        {
+            $('.edit_income_account_'+index).css('display','none');
+            $('#edit_income_account_'+index).show();
+            $('.hideme').show();
+        }
+        if($('#edit_interest_earned_'+index).attr("type")== 'hidden')
+        {
+            $('.edit_interest_earned_'+index).css('display','none');
+            $('#edit_interest_earned_'+index).removeAttr('type','hidden');
+            $('#edit_interest_earned_'+index).attr('type','number');
+            $('.hideme').show();
+        }
+        if($('#edit_descp_it_'+index).attr("type")== 'hidden')
+        {
+            $('.edit_descp_it_'+index).css('display','none');
+            $('#edit_descp_it_'+index).removeAttr('type','hidden');
+            $('.hideme').show();
+        }
+    }
+    function rightclick_int()
+    {
+        length =$('#participantIntTable tr').length -2;
+        $('.edit_income_account').show();
+        $('.edit_income_account').text($('#edit_income_account').val());
+        $('#edit_income_account').css('display','none');
+        $('.edit_interest_earned').show();
+        $('.edit_interest_earned').text($('#edit_interest_earned').val());
+        $('#edit_interest_earned').attr('type','hidden');
+        $('.edit_descp_it').show();
+        $('.edit_descp_it').text($('#edit_descp_it').val());
+        $('#edit_descp_it').attr('type','hidden');
+        $('.hideme').hide();
+
+        for(var i = 2 ; i <= length ; i++)
+        {
+            $('.edit_income_account_'+i).show();
+            $('.edit_income_account_'+i).text($('#edit_income_account_'+i).val());
+            $('#edit_income_account_'+i).css('display','none');
+            $('.edit_interest_earned_'+i).show();
+            $('.edit_interest_earned_'+i).text($('#edit_interest_earned_'+i).val());
+            $('#edit_interest_earned_'+i).attr('type','hidden');
+            $('.edit_descp_it_'+i).show();
+            $('.edit_descp_it_'+i).text($('#edit_descp_it_'+i).val());
+            $('#edit_descp_it_'+i).attr('type','hidden');
+        }
+
+        var total = 0;
+        total += parseInt($('.edit_interest_earned').text());
+        for(var i = 2 ; i <= length ; i++)
+        {
+            if($('.edit_interest_earned_'+i).text() != '')
+            {total += parseInt($('.edit_interest_earned_'+i).text());}
+        }
+        $('#inttotal').text('Other Fund Total : $'+total.toFixed(2));
+        $('#intamount').text('Amount : $'+total.toFixed(2));
+        if($('#cash_back_amount').val()!='')
+        {
+            var sub = parseInt($('#cash_back_amount').val());
+            var total = total - sub;
+        }
+        $('#inttotal_final').text('Total : $'+total.toFixed(2));
+        
+    }
+    function crossClickEdit_int()
+    {
+        length =$('#participantIntTable tr').length -2;
+        $('.edit_income_account').show();
+        $('#edit_income_account').css('display','none');
+        $('.edit_interest_earned').show();
+        $('#edit_interest_earned').attr('type','hidden');
+        $('.edit_descp_it').show();
+        $('#edit_descp_it').attr('type','hidden');
+        $('.hideme').hide();
+        for(var i = 2 ; i <= length ; i++)
+        {
+            $('.edit_income_account_'+i).show();
+            $('#edit_income_account_'+i).css('display','none');
+            $('.edit_interest_earned_'+i).show();
+            $('#edit_interest_earned_'+i).attr('type','hidden');
+            $('.edit_descp_it_'+i).show();
+            $('#edit_descp_it_'+i).attr('type','hidden');
+        }
+    }
+    $("#cash_back_amount").focus(function(){
+        $('.hidemefinal').show();
+    });
+    function rightclick_int_final()
+    {
+        $('.hidemefinal').hide();
+
+        var totalfinal = parseInt($('#inttotal').text().substr(20));
+        var sub = parseInt($('#cash_back_amount').val());
+        if($('#cash_back_amount').val()!='')
+        {var ftotal = totalfinal - sub;}
+        $('#inttotal_final').text('Total : $'+ftotal.toFixed(2));
+        
+    }
+    function crossClickEdit_int_final()
+    {
+        $('#cash_back_amount').val('');
+        $('.hidemefinal').hide();
     }
 </script>
 <script type="text/javascript">

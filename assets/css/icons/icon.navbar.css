@@ -18,10 +18,6 @@
     }
 }
 
-
-.nav-pro-img{
-    display: none;
-}
 /*Calendar live icon*/
 time.icon-calendar-live
 {
@@ -116,7 +112,7 @@ time.icon-calendar-live:hover, time.icon-calendar-live:focus
     margin: 0;
     height: auto;
     width: auto;
-    display: none;
+    display: inline-block;
 }
 .settings-icon-container + .prev-icon-title{
     visibility: hidden;
@@ -139,7 +135,7 @@ time.icon-calendar-live:hover, time.icon-calendar-live:focus
 
 /*Schedule Icon*/
 .schedule-icon-container{
-    display: none;
+    display: inline-block;
     cursor: pointer;
     margin: 0;
     height: auto;
@@ -162,7 +158,7 @@ time.icon-calendar-live:hover, time.icon-calendar-live:focus
 }
 /*Growth icon*/
 .growth-icon-container{
-    display: none;
+    display: inline-block;
     cursor: pointer;
     margin: 0;
     height: auto;
@@ -179,7 +175,7 @@ time.icon-calendar-live:hover, time.icon-calendar-live:focus
 }
 /*Conversation icon*/
 .conversation-icon-container{
-    display: none;
+    display: inline-block;
     cursor: pointer;
     margin: 0;
     height: auto;
@@ -196,7 +192,7 @@ time.icon-calendar-live:hover, time.icon-calendar-live:focus
 }
 /*Plus Icon*/
 .plus-icon-container{
-    display: none;
+    display: inline-block;
     cursor: pointer;
     margin: 0;
     height: auto;
@@ -215,15 +211,15 @@ time.icon-calendar-live:hover, time.icon-calendar-live:focus
 #topnav .navigation-menu > li .dropdown-toggle::after{
     bottom: 10px!important;
 }
-.has-submenu .icon-loader-left{
-    margin-right: 20px;
-    height: 47px;
-    width: 47px;
-}
+/*.has-submenu .icon-loader-left{*/
+/*    margin-right: 20px;*/
+/*    height: 47px;*/
+/*    width: 47px;*/
+/*}*/
 .icons-list-navbar{
     text-align: center;
     margin-right: 20px;
-    display: none;
+    display: inline-block;
 
 }
 .icons-list-navbar span{

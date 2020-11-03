@@ -303,7 +303,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3'){echo "active";} ?>" data-toggle="tab" href="#widget2">Dispute Wizard</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4'){echo "active";} ?>" data-toggle="tab" href="#widget3">Dispute Items</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4' || $minitab=='mt4-2'){echo "active";} ?>" data-toggle="tab" href="#widget3">Dispute Items</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt5'){echo "active";} ?>" data-toggle="tab" href="#profle">Profile</a>
@@ -346,14 +346,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         include viewPath('customer/adv_cust_modules/settings_widget2');
                                                     ?>
                                                 </div>
-                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget3">
-                                                    <div class="card">
-                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                            <div class="col-lg-12">
-                                                                <h6>Widget 3</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <div class="tab-pane <?php if($minitab=='mt4' || $minitab=='mt4-2'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget3">
+                                                    <?php
+                                                        include viewPath('customer/adv_cust_modules/settings_widget3');
+                                                    ?>
                                                 </div>
                                                 <div class="tab-pane <?php if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="profle">
                                                     <div class="card">
@@ -596,340 +592,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <!-- end container-fluid -->
 
-<!-- Lead Type Modal -->
-<div class="modal fade" id="modal_lead_type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Lead Type</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="leadTypeForm">
-                <div class="modal-body">
+<!-- Modals -->
 
-                    <div class="col-md-12">
-                        <div class="form-group" id="customer_type_group">
-                            <label for="">Lead Type Name</label><br/>
-                            <input type="text" class="form-control" name="lead_name" id="lead_name" required/>
-                            <input type="hidden" class="form-control" name="lead_id" id="lead_id" required/>
-                        </div>
-                    </div>
+    <!-- Lead Type Modal -->
+    <?php include viewPath('customer/adv_modals/modal_lead_type'); ?>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+    <!-- Sales Area Modal -->
+    <?php include viewPath('customer/adv_modals/modal_sales_area'); ?>
 
-<!-- Sales Area Modal -->
-<div class="modal fade" id="modal_sales_area" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sales_area_header">Add Sales Area</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="salesAreaForm">
-                <div class="modal-body">
-                    <div class="col-md-12">
-                        <div class="form-group" id="customer_type_group">
-                            <label for="">Sales Area Name</label><br/>
-                            <input type="text" class="form-control" name="sa_name" id="sa_name" required/>
-                            <input type="hidden" class="form-control" name="sa_id" id="sa_id" required/>
-                        </div>
-                    </div>
+    <!-- Lead Source Modal -->
+    <?php include viewPath('customer/adv_modals/modal_lead_source'); ?>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+    <!-- Task Modal -->
+    <?php include viewPath('customer/adv_modals/modal_task'); ?>
 
-<!-- Lead Source Modal -->
-<div class="modal fade" id="modal_lead_source" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="lead_source_header">Add Lead Source</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="leadSourceForm">
-                <div class="modal-body">
-                    <div class="col-md-12">
-                        <div class="form-group" id="customer_type_group">
-                            <label for="">Lead Source</label><br/>
-                            <input type="text" class="form-control" name="ls_name" id="ls_name" required/>
-                            <input type="hidden" class="form-control" name="ls_id" id="ls_id" required/>
-                        </div>
-                    </div>
+    <!-- Impoer Credit Modal -->
+    <?php include viewPath('customer/adv_modals/modal_import_credit'); ?>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+    <!-- Fusnishers Modal -->
+    <?php include viewPath('customer/adv_modals/modal_furnishers'); ?>
 
-<!-- Task Modal -->
-<div class="modal fade" id="modal_task" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Task</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="task_form">
-                <div class="modal-body">
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Task Type</label><span class="required"> *</span>
-                            </div>
-                            <div class="col-md-8">
-                                <select id="task_type" name="task_type" data-customer-source="dropdown" class="form-control" >
-                                    <option value="General">General</option>
-                                    <option value="Billing">Billing</option>
-                                    <option value="Send Invoice">Send Invoice</option>
-                                    <option value="Follow Up">Follow Up</option>
-                                    <option value="Appointment">Appointment</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Subject</label><span class="required"> *</span>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Due Date</label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control date_picker" name="due_date" id="due_date" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <select id="due_time" name="due_time" class="form-control">
-                                            <option value="00:00:00" selected="selected"></option>
-                                            <option value="00:00:00">12:00 am</option>
-                                            <option value="00:30:00">12:30 am</option>
-                                            <option value="01:00:00">1:00 am</option>
-                                            <option value="01:30:00">1:30 am</option>
-                                            <option value="02:00:00">2:00 am</option>
-                                            <option value="02:30:00">2:30 am</option>
-                                            <option value="03:00:00">3:00 am</option>
-                                            <option value="03:30:00">3:30 am</option>
-                                            <option value="04:00:00">4:00 am</option>
-                                            <option value="04:30:00">4:30 am</option>
-                                            <option value="05:00:00">5:00 am</option>
-                                            <option value="05:30:00">5:30 am</option>
-                                            <option value="06:00:00">6:00 am</option>
-                                            <option value="06:30:00">6:30 am</option>
-                                            <option value="07:00:00">7:00 am</option>
-                                            <option value="07:30:00">7:30 am</option>
-                                            <option value="08:00:00">8:00 am</option>
-                                            <option value="08:30:00">8:30 am</option>
-                                            <option value="09:00:00">9:00 am</option>
-                                            <option value="09:30:00">9:30 am</option>
-                                            <option value="10:00:00">10:00 am</option>
-                                            <option value="10:30:00">10:30 am</option>
-                                            <option value="11:00:00">11:00 am</option>
-                                            <option value="11:30:00">11:30 am</option>
-                                            <option value="12:00:00">12:00 pm</option>
-                                            <option value="12:30:00">12:30 pm</option>
-                                            <option value="13:00:00">1:00 pm</option>
-                                            <option value="13:30:00">1:30 pm</option>
-                                            <option value="14:00:00">2:00 pm</option>
-                                            <option value="14:30:00">2:30 pm</option>
-                                            <option value="15:00:00">3:00 pm</option>
-                                            <option value="15:30:00">3:30 pm</option>
-                                            <option value="16:00:00">4:00 pm</option>
-                                            <option value="16:30:00">4:30 pm</option>
-                                            <option value="17:00:00">5:00 pm</option>
-                                            <option value="17:30:00">5:30 pm</option>
-                                            <option value="18:00:00">6:00 pm</option>
-                                            <option value="18:30:00">6:30 pm</option>
-                                            <option value="19:00:00">7:00 pm</option>
-                                            <option value="19:30:00">7:30 pm</option>
-                                            <option value="20:00:00">8:00 pm</option>
-                                            <option value="20:30:00">8:30 pm</option>
-                                            <option value="21:00:00">9:00 pm</option>
-                                            <option value="21:30:00">9:30 pm</option>
-                                            <option value="22:00:00">10:00 pm</option>
-                                            <option value="22:30:00">10:30 pm</option>
-                                            <option value="23:00:00">11:00 pm</option>
-                                            <option value="23:30:00">11:30 pm</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Client</label>
-                            </div>
-                            <div class="col-md-8">
-                                <?= isset($profile_info) ? $profile_info->first_name.' '.$profile_info->last_name : '' ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Assign to: <span class="required"> *</span></label>
-                            </div>
-                            <div class="col-md-8">
-                                <select id="assign_to" name="assign_to"  class="form-control" required>
-                                    <option value="">Select</option>.l
-                                    <?php foreach ($users as $user): ?>
-                                        <option <?php if(isset($office_info)){ echo $office_info->assign_to ==  $user->id ? 'selected' : ''; } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Notes: </label>
-                            </div>
-                            <div class="col-md-8">
-                                <textarea type="text" class="form-controls" name="notes" id="notes" cols="40" rows="5"> </textarea>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" class="form-control" name="fk_prof_id" id="fk_prof_id" value="<?= isset($profile_info) ? $profile_info->prof_id : '' ?>" />
-                <input type="hidden" class="form-control" name="task_id" id="task_id" />
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Impoer Credit Modal -->
-<div class="modal fade" id="modal_import_credit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="exampleModalLabel">Enter & Confirm Credit Monitoring Access Details</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="audit_import_form">
-                <div class="modal-body">
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Select Affiliate</label><span class="required"> *</span>
-                            </div>
-                            <div class="col-md-8">
-                                <select id="affiliate" name="affiliate" data-customer-source="dropdown" class="form-control" required>
-                                    <?php if (isset($affiliates)): ?>
-                                        <?php foreach ($affiliates as $affiliate): ?>
-                                            <option <?= isset($audit_info)  ? $affiliate->company == $audit_info->affiliate ?  'selected' : '' : '';   ?> value="<?= $affiliate->company; ?>"><?= $affiliate->company; ?></option>
-                                        <?php endforeach ?>
-                                    <?php endif; ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Username</label><span class="required"> *</span>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" value="<?= isset($audit_info) ? $audit_info->username : ''; ?>" class="form-control" name="username" id="username" required/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Password</label><span class="required"> *</span>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" value="<?= isset($audit_info) ? $audit_info->password : ''; ?>" class="form-control" name="password" id="password" required/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Phone number</label><span class="required"> *</span>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" value="<?= isset($audit_info) ? $audit_info->phone_number : ''; ?>" class="form-control" name="phone_number" id="phone_number" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Last four digits of SSN <span class="required"> *</span></label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="number" alue="<?= isset($audit_info) ? $audit_info->ssn_last : ''; ?>" maxlength="4" class="form-control" name="ssn_last" id="ssn_last" required/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 form-line">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="">Notes: </label>
-                            </div>
-                            <div class="col-md-8">
-                                <textarea type="text" class="form-controls" name="notes" id="notes" cols="35" rows="3"><?= isset($audit_info) ? $audit_info->notes : ''; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" class="form-control" name="fk_prof_id" id="fk_prof_id" value="<?= isset($profile_info) ? $profile_info->prof_id : '' ?>" />
-                <input type="hidden" class="form-control" value="<?= isset($audit_info) ? $audit_info->ai_id : '' ?>" name="ai_id" id="ai_id" />
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+    <!-- Reasons Modal -->
+    <?php include viewPath('customer/adv_modals/modal_reasons'); ?>
+<!-- End Modals -->
 
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
@@ -946,6 +631,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     .alarm_label, .alarm_answer{
         font-size: 12px !important;
+    }
+    .input_select{
+        color: #363636;
+        box-shadow: none;
+        display: inline-block !important;
+        background-color: #fff;
+        background-clip: padding-box;
+    }
+
+    .dispute_link{
+        text-decoration: none;
+        color: #1e5da9 !important;
+        margin-top : 2px !important;
     }
 </style>
 

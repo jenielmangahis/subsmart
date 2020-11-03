@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>esign/css/responsive.css" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="<?=$url->assets?>plugins/select2/dist/css/select2.min.css" />
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -23,31 +24,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/css/toastr.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/js/toastr.js"></script>
     
-    <title>Category Management</title>
-    <style>
-fieldset {
-  background-color: #eeeeee;
-}
-
-legend {
-  background-color: gray;
-  color: white;
-  padding: 5px 10px;
-}
-
-.notFavorite { 
-    color: #5f5f5f
-}
-.favorite {
-    color : tomato;
-}
-input {
-  margin: 5px;
-}
-.trashColor{
-    color : tomato;
-}
-</style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/css/toastr.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/js/toastr.js"></script>
+    
+    <title>Add Category</title>
 </head>
 
 <body style="background: white !important;">
@@ -163,139 +143,63 @@ input {
     <!-- Main Selection -->
     <section class="main-wrapper" id="custome-fileup" style="background: white;padding-bottom: 15px;">
         <br>
-        <br>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="<?=base_url('esign/addCategory')?>">Add Category</a>
-                    <a style="float: right;" href="<?=base_url('esign/libraryList')?>">Manage Library</a>
+                    <a href="<?=base_url('esign/categoryList')?>">Back To Category List</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <table id="myTable" class="display">
-                        <thead>
-                            <tr>
-                                <th>Category Name</th>
-                                <th>Library</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($categories AS $category){?>
-                                <tr>
-                                    <form class="editCategory" id="formId-<?=$category['category_id']?>">
-                                        <td>
-                                            <span style="display: none;"><?=$category['categoryName']?>  </span>
-                                            <input type="text" name="categoryName" value="<?=$category['categoryName']?>">
-                                            <input type="hidden" name="categoryId" value="<?=$category['category_id']?>">
-                                        </td>
-                                        <td>
-                                            <span style="display: none;"><?=$category['libraryName']?></span>
-                                            <?php if($category['isDefault']){?>
-                                                <?=$category['libraryName']?>
-                                            <?php }else { ?>
-                                                <select name="fk_esignLibraryMaster" id="">
-                                                    <?php foreach($libraries AS $library){?>
-                                                        <option <?=$library['pk_esignLibraryMaster'] == $category['fk_esignLibraryMaster'] ? "selected" : ""?> value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            <?php } ?>
-                                        </td>
-                                        <td>
-                                            <?php if(!$category['isDefault']){?>
-                                                <button type="submit"><i class="fa fa-edit"></i></button>
-                                                <a class="trashColor" href="#"><i id="deleteId-<?=$category['category_id']?>" class="fa fa-trash"></i></a>
-                                            <?php }else {?>
-                                                <a><i class="fa fa-lock"></i></a>
-                                            <?php }?>
-                                        </td>
-                                    </form>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                    <?=form_open_multipart('', ['id' => 'createCategory']); ?>
+                        <div class="form-group">
+                            <label for="">Category Name</label>
+                            <input required type="text" class="form-control" name="categoryName" id="">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Category Library</label>
+                            <br>
+                            <select required class="selectLibrary" name="fk_esignLibraryMaster" id="">
+                                <?php foreach($libraries AS $library){?>
+                                    <option value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn btn-primary">Submit</button>
+                        </div>
+                    <?=form_close(); ?>
                 </div>
             </div>
-            
-        <br/>
-        
         </div>    
     </section>
-
+    <script src="<?=$url->assets?>plugins/select2/dist/js/select2.full.min.js"></script>
     <script>
         $(document).ready(function() {
-            let table = $('#myTable').DataTable({
-                columnDefs: [
-                  { orderable: false, targets: -1 },
-                ]
-            });
-            
-            // $('#myTable').on( 'dblclick', 'tbody td', function (e) {
-            //     console.log($(this).html())
-            // });
+            $('.selectLibrary').select2()
 
-            $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
-               table
-                .row( $(this).parents('tr') )
-                .remove()
-                .draw();
-                let id= $(this).prop('id').split('-')[1] || 0;
-                deleteCategory(id);
-            });
-            function deleteCategory(categoryId){
-                $.get("deleteCategory/"+categoryId, function(data, status){
-                    try {
-                        data = JSON.parse(data);
-                        if(status != "success" || !data.status){
-                            throw "errr";
-                        }
-                    } catch (error) {
-                        alert('Something Went Wrong Please Try Again');
-                        location.reload();
-                    }
-                });
-            }
-
-            $('.editCategory').submit(function (e){
+            $("#createCategory").submit(function(e){
                 e.preventDefault();
-                let submittedData = {};
-                if(!$(this).hasClass('loading')){
-                    $(this).addClass('loading');
-                    let thisEleId = $(this).prop('id');
-                    updateCategory($(this).serialize(),thisEleId)
-                    // for(let subData of $(this).serializeArray()){
-                    //     submittedData[subData.name] = subData.value; 
-                    // }
-                }
-                return true;
-            });
-        });
-
-        function updateCategory(data, thisEleId){
-                console.log("before send : "+thisEleId)
                 $.ajax({
-                    url: '<?=base_url('esign/updateCategory') ?>',
+                    url: '<?=base_url('esign/createCategory') ?>',
                     type: 'post',
-                    data,
-                    complete: function (compl) {
-                        $("#"+thisEleId).removeClass('loading'); 
-                    },
+                    data : $("#createCategory").serialize(),
                     success: function(res, status) {
                         try {
                             res = JSON.parse(res);
                             if(status != "success" || !res.status){
                                 throw "errr";
                             }
-                            toastr.success("Data Has Been Updated Successfully");
+                            $('#createCategory')[0].reset();
+                            toastr.success("Data Has Been added Successfully");
                         } catch (error) {
                             console.error('Execption Generated : ',error)
-                            alert('Something Went Wrong Please Try Again');
-                            location.reload();
+                            toastr.warning('Something Went Wrong Please Try Again');
                         }
                     }
                 });
-            }
+            });
+        });
     </script>
 </body>
 </html>

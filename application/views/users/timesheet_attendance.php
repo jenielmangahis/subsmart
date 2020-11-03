@@ -177,6 +177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .right{
         float: right;
     }
+
     /*Employee button lunch*/
     .employeeLunch .btn-lunch-hover{
         display: none;
@@ -219,6 +220,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         border-color: #0000008a transparent transparent transparent;
     }
     .employeeLunchBtn:hover .employeeLunchTooltip{
+        visibility: visible;
+    }
+
+    /*Employee button leave*/
+    .employeeLeaveBtn .btn-leave-hover{
+        visibility: hidden;
+        position: absolute;
+        top: -12px;
+        z-index: 99;
+    }
+    .employeeLeaveBtn:hover .btn-leave-hover{
+        visibility: visible;
+    }
+    .employeeLeaveBtn:hover .btn-leave-static{
+        visibility: hidden;
+    }
+    /*Leave button tooltip*/
+    .employeeLeaveBtn + .employeeLeaveTooltip{
+        visibility: hidden;
+        font-size: 14px!important;
+        font-weight: bold!important;
+        color: #ffffff;
+        text-align: center;
+        min-width: 150px;
+        padding: 10px;
+        position: absolute;
+        border-radius: 2px;
+        background-color: #0000008a;
+        z-index: 1;
+        bottom: 110%;
+        left: 70%;
+        margin-left: -60px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+    .employeeLeaveBtn + .employeeLeaveTooltip::after{
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #0000008a transparent transparent transparent;
+    }
+    .employeeLeaveBtn:hover + .employeeLeaveTooltip{
         visibility: visible;
     }
 </style>
@@ -832,6 +878,43 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row" style="margin-top: 20px">
+                                    <div class="col-md-4">
+                                        <div class="tile-container user-logs-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title user-card-title">
+                                                                <span>Leave request</span>
+                                                            </div>
+                                                            <div class="user-logs">
+                                                                <div class="user-logs-section">
+                                                                    <div class="user-clock-in-title" style="height: 35px">Request: </div>
+                                                                    <div class="user-clock-in-title">Requested date: </div>
+                                                                    <div class="user-clock-out-title">Approved by: </div>
+                                                                    <div class="user-lunch-in-title">Status: </div>
+                                                                </div>
+                                                                <div class="user-logs-section" style="vertical-align: top">
+                                                                    <div class="user-clock-in" style="height: 35px">
+                                                                        <a href="javascript:void (0)" class="employeeLeaveBtn" id="btn-leave-emp" style="float: right;margin-top: -12px">
+                                                                            <img src="/assets/css/timesheet/images/mask-static.svg" alt="sick icon" class="btn-leave-static">
+                                                                            <img src="/assets/css/timesheet/images/mask-hover.svg" alt="sick icon" class="btn-leave-hover">
+                                                                        </a>
+                                                                        <span class="employeeLeaveTooltip">Request for leave</span>
+                                                                    </div>
+                                                                    <div class="user-lunch-out">-</div>
+                                                                    <div class="user-clock-out">-</div>
+                                                                    <div class="user-lunch-in">-</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php endif;?>
                         </div>
                     </div>
@@ -844,6 +927,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
+<!--Leave request modal-->
+<div class="modal fade" id="leaveRequestModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Request Leave</h4>
+<!--                <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="" style="display: block">Leave type</label>
+                    <select name="" id="" class="form-control" style="width: 200px">
+                        <option value="">1</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="startDateLeave">Start Date</label>
+                            <input type="text" class="form-control" id="startDateLeave">
+                        </div>
+                    </div>
+<!--                    <div class="col-md-2"></div>-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="endDateLeave">End Date</label>
+                            <input type="text" class="form-control" id="endDateLeave">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end of modal-->
 <?php include viewPath('includes/footer'); ?>
 <script>
 
@@ -867,6 +993,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         return datetime;
     }
     $(document).ready(function () {
+        //Date picker
+        $("#startDateLeave").datepicker();
+        $("#endDateLeave").datepicker();
+
         // In/Out Counter
         let out_log = $('#outCounter').val();
         let in_log = $('#inCounter').val();
@@ -880,15 +1010,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#employee-out-now').text(out_log);
         $('#progressOutNow').attr('aria-valuenow',out_log).css('width',out_ans+"%").text(out_ans+"%");
 
-
-        let total_employee = $('#employeeTotal').val();
         function inNow() {
             $.ajax({
                 url:"/timesheet/inNow",
                 dataType:"json",
                 success:function (data) {
                     $('#employee-in-now').text(data);
-                    var percentage = (data / total_employee) * 100;
+                    let percentage = (data / total_user) * 100;
                     $('#progressInNow').attr('aria-valuenow',percentage.toFixed(2));
                     $('#progressInNow').css('width',percentage.toFixed(2)+'%');
                     $('#progressInNow').text(percentage.toFixed(2)+'%');
@@ -902,7 +1030,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 success:function (data) {
                     $('#employee-out-now').text(data);
-                    var percentage = (data / total_employee) * 100;
+                    let percentage = (data / total_user) * 100;
                     $('#progressOutNow').attr('aria-valuenow',percentage.toFixed(2));
                     $('#progressOutNow').css('width',percentage.toFixed(2)+'%');
                     $('#progressOutNow').text(percentage.toFixed(2)+'%');
@@ -915,7 +1043,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 success:function (data) {
                     $('#employee-not-loggedin').text(data);
-                    var percentage = (100 - (((total_employee - data) / total_employee) * 100));
+                    var percentage = (100 - (((total_user - data) / total_user) * 100));
                     $('#progressNotLoggedIn').attr('aria-valuenow',percentage.toFixed(2));
                     $('#progressNotLoggedIn').css('width',percentage.toFixed(2)+'%');
                     $('#progressNotLoggedIn').text(percentage.toFixed(2)+'%');
@@ -992,13 +1120,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         // Checking OUT
         $(document).on('click','#employeeCheckOut',function () {
-            var id = $(this).attr('data-id');
-            var emp_name = $(this).attr('data-name');
-            var selected = this;
+            let id = $(this).attr('data-id');
+            let emp_name = $(this).attr('data-name');
+            let selected = this;
             // var week_id = $(this).attr('data-week');
-            var attn_id = $(this).attr('data-attn');
-            var entry = 'Manual';
-            var approved_by = $(this).attr('data-approved');
+            let attn_id = $(this).attr('data-attn');
+            let entry = 'Manual';
+            let approved_by = $(this).attr('data-approved');
             let photo = $(this).attr('data-photo');
             let company_id = $(this).attr('data-company');
             Swal.fire({
@@ -1183,5 +1311,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             });
         });
+        //Employee leave
+        $(document).on('click','#btn-leave-emp',function () {
+            $('#leaveRequestModal').modal({backdrop: 'static', keyboard: false});
+        });
     });
+
 </script>

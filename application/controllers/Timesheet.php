@@ -23,7 +23,8 @@ class Timesheet extends MY_Controller {
         add_css(array(
             "assets/css/timesheet.css",
             "assets/plugins/dropzone/dist/dropzone.css",
-            "assets/plugins/country-picker-flags/build/css/countrySelect.css"
+            "assets/plugins/country-picker-flags/build/css/countrySelect.css",
+//            "https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.dataTables.min.css"
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css",
         ));
 
@@ -32,7 +33,7 @@ class Timesheet extends MY_Controller {
             "assets/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.js",
             "assets/plugins/country-picker-flags/build/js/countrySelect.js",
             "assets/plugins/timezone-picker/dist/timezones.full.js",
-//            "assets/js/accounting/sweetalert2@9.js",
+//            "https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js",
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
 
