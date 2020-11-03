@@ -15,7 +15,7 @@ class More extends MY_Controller {
 		$this->checkLogin();
 		$this->page_data['page']->title = 'More ';
 		$this->page_data['page']->menu = 'more';
-
+		$this->load->model('NsmartUpgrades_model');
 	}
 
 
@@ -23,8 +23,10 @@ class More extends MY_Controller {
 		
 		$user = (object)$this->session->userdata('logged');
 		$cid=logged('company_id');
+
+		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
-		
+		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
 		/*$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata[0];*/
 		

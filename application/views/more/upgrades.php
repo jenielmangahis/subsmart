@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <p>Add-on Plugins</p>
                         </div>
                     </div> -->
-                    <div class="marketing-card-deck card-deck pl-50 pb-100">
+                    <!-- <div class="marketing-card-deck card-deck pl-50 pb-100">
                         <a href="#" class="card border-gr"> <img
                                     class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>"
                                     data-holder-rendered="true">
@@ -35,8 +35,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <p style="text-align: center;"><strong>Subscribe Now</strong></p>
                                 <div style="text-align: center;" class="card-price bottom-txt">$0.05/SMS + $5.00 service fee</div>
                             </div>
-                        </a>                       
-                    </div>
+                        </a>     
+                    </div> -->
+
+                    <?php  $row = 1; 
+                           if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { ?>
+                           
+                           <?php if($row == 1){ ?>
+                             <div class="marketing-card-deck card-deck pl-50 pb-100"> <?php } $row++; ?>
+                            
+                                <a href="#" class="card border-gr"> <img
+                                            class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>"
+                                            data-holder-rendered="true">
+                                    <div class="card-body align-left">
+                                        <h5 class="card-title mb-0"><?php echo $NsmartUpgrade->name; ?></h5>
+                                        <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>
+                                        <p style="text-align: center;"><strong>Subscribe Now</strong></p>
+                                        <div style="text-align: center;" class="card-price bottom-txt">$<?php  echo $NsmartUpgrade->sms_fee; ?>/SMS + $<?php  echo $NsmartUpgrade->service_fee; ?> service fee</div>
+                                    </div>
+                                </a>     
+                         <?php if($row == 4){ ?>
+                          </div>
+                        <?php $row = 1; }   ?>
+
+
+                    <?php    } 
+                          } ?>
+                   
                     <!-- end card -->
                 </div>
             </div>
