@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Subscribers/Users</h1>
+                        <h1 class="page-title">Subscribers / Users</h1>
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>       
                         <hr /> -->
                         <?php include viewPath('flash'); ?>
-                        <table class="table table-hover" data-id="coupons">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -62,10 +62,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td><?= $subscription->first_name; ?> <?= $subscription->last_name; ?></td>
                                         <td><?= $subscription->email_address; ?></td>
                                         <td><?= $subscription->business_name; ?></td>
-                                        <td><?= $subscription->industry; ?></td>
+                                        <td><?= $subscription->industry_type_name; ?></td>
                                         <td>
                                             
-                                            <div class="col-sm-8 col-md-8" style="background-color: #909da7;">
+                                            <div class="col-sm-8 col-md-8" style="background-color: #909da7;padding:5px">
                                                 <div class="plan-option-box" style="color: #ffffff;">
                                                     <span class="plan-option-box-header">
                                                        <?= $subscription->plan_name; ?>
@@ -79,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <!-- <span class=""><strong>Next Billing:</strong> Month XX, XXXX</span> -->
 
                                         </td>
-                                        <td class="<?= $cell; ?>"><?= $status; ?></td>
+                                        <td class="<?= $cell; ?>" style="text-align: center;color:#ffffff;"><?= $status; ?></td>
                                         <td>
                                             <a class="btn btn-sm btn-default btn-view-subscription-details" href="javascript:void(0);" data-id="<?= $subscription->id; ?>"><i class="fa fa-view"></i> View Details</a>
                                         </td>

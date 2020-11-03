@@ -9,8 +9,13 @@ class Clients_model extends MY_Model
     {
         $id = logged('id');
 
-        $this->db->select('*');
+        $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name');
         $this->db->from($this->table);
+
+        $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
+        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+
+        //$this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
@@ -18,7 +23,7 @@ class Clients_model extends MY_Model
             }
         }
 
-        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+
 
         //table "nsmart_plans" field nsmart_plans_id
 
@@ -32,10 +37,13 @@ class Clients_model extends MY_Model
     {
         $user_id = logged('id');
 
-        $this->db->select('*');
+        $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name');
         $this->db->from($this->table);
 
-        $this->db->where('id', $id);
+        $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
+        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+
+        $this->db->where('clients.id', $id);
 
         $query = $this->db->get()->row();
         return $query;

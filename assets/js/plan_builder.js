@@ -23,23 +23,23 @@ $(function(){
     $(".btn-view-subscription-details").click(function(){
         $("#modalViewSubscriptionDetails").modal('show');
 
-        //var siid = $(this).attr("data-id");
+        var sid = $(this).attr("data-id");
         
         var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
-        //var url = base_url + '/booking/ajax_edit_service_item';
+        var url = base_url + '/nsmart_adminmgt/_load_subscriber_details';
 
         $(".modal-view-subscription-details-container").html(msg);
-        /*setTimeout(function () {
+        setTimeout(function () {
             $.ajax({
                type: "POST",
                url: url,
-               data: {siid:siid},
+               data: {sid:sid},
                success: function(o)
                {
                   $(".modal-view-subscription-details-container").html(o);
                }
             });
-        }, 500);*/
+        }, 500);
 
     });
 

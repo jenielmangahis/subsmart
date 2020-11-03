@@ -18,7 +18,12 @@ class IndustryType_model extends MY_Model
             if ( !empty($filters['search']) ) {
                 $this->db->like('name', $filters['search'], 'both');
             }
+
+            if( !empty($filters['limit_perpage']) && !empty($filters['offset']) ){
+                $this->db->limit($filters['limit_perpage'], $filters['offset']);
+            }
         }
+
 
         $this->db->order_by('business_type_name', 'ASC');
         $query = $this->db->get();
@@ -94,6 +99,15 @@ class IndustryType_model extends MY_Model
     public function isInactive()
     {
         return $this->status_inactive;
+    }
+
+    public function countAllRecords()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $total_records = $this->db->count_all_results();
+
+        return $total_records;
     }
 
 }
