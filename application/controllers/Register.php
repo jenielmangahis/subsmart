@@ -83,11 +83,26 @@ class Register extends MY_Controller {
 
                 	$payment_complete = true;
                 	$payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
+
+                    $this->session->set_flashdata('alert-type', 'success');
+                    $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
+
+                    redirect('login');
                 }
             }      
 
         }elseif( ($get_data && isset($get_data['status'])) && $get_data['status'] == 'cancel' ) {
             //Add cancel paypal here
+            $cid = $this->session->userdata('regiserClientId');
+            $uid = $this->session->userdata('regiserUserId');
+
+            //Delete data
+            $this->Clients_model->deleteClient($cid);
+            $this->Users_model->deleteUser($uid);
+
+            $payment_complete = false;
+            $payment_message  = 'Registration cancelled.';
+
         }
         //Paypal subscription process after success - End
 
