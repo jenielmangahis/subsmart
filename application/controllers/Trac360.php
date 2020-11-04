@@ -178,4 +178,63 @@ class Trac360 extends MY_Controller {
 
             echo json_encode($return);    
         }
+
+        public function addNewGroup(){
+            $return = array(
+                'groups' => array(),
+                'error' => ''
+            );
+
+            $category_name = trim($_POST['category_name']);
+            $exists = $this->db->query('select count(*) as `total` from users_geo_positions_categories where lower(category_name) = ' . strtolower($category_name))->row();
+            if($exists->total > 0){
+                $return['error'] = 'Category record already exists';
+            } else {
+                $company_id = logged('company_id');
+                $uid = logged('id');
+
+                $data = array(
+                    'category_name' => $category_name,
+                    'category_desc' => $_POST['category_desc'],
+                    'category_tag' => $_POST['category_tag'],
+                    'date_created' => date('Y-m-d h:i:s'),
+                    'created_by' => $uid,
+                    'company_id' => date('Y-m-d h:i:s')
+                );
+
+                if(!$this->users_geographic_positions_categories_model->trans_create($data)){
+                    $return['error'] = 'Error in adding group';
+                } else {
+                    $return['groups'] = $this->users_geographic_positions_categories_model->getByWhere(array('company_id' => $company_id), [], true);
+                }
+
+                echo json_encode($return);
+            }
+        }
+
+        public function deleteGroup(){
+            $return = array(
+                'groups' => array(),
+                'error' => ''
+            );
+
+            $company_id = logged('company_id');
+            $group_id = $_POST['group_id'];
+            $exists = $this->db->query('select count(*) as `total` from users_geo_positions_categories where id = ' . $group_id)->row();
+            $used = $this->db->query('select count(*) as `total` from users_geo_positions where category_id = ' . $group_id)->row();
+
+            if($exists->total <= 0){
+                $return['error'] = 'Group does not exists anymore';    
+            } else if($used->total > 0){
+                $return['error'] = 'Group is currently in used';
+            } else {
+                if(!$this->users_geographic_positions_categories_model->trans_delete(array(),array('id' => $group_id))){
+                    $return['error'] = 'Error in deleting group';
+                } else {
+                    $return['groups'] = $this->users_geographic_positions_categories_model->getByWhere(array('company_id' => $company_id), [], true);   
+                }
+            }
+
+            echo json_encode($return);
+        }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2020 at 05:44 PM
+-- Generation Time: Nov 03, 2020 at 03:57 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -47,6 +47,9 @@ CREATE TABLE `accounting_reconcile` (
   `checkno` varchar(255) DEFAULT 'SVCCHRG',
   `descp_sc` varchar(255) DEFAULT NULL,
   `descp_it` varchar(255) DEFAULT NULL,
+  `cash_back_account` varchar(255) DEFAULT NULL,
+  `cash_back_memo` varchar(255) DEFAULT NULL,
+  `cash_back_amount` varchar(255) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 = inactive , 1 = active	'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -54,9 +57,9 @@ CREATE TABLE `accounting_reconcile` (
 -- Dumping data for table `accounting_reconcile`
 --
 
-INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`, `CHRG`, `memo_sc`, `memo_it`, `mailing_address`, `checkno`, `descp_sc`, `descp_it`, `active`) VALUES
-(2, 1, '2000', '28.08.2019', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '08.08.2020', 'SVCCHRG', 'Service Charge', 'Interest Earned', NULL, NULL, NULL, NULL, 0),
-(4, 2, '10000', '09.06.2020', '11.06.2020', '110.00', 'Cash on hand', '20.06.2020', '200', 'Cash on hand', NULL, 'SVCCHRG', 'Service charge', 'Interest Earned', 'mailing add', 'SVCCHRG', '', NULL, 1);
+INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`, `CHRG`, `memo_sc`, `memo_it`, `mailing_address`, `checkno`, `descp_sc`, `descp_it`, `cash_back_account`, `cash_back_memo`, `cash_back_amount`, `active`) VALUES
+(2, 1, '2000', '28.08.2019', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '08.08.2020', 'SVCCHRG', 'Service Charge', 'Interest Earned', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0),
+(4, 2, '10000', '09.06.2020', '11.06.2020', '110.00', 'Cash on hand', '20.06.2020', '170.00', 'Cash on hand', NULL, 'SVCCHRG', 'Service charge', 'Interest Earned', 'mailing add', 'SVCCHRG', '', '', '1', '', '10', 1);
 
 --
 -- Indexes for dumped tables

@@ -170,6 +170,8 @@ class Esign extends MY_Controller {
 	public function getCategories($libraryId){
 		$loggedInUser = logged('id');
 		$data = $this->Esign_model->getLibraryCategory($loggedInUser, $libraryId);
+		// echo $this->db->last_query();
+		// print_r($data);
 		$dataToSend = [];
 		foreach($data as $d){
 			$dataToSend[] = ['id'=> $d['category_id'], 'text' => $d['categoryName']];
@@ -308,7 +310,7 @@ class Esign extends MY_Controller {
 		if(!isset($queryParams['id'])){
 			redirect('esign/esignmain');
 		}
-		$getTemplate = $this->db->from('esign_library_template')->where('user_id',$loggedInUser)->where('isActive',1)->where('esignLibraryTemplateId',$queryParams['id'])->get();
+		$getTemplate = $this->Esign_model->editTemplate($loggedInUser, $queryParams['id']);
 		
 		if(!$getTemplate->num_rows()){
 			redirect('esign/esignmain');
@@ -316,7 +318,10 @@ class Esign extends MY_Controller {
 		
 		$this->page_data['template'] = $getTemplate->row();
 		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries();		
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);		
+		// echo '<pre>';
+		// print_r($this->page_data);
+		// exit;
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
 	
@@ -518,7 +523,10 @@ class Esign extends MY_Controller {
 		$this->_get_datatables_query($postData);
 		$this->db->where('esign_library_template.user_id',$userId )
 		->where('esign_library_template.isActive',1 )
-		->join( "esign_library_category", 'esign_library_category.category_id = esign_library_template.category_id');
+		->where('esign_library_master.isActive',1 )
+		->where('esign_library_category.isActive',1 )
+		->join( "esign_library_category", 'esign_library_category.category_id = esign_library_template.category_id')
+		->join( "esign_library_master", 'esign_library_master.pk_esignLibraryMaster = esign_library_category.fk_esignLibraryMaster');
 		if($libraryId && $libraryId  != "0"){
 			$this->db->where('esign_library_category.fk_esignLibraryMaster', $libraryId);
 		}
@@ -528,7 +536,10 @@ class Esign extends MY_Controller {
 		$this->db->select('esignLibraryTemplateId, title, categoryName, isFavorite, status')
 		->where('esign_library_template.user_id',$userId )
 		->where('esign_library_template.isActive',1 )
-		->join( "esign_library_category", 'esign_library_category.category_id = esign_library_template.category_id');
+		->where('esign_library_master.isActive',1 )
+		->where('esign_library_category.isActive',1 )
+		->join( "esign_library_category", 'esign_library_category.category_id = esign_library_template.category_id')
+		->join( "esign_library_master", 'esign_library_master.pk_esignLibraryMaster = esign_library_category.fk_esignLibraryMaster');
 		if($libraryId && $libraryId  != "0"){
 			$this->db->where('esign_library_category.fk_esignLibraryMaster', $libraryId);
 		}

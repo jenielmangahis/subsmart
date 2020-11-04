@@ -520,4 +520,48 @@ class Reconcile extends MY_Controller {
         $this->reconcile_model->remove_sc_check_records($id);
         
     }
+
+    public function insert_interestearned()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $income_account_sub=$this->input->post('income_account_sub');
+        $interest_earned_sub=$this->input->post('interest_earned_sub');
+        $descp_it_sub=$this->input->post('descp_it_sub');
+        $this->reconcile_model->save_interest($reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub);
+    }
+
+    public function update_interestearned()
+    {
+        $id=$this->input->post('id');
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $income_account_sub=$this->input->post('income_account_sub');
+        $interest_earned_sub=$this->input->post('interest_earned_sub');
+        $descp_it_sub=$this->input->post('descp_it_sub');
+        $this->reconcile_model->update_interest($id,$income_account_sub,$interest_earned_sub,$descp_it_sub);
+    }
+
+    public function update_it()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $second_date=$this->input->post('date_popup');
+        $memo_it=$this->input->post('memo_it');
+        $descp_it=$this->input->post('descp_it');
+        $income_account=$this->input->post('income_account');
+        $interest_earned=$this->input->post('interest_earned');
+        $cash_back_account=$this->input->post('cash_back_account');
+        $cash_back_memo=$this->input->post('cash_back_memo');
+        $cash_back_amount=$this->input->post('cash_back_amount');
+        $this->reconcile_model->update_it_records($reconcile_id,$second_date,$memo_it,$descp_it,$income_account,$interest_earned,$cash_back_account,$cash_back_memo,$cash_back_amount);
+        
+    }
+
+    public function remove_it()
+    {
+        $id=$this->input->post('id');
+
+        $this->reconcile_model->remove_it_records($id);
+        
+    }
 }

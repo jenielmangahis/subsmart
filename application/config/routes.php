@@ -265,6 +265,12 @@ $route['accounting/reconcile/check/save'] = 'reconcile/check_save';
 $route['accounting/reconcile/addcheck/servicecharge'] = 'reconcile/insert_check_servicecharge';
 $route['accounting/reconcile/servicecharge/remove_sc_check'] = 'reconcile/remove_sc_check';
 
+
+$route['accounting/reconcile/add/interestearned'] = 'reconcile/insert_interestearned';
+$route['accounting/reconcile/change/interestearned'] = 'reconcile/update_interestearned';
+$route['accounting/reconcile/interestearned/update_it'] = 'reconcile/update_it';
+$route['accounting/reconcile/interestearned/remove_it'] = 'reconcile/remove_it';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';
@@ -337,6 +343,7 @@ $route['nsmart_features/edit_feature/(:any)'] = 'Nsmart_Features/edit_feature/$1
 $route['nsmart_features/update_feature'] = 'Nsmart_Features/update_feature';
 
 $route['nsmart_adminmgt/subscribers'] = 'Nsmart_AdminMgt/subscribers';
+$route['nsmart_adminmgt/_load_subscriber_details'] = 'Nsmart_AdminMgt/ajax_load_subscriber_details';
 
 $route['notification/calendar_notification_counter'] = 'Notification_Counter/calendar_notification_counter';
 
@@ -397,5 +404,9 @@ $route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_ca
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
+
+//Addon Upgrades
+$route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
+$route['more/add_plugin'] = 'More/add_plugin';
 
 $route['page/no_access'] = 'page/no_access';

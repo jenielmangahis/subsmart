@@ -26,6 +26,17 @@ class Nsmart_AdminMgt extends MY_Controller {
 		$this->load->view('admin_management/subscribers', $this->page_data);
 	}
 
+	public function ajax_load_subscriber_details() {
+		$post = $this->input->post();
+
+		$sid = $post['sid'];
+
+		$subscriber = $this->Clients_model->getById($sid);
+
+		$this->page_data['subscriber'] = $subscriber;
+		$this->load->view('admin_management/ajax_subscriber_details', $this->page_data);
+	}
+
 }
 
 /* End of file Nsmart_AdminMgt.php */

@@ -1,0 +1,51 @@
+<table class="table table-hover">
+    <tr>
+        <td style="width: 30%;">Name</td>
+        <td>: <?= $subscriber->first_name . ' ' . $subscriber->last_name; ?></td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td>: <?= $subscriber->email_address; ?></td>
+    </tr>
+    <tr>
+        <td>Phone Number</td>
+        <td>: <?= $subscriber->phone_number; ?></td>
+    </tr>
+    <tr>
+        <td>Business Name</td>
+        <td>: <?= $subscriber->business_name; ?></td>
+    </tr>
+    <tr>
+        <td>Business Address</td>
+        <td>: <?= $subscriber->business_address; ?></td>
+    </tr>
+    <tr>
+        <td>Number of Employees</td>
+        <td>: <?= $subscriber->number_of_employee; ?></td>
+    </tr>
+    <tr>
+        <td>Plan Name</td>
+        <td>: <?= $subscriber->plan_name; ?> / $<?= $subscriber->price; ?> Subscription</td>
+    </tr>
+    <tr>
+        <td>Industry Type</td>
+        <td>: <?= $subscriber->industry_type_name; ?></td>
+    </tr>
+    <tr>
+        <td>Status</td>
+        <td>: 
+            <?php 
+                $status = "-";
+                if( $subscriber->is_plan_active == 1 ){
+                    $cell = 'cell-active';
+                    $status = "Active";
+                }else{
+                    $cell = 'cell-inactive';
+                    $status = "Expire";
+                }
+            ?>
+            <span class="<?= $cell; ?>" style="padding: 10px; color:#ffffff;"><?= $status; ?></span>
+        </td>
+    </tr>
+
+</table>

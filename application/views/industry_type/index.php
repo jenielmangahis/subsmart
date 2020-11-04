@@ -35,9 +35,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
-                                    <th style="width: 20%;">Industry Type Name</th>
+                                    <th style="width: 40%;">Industry Type Name</th>
                                     <th style="width: 20%;">Business Type Name</th>
-                                    <th style="width: 15%;">Status</th>
+                                    <th style="width: 10%;">Status</th>
                                     <th style="width: 15%;"></th>
                                 </tr>
                             </thead>
@@ -55,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tr>
                                         <td><?= $industryType->name; ?></td>
                                         <td><?= $industryType->business_type_name; ?></td>
-                                        <td class="<?= $cell; ?>"><?= $status; ?></td>
+                                        <td class="<?= $cell; ?>" style="text-align: center;color:#ffffff;"><?= $status; ?></td>
                                         <td>
                                             <a class="btn btn-info btn-sm" href="<?php echo base_url('industry_type/edit_industry_type/'.$industryType->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
                                             <a class="btn btn-sm btn-danger btn-delete-type" href="javascript:void(0);" data-id="<?= $industryType->id; ?>"><i class="fa fa-trash"></i> Delete</a>
@@ -64,6 +64,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <?php } ?>
                             </tbody>
                         </table>
+                        <div style="margin: 0 auto; margin-top: 45px;">
+                            <?= $pagination; ?>
+                        </div>
                     </div>
                     <!-- end card -->
                 </div>

@@ -7,7 +7,7 @@ class Nsmart_Plans extends MY_Controller {
 		parent::__construct();
 
 		$role_id = 1; //this is for nsmart admin user
-		$this->isCheckLoginAndRole($role_id);
+		//$this->isCheckLoginAndRole($role_id);
 
 		$this->page_data['page_title'] = 'Nsmart Plans';
 
