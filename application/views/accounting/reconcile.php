@@ -585,8 +585,8 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     <div class="edit_income_account_<?=$editrowcount?>"><?=$editrowtab->income_account_sub?></div>
                                 </td>
                                 <td>
-                                    <input type="hidden" id="edit_descp_it_<?=$editrowcount?>" name="edit_descp_it_<?=$editrowcount?>" value="<?=$editrowtab->descp_sc_sub?>" placeholder="What did you paid for?" value="<?=$editrowtab->descp_it_sub?>">
-                                    <div class="edit_descp_it_<?=$editrowcount?>"><?=$editrowtab->descp_sc_sub?></div>
+                                    <input type="hidden" id="edit_descp_it_<?=$editrowcount?>" name="edit_descp_it_<?=$editrowcount?>" value="<?=$editrowtab->descp_it_sub?>" placeholder="What did you paid for?" value="<?=$editrowtab->descp_it_sub?>">
+                                    <div class="edit_descp_it_<?=$editrowcount?>"><?=$editrowtab->descp_it_sub?></div>
                                 </td>
                                 <td>
                                      <input type="hidden" id="edit_interest_earned_<?=$editrowcount?>" name="edit_interest_earned_<?=$editrowcount?>" value="<?=number_format($editrowtab->interest_earned_sub,2)?>">
@@ -4691,6 +4691,128 @@ function closeAddaccount()
                                 url:"<?php echo url('accounting/reconcile/servicecharge/update_sc') ?>",
                                 method: "POST",
                                 data: {reconcile_id:reconcile_id,mailing_address:mailing_address,date_popup:date_popup,checkno:checkno,memo_sc:memo_sc,descp_sc:descp_sc,expense_account:expense_account,service_charge:service_charge},
+                                success:function(data)
+                                {
+                                    sweetAlert(
+                                            'Deleted!',
+                                            'Item has been deleted.',
+                                            'success'
+                                        );
+                                }
+                            })
+                          }
+                    }
+                })
+        }
+
+    }
+</script>
+<script type="text/javascript">
+    function save_close_edit_int(id,chart_of_accounts_id)
+    {
+      var reconcile_id = id;
+      var chart_of_accounts_id = chart_of_accounts_id;
+      var date_popup = $('#int_date_popup').val();
+      var memo_it = $('#memo_it').val();
+      var cash_back_amount = $('#cash_back_amount').val();
+      var cash_back_account='';
+      var cash_back_memo='';
+      if(cash_back_amount!='')
+      {  
+       cash_back_account = $('#int_cashback_popup').val();
+       cash_back_memo = $('#cash_back_memo').val();
+      }
+      var descp_it = $('.edit_descp_it').text();
+      var income_account=$('.edit_income_account').text();
+      var interest_earned=$('#inttotal_final').text().substr(9);
+
+      var tablelength = $('#participantIntTable tr').length -2;
+
+      for(var i = 2 ; i <= tablelength ; i++)
+        {
+
+            var income_account_sub = $('.edit_income_account_'+i).text();
+            var interest_earned_sub = $('.edit_interest_earned_'+i).text();
+            var descp_it_sub = $('.edit_descp_it_'+i).text();
+
+          if(income_account_sub!='' || descp_it_sub!='' || interest_earned_sub!='')
+          {
+            if(interest_earned_sub!='')
+            {
+                if($('#edit_income_account_'+i).hasClass('up_row'))
+                {
+                    var id = $('#edit_income_account_'+i).data('id');
+                    $.ajax({
+                        url:"<?php echo url('accounting/reconcile/change/interestearned') ?>",
+                        method: "POST",
+                        data: {id:id,income_account_sub:income_account_sub,interest_earned_sub:interest_earned_sub,descp_it_sub:descp_it_sub},
+                        success:function(data)
+                        {
+                        }
+                    })
+                }
+                else
+                {
+                    $.ajax({
+                        url:"<?php echo url('accounting/reconcile/add/interestearned') ?>",
+                        method: "POST",
+                        data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,income_account_sub:income_account_sub,interest_earned_sub:interest_earned_sub,descp_it_sub:descp_it_sub},
+                        success:function(data)
+                        {
+                        }
+                    })
+                }
+            }
+          }
+        }
+        
+      if(reconcile_id!='')
+      {
+        $.ajax({
+            url:"<?php echo url('accounting/reconcile/interestearned/update_it') ?>",
+            method: "POST",
+            data: {reconcile_id:reconcile_id,date_popup:date_popup,memo_it:memo_it,descp_it:descp_it,income_account:income_account,interest_earned:interest_earned,cash_back_account:cash_back_account,cash_back_memo:cash_back_memo,cash_back_amount:cash_back_amount},
+            success:function(data)
+            {
+                closeFullNav_int();
+                location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+            }
+        })
+      }
+
+
+    }
+    function remove_func_int(id)
+    {
+        var id = id;
+      var reconcile_id = $('#XYZ_id').text();
+      var date_popup = $('#int_date_popup').val();
+      var memo_it = $('#memo_it').val();
+      var descp_it = $('.edit_descp_it').text();
+      var income_account=$('.edit_income_account').text();
+      var interest_earned=$('#inttotal_final').text().substr(9);
+      var cash_back_amount = $('#cash_back_amount').val();
+      var cash_back_account='';
+      var cash_back_memo='';
+      if(cash_back_amount!='')
+      {  
+       cash_back_account = $('#int_cashback_popup').val();
+       cash_back_memo = $('#cash_back_memo').val();
+      }
+        if(id!='')
+        {
+            $.ajax({
+                    url:"<?php echo url('accounting/reconcile/interestearned/remove_it') ?>",
+                    method: "POST",
+                    data: {id:id},
+                    success:function(data)
+                    {
+                        if(reconcile_id!='')
+                          {
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/interestearned/update_it') ?>",
+                                method: "POST",
+                                data: {reconcile_id:reconcile_id,date_popup:date_popup,memo_it:memo_it,descp_it:descp_it,income_account:income_account,interest_earned:interest_earned,cash_back_account:cash_back_account,cash_back_memo:cash_back_memo,cash_back_amount:cash_back_amount},
                                 success:function(data)
                                 {
                                     sweetAlert(

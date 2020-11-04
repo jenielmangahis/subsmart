@@ -265,6 +265,12 @@ $route['accounting/reconcile/check/save'] = 'reconcile/check_save';
 $route['accounting/reconcile/addcheck/servicecharge'] = 'reconcile/insert_check_servicecharge';
 $route['accounting/reconcile/servicecharge/remove_sc_check'] = 'reconcile/remove_sc_check';
 
+
+$route['accounting/reconcile/add/interestearned'] = 'reconcile/insert_interestearned';
+$route['accounting/reconcile/change/interestearned'] = 'reconcile/update_interestearned';
+$route['accounting/reconcile/interestearned/update_it'] = 'reconcile/update_it';
+$route['accounting/reconcile/interestearned/remove_it'] = 'reconcile/remove_it';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

@@ -57,8 +57,8 @@
       <div class="row pt-2 pb-5">
         <div class="col-md-1 trac360_main_sections trac360_side_transparent">
           <div class="btn-group-vertical">
-            <button type="button" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5"><span class="fa fa-users fa-3x" class="text-center"></span>Group</button>
-            <button type="button" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5"><span class="fa fa-map-marker fa-3x" class="text-center"></span>Places</button>
+            <button type="button" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id="btn_open_trac360_groups"><span class="fa fa-users fa-3x" class="text-center"></span>Group</button>
+            <button type="button" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id="btn_open_trac360_places"><span class="fa fa-map-marker fa-3x" class="text-center"></span>Places</button>
           </div>
         </div>
         <div class="col-md-4 trac360_main_sections">
@@ -82,6 +82,28 @@
 
                 </div>
                 <div class="tab-pane container pl-0 pr-0 fade" diventry="groups_entry" title="Groups" id="groups_tab" prev_tab="">
+                  <div class="table-responsive">
+                    <table class="table table-bordered mb-0" id="trac360_groups_table">
+                      <thead>
+                        <tr>
+                          <th class="d-none"></th>
+                          <th class="font-weight-bold" style="width: 30%">Group Name</th>
+                          <th class="font-weight-bold" style="width: 50%">Description</th>
+                          <th class="font-weight-bold" style="width: 20%">Record Tag</th> 
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach($categories as $category){ ?>
+                          <tr>
+                            <td class="d-none"><?php echo $category->id; ?></td>
+                            <td style="width: 30%"><?php echo $category->category_name; ?></td>
+                            <td style="width: 50%"><?php echo $category->category_desc; ?></td>
+                            <td style="width: 20%"><?php echo $category->category_tag; ?></td> 
+                          </tr>
+                        <?php } ?>  
+                      </tbody>
+                    </table>
+                  </div>  
                 </div>
                 <div class="tab-pane container pl-0 pr-0 fade" diventry="places_entry" title="Places" id="places_tab" prev_tab="">
                 </div>
@@ -120,6 +142,20 @@
                   </div>
                 </div>
                 <div class="tab-pane container trac360_entry fade" id="groups_entry" title="Groups Form" prev_tab="">
+                  <div class="row mt-4">
+                    <div class="col-md-12">
+                      <label for="trac360_group_entry_name"><strong>Group Name</strong><small> Name of the group to be displayed in people page</small></label>
+                      <input type="text" class="form-control" name="trac360_group_entry_name" id="trac360_group_entry_name" required autofocus />
+                    </div>
+                    <div class="col-md-12">
+                      <label for="trac360_group_entry_desc"><strong>Description</strong><small> Additional details of the group record</small></label>
+                      <input type="text" class="form-control" name="trac360_group_entry_desc" id="trac360_group_entry_desc" required autofocus />
+                    </div>
+                    <div class="col-md-12">
+                      <label for="trac360_group_entry_tag"><strong>Record Tag</strong><small> Column Header Name to be used in people page</small></label>
+                      <input type="text" class="form-control" name="trac360_group_entry_tag" id="trac360_group_entry_tag" required autofocus />
+                    </div>  
+                  </div>      
                 </div>
                 <div class="tab-pane container trac360_entry fade" id="places_entry" title="Places Form" prev_tab="">
                 </div>
@@ -301,6 +337,25 @@
       }
     });
 // ----------------------------------------------------------------------------------
+
+// Groups Page ----------------------------------------------------------------------
+    $('#btn_open_trac360_groups').click(function(){
+      var button = $('#prev_tab');
+      var tab = $('div.tab-pane.active');
+      var groups_tab = $('#groups_tab');
+
+      tab.removeClass('active');
+      tab.addClass('fade');
+
+      groups_tab.removeClass('fade');
+      groups_tab.addClass('active');
+
+      button.attr("prev_tab",tab.attr("id"));
+      button.removeClass('d-none');
+
+      processNodeControlButtons('groups_tab');  
+    });
+// ----------------------------------------------------------------------------------
   });
 
 // ----------------------------------------------------------------------------------
@@ -338,6 +393,8 @@
           } 
         });  
       }
+    } else if(vEntry == 'groups_entry'){
+      
     }  
   }
 // ----------------------------------------------------------------------------------
@@ -381,6 +438,12 @@
     $('#trac360_people_entry_users').val("");
     $('#trac360_people_entry_latitude').val(0);
     $('#trac360_people_entry_longitude').val(0);   
+  }
+
+  function clearGroupEntries(){
+    $('#trac360_group_entry_name').val("");
+    $('#trac360_group_entry_desc').val("");
+    $('#trac360_group_entry_tag').val("");  
   }
 // ----------------------------------------------------------------------------------
 

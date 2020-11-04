@@ -108,5 +108,17 @@ class Esign_model extends MY_Model {
 		return $this->db->insert($this->librariesMaster, $data); 
 	}
 	
+	public function editTemplate($loggedInUser, $templateId){
+		return $this->db->from('esign_library_template AS ELT')
+		->select('ELT.status, ELT.esignLibraryTemplateId, ELT.title, ELT.content, ELT.category_id, ELC.fk_esignLibraryMaster')
+		->join( "esign_library_category AS ELC", 'ELC.category_id = ELT.category_id')
+		->join( "esign_library_master AS ELM", 'ELM.pk_esignLibraryMaster = ELC.fk_esignLibraryMaster')
+		->where('ELT.user_id',$loggedInUser)
+		->where('ELT.isActive',1)
+		->where('ELC.isActive',1)
+		->where('ELM.isActive',1)
+		->where('ELT.esignLibraryTemplateId',$templateId)
+		->get();
+	}
 }
 

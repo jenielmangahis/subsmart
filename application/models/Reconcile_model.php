@@ -7,7 +7,7 @@ class Reconcile_model extends MY_Model {
 
 	public function saverecords($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account)
 	{
-		$query="insert into accounting_reconcile values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','','','','1')";
+		$query="insert into accounting_reconcile values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','','','','','','','',1')";
 		echo $this->db->query($query);
 	}
 
@@ -264,6 +264,18 @@ class Reconcile_model extends MY_Model {
 		$this->db->delete('accounting_reconcile_has_servicecharge_check');  
 	}
 
+	public function save_interest($reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub)
+	{
+		$query="insert into accounting_reconcile_has_interestearned values('','$reconcile_id','$chart_of_accounts_id','$income_account_sub','$interest_earned_sub','$descp_it_sub')";
+		echo $this->db->query($query);
+	}
+
+	public function update_interest($id,$income_account_sub,$interest_earned_sub,$descp_it_sub)
+	{
+		$query="update accounting_reconcile_has_interestearned set income_account_sub = '$income_account_sub',interest_earned_sub = '$interest_earned_sub',descp_it_sub = '$descp_it_sub' where id = '$id'";
+		echo $this->db->query($query);
+	}
+
 	public function select_interest($id,$chart_of_accounts_id)
 	{
 		$this->db->from('accounting_reconcile_has_interestearned');  
@@ -271,6 +283,19 @@ class Reconcile_model extends MY_Model {
 		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id);
 		$result =  $this->db->get()->result();
 	    return $result;	
+	}
+
+	public function remove_it_records($id)
+	{
+		$this->db->where('id',$id);
+		$this->db->delete('accounting_reconcile_has_interestearned');  
+	}
+
+	public function update_it_records($reconcile_id,$second_date,$memo_it,$descp_it,$income_account,$interest_earned,$cash_back_account,$cash_back_memo,$cash_back_amount)
+	{
+		$query="update accounting_reconcile set second_date ='$second_date', memo_it = '$memo_it',descp_it = '$descp_it',income_account = '$income_account',interest_earned = '$interest_earned',cash_back_account='$cash_back_account',cash_back_memo='$cash_back_memo',cash_back_amount='$cash_back_amount' where id = '$reconcile_id'";
+		echo $this->db->query($query);
+		echo $query;
 	}
 }
 ?>

@@ -80,8 +80,8 @@ $(document).ready(function () {
     });
     });
     $(document).on('click','#clockOut',function () {
-        var selected = this;
-        var attn_id = $('#attendanceId').val();
+        let selected = this;
+        let attn_id = $('#attendanceId').val();
         Swal.fire({
             title: 'Clock out?',
             html: "Are you sure you want to Clock-out?",

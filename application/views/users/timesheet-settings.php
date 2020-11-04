@@ -458,6 +458,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a class="nav-link active" data-toggle="tab" href="#empPTO">PTO</a>
                                         </li>
                                         <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#empInvite">Invite Link</a>
+                                        </li>
+                                        <li class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#empSettings">Settings</a>
                                         </li>
                                     </ul>
@@ -552,7 +555,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container fade" id="empSettings">3</div>
+                                        <div class="tab-pane container fade" id="empInvite">
+                                            <div class="form-group">
+                                                <label for="" style="font-weight: bold">TYPE AN EMAIL ADDRESS TO INVITE</label>
+                                                <input type="email" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <i class="fas fa-link"></i> <span>Create an invite link</span>
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Create an invite link to share with your team members so they can join your account.</p>
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-success" style="border-radius: 36px;width: 200px">SEND</button>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane container fade" id="empSettings">
+                                            3
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -644,7 +664,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-                <button class="btn btn-default" id="addLeaveRow"><i class="fa fa-plus"></i> Add leave</button>
+                <button class="btn btn-default" id="addLeaveRow"><i class="fa fa-plus"></i> Add Row</button>
                 <table id="leaveTableList" class="ptoTable cell-border hover">
                     <thead>
                     <tr>
@@ -656,34 +676,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </thead>
                     <tbody>
                     <form action="" method="post" id="formLeaveType">
-                    <tr class="leave-type-row">
-                        <td class="center" style="border-left: 0;"><input type="hidden" class="leave-id" name="id[]" value="1">1</td>
-                        <td class="center leave-type-column">
-                            <span class="display">Vacation</span>
-                            <input type="text" name="type[]" class="leave-type-data form-control hidden" value="Vacation" required>
-                        </td>
-                        <td class="center">
-                            <span class="display">Hello world1</span>
-                            <textarea name="description[]"  class="leave-desc-data form-control hidden" cols="30" rows="10" required>Hello world1</textarea>
-                        </td>
-                        <td class="center" style="border-right: 0;">
-                            <a href="javascript:void (0)" class="removeLeaveRow" title="Remove" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
-                        </td>
-                    </tr>
-                    <tr class="leave-type-row">
-                        <td class="center" style="border-left: 0;"><input type="hidden" class="leave-id" name="id[]" value="2" required>2</td>
-                        <td class="center leave-type-column">
-                            <span class="display">Sick</span>
-                            <input type="text" name="type[]" class="leave-type-data form-control hidden" value="Sick">
-                        </td>
-                        <td class="center">
-                            <span class="display">Hello world2</span>
-                            <textarea name="description[]" class="leave-desc-data form-control hidden" cols="30" rows="10" required>Hello world2</textarea>
-                        </td>
-                        <td class="center" style="border-right: 0;">
-                            <a href="javascript:void (0)" class="removeLeaveRow" title="Remove" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
-                        </td>
-                    </tr>
+                        <?php if ($pto == null){?>
+                            <tr class="leave-type-row">
+                                <td class="center" style="border-left: 0;">1</td>
+                                <td class="center leave-type-column">
+                                    <span class="display"></span>
+                                    <input type="text" name="type[]" class="leave-type-data form-control hidden" value="" required>
+                                    <input type="hidden" class="leave-id" name="id[]" value="0">
+                                </td>
+                                <td class="center">
+                                    <span class="display"></span>
+                                    <textarea name="description[]"  class="leave-desc-data form-control hidden" cols="30" rows="10" readonly></textarea>
+                                </td>
+                                <td class="center" style="border-right: 0;">
+                                    <a href="javascript:void (0)" class="removeLeaveRow" title="Remove" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                                </td>
+                            </tr>
+                        <?php }else{ ?>
+                        <?php foreach ($pto as $cnt => $type): ?>
+                            <tr class="leave-type-row">
+                                <td class="center" style="border-left: 0;"><?php echo $cnt+1?></td>
+                                <td class="center leave-type-column">
+                                    <span class="display"><?php echo $type->name?></span>
+                                    <input type="text" name="type[]" class="leave-type-data form-control hidden" value="<?php echo $type->name?>" required>
+                                    <input type="hidden" class="leave-id" name="id[]" value="<?php echo $type->id?>">
+                                </td>
+                                <td class="center">
+                                    <span class="display"></span>
+                                    <textarea name="description[]"  class="leave-desc-data form-control hidden" cols="30" rows="10" readonly></textarea>
+                                </td>
+                                <td class="center" style="border-right: 0;">
+                                    <a href="javascript:void (0)" data-id="<?php echo $type->id?>" class="removeLeaveRow" title="Remove" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php } ?>
                     </form>
                     </tbody>
                 </table>
@@ -707,20 +734,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     // });
 
     $(document).ready(function() {
+        // PTO Leave list DataTable
+        $('#pto-table-list').DataTable({"paging":false});
+        // PTO placeholder
+        $('#pto-table-list_filter').children('label').children('input').attr('placeholder','Search...');
         // Leave list modal
         $(document).on('click','#leaveList',function () {
             $('#listLeaveType').modal({backdrop: 'static', keyboard: false});
+            let table = $('#leaveTableList');
+            table.children('tbody').children('tr').children('td').children('input.leave-type-data').addClass('hidden');
+            table.children('tbody').children('tr').children('td').children('textarea').addClass('hidden');
+            table.children('tbody').children('tr').children('td').children('span').removeClass('hidden').addClass('display');
         });
         //Leave modal dataTable
-        $('#leaveTableList').DataTable({"paging":false,"sort":false});
+        $('#leaveTableList').DataTable({
+            "paging":false,
+            "sort":false,
+        });
         //Row add/edit
         $(document).on('click','.leave-type-row',function () {
-            $(this).parent('tbody').children('tr').children('td').children('input').addClass('hidden');
+            $(this).parent('tbody').children('tr').children('td').children('input.leave-type-data').addClass('hidden');
             $(this).parent('tbody').children('tr').children('td').children('textarea').addClass('hidden');
             $(this).parent('tbody').children('tr').children('td').children('span').removeClass('hidden').addClass('display');
 
             $(this).children('td').children('span').removeClass('display').addClass('hidden');
-            $(this).children('td').children('input').removeClass('hidden').addClass('display');
+            $(this).children('td').children('input.leave-type-data').removeClass('hidden').addClass('display');
             $(this).children('td').children('textarea').removeClass('hidden').addClass('display');
         });
         //Add row Leave type
@@ -728,10 +766,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             let last = $('#leaveTableList tbody tr:last td:first').text();
             let counter = parseInt(last) + 1;
             let row = '     <tr class="leave-type-row">\n' +
-                '                        <td class="center" style="border-left: 0;"><input type="hidden" class="leave-id" name="id[]" value="0">'+counter+'</td>\n' +
+                '                        <td class="center" style="border-left: 0;">'+counter+'</td>\n' +
                 '                        <td class="center leave-type-column">\n' +
                 '                            <span class="display"></span>\n' +
                 '                            <input type="text" name="type[]" class="leave-type-data form-control hidden" value="">\n' +
+                '                            <input type="hidden" class="leave-id" name="id[]" value="0">\n' +
                 '                        </td>\n' +
                 '                        <td class="center">\n' +
                 '                            <span class="display"></span>\n' +
@@ -746,10 +785,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Remove leave row
         $(document).on('click','.removeLeaveRow',function () {
             let type = $(this).parent('td').parent('tr').children('td.leave-type-column').children('span').text();
+            let id = $(this).attr('data-id');
+            let row = $(this).parent('td').parent('tr');
             if (type == ''){
-                $(this).parent('td').parent('tr').remove();
+                row.remove();
             }else{
-                console.log(type);
+                Swal.fire({
+                    title: 'Remove leave type?',
+                    html: "Are you sure you want to remove <strong>"+type+"</strong> ?",
+                    icon:"question",
+                    showCancelButton: true,
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Remove it!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url:'/timesheet/removePTO',
+                            type:"POST",
+                            dataType:'json',
+                            data:{id:id},
+                            success:function (data) {
+                                if (data == 1){
+                                    let row_cnt = $('#leaveTableList').children('tbody').children('tr').length;
+                                    if(row_cnt == 1){
+                                        row.children('td.leave-type-column').children('span').text(null);
+                                        row.children('td.leave-type-column').children('input.leave-type-data').val(null).removeClass('display').addClass('hidden');
+                                        row.children('td').children('textarea.leave-desc-data').val(null).removeClass('display').addClass('hidden');
+                                        row.children('td.leave-type-column').children('input.leave-id').val(null);
+                                    }else if(row_cnt > 1){
+                                        row.remove();
+                                    }
+                                    Swal.fire(
+                                        {
+                                            showConfirmButton: false,
+                                            timer: 2000,
+                                            title: 'Success',
+                                            html: "<strong>"+type+"</strong> has been removed.",
+                                            icon: 'success'
+                                        });
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
         //Save Leave type
@@ -757,16 +836,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             let type = getArrayType($('.leave-type-data'));
             let desc = getArrayDesc($('.leave-desc-data'));
             let id = getArrayID($('.leave-id'));
-            console.log($('.leave-type-data').length);
-            // $.ajax({
-            //     url:'/timesheet/savedPTO',
-            //     type:"POST",
-            //     dataType:"json",
-            //     data:{id:id,type:type,desc:desc},
-            //     success:function (data) {
-            //
-            //     }
-            // });
+
+            $.ajax({
+                url:'/timesheet/savedPTO',
+                type:"POST",
+                dataType:"json",
+                data:{id:id,type:type},
+                success:function (data) {
+                    $("#listLeaveType").modal('hide');
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            html: "New PTO has been added",
+                            icon: 'success'
+                        });
+
+                }
+            });
         });
         function getArrayDesc(description) {
             let list = [];
@@ -814,7 +902,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 return markup;
             },
             templateResult: function (d) {
-                var subtext = d.subtext;
+                let subtext = d.subtext;
                 if(subtext == undefined){subtext=''}
                 return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
             }
@@ -848,11 +936,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
             }
         });
-
-        // PTO DataTable
-        $('#pto-table-list').DataTable({"paging":false});
-        // PTO placeholder
-        $('#pto-table-list_filter').children('label').children('input').attr('placeholder','Search...');
 
         //Load dataTable
         let selected_week = $('#ts-sorting-week').val();

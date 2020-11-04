@@ -508,6 +508,49 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
+    //Get PTO Type
+    public function getPTO(){
+        $qry = $this->db->get('timesheet_pto');
+        return $qry->result();
+    }
+    public function getPTOByName($name){
+        $this->db->like('name',$name);
+        $query = $this->db->get('timesheet_pto');
+        return $query->result();
+    }
+
+    //Adding PTO type
+    public function savedPTO($id,$type){
+        for ($x = 0;$x < count($type);$x++){
+            if ($type[$x] != null){
+                $update = array(
+                    'name' => $type[$x]
+                );
+                $find = array('id'=>$id[$x]);
+                $check = $this->db->where($find);
+                if ($check == true && $id[$x] > 0){
+                    $this->db->update('timesheet_pto',$update);
+
+                }else{
+                    $qry = $this->db->get_where('timesheet_pto',array('name'=>$type[$x]));
+                    if ($qry->num_rows() == 0){
+                        $insert = array(
+                            'name' => $type[$x],
+                            'company_id' => getLoggedCompanyID()
+                        );
+                        $this->db->insert('timesheet_pto',$insert);
+                    }
+
+                }
+            }
+
+        }
+    }
+    //Employee requesting leave
+    public function employeeRequestLeave($pto,$start,$end){
+
+    }
+
 }
 
 

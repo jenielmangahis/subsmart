@@ -59,7 +59,7 @@ ini_set('max_input_vars', 30000);
                                 <select name="libraryId" id="library" class="select2LibrarySelection dropdown form-control">
                                     <option></option>
                                     <?php foreach($libraries as $library){ ?>
-                                        <option value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
+                                        <option <?=isset($template) && $template->fk_esignLibraryMaster == $library['pk_esignLibraryMaster'] ? "selected" : "" ?>  value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -156,13 +156,7 @@ ini_set('max_input_vars', 30000);
 <p>{client_first_name}&nbsp;{client_last_name}</p>`;
         $(document).ready(function() {
             // $('.select2CategoorySelection').select2();
-            $('.select2LibrarySelection').select2({
-                placeholder: 'Please Select',
-                allowClear: true
-            });
-            $('.select2LibrarySelection').change(function(){
-                let id = $(this).val();
-                $('.select2CategoorySelection').val('');
+            function selectCategory(id){
                 $('.select2CategoorySelection').select2({
                     placeholder: 'Please Select',
                     ajax: {
@@ -177,6 +171,16 @@ ini_set('max_input_vars', 30000);
                         cache: true
                     }
                 });
+            }
+            selectCategory(<?=isset($template) && $template->fk_esignLibraryMaster ? $template->fk_esignLibraryMaster : -1 ?>)
+            $('.select2LibrarySelection').select2({
+                placeholder: 'Please Select',
+                allowClear: true
+            });
+            $('.select2LibrarySelection').change(function(){
+                let id = $(this).val();
+                $('.select2CategoorySelection').val('');
+                selectCategory(id);
             });
             $('#summernote').summernote({
                 placeholder: 'Type Here ... ',

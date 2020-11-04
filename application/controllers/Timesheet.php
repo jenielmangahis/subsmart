@@ -171,6 +171,7 @@ class Timesheet extends MY_Controller {
 		$this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['timesheet_settings'] = $this->timesheet_model->getTimeSheetSettings();
         $this->page_data['timesheet_day'] = $this->timesheet_model->getTimeSheetDay();
+        $this->page_data['pto'] = $this->timesheet_model->getPTO();
 //        $this->page_data['user_logged'] = $this->checkLogin();
 
 		$date_this_week = array(
@@ -240,7 +241,6 @@ class Timesheet extends MY_Controller {
         $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
         $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
 
-		// echo '<pre>';print_r($this->page_data);die;
 
 		$this->load->view('users/timesheet-admin', $this->page_data);
 	}
@@ -1107,6 +1107,8 @@ class Timesheet extends MY_Controller {
         //Employee's attendance
         $this->page_data['emp_attendance'] = $this->timesheet_model->getUserAttendance();
         $this->page_data['emp_logs'] = $this->timesheet_model->getUserLogs();
+        //PTO
+        $this->page_data['pto'] = $this->timesheet_model->getPTO();
 
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
@@ -1519,16 +1521,50 @@ class Timesheet extends MY_Controller {
 	    $display .= '</tfoot>';
 	    echo json_encode($display);
     }
+    public function savedPTO(){
+	    $id = $this->input->post('id');
+	    $type = $this->input->post('type');
+	    $query = $this->timesheet_model->savedPTO($id,$type);
+	    echo json_encode(1);
+    }
+    public function removePTO(){
+	    $id = $this->input->post('id');
+	    $this->db->where('id',$id);
+	    $this->db->delete('timesheet_pto');
+	    echo json_encode(1);
+    }
+
+    public function getPTOList(){
+        $name = $this->input->get('search');
+        $pto = $this->timesheet_model->getPTOByName($name);
+        $data = array();
+        foreach ($pto as $list){
+            $data[] = array(
+                'id' =>   $list->id,
+                'text' => $list->name
+            );
+        }
+        echo json_encode($data);
+    }
+    //Employee requesting for leave
+    public function employeeRequestLeave(){
+        $pto = $this->input->post('values[pto]');
+        $start = $this->input->post('values[start]');
+        $end = $this->input->post('values[end]');
+        $query = $this->timesheet_model->employeeRequestLeave($pto,$start,$end);
+        if ($query == true){
+
+        }else{
+
+        }
+
+    }
+
     public function getEmployees(){
 	    $name = $this->input->get('search');
 	    $users = $this->users_model->getUsersByName($name);
 	    $roles = $this->users_model->getRoles();
         $data = array();
-//        $data[] = array(
-//            'id' =>   '0',
-//            'text' => 'Teammates',
-//            'subtext' => 'Default'
-//        );
 	    foreach ($users as $employee){
 	        $users_role = '';
 	        foreach ($roles as $role){
@@ -1542,10 +1578,7 @@ class Timesheet extends MY_Controller {
                 'subtext' => $users_role
             );
         }
-
         echo json_encode($data);
-
-
     }
 //    public function serverTime(){
 //	    $duration = '60 minute';

@@ -898,8 +898,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="user-logs-section" style="vertical-align: top">
                                                                     <div class="user-clock-in" style="height: 35px">
                                                                         <a href="javascript:void (0)" class="employeeLeaveBtn" id="btn-leave-emp" style="float: right;margin-top: -12px">
-                                                                            <img src="/assets/css/timesheet/images/mask-static.svg" alt="sick icon" class="btn-leave-static">
-                                                                            <img src="/assets/css/timesheet/images/mask-hover.svg" alt="sick icon" class="btn-leave-hover">
+                                                                            <img src="/assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
+                                                                            <img src="/assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
                                                                         </a>
                                                                         <span class="employeeLeaveTooltip">Request for leave</span>
                                                                     </div>
@@ -938,34 +938,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-                <div class="form-group">
+                <form action="" id="leaveRequestForm" method="post">
+                <div class="form-group" style="width: 250px">
                     <label for="" style="display: block">Leave type</label>
-                    <select name="" id="" class="form-control" style="width: 200px">
-                        <option value="">1</option>
+                    <select name="pto" id="leaveSelectList" class="form-control" >
+                        <option value=""></option>
                     </select>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="startDateLeave">Start Date</label>
-                            <input type="text" class="form-control" id="startDateLeave">
+                            <input type="text" name="start" class="form-control" id="startDateLeave">
                         </div>
                     </div>
 <!--                    <div class="col-md-2"></div>-->
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="endDateLeave">End Date</label>
-                            <input type="text" class="form-control" id="endDateLeave">
+                            <input type="text" name="end" class="form-control" id="endDateLeave" disabled>
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-success" id="submitLeaveRequest">Submit</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
-
         </div>
     </div>
 </div>
@@ -1314,6 +1315,65 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Employee leave
         $(document).on('click','#btn-leave-emp',function () {
             $('#leaveRequestModal').modal({backdrop: 'static', keyboard: false});
+        });
+        //PTO list
+        $('#leaveSelectList').select2({
+            placeholder: 'Select type',
+            width: 'resolve',
+            ajax:{
+                url:'/timesheet/getPTOList',
+                type:"GET",
+                dataType:"json",
+                delay:250,
+                data:function (params) {
+                    let query = {
+                        search: params.term
+                    };
+                    return query;
+                },
+                processResults:function (response) {
+                    return{results:response};
+                },
+                cache:true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        });
+        //Employee request for leave
+        $(document).on('click','#submitLeaveRequest',function () {
+            //
+            let values = {};
+            $.each($('#leaveRequestForm').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            Swal.fire({
+                title: 'Requesting leave',
+                html: "Are you sure you want this request?",
+                icon:"question",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    // $.ajax({
+                    //     url:'/timesheet/employeeRequestLeave',
+                    //     method:"POST",
+                    //     dataType:"json",
+                    //     data:{values:values},
+                    //     success:function (data) {
+                    //         if (data == 1){
+                    //             $('#leaveRequestModal').modal('hide');
+                    //         }
+                    //     }
+                    // });
+                }
+            });
+        });
+        //Prevent the end date to be less than the end date
+        $(document).on('change','#startDateLeave',function () {
+            $('#endDateLeave').attr('disabled',false);
         });
     });
 
