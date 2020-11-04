@@ -31,6 +31,18 @@ class SubscriberNsmartUpgrade_model extends MY_Model
         return $query;
     }
 
+    public function getByClientIdAndNsmartUpgradeId($client_id, $upgrade_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('client_id', $client_id);
+        $this->db->where('nsmart_upgrade_id', $upgrade_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
 }
 
 /* End of file SubscriberNsmartUpgrade_model.php */

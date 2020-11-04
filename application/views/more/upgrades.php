@@ -17,6 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
+                    <?php include viewPath('flash'); ?>
                     <!-- <div class="card">
                         <div class="card-body">
                             <p>Add-on Plugins</p>
