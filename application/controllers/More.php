@@ -69,7 +69,7 @@ class More extends MY_Controller {
 			}else{
 				$data = [
 	    			'client_id' => $cid,
-	    			'nsmart_upgrade_id' => $post['pid'],
+	    			'plan_upgrade_id' => $post['pid'],
 	    			'date_created' => date("Y-m-d H:i:s"),
 	    			'date_modified' => date("Y-m-d H:i:s")
 	    		];

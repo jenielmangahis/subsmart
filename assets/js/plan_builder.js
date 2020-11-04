@@ -25,7 +25,7 @@ $(function(){
 
         var sid = $(this).attr("data-id");
         
-        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading...</div>';
         var url = base_url + '/nsmart_adminmgt/_load_subscriber_details';
 
         $(".modal-view-subscription-details-container").html(msg);
