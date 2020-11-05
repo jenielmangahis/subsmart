@@ -38,7 +38,7 @@ class Nsmart_AdminMgt extends MY_Controller {
 		$subscriber   = $this->Clients_model->getById($sid);
 		$upgrades     = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
 		$industryType = $this->IndustryType_model->getById($subscriber->industry_type_id);
-		$templateModules = $this->IndustryTemplateModules_model->getAllByIndustryTemplateId($industryType->id);
+		$templateModules = $this->IndustryTemplateModules_model->getAllByIndustryTemplateId($industryType->industry_template_id);
 
 		$this->page_data['templateModules'] = $templateModules;
 		$this->page_data['subscriber'] = $subscriber;

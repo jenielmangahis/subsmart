@@ -37,7 +37,7 @@ class SubscriberNsmartUpgrade_model extends MY_Model
         $this->db->from($this->table);
 
         $this->db->where('client_id', $client_id);
-        $this->db->where('nsmart_upgrade_id', $upgrade_id);
+        $this->db->where('plan_upgrade_id', $upgrade_id);
 
         $query = $this->db->get()->row();
         return $query;

@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php echo form_open_multipart('industry_modules/create_module', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 
                           <div class="form-group">
-                              <label>Addon Name</label> <span class="form-required">*</span>
+                              <label>Module Name</label> <span class="form-required">*</span>
                               <input type="text" name="name" value=""  class="form-control" required="" autocomplete="off" />
                           </div>
                           <div class="form-group">
