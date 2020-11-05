@@ -158,6 +158,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										</div>
 						    		<?php } ?>
 						    		<!-- Stepper -->
+						    		<?php if($ip_exist== false){ ?>
 								    <div class="steps-form">
 								      <div class="steps-row setup-panel">
 								        <div class="steps-step">
@@ -178,6 +179,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								        </div>
 								      </div>
 								    </div>
+									<?php } ?>
 
 						    		<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
 							      	<input type="hidden" name="plan_id" id="plan_id" value="">

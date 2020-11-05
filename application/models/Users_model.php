@@ -390,6 +390,10 @@ class Users_model extends MY_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    public function deleteUser($id){
+        $this->db->delete($this->table, array('id' => $id));
+    } 
 }
 
 

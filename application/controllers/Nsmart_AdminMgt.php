@@ -16,6 +16,9 @@ class Nsmart_AdminMgt extends MY_Controller {
 
         $this->load->model('Clients_model');
         $this->load->model('Users_model');	
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
 	}
 
 	public function subscribers() {
@@ -30,10 +33,16 @@ class Nsmart_AdminMgt extends MY_Controller {
 		$post = $this->input->post();
 
 		$sid = $post['sid'];
+		$cid = logged('company_id');
 
-		$subscriber = $this->Clients_model->getById($sid);
+		$subscriber   = $this->Clients_model->getById($sid);
+		$upgrades     = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
+		$industryType = $this->IndustryType_model->getById($subscriber->industry_type_id);
+		$templateModules = $this->IndustryTemplateModules_model->getAllByIndustryTemplateId($industryType->id);
 
+		$this->page_data['templateModules'] = $templateModules;
 		$this->page_data['subscriber'] = $subscriber;
+		$this->page_data['upgrades']   = $upgrades;
 		$this->load->view('admin_management/ajax_subscriber_details', $this->page_data);
 	}
 

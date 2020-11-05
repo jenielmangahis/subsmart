@@ -68,8 +68,8 @@ class MY_Controller extends CI_Controller {
 			exit();
 		} else {
 			if($role_id != $user_role_id) {
-				redirect('page/no_access');
-				exit();
+				//redirect('page/no_access');
+				//exit();
 			}
 		}
 

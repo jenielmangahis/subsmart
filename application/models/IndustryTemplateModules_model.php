@@ -96,6 +96,16 @@ class IndustryTemplateModules_model extends MY_Model
         return $this->status_inactive;
     }
 
+    public function getAllByIndustryTemplateId( $id )
+    {
+        $this->db->select('industry_template_modules.*,industry_modules.name AS industry_module_name,industry_modules.description AS industry_module_description');
+        $this->db->from($this->table);
+        $this->db->join('industry_modules', 'industry_template_modules.industry_module_id = industry_modules.id', 'left');
+        $this->db->where('industry_template_id', $id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file IndustryTemplateModules_model.php */
