@@ -52,8 +52,6 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByUserId();
         }
 
-        $upcoming_events = $this->event_model->getAllUpComingEvents();
-
         $this->page_data['events'] = array();
 
         // setting of the calender
@@ -334,7 +332,6 @@ class Workcalender extends MY_Controller
         $this->page_data['users'] = $this->user_model->getUsers();
 
         $this->page_data['calendar_list'] = $calendar_list;
-        $this->page_data['upcoming_events'] = $upcoming_events;
 
         $this->load->view('workcalender/calender', $this->page_data);
     }
@@ -1362,6 +1359,15 @@ class Workcalender extends MY_Controller
         echo "<pre>";
         print_r($resources_user_events);
         exit;
+    }
+
+    public function ajax_load_upcoming_events(){
+        $this->load->model('Event_model', 'event_model');
+
+        $upcoming_events = $this->event_model->getAllUpComingEvents();
+
+        $this->page_data['upcoming_events'] = $upcoming_events;
+        $this->load->view('workcalender/ajax_load_upcoming_events', $this->page_data);
     }
 }
 
