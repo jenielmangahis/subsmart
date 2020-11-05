@@ -16,9 +16,7 @@ class Customer extends MY_Controller
     public function __construct()
 
     {
-
         parent::__construct();
-
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
         $this->load->model('Customer_model', 'customer_model');
@@ -61,7 +59,7 @@ class Customer extends MY_Controller
            // 'assets/frontend/js/creditcard.js',
            // 'assets/frontend/js/customer/add.js',
         ));
-        //error_reporting(1);
+        error_reporting(1);
     }
 
     public function leads()

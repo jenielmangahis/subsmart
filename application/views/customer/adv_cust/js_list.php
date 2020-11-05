@@ -533,6 +533,7 @@
         //     insertHere.parentNode.insertBefore(newFields,insertHere);
         // }
     });
+
     $('#dataTable1').DataTable({
         columnDefs: [{
             orderable: true,
@@ -564,6 +565,62 @@
                 alert('Unable to change Status ! Try Again');
             }
         })
+    }
+
+    function handleClick(myRadio) {
+        if( $('input:checkbox.bureau_checkbox:checked').length < 1){
+            warning("Please select at least one Credit Bureau");
+        }else{
+            if(myRadio.value === 'same'){
+                document.getElementById('same_all_details').style.display = "block";
+                document.getElementById('different_details').style.display = "none";
+            }else{
+                document.getElementById('same_all_details').style.display = "none";
+                document.getElementById('different_details').style.display = "block";
+            }
+
+            document.getElementById('equifax_details').style.display = "none";
+            document.getElementById('equifax_details_same').style.display = "none";
+            document.getElementById('experian_details').style.display = "none";
+            document.getElementById('experian_details_same').style.display = "none";
+            document.getElementById('transunion_details').style.display = "none";
+            document.getElementById('transunion_details_same').style.display = "none";
+
+            $(".bureau_checkbox:checked").each(function(){
+                if($(this).val() === "1"){
+                    document.getElementById('equifax_details').style.display = "block";
+                    document.getElementById('equifax_details_same').style.display = "inline-block";
+                }else if($(this).val() === "2"){
+                    document.getElementById('experian_details').style.display = "block";
+                    document.getElementById('experian_details_same').style.display = "inline-block";
+                }else if($(this).val() === "3"){
+                    document.getElementById('transunion_details').style.display = "block";
+                    document.getElementById('transunion_details_same').style.display = "inline-block";
+                }
+                //alert( $(this).val());
+            });
+        }
+       // alert($('input:checkbox.bureau_checkbox:checked').length);
+        //alert(myRadio.value);
+    }
+
+    $(".bureau_checkbox").change(function(){
+        //var checkedValue = document.querySelector('.bureau_checkbox:checked').value;
+        console.log($(this).val());
+    });
+
+    function warning(information){
+        Swal.fire({
+            title: 'Warning!',
+            text: information,
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+
+        });
     }
 
 </script>

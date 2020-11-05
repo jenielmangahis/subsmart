@@ -94,7 +94,7 @@
                       </thead>
                       <tbody>
                         <?php foreach($categories as $category){ ?>
-                          <tr>
+                          <tr class="trac360_row" card="groups">
                             <td class="d-none"><?php echo $category->id; ?></td>
                             <td style="width: 30%"><?php echo $category->category_name; ?></td>
                             <td style="width: 50%"><?php echo $category->category_desc; ?></td>
@@ -109,7 +109,7 @@
                 </div>
                 <div class="tab-pane container trac360_entry fade" id="people_entry" title="People Form" prev_tab="">
                   <div class="row mt-4">
-                    <div class="col-md-7 form-group">
+                    <div class="col-md-11 form-group">
                       <label for="trac360_people_entry_categories"><strong>Group</strong><small> Select group to add user</small></label>
                       <select class="form-control" name="trac360_people_entry_categories" id="trac360_people_entry_categories">
                         <option value="">Select Group</option>
@@ -120,7 +120,12 @@
                       <?php } ?>
                       </select>
                     </div>
-                    <div class="col-md-5 form-group">
+                    <div class="col-md-1 form-group">
+                      <label style="color: transparent;">-</label>
+                      <a href="#" class="btn btn-sm btn-default pull-right ml-1" id="trac360_people_entry_refresh" title="Refresh Groups And Users">
+                        <i class="fa fa-refresh" id="trac360_people_entry_refresh_icon"></i></a>   
+                    </div>
+                    <div class="col-md-11 form-group">
                       <label for="trac360_people_entry_users"><strong>User</strong><small> Select user to trace</small></label>
                       <select class="form-control" name="trac360_people_entry_users" id="trac360_people_entry_users">
                         <option value="">Select User</option>
@@ -130,6 +135,8 @@
                           <option value="<?php echo $user->id; ?>"><?php echo $user->FName . ' ' . $user->LName; ?></option>
                       <?php } ?>
                       </select>
+                    </div>
+                    <div class="col-md-1 form-group">
                     </div>
                     <div class="col-md-6">
                       <label for="trac360_people_entry_latitude"><strong>Latitude</strong><small> Initial latitude position</small></label>
@@ -194,7 +201,7 @@
     initialAllLoadStateDone = false;
     initialMapCenter = null;
 
-    groups = {};
+    groups = new Array();
     tracking = {};
     requests = {};
 
@@ -223,6 +230,7 @@
 
       $(entry).removeClass('fade');
       $(entry).addClass('active');
+      $(entry).attr("prev_tab",tab.attr("id"));
     
       button.attr("prev_tab",tab.attr("id"));
       button.removeClass('d-none');
@@ -243,6 +251,13 @@
           current_data = row;
 
           showAlert('confirm','Are you sure you want to stop tracking <strong>' + vName + '</strong>?','Confirm Stop Tracking');
+        } else if(table_type == "groups"){
+          var vName = row.children('td:eq(1)').text();
+
+          current_process = 'delete_group';
+          current_data = row;
+
+          showAlert('confirm','Are you sure you want to delete <strong>' + vName + '</strong> group?','Confirm Delete Group');
         }
       } else {
         showAlert('info','No record selected','Delete Record');
@@ -267,6 +282,7 @@
 
       tab.removeClass('active');
       tab.addClass('fade');
+      tab.attr("prev_tab","");
 
       $(prev_tab).removeClass('fade');
       $(prev_tab).addClass('active');
@@ -306,7 +322,9 @@
               markers_map.splice(vIdx, 1);
               current_data.remove();
 
-              showAlert('success','Person successfully added to tracking list','Successful');  
+              showAlert('success','Person successfully removed from the tracking list','Successful');  
+            } else {
+
             }
           },
           error: function(jqXHR, textStatus, errorThrown){
@@ -316,11 +334,81 @@
             current_data = null;
           } 
         }); 
+      } else if(current_process == 'delete_group'){
+        var groups_id = current_data.children('td:eq(0)').text();
+
+        if(false){
+          $.ajax({
+            type: 'POST',
+            url: base_url + "trac360/deletegroup",
+            data: {group_id:group_id},
+            beforeSend(){
+              hideAlert();
+            },
+            success: function(data){
+              var result = jQuery.parseJSON(data);
+
+              if((result.error == "") || (result.error == null)){
+                
+                current_data.remove();
+
+                showAlert('success','Person successfully removed from the tracking list','Successful');  
+              } else {
+                showAlert('error',result.error,'Error');
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+              showAlert('error',errorThrown,'Error ' + textStatus);  
+            },
+            complete: function(jqXHR, textStatus){
+              current_data = null;
+            } 
+          });
+        }
       }
     });
 
     $('#btn-modal-trac360-alert-ok,#btn-modal-trac360-alert-cancel').click(function(){
+      current_process = '';
+      current_data = null;
+
       hideAlert();
+    });
+
+    $('#trac360_people_entry_refresh').click(function(e){
+      e.preventDefault();
+
+      $.ajax({
+        type: 'GET',
+        url: base_url + "trac360/getusersgroups",
+        beforeSend: function(){
+          $('#trac360_people_entry_refresh_icon').addClass('fa-spin');
+        },
+        success: function(data){
+          var result = jQuery.parseJSON(data);
+
+          reloadGroupAndUserList(result);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          showAlert('error',errorThrown,'Error ' + textStatus);  
+        },
+        complete: function(jqXHR, textStatus){
+          $('#trac360_people_entry_refresh_icon').removeClass('fa-spin');  
+        }
+      });
+    });
+
+    $('#trac360_groups_table > tbody > tr > td').click(function(){
+      var row = $(this).parent('tr');
+      if(!row.hasClass('table-primary')){
+        if($('tr.table-primary').length){
+          $('tr.table-primary').removeClass('table-primary');
+        }
+
+        row.addClass('table-primary');
+      } else {
+        row.removeClass('table-primary');
+      }
     });
 // ----------------------------------------------------------------------------------
 
@@ -349,6 +437,7 @@
 
       groups_tab.removeClass('fade');
       groups_tab.addClass('active');
+      groups_tab.attr("prev_tab", tab.attr("id"));
 
       button.attr("prev_tab",tab.attr("id"));
       button.removeClass('d-none');
@@ -394,7 +483,40 @@
         });  
       }
     } else if(vEntry == 'groups_entry'){
-      
+      var group_name = $('#trac360_group_entry_name').val();
+      var group_desc = $('#trac360_group_entry_desc').val();
+      var group_tag = $('#trac360_group_entry_tag').val();
+
+      if(group_name == ""){
+        showAlert('info','Please enter group name','Group Entry');  
+      } else if(group_desc == ""){
+        showAlert('info','Please enter group description','Group Entry');  
+      } else if(group_tag == ""){
+        showAlert('info','Please enter group record tag','Group Entry');
+      } else {
+        $.ajax({
+          type: 'POST',
+          url: base_url + "trac360/addnewgroup",
+          data: {category_name:group_name,category_desc:group_desc,category_tag:group_tag},
+          success: function(data){
+            var result = jQuery.parseJSON(data);
+
+            if((result.error == "") || (result.error == null)){
+              reloadGroupAndUserList(result);
+              clearGroupEntries();
+
+              $('#prev_tab').click();
+
+              showAlert('success','Group successfully created','Successful');
+            } else {
+              showAlert('error',result.error,'Error');  
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            showAlert('error',errorThrown,'Error ' + textStatus);  
+          }
+        });
+      }
     }  
   }
 // ----------------------------------------------------------------------------------
@@ -429,6 +551,51 @@
     }
 
     $('#cur_tab_title').text($('#' + vCurTab).attr("title"));
+  }
+
+  function reloadGroupAndUserList(vGroupsAndUsers){
+    var groups = vGroupsAndUsers.groups;
+    var users = vGroupsAndUsers.users;
+
+    $('#trac360_groups_table > tbody').empty();
+    $('#trac360_people_entry_categories').empty();
+    $('#trac360_people_entry_users').empty();
+
+    var categories_list = '';
+    var categories_append = '<option value="">Select Group</option>';
+    var users_append = '<option value="">Select User</option>';
+
+    $.each(groups, function(index, group){
+      categories_append += '<option value="'+ group.id +'" catdesc="'+ group.category_desc +'">' + group.category_name + '</option>';
+
+      categories_list += '<tr class="trac360_row" card="groups">';
+      categories_list += '<td class="d-none">' + group.id + '</td>';
+      categories_list += '<td style="width: 30%">' + group.category_name + '</td>';
+      categories_list += '<td style="width: 50%">' + group.category_desc + '</td>';
+      categories_list += '<td style="width: 20%">' + group.category_tag + '</td>';
+      categories_list += '</tr>';
+    });
+
+    $.each(users, function(index, user){
+      users_append += '<option value="'+ user.user_id +'">' + user.FName + ' ' + user.LName + '</option>';
+    }); 
+
+    $('#trac360_groups_table > tbody').append(categories_list);
+    $('#trac360_people_entry_categories').append(categories_append);
+    $('#trac360_people_entry_users').append(users_append); 
+
+    $('#trac360_groups_table > tbody > tr > td').click(function(){
+      var row = $(this).parent('tr');
+      if(!row.hasClass('table-primary')){
+        if($('tr.table-primary').length){
+          $('tr.table-primary').removeClass('table-primary');
+        }
+
+        row.addClass('table-primary');
+      } else {
+        row.removeClass('table-primary');
+      }
+    });    
   }
 // ----------------------------------------------------------------------------------
 
@@ -634,7 +801,7 @@
                   requests[member.idx]['visible'] = false;
                 });  
 
-                $("#trac360_table_"+ cur_catid + " > tbody").children('tr.table-primary').removeClass('table-primary');  
+                $('tr.table-primary').removeClass('table-primary');  
               });
             }  
           });
