@@ -625,6 +625,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <?php include viewPath('customer/adv_cust/css_list'); ?>
 <?php include viewPath('customer/adv_cust/js_list'); ?>
+
 <style>
     #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
     #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
