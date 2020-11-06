@@ -362,13 +362,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
 
                                                 <div class="tab-pane <?php if($minitab=='mt6'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="educate">
-                                                    <div class="card">
-                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                            <div class="col-lg-12">
-                                                                <h6>Educate</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <?php
+                                                        include viewPath('customer/adv_cust_modules/settings_educate');
+                                                    ?>
                                                 </div>
 
                                                 <div class="tab-pane <?php if($minitab=='mt7'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="messages">
@@ -382,13 +378,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
 
                                                 <div class="tab-pane <?php if($minitab=='mt8'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="notes">
-                                                    <div class="card">
-                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                            <div class="col-lg-12">
-                                                                <h6>Internal Notes</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <?php
+                                                        include viewPath('customer/adv_cust_modules/settings_notes');
+                                                    ?>
                                                 </div>
 
                                                 <div class="tab-pane <?php if($minitab=='mt9'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="invoices">

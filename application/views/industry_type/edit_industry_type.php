@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title"><i class="fa fa-pencil"></i> Edit Template</h1>
+                        <h1 class="page-title"><i class="fa fa-pencil"></i> Edit Industry Type</h1>
                     </div>
                 </div>
             </div>

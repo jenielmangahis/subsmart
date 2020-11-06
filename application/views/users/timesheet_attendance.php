@@ -267,6 +267,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .employeeLeaveBtn:hover + .employeeLeaveTooltip{
         visibility: visible;
     }
+    /*input tags*/
+    .bootstrap-tagsinput .tag{
+        border-radius: 3px;
+        background: grey;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -930,7 +935,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!--Leave request modal-->
 <div class="modal fade" id="leaveRequestModal">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" style="border-radius: 0">
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Request Leave</h4>
@@ -946,17 +951,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </select>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
-                            <label for="startDateLeave">Start Date</label>
-                            <input type="text" name="start" class="form-control" id="startDateLeave">
-                        </div>
-                    </div>
-<!--                    <div class="col-md-2"></div>-->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="endDateLeave">End Date</label>
-                            <input type="text" name="end" class="form-control" id="endDateLeave" disabled>
+                            <label for="startDateLeave">Leave date</label>
+                            <input type="text" name="leave_date" class="form-control" id="startDateLeave" data-role="tagsinput">
                         </div>
                     </div>
                 </div>
@@ -994,9 +992,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         return datetime;
     }
     $(document).ready(function () {
+
         //Date picker
-        $("#startDateLeave").datepicker();
-        $("#endDateLeave").datepicker();
+        $(".bootstrap-tagsinput > input").datepicker();
 
         // In/Out Counter
         let out_log = $('#outCounter').val();
@@ -1315,6 +1313,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Employee leave
         $(document).on('click','#btn-leave-emp',function () {
             $('#leaveRequestModal').modal({backdrop: 'static', keyboard: false});
+            $('.bootstrap-tagsinput').children('span').remove();
         });
         //PTO list
         $('#leaveSelectList').select2({
@@ -1342,11 +1341,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         //Employee request for leave
         $(document).on('click','#submitLeaveRequest',function () {
-            //
             let values = {};
             $.each($('#leaveRequestForm').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
+            let date = values['leave_date'];
+            let array = date.split(',');
+
             Swal.fire({
                 title: 'Requesting leave',
                 html: "Are you sure you want this request?",
@@ -1357,23 +1358,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.value) {
-                    // $.ajax({
-                    //     url:'/timesheet/employeeRequestLeave',
-                    //     method:"POST",
-                    //     dataType:"json",
-                    //     data:{values:values},
-                    //     success:function (data) {
-                    //         if (data == 1){
-                    //             $('#leaveRequestModal').modal('hide');
-                    //         }
-                    //     }
-                    // });
+                    $.ajax({
+                        url:'/timesheet/employeeRequestLeave',
+                        method:"POST",
+                        dataType:"json",
+                        data:{values:values,array:array},
+                        success:function (data) {
+                            console.log(array);
+                            if (data == 1){
+                                $('#leaveRequestModal').modal('hide');
+                            }
+                        }
+                    });
                 }
             });
-        });
-        //Prevent the end date to be less than the end date
-        $(document).on('change','#startDateLeave',function () {
-            $('#endDateLeave').attr('disabled',false);
         });
     });
 

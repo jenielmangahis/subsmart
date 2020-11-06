@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php echo form_open_multipart('industry_modules/update_module', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                           <input type="hidden" name="module_id" value="<?= $industryModules->id; ?>">
                           <div class="form-group">
-                              <label>Name</label> <span class="form-required">*</span>
+                              <label>Module Name</label> <span class="form-required">*</span>
                               <input type="text" name="name" value="<?= $industryModules->name; ?>" class="form-control" required="" autocomplete="off" />
                           </div>
                           <div class="form-group">

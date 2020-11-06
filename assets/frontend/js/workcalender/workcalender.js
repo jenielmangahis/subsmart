@@ -179,7 +179,9 @@ $(document).ready(function() {
 
                         $(saveButton).attr('disabled', false);
                     }
-                });                
+                }); 
+                
+                load_upcoming_events();               
             },
             error: function(er) {
               
@@ -189,6 +191,21 @@ $(document).ready(function() {
             }
         });
     });
+
+    function load_upcoming_events(){
+      var url = base_url + '/calendar/_load_upcoming_events';
+       $("#upcoming-events-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Upcoming Events...</div>');
+
+      $.ajax({
+         type: "POST",
+         url: url,
+         data: {},
+         success: function(o)
+         {
+            $("#upcoming-events-container").html(o);      
+         }
+      });
+    }
 
 
     // delete schedule

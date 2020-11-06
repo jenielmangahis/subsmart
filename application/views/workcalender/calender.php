@@ -90,7 +90,7 @@ a.top-1 {
     margin: 5px;
     padding: 10px;
 }
-.right-filter-header{
+.right-filter-header, .left-header{
     font-size: 16px;
     text-align: left;
     background-color: #76828E;
@@ -439,37 +439,9 @@ a.top-1 {
 
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
-
                                       <div class="margin-bottom">
-                                          <div class="bold margin-bottom">Upcoming Events</div>
-                                          <div data-calendar="upcoming-events">
-                                              <?php if ( !empty($upcoming_events) ) { ?>
-                                                <?php foreach($upcoming_events as $upcoming_event) { ?>
-                                                  <div class="cue-event" data-calendar="view-event" data-calendar-event-id="<?php echo $upcoming_event->id; ?>">
-                                                      <span class="cue-date">
-                                                          <?php 
-                                                            $month = date('m', strtotime($upcoming_event->start_date));
-                                                            $day  = date('d', strtotime($upcoming_event->start_date));
-                                                            $year  = date('Y', strtotime($upcoming_event->start_date));
-                                                            $start_time = $upcoming_event->start_time;
-                                                            $end_time = $upcoming_event->end_time;
-                                                          ?>
-                                                          <span class="cue-day"><?php echo $day; ?></span>
-                                                          <span><?php echo $month; ?> <?php echo $year; ?></span>
-                                                      </span>
-                                                      <div class="cue-event-name">
-                                                          <?php echo get_customer_by_id($upcoming_event->customer_id)->contact_name; ?>
-                                                      </div> 
-                                                      <div class="cue-event-time text-ter">
-                                                          <?php echo $start_time; ?> - <?php echo $end_time; ?>
-                                                      </div>  
-                                                  </div>     
-                                                  <hr /> 
-                                                <?php } ?>
-                                              <?php }else{ ?>
-                                                      <div class="cue-event-name">NO UPCOMING EVENTS</div>
-                                              <?php } ?>
-                                          </div>
+                                          <div class="margin-bottom"><h3 class="left-header">Upcoming Events</h3></div>
+                                          <div id="upcoming-events-container"></div>
                                           
                                       </div>
                                   </div>
@@ -1300,7 +1272,7 @@ a.top-1 {
           },
           loading: function (isLoading) {
             if (isLoading) {
-                $(".right-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading Events...</div>');
+                $(".right-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Events...</div>');
             }
             else {
                 $(".right-calendar-loading").html('');
@@ -1398,5 +1370,22 @@ a.top-1 {
           templateResult: formatRepoUser,
           templateSelection: formatRepoSelectionUser
     });
+
+    load_upcoming_events();
+
+    function load_upcoming_events(){
+      var url = base_url + '/calendar/_load_upcoming_events';
+       $("#upcoming-events-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Upcoming Events...</div>');
+
+      $.ajax({
+         type: "POST",
+         url: url,
+         data: {},
+         success: function(o)
+         {
+            $("#upcoming-events-container").html(o);      
+         }
+      });
+    }
 
 </script>

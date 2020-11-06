@@ -574,7 +574,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="card" id="same_all_details" style="display: none;">
                                     <div class="card-body">
                                         <div class="col-md-12">

@@ -24,6 +24,7 @@ class Timesheet extends MY_Controller {
             "assets/css/timesheet.css",
             "assets/plugins/dropzone/dist/dropzone.css",
             "assets/plugins/country-picker-flags/build/css/countrySelect.css",
+            "assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css",
 //            "https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.dataTables.min.css"
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css",
         ));
@@ -33,6 +34,7 @@ class Timesheet extends MY_Controller {
             "assets/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.js",
             "assets/plugins/country-picker-flags/build/js/countrySelect.js",
             "assets/plugins/timezone-picker/dist/timezones.full.js",
+            "assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js",
 //            "https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js",
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
@@ -1549,13 +1551,12 @@ class Timesheet extends MY_Controller {
     //Employee requesting for leave
     public function employeeRequestLeave(){
         $pto = $this->input->post('values[pto]');
-        $start = $this->input->post('values[start]');
-        $end = $this->input->post('values[end]');
-        $query = $this->timesheet_model->employeeRequestLeave($pto,$start,$end);
+        $date = $this->input->post('array');
+        $query = $this->timesheet_model->employeeRequestLeave($pto,$date);
         if ($query == true){
-
+            echo json_encode(1);
         }else{
-
+            echo json_encode(0);
         }
 
     }
@@ -1854,19 +1855,21 @@ class Timesheet extends MY_Controller {
         //Load email library
         $this->load->library('email');
         $config = array(
+            'smtp_crypto'   => 'ssl',
             'protocol' => 'smtp',
-            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_host' => 'mail.nsmartrac.com',
             'smtp_port' => 465,
-            'smtp_user' => 'nsmartrac@gmail.com',
-            'smtp_pass' => 'nSmarTrac2020',
+            'smtp_user' => 'no-reply@nsmartrac.com',
+            'smtp_pass' => 'g0[05_rEa3?%',
             'mailtype'  => 'html',
             'charset'   => 'utf-8',
         );
         $this->email->initialize($config);
         $this->email->set_newline("\r\n");
 
-        $this->email->from('aic.jerry.cantrell@gmail.com','nSmartrac');
-        $this->email->to('support@nsmartrac.com','meggiechawn@gmail.com');
+        $this->email->from('no-reply@nsmartrac.com','nSmartrac');
+//        $this->email->to('support@nsmartrac.com');
+        $this->email->to('rarecandy05@gmail.com');
         $this->email->subject('Timesheet Weekly Report');
         $message = $this->load->view('users/email_template',$page,TRUE);
         $this->email->message($message);
@@ -1980,10 +1983,16 @@ class Timesheet extends MY_Controller {
 
     }
 
-    public function notificationSchedule(){
-
+    //Invite link page
+    public function invite_link(){
+        $user_id = logged('id');
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->load->view('users/timesheet_invite_link', $this->page_data);
     }
-//    Email Report for Timesheet
+
+//    Email Report for Timesheet test page
     public function email(){
 	    $page = array(
 	        'last_week' => $this->timesheet_model->getLastWeekTotalDuration()

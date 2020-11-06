@@ -547,8 +547,30 @@ class Timesheet_model extends MY_Model {
         }
     }
     //Employee requesting leave
-    public function employeeRequestLeave($pto,$start,$end){
-
+    public function employeeRequestLeave($pto,$date){
+        $user_id = $this->session->userdata('logged')['id'];
+        $query = $this->db->get_where('timesheet_leave',array('user_id' => $user_id));
+        if ($query->num_rows() == 0){
+            $insert = array(
+                'pto_id' => $pto,
+                'user_id' => $user_id,
+                'status' => 0
+            );
+            $this->db->insert('timesheet_leave',$insert);
+            $leave_id = $this->db->insert_id();
+            //Inserting the dates
+            for ($x = 0;$x < count($date);$x++){
+                $data[] = array(
+                    'leave_id' => $leave_id,
+                    'date' => date('Y-m-d',strtotime($date[$x]))
+                );
+            }
+            $this->db->insert_batch('timesheet_leave_date',$data);
+            $return = true;
+        }else{
+            $return = false;
+        }
+        return $return;
     }
 
 }

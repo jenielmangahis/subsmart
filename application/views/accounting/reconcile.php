@@ -749,8 +749,14 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
      
         <div class="save-act" style="position: unset !important;">
             <button type="button" class="btn-cmn" onclick="closeFullNav_int()">Cancel</button>
-            <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
-            <a href="#" style="margin-left: 5%" onclick="OpenRecurr()">Make Recurring</a>
+            <a style="margin-left: 30%" class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Print </a>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick="Int_printboth()">Print Deposit Slip & Summary</a>
+                </li>
+                <li><a href="#" onclick="Int_printonly()">Print Summary only</a>
+                </li>
+            </ul>
+            <a href="#" style="margin-left: 5%" onclick="OpenRecurrInt()">Make Recurring</a>
             <button type="button" onclick="save_close_edit_int(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
     </div>
@@ -5098,4 +5104,24 @@ function closeAddaccount()
                     showData();
                 }, 100); 
     });
+</script>
+<script type="text/javascript">
+    window.print_this = function(id) {
+    var prtContent = document.getElementById(id);
+    var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+    
+    //WinPrint.document.write('<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">');
+    
+    // To keep styling
+    /*var file = WinPrint.document.createElement("link");
+    file.setAttribute("rel", "stylesheet");
+    file.setAttribute("type", "text/css");
+    file.setAttribute("href", 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+    WinPrint.document.head.appendChild(file);*/
+
+    
+    WinPrint.document.write(prtContent.innerHTML);
+    WinPrint.document.close();
+    WinPrint.print();
+}
 </script>
