@@ -238,7 +238,7 @@
                         $overtime_status = 1;
                         foreach ($attendances as $attn){
                             $attn_id = $attn->id;
-                            $overtime_status = $attn->overtime_status;
+                            $overtime_status =  1;
                             foreach ($ts_logs_h as $log){
                                 if ($log->attendance_id == $attn->id && $attn->status == 1){
                                     if ($log->action == 'Check in'){
@@ -309,7 +309,7 @@
                                     if ($setting->timezone == null){
                                         $tz = date_default_timezone_get();
                                     }else{
-                                        $tz = $setting->timezone;
+                                        $tz = /* $setting->timezone */ 'America/Chicago';
                                     }
                                     $timestamp = time();
                                     $dt = new DateTime("now", new DateTimeZone($tz));

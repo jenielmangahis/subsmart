@@ -54,6 +54,7 @@ class FormsBuilder_model extends MY_Model {
 			$query =  $this->db->get($this->elements_table);
 			return $query->result();
 		}
+		$this->db->order_by('fe_order', 'ASC');
 		$query =  $this->db->get($this->elements_table);
 		return $query->result();
 	}
@@ -67,8 +68,41 @@ class FormsBuilder_model extends MY_Model {
 	}
 
 	public function updateFormElement($element_id, $data){
-		$this->db->where('fe_id', $element_id);
-		$query = $this->db->update($this->elements_table, $data);
+		if(isset($data['sort_update'])){
+			$updateData = $data['elements_collection'];
+			$this->db->update_batch($this->elements_table, $updateData, 'fe_id');
+			// $this->db->set('fe_order', $data['new_index'], FALSE);
+			// $this->db->where('fe_id', $element_id);
+			// $this->db->update($this->elements_table);
+
+			// $this->db->where('fe_form_id', $data['fe_form_id']);
+			// $this->db->where('fe_id !=', $element_id);
+			// if($data['update_method'] === 'move_down') {
+			// 	$this->db->where('fe_order <=', $data['old_index']);
+			// 	$this->db->where('fe_order >=', $data['new_index']);
+			// 	$this->db->set('fe_order', '`fe_order` + 1', FALSE);
+			// 	$this->db->update($this->elements_table);
+			// } else {
+			// 	$this->db->where('fe_order <=', $data['new_index']);
+			// 	$this->db->where('fe_order >=', $data['old_index']);
+			// 	$this->db->set('fe_order', '`fe_order` - 1', FALSE);
+			// 	$this->db->update($this->elements_table);
+			// }
+			// $elements = $this->db->get($this->elements_table)->result();
+			// foreach ($elements as $key => $el) {
+			// 	$this->db->where('fe_id', $el->fe_id);
+			// 	if($data['update_method'] === 'move_down') {
+			// 		$this->db->set('fe_order', '`fe_order` - 1', FALSE);
+			// 	} else {
+			// 		$this->db->set('fe_order', '`fe_order` + 1', FALSE);
+			// 	}
+			// 	$this->db->update($this->elements_table);
+			// }
+
+		} else {
+			$this->db->where('fe_id', $element_id);
+			$query = $this->db->update($this->elements_table, $data);
+		}
 		return array(
 			"status" => 1
 		);

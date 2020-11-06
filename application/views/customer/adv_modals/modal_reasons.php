@@ -33,17 +33,17 @@
                 </thead>
                 <tbody>
                 <?php foreach ($reasons as $reason) : ?>
-                <tr>
-                    <td><?= $reason->reason; ?></td>
-                    <td>
-                        <a href="" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                            <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
-                        </a>
-                        <a href="javascript:void(0);" id="" class="delete_lead" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                            <img src="/assets/img/customer/actions/cross.png" width="16px" height="16px" border="0" title="Delete Lead">
-                        </a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td><?= $reason->reason; ?></td>
+                        <td>
+                            <a href="" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
+                            </a>
+                            <a href="javascript:void(0);" id="" class="delete_lead" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                <img src="/assets/img/customer/actions/cross.png" width="16px" alt="Delete" height="16px" border="0" title="Delete Lead">
+                            </a>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
                 </tbody>
             </table>

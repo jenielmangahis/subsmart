@@ -541,7 +541,7 @@ class Survey_model extends MY_Model {
 	// logic jumps
 	public function getSurveyLogics($survey_id){
 		$this->db->select('*');
-		$this->db->where('si_survey_id', $survey_id);
+		$this->db->where('sl_survey_id', $survey_id);
 		$query = $this->db->get('survey_logic');
 		return $query->result();
 		

@@ -25,6 +25,14 @@
             "order": [],
         });
 
+        var table_notes =$('#internal_notes_table').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 20,
+            "info": false,
+            "order": [],
+        });
+
         var table_quick_list =$('#customer_list_quick').DataTable({
             "lengthChange": false,
             "searching" : false,

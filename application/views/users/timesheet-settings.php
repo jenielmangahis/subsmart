@@ -414,6 +414,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #leaveTableList tbody tr input.form-control{
         height: 36px!important;
     }
+    /*Invite email input css*/
+    .invite-email{
+        border-right: 0;
+        border-left: 0;
+        border-top: 0;
+    }
+    .remove-email-icon{
+        position: absolute;
+        bottom: 2px;
+        right: 15px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        visibility: hidden;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -455,10 +470,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a class="nav-link" data-toggle="tab" href="#empSchedule">Schedule</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#empPTO">PTO</a>
+                                            <a class="nav-link" data-toggle="tab" href="#empPTO">PTO</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#empInvite">Invite Link</a>
+                                            <a class="nav-link active" data-toggle="tab" href="#empInvite">Invite Link</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#empSettings">Settings</a>
@@ -508,7 +523,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container active" id="empPTO">
+                                        <div class="tab-pane container fade" id="empPTO">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <button class="btn btn-info" id="leaveList" style="float: right"><i class="fa fa-plus"></i> Add Leave Type</button>
@@ -535,8 +550,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <td class="center">Oct 29,2020</td>
                                                                 <td class="center">Pending</td>
                                                                 <td class="center" style="border-right: 0;">
-                                                                    <a href="javascript:void (0)" title="Approve" data-toggle="tooltip" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
-                                                                    <a href="javascript:void (0)" title="Decline" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                                                                    <a href="javascript:void (0)" title="Approve" data-toggle="tooltip" id="approveRequest" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
+                                                                    <a href="javascript:void (0)" title="Deny" data-toggle="tooltip" id="denyRequest" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -547,7 +562,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <td class="center">Pending</td>
                                                                 <td class="center" style="border-right: 0;">
                                                                     <a href="javascript:void (0)" title="Approve" data-toggle="tooltip" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
-                                                                    <a href="javascript:void (0)" title="Decline" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                                                                    <a href="javascript:void (0)" title="Deny" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -555,23 +570,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container fade" id="empInvite">
+                                        <div class="tab-pane container active" id="empInvite">
+                                            <form action="" method="post" id="formInviteLink">
                                             <div class="form-group">
                                                 <label for="" style="font-weight: bold">TYPE AN EMAIL ADDRESS TO INVITE</label>
-                                                <input type="email" class="form-control">
+                                                <input type="email" class="form-control invite-email" placeholder="sample@mail.com">
+                                                <a href="javascript:void(0)" title="Clear" id="clearEmailField"><i class="fa fa-times fa-lg remove-email-icon"></i></a>
                                             </div>
+                                            </form>
                                             <div class="form-group">
-                                                <i class="fas fa-link"></i> <span>Create an invite link</span>
+                                                <i class="fas fa-link"></i> <span style="font-size: 16px;font-weight: bold">Create an invite link</span>
                                             </div>
                                             <div class="form-group">
                                                 <p>Create an invite link to share with your team members so they can join your account.</p>
                                             </div>
                                             <div class="form-group">
-                                                <button class="btn btn-success" style="border-radius: 36px;width: 200px">SEND</button>
+                                                <button type="button" class="btn btn-success" style="border-radius: 36px;width: 200px" id="sendInviteLink">SEND</button>
                                             </div>
                                         </div>
                                         <div class="tab-pane container fade" id="empSettings">
-                                            3
+                                            <h4>Settings</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -738,6 +756,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#pto-table-list').DataTable({"paging":false});
         // PTO placeholder
         $('#pto-table-list_filter').children('label').children('input').attr('placeholder','Search...');
+        // PTO table approve and deny prompt
+        //Approve
+        $(document).on('click','#approveRequest',function () {
+            Swal.fire({
+                title: 'Approve?',
+                html: "Are you sure you want to approve this request?",
+                icon:"question",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Approve it!'
+            }).then((result) => {
+                if (result.value) {
+                    // $.ajax({
+                    //     url:'/timesheet/approveRequest',
+                    //     type:"POST",
+                    //     dataType:'json',
+                    //     data:{id:id},
+                    //     success:function (data) {
+                    //
+                    //     }
+                    // });
+                }
+            });
+        });
+        //Deny
+        $(document).on('click','#denyRequest',function () {
+            Swal.fire({
+                title: 'Deny?',
+                html: "Are you sure you want to deny this request?",
+                icon:"question",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Deny it!'
+            }).then((result) => {
+                if (result.value) {
+                    // $.ajax({
+                    //     url:'/timesheet/approveRequest',
+                    //     type:"POST",
+                    //     dataType:'json',
+                    //     data:{id:id},
+                    //     success:function (data) {
+                    //
+                    //     }
+                    // });
+                }
+            });
+        });
+
         // Leave list modal
         $(document).on('click','#leaveList',function () {
             $('#listLeaveType').modal({backdrop: 'static', keyboard: false});
@@ -877,6 +945,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
             return list;
         }
+
+        // Invite link email field remove icon
+        $(document).on('change','.invite-email',function () {
+            if($(this).val() != ''){
+                $('.remove-email-icon').css('visibility','visible');
+            }else{
+                $('.remove-email-icon').css('visibility','hidden');
+            }
+        });
+        $(document).on('click','#clearEmailField',function () {
+            $(this).prev('input').val(null);
+            $(this).children('i').css('visibility','hidden');
+        });
 
         //Select2 employee list
         $('.select2-employee-list').select2({

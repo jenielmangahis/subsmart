@@ -14,17 +14,17 @@ class FormBuilder extends MY_Controller {
 		$this->load->model('FormsBuilder_model', 'formsbuilder_model');
 
 		add_css(array(
-			'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
-			'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-minima.css',
-			'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css',
-			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css'
+			'assets/formbuilder/css/toastr.min.css',
+			'assets/formbuilder/css/jssocials-theme-minima.css',
+			'assets/formbuilder/css/jssocials.css',
+			'assets/formbuilder/css/animate.min.css'
 		));
 
 		add_footer_js(array(
-			'https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js',
-			'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js',
-			'https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js',
-			'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js',
+			'assets/formbuilder/js/dragula.min.js',
+			'assets/formbuilder/js/toastr.min.js',
+			'assets/formbuilder/js/tribute.min.js',
+			'assets/formbuilder/js/bootstrap.min.js',
 			'assets/js/formbuilder.js'
 		));
 
@@ -147,7 +147,7 @@ class FormBuilder extends MY_Controller {
 		$data = array(
 			"status" => 1
 		);
-		echo json_encode($data);
+		echo json_encode($query);
 		exit;
 	}
 
