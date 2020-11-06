@@ -72,7 +72,25 @@ class MY_Controller extends CI_Controller {
 				//exit();
 			}
 		}
+	}
 
+	protected function isAllowedModuleAccess($module_id = 0){
+		$this->load->helper(array('user_helper'));
+
+		$role_id    = logged('role');
+		$is_allowed = true;
+		if( $role_id != 1 && $role_id != 2 ){
+			$is_allowed = validateUserAccessModule($module_id);
+
+			/*if( !$is_allowed ){
+				$this->session->set_flashdata('alert_class', 'danger');
+        		$this->session->set_flashdata('message', 'No access to module');
+
+        		redirect('dashboard');
+			}*/
+		}
+
+		return $is_allowed;
 	}
 }
 

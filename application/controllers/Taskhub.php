@@ -12,6 +12,13 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function index(){
+		$is_allowed = $this->isAllowedModuleAccess(6);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'taskhub';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		// $this->page_data['tasks'] = getTasks();
 		$this->page_data['tasks'] = [];
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
