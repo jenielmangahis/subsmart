@@ -1,3 +1,106 @@
+<style type="text/css">
+.left {
+  float: left !important;
+}
+span.help.help-sm.left {
+  margin-left: 4px;
+}
+input.form-control::placeholder {
+  color: #999;
+}
+span#select2-business-customer-container {
+  float: left;
+}
+select.gray-first option:first-child {
+  color: #999 !important;
+}
+select.gray-first option {
+  color: #000000;
+}
+table.table-condensed thead tr td {
+    border-radius: 0px !important;
+}
+table.table-condensed thead tr th {
+    border-radius: 0px !important;
+}
+th.dow {
+    border-radius: 0px !important;
+}
+table.table-condensed tbody tr td {
+  border-radius: 0px !important;
+}
+.mbc-1 {
+  margin-bottom: 0px !important;
+}
+.mbc-15 {
+  margin-bottom: 15px !important;
+}
+select.gray-first:invalid,
+select.gray-first option[value=""] {
+  color: #999999;
+}
+.modal-body {
+  padding: 40px 30px 10px 30px !important;
+}
+.calendar-modal-color-selector {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+input#datepicker_startdate {
+  position: relative;
+  bottom: 4.5px;
+}
+.input-group.date.datepicker.left {
+  border: 0px;
+}
+.checkbox.checkbox-sec {
+  float: right;
+}
+.spacing {
+  margin-top: 10px;
+  width: 100%;
+  display: block;
+  height: 20px;
+}
+.row.r-date {
+    position: relative;
+    right: 15px;
+}
+.spacing {
+  margin-top: 10px;
+  width: 100%;
+  display: block;
+  height: 20px;
+}
+@media only screen and (max-width: 800px) {
+  .modal-body {
+      padding: 20px 10px 20px 10px !important;
+  }
+  .col-md-6.col-sm-12 {
+      margin-bottom: 20px !important;
+  }
+  .col-md-12.col-sm-12 {
+      margin-bottom: 20px;
+  }
+  .form-group {
+      margin-bottom: 0px !important;
+      width: 100% !important;
+  }
+  label.left {
+      clear: both;
+      float: left;
+      width: auto;
+      display: block;
+      text-align: left;
+  }
+  .spacing {
+      margin-top: 0px;
+      width: 100%;
+      display: block;
+      height: 0px;
+  }
+}
+</style>
 <form name="calendar-event-modal-form" id="frm_create_event">
     <input name="type" type="hidden" value="1">
 
@@ -8,15 +111,15 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-6 col-sm-12">
-                <label>Customer1</label> <span class="form-required">*</span>
+                <label class="left">Customer1</label> <span class="form-required left">*</span>
                 <select name="customer_id" id="business-customer" class="form-control select2-hidden-accessible"
                         placeholder="Select customer" tabindex="-1" aria-hidden="true">
                 </select>
             </div>
             <div class="col-md-6 col-sm-12">
-                <label for="what_of_even">Type of Event</label>
-                <select name="what_of_even" id="what_of_even" class="form-control">
-                    <option>SELECT</option>
+                <label for="what_of_even" class="left">Type of Event</label>
+                <select name="what_of_even" id="what_of_even" class="form-control gray-first">
+                    <option value="">Select type of event</option>
                     <option value="Service">Service</option>
                     <option value="Service">Reasign</option>
                     <option value="Service">Install</option>
@@ -27,9 +130,9 @@
 
     <div class="form-group">
         <div class="row">
-            <div class="col-md-12 col-sm-24">
-                <label>Schedule Description</label> <span class="form-required">*</span> <span class="help help-sm">(write few words about this)</span>
-                <input type="text" name="description" value="<?php echo (!empty($event)) ? $event->description : '' ?>"
+            <div class="col-md-12 col-sm-12">
+                <label class="left">Schedule Description</label> <span class="form-required left">*</span><!-- &nbsp;<span class="help help-sm left">(write few words about this)</span> -->
+                <input placeholder="Write few words about this..." type="text" name="description" value="<?php echo (!empty($event)) ? $event->description : '' ?>"
                        class="form-control" autocomplete="off">
             </div>
         </div>
@@ -37,22 +140,104 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-6 col-sm-12">
-                <label>Assigned To</label> <span class="form-required">*</span> <span class="help help-sm">(who can see this event)</span>
+                <label class="left">Assigned To</label> <span class="form-required left">*</span>&nbsp;<span class="help help-sm left">(who can see this event)</span>
                 <select name="user_id[]" id="assign_users" class="form-control">
                     <option value="0" selected="selected">All employees</option>
                 </select>
             </div>
+            <div class="col-md-6 col-sm-12">
+                <label class="left">Customer Reminder Notification</label>
+                <select name="notify_at" class="form-control">
+                    <?php foreach (get_notification_details() as $key => $notification) { ?>
+                        <?php if ($event->notify_at == $key) { ?>
+                            <option value="<?php echo $key ?>" selected><?php echo $notification ?></option>
+                        <?php } else { ?>
+                            <option value="<?php echo $key ?>"><?php echo $notification ?></option>
+                        <?php } ?>
+                    <?php } ?>
+                    <option value="0">None</option>
+                </select>
+            </div>
         </div>
     </div>
+    <div class="spacing"></div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <label class="center">Select an event Color</label>
+                <br/>
+                <div class="calendar-modal-color-selector" data-calendar="color-selector">
 
+                    <?php if (!empty(get_config_item('event_colors'))) { ?>
+
+                        <?php foreach (get_config_item('event_colors') as $k => $color) { ?>
+
+                            <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $color ?>"
+                                  style="background:<?php echo $color ?>">
+                                <?php if (!empty($event)) { ?>
+
+                                    <?php if ($event->event_color == $color) { ?>
+
+                                        <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+
+                                    <?php } ?>
+
+                                <?php } else { ?>
+
+                                    <?php if ($k === 0) { ?>
+
+                                        <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+
+                                    <?php } ?>
+
+                                <?php } ?>
+                            </span>
+
+                        <?php } ?>
+
+                    <?php } ?>
+
+                    <!-- <span class="calendar-modal-color-sq" data-calendar-color-id="#4cb052" style="background:#4cb052">
+                        <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#d96666" style="background:#d96666">
+
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#e67399" style="background:#e67399">
+
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#b373b3" style="background:#b373b3">
+
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#8c66d9" style="background:#8c66d9">
+
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#668cd9" style="background:#668cd9">
+
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#59bfb3" style="background:#59bfb3">
+
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#65ad89" style="background:#65ad89">
+
+                    </span>
+                    <span class="calendar-modal-color-sq" data-calendar-color-id="#f2a640" style="background:#f2a640">
+
+                    </span> -->
+                </div>
+                <input name="event_color" type="hidden"
+                       value="<?php echo (!empty($event)) ? $event->event_color : get_config_item('event_colors')[0] ?>">
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-                <div class="row">
+            <div class="form-group mbc-1">
+                <div class="row r-date">
                     <div class="col-md-6 col-sm-12">
-                        <label>Start Date</label>
+                        <label class="left">Start Date</label>
                         <div class="form-group">
-                            <div class='input-group date datepicker'>
+                            <div class='input-group date datepicker left'>
                                 <input type='text'
                                        value="<?php echo (!empty($event)) ? date('m/d/Y', strtotime($event->start_date)) : '' ?>"
                                        name="start_date" class="form-control" id="datepicker_startdate"/>
@@ -63,8 +248,8 @@
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div data-calendar="time-start-container">
-                            <label>Start Time</label>
-                            <div class="form-group">
+                            <label class="left">Start Time</label>
+                            <div class="form-group left">
                                 <div class='input-group date timepicker'>
                                     <input type='text' value="<?php echo (!empty($event)) ? $event->start_time : '' ?>"
                                            name="start_time" class="form-control" id="datepicker_starttime"/>
@@ -76,11 +261,13 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="row">
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="form-group mbc-1">
+                <div class="row r-date">
                     <div class="col-md-6 col-sm-12">
-                        <label>End Date</label>
-                        <div class="form-group">
+                        <label class="left">End Date</label>
+                        <div class="form-group left">
                             <div class='input-group date timepicker'>
                                 <input type='text'
                                        value="<?php echo (!empty($event)) ? date('m/d/Y', strtotime($event->end_date)) : '' ?>"
@@ -92,8 +279,8 @@
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div data-calendar="time-end-container">
-                            <label>End Time</label>
-                            <div class="form-group">
+                            <label class="left">End Time</label>
+                            <div class="form-group left">
                                 <div class='input-group date timepicker'>
                                     <input type='text' value="<?php echo (!empty($event)) ? $event->end_time : '' ?>"
                                            name="end_time" class="form-control" id="datepicker_endtime"/>
@@ -136,113 +323,29 @@
             </div> -->
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group mbc-15">
         <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <label>Event Color</label>
-                <div class="calendar-modal-color-selector" data-calendar="color-selector">
-
-                    <?php if (!empty(get_config_item('event_colors'))) { ?>
-
-                        <?php foreach (get_config_item('event_colors') as $k => $color) { ?>
-
-                            <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $color ?>"
-                                  style="background:<?php echo $color ?>">
-                                <?php if (!empty($event)) { ?>
-
-                                    <?php if ($event->event_color == $color) { ?>
-
-                                        <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
-
-                                    <?php } ?>
-
-                                <?php } else { ?>
-
-                                    <?php if ($k === 0) { ?>
-
-                                        <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
-
-                                    <?php } ?>
-
-                                <?php } ?>
-                            </span>
-
-                        <?php } ?>
-
-                    <?php } ?>
-
-                    <!-- <span class="calendar-modal-color-sq" data-calendar-color-id="#4cb052" style="background:#4cb052">                        
-                        <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#d96666" style="background:#d96666">
-
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#e67399" style="background:#e67399">
-
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#b373b3" style="background:#b373b3">
-
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#8c66d9" style="background:#8c66d9">
-
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#668cd9" style="background:#668cd9">
-
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#59bfb3" style="background:#59bfb3">
-
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#65ad89" style="background:#65ad89">
-
-                    </span>
-                    <span class="calendar-modal-color-sq" data-calendar-color-id="#f2a640" style="background:#f2a640">
-
-                    </span> -->
-                </div>
-                <input name="event_color" type="hidden"
-                       value="<?php echo (!empty($event)) ? $event->event_color : get_config_item('event_colors')[0] ?>">
-            </div>
-
-            <div class="col-md-6 col-sm-12">
-                <label>Customer Reminder Notification</label>
-                <select name="notify_at" class="form-control">
-                    <?php foreach (get_notification_details() as $key => $notification) { ?>
-                        <?php if ($event->notify_at == $key) { ?>
-                            <option value="<?php echo $key ?>" selected><?php echo $notification ?></option>
-                        <?php } else { ?>
-                            <option value="<?php echo $key ?>"><?php echo $notification ?></option>
-                        <?php } ?>
-                    <?php } ?>
-                    <option value="0">None</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-12 col-sm-24">
-                <label>Instructions</label> <span class="help help-sm">(optional internal notes)</span>
+            <div class="col-md-12 col-sm-12">
+                <label class="left">Instructions</label> <span class="help help-sm left">(optional internal notes)</span>
                 <input type="text" name="instructions"
                        value="<?php echo (!empty($event)) ? $event->instructions : '' ?>" class="form-control"
                        autocomplete="off">
             </div>
         </div>
     </div>
-
-    <hr>
-
     <div>
-        <div class="checkbox checkbox-sec">
-            <input type="checkbox" name="is_recurring" value="1" id="is_recurring"
-                   data-calendar="recurring-toggle-checkbox" <?php echo (!empty($event) && $event->is_recurring) ? 'checked' : '' ?>>
-            <label style="font-weight: 500;" for="is_recurring">Repeat this schedule</label>
-        </div>
-        <span class="" data-calendar="recurring-toggle-edit" style="display: none;">
-            <span class="middot">·</span>
-            <span data-calendar="recurring-rule"></span>
-            <span class="middot">·</span>
-            <a data-calendar="recurring-toggle" data-label-open="edit" data-label-close="close" href="#">edit</a>
-        </span>
+      <div class="checkbox checkbox-sec">
+          <input type="checkbox" name="is_recurring" value="1" id="is_recurring"
+                 data-calendar="recurring-toggle-checkbox" <?php echo (!empty($event) && $event->is_recurring) ? 'checked' : '' ?>>
+          <label class="left" style="font-weight: 500;" for="is_recurring">Repeat this schedule</label>
+      </div>
+      <span class="" data-calendar="recurring-toggle-edit" style="display: none;">
+          <span class="middot">·</span>
+          <span data-calendar="recurring-rule"></span>
+          <span class="middot">·</span>
+          <a data-calendar="recurring-toggle" data-label-open="edit" data-label-close="close" href="#">edit</a>
+      </span>
+    </div>
         <!-- </div>
         <div class="margin-top-sec" data-calendar="recurring-container" style="display: none;">
             <div class="row">
@@ -361,7 +464,7 @@
 <script>
     $(document).ready(function () {
 
-        // select the customer 
+        // select the customer
         $('#business-customer')
             .empty() //empty select
             .append($("<option/>") //add option tag in select
@@ -371,7 +474,7 @@
             .trigger("change"); //apply to select2
 
 
-        // select the employee / user 
+        // select the employee / user
         $('#assign_users')
             .empty() //empty select
             .append($("<option/>") //add option tag in select
