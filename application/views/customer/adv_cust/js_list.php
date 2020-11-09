@@ -303,6 +303,118 @@
             $('#modal_import_credit').modal('show');
         });
 
+        $("#form_creditor").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_furnisher_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        //window.location.reload();
+                        sucess_add('Furnisher Added Successfully!',1);
+                    }else {
+                        warning('There is an error adding Creditor/Furnisher. Contact Administrator!');
+                        console.log(data);
+                    }
+                }
+            });
+        });
+
+        // reasons script
+        $("#form_reasons").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_reasons_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        $('[id="reason_form_id"]').val("");
+                        display_reasons();
+                        sucess_add('Furnisher Added Successfully!',0);
+                    }else {
+                        warning('There is an error adding Reason. Contact Administrator!');
+                        console.log(data);
+                    }
+                }
+            });
+        });
+        var table_reasons = $('#reasons_table').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "paging": false,
+            "ordering": false,
+        });
+
+        function display_reasons(){
+            $.ajax({
+                type: "POST",
+                url: "/customer/fetch_reasons_data",
+                data: {name : "reasons"}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var reasons_data = JSON.parse(data);
+                    for(var x=0;x<reasons_data.length;x++){
+                        var html = '<tr role="row">';
+                        html += '<td class="sorting_1">'+reasons_data[x].reason+'</td>';
+                        html += '<td>'+'<a href="javascript:void(0);" id="'+reasons_data[x].reason_id+'" class="delete_reason" style="text-decoration:none;display:inline-block;" title="Edit Customer">'+
+                            '<img src="/assets/img/customer/actions/cross.png" width="16px" alt="Delete" height="16px" border="0" title="Delete Lead">'+
+                            '</a> </td></tr>';
+                        table_reasons.rows.add($(html)).draw();
+                        //$('#leadtype_table_data').append(html);
+                        $('#form_reasons')[0].reset();
+                        $('#dispute_reason').append($('<option>', {
+                            value: reasons_data[x].reason,
+                            text: reasons_data[x].reason
+                        }));
+                    }
+                }
+            });
+        }
+
+        $(".delete_reason").on( "click", function( event ) {
+            var ID=this.id;
+            // alert(ID);
+            Swal.fire({
+                title: 'Are you sure you want to DELETE this reason?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/customer/remove_customer",
+                        data: {reason_id : ID}, // serializes the form's elements.
+                        success: function(data)
+                        {
+                            if(data === "Done"){
+                                sucess_add("Reason Remove Successfully!",0);
+                            }else{
+                                warning('There is an error removing this reason. Contact Administrator!');
+                                console.log(data);
+                            }
+                        }
+                    });
+                    // window.location.href="/customer";
+                }
+            });
+        });
+        // end reasons script
+
         $("#audit_import_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
@@ -516,6 +628,26 @@
             //$(this).remove();
            // return false;
         });
+
+        function sucess_add(information,is_reload){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(is_reload === 1){
+                    if (result.value) {
+                        window.location.reload();
+                    }
+                }
+
+
+            });
+        }
 
 
 

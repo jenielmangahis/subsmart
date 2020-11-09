@@ -523,7 +523,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container fade" id="empPTO">
+                                        <div class="tab-pane container" id="empPTO">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <button class="btn btn-info" id="leaveList" style="float: right"><i class="fa fa-plus"></i> Add Leave Type</button>
@@ -537,34 +537,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <th>ID</th>
                                                                 <th>Employee</th>
                                                                 <th>Type</th>
-                                                                <th>Date of Request</th>
+                                                                <th>Date requested</th>
+                                                                <th>Leave date</th>
                                                                 <th>Status</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                        <?php foreach ($leave_request as $cnt => $request): ?>
+                                                            <?php
+                                                                //PTO TYPE
+                                                                foreach ($pto as $type){
+                                                                    if ($type->id == $request->pto_id){
+                                                                        $pto_type = $type->name;
+                                                                    }
+                                                                }
+                                                                //Employee name
+                                                                foreach ($users as $user){
+                                                                    if ($user->id == $request->user_id){
+                                                                        $name = $user->FName." ".$user->LName;
+                                                                    }
+                                                                }
+                                                                //Status request
+                                                                if ($request->status == 1){
+                                                                    $status = 'Approved';
+                                                                }elseif($request->status == 2){
+                                                                    $status = 'Denied';
+                                                                }else{
+                                                                    $status = 'Pending';
+                                                                }
+                                                            ?>
                                                             <tr>
-                                                                <td class="center" style="border-left: 0;">1</td>
-                                                                <td>Sample</td>
-                                                                <td class="center">Sick</td>
-                                                                <td class="center">Oct 29,2020</td>
-                                                                <td class="center">Pending</td>
+                                                                <td class="center" style="border-left: 0;"><?php echo $cnt+1?></td>
+                                                                <td><?php echo $name;?></td>
+                                                                <td class="center"><?php echo $pto_type?></td>
+                                                                <td class="center"><?php echo date('M d,Y',strtotime($request->date_created));?></td>
+                                                                <td class="center">
+                                                                    <?php foreach ($leave_date as $date):
+                                                                            if ($date->leave_id == $request->id){
+                                                                    ?>
+                                                                            <span style="display: block"><?php echo date('M d,Y',strtotime($date->date));?></span>
+                                                                    <?php }?>
+                                                                    <?php endforeach; ?>
+                                                                </td>
+                                                                <td class="center"><?php echo $status?></td>
                                                                 <td class="center" style="border-right: 0;">
-                                                                    <a href="javascript:void (0)" title="Approve" data-toggle="tooltip" id="approveRequest" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
-                                                                    <a href="javascript:void (0)" title="Deny" data-toggle="tooltip" id="denyRequest" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
+                                                                    <a href="javascript:void (0)" data-id="<?php echo $request->id?>" title="Approve" data-toggle="tooltip" id="approveRequest" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
+                                                                    <a href="javascript:void (0)" data-id="<?php echo $request->id?>" title="Deny" data-toggle="tooltip" id="denyRequest" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td class="center" style="border-left: 0;">2</td>
-                                                                <td>Sample</td>
-                                                                <td class="center">Maternity</td>
-                                                                <td class="center">Oct 29,2020</td>
-                                                                <td class="center">Pending</td>
-                                                                <td class="center" style="border-right: 0;">
-                                                                    <a href="javascript:void (0)" title="Approve" data-toggle="tooltip" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>
-                                                                    <a href="javascript:void (0)" title="Deny" data-toggle="tooltip" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>
-                                                                </td>
-                                                            </tr>
+                                                        <?php endforeach; ?>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -574,8 +596,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <form action="" method="post" id="formInviteLink">
                                             <div class="form-group">
                                                 <label for="" style="font-weight: bold">TYPE AN EMAIL ADDRESS TO INVITE</label>
-                                                <input type="email" class="form-control invite-email" placeholder="sample@mail.com">
+                                                <input type="email" name="email" class="form-control invite-email" placeholder="sample@mail.com">
                                                 <a href="javascript:void(0)" title="Clear" id="clearEmailField"><i class="fa fa-times fa-lg remove-email-icon"></i></a>
+                                                <?php
+                                                    $name = null;
+                                                    $user_role = null;
+                                                    foreach ($users as $user){
+                                                        if ($user->id == $this->session->userdata('logged')['id']){
+                                                            $name = $user->FName." ".$user->LName;
+                                                            //User role
+                                                            foreach ($roles as $role){
+                                                                if($role->id == $user->role){
+                                                                    $user_role = $role->title;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ?>
+                                                <input type="hidden" name="name" value="<?php echo $name;?>">
+                                                <input type="hidden" name="role" value="<?php echo $user_role;?>">
                                             </div>
                                             </form>
                                             <div class="form-group">
@@ -759,6 +798,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         // PTO table approve and deny prompt
         //Approve
         $(document).on('click','#approveRequest',function () {
+            let id = $(this).attr('data-id');
+            let selected = $(this);
             Swal.fire({
                 title: 'Approve?',
                 html: "Are you sure you want to approve this request?",
@@ -769,20 +810,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 confirmButtonText: 'Yes, Approve it!'
             }).then((result) => {
                 if (result.value) {
-                    // $.ajax({
-                    //     url:'/timesheet/approveRequest',
-                    //     type:"POST",
-                    //     dataType:'json',
-                    //     data:{id:id},
-                    //     success:function (data) {
-                    //
-                    //     }
-                    // });
+                    $.ajax({
+                        url:'/timesheet/approveRequest',
+                        type:"POST",
+                        dataType:'json',
+                        data:{id:id},
+                        success:function (data) {
+                            if(data == 1){
+                                selected.parent('td').prev('td').text('Approved');
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: "Leave request <strong>Approved</strong>",
+                                        icon: 'success'
+                                    });
+                            }
+
+                        }
+                    });
                 }
             });
         });
         //Deny
         $(document).on('click','#denyRequest',function () {
+            let id = $(this).attr('data-id');
+            let selected = $(this);
             Swal.fire({
                 title: 'Deny?',
                 html: "Are you sure you want to deny this request?",
@@ -793,15 +847,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 confirmButtonText: 'Yes, Deny it!'
             }).then((result) => {
                 if (result.value) {
-                    // $.ajax({
-                    //     url:'/timesheet/approveRequest',
-                    //     type:"POST",
-                    //     dataType:'json',
-                    //     data:{id:id},
-                    //     success:function (data) {
-                    //
-                    //     }
-                    // });
+                    $.ajax({
+                        url:'/timesheet/denyRequest',
+                        type:"POST",
+                        dataType:'json',
+                        data:{id:id},
+                        success:function (data) {
+                            if (data == 1){
+                                selected.parent('td').prev('td').text('Denied');
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: "Leave request <strong>Denied</strong>",
+                                        icon: 'success'
+                                    });
+                            }
+                        }
+                    });
                 }
             });
         });
@@ -957,6 +1021,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(document).on('click','#clearEmailField',function () {
             $(this).prev('input').val(null);
             $(this).children('i').css('visibility','hidden');
+        });
+        //Sending invite link
+        $(document).on('click','#sendInviteLink',function () {
+            let values = {};
+            $.each($('#formInviteLink').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            $.ajax({
+                url:'/timesheet/inviteLinkEntry',
+                type:"POST",
+                dataType:"json",
+                data:{values:values},
+                success:function (data) {
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            html: "Invite link has been sent",
+                            icon: 'success'
+                        });
+
+                }
+            });
         });
 
         //Select2 employee list

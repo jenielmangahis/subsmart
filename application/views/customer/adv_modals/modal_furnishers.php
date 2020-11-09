@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form_creditor_furnisher">
+            <form id="form_creditor">
                 <div class="modal-body">
                     <div class="col-md-12 form-line">
                         <div class="row">
@@ -15,7 +15,7 @@
                                 <label for="">Furnisher / Creditor</label><span class="required"> *</span>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" required/>
+                                <input type="text" class="form-control" name="furn_name" id="furn_name" required/>
                             </div>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                                 <label for="">Address </label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" />
+                                <input type="text" class="form-control" name="furn_address" id="furn_address" />
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                                 <label for="">City </label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" />
+                                <input type="text" class="form-control" name="furn_city" id="furn_city" />
                             </div>
                         </div>
                     </div>
@@ -47,17 +47,27 @@
                                 <label for="">State </label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" />
+                                <input type="text" class="form-control" name="furn_state" id="furn_state" />
                             </div>
                         </div>
                     </div>
+                        <div class="col-md-12 form-line">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="">Zip </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="furn_zip" id="furn_zip" />
+                                </div>
+                            </div>
+                        </div>
                     <div class="col-md-12 form-line">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="">Phone Number </label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" />
+                                <input type="text" class="form-control" name="furn_phone_number" id="furn_phone_number" />
                             </div>
                         </div>
                     </div>
@@ -67,7 +77,7 @@
                                 <label for="">Extension </label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" />
+                                <input type="text" class="form-control" name="furn_acct_number" id="furn_acct_number" />
                             </div>
                         </div>
                     </div>
@@ -77,7 +87,7 @@
                                 <label for="">Account Type </label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="subject" id="subject" />
+                                <input type="text" class="form-control" name="furn_acct_number" id="furn_acct_number" />
                             </div>
                         </div>
                     </div>
@@ -87,14 +97,12 @@
                                 <label for="">Notes: </label>
                             </div>
                             <div class="col-md-8">
-                                <textarea type="text" class="form-controls" name="notes" id="notes" cols="35" rows="3"> </textarea>
+                                <textarea type="text" class="form-controls" name="furn_notes" id="furn_notes" cols="35" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
                     </div>
                 </div>
-                <input type="hidden" class="form-control" name="fk_prof_id" id="fk_prof_id" value="<?= isset($profile_info) ? $profile_info->prof_id : '' ?>" />
-                <input type="hidden" class="form-control" name="task_id" id="task_id" />
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>

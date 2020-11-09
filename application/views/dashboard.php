@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <li class="breadcrumb-item active">Welcome to  Dashboard</li>
                         </ol>
                     </div>
-
+                    <?php include viewPath('flash'); ?>
 					<style>
 						.smart__grid{
 							background: #fff;

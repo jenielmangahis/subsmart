@@ -107,7 +107,7 @@
                                     </p>
                                 </div>
                                 <div class="email-attachment" style="margin: auto;width: 30%;">
-                                    <a href="<?php echo site_url()?>timesheet/csvTimesheetReport" class="btn btn-success btn-attachment" style="
+                                    <a href="<?php echo site_url()?>timesheet_report/csvTimesheetReport" class="btn btn-success btn-attachment" style="
                                     text-decoration: none;
                                     display: block;
                                     margin-bottom: 10px;
@@ -123,7 +123,7 @@
                                     line-height: 1.5;
                                     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
                                     font-size: 15px;">DOWNLOAD .CSV</a>
-                                    <a href="<?php echo site_url()?>timesheet/pdfTimesheetReport" class="btn btn-success btn-attachment" target="_blank" style="
+                                    <a href="<?php echo site_url()?>timesheet_report/pdfTimesheetReport" class="btn btn-success btn-attachment" target="_blank" style="
                                      text-decoration: none;
                                     display: block;
                                     margin-bottom: 10px;

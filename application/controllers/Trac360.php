@@ -103,6 +103,9 @@ class Trac360 extends MY_Controller {
 
             if(isset($_POST['user_ids'])){
                     $ids = $_POST['user_ids'];
+                    if(!empty($ids)){
+                        $ids = 'and a.user_id not in('. $ids .') ';
+                    }
 
                     $sql = 'select '.
 
@@ -122,8 +125,7 @@ class Trac360 extends MY_Controller {
                             'left join users b on b.id = a.user_id '.
                             'left join users_geo_positions_categories c on c.id = a.category_id '.
 
-                            'where a.company_id = ' . $company_id . ' ' .
-                              'and a.user_id not in('. $ids .') '.
+                            'where a.company_id = ' . $company_id . ' ' . $ids .
                               
                             'order by a.category_id';
 
@@ -135,8 +137,11 @@ class Trac360 extends MY_Controller {
 
             if(isset($_POST['group_ids'])){
                 $ids = $_POST['group_ids'];
+                if(!empty($ids)){
+                    $ids = ' and id not in('. $ids .')';
+                }
 
-                $sql = 'select * from users_geo_positions_categories where company_id = ' . $company_id . ' and id not in('. $ids .')';
+                $sql = 'select * from users_geo_positions_categories where company_id = ' . $company_id . $ids;
 
                 $groups = $this->db->query($sql);
 
@@ -152,9 +157,15 @@ class Trac360 extends MY_Controller {
             'error' => ""
         );
 
-        $exists = $this->db->query('select count(*) as `total` from users_geo_positions where user_id = ' . $_POST['user_id'])->row();
+        $exists = $this->db->query('select count(*) as `total`, a.category_id, concat(c.FName," ",c.LName) as `user_name`, b.category_name '.
+            'from users_geo_positions a '.
+            'left join users_geo_positions_categories b on b.id = a.category_id '.
+            'left join users c on c.id = a.user_id '.
+            'where user_id = ' . $_POST['user_id']
+        )->row();
+        
         if($exists->total > 0){
-            $return['error'] = 'User already added to the tracking list';
+            $return['error'] = 'User <strong>'. $exists->user_name .'</strong> already added to the tracking list group <strong>' . $exists->category_name . '</strong>';
         } else {
             $company_id = logged('company_id');
 
@@ -239,7 +250,7 @@ class Trac360 extends MY_Controller {
         $used = $this->db->query('select count(*) as `total` from users_geo_positions where category_id = ' . $group_id)->row();
 
         if($exists->total <= 0){
-            $return['error'] = 'Group does not exists anymore';    
+            $return['groups'] = $this->users_geographic_positions_categories_model->getByWhere(array('company_id' => $company_id), [], true);    
         } else if($used->total > 0){
             $return['error'] = 'Group is currently in used';
         } else {

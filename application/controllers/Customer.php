@@ -522,9 +522,56 @@ class Customer extends MY_Controller
         }
     }
 
-    public function add_task_ajax(){
+    public function add_furnisher_ajax(){
         $input = $this->input->post();
         // customer_ad_model
+        if($this->customer_ad_model->add($input,"acs_furnisher")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+//        else{
+//            if($this->customer_ad_model->update_data($input,"acs_audit_import","ai_id")){
+//                echo "Updated";
+//            }else{
+//                echo "Error";
+//            }
+//        }
+    }
+
+    public function add_reasons_ajax(){
+        $input = $this->input->post();
+        if($this->customer_ad_model->add($input,"acs_reasons")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+    }
+
+    public function fetch_reasons_data()
+    {
+        $reasons = $this->customer_ad_model->get_all(1, "", "DESC", "acs_reasons", "reason_id");
+        echo json_encode($reasons);
+    }
+
+    public function fetch_all_reasons_data()
+    {
+        $reasons = $this->customer_ad_model->get_all(FALSE, "", "DESC", "acs_reasons", "reason_id");
+        echo json_encode($reasons);
+    }
+
+    public function delete_reason(){
+        $input = array();
+        $input['field_name'] = "reason_id";
+        $input['id'] = $_POST['reason_id'];
+        $input['tablename'] = "acs_reasons";
+        if ($this->customer_ad_model->delete($input)) {
+            echo  "Done";
+        }
+    }
+
+    public function add_task_ajax(){
+        $input = $this->input->post();
         if(empty($input['task_id'])){
             unset($input['task_id']);
             if($this->customer_ad_model->add($input,"acs_tasks")){

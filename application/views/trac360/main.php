@@ -201,11 +201,11 @@
     initialAllLoadStateDone = false;
     initialMapCenter = null;
 
-    groups = new Array();
-    tracking = {};
-    requests = {};
+    groups = {};
+    groups[0] = 0;
 
-    all_users = [];
+    tracking = new Array;
+    all_users = new Array;
 
     new_records_checker = null;
     new_checker_status = 'idle';
@@ -312,19 +312,13 @@
             var result = jQuery.parseJSON(data);
 
             if((result.error == "") || (result.error == null)){
-              var vUser = groups[group_id]['members'][user_id];
-              var vIdx = vUser.idx;
+              removeItemFromTracking(user_id);
 
-              requests[vIdx]['removed'] = true;
-              marker = markers_map[vIdx];
-              marker.setMap(null);
-              
-              markers_map.splice(vIdx, 1);
               current_data.remove();
 
               showAlert('success','Person successfully removed from the tracking list','Successful');  
             } else {
-
+              showAlert('error',result.error,'Error');
             }
           },
           error: function(jqXHR, textStatus, errorThrown){
@@ -335,36 +329,38 @@
           } 
         }); 
       } else if(current_process == 'delete_group'){
-        var groups_id = current_data.children('td:eq(0)').text();
+        var group_id = current_data.children('td:eq(0)').text();
 
-        if(false){
-          $.ajax({
-            type: 'POST',
-            url: base_url + "trac360/deletegroup",
-            data: {group_id:group_id},
-            beforeSend(){
-              hideAlert();
-            },
-            success: function(data){
-              var result = jQuery.parseJSON(data);
+        $.ajax({
+          type: 'POST',
+          url: base_url + "trac360/deletegroup",
+          data: {group_id:group_id},
+          beforeSend(){
+            hideAlert();
+          },
+          success: function(data){
+            var result = jQuery.parseJSON(data);
 
-              if((result.error == "") || (result.error == null)){
-                
-                current_data.remove();
+            if((result.error == "") || (result.error == null)){
+              
+              removeItemFromGroups(group_id);
 
-                showAlert('success','Person successfully removed from the tracking list','Successful');  
-              } else {
-                showAlert('error',result.error,'Error');
-              }
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-              showAlert('error',errorThrown,'Error ' + textStatus);  
-            },
-            complete: function(jqXHR, textStatus){
-              current_data = null;
-            } 
-          });
-        }
+              current_data.remove();
+
+              $('#trac360_card_' + group_id).remove();
+
+              showAlert('success','Person successfully removed from the tracking list','Successful');  
+            } else {
+              showAlert('error',result.error,'Error');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            showAlert('error',errorThrown,'Error ' + textStatus);  
+          },
+          complete: function(jqXHR, textStatus){
+            current_data = null;
+          } 
+        });
       }
     });
 
@@ -428,21 +424,23 @@
 
 // Groups Page ----------------------------------------------------------------------
     $('#btn_open_trac360_groups').click(function(){
-      var button = $('#prev_tab');
       var tab = $('div.tab-pane.active');
-      var groups_tab = $('#groups_tab');
+      if(tab.attr("id") != 'groups_tab'){
+        var button = $('#prev_tab');
+        var groups_tab = $('#groups_tab');
 
-      tab.removeClass('active');
-      tab.addClass('fade');
+        tab.removeClass('active');
+        tab.addClass('fade');
 
-      groups_tab.removeClass('fade');
-      groups_tab.addClass('active');
-      groups_tab.attr("prev_tab", tab.attr("id"));
+        groups_tab.removeClass('fade');
+        groups_tab.addClass('active');
+        groups_tab.attr("prev_tab", tab.attr("id"));
 
-      button.attr("prev_tab",tab.attr("id"));
-      button.removeClass('d-none');
+        button.attr("prev_tab",tab.attr("id"));
+        button.removeClass('d-none');
 
-      processNodeControlButtons('groups_tab');  
+        processNodeControlButtons('groups_tab');
+      }  
     });
 // ----------------------------------------------------------------------------------
   });
@@ -522,6 +520,46 @@
 // ----------------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------------
+  function removeItemFromGroups(vId){
+    var tmpGroups = {};
+    $.each(groups, function(index, group){
+      if(vId == index){
+        group.members = null;
+      } else {
+        tmpGroups[index] = group;
+      }
+    });
+
+    groups = tmpGroups;
+
+    tmpGroups = null;
+  }
+
+  function removeItemFromTracking(vId){
+    $.each(tracking, function(index, track_info){
+      if(vId == track_info.info.user_id){
+        track_info.removed = true;
+
+        var members = groups[track_info.info.category_id]['members'];
+        $.each(members, function(index, member){
+          if(vId == member.info.user_id){
+            members.splice(index, 1);
+            member.marker.setMap(null);
+
+            clearInterval(member.track_info);
+
+            return false;
+          }
+        });
+
+        markers_map.splice(index, 1);
+        tracking.splice(index, 1);
+        all_users.splice(index, 1);
+        return false;
+      }
+    });
+  }
+
   function processNodeControlButtons(vCurTab){
     if((vCurTab == "trac360_groups_people") ||
        (vCurTab == "groups_tab") ||
@@ -554,8 +592,8 @@
   }
 
   function reloadGroupAndUserList(vGroupsAndUsers){
-    var groups = vGroupsAndUsers.groups;
-    var users = vGroupsAndUsers.users;
+    var vGroups = vGroupsAndUsers.groups;
+    var vUsers = vGroupsAndUsers.users;
 
     $('#trac360_groups_table > tbody').empty();
     $('#trac360_people_entry_categories').empty();
@@ -565,7 +603,7 @@
     var categories_append = '<option value="">Select Group</option>';
     var users_append = '<option value="">Select User</option>';
 
-    $.each(groups, function(index, group){
+    $.each(vGroups, function(index, group){
       categories_append += '<option value="'+ group.id +'" catdesc="'+ group.category_desc +'">' + group.category_name + '</option>';
 
       categories_list += '<tr class="trac360_row" card="groups">';
@@ -576,7 +614,7 @@
       categories_list += '</tr>';
     });
 
-    $.each(users, function(index, user){
+    $.each(vUsers, function(index, user){
       users_append += '<option value="'+ user.user_id +'">' + user.FName + ' ' + user.LName + '</option>';
     }); 
 
@@ -666,7 +704,9 @@
             first_show_tag = '';
           }
 
-          groups[category.id] = {count:0,members:{}};
+          groups[category.id] = {count:0,members:null};
+          groups[category.id].members = new Array();
+          groups[0] = groups[0] + 1;
 
           append = '';
 
@@ -771,13 +811,13 @@
                 var cur_first = true;
 
                 $.each(cur_group, function(index, member){
-                  var cur_marker = markers_map[member.idx];
+                  var cur_marker = member.marker;
                   var cur_lat = parseFloat(member.info.latitude);
                   var cur_lon = parseFloat(member.info.longitude);
 
                   cur_marker.setVisible(true);
 
-                  requests[member.idx]['visible'] = true;
+                  member.track_info.visible = true;
 
                   if(cur_first){
                     map.setCenter({lat:cur_lat,lng:cur_lon});
@@ -794,11 +834,11 @@
                 var cur_group = groups[cur_catid]['members'];
 
                 $.each(cur_group, function(index, member){
-                  var cur_marker = markers_map[member.idx];
+                  var cur_marker = member.marker;
 
                   cur_marker.setVisible(false);
 
-                  requests[member.idx]['visible'] = false;
+                  member.track_info.visible = false;
                 });  
 
                 $('tr.table-primary').removeClass('table-primary');  
@@ -822,13 +862,15 @@
 
         new_records_checker = setInterval(function(){
           if(new_checker_status == 'idle'){
-            new_checker_status = ''
+            new_checker_status = 'processing';
             var group_ids = '';
             $.each(groups, function(index, group){
-              if(group_ids == ''){
-                group_ids = index;
-              } else {
-                group_ids += ',' + index; 
+              if(index != 0){
+                if(group_ids == ''){
+                  group_ids = index;
+                } else {
+                  group_ids += ',' + index; 
+                }
               }  
             });
 
@@ -852,7 +894,8 @@
                 if(result.groups_count > 0){
                   $.each(result.groups, function(index, group){
                     var append = '';
-                    var InGroups = (group.id in groups);
+                    var group_id_text = '"' + group.id + '"';
+                    var InGroups = (group_id_text in groups);
                     if(!InGroups){
                       append += '<div class="card mb-0 p-1" id="trac360_card_'+ group.id +'">';
                       append += '<div class="card-header">';
@@ -894,7 +937,9 @@
 
                       $('#trac360_card_' + group.id + ' > div.card-header').after(append);
 
-                      groups[group.id] = {count:0,members:{}};    
+                      groups[group.id] = {count:0,members:null};
+                      groups[group_id].members = new Array();
+                      groups[0] = groups[0] + 1;    
                     }
                   });
                 }
@@ -963,19 +1008,17 @@
     };
 
     var tMarker = createMarker_map(UserMarker);
+    var track_info = {'info':vUser,'background_thread':null,'process':'idle','visible':vShowOnMap,'removed':false};
+
+    tracking.push(track_info);
+
+    var vUserInfo = {'info':vUser,'marker':tMarker,'track_info':track_info};
+
+    groups[vUser.category_id]['members'].push(vUserInfo);
     
-    var cmmi = markers_map.length - 1;
-    var cmmi_info = {'process':'idle','visible':vShowOnMap,'removed':false};
-
-    var vUserInfo = {'idx':cmmi,'info':vUser};
-
-    groups[vUser.category_id]['members'][vUser.user_id] = vUserInfo;
-    groups[vUser.category_id]['count'] = groups[vUser.category_id]['count'] + 1;
- 
-    requests[cmmi] = cmmi_info;
-    tracking[cmmi] = setInterval(function(){
-      if((requests[cmmi]['process'] == 'idle') && (requests[cmmi]['visible']) && (!requests[cmmi]['removed'])){
-        requests[cmmi]['process'] = 'ongoing';
+    track_info.background_thread = setInterval(function(){
+      if((track_info.process == 'idle') && (track_info.visible) && (!track_info.removed)){
+        track_info.process = 'ongoing';
         var user_geo = $('#trac360_table_'+ vUser.category_id +' > tbody').children('tr.marker_' + vUser.user_id);
         var user_old_lat = user_geo.children('td:eq(2)').text();
         var user_old_lng = user_geo.children('td:eq(3)').text();
@@ -993,13 +1036,12 @@
                 user_geo.children('td:eq(2)').text(new_lat);
                 user_geo.children('td:eq(3)').text(new_lng);
 
-                vMarker = markers_map[groups[vUser.category_id]['members'][vUser.user_id].idx];
-                vMarker.setPosition(new google.maps.LatLng(new_lat, new_lng));     
+                tMarker.setPosition(new google.maps.LatLng(new_lat, new_lng));     
               }
             }
           },
           complete: function(jqXHR, textStatus){
-            requests[cmmi]['process'] = 'idle';
+            track_info.process = 'idle';
           }
         });
       }

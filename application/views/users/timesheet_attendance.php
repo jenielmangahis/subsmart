@@ -571,13 +571,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         foreach ($logs as $log){
                                                             if ($user->id == $attn->user_id){
                                                                 $attn_id = $attn->id;
-                                                                if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                                                    $yesterday_in = "(Yesterday)";
-                                                                }else{
-                                                                    $yesterday_in = null;
-                                                                }
                                                                 if ($attn_id == $log->attendance_id){
                                                                     if ($log->action == 'Check in'){
+                                                                        if (date('Y-m-d',strtotime($log->date_created)) == date('Y-m-d',strtotime('yesterday'))){
+                                                                            $yesterday_in = "(Yesterday)";
+                                                                        }else{
+                                                                            $yesterday_in = null;
+                                                                        }
                                                                         $time_in = date('h:i A',strtotime($log->date_created));
                                                                         $time_out = null;
                                                                         $break_in = null;
@@ -747,11 +747,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     if ($log->attendance_id == $attn->id){
                                                                         if ($attn->status == 1){
                                                                             if ($log->action == 'Check in'){
-                                                                                if ($attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                                                                if (date('Y-m-d',strtotime($log->date_created)) == date('Y-m-d',strtotime('yesterday'))){
                                                                                     $clock_in = date('h:i A',strtotime($log->date_created));
                                                                                     $yesterday_note = '(Yesterday)';
                                                                                     $shift = '-';
-                                                                                }elseif ($attn->date_in == date('Y-m-d')){
+                                                                                }elseif (date('Y-m-d',strtotime($log->date_created)) == date('Y-m-d')){
                                                                                     $clock_in = date('h:i A',strtotime($log->date_created));
                                                                                     $yesterday_note = null;
                                                                                 }
@@ -764,9 +764,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         }else{
                                                                             if ($log->action == 'Check in'){
                                                                                 $clock_in = date('h:i A',strtotime($log->date_created));
-                                                                                if ($attn->date_out > $attn->date_in){
+                                                                                if (date('Y-m-d',strtotime($log->date_created)) == date('Y-m-d',strtotime('yesterday'))){
                                                                                     $yesterday_note = '(Yesterday)';
-                                                                                }elseif ($attn->date_in == date('Y-m-d')){
+                                                                                }elseif (date('Y-m-d',strtotime($log->date_created)) == date('Y-m-d')){
                                                                                     $yesterday_note = null;
                                                                                 }
                                                                             }elseif ($log->action == 'Check out'){

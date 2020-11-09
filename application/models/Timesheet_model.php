@@ -23,9 +23,9 @@ class Timesheet_model extends MY_Model {
         return $qry;
     }
     public function getClockInSession(){
-        $this->db->or_where('date_in',date('Y-m-d'));
-        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
-        $qry = $this->db->get($this->attn_tbl)->result();
+//        $this->db->or_where('date_in',date('Y-m-d'));
+//        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $qry = $this->db->get_where($this->attn_tbl,array('status'=>1))->result();
         return $qry;
     }
     public function getNotification($user_id){
@@ -37,8 +37,8 @@ class Timesheet_model extends MY_Model {
         return $qry;
     }
     public function getEmployeeAttendance(){
-        $this->db->or_where('date_in',date('Y-m-d'));
-        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $this->db->or_where('DATE(date_created)',date('Y-m-d'));
+        $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
         $qry = $this->db->get($this->attn_tbl);
         return $qry->result();
     }
@@ -72,7 +72,7 @@ class Timesheet_model extends MY_Model {
             6 => date("Y-m-d",strtotime('sunday last week')),
         );
         for ($x = 0;$x < count($week_check);$x++){
-            $this->db->or_where('date_out',$week_check[$x]);
+            $this->db->or_where('DATE(date_created)',$week_check[$x]);
         }
         $qry = $this->db->get('timesheet_attendance');
         return $qry->result();
@@ -86,16 +86,17 @@ class Timesheet_model extends MY_Model {
             $data = array(
 //                'week_id' => $week_id,
                 'user_id' =>  $user_id,
-                'date_in' => date('Y-m-d'),
-                'date_out' => date('Y-m-d'),
-                'status' => $status
+//                'date_in' => date('Y-m-d'),
+//                'date_out' => date('Y-m-d'),
+                'status' => $status,
+                'date_created' => date('Y-m-d H:i:s')
             );
             $this->db->insert($this->attn_tbl,$data);
             return $this->db->insert_id();
         }elseif($qry->num_rows() == 1 && $status == 0){
             $update = array(
                 'status' => $status,
-                'date_out' => date('Y-m-d'),
+//                'date_out' => date('Y-m-d'),
                 'shift_duration' => $shift,
                 'break_duration' => $break,
                 'overtime' => $overtime
@@ -365,8 +366,8 @@ class Timesheet_model extends MY_Model {
 
     public function getTotalUsersLoggedIn(){
         $total_users = $this->users_model->getTotalUsers();
-        $this->db->or_where('date_in',date('Y-m-d'));
-        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+//        $this->db->or_where('date_in',date('Y-m-d'));
+//        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
         $this->db->where('status',1);
         $query =  $this->db->get('timesheet_attendance');
         $logged_in = $query->num_rows();
@@ -380,15 +381,15 @@ class Timesheet_model extends MY_Model {
         return $query->num_rows();
     }
     public function getOutNow(){
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_out'=>date('Y-m-d')))->num_rows();
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0))->num_rows();
         return $query;
     }
-    public function getAttendanceByDay($day){
-        $this->db->or_where('date_in',$day);
-        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
-        $query = $this->db->get('timesheet_attendance')->result();
-        return $query;
-    }
+//    public function getAttendanceByDay($day){
+//        $this->db->or_where('date_in',$day);
+//        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+//        $query = $this->db->get('timesheet_attendance')->result();
+//        return $query;
+//    }
     public function getTimeSettingsByUser(){
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('timesheet_settings',array('user_id'=>$user_id));
@@ -571,6 +572,19 @@ class Timesheet_model extends MY_Model {
             $return = false;
         }
         return $return;
+    }
+
+    //Get leave request
+    public function getLeaveRequest(){
+        $this->db->order_by("date_created", "desc");
+        $qry = $this->db->get('timesheet_leave');
+        return $qry->result();
+    }
+    //Get leave date
+    public function getLeaveDate(){
+        $this->db->order_by("date", "desc");
+        $qry = $this->db->get('timesheet_leave_date');
+        return $qry->result();
     }
 
 }

@@ -12,6 +12,7 @@ class Workcalender extends MY_Controller
         include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
 
         $this->checkLogin();
+
         $this->page_data['page']->title = 'Work Calender';
         $this->page_data['page']->menu  = 'Workcalender';
         $this->page_data['module']      = 'calendar'; 
@@ -41,6 +42,12 @@ class Workcalender extends MY_Controller
 
     public function index()
     {
+        $is_allowed = $this->isAllowedModuleAccess(4);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'calendar';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         $this->load->model('Event_model', 'event_model');
         
         $role = logged('role');
