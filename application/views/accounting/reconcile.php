@@ -753,11 +753,82 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <ul class="dropdown-menu">
                 <li><a href="#" onclick="Int_printboth()">Print Deposit Slip & Summary</a>
                 </li>
-                <li><a href="#" onclick="Int_printonly()">Print Summary only</a>
+                <li><a href="#" onclick="print_this('to_print_summary')">Print Summary only</a>
                 </li>
             </ul>
             <a href="#" style="margin-left: 5%" onclick="OpenRecurrInt()">Make Recurring</a>
             <button type="button" onclick="save_close_edit_int(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
+        </div>
+        <div id="to_print_summary" style="display: none;">
+            <center><h2>Deposit Summary</h2></center>
+            <p style="margin-left: 90%"><?=date("Y-m-d")?></p>
+            <p>Summary of Deposit to <?php
+                               foreach($this->chart_of_accounts_model->select() as $row)
+                               {
+                                 if($row->id == $rows[0]->chart_of_accounts_id)
+                                 { echo $row->name;}
+                              }
+                               ?> on <?=$rows[0]->second_date?>
+            </p>
+            <table class="table">
+                <thead>
+                    <th>Category</th>
+                    <th>Descp</th>
+                    <th>Amount</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><?=number_format($rows[0]->interest_earned,2)?></td>
+                    </tr>
+                    <?php 
+                    if(!empty($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id)))
+                    {
+                    foreach($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id) as $editrowtab)
+                    {
+                    ?>
+                    <tr>
+                        <td><?=$editrowtab->income_account_sub?></td>
+                        <td><?=$editrowtab->descp_it_sub?></td>
+                        <td><?=number_format($editrowtab->interest_earned_sub,2)?></td>
+                    </tr>
+                    <?php
+                    }}
+                    ?>
+                    <?php
+                    for ($i=2; $i < 20 ; $i++) { 
+                    ?>
+                    <tr>
+                        <td class="print_income_account_<?=$i?>"></td>
+                        <td class="print_descp_it_<?=$i?>"></td>
+                        <td class="print_interest_earned_<?=$i?>"></td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <div class="container">
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <h6 id="getsubtotal_print"></h6>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <h6 id="getdeduct_print"></h6>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <h6 id="gettotal_print"></h6>
+                </div>
+            </div>
+            </div>
         </div>
     </div>
     <!-- End Edit New -->
@@ -3747,6 +3818,7 @@ function showData() {
             var total = total - sub;
         }
         $('#inttotal_final').text('Total : $'+total.toFixed(2));
+        update_print();
         
     }
     function crossClickEdit_int()
@@ -3768,6 +3840,7 @@ function showData() {
             $('.edit_descp_it_'+i).show();
             $('#edit_descp_it_'+i).attr('type','hidden');
         }
+        update_print()
     }
     $("#cash_back_amount").focus(function(){
         $('.hidemefinal').show();
@@ -3780,13 +3853,16 @@ function showData() {
         var sub = parseInt($('#cash_back_amount').val());
         if($('#cash_back_amount').val()!='')
         {var ftotal = totalfinal - sub;}
+        else
+        {var ftotal = totalfinal - 0;}
         $('#inttotal_final').text('Total : $'+ftotal.toFixed(2));
-        
+        update_print()
     }
     function crossClickEdit_int_final()
     {
-        $('#cash_back_amount').val('');
+       // $('#cash_back_amount').val('');
         $('.hidemefinal').hide();
+        update_print()
     }
 </script>
 <script type="text/javascript">
@@ -4730,7 +4806,8 @@ function closeAddaccount()
       }
       var descp_it = $('.edit_descp_it').text();
       var income_account=$('.edit_income_account').text();
-      var interest_earned=$('#inttotal_final').text().substr(9);
+      //var interest_earned=$('#inttotal_final').text().substr(9);
+      var interest_earned=$('.edit_interest_earned').text();
 
       var tablelength = $('#participantIntTable tr').length -2;
 
@@ -5124,4 +5201,26 @@ function closeAddaccount()
     WinPrint.document.close();
     WinPrint.print();
 }
+</script>
+<script type="text/javascript">
+    function update_print()
+    {
+
+        $('#getsubtotal_print').text('Deposit Subtotal: $'+$('#inttotal').text().substr(20));
+        $('#getdeduct_print').text('Less Cash back: $'+$('#cash_back_amount').val());
+        $('#gettotal_print').text('Deposit total: $'+$('#inttotal_final').text().substr(9));
+        
+        length =$('#participantIntTable tr').length -2;
+        for(var i = 2 ; i <= length ; i++)
+        {
+            $('.print_income_account_'+i).text($('#edit_income_account_'+i).val());
+            $('.print_interest_earned_'+i).text($('#edit_interest_earned_'+i).val());
+            $('.print_descp_it_'+i).text($('#edit_descp_it_'+i).val());
+        }
+    }
+</script>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        update_print();
+    });
 </script>

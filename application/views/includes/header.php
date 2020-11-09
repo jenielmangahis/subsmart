@@ -210,16 +210,9 @@
                             if ($in->user_id == $user_id && $in->status == 1){
                                 $clock_btn = 'clockOut';
                             }
-//                                    if ($in->user_id == $user_id && $in->status == 0){
-//                                        $clock_btn = null;
-//                                    }
-//                            if($in->user_id == $user_id && $in->date_in == date('Y-m-d',strtotime('yesterday')) && $in->date_out == date('Y-m-d')){
-//                                $clock_btn = 'clockIn';
-//                            }
-                            if ($in->user_id == $user_id && $in->status == 0 && $in->date_in == date('Y-m-d',strtotime('yesterday'))){
+                            if ($in->user_id == $user_id && $in->status == 0){
                                 $clock_btn = 'clockIn';
                             }
-
                         }
                         //Employee display shift status
                         $clock_in = '-';
@@ -244,12 +237,12 @@
                                     if ($log->action == 'Check in'){
                                         $clock_in = date('h:i A',strtotime($log->date_created));
                                         $shift_end = strtotime($log->date_created);
-
                                         $hours = floor($attn->break_duration / 60);
                                         $minutes = floor($attn->break_duration % 60);
                                         $seconds = $attn->break_duration - (int)$attn->break_duration;
                                         $seconds = round($seconds * 60);
                                         $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                        $analog_active = 'clock-active';
                                     }
                                     if ($log->action == 'Break in'){
                                         $analog_active = 'clock-break';

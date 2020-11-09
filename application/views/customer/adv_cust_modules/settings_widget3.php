@@ -67,7 +67,7 @@
                             <label for="">Reason:</label> <span class="required"> *</span>
                         </div>
                         <div class="col-md-6">
-                            <select id="language" name="language"  class="form-control" required>
+                            <select id="dispute_reason" name="dispute_reason"  class="form-control" required>
                                 <option value="">Choose a reason for your dispute</option>
                                 <?php foreach ($reasons as $reason): ?>
                                     <option <?php if(isset($profile_info)){ if($reason->reason_id == ""){ echo 'selected'; } } ?> value="<?= $reason->reason_id; ?>"><?= $reason->reason; ?></option>

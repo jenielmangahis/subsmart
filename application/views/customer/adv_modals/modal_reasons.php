@@ -15,7 +15,7 @@
                                 <label for="">Reason</label><span class="required"> *</span>
                             </div>
                             <div class="col-md-7">
-                                <input type="text" class="form-control" name="subject" id="subject" required/>
+                                <input type="text" class="form-control" name="reason" id="reason_form_id" required/>
                             </div>
                             <div class="col-md-2">
                                 <button style="height: 100% !important;padding: 1px 1px 1px 1px !important;width:50px !important;" type="submit" class="btn btn-primary ">Add</button>
@@ -36,10 +36,7 @@
                     <tr>
                         <td><?= $reason->reason; ?></td>
                         <td>
-                            <a href="" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                                <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
-                            </a>
-                            <a href="javascript:void(0);" id="" class="delete_lead" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                            <a href="javascript:void(0);" id="<?= $reason->reason_id; ?>" class="delete_reason" style="text-decoration:none;display:inline-block;" title="Delete Reason">
                                 <img src="/assets/img/customer/actions/cross.png" width="16px" alt="Delete" height="16px" border="0" title="Delete Lead">
                             </a>
                         </td>
