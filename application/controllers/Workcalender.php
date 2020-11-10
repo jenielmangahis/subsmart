@@ -42,7 +42,7 @@ class Workcalender extends MY_Controller
 
     public function index()
     {
-        $is_allowed = $this->isAllowedModuleAccess(4);
+        $is_allowed = $this->isAllowedModuleAccess(5);
         if( !$is_allowed ){
             $this->page_data['module'] = 'calendar';
             echo $this->load->view('no_access_module', $this->page_data, true);

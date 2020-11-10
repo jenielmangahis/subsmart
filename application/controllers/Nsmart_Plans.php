@@ -21,6 +21,13 @@ class Nsmart_Plans extends MY_Controller {
 
 		//$user = $this->session->userdata('logged');
 
+		$is_allowed = $this->isAllowedModuleAccess(80);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'plan_builder';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		$nSmartPlans   = $this->NsmartPlan_model->getAll();
 		$option_status = $this->NsmartPlan_model->getPlanStatus();
 		$option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
