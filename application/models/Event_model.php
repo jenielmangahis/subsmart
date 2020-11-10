@@ -61,7 +61,7 @@ class Event_model extends MY_Model
         $this->db->join('user_events', 'user_events.event_id = events.id');
 
         $start_date = date('Y-m-d');
-        $end_date = date('Y-m-d', strtotime($start_date . ' +1 day'));
+        $end_date = date('Y-m-d', strtotime($start_date . ' +5 day'));
 
         $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
 
