@@ -37,7 +37,7 @@
                         <td><?= $reason->reason; ?></td>
                         <td>
                             <a href="javascript:void(0);" id="<?= $reason->reason_id; ?>" class="delete_reason" style="text-decoration:none;display:inline-block;" title="Delete Reason">
-                                <img src="/assets/img/customer/actions/cross.png" width="16px" alt="Delete" height="16px" border="0" title="Delete Lead">
+                                <img src="/assets/img/customer/actions/cross.png" width="16" alt="Delete" height="16" border="0" title="Delete Reason">
                             </a>
                         </td>
                     </tr>

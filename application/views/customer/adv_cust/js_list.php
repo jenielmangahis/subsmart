@@ -339,7 +339,7 @@
                 {
                     if(data === "Success"){
                         $('[id="reason_form_id"]').val("");
-                        display_reasons();
+                        display_reasons("/customer/fetch_reasons_data");
                         sucess_add('Furnisher Added Successfully!',0);
                     }else {
                         warning('There is an error adding Reason. Contact Administrator!');
@@ -355,10 +355,13 @@
             "ordering": false,
         });
 
-        function display_reasons(){
+        function display_reasons(url){
+            if(url === "/customer/fetch_all_reasons_data"){
+                table_reasons.clear();
+            }
             $.ajax({
                 type: "POST",
-                url: "/customer/fetch_reasons_data",
+                url: url,
                 data: {name : "reasons"}, // serializes the form's elements.
                 success: function(data)
                 {
@@ -367,7 +370,7 @@
                         var html = '<tr role="row">';
                         html += '<td class="sorting_1">'+reasons_data[x].reason+'</td>';
                         html += '<td>'+'<a href="javascript:void(0);" id="'+reasons_data[x].reason_id+'" class="delete_reason" style="text-decoration:none;display:inline-block;" title="Edit Customer">'+
-                            '<img src="/assets/img/customer/actions/cross.png" width="16px" alt="Delete" height="16px" border="0" title="Delete Lead">'+
+                            '<img src="/assets/img/customer/actions/cross.png" width=16" alt="Delete" height="16" border="0" title="Delete Lead">'+
                             '</a> </td></tr>';
                         table_reasons.rows.add($(html)).draw();
                         //$('#leadtype_table_data').append(html);
@@ -380,6 +383,40 @@
                 }
             });
         }
+
+        $("body").delegate(".delete_reason", "click", function(){
+            var ID=this.id;
+            // alert(ID);
+            Swal.fire({
+                title: 'Are you sure you want to DELETE this reason?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/customer/delete_reason",
+                        data: {reason_id : ID}, // serializes the form's elements.
+                        success: function(data)
+                        {
+                            console.log(data);
+                            if(data === "Done"){
+                                sucess_add("Reason Remove Successfully!",0);
+                                display_reasons("/customer/fetch_all_reasons_data");
+                            }else{
+                                warning('There is an error removing this reason. Contact Administrator!');
+                            }
+                        }
+                    });
+                    // window.location.href="/customer";
+                }
+            });
+        });
 
         $(".delete_reason").on( "click", function( event ) {
             var ID=this.id;
@@ -397,15 +434,16 @@
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "/customer/remove_customer",
+                        url: "/customer/delete_reason",
                         data: {reason_id : ID}, // serializes the form's elements.
                         success: function(data)
                         {
+                            console.log(data);
                             if(data === "Done"){
                                 sucess_add("Reason Remove Successfully!",0);
+                                display_reasons("/customer/fetch_all_reasons_data");
                             }else{
                                 warning('There is an error removing this reason. Contact Administrator!');
-                                console.log(data);
                             }
                         }
                     });

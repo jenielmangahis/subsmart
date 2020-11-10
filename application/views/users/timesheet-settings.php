@@ -429,6 +429,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         cursor: pointer;
         visibility: hidden;
     }
+    #sendInviteLink[disabled]{
+        cursor: not-allowed;
+        background: #73c686;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -476,7 +480,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a class="nav-link active" data-toggle="tab" href="#empInvite">Invite Link</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#empSettings">Settings</a>
+                                            <a class="nav-link" data-toggle="tab" href="#empDepartment">Department</a>
                                         </li>
                                     </ul>
 
@@ -624,11 +628,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <p>Create an invite link to share with your team members so they can join your account.</p>
                                             </div>
                                             <div class="form-group">
-                                                <button type="button" class="btn btn-success" style="border-radius: 36px;width: 200px" id="sendInviteLink">SEND</button>
+                                                <button type="button" class="btn btn-success" style="border-radius: 36px;width: 200px" id="sendInviteLink"><i class="fa fa-paper-plane fa-lg"></i> <span>SEND</span></button>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container fade" id="empSettings">
-                                            <h4>Settings</h4>
+                                        <div class="tab-pane container fade" id="empDepartment">
+                                            <h4>Department</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -1014,37 +1018,63 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(document).on('change','.invite-email',function () {
             if($(this).val() != ''){
                 $('.remove-email-icon').css('visibility','visible');
+                if (isEmail($(this).val()) == false){
+                    $(this).css('border-bottom','2px solid red');
+                }else{
+                    $(this).css('border-bottom','2px solid #e0e0e0');
+                }
             }else{
                 $('.remove-email-icon').css('visibility','hidden');
             }
         });
+        $(document).on('keyup','.invite-email',function () {
+            if($(this).val() != ''){
+                $(this).css('border-bottom','2px solid #e0e0e0');
+            }
+        });
+        function isEmail(email) {
+            let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+
         $(document).on('click','#clearEmailField',function () {
             $(this).prev('input').val(null);
             $(this).children('i').css('visibility','hidden');
+            $('.invite-email').css('border-bottom','2px solid #e0e0e0');
         });
         //Sending invite link
         $(document).on('click','#sendInviteLink',function () {
-            let values = {};
-            $.each($('#formInviteLink').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            $.ajax({
-                url:'/timesheet/inviteLinkEntry',
-                type:"POST",
-                dataType:"json",
-                data:{values:values},
-                success:function (data) {
-                    Swal.fire(
-                        {
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Success',
-                            html: "Invite link has been sent",
-                            icon: 'success'
-                        });
-
-                }
-            });
+            if ($('.invite-email').val() != '' && isEmail($('.invite-email').val()) == true){
+                let values = {};
+                $.each($('#formInviteLink').serializeArray(), function (i, field) {
+                    values[field.name] = field.value;
+                });
+                let button = $(this);
+                button.attr('disabled',true).children('i').removeClass('fa-paper-plane').addClass('fa-spinner').addClass('fa-pulse');
+                button.children('span').text('SENDING');
+                $.ajax({
+                    url:'/timesheet/inviteLinkEntry',
+                    type:"POST",
+                    dataType:"json",
+                    data:{values:values},
+                    success:function (data) {
+                        if(data == 1){
+                            button.attr('disabled',false).children('i').addClass('fa-paper-plane').removeClass('fa-spinner').removeClass('fa-pulse');
+                            button.children('span').text('SEND');
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    html: "Invite link has been sent",
+                                    icon: 'success'
+                                });
+                        }
+                    }
+                });
+            }else{
+                $('.invite-email').css('border-bottom','2px solid red');
+            }
         });
 
         //Select2 employee list

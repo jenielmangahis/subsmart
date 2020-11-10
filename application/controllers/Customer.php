@@ -556,7 +556,7 @@ class Customer extends MY_Controller
 
     public function fetch_all_reasons_data()
     {
-        $reasons = $this->customer_ad_model->get_all(FALSE, "", "DESC", "acs_reasons", "reason_id");
+        $reasons = $this->customer_ad_model->get_all(FALSE, "", "ASC", "acs_reasons", "reason_id");
         echo json_encode($reasons);
     }
 
