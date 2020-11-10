@@ -411,3 +411,9 @@ $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
 $route['more/add_plugin'] = 'More/add_plugin';
 
 $route['page/no_access'] = 'page/no_access';
+
+// Offer Code
+$route['offer_codes/index'] = 'Offer_Codes/index';
+
+//Registration
+$route['registration/_use_offer_code'] = 'Register/registration_use_code';

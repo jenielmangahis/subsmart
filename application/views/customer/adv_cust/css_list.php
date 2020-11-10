@@ -157,8 +157,6 @@
     .assigned {
         background-image: url('/assets/img/customer/assigned.png')!important;
     }
-
-
     .client {
         background-image: url('https://app.creditrepaircloud.com/application/images/client_new.png');
         width: 530px;
@@ -170,7 +168,6 @@
         height: 185px;
         background-repeat: no-repeat;
     }
-
     .contactrighttab:hover {
         border: 1px solid #dfdfdf;
         border-radius: 5px;

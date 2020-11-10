@@ -17,6 +17,10 @@
 <script src="../plugins/chartist/js/chartist-plugin-tooltip.min.js"></script>
 <script src="../plugins/peity-chart/jquery.peity.min.js"></script> -->
 <!-- App js<script src="<?php echo $url->assets ?>dashboard/pages/dashboard.js"></script> -->
+<!--Morris js Chart-->
+<script src="<?php echo $url->assets ?>plugins/morris.js/morris.min.js"></script>
+
+
 <script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>

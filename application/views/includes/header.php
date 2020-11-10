@@ -9,7 +9,8 @@
     <meta content="Admin Dashboard" name="description">
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="<?php echo $url->assets?>plugins/font-awesome/css/font-awesome.min.css">
-    <!--Chartist Chart CSS -->
+    <!--Morris Chart CSS -->
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
 
     <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">

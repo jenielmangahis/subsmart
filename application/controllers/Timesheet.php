@@ -1876,18 +1876,51 @@ class Timesheet extends MY_Controller {
         }
     }
 
-    //Invite link page
-    public function invite_link(){
-        $user_id = logged('id');
-        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
-        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
-        $this->page_data['users'] = $this->users_model->getUsers();
-        $this->load->view('users/timesheet_invite_link', $this->page_data);
-    }
     //Invite link entry
     public function inviteLinkEntry(){
+        $email = $this->input->post('values[email]');
+        $name = $this->input->post('values[name]');
+        $role = $this->input->post('values[role]');
+        $query = $this->timesheet_model->inviteLinkEntry($email);
+        if ($query != null){
+            if ($this->sendEmailInviteLink($email,$name,$query) == true){
+                echo json_encode(1);
+            }
+        }else{
+            echo json_encode(0);
+        }
 
     }
+    public function sendEmailInviteLink($email,$name,$code){
+        $data = array(
+            'name' => $name,
+            'link' => $code
+        );
+        //Load email library
+        $this->load->library('email');
+        $config = array(
+            'smtp_crypto' => 'ssl',
+            'protocol' => 'smtp',
+            'smtp_host' => 'mail.nsmartrac.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'no-reply@nsmartrac.com',
+            'smtp_pass' => 'g0[05_rEa3?%',
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8',
+        );
+        $this->email->initialize($config);
+        $this->email->set_newline("\r\n");
+
+        $this->email->from('no-reply@nsmartrac.com','nSmartrac');
+        $this->email->to($email);
+        $this->email->subject('nSmartrac invitation');
+        $message = $this->load->view('users/invite_link_template',$data,TRUE);
+        $this->email->message($message);
+        //Send mail
+        $this->email->send();
+        return true;
+    }
+
 //    Email Report for Timesheet test page
     public function email(){
 	    $page = array(
@@ -1895,7 +1928,10 @@ class Timesheet extends MY_Controller {
         );
         $this->load->view('users/email_template',$page);
     }
-
+    //Invite link email for test page
+    public function invite(){
+        $this->load->view('users/invite_link_template');
+    }
 }
 
 

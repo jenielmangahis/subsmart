@@ -587,6 +587,19 @@ class Timesheet_model extends MY_Model {
         return $qry->result();
     }
 
+    //Invite link
+    public function inviteLinkEntry($email){
+        $random = sha1(rand());
+        $insert = array(
+            'email' => $email,
+            'invitation_code' => $random,
+            'status' => 1,
+            'date_created' => date('Y-m-d h:i:s')
+        );
+        $this->db->insert('timesheet_invite_link',$insert);
+        return $random;
+    }
+
 }
 
 

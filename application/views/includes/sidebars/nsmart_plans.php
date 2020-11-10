@@ -42,6 +42,7 @@
             $is_active_industry_type = "";
             $is_active_admin_management = "";
             $is_active_upgrades = "";
+            $is_active_offer_code = "";
             
             if($this->uri->uri_string() == 'nsmart_plans/index') {
                 $is_active_plans = "active";
@@ -77,6 +78,8 @@
                 $is_active_industry_type = "active";
             }elseif($this->uri->uri_string() == 'nsmart_adminmgt/subscribers') {
                 $is_active_admin_management = "active";
+            }elseif($this->uri->uri_string() == 'offers_code/index') {
+                $is_active_offer_code = "active";
             }
 
             
@@ -109,6 +112,9 @@
         </li>
         <li class="submenus <?= $is_active_admin_management; ?>"><a href="<?php echo base_url('nsmart_adminmgt/subscribers') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Admin Management</a>
+        </li>
+         <li class="submenus <?= $is_active_offer_code; ?>"><a href="<?php echo base_url('offer_codes/index') ?>" title="Industry Modules" style="color: #fff;">
+            <span class="fa fa-list"></span>Offer Code</a>
         </li>
     </ul>
 </nav>

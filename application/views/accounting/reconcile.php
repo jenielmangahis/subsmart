@@ -751,7 +751,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <button type="button" class="btn-cmn" onclick="closeFullNav_int()">Cancel</button>
             <a style="margin-left: 30%" class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Print </a>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="Int_printboth()">Print Deposit Slip & Summary</a>
+                <li><a href="#" onclick="print_this('to_print_both')">Print Deposit Slip & Summary</a>
                 </li>
                 <li><a href="#" onclick="print_this('to_print_summary')">Print Summary only</a>
                 </li>
@@ -759,29 +759,11 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <a href="#" style="margin-left: 5%" onclick="OpenRecurrInt()">Make Recurring</a>
             <button type="button" onclick="save_close_edit_int(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
-        <div id="to_print_summary" style="display: none;">
-            <center><h2>Deposit Summary</h2></center>
-            <p style="margin-left: 90%"><?=date("Y-m-d")?></p>
-            <p>Summary of Deposit to <?php
-                               foreach($this->chart_of_accounts_model->select() as $row)
-                               {
-                                 if($row->id == $rows[0]->chart_of_accounts_id)
-                                 { echo $row->name;}
-                              }
-                               ?> on <?=$rows[0]->second_date?>
-            </p>
-            <table class="table">
-                <thead>
-                    <th>Category</th>
-                    <th>Descp</th>
-                    <th>Amount</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td><?=number_format($rows[0]->interest_earned,2)?></td>
-                    </tr>
+        <div id="to_print_both" style="display: none;">
+            <div class="container">
+                <center>
+                    <?=number_format($rows[0]->interest_earned,2)?>
+                    </br>
                     <?php 
                     if(!empty($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id)))
                     {
@@ -799,35 +781,109 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <?php
                     for ($i=2; $i < 20 ; $i++) { 
                     ?>
-                    <tr>
-                        <td class="print_income_account_<?=$i?>"></td>
-                        <td class="print_descp_it_<?=$i?>"></td>
-                        <td class="print_interest_earned_<?=$i?>"></td>
-                    </tr>
+                        <div class="print_interest_earned_<?=$i?>"></div>
                     <?php
                     }
                     ?>
-                </tbody>
-            </table>
-            <div class="container">
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-10"></div>
-                <div class="col-md-2">
-                    <h6 id="getsubtotal_print"></h6>
+                </center>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2"><?=date("Y-m-d")?></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+                        <h6 id="getsubtotal_print_both"></h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+                        <h6 id="getdeduct_print_both"></h6>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+                        <h6 id="gettotal_print_both"></h6>
+                    </div>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-10"></div>
-                <div class="col-md-2">
-                    <h6 id="getdeduct_print"></h6>
+        
+            <div id="to_print_summary" style="display: none;">
+                <div class="container">
+                    <center><h2>Deposit Summary</h2></center>
+                    <p style="margin-left: 90%"><?=date("Y-m-d")?></p>
+                    <p>Summary of Deposit to <?php
+                                       foreach($this->chart_of_accounts_model->select() as $row)
+                                       {
+                                         if($row->id == $rows[0]->chart_of_accounts_id)
+                                         { echo $row->name;}
+                                      }
+                                       ?> on <?=$rows[0]->second_date?>
+                    </p>
+                    <section class="table-wrapper">
+                        <div class="container">
+                            <table class="table" style="width: 100%">
+                                <thead>
+                                    <th>Category</th>
+                                    <th>Descp</th>
+                                    <th>Amount</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td><?=number_format($rows[0]->interest_earned,2)?></td>
+                                    </tr>
+                                    <?php 
+                                    if(!empty($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id)))
+                                    {
+                                    foreach($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id) as $editrowtab)
+                                    {
+                                    ?>
+                                    <tr>
+                                        <td><?=$editrowtab->income_account_sub?></td>
+                                        <td><?=$editrowtab->descp_it_sub?></td>
+                                        <td><?=number_format($editrowtab->interest_earned_sub,2)?></td>
+                                    </tr>
+                                    <?php
+                                    }}
+                                    ?>
+                                    <?php
+                                    for ($i=2; $i < 20 ; $i++) { 
+                                    ?>
+                                    <tr>
+                                        <td class="print_income_account_<?=$i?>"></td>
+                                        <td class="print_descp_it_<?=$i?>"></td>
+                                        <td class="print_interest_earned_<?=$i?>"></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                            <div class="row" style="margin-bottom:20px">
+                                <div class="col-md-10"></div>
+                                <div class="col-md-2">
+                                    <h6 id="getsubtotal_print"></h6>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:20px">
+                                <div class="col-md-10"></div>
+                                <div class="col-md-2">
+                                    <h6 id="getdeduct_print"></h6>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:20px">
+                                <div class="col-md-10"></div>
+                                <div class="col-md-2">
+                                    <h6 id="gettotal_print"></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
-            </div>
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-10"></div>
-                <div class="col-md-2">
-                    <h6 id="gettotal_print"></h6>
-                </div>
-            </div>
             </div>
         </div>
     </div>
@@ -5184,6 +5240,10 @@ function closeAddaccount()
 </script>
 <script type="text/javascript">
     window.print_this = function(id) {
+        if(id== 'to_print_both')
+        {
+            $('#to_print_summary').show();
+        }
     var prtContent = document.getElementById(id);
     var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
     
@@ -5200,6 +5260,7 @@ function closeAddaccount()
     WinPrint.document.write(prtContent.innerHTML);
     WinPrint.document.close();
     WinPrint.print();
+    $('#to_print_summary').hide();
 }
 </script>
 <script type="text/javascript">
@@ -5209,6 +5270,9 @@ function closeAddaccount()
         $('#getsubtotal_print').text('Deposit Subtotal: $'+$('#inttotal').text().substr(20));
         $('#getdeduct_print').text('Less Cash back: $'+$('#cash_back_amount').val());
         $('#gettotal_print').text('Deposit total: $'+$('#inttotal_final').text().substr(9));
+        $('#getsubtotal_print_both').text($('#inttotal').text().substr(20));
+        $('#getdeduct_print_both').text($('#cash_back_amount').val());
+        $('#gettotal_print_both').text($('#inttotal_final').text().substr(9));
         
         length =$('#participantIntTable tr').length -2;
         for(var i = 2 ; i <= length ; i++)

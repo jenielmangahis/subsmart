@@ -338,6 +338,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	<hr />
 								          	<p><b>Payment Method</b></p>
 								          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+								          	<hr />
+								          	<!-- Grid row -->
+											  <div class="form-row align-items-center" style="margin-top: 30px;">
+											    <!-- Grid column -->
+											    <div class="col-auto">
+											      <!-- Material input -->
+											      <label class="sr-only" for="inlineFormInputGroupMD">Username</label>
+											      <div class="md-form input-group mb-3">
+											        <div class="input-group-prepend">
+											          <span class="input-group-text md-addon">Use Offer Code</span>
+											        </div>
+											        <input type="text" class="form-control pl-0 rounded-0" id="offer-code"
+											          placeholder="">
+											      </div>
+											    </div>
+											    <!-- Grid column -->
+
+											    <!-- Grid column -->
+											    <div class="col-auto">
+											      <button type="button" class="btn btn-primary mb-0 btn-use-offer-code">Use Code</button>
+											    </div>
+											    <!-- Grid column -->
+											  </div>
+											  <!-- Grid row -->
+
 								      	  </div>
 								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
 								          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
@@ -358,6 +383,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						  </div>
 						</div>
 						<!-- Steps form -->
+
+						<!-- MODAL USE OFFER CODE -->
+						<div id="modalVerifyOfferCode" class="modal fade" role="dialog">
+						    <div class="modal-dialog modal-lg">
+						        <!-- Modal content-->
+						        <div class="modal-content">
+						            <div class="modal-header">
+						                <h4 class="modal-title">Offer Code</h4>
+						                <button type="button" class="close" data-dismiss="modal">&times;</button>
+						            </div>
+						            <div class="modal-body">
+						                <p>Verifying code...</p>
+						            </div>
+						        </div>
+
+						    </div>
+						</div>
 
 						<!-- <div class="col-md-6 float-left z-100">
 							<div class="radio m-b-0">
@@ -574,6 +616,29 @@ $(function(){
     		$(".discounted-price").show();
     		$(".trial-price").hide();
     	}
+    });
+
+    $(".btn-use-offer-code").click(function(){
+    	var url = base_url + 'registration/_use_offer_code';
+    	var offer_code = $("#offer-code").val();
+    	$("#modalVerifyOfferCode").modal("show");
+
+    	setTimeout(function () {
+	        $.ajax({
+	           type: "POST",
+	           url: url,
+	           data: {offer_code:offer_code},
+	           success: function(o)
+	           {	
+	           		$("#modalVerifyOfferCode .modal-body").html(o.msg);
+	           		//$("#modalVerifyOfferCode").modal("hide");
+	              	
+	           }
+	        });
+	    }, 500);        	
+
+
+
     });
 });
 </script>
