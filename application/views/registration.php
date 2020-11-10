@@ -349,7 +349,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											        <div class="input-group-prepend">
 											          <span class="input-group-text md-addon">Use Offer Code</span>
 											        </div>
-											        <input type="text" class="form-control pl-0 rounded-0" id="offer-code"
+											        <input type="text" class="form-control pl-0 rounded-0" name="offer_code" id="offer-code"
 											          placeholder="">
 											      </div>
 											    </div>
@@ -620,25 +620,33 @@ $(function(){
 
     $(".btn-use-offer-code").click(function(){
     	var url = base_url + 'registration/_use_offer_code';
-    	var offer_code = $("#offer-code").val();
+
     	$("#modalVerifyOfferCode").modal("show");
 
     	setTimeout(function () {
 	        $.ajax({
 	           type: "POST",
 	           url: url,
-	           data: {offer_code:offer_code},
+	           dataType: "json",
+	           data: $("#subscribe-form-payment").serialize(),
 	           success: function(o)
 	           {	
-	           		$("#modalVerifyOfferCode .modal-body").html(o.msg);
-	           		//$("#modalVerifyOfferCode").modal("hide");
-	              	
+	           		if( o.is_valid ){
+	           			var msg = "<div class='alert alert-success'><p>"+o.msg+"</p></div>";
+	           		}else{
+	           			var msg = "<div class='alert alert-danger'><p>"+o.msg+"</p></div>";	
+	           		}
+
+	           		$("#modalVerifyOfferCode .modal-body").html(msg);
+
+	           		if( o.is_valid ){
+	           			setTimeout(function () {
+					        location.href = base_url + 'login';
+					    }, 1500);  
+	           		}
 	           }
 	        });
-	    }, 500);        	
-
-
-
+	    }, 500);  
     });
 });
 </script>
