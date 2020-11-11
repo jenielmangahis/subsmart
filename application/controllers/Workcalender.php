@@ -886,7 +886,7 @@ class Workcalender extends MY_Controller
                     $resources_user_events[$inc]['title'] = $event->event_description;
                     $resources_user_events[$inc]['start'] = $start_date_time;
                     $resources_user_events[$inc]['end'] = $start_date_end;
-                    $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
 
                 $inc++;
                 }elseif($event->employee_id == 0) {
@@ -898,7 +898,7 @@ class Workcalender extends MY_Controller
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
                         $resources_user_events[$inc]['end'] = $start_date_end;
-                        $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                        $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
                     $inc++; 
                     }
                    
@@ -1018,7 +1018,7 @@ class Workcalender extends MY_Controller
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
                                 $resources_user_events[$inc]['start'] = $start_date;
                                 $resources_user_events[$inc]['end'] = $end_date;
-                                $resources_user_events[$inc]['color'] = $bgcolor;
+                                $resources_user_events[$inc]['backgroundColor'] = $bgcolor;
 
                                 $inc++;
                             }
