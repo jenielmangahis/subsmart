@@ -23,7 +23,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }elseif( $module == 'taskhub' ){
             $module_title = "Taskhub";
             include viewPath('includes/sidebars/schedule');
+        }elseif( $module == 'online_booking' ){
+            $module_title = "Online Booking";
+            include viewPath('includes/sidebars/upgrades');
+        }elseif( $module == 'customer' ){
+            $module_title = "Customer";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'customer_group' ){
+            $module_title = "Customer Group";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'customer_type' ){
+            $module_title = "Customer Type";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'customer_leads' ){
+            $module_title = "Leads";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'job' ){
+            $module_title = "Jobs";
+            include viewPath('includes/sidebars/job');
         }
+
+
+     
 
     ?>
     <!-- page wrapper start -->

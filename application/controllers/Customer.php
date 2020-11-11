@@ -63,7 +63,13 @@ class Customer extends MY_Controller
     }
 
     public function leads()
-    {
+    {   $is_allowed = true; //$this->isAllowedModuleAccess(14);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_leads';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $user_id = logged('id');
         $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         $this->load->view('customer/leads', $this->page_data);
@@ -749,6 +755,12 @@ class Customer extends MY_Controller
 
     public function index($status_index = 0)
     {
+        $is_allowed = true; //$this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
        //echo  $this->uri->segment(3);
       // echo  $this->uri->segment(4);
@@ -1596,7 +1608,13 @@ class Customer extends MY_Controller
      *
      */
     public function group()
-    {
+    {   
+        $is_allowed = true; //$this->isAllowedModuleAccess(11);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_group';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerGroup = new CustomerGroup($this);
     }
@@ -1607,12 +1625,24 @@ class Customer extends MY_Controller
      */
     public function source()
     {
+         $is_allowed = true; //$this->isAllowedModuleAccess(12);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_source';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerSource = new CustomerSource($this);
     }
 
     public function types()
     {
+         $is_allowed = true; //$this->isAllowedModuleAccess(13);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_type';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerTypes = new CustomerTypes($this);
     }
