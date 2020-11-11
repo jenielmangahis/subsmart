@@ -110,9 +110,9 @@ a.top-1 {
 .tooltip-table td{
   text-align: left;
 }
-.fc .fc-scrollgrid, .fc .fc-scrollgrid table {
+/*.fc .fc-scrollgrid, .fc .fc-scrollgrid table {
     width: 101% !important;
-}
+}*/
 .tooltip{
   opacity: 1;
 }
