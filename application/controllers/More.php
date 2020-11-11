@@ -22,6 +22,13 @@ class More extends MY_Controller {
 
 	public function upgrades(){	
 		
+		$is_allowed = $this->isAllowedModuleAccess(66);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'plan_builder';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('company_id');
 

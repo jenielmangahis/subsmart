@@ -42,7 +42,7 @@ class Workcalender extends MY_Controller
 
     public function index()
     {
-        $is_allowed = $this->isAllowedModuleAccess(4);
+        $is_allowed = $this->isAllowedModuleAccess(5);
         if( !$is_allowed ){
             $this->page_data['module'] = 'calendar';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -1373,7 +1373,167 @@ class Workcalender extends MY_Controller
 
         $upcoming_events = $this->event_model->getAllUpComingEvents();
 
-        $this->page_data['upcoming_events'] = $upcoming_events;
+        //Google Events
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+        $a_settings = unserialize($settings[0]->value);
+        if( $a_settings ){
+            $user_timezone = $a_settings['calendar_timezone'];
+        }else{
+            $user_timezone = 'UTC';
+        }
+
+        $inc = 0;
+        $google_events    = array();
+        $enabled_calendar = array();
+        $calendar_list    = array();
+        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+        if( $google_user_api ){
+            $google_credentials = google_credentials();        
+
+            $access_token = "";
+            $refresh_token = "";
+            $google_client_id = "";
+            $google_secrect = "";
+            $calendar_list = array();
+
+            if(isset($google_user_api->google_access_token)) {
+                $access_token = $google_user_api->google_access_token;
+            }
+
+            if(isset($google_user_api->google_refresh_token)) {
+                $refresh_token = $google_user_api->google_refresh_token;
+            }
+
+            if(isset($google_credentials['client_id'])) {
+                $google_client_id = $google_credentials['client_id'];
+            }
+
+            if(isset($google_credentials['client_secret'])) {
+                $google_secrect = $google_credentials['client_secret'];
+            }    
+            
+            //Set Client
+            $client = new Google_Client();
+            $client->setClientId($google_client_id);
+            $client->setClientSecret($google_secrect);
+            $client->setAccessToken($access_token);
+            $client->refreshToken($refresh_token);
+            $client->setScopes(array(
+                'email',
+                'profile',
+                'https://www.googleapis.com/auth/calendar',
+            ));
+            $client->setApprovalPrompt('force');
+            $client->setAccessType('offline');
+
+            //Request
+            $access_token = $client->getAccessToken();
+            $calendar     = new Google_Service_Calendar($client);
+            $data = $calendar->calendarList->listCalendarList();
+
+            $calendar_list = $data->getItems(); 
+            $email = $google_user_api->google_email;
+
+            $start_date = date("Y-m-d");
+            $end_date   = date("Y-m-d", strtotime("+5 days"));
+
+            $start_date = $start_date . 'T00:00:00+08:00';
+            $end_date   = $end_date . 'T00:00:00+08:00';
+
+            $optParams = array(
+              'orderBy' => 'startTime',
+              'singleEvents' => TRUE,
+              'timeMin' => $start_date,
+              'timeMax' => $end_date,
+            );
+
+            foreach( $calendar_list as $cl ){
+                //Display in events                
+                $events = $calendar->events->listEvents($cl['id'],$optParams);
+                $bgcolor = "#38a4f8";
+                if( $cl->backgroundColor != '' ){
+                    $bgcolor = $cl->backgroundColor;
+                }
+
+                foreach( $events->items as $event ){  
+
+                    $gevent = $this->event_model->getEventByGoogleEventId($event->id);
+                    
+                    if( empty($gevent) ){
+
+                        if( $event->start->timeZone != '' ){
+                            $tz = new DateTimeZone($event->start->timeZone);
+                            $timezone = $event->start->timeZone;
+                        }else{
+                            $tz = new DateTimeZone($user_timezone);
+                            $timezone = $user_timezone;
+                        }
+
+                        if( $event->start->dateTime != '' ){
+                            $date = new DateTime($event->start->dateTime);
+                            $date->setTimezone($tz);
+
+                            $start_date = $date->format('Y-m-d H:i:s');
+                        }else{
+                            $date = new DateTime($event->start->date);
+                            $date->setTimezone($tz);
+
+                            $start_date = $date->format('Y-m-d H:i:s');
+                        }
+
+                        if( $event->end->dateTime != '' ){
+                            $date = new DateTime($event->end->dateTime);
+                            $date->setTimezone($tz);
+
+                            $end_date = $date->format('Y-m-d H:i:s');
+                        }else{
+                            $date = new DateTime($event->end->date);
+                            $date->setTimezone($tz);
+                            
+                            $end_date = $date->format('Y-m-d H:i:s');
+                        }
+
+                        if( $event->summary != '' ){
+                            $google_events[$inc]['geventID'] = $event->id;
+                            $google_events[$inc]['resourceId'] = "user17";
+                            $google_events[$inc]['title'] = $event->summary;
+                            $google_events[$inc]['description'] = $event->summary;
+                            $google_events[$inc]['start'] = $start_date;
+                            $google_events[$inc]['end'] = $end_date;
+                            $google_events[$inc]['color'] = $bgcolor;
+
+                            $inc++;
+                        }
+                    }
+                }
+            }
+        }
+
+        $events = array();
+        foreach( $upcoming_events as $u ){
+            $events[$u->start_date][] = [
+                'event_title' => get_customer_by_id($u->customer_id)->contact_name,
+                'event_description' => $u->event_description,
+                'start_date' => date('F j, Y', strtotime($u->start_date)),
+                'end_date' => date('F j, Y', strtotime($u->end_date)),
+                'start_time' => $u->start_time,
+                'end_time' => $u->end_time
+            ];
+        }
+
+        foreach( $google_events as $g ){
+            $start_date = date("Y-m-d", strtotime($g['start']));
+            $events[$start_date][] = [
+                'event_title' => $g['title'],
+                'event_description' => $g['description'],
+                'start_date' => date('F j, Y', strtotime($g['start'])),
+                'end_date' => date('F j, Y', strtotime($g['end'])),
+                'start_time' => date('H:i:s', strtotime($g['start'])),
+                'end_time' => date('H:i:s', strtotime($g['end']))
+            ];
+        }
+
+        $this->page_data['events'] = $events;
         $this->load->view('workcalender/ajax_load_upcoming_events', $this->page_data);
     }
 }

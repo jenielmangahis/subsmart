@@ -136,7 +136,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <div class="dropdown">
                                                                         <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
                                                                             <!--<input type="file" name="file" /> -->
-                                                                            <button type="submit" class="btn btn-primary btn-md" name="importSubmit" id="importItemsInventory" ><span class="fa fa-download"></span> Import</button>
+
+                                                                            <label for="file-upload" class="btn btn-primary btn-md">
+                                                                                <span class="fa fa-download"></span> Import
+                                                                            </label>
+                                                                            <input id="file-upload" type="file" style="display: none;"/>
                                                                             <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
                                                                             <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
                                                                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
@@ -207,7 +211,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <a href="#" style="text-decoration:none; display:inline-block;" >
                                                                                                 <img src="/assets/img/customer/actions/ac_call.png" width="16px" height="16px" border="0" title="Call Customer">
                                                                                             </a>
-                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;">
                                                                                                 <img src="/assets/img/customer/actions/ac_invoice.png" width="16px" height="16px" border="0" title="Invoice Customer">
                                                                                             </a>
                                                                                             <a href="#" style="text-decoration:none; display:inline-block;" >

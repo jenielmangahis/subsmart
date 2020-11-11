@@ -10,6 +10,7 @@ class Register extends MY_Controller {
         $this->load->model('Clients_model');
         $this->load->model('Users_model');
         $this->load->model('IndustryType_model');
+        $this->load->model('OfferCodes_model');
         $this->load->helper(array('paypal_helper'));
 
         // Load Paypal SDK
@@ -266,11 +267,12 @@ class Register extends MY_Controller {
             'password' => $post['password'],
             'ip_address' => ip_address(),
             'date_created'  => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
+            'date_modified' => date("Y-m-d H:i:s"),
+            'is_trial' => 0
         ]);
 
         $uid = $this->users_model->create([
-            'role' => 0,
+            'role' => 3,
             'FName' => $post['firstname'],
             'LName' => $post['lastname'],
             'username' => $post['email'],
@@ -455,6 +457,68 @@ class Register extends MY_Controller {
          *  Paypal Process Here - End
         */        
         
+    }
+
+    public function registration_use_code()
+    {
+        $is_valid = false;
+        $msg      = '';
+
+        postAllowed();
+        $post = $this->input->post(); 
+
+        //Check if offer code is valid
+        $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
+
+        if( $offerCode && $offerCode->status == 0 ){
+            $cid = $this->Clients_model->create([
+                'first_name' => $post['firstname'],
+                'last_name'  => $post['lastname'],
+                'email_address' => $post['email'],
+                'phone_number'  => $post['phone'],
+                'business_name' => $post['business_name'],
+                'business_address' => $post['business_address'],
+                'number_of_employee' => $post['number_of_employee'],
+                'industry_type_id' => $post['industry_type_id'],
+                'password' => $post['password'],
+                'ip_address' => ip_address(),
+                'date_created'  => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s"),
+                'is_plan_active' => 1,
+                'nsmart_plan_id' => $post['plan_id'],
+                'is_trial' => 1
+            ]);
+
+            $uid = $this->users_model->create([
+                'role' => 3,
+                'FName' => $post['firstname'],
+                'LName' => $post['lastname'],
+                'username' => $post['email'],
+                'email' => $post['email'],
+                'company_id' => $cid,
+                'status' => 1,
+                'password_plain' =>  $post['password'],
+                'password' => hash( "sha256", $post['password'] ),
+            ]);
+
+            $this->OfferCodes_model->update($offerCode->id, array(
+                'client_id' => $cid,
+                'status' => 1
+            ));
+
+            $is_valid = true;
+            $msg      = 'Registration completed. Redirecting to login page.';
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
+
+        }else{
+            $msg = 'Invalid offer code';
+        }
+
+        $json_data = ['is_valid' => $is_valid, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
 }

@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
     height: 150px !important;
 }
-.hide,.Checkhide,.Recurrhide,.hideint,.hidemefinal
+.hide,.Checkhide,.Recurrhide,.hideint,.hidemefinal,.RecurrhideInt,.hidemefinal_int
 {
     display: none;
 }
@@ -1725,6 +1725,443 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         </div>
     </div>
     <!-- End Make recurring -->
+
+    <!-- Make recurring Int-->
+    <div id="overlay-recurrint-tx" class=""></div>
+    <div id="side-menu-recurrint-tx" class="main-side-nav" style="display: none;">
+        <div style="background-color: #f4f5f8">
+            <div class="side-title">
+                <a id="close-menu-recurrint-tx" class="menuCloseButton" onclick="closeRecurrInt()"><span id="side-menu-close-text">
+                <i class="fa fa-times"></i></span></a>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <h2>Recurring Check</h2>
+                </div>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-2">
+                        <label>Template name</label>
+                        <input type="text" name="template_name_int" id="template_name_int" class="form-control" required="required">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Type</label>
+                        <select name="type_scheduled_int" id="type_scheduled_int" class="form-control">
+                            <option value="scheduled">Scheduled</option>
+                            <option value="reminder">Reminder</option>
+                            <option value="unscheduled">Unscheduled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <div id="sched_int_">Create<input type="number" name="create_days_int" id="create_days_int" class="form-control">days in advance</div>
+                        <div id="remine_int_" style="display: none;">Remind<input type="number" name="remine_days_int" id="remine_days_int" class="form-control">days before the transaction date</div>
+                        <div id="unsched_int_" style="display: none;">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-left: 20px;" id="sched_section_int">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-1">
+                        <label>Interval</label>
+                        <select name="interval_int" id="interval_int" class="form-control" style="width: 120% !important;">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly" selected>Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6" style="display: flex;">
+                        <div id="daily_int" style="display: none;">every<input type="number" name="daily_days_int" id="daily_days_int" class="form-control" style="width: 15% !important;display: inline;">day(s)</div>
+                        <div id="weekly_int" style="display: none;">
+                            every<input type="number" name="daily_weeks_int" id="daily_weeks_int" class="form-control" style="width: 10% !important;display: inline;">week(s) on
+                            <select name="weekly_option_int" id="weekly_option_int" class="form-control" style="width: 30% !important;">
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                                <option value="saturday">Saturday</option>
+                                <option value="sunday">Sunday</option>
+                            </select>
+                        </div>
+                        <div id="monthly_int">
+                            on
+                            <select name="monthlymain_option_int" id="monthlymain_option_int" class="form-control" style="width: 15% !important;">
+                                <option value="day">day</option>
+                                <option value="first">first</option>
+                                <option value="second">second</option>
+                                <option value="third">third</option>
+                                <option value="fourth">fourth</option>
+                                <option value="last">last</option>
+                            </select>
+                            <select name="monthlyday_option_int" id="monthlyday_option_int" class="form-control" style="width: 12% !important;">
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                                <option value="4th">4th</option>
+                                <option value="5th">5th</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                                <option value="9th">9th</option>
+                                <option value="10th">10th</option>
+                                <option value="11th">11th</option>
+                                <option value="12th">12th</option>
+                                <option value="13th">13th</option>
+                                <option value="14th">14th</option>
+                                <option value="15th">15th</option>
+                                <option value="16th">16th</option>
+                                <option value="17th">17th</op1tion>
+                                <option value="18th">18th</option>
+                                <option value="19th">19th</option>
+                                <option value="20th">20th</option>
+                                <option value="21th">21th</option>
+                                <option value="22th">22th</option>
+                                <option value="23th">23th</option>
+                                <option value="24th">24th</option>
+                                <option value="25th">25th</option>
+                                <option value="26th">26th</option>
+                                <option value="27th">27th</option>
+                                <option value="28th">28th</option>
+                                <option value="last">Last</option>
+                            </select>
+                            <select name="monthlyweek_option_int" id="monthlyweek_option_int" class="form-control" style="display: none;width: 20% !important;">
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                                <option value="saturday">Saturday</option>
+                                <option value="sunday">Sunday</option>
+                            </select>
+                            of every<input type="number" name="monthly_days_int" id="monthly_days_int" size="1" class="form-control" style="width: 8% !important;display: inline;">month(s)
+                        </div>
+                        <div id="yearly_int" style="display: none;">
+                            every
+                            <select name="yearlymonth_option_int" id="yearlymonth_option_int" class="form-control">
+                                <option value="january">January</option>
+                                <option value="february">February</option>
+                                <option value="march">March</option>
+                                <option value="april">April</option>
+                                <option value="may">May</option>
+                                <option value="june">June</option>
+                                <option value="july">July</option>
+                                <option value="august">August</option>
+                                <option value="september">September</option>
+                                <option value="october">October</option>
+                                <option value="november">November</option>
+                                <option value="december">December</option>
+                            </select>
+                            <select name="yearlyday_option_int" id="yearlyday_option_int" class="form-control">
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                                <option value="4th">4th</option>
+                                <option value="5th">5th</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                                <option value="9th">9th</option>
+                                <option value="10th">10th</option>
+                                <option value="11th">11th</option>
+                                <option value="12th">12th</option>
+                                <option value="13th">13th</option>
+                                <option value="14th">14th</option>
+                                <option value="15th">15th</option>
+                                <option value="16th">16th</option>
+                                <option value="17th">17th</op1tion>
+                                <option value="18th">18th</option>
+                                <option value="19th">19th</option>
+                                <option value="20th">20th</option>
+                                <option value="21th">21th</option>
+                                <option value="22th">22th</option>
+                                <option value="23th">23th</option>
+                                <option value="24th">24th</option>
+                                <option value="25th">25th</option>
+                                <option value="26th">26th</option>
+                                <option value="27th">27th</option>
+                                <option value="28th">28th</option>
+                                <option value="last">Last</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="display: flex;">
+                        <label>StartDate</label>
+                        <div class="col-xs-10 date_picker">
+                            <input type="text" name="recurr_start_date_int" id="recurr_start_date_int" class="form-control" style="width: 103%!important;">
+                        </div>
+                        <select class="form-control" name="recurr_select_int" id="recurr_select_int" style="width: 35%!important">
+                            <option value="none">None</option>
+                            <option value="by">By</option>
+                            <option value="after">After</option>
+                        </select>
+                        <div id="recurr_by_int" style="display: none;">
+                            <div class="col-xs-10 date_picker">
+                                <input type="text" name="recurr_end_date_int" id="recurr_end_date_int" class="form-control">
+                            </div>
+                        </div>
+                        <div id="recurr_after_int" style="display: none;"><input type="text" name="recurr_after_occurrences_int" id="recurr_after_occurrences_int" class="form-control" maxlength="3"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-3">
+                        <select class="form-control fa" name="recurr_account_popup_int" id="recurr_account_popup_int">
+                            <?php
+                               $i=1;
+                               foreach($this->chart_of_accounts_model->select() as $row)
+                               {
+                                ?>
+                                <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                <?php endif ?>value="<?=$row->id?>"><?=$row->name?></option>
+                              <?php
+                              $i++;
+                              }
+                               ?>
+                            <option value="fa fa-plus">&#xf067; Add new</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-left: 20px">
+            <section class="table-wrapper">
+                <div class="container">
+                    <table class="table" id="participantRecurrIntTable">
+                        <thead>
+                            <tr>
+                               <th></th>
+                               <th>#</th>
+                               <th>Category</th>
+                               <th>Description</th>
+                               <th>Amount</th>
+                               <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="trClickRecurrMain_Int()">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>1</td>
+                                <td>
+                                    <select name='recurr_income_account' id='recurr_income_account' class='' style="display: none;">
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($rows[0]->income_account == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_income_account"><?=$rows[0]->income_account?></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp_it" name="recurr_descp_it" value="" placeholder="What did you paid for?">
+                                    <div class="recurr_descp_it"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_interest_earned" name="recurr_interest_earned" value="<?=number_format($rows[0]->service_charge,2)?>">
+                                    <div class="recurr_interest_earned"><?=number_format($rows[0]->interest_earned,2)?></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php 
+                            $recurrservicechargecount_int =0;
+                            if(!empty($this->reconcile_model->select_recurr_interest($rows[0]->id,$rows[0]->chart_of_accounts_id)))
+                            {
+                            $recurrrowcount_int =2;
+                            foreach($this->reconcile_model->select_recurr_interest($rows[0]->id,$rows[0]->chart_of_accounts_id) as $recurrrowtabint)
+                            {
+                                $recurrservicechargecount_int+=$recurrrowtabint->service_charge_sub;
+                            ?>
+                            <tr onclick="trClickRecurr_Int(<?=$recurrrowcount_int?>)">
+                                <td data-id="<?=$recurrrowtabint->id?>"><i class="fa fa-th"></i></td>
+                                <td><?=$recurrrowcount_int?></td>
+                                <td>
+                                    <select name='recurr_income_account_<?=$recurrrowcount_int?>' id='recurr_income_account_<?=$recurrrowcount_int?>' data-id='<?=$recurrrowtabint->id?>' class='up_row' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($recurrrowtabint->expense_account_sub == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_income_account_<?=$recurrrowcount_int?>"><?=$recurrrowtabint->expense_account_sub?></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp_it_<?=$recurrrowcount_int?>" name="recurr_descp_it_<?=$recurrrowcount_int?>" value="<?=$recurrrowtabint->descp_it_sub?>" placeholder="What did you paid for?" value="<?=$recurrrowtabint->descp_it_sub?>">
+                                    <div class="recurr_descp_it_<?=$recurrrowcount_int?>"><?=$recurrrowtabint->descp_it_sub?></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_interest_earned_<?=$recurrrowcount_int?>" name="recurr_interest_earned_<?=$recurrrowcount_int?>" value="<?=number_format($recurrrowtabint->interest_earned_sub,2)?>">
+                                    <div class="recurr_interest_earned_<?=$recurrrowcount_int?>"><?=number_format($recurrrowtabint->interest_earned_sub,2)?></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php $recurrrowcount_int++; }}else{ ?>
+                            <tr onclick="trClickRecurr_Int(2)">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>2</td>
+                                <td>
+                                    <select name='recurr_income_account_2' id='recurr_income_account_2' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_income_account_2"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp_it_2" name="recurr_descp_it_2" value="" placeholder="What did you paid for?">
+                                    <div class="recurr_descp_it_2"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_interest_earned_2" name="recurr_interest_earned_2" value="">
+                                    <div class="recurr_interest_earned_2"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <?php } ?>
+                            <input type="hidden" name="recurrservicechargecount_int" id="recurrservicechargecount_int" value="<?=$recurrservicechargecount_int?>">
+                            <tr class="pr participantRecurrIntRow RecurrhideInt">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>0</td>
+                                <td>
+                                    <select name='recurr_income_account_' id='recurr_income_account_' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_income_account_"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp_it_" name="recurr_descp_it_" value="" placeholder="What did you paid for?">
+                                    <div class="recurr_descp_it_"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_interest_earned_" name="recurr_interest_earned_" value="">
+                                    <div class="recurr_interest_earned_"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr_int"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="row" style="margin-bottom:20px">
+                        <div class="col-md-10">
+                            <div class="btn-group">
+                                <a href="javascript:void(0);" class="btn-add-bx add_recurr_int">Add Lines</a>
+                                <a href="javascript:void(0);" class="btn-add-bx clear_recurr_int">Clear All Lines</a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <h6 id="intrecurrtotal">Other Fund Total : $<?=number_format($rows[0]->interest_earned,2)?></h6>
+                        </div>
+                    </div>
+                    <div class="btn-group hidemerecurr_int" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="rightclickRecurrInt()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickRecurrInt()">Cancel<i class="fa fa-close"></i>
+                    </div>
+                </div>
+            </section>
+
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label>Memo</label>
+                    </br>
+                    <textarea name="recurr_memo_it" id="recurr_memo_it" rows="4"><?=$rows[0]->memo_it?></textarea>
+                </div>
+                <div class="col-md-3">
+                    <label>Cash back goes to</label>
+                    </br>
+                    <select class="form-control" id="cashback_popup_recurr">
+                        <?php
+                           $i=1;
+                           foreach($this->chart_of_accounts_model->select() as $row)
+                           {
+                            ?>
+                            <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                            <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                          <?php
+                          $i++;
+                          }
+                           ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Cash back memo</label>
+                    </br>
+                    <textarea name="cash_back_memo_recurr" id="cash_back_memo_recurr" rows="4"></textarea>
+                </div>
+                <div class="col-md-3">
+                    <label>Cash back amount</label>
+                    </br>
+                    <input type="number" name="cash_back_amount_recurr" id="cash_back_amount_recurr" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <h6 id="intrecurrtotal_final">Total : $<?=number_format($rows[0]->interest_earned,2)?></h6>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <div class="btn-group hidemefinal_int" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx" onclick="rightclickRecurr_int_final()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickRecurr_int_final()">Cancel<i class="fa fa-close"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label><i class="fa fa-paperclip"></i>Attachment</label>
+                    </br>
+                    <iframe name="hiddenFramerecurr" width="0" height="0" border="0" style="display: none;"></iframe>
+                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="recurrForm" enctype="multipart/form-data" target="hiddenFramerecurr">
+                    <div class="file-upload-block">
+                        <div class="upload-btn-wrapper">
+                            <button class="btn ubw">
+                                <i class="fa fa-cloud-upload"></i>
+                                <h6>Drag and drop files here or <span>browse to upload</span></h6>
+                            </button>
+                            <input type="file" name="userfile_recurrint" />
+                            <input type="hidden" name="reconcile_id" value="<?=$rows[0]->id?>">
+                            <input type="hidden" name="subfix" value="recurrint">
+                        </div>
+                    </div>
+                    </br>
+                    <button type="submit" class="form-control">Upload</button>
+                    </form>
+                    </br>
+                    <a href="#" onclick="openSideNav()">Show existing</a>
+                </div>
+            </div>
+        </div>
+     
+        <div class="save-act" style="position: unset !important;">
+            <button type="button" class="btn-cmn" onclick="closeRecurrInt()">Cancel</button>
+            <button type="button" class="btn-cmn" onclick="OpenRecurrInt()" style="margin-left: 5% ">Revert</button>
+            <button type="button" class="savebtn" onclick="save_recurr_int(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)">Save template</button>
+        </div>
+    </div>
+    <!-- End Make recurring Int-->
 
     <!-- Make account -->
     <div id="overlay-account-tx" class=""></div>
@@ -4248,6 +4685,24 @@ function closeRecurr()
 }
 </script>
 <script type="text/javascript">
+function OpenRecurrInt()
+{
+    jQuery("#side-menu-recurrint-tx").css("display","");
+    closeFullNav_int();
+    jQuery("#side-menu-recurrint-tx").addClass("open-side-nav");
+    jQuery("#side-menu-recurrint-tx").css("width","100%");
+    jQuery("#side-menu-recurrint-tx").css("overflow-y","auto");
+    jQuery("#side-menu-recurrint-tx").css("overflow-x","hidden");
+    jQuery("#overlay-recurrint-tx").addClass("overlay");
+}
+function closeRecurrInt() 
+{
+    jQuery("#side-menu-recurrint-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-recurrint-tx").css("width","0%");
+    jQuery("#overlay-recurrint-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
     /* Variables */
     var p = 1;
     var row_recurr = $(".participantRecurrRow");
@@ -4549,6 +5004,92 @@ function closeAddaccount()
     jQuery("#overlay-account-tx").removeClass("overlay");
 }
 </script>
+<!-- int start-->
+<script type="text/javascript">
+     $('#interval_int').on('change', function (e) {
+          if($('#interval_int').val() == 'daily')
+          {
+            $('#daily_int').show();
+            $('#weekly_int').hide();
+            $('#monthly_int').hide();
+            $('#yearly_int').hide();
+          }
+          else if($('#interval_int').val() == 'weekly')
+          {
+            $('#daily_int').hide();
+            $('#weekly_int').show();
+            $('#monthly_int').hide();
+            $('#yearly_int').hide();
+          }
+          else if($('#interval_int').val() == 'monthly')
+          {
+            $('#daily_int').hide();
+            $('#weekly_int').hide();
+            $('#monthly_int').show();
+            $('#yearly_int').hide();
+          }
+          else if($('#interval_int').val() == 'yearly')
+          {
+            $('#daily_int').hide();
+            $('#weekly_int').hide();
+            $('#monthly_int').hide();
+            $('#yearly_int').show();
+          }
+        });
+</script>
+<script type="text/javascript">
+    $('#type_scheduled_int').on('change', function (e) {
+          if($('#type_scheduled_int').val() == 'scheduled')
+          {
+            $('#sched_int_').show();
+            $('#unsched_int_').hide();
+            $('#remine_int_').hide();
+            $('#sched_section_int').show();
+          }
+          else if($('#type_scheduled_int').val() == 'unscheduled')
+          {
+            $('#sched_int_').hide();
+            $('#unsched_int_').show();
+            $('#remine_int_').hide();
+            $('#sched_section_int').hide();
+          }
+          else if($('#type_scheduled_int').val() == 'reminder')
+          {
+            $('#sched_int_').hide();
+            $('#unsched_int_').hide();
+            $('#remine_int_').show();
+            $('#sched_section_int').show();
+          }
+        });
+</script>
+<script type="text/javascript">
+    $('#recurr_select_int').on('change', function (e) {
+          if($('#recurr_select_int').val() == 'none')
+          {
+            $('#recurr_by_int').hide();
+            $('#recurr_after_int').hide();
+          }
+          else if($('#recurr_select_int').val() == 'by')
+          {
+            $('#recurr_by_int').show();
+            $('#recurr_after_int').hide();
+          }
+          else if($('#recurr_select_int').val() == 'after')
+          {
+            $('#recurr_by_int').hide();
+            $('#recurr_after_int').show();
+          }
+        });
+</script>
+<script type="text/javascript">
+    $('#recurr_account_popup_int').on('change', function (e) {
+          if($('#recurr_account_popup_int').val() == 'fa fa-plus')
+          {
+           openAddAccount();
+          } 
+      });
+</script>
+<!-- int end-->
 <script type="text/javascript">
     $(document).ready(function () {
 

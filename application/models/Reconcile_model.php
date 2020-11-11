@@ -285,6 +285,15 @@ class Reconcile_model extends MY_Model {
 	    return $result;	
 	}
 
+	public function select_recurr_interest($id,$chart_of_accounts_id)
+	{
+		$this->db->from('accounting_reconcile_has_interestearned_recurr');  
+		$this->db->where('reconcile_id',$id);
+		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id);
+		$result =  $this->db->get()->result();
+	    return $result;	
+	}
+
 	public function remove_it_records($id)
 	{
 		$this->db->where('id',$id);
