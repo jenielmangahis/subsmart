@@ -1371,7 +1371,8 @@ class Workcalender extends MY_Controller
     public function ajax_load_upcoming_events(){
         $this->load->model('Event_model', 'event_model');
 
-        $upcoming_events = $this->event_model->getAllUpComingEvents();
+        $company_id = logged('company_id');
+        $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
 
         //Google Events
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
