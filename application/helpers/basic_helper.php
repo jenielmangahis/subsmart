@@ -1067,7 +1067,36 @@ if (!function_exists('getNewTasks')){
         return $CI->db->query($sql)->result_array();    
     }
 }
+if (!function_exists('getTasks')){
 
+    function getTasks(){
+        $CI = &get_instance();
+        $uid = logged('id');
+
+        $sql = 'select '.
+
+               'a.task_id, '.
+               'a.subject, '.
+               'a.date_created, '.
+               'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
+
+               'b.status_text '.
+
+               'from tasks a '.
+               'left join tasks_status b on b.status_id = a.status_id '.
+               'left join tasks_participants c on c.task_id = a.task_id '.
+
+               'where a.created_by = '. $uid . ' ' .
+                  'or c.user_id = '. $uid . ' ' .
+
+               'group by a.task_id '.
+
+               'order by date_created desc';
+
+        return $CI->db->query($sql)->result();
+    }
+
+}
 if (!function_exists('getUserFileVaultPermissions')){
 
     function getUserFileVaultPermissions(){

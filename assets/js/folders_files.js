@@ -1339,10 +1339,10 @@ function setFoldersAndFiles(folders, files){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
-          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+          append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
-          append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+          append += '<td style="width: 20%" class="text-right" id="td_total_contents">('+ folder.total_contents +')</td>';
           append += '</tr></tbody></table></div>';
         append += '</div>';
       }
@@ -1350,10 +1350,10 @@ function setFoldersAndFiles(folders, files){
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
-        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+        append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
-        append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+        append += '<td style="width: 20%" class="text-right" id="td_total_contents">('+ folder.total_contents +')</td>';
         append += '</tr></tbody></table></div>';
       append += '</div>';
     }   
@@ -1379,9 +1379,9 @@ function setFoldersAndFiles(folders, files){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
-          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
-          append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
-          append += '<td class="pl-2">' + file.title + '</td>';
+          append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+          append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+          append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
           append += '</tr></tbody></table></div>';
         append += '</div>';
       }
@@ -1389,9 +1389,9 @@ function setFoldersAndFiles(folders, files){
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
-        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
-        append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
-        append += '<td class="pl-2">' + file.title + '</td>';
+        append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+        append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+        append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
         append += '</tr></tbody></table></div>';
       append += '</div>';
     }   
@@ -1643,10 +1643,10 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
-          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+          append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
-          append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+          append += '<td style="width: 20%" class="text-right" id="td_total_contents">('+ folder.total_contents +')</td>';
           append += '</tr></tbody></table></div>';
         append += '</div>';
 
@@ -1665,10 +1665,10 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
-        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+        append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
-        append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+        append += '<td style="width: 20%" class="text-right" id="td_total_contents">('+ folder.total_contents +')</td>';
         append += '</tr></tbody></table></div>';
       append += '</div>';
 
@@ -1741,9 +1741,9 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
                        '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
-          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
-          append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
-          append += '<td class="pl-2">' + file.title + '</td>';
+          append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+          append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+          append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
           append += '</tr></tbody></table></div>';
         append += '</div>';
 
@@ -1762,9 +1762,9 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
-        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
-        append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
-        append += '<td class="pl-2">' + file.title + '</td>';
+        append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+        append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+        append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
         append += '</tr></tbody></table></div>';
       append += '</div>';
 
