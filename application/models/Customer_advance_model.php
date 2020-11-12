@@ -63,7 +63,6 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
         $query = $this->db->get();
         return $query->result();
-
     }
 
     public function get_all_by_id($fieldname,$fieldvalue,$tablename){

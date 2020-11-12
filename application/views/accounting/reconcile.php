@@ -1963,7 +1963,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     <div class="recurr_descp_it"></div>
                                 </td>
                                 <td>
-                                     <input type="hidden" id="recurr_interest_earned" name="recurr_interest_earned" value="<?=number_format($rows[0]->service_charge,2)?>">
+                                     <input type="hidden" id="recurr_interest_earned" name="recurr_interest_earned" value="<?=number_format($rows[0]->interest_earned,2)?>">
                                     <div class="recurr_interest_earned"><?=number_format($rows[0]->interest_earned,2)?></div>
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove_recurr_int"><i class="fa fa-trash"></i></a></td>
@@ -1975,7 +1975,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             $recurrrowcount_int =2;
                             foreach($this->reconcile_model->select_recurr_interest($rows[0]->id,$rows[0]->chart_of_accounts_id) as $recurrrowtabint)
                             {
-                                $recurrservicechargecount_int+=$recurrrowtabint->service_charge_sub;
+                                $recurrservicechargecount_int+=$recurrrowtabint->interest_earned_sub;
                             ?>
                             <tr onclick="trClickRecurr_Int(<?=$recurrrowcount_int?>)">
                                 <td data-id="<?=$recurrrowtabint->id?>"><i class="fa fa-th"></i></td>
@@ -1987,12 +1987,12 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                         foreach ($this->account_sub_account_model->get() as $rw)
                                         {
                                             ?>
-                                           <option <?php if($recurrrowtabint->expense_account_sub == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                           <option <?php if($recurrrowtabint->income_account_sub == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
                                         <?php
                                         }
                                         ?>
                                     </select>
-                                    <div class="recurr_income_account_<?=$recurrrowcount_int?>"><?=$recurrrowtabint->expense_account_sub?></div>
+                                    <div class="recurr_income_account_<?=$recurrrowcount_int?>"><?=$recurrrowtabint->income_account_sub?></div>
                                 </td>
                                 <td>
                                     <input type="hidden" id="recurr_descp_it_<?=$recurrrowcount_int?>" name="recurr_descp_it_<?=$recurrrowcount_int?>" value="<?=$recurrrowtabint->descp_it_sub?>" placeholder="What did you paid for?" value="<?=$recurrrowtabint->descp_it_sub?>">
@@ -2077,14 +2077,14 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         </div>
                     </div>
                     <div class="btn-group hidemerecurr_int" style="display: none;">
-                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="rightclickRecurrInt()">Save<i class="fa fa-check"></i></a>
-                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickRecurrInt()">Cancel<i class="fa fa-close"></i>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="rightclickRecurr_Int()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickRecurr_Int()">Cancel<i class="fa fa-close"></i></a>
                     </div>
                 </div>
             </section>
 
             <div class="row" style="margin-bottom:20px">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <label>Memo</label>
                     </br>
                     <textarea name="recurr_memo_it" id="recurr_memo_it" rows="4"><?=$rows[0]->memo_it?></textarea>
@@ -5829,3 +5829,229 @@ function closeAddaccount()
         update_print();
     });
 </script>
+<!-- recurr int start-->
+<script type="text/javascript">
+    /* Variables */
+    var p = 1;
+    var row_recurr_int = $(".participantRecurrIntRow");
+
+    function addRowRecurrInt() {
+      row_recurr_int.clone(true, true).removeClass('RecurrhideInt table-line').appendTo("#participantRecurrIntTable");
+      var index_recurr_int =$('#participantRecurrIntTable tr').length -1;
+      var final_index_recurr_int = index_recurr_int-1;
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+')').attr("onclick","trClickRecurr_Int("+final_index_recurr_int+")");
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(1)').text(index_recurr_int-1);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(2)').find('select').attr("id","recurr_income_account_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(2)').find('select').attr("name","recurr_income_account_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(2)').find('div').attr("class","recurr_income_account_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(3)').find('input').attr("id","recurr_descp_it_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(3)').find('input').attr("name","recurr_descp_it_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(3)').find('div').attr("class","recurr_descp_it_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(4)').find('input').attr("id","recurr_interest_earned_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(4)').find('input').attr("name","recurr_interest_earned_"+final_index_recurr_int);
+      $('#participantRecurrIntTable tr:eq('+index_recurr_int+') td:eq(4)').find('div').attr("class","recurr_interest_earned_"+final_index_recurr_int);
+    }
+
+    function removeRowRecurrInt(buttonrecurrint) {
+        console.log(buttonrecurrint.closest("tr").text());
+      buttonrecurrint.closest("tr").remove();
+      //var totrecurrint = $('#intrecurrtotal').text().substr(9)-buttonrecurrint.closest("tr").find('td:eq(4)').text().trim();
+      var totrecurrint_final = $('#inttotal').text().substr(20);
+      var totrecurrint = $('#intrecurrtotal').text().substr(9);
+      $('#intrecurrtotal').text('Other Fund Total : $'+totrecurrint.toFixed(2));
+      $('#intrecurrtotal_final').text('Total : $'+totrecurrint_final.toFixed(2));
+      if(buttonrecurrint.closest("tr").find('td:eq(2)').find('select').hasClass("up_row"))
+        {
+            var id_to_remove =buttonrecurrint.closest("tr").find('td:eq(0)').attr("data-id");
+            remove_func_recurr_int(id_to_remove);
+        }
+    }
+    /* Doc ready */
+    $(".add_recurr_int").on('click', function () {
+      getP();
+      if($("#participantRecurrIntTable tr").length < 17) {
+        addRowRecurrInt();
+        var i = Number(p)+1;
+        $("#participants").val(i);
+      }
+      $(this).closest("tr").appendTo("#participantRecurrIntTable");
+      if ($("#participantRecurrIntTable tr").length === 3) {
+        $(".remove_recurr_int").hide();
+      } else {
+        $(".remove_recurr_int").show();
+      }
+    });
+    $(".remove_recurr_int").on('click', function () {
+      getP();
+      if($("#participantRecurrIntTable tr").length === 3) {
+        //alert("Can't remove row.");
+        $(".remove_recurr_int").hide();
+      } else if($("#participantRecurrIntTable tr").length - 1 ==3) {
+        $(".remove_recurr_int").hide();
+        removeRowRecurrInt($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      } else {
+        removeRowRecurrInt($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      }
+    });
+    $("#participants").change(function () {
+      var i = 0;
+      p = $("#participants").val();
+      var rowCount = $("#participantRecurrIntTable tr").length - 2;
+      if(p > rowCount) {
+        for(i=rowCount; i<p; i+=1){
+          addRowRecurrInt();
+        }
+        $("#participantRecurrIntTable #addButtonRow").appendTo("#participantRecurrIntTable");
+      } else if(p < rowCount) {
+      }
+    });
+    $(".clear_recurr_int").on('click', function () {
+      if($("#participantRecurrIntTable tr").length - 1 >3) {
+        x = 1;
+        $('#participantRecurrIntTable > tbody  > tr').each(function() {
+            if(x >3)
+            {
+                $(this).remove();
+                var totrecurr_clear_int = $('#intrecurrtotal').text().substr(9)-$(this).closest("tr").find('td:eq(4)').text().trim();
+                $('#intrecurrtotal').text('Other Fund Total : $'+totrecurr_clear_int.toFixed(2));
+                $('#intrecurrtotal_final').text('Total : $'+totint_clear.toFixed(2));
+            }
+            x = x+1;
+        });
+      }
+    });
+</script>
+<script type="text/javascript">
+    function trClickRecurrMain_Int()
+    {
+        if($('#recurr_income_account').css("display")== 'none')
+        {
+            $('.recurr_income_account').css('display','none');
+            $('#recurr_income_account').show();
+            $('.hidemerecurr_int').show();
+        }
+        if($('#recurr_interest_earned').attr("type")== 'hidden')
+        {
+            $('.recurr_interest_earned').css('display','none');
+            $('#recurr_interest_earned').removeAttr('type','hidden');
+            $('#recurr_interest_earned').attr('type','number');
+            $('.hidemerecurr_int').show();
+        }
+        if($('#recurr_descp_it').attr("type")== 'hidden')
+        {
+            $('.recurr_descp_it').css('display','none');
+            $('#recurr_descp_it').removeAttr('type','hidden');
+            $('.hidemerecurr_int').show();
+        }
+    }
+
+    function trClickRecurr_Int(index_recurr_int)
+    {
+        if($('#recurr_income_account_'+index_recurr_int).css("display")== 'none')
+        {
+            $('.recurr_income_account_'+index_recurr_int).css('display','none');
+            $('#recurr_income_account_'+index_recurr_int).show();
+            $('.hidemerecurr_int').show();
+        }
+        if($('#recurr_interest_earned_'+index_recurr_int).attr("type")== 'hidden')
+        {
+            $('.recurr_interest_earned_'+index_recurr_int).css('display','none');
+            $('#recurr_interest_earned_'+index_recurr_int).removeAttr('type','hidden');
+            $('#recurr_interest_earned_'+index_recurr_int).attr('type','number');
+            $('.hidemerecurr_int').show();
+        }
+        if($('#recurr_descp_it_'+index_recurr_int).attr("type")== 'hidden')
+        {
+            $('.recurr_descp_it_'+index_recurr_int).css('display','none');
+            $('#recurr_descp_it_'+index_recurr_int).removeAttr('type','hidden');
+            $('.hidemerecurr_int').show();
+        }
+    }
+    function rightclickRecurr_Int()
+    {
+        length_recurr_int =$('#participantRecurrIntTable tr').length -2;
+        $('.recurr_income_account').show();
+        $('.recurr_income_account').text($('#recurr_income_account').val());
+        $('#recurr_income_account').css('display','none');
+        $('.recurr_interest_earned').show();
+        $('.recurr_interest_earned').text($('#recurr_interest_earned').val());
+        $('#recurr_interest_earned').attr('type','hidden');
+        $('.recurr_descp_it').show();
+        $('.recurr_descp_it').text($('#recurr_descp_it').val());
+        $('#recurr_descp_it').attr('type','hidden');
+        $('.hidemerecurr_int').hide();
+
+        for(var i = 2 ; i <= length_recurr_int ; i++)
+        {
+            $('.recurr_income_account_'+i).show();
+            $('.recurr_income_account_'+i).text($('#recurr_income_account_'+i).val());
+            $('#recurr_income_account_'+i).css('display','none');
+            $('.recurr_interest_earned_'+i).show();
+            $('.recurr_interest_earned_'+i).text($('#recurr_interest_earned_'+i).val());
+            $('#recurr_interest_earned_'+i).attr('type','hidden');
+            $('.recurr_descp_it_'+i).show();
+            $('.recurr_descp_it_'+i).text($('#recurr_descp_it_'+i).val());
+            $('#recurr_descp_it_'+i).attr('type','hidden');
+        }
+
+        var total_recurr_int = 0;
+        total_recurr_int += parseInt($('.recurr_interest_earned').text());
+        for(var i = 2 ; i <= length_recurr_int ; i++)
+        {
+            if($('.recurr_interest_earned_'+i).text() != '')
+            {total_recurr_int += parseInt($('.recurr_interest_earned_'+i).text());}
+        }
+        $('#intrecurrtotal').text('Other Fund Total : $'+total_recurr_int.toFixed(2));
+        if($('#cash_back_amount_recurr').val()!='')
+        {
+            var sub = parseInt($('#cash_back_amount_recurr').val());
+            var total_recurr_int = total_recurr_int - sub;
+        }
+        $('#intrecurrtotal_final').text('Total : $'+total.toFixed(2));
+    }
+    function crossClickRecurr_Int()
+    {
+        length_recurr_int =$('#participantRecurrIntTable tr').length -2;
+        $('.recurr_income_account').show();
+        $('#recurr_income_account').css('display','none');
+        $('.recurr_interest_earned').show();
+        $('#recurr_interest_earned').attr('type','hidden');
+        $('.recurr_descp_it').show();
+        $('#recurr_descp_it').attr('type','hidden');
+        $('.hidemerecurr_int').hide();
+        for(var i = 2 ; i <= length_recurr_int ; i++)
+        {
+            $('.recurr_income_account_'+i).show();
+            $('#recurr_income_account_'+i).css('display','none');
+            $('.recurr_interest_earned_'+i).show();
+            $('#recurr_interest_earned_'+i).attr('type','hidden');
+            $('.recurr_descp_it_'+i).show();
+            $('#recurr_descp_it_'+i).attr('type','hidden');
+        }
+    }
+    $("#cash_back_amount_recurr").focus(function(){
+        $('.hidemefinal_int').show();
+    });
+    function rightclickRecurr_int_final()
+    {
+        $('.hidemefinal_int').hide();
+
+        var totalfinal_recurr = parseInt($('#intrecurrtotal').text().substr(20));
+        var sub_recurr = parseInt($('#cash_back_amount_recurr').val());
+        if($('#cash_back_amount_recurr').val()!='')
+        {var ftotal_recurr = totalfinal_recurr - sub_recurr;}
+        else
+        {var ftotal_recurr = totalfinalrecurr - 0;}
+        $('#intrecurrtotal_final').text('Total : $'+ftotal_recurr.toFixed(2));
+    }
+    function crossClickRecurr_int_final()
+    {
+       // $('#cash_back_amount_recurr').val('');
+        $('.hidemefinal_int').hide();
+    }
+</script>
+<!-- recurr int end-->

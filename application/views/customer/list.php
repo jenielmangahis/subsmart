@@ -136,11 +136,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <div class="dropdown">
                                                                         <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
                                                                             <!--<input type="file" name="file" /> -->
-
-                                                                            <label for="file-upload" class="btn btn-primary btn-md">
-                                                                                <span class="fa fa-download"></span> Import
-                                                                            </label>
-                                                                            <input id="file-upload" type="file" style="display: none;"/>
+                                                                            <a href="<?= url('customer/import_customer') ?>">
+                                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
+                                                                            </a>
                                                                             <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
                                                                             <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
                                                                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
@@ -148,7 +146,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
                                                                                     <span class="fa fa-print "></span> Print
                                                                             </a>-->
-
                                                                             <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
                                                                             <a class="btn btn-primary btn-md"
                                                                                href="<?php echo url('customer/add_advance') ?>"><span
