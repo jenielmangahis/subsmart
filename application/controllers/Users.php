@@ -447,9 +447,15 @@ class Users extends MY_Controller {
 	{	
 
 		//ifPermissions('users_list');
+		$this->load->helper(array('form', 'url', 'hashids_helper'));
 
+		$cid = logged('company_id');
 
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		$eid = hashids_encrypt($cid, '', 15);
+
+		$this->page_data['eid'] = $eid;
+
+		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		
 		$this->page_data['users'] = $this->users_model->getUsers();
 

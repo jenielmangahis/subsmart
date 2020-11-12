@@ -417,3 +417,6 @@ $route['offer_codes/index'] = 'Offer_Codes/index';
 
 //Registration
 $route['registration/_use_offer_code'] = 'Register/registration_use_code';
+
+//Public Add Employee
+$route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
