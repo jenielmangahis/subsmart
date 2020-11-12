@@ -110,9 +110,9 @@ a.top-1 {
 .tooltip-table td{
   text-align: left;
 }
-.fc .fc-scrollgrid, .fc .fc-scrollgrid table {
+/*.fc .fc-scrollgrid, .fc .fc-scrollgrid table {
     width: 101% !important;
-}
+}*/
 .tooltip{
   opacity: 1;
 }
@@ -440,7 +440,7 @@ a.top-1 {
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
                                       <div class="margin-bottom">
-                                          <div class="margin-bottom"><h3 class="left-header">Upcoming Events</h3></div>
+                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
                                           <div id="upcoming-events-container"></div>
                                           
                                       </div>
@@ -929,6 +929,7 @@ a.top-1 {
             center: 'employeeTimeline,monthView,dayView,weekView,listView' // buttons for switching between views
           },
           themeSystem : 'bootstrap',
+          eventDisplay: 'block',
           views: {
             employeeTimeline: {
               type: 'resourceTimelineDay',

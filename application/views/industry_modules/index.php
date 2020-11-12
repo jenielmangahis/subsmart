@@ -35,6 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
+                                    <th style="width: 15%;">ID</th>
                                     <th style="width: 20%;">Model Name</th>
                                     <th style="width: 30%;">Description</th>
                                     <th style="width: 15%;">Status</th>
@@ -54,6 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         }
                                     ?>
                                     <tr>
+                                         <td><?= $industryModule->id; ?></td>
                                         <td><?= $industryModule->name; ?></td>
                                         <td><?= $industryModule->description; ?></td>
                                         <td class="<?= $cell; ?>"><?= $status; ?></td>

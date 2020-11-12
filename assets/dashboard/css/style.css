@@ -3093,10 +3093,10 @@ pre[class*="language-"] {
     border-radius: 2px;
     border: none;
     cursor: move;
-    font-size: 13px;
-    margin: 5px 0;
-    padding: 5px 5px;
-    text-align: center;
+    font-size: 12px !important;
+    margin: 2px 0;
+    padding: 2px 2px;
+    text-align: left;
     background-color: #626ed4;
     color: #fff !important;
 }

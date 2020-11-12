@@ -57,6 +57,7 @@
 }
 .media{
   margin-bottom: 30px;
+  border-bottom: 1px solid #dddddd;
 }
 .date .month {
     padding: 2px 0px;
@@ -79,6 +80,9 @@
 }
 .media-body{
   margin-left: 20px;
+  border-left: 1px solid #ddd;
+  padding-left: 10px;
+  height: 130px;
 }
 .event-time{
   font-size: 14px;

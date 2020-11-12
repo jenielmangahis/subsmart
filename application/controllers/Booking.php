@@ -27,6 +27,13 @@ class Booking extends MY_Controller {
 
 	public function index() {
 
+		$is_allowed = $this->isAllowedModuleAccess(7);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'online_booking';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		$user = $this->session->userdata('logged');
     	$eid = hashids_encrypt($user['id'], '', 15);
 

@@ -63,7 +63,13 @@ class Customer extends MY_Controller
     }
 
     public function leads()
-    {
+    {   $is_allowed = true; //$this->isAllowedModuleAccess(14);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_leads';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $user_id = logged('id');
         $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         $this->load->view('customer/leads', $this->page_data);
@@ -436,6 +442,13 @@ class Customer extends MY_Controller
         $this->load->view('customer/add_advance', $this->page_data);
     }
 
+    public function import_customer()
+    {
+        $user_id = logged('id');
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->load->view('customer/import_customer', $this->page_data);
+    }
+
     public function add_lead($lead_id=0)
     {
         if(isset($lead_id)){
@@ -747,8 +760,95 @@ class Customer extends MY_Controller
        show_error($this->email->print_debugger());
     }
 
+    public function import_customer_data() {
+        $data = array();
+        $itemData = array();
+
+        if ($this->input->post('importSubmit')) {
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+
+            if ($this->form_validation->run() == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+
+                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+                    echo "wow";
+                    $this->load->library('CSVReader');
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+                    print_r($csvData);
+
+                    if (!empty($csvData)) {
+                        foreach ($csvData as $row) {
+                            $rowCount++;
+
+                            $itemData = array(
+                                'company_id' => logged('company_id'),
+                                'customer_type' => $row['Customer Type'],
+                                'company_name' => $row['Company Name'],
+                                'contact_name' => $row['Contact Name'],
+                                'contact_email' => $row['Contact Email'],
+                                'mobile' => $row['Mobile'],
+                                'phone' => $row['Phone'],
+                                'birthday' => $row['Birthday'],
+                                'suite_unit' => $row['Suite Unit'],
+                                'street_address' => $row['Street Address'],
+                                'city' => $row['City'],
+                                'state' => $row['State'],
+                                'postal_code' => $row['Postal Code']
+                            );
+
+                            $con = array(
+                                'where' => array(
+                                    'contact_name' => $row['Contact Name']
+                                ),
+                                'returnType' => 'count'
+                            );
+                            $prevCount = $this->customer_model->getRows($con);
+
+                            if ($prevCount > 0) {
+                                $condition = array('contact_name' => $row['Contact Name']);
+                                $update = $this->customer_model->update($itemData, $condition);
+
+                                if ($update) {
+                                    $updateCount++;
+                                }
+                            } else {
+                                $insert = $this->customer_model->insert($itemData);
+
+                                if ($insert) {
+                                    $insertCount++;
+                                }
+                            }
+                        }
+
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        $this->session->set_userdata('success_msg', $successMsg);
+
+                        $this->activity_model->add($successMsg);
+                        $this->session->set_flashdata('alert-type', 'success');
+                        $this->session->set_flashdata('alert', $successMsg);
+                    }
+                } else {
+                    $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                }
+            } else {
+                $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
+            }
+        }
+        //redirect('customer');
+    }
+
+
     public function index($status_index = 0)
     {
+        $is_allowed = true; //$this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
        //echo  $this->uri->segment(3);
       // echo  $this->uri->segment(4);
@@ -1596,7 +1696,13 @@ class Customer extends MY_Controller
      *
      */
     public function group()
-    {
+    {   
+        $is_allowed = true; //$this->isAllowedModuleAccess(11);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_group';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerGroup = new CustomerGroup($this);
     }
@@ -1607,12 +1713,24 @@ class Customer extends MY_Controller
      */
     public function source()
     {
+         $is_allowed = true; //$this->isAllowedModuleAccess(12);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_source';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerSource = new CustomerSource($this);
     }
 
     public function types()
     {
+         $is_allowed = true; //$this->isAllowedModuleAccess(13);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_type';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerTypes = new CustomerTypes($this);
     }
@@ -1821,82 +1939,6 @@ class Customer extends MY_Controller
         fpassthru($f);
     }
 
-    public function importItems () {
-        $data = array();
-        $itemData = array();
-
-        if ($this->input->post('importSubmit')) {
-            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
-
-            if ($this->form_validation->run() == true) {
-                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
-
-                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                    $this->load->library('CSVReader');
-
-                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-
-                    if (!empty($csvData)) {
-                        foreach ($csvData as $row) {
-                            $rowCount++;
-
-                            $itemData = array(
-                                'company_id' => logged('company_id'),
-                                'customer_type' => $row['Customer Type'],
-                                'company_name' => $row['Company Name'],
-                                'contact_name' => $row['Contact Name'],
-                                'contact_email' => $row['Contact Email'],
-                                'mobile' => $row['Mobile'],
-                                'phone' => $row['Phone'],
-                                'birthday' => $row['Birthday'],
-                                'suite_unit' => $row['Suite Unit'],
-                                'street_address' => $row['Street Address'],
-                                'city' => $row['City'],
-                                'state' => $row['State'],
-                                'postal_code' => $row['Postal Code']
-                            );
-
-                            $con = array(
-                                'where' => array(
-                                    'contact_name' => $row['Contact Name']
-                                ),
-                                'returnType' => 'count'
-                            );
-                            $prevCount = $this->customer_model->getRows($con);
-
-                            if ($prevCount > 0) {
-                                $condition = array('contact_name' => $row['Contact Name']);
-                                $update = $this->customer_model->update($itemData, $condition);
-
-                                if ($update) {
-                                    $updateCount++;
-                                }
-                            } else {
-                                $insert = $this->customer_model->insert($itemData);
-
-                                if ($insert) {
-                                    $insertCount++;
-                                }
-                            }
-                        }
-
-                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
-                        $successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
-                        $this->session->set_userdata('success_msg', $successMsg);
-
-                        $this->activity_model->add($successMsg);
-                        $this->session->set_flashdata('alert-type', 'success');
-                        $this->session->set_flashdata('alert', $successMsg);
-                    }
-                } else {
-                    $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
-                }
-            } else {
-                $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
-            }
-        }
-        redirect('customer');
-    }
 
         /*
      * Callback function to check file value and type during validation
