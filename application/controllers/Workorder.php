@@ -45,6 +45,12 @@ class Workorder extends MY_Controller
 
     public function index($tab_index = 0)
     {
+        $is_allowed = $this->isAllowedModuleAccess(24);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'workorder';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
         $role = logged('role');
         $this->page_data['workorderStatusFilters'] = array ();
@@ -664,6 +670,12 @@ class Workorder extends MY_Controller
      */
     public function map()
     {
+        $is_allowed = $this->isAllowedModuleAccess(25);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'bird_eye_view';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         $this->load->view('workorder/bird-eye-view', $this->page_data);
     }
 
@@ -705,6 +717,12 @@ class Workorder extends MY_Controller
      */
     public function job_type()
     {
+        $is_allowed = $this->isAllowedModuleAccess(26);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'job_type_list';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $jobType = new JobType($this);
     }

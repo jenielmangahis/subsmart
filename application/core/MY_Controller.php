@@ -80,7 +80,8 @@ class MY_Controller extends CI_Controller {
 		$role_id    = logged('role');
 		$is_allowed = true;
 		if( $role_id != 1 && $role_id != 2 ){
-			$is_allowed = validateUserAccessModule($module_id);
+			//$is_allowed = validateUserAccessModule($module_id); //Activate to validate
+			$is_allowed = true;
 
 			/*if( !$is_allowed ){
 				$this->session->set_flashdata('alert_class', 'danger');

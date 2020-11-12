@@ -63,7 +63,7 @@ class Customer extends MY_Controller
     }
 
     public function leads()
-    {   $is_allowed = true; //$this->isAllowedModuleAccess(14);
+    {   $is_allowed = $this->isAllowedModuleAccess(14);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_leads';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -843,7 +843,7 @@ class Customer extends MY_Controller
 
     public function index($status_index = 0)
     {
-        $is_allowed = true; //$this->isAllowedModuleAccess(9);
+        $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -1697,7 +1697,7 @@ class Customer extends MY_Controller
      */
     public function group()
     {   
-        $is_allowed = true; //$this->isAllowedModuleAccess(11);
+        $is_allowed = $this->isAllowedModuleAccess(11);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_group';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -1713,7 +1713,7 @@ class Customer extends MY_Controller
      */
     public function source()
     {
-         $is_allowed = true; //$this->isAllowedModuleAccess(12);
+         $is_allowed = $this->isAllowedModuleAccess(12);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_source';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -1725,7 +1725,7 @@ class Customer extends MY_Controller
 
     public function types()
     {
-         $is_allowed = true; //$this->isAllowedModuleAccess(13);
+         $is_allowed = $this->isAllowedModuleAccess(13);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_type';
             echo $this->load->view('no_access_module', $this->page_data, true);
