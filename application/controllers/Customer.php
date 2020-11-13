@@ -59,11 +59,11 @@ class Customer extends MY_Controller
            // 'assets/frontend/js/creditcard.js',
            // 'assets/frontend/js/customer/add.js',
         ));
-        error_reporting(1);
+        error_reporting(0);
     }
 
     public function leads()
-    {   $is_allowed = true; //$this->isAllowedModuleAccess(14);
+    {   $is_allowed = $this->isAllowedModuleAccess(14);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_leads';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -84,7 +84,6 @@ class Customer extends MY_Controller
             echo "Error";
         }
     }
-
 
     public function qrcodeGenerator($profile_id){
         $this->load->library('qrcode/ciqrcode');
@@ -421,7 +420,6 @@ class Customer extends MY_Controller
         }else{
             echo "Done";
         }
-
     }
 
     public function add_advance()
@@ -762,80 +760,88 @@ class Customer extends MY_Controller
 
     public function import_customer_data() {
         $data = array();
-        $itemData = array();
-
-        if ($this->input->post('importSubmit')) {
-            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
-
-            if ($this->form_validation->run() == true) {
+        $input_profile = array();
+        $input = $this->input->post();
+        if ($input) {
                 $insertCount = $updateCount = $rowCount = $notAddCount = 0;
-
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
 
-                    echo "wow";
                     $this->load->library('CSVReader');
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
 
-                    print_r($csvData);
+                    /*
+                     ALTER TABLE acs_profile MODIFY `business_name` varchar(255) null;
+                     ALTER TABLE acs_profile MODIFY `prefix` varchar(20) null;
+                     ALTER TABLE acs_profile MODIFY `suffix` varchar(20) null;
+                     ALTER TABLE acs_profile MODIFY `ssn` varchar(50) null;
+                     */
 
                     if (!empty($csvData)) {
                         foreach ($csvData as $row) {
                             $rowCount++;
-
-                            $itemData = array(
-                                'company_id' => logged('company_id'),
-                                'customer_type' => $row['Customer Type'],
-                                'company_name' => $row['Company Name'],
-                                'contact_name' => $row['Contact Name'],
-                                'contact_email' => $row['Contact Email'],
-                                'mobile' => $row['Mobile'],
-                                'phone' => $row['Phone'],
-                                'birthday' => $row['Birthday'],
-                                'suite_unit' => $row['Suite Unit'],
-                                'street_address' => $row['Street Address'],
-                                'city' => $row['City'],
-                                'state' => $row['State'],
-                                'postal_code' => $row['Postal Code']
+                            $input_profile = array(
+                                'fk_user_id' => logged('id'),
+                                'fk_sa_id' => 0,
+                                'first_name' => $row['firstname'],
+                                'middle_name' => $row['middlename'],
+                                'last_name' => $row['lastname'],
+                                'prefix' => $row['prefix'],
+                                'suffix' => $row['suffix'],
+                                'date_of_birth' => $row['birthdate'],
+                                'business_name' => $row['business_name'],
+                                'email' => $row['email'],
+                                'ssn' => $row['ssn_no'],
+                                'phone_h' => $row['phone_home'],
+                                'phone_w' => $row['phone_work'],
+                                'phone_m' => $row['phone_mobile'],
+                                'fax' => $row['fax'],
+                                'mail_add' => $row['address'],
+                                'cross_street' => $row['street'],
+                                'subdivision' => $row['subdivision'],
+                                'city' => $row['city'],
+                                'state' => $row['state'],
+                                'country' => $row['country'],
+                                'zip_code' => $row['zip_code']
                             );
 
-                            $con = array(
-                                'where' => array(
-                                    'contact_name' => $row['Contact Name']
-                                ),
-                                'returnType' => 'count'
-                            );
-                            $prevCount = $this->customer_model->getRows($con);
+                            if(!empty( $row['firstname']) && !empty( $row['lastname'])) {
+                                $check_user = array(
+                                    'where' => array(
+                                        'first_name' => $row['firstname'],
+                                        'last_name' => $row['lastname'],
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
 
-                            if ($prevCount > 0) {
-                                $condition = array('contact_name' => $row['Contact Name']);
-                                $update = $this->customer_model->update($itemData, $condition);
-
-                                if ($update) {
-                                    $updateCount++;
-                                }
-                            } else {
-                                $insert = $this->customer_model->insert($itemData);
-
-                                if ($insert) {
-                                    $insertCount++;
+                                if ($prevCount > 0) {
+                                    echo "exist";
+//                                $condition = array('contact_name' => $row['Contact Name']);
+//                                $update = $this->customer_model->update($itemData, $condition);
+//                                if ($update) {
+//                                    $updateCount++;
+//                                }
+                                } else {
+                                    //$insert = $this->customer_ad_model->insert($itemData);
+                                    $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
+                                    if ($fk_prod_id) {
+                                        $insertCount++;
+                                    }
+                                    echo $row['firstname'].' '. $row['lastname'].' has been added!'; echo "<br>";
                                 }
                             }
                         }
-
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));
-                        $successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
-                        $this->session->set_userdata('success_msg', $successMsg);
+                        //$successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                       // $this->session->set_userdata('success_msg', $successMsg);
 
-                        $this->activity_model->add($successMsg);
-                        $this->session->set_flashdata('alert-type', 'success');
-                        $this->session->set_flashdata('alert', $successMsg);
+                        //$this->activity_model->add($successMsg);
+                        //$this->session->set_flashdata('alert-type', 'success');
+                        //$this->session->set_flashdata('alert', $successMsg);
                     }
                 } else {
                     $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
                 }
-            } else {
-                $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
-            }
         }
         //redirect('customer');
     }
@@ -843,7 +849,7 @@ class Customer extends MY_Controller
 
     public function index($status_index = 0)
     {
-        $is_allowed = true; //$this->isAllowedModuleAccess(9);
+        $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -1697,7 +1703,7 @@ class Customer extends MY_Controller
      */
     public function group()
     {   
-        $is_allowed = true; //$this->isAllowedModuleAccess(11);
+        $is_allowed = $this->isAllowedModuleAccess(11);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_group';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -1713,7 +1719,7 @@ class Customer extends MY_Controller
      */
     public function source()
     {
-         $is_allowed = true; //$this->isAllowedModuleAccess(12);
+         $is_allowed = $this->isAllowedModuleAccess(12);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_source';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -1725,7 +1731,7 @@ class Customer extends MY_Controller
 
     public function types()
     {
-         $is_allowed = true; //$this->isAllowedModuleAccess(13);
+         $is_allowed = $this->isAllowedModuleAccess(13);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_type';
             echo $this->load->view('no_access_module', $this->page_data, true);

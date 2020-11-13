@@ -98,6 +98,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         color: grey;
     }
 
+    #shareEmployeeForm{
+    	float: right;
+    	margin-right: 10px;
+    }
+
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -137,6 +142,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-6">
                                     <button class="btn btn-info add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
+                                    <button class="btn btn-info share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -429,11 +435,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalShareAddEmployee">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-globe"></i> Public URL</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+            	<p>You public URL for adding employees</p>   
+            	<div class="copy-info"></div>         	
+            	<input type="hidden" id="e-public-url" value="<?php echo base_url('/add_company_employee/' . $eid); ?>">
+            	<label class="label label-default label-public-url" style="padding: 10px;font-size:15px;width: 88%; color: #ffffff;"><?php echo base_url('/add_company_employee/' . $eid); ?></label><a class="btn-copy-public-url" href="javascript:void(0);" style="padding: 10px;"><i class="fa fa-copy"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
 <!--end of modal-->
 <?php include viewPath('includes/footer'); ?>
 <script>
     $(document).ready(function () {
         $('#employeeTable').DataTable({"sort":false});
+
+        $("#shareEmployeeForm").click(function(){
+        	$("#modalShareAddEmployee").modal("show");
+        });
+
+        $(".btn-copy-public-url").click(function(){
+			var copyText = document.getElementById("e-public-url");
+			copyText.type = 'text';
+			copyText.select();
+			document.execCommand("copy");
+			copyText.type = 'hidden';
+
+			$(".label-public-url").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+        });
 
         $(document).on('click','#addEmployeeData',function () {
             $('#modalAddEmployee').modal({backdrop: 'static', keyboard: false});

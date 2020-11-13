@@ -29,6 +29,12 @@ class Items extends MY_Controller
 
     public function index()
     {
+        $is_allowed = $this->isAllowedModuleAccess(20);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'items';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
         // ifPermissions('items_list');
 
@@ -51,6 +57,12 @@ class Items extends MY_Controller
 
     public function add()
     {
+        $is_allowed = $this->isAllowedModuleAccess(20);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'items_add';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         ifPermissions('items_add');
         $this->load->view('items/add', $this->page_data);
     }

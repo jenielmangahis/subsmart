@@ -12,6 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="wrapper" role="wrapper">
     <?php //include viewPath('includes/sidebars/nsmart_plans'); ?>
     <?php 
+        $has_sidebar = true;
         if( $module == 'calendar' ){
             $module_title = "Calendar";
             include viewPath('includes/sidebars/schedule');
@@ -41,18 +42,48 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }elseif( $module == 'job' ){
             $module_title = "Jobs";
             include viewPath('includes/sidebars/job');
+        }elseif( $module == 'customer_source' ){
+            $module_title = "Customer Source";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'customer_type' ){
+            $module_title = "Customer Type";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'customer_leads' ){
+            $module_title = "Customer Leads";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'estimate' ){
+            $module_title = "Estimates";
+            include viewPath('includes/sidebars/estimate');
+        }elseif( $module == 'items' ){
+            $module_title = "Items";
+            include viewPath('includes/sidebars/items');
+        }elseif( $module == 'items_add' ){
+            $module_title = "Items";
+            include viewPath('includes/sidebars/items');
+        }elseif( $module == 'plans' ){
+            $module_title = "Plans";
+            include viewPath('includes/sidebars/inventory');
+        }elseif( $module == 'workorder' ){
+            $module_title = "Workorder";
+            include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'bird_eye_view' ){
+            $module_title = "Bird Eye View";
+            include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'job_type_list' ){
+            $module_title = "Job Type List";
+            include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'form_builder' ) {
+            $module_title = "Form Builder";
+            $has_sidebar = false;
         }
-
-
-     
-
     ?>
+    <?php if($has_sidebar){ ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <h1 class="page-title"><?= $module_title ?></h1>
                     </div>
                 </div>
@@ -73,5 +104,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
+    <?php }else{ ?>
+    <div class="wrapper">
+      <div __wrapper_section>
+        <div class="card my-2">
+          <div class="text-left"><h1><?= $module_title ?></h1></div>
+          <hr/>
+          <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="alert danger lert-dismissible fade show" style="width: 100%;margin-top: 10px;margin-bottom: 10px; text-align: left;color: #721c24;background-color: #f8d7da;border-color: #f5c6cb;">
+                  <p>No access to module</p>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <?php } ?>
 </div>
 <?php include viewPath('includes/footer'); ?>

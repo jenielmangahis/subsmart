@@ -178,6 +178,8 @@ class Timesheet extends MY_Controller {
         $this->page_data['leave_request'] = $this->timesheet_model->getLeaveRequest();
         $this->page_data['leave_date'] = $this->timesheet_model->getLeaveDate();
 //        $this->page_data['user_logged'] = $this->checkLogin();
+        //Department
+        $this->page_data['department'] = $this->timesheet_model->getDepartment();
 
 		$date_this_week = array(
             "Monday" => date("M d",strtotime('monday this week')),
@@ -1232,9 +1234,9 @@ class Timesheet extends MY_Controller {
     public function getTimesheetData(){
 	    $timesheet_id = $this->input->get('timesheet_id');
 	    $day_id = $this->input->get('day_id');
-	    $ts_query = $this->db->get_where('timesheet_settings',array('id'=>$timesheet_id));
+	    $ts_query = $this->db->get_where('timesheet_schedule',array('id'=>$timesheet_id));
 	    if ($day_id != null){
-            $ts_day = $this->db->get_where('ts_settings_day',array('id'=>$day_id));
+            $ts_day = $this->db->get_where('ts_schedule_day',array('id'=>$day_id));
         }
         $users = $this->db->get_where('users',array('id'=> $ts_query->row()->user_id));
 	    $employee_name = ($ts_query->row()->user_id != 0)?$users->row()->FName." ".$users->row()->LName:"Teammates";
@@ -1319,7 +1321,7 @@ class Timesheet extends MY_Controller {
 
     public function getProjectData(){
 	    $id = $this->input->get('id');
-	    $project = $this->db->get_where('timesheet_settings',array('id'=>$id))->result();
+	    $project = $this->db->get_where('timesheet_schedule',array('id'=>$id))->result();
 
 	    $data = new stdClass();
 	    $data->name = $project[0]->project_name;
@@ -1352,10 +1354,10 @@ class Timesheet extends MY_Controller {
 	    $id = $this->input->post('id');
 	    //Deleting in timesheet_settings table
 	    $this->db->where('id',$id);
-	    $this->db->delete('timesheet_settings');
+	    $this->db->delete('timesheet_schedule');
 	    //Deleting in ts_settings_day table
-        $this->db->where('ts_settings_id',$id);
-        $this->db->delete('ts_settings_day');
+        $this->db->where('schedule_id',$id);
+        $this->db->delete('ts_schedule_day');
     }
 
     public function showTimesheetSettings(){
@@ -1800,7 +1802,7 @@ class Timesheet extends MY_Controller {
         $tz = null;
         foreach ($ts_settings as $setting){
             foreach ($schedule as $item){
-                if ($setting->id == $item->ts_settings_id){
+                if ($setting->id == $item->schedule_id){
                     $tz = $setting->timezone;
                     $time= ltrim(date('hA',strtotime($item->start_time)), 0);
                 }
@@ -1828,7 +1830,7 @@ class Timesheet extends MY_Controller {
         $tz = null;
         foreach ($ts_settings as $setting){
             foreach ($schedule as $item){
-                if ($setting->id == $item->ts_settings_id){
+                if ($setting->id == $item->schedule_id){
                     $tz = $setting->timezone;
                     $time= ltrim(date('hA',strtotime($item->end_time)), 0);
                 }
@@ -1881,7 +1883,7 @@ class Timesheet extends MY_Controller {
         $email = $this->input->post('values[email]');
         $name = $this->input->post('values[name]');
         $role = $this->input->post('values[role]');
-        $query = $this->timesheet_model->inviteLinkEntry($email);
+        $query = $this->timesheet_model->inviteLinkEntry($email,$name,$role);
         if ($query != null){
             if ($this->sendEmailInviteLink($email,$name,$query) == true){
                 echo json_encode(1);
@@ -1921,6 +1923,25 @@ class Timesheet extends MY_Controller {
         return true;
     }
 
+    //Department
+//    Adding department
+    public function addDepartment(){
+	    $dept = $this->input->post('dept');
+	    $query = $this->timesheet_model->addDepartment($dept);
+	    if ($query == 1){
+	        echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+    //Deleting department
+    public function removeDepartment(){
+	    $id = $this->input->post('id');
+        $this->db->where('id',$id);
+        $this->db->delete('timesheet_departments');
+        echo json_encode(1);
+    }
+
 //    Email Report for Timesheet test page
     public function email(){
 	    $page = array(
@@ -1930,7 +1951,8 @@ class Timesheet extends MY_Controller {
     }
     //Invite link email for test page
     public function invite(){
-        $this->load->view('users/invite_link_template');
+	    $data = array('name'=>'Tommy Nguyen','link'=>sha1(rand()));
+        $this->load->view('users/invite_link_template',$data);
     }
 }
 

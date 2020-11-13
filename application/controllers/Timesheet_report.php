@@ -135,7 +135,6 @@ class Timesheet_report extends MY_Controller
         ob_end_clean();
         $obj_pdf->writeHTML($content, true, false, true, false, '');
         $obj_pdf->Output($title, 'I');
-
     }
 
     public function getUsers(){

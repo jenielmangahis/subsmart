@@ -76,7 +76,7 @@
         font-weight: bold;
     }
 </style>
-<body style="font-family: "Gill Sans", sans-serif;">
+<body style="font-family: Gill Sans, sans-serif;" >
 <div class="tile-container" style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;height: 90%;margin: 0 auto;">
     <div class="inner-container">
         <div class="tileContent">

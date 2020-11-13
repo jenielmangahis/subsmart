@@ -14,7 +14,13 @@ class Plans extends MY_Controller {
 	 
 	public function index()
 	{
- 
+ 		$is_allowed = $this->isAllowedModuleAccess(22);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'plans';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		// ifPermissions('plan_list');
 
 		// $this->page_data['items'] = $this->items_model->get();
@@ -26,6 +32,12 @@ class Plans extends MY_Controller {
 	}
 	
 	public function add(){
+		$is_allowed = $this->isAllowedModuleAccess(22);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'plans';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 		// ifPermissions('add_plan');
 		$this->load->view('plans/add', $this->page_data);
 	}

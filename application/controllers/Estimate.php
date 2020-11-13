@@ -37,6 +37,13 @@ class Estimate extends MY_Controller
 
     public function index($tab = '')
     {
+        $is_allowed = $this->isAllowedModuleAccess(18);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'estimate';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');

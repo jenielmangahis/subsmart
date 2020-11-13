@@ -433,6 +433,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         cursor: not-allowed;
         background: #73c686;
     }
+    /*Department dataTable*/
+    .departmentTbl th{
+        font-weight: bold!important;
+        background: #efefef;
+    }
+    .add-department-btn{
+        font-size: 18px;
+        font-weight: 400;
+        color: #0bd4ad;
+        float: right;
+    }
+    .add-department-btn:hover{
+        color: #61f1d5;
+    }
+    /*Department modal*/
+    #departmentModal .modal-content{
+        margin-top: 40%;
+    }
+    .input-department{
+        width: 95%;
+        display: inline-block;
+    }
+    .remove-row-dept {
+        display: inline-block;
+    }
+    .remove-row-dept a{
+        color: #92969d;
+    }
+    .remove-row-dept a:hover{
+        color: orangered;
+    }
+    .department-row{
+        margin-bottom: 10px;
+    }
+    .add-department-row{
+        margin-top: 10px;
+    }
+    .add-department-row a{
+        color: #0bd4ad;
+        font-weight: 400;
+    }
+    .add-department-row a:hover{
+        color: #61f1d5;
+    }
+    .tbl-dept-row td{
+        cursor: pointer;
+    }
+    .tbl-dept-row td:last-child{
+        cursor: auto;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -477,10 +527,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a class="nav-link" data-toggle="tab" href="#empPTO">PTO</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#empInvite">Invite Link</a>
+                                            <a class="nav-link" data-toggle="tab" href="#empInvite">Invite Link</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#empDepartment">Department</a>
+                                            <a class="nav-link active" data-toggle="tab" href="#empDepartment">Department</a>
                                         </li>
                                     </ul>
 
@@ -596,10 +646,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container active" id="empInvite">
+                                        <div class="tab-pane container" id="empInvite">
                                             <form action="" method="post" id="formInviteLink">
                                             <div class="form-group">
-                                                <label for="" style="font-weight: bold">TYPE AN EMAIL ADDRESS TO INVITE</label>
+                                                <label for="" style="font-weight: bold">EMAIL</label>
                                                 <input type="email" name="email" class="form-control invite-email" placeholder="sample@mail.com">
                                                 <a href="javascript:void(0)" title="Clear" id="clearEmailField"><i class="fa fa-times fa-lg remove-email-icon"></i></a>
                                                 <?php
@@ -608,17 +658,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     foreach ($users as $user){
                                                         if ($user->id == $this->session->userdata('logged')['id']){
                                                             $name = $user->FName." ".$user->LName;
-                                                            //User role
-                                                            foreach ($roles as $role){
-                                                                if($role->id == $user->role){
-                                                                    $user_role = $role->title;
-                                                                }
-                                                            }
                                                         }
                                                     }
                                                 ?>
                                                 <input type="hidden" name="name" value="<?php echo $name;?>">
-                                                <input type="hidden" name="role" value="<?php echo $user_role;?>">
+                                            </div>
+                                            <div class="form-group" style="width: 200px">
+                                                <label for="" style="font-weight: bold">ROLE</label>
+                                                <select name="role" id="" class="form-control invite-role" >
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="Admin">Admin</option>
+                                                </select>
                                             </div>
                                             </form>
                                             <div class="form-group">
@@ -631,8 +682,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <button type="button" class="btn btn-success" style="border-radius: 36px;width: 200px" id="sendInviteLink"><i class="fa fa-paper-plane fa-lg"></i> <span>SEND</span></button>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container fade" id="empDepartment">
-                                            <h4>Department</h4>
+                                        <div class="tab-pane container active" id="empDepartment">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h4>Departments</h4>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <a href="#" class="add-department-btn" id="addDepartmentBtn"><i class="fa fa-plus"></i> Add New Department</a>
+                                                </div>
+                                            </div>
+                                            <table id="department-table-list" class="departmentTbl cell-border hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Departments</th>
+                                                    <th>Members</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php foreach ($department as $dept): ?>
+                                                    <tr class="tbl-dept-row">
+                                                        <td style="border-left: 0;"><?php echo $dept->name; ?></td>
+                                                        <td><?php ?></td>
+                                                        <td class="center">
+                                                            <a href="#" data-id="<?php echo $dept->id?>" data-name="<?php echo $dept->name; ?>" id="removeDept"><i class="fa fa-trash-alt fa-lg"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -779,6 +857,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" id="savedLeaveType">Save & Exit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--end of modal-->
+<!--Add Department modal-->
+<div class="modal md-effect-11" id="departmentModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h6 class="modal-title">Add New Department</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form action="" method="post" id="departmentForm">
+                    <label for="" style="color: #92969d;">Departments</label>
+                    <div class="department-row">
+                        <div class="input-department">
+                            <input type="text" name="department[]" class="form-control deptArray" placeholder="Add department name">
+                        </div>
+                        <div class="remove-row-dept">
+                            <a href="javascript:void (0)" ><i class="fa fa-times fa-lg"></i></a>
+                        </div>
+                    </div>
+                </form>
+                <div class="add-department-row">
+                    <a href="javascript:void (0)" id="addDeptRow">Add New Department</a>
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="savedDepartment">Save & Exit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
 
@@ -1076,6 +1190,108 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $('.invite-email').css('border-bottom','2px solid red');
             }
         });
+        //Select2 role list
+        $('.invite-role').select2();
+
+        //Department dataTable
+        $('#department-table-list').DataTable({
+            "paging": false,
+            "filter":false,
+            "info":false,
+            "sort": false
+        });
+        // Department modal
+        $(document).on('click','#addDepartmentBtn',function () {
+            $('#departmentModal').modal({backdrop: 'static', keyboard: false});
+            $('.input-department').children('input').val(null);
+        });
+        //Adding department
+        $(document).on('click','#savedDepartment',function () {
+            let dept = getDepartment($('.deptArray'));
+            $.ajax({
+                url:'/timesheet/addDepartment',
+                type:"POST",
+                dataType:"json",
+                data:{dept:dept},
+                success:function (data) {
+                    $("#departmentModal").modal('hide');
+                    if (data == 1){
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "New department has been added",
+                                icon: 'success'
+                            });
+                    }else{
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Failed',
+                                html: "Department name already exist",
+                                icon: 'warning'
+                            });
+                    }
+
+                }
+            });
+        });
+        function getDepartment(dept) {
+            let list = [];
+            $(dept).each(function(index, element) {
+                list.push($(element).val());
+            });
+            return list;
+        }
+        //Department add row
+        $(document).on('click','#addDeptRow',function () {
+            let select =  $('#departmentForm');
+            if ($('.input-department').children('input').val() !== ''){
+                select.append($('.department-row').last().clone());
+                $('.department-row:last').children('.input-department').children('input').val(null);
+            }
+        });
+        //Deleting department
+        $(document).on('click','#removeDept',function () {
+            let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
+            Swal.fire({
+                title: 'Are you sure to delete this?',
+                html: "Department: <strong>"+name+"</strong>",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url:"/timesheet/removeDepartment",
+                        type:"POST",
+                        dataType:"json",
+                        data:{id:id},
+                        success:function (data) {
+                            if(data == 1){
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: name+" department has been removed",
+                                        icon: 'success'
+                                    });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        //Department update
+        $(document).on('click','.tbl-dept-row td:not(:last-child)',function () {
+
+        });
 
         //Select2 employee list
         $('.select2-employee-list').select2({
@@ -1295,8 +1511,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
 
         $(document).on('change','#tsUsersList',function () {
-             var user = $(this).val();
-             var week = $('#ts-sorting-week').val();
+             let user = $(this).val();
+             let week = $('#ts-sorting-week').val();
             $('#timesheet_settings').DataTable().destroy();
             showWeekList(week,user);
         });

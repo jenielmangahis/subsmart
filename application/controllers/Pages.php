@@ -105,4 +105,27 @@ class Pages extends MY_Controller {
 		echo json_encode($response);
 	}
 
+	public function front_add_employee( $eid ) {
+
+		$this->load->helper(array('hashids_helper'));
+
+		$this->load->model('Clients_model');
+		$this->load->model('Users_model');
+
+		$encrypted = hashids_encrypt(2, '', 15);
+    	$decrypted = hashids_decrypt($encrypted, '', 15);
+
+		$cid      = hashids_decrypt($eid, '', 15);
+		$client   = $this->Clients_model->getById($cid);
+		$is_valid = true;
+		if( !$client ){
+			$is_valid = false;
+		}
+
+		$this->page_data['page']->title = 'nSmartTrac - Add Company Employees';	
+		$this->page_data['client'] = $client;
+		$this->page_data['is_valid'] = $is_valid;
+		$this->load->view('pages/front_add_employee', $this->page_data);
+	}
+
 }

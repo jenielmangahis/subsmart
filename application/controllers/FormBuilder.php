@@ -62,6 +62,12 @@ class FormBuilder extends MY_Controller {
 
 	// VIEWS
 	public function index(){	
+		$is_allowed = true; //$this->isAllowedModuleAccess(16);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'form_builder';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 		$this->page_data["forms"] = $this->formsbuilder_model->getForms();
 		$this->load->view('form_builder/index.php', $this->page_data);
 	}
