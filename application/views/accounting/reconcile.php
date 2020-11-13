@@ -690,7 +690,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                            {
                             ?>
                             <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
-                            <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                            <?php endif ?> <?php if($row->id == $rows[0]->cash_back_account): echo "selected"; endif?> value="<?=$row->id?>"><?=$row->name?></option>
                           <?php
                           $i++;
                           }
@@ -700,12 +700,14 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-2">
                     <label>Cash back memo</label>
                     </br>
-                    <textarea name="cash_back_memo" id="cash_back_memo" rows="4"></textarea>
+                    <textarea name="cash_back_memo" id="cash_back_memo" rows="4">
+                        <?=$rows[0]->cash_back_memo?>
+                    </textarea>
                 </div>
                 <div class="col-md-3">
                     <label>Cash back amount</label>
                     </br>
-                    <input type="number" name="cash_back_amount" id="cash_back_amount" class="form-control">
+                    <input type="number" name="cash_back_amount" id="cash_back_amount" class="form-control" value="<?=$rows[0]->cash_back_amount?>">
                 </div>
                 <div class="col-md-2">
                     <h6 id="inttotal_final">Total : $<?=number_format($rows[0]->interest_earned,2)?></h6>
@@ -5741,6 +5743,16 @@ function closeAddaccount()
        var maintot = main - $("#servicechargecount").val();
        $(".edit_service_charge").text(maintot.toFixed(2));
        $("#edit_service_charge").val(maintot.toFixed(2));
+
+       var main_int = $(".edit_interest_earned").text();
+       var maintot_int = parseInt(main_int) + parseInt($("#interestearnedcount").val());
+       $("#inttotal").text("Other Fund Total : $"+maintot_int.toFixed(2));
+       if($('#cash_back_amount').val()!='')
+       {
+        var subint = $('#cash_back_amount').val();
+        maintot_int = maintot_int - $('#cash_back_amount').val();
+       }
+       $("#inttotal_final").text("Total : $"+maintot_int.toFixed(2));
     });
 </script>
 <script type="text/javascript">

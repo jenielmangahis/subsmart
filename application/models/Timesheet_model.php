@@ -8,7 +8,7 @@ class Timesheet_model extends MY_Model {
     public $table = 'time_record';
     private $db_table = 'timesheet_logs';
     private $attn_tbl = 'timesheet_attendance';
-    private $tbl_ts_settings = 'timesheet_settings';
+    private $tbl_ts_settings = 'timesheet_schedule';
 
     public function getNotifyCount(){
         $user_id = $this->session->userdata('logged')['id'];
@@ -231,7 +231,7 @@ class Timesheet_model extends MY_Model {
 
     public function calculateOvertime($user_id,$attn_id){
         $shift = $this->calculateShiftDuration($attn_id);
-        $query = $this->db->get_where('ts_settings_day',array('user_id'=>$user_id,'start_date'=>date('Y-m-d')));
+        $query = $this->db->get_where('ts_schedule_day',array('user_id'=>$user_id,'start_date'=>date('Y-m-d')));
         $hired_type = $this->db->get_where('users',array('id'=>$user_id));
         $min_duration = 0;
         $overtime = 0;
@@ -392,37 +392,37 @@ class Timesheet_model extends MY_Model {
 //    }
     public function getTimeSettingsByUser(){
         $user_id = $this->session->userdata('logged')['id'];
-        $qry = $this->db->get_where('timesheet_settings',array('user_id'=>$user_id));
+        $qry = $this->db->get_where('timesheet_schedule',array('user_id'=>$user_id));
         return $qry->result();
     }
     public function getTimesheetDayByUser(){
         $user_id = $this->session->userdata('logged')['id'];
-        $qry = $this->db->get_where('ts_settings_day',array('user_id'=>$user_id));
+        $qry = $this->db->get_where('ts_schedule_day',array('user_id'=>$user_id));
         return $qry->result();
     }
 
     public function getTimeSheetSettings(){
-        $qry = $this->db->get('timesheet_settings');
+        $qry = $this->db->get('timesheet_schedule');
         return $qry->result();
     }
     public function getTimeSheetDay(){
-        $qry = $this->db->get('ts_settings_day');
+        $qry = $this->db->get('ts_schedule_day');
         return $qry->result();
     }
     public function getTimeSheetByWeek($week){
         for ($x = 0;$x < count($week);$x++){
             $this->db->or_where('date_created',$week[$x]);
         }
-        $qry = $this->db->get('timesheet_settings');
+        $qry = $this->db->get('timesheet_schedule');
         return $qry->result();
     }
     public function getTimeSheetByUser($users_id){
         $this->db->where('user_id',$users_id);
-        $qry = $this->db->get('timesheet_settings');
+        $qry = $this->db->get('timesheet_schedule');
         return $qry->result();
     }
     public function getTimeSheetDayById($timesheet_id){
-        $qry = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$timesheet_id));
+        $qry = $this->db->get_where('ts_schedule_day',array('schedule_id'=>$timesheet_id));
         return $qry->result();
     }
 
@@ -450,27 +450,27 @@ class Timesheet_model extends MY_Model {
     //Updating timesheet settings total duration
     public function recalculateWeekDuration($ts_id){
         $total = 0;
-        $query = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$ts_id))->result();
+        $query = $this->db->get_where('ts_schedule_day',array('schedule_id'=>$ts_id))->result();
         foreach ($query as $durations){
             $total += $durations->duration;
         }
         $ts_settings = array('total_duration_w'=>$total);
         $this->db->where('id',$ts_id);
-        $this->db->update('timesheet_settings',$ts_settings);
+        $this->db->update('timesheet_schedule',$ts_settings);
     }
     public function perDaySchedule($ts_id,$data){
-        $qry = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$ts_id,'start_date' => $data['start_date']));
+        $qry = $this->db->get_where('ts_schedule_day',array('schedule_id'=>$ts_id,'start_date' => $data['start_date']));
         if ($qry->num_rows() == 0){
             $insert = array(
                 'user_id' => $data['user_id'],
-                'ts_settings_id' => $ts_id,
+                'schedule_id' => $ts_id,
                 'start_date' => $data['start_date'],
                 'start_time' => $data['start_time'],
                 'end_time' => $data['end_time'],
                 'day' => $data['day'],
                 'duration' => intval($data['duration'])
             );
-            $this->db->insert('ts_settings_day',$insert);
+            $this->db->insert('ts_schedule_day',$insert);
             $this->recalculateWeekDuration($ts_id);
         }else{
             $update = array(
@@ -478,32 +478,32 @@ class Timesheet_model extends MY_Model {
                 'end_time' => $data['end_time'],
                 'duration' => $data['duration']
             );
-            $array_check = array('ts_settings_id' => $ts_id,'start_date' => $data['start_date']);
+            $array_check = array('schedule_id' => $ts_id,'start_date' => $data['start_date']);
             $this->db->where($array_check);
-            $this->db->update('ts_settings_day',$update);
+            $this->db->update('ts_schedule_day',$update);
             $this->recalculateWeekDuration($ts_id);
 
         }
         return true;
     }
     public function updateTSProject($id,$update){
-        $qry = $this->db->get_where('timesheet_settings',array('id'=>$id));
+        $qry = $this->db->get_where('timesheet_schedule',array('id'=>$id));
         if ($qry->num_rows() == 1){
             $this->db->where('id',$id);
-            $this->db->update('timesheet_settings',$update);
+            $this->db->update('timesheet_schedule',$update);
             return true;
         }else{
             return false;
         }
     }
     public function updateTotalWeekDuration($update){
-        $qry = $this->db->get_where('timesheet_settings',array('id'=>$update['project_id']));
+        $qry = $this->db->get_where('timesheet_schedule',array('id'=>$update['project_id']));
         if ($qry->num_rows() == 1){
             $data = array(
               'total_duration_w' => $update['total']
             );
             $this->db->where('id',$update['project_id']);
-            $this->db->update('timesheet_settings',$data);
+            $this->db->update('timesheet_schedule',$data);
             return true;
         }else{
             return false;
@@ -588,7 +588,20 @@ class Timesheet_model extends MY_Model {
     }
 
     //Invite link
-    public function inviteLinkEntry($email){
+    public function inviteLinkEntry($email,$name,$role){
+        $user_id = $this->session->userdata('logged')['id'];
+        $query = $this->db->get_where('timesheet_team_members',array('email'=>$email));
+        if ($query->num_rows() == 0){
+            $data = array(
+                'user_id' => $user_id,
+                'role' => $role,
+                'name' => $name,
+                'email' => $email,
+                'status' => 0
+            );
+            $this->db->insert('timesheet_team_members',$data);
+        }
+        //Inserting invitation code.
         $random = sha1(rand());
         $insert = array(
             'email' => $email,
@@ -598,6 +611,30 @@ class Timesheet_model extends MY_Model {
         );
         $this->db->insert('timesheet_invite_link',$insert);
         return $random;
+    }
+    //Department
+    public function getDepartment(){
+        $qry = $this->db->get('timesheet_departments');
+        return $qry->result();
+    }
+    //Adding department
+    public function addDepartment($dept){
+        $user_id = $this->session->userdata('logged')['id'];
+        $return = 1;
+        for ($x = 0;$x < count($dept);$x++){
+            $query = $this->db->get_where('timesheet_departments',array('name'=>$dept[$x]));
+            if ($query->num_rows() == 0){
+                $insert = array(
+                    'name' => $dept[$x],
+                    'user_id' => $user_id
+                );
+                $this->db->insert('timesheet_departments',$insert);
+                $return = 1;
+            }else{
+                $return = 0;
+            }
+        }
+        return $return;
     }
 
 }
