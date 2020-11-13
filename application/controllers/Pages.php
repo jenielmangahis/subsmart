@@ -124,8 +124,68 @@ class Pages extends MY_Controller {
 
 		$this->page_data['page']->title = 'nSmartTrac - Add Company Employees';	
 		$this->page_data['client'] = $client;
+		$this->page_data['eid'] = $eid;
 		$this->page_data['is_valid'] = $is_valid;
 		$this->load->view('pages/front_add_employee', $this->page_data);
+	}
+
+	public function front_save_company_employee() {
+		$this->load->helper(array('hashids_helper'));
+		$this->load->model('Clients_model');
+		$this->load->model('Users_model');
+		$this->load->model('TimesheetTeamMember_model');
+
+		$post = $this->input->post();
+
+		$is_success = false;
+		$msg = 'Cannot save employee. Please try again later.';
+
+		if( $post['password'] == $post['confirm_password'] ){
+			//Check if username already taken
+			$isUsernameTaken = $this->Users_model->getUserByUsernname($post['username']);
+			if( $isUsernameTaken ){
+				$msg = 'Username already taken.';
+			}else{
+				$cid      = hashids_decrypt($post['eid'], '', 15);
+				$client   = $this->Clients_model->getById($cid);
+				if( $client ){
+					$uid = $this->users_model->create([
+		                'role' => 30,
+		                'FName' => $post['firstname'],
+		                'LName' => $post['lastname'],
+		                'username' => $post['username'],
+		                'email' => $post['email'],
+		                'company_id' => $cid,
+		                'status' => 1,
+		                'password_plain' =>  $post['password'],
+		                'password' => hash( "sha256", $post['password'] ),
+		            ]);
+
+		            $timesheetMember = $this->TimesheetTeamMember_model->create([
+		            	'user_id' => $uid,
+		            	'name' => $post['firstname'] . ' ' . $post['lastname'],
+		            	'email' => $post['email'],
+		            	'role' => 'Employee',
+		            	'department_id' => 0,
+		            	'department_role' => 'Member',
+		            	'will_track_location' => 1,
+		            	'status' => 1,
+		            	'company_id' => $cid
+		            ]);
+
+		            $msg = "Employee was successfully created.";
+		            $is_success = true;
+				}else{
+					$msg = "Cannot save employee.";
+				}
+			}
+		}else{
+			$msg = 'Password does not match';
+		}
+
+		$data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
+		exit;
 	}
 
 }
