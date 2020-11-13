@@ -299,7 +299,7 @@
                         $time_difference = 0;
                         foreach ($ts_settings as $setting){
                             foreach ($schedule as $sched){
-                                if ($setting->id == $sched->ts_settings_id){
+                                if ($setting->id == $sched->schedule_id){
                                     if ($setting->timezone == null){
                                         $tz = date_default_timezone_get();
                                     }else{

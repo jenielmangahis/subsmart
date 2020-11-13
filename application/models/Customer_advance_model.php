@@ -75,6 +75,21 @@ class Customer_advance_model extends MY_Model {
         }
     }
 
+    public function check_if_user_exist($params = array(),$tablename) {
+        $this->db->select('*');
+        $this->db->from($tablename);
+
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+            $result = $this->db->count_all_results();
+        }
+        return $result;
+    }
+
     public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
     {
         if(!empty($orderBy) || $orderBy!= null){
