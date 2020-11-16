@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <?php include viewPath('includes/sidebars/workorder'); ?>
         <?php include viewPath('includes/notifications'); ?>
         <div wrapper__section>
+            <div class="card">
             <div class="container-fluid">
                 <!-- end row -->
                 <div class="row">
@@ -13,7 +14,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <h1>Settings</h1>
 
                         <?php echo form_open('workorder/settings', ['class' => 'form-validate require-validation', 'id' => 'workorder-settings', 'autocomplete' => 'off']); ?>
-                        <div class="card p-3">
+                        <div class="p-3">
                             <div class="err-msg hide" style="display: none;"></div>
                             <div class="form-group">
                                 <label>Work Order Number</label>
@@ -53,7 +54,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <hr class="card-hr">
                             <a href="www.google.com" style="padding: 10px;width: 18%;" class="btn btn-outline-secondary">Manage work order notifications</a>
                             <hr class="card-hr">
-                            <button class="btn btn-primary btn-update-workorder-settings" name="btn-submit" type="button" style="width: 10%;">Save Changes</button>                            
+                            <button class="btn btn-primary btn-update-workorder-settings" name="btn-submit" type="button" style="width: 15%;">Save Changes</button>                            
 
                         </div>
 
@@ -62,6 +63,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
                 <!-- end row -->
+            </div>
             </div>
         </div>
     </div>

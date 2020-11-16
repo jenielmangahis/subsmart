@@ -245,7 +245,7 @@ class Register extends MY_Controller {
         }
 
         //echo $is_authentic;
-        
+        $is_authentic = 1;
         $json_data = array('is_authentic' => $is_authentic);
         echo json_encode($json_data);        
     }

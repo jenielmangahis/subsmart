@@ -148,6 +148,7 @@ class Pages extends MY_Controller {
 			}else{
 				$cid      = hashids_decrypt($post['eid'], '', 15);
 				$client   = $this->Clients_model->getById($cid);
+
 				if( $client ){
 					$uid = $this->users_model->create([
 		                'role' => 30,
@@ -176,7 +177,7 @@ class Pages extends MY_Controller {
 		            $msg = "Employee was successfully created.";
 		            $is_success = true;
 				}else{
-					$msg = "Cannot save employee.";
+					$msg = "Cannot create employee.";
 				}
 			}
 		}else{

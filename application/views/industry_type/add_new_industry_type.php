@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                           </div>
 
-                          <div class="col-md-">
+                          <div class="col-md-5">
                             <a class="btn btn-default" href="<?php echo base_url('industry_type/index'); ?>">Cancel</a>
                             <button type="submit" class="btn btn-primary">Submit</button>
                           </div>
