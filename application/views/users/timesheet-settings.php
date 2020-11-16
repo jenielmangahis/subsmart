@@ -483,6 +483,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .tbl-dept-row td:last-child{
         cursor: auto;
     }
+    /*Department update page*/
+    .dept-header{
+        border-bottom: 1px solid #92969d45;
+    }
+    .dept-header h3,i{
+        display: inline-block;
+    }
+    .dept-header a{
+        color:#a2a2a2;
+    }
+    .dept-header a:hover{
+        color: #5f5f5f;
+    }
+    .dept-sub-header{
+        border-bottom: 1px solid #92969d45;
+        background: #efefefb5;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .dept-sub-header .sub-header-title{
+        font-size: 16px;
+        font-weight: 700;
+        color: #5f5f5f;;
+        margin-left: 8px;
+    }
+    .dept-role-title{
+        padding: 20px;
+        border-bottom: 1px solid #92969d45;
+        background: #fafafa;
+    }
+    .dept-role-add{
+        padding: 20px;
+        border-bottom: 1px solid #92969d45;
+    }
+    .dept-role-add a{
+        color: #0bd4ad;
+    }
+    .dept-role-add a:hover{
+        text-decoration: underline;
+    }
+    .dept-role-add i{
+        margin-right: 15px;
+    }
+    .dept-role-add i,.dept-add-btn{
+        font-size: 16px;
+        font-weight: 700;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -683,34 +730,86 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                         <div class="tab-pane container active" id="empDepartment">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h4>Departments</h4>
+                                            <?php
+                                            if (isset($dept_id)){
+                                                $name = null;
+                                                if($this->uri->segment(3) != null){
+                                                    $hide = 'display:none';
+                                            ?>
+                                                <div class="department-edit-view">
+                                                    <div class="dept-header">
+                                                        <a href="javascript:void(0)" id="deptBckBtn"><i class="fas fa-arrow-left fa-lg" style="margin-right: 10px;color: #a2a2a2;"></i></a>  <h3><?php echo $dept_id[0]->name;?></h3> <a href="javascript:void(0)" title="Edit" data-toggle="tooltip"><i class="fas fa-pencil-alt"></i></a>
+                                                    </div>
+                                                    <div class="dept-sub-header">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <span class="sub-header-title">Name</span>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <span class="sub-header-title">Role</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="dept-role-title">
+                                                        <h6>Managers</h6>
+                                                    </div>
+                                                    <div class="dept-role-add">
+                                                        <a href="javascript:void(0)">
+                                                            <i class="fas fa-plus fa-lg"></i> <span class="dept-add-btn">Add Managers</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="dept-role-title">
+                                                        <h6>Members</h6>
+                                                    </div>
+                                                    <div class="dept-role-add">
+                                                        <a href="javascript:void(0)">
+                                                            <i class="fas fa-plus fa-lg"></i> <span class="dept-add-btn">Add Members</span>
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <a href="#" class="add-department-btn" id="addDepartmentBtn"><i class="fa fa-plus"></i> Add New Department</a>
+                                            <?php
+                                                }else{
+                                                    $hide = 'display:none';
+                                                }
+                                                if ($dept_id == 0){
+                                                    redirect('/timesheet/settings');
+                                                }
+                                            }else{
+                                                $hide = null;
+                                            }
+                                            ?>
+                                            <div class="department-table-list" style="<?php echo $hide?>">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h4>Departments</h4>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <a href="#" class="add-department-btn" id="addDepartmentBtn"><i class="fa fa-plus"></i> Add New Department</a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <table id="department-table-list" class="departmentTbl cell-border hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>Departments</th>
-                                                    <th>Members</th>
-                                                    <th></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php foreach ($department as $dept): ?>
-                                                    <tr class="tbl-dept-row">
-                                                        <td style="border-left: 0;"><?php echo $dept->name; ?></td>
-                                                        <td><?php ?></td>
-                                                        <td class="center">
-                                                            <a href="#" data-id="<?php echo $dept->id?>" data-name="<?php echo $dept->name; ?>" id="removeDept"><i class="fa fa-trash-alt fa-lg"></i></a>
-                                                        </td>
+                                                <table id="department-table-list" class="departmentTbl cell-border hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Departments</th>
+                                                        <th>Members</th>
+                                                        <th></th>
                                                     </tr>
-                                                <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php if (isset($department)): ?>
+                                                    <?php foreach ($department as $dept): ?>
+                                                        <tr class="tbl-dept-row" data-id="<?php echo $dept->id?>">
+                                                            <td style="border-left: 0;"><?php echo $dept->name; ?></td>
+                                                            <td><?php ?></td>
+                                                            <td class="center">
+                                                                <a href="#" data-id="<?php echo $dept->id?>" data-name="<?php echo $dept->name; ?>" id="removeDept"><i class="fa fa-trash-alt fa-lg"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1290,7 +1389,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         //Department update
         $(document).on('click','.tbl-dept-row td:not(:last-child)',function () {
-
+            let dept_id = $(this).parent('tr').attr('data-id');
+            let refresh = window.location.protocol + "//" + window.location.host + window.location.pathname + '/'+dept_id;
+            window.history.pushState({ path: refresh }, '', refresh);
+            $.ajax({
+               url:"/timesheet/showDeptUpdate",
+               type:"GET",
+               dataType:"json",
+               data:{dept_id:dept_id},
+               success:function (data) {
+                    $('.department-table-list').hide();
+                    $('#empDepartment').append(data);
+               }
+            });
+        });
+        //Department back button
+        $(document).on('click','#deptBckBtn',function () {
+            let url = window.location.href.replace(window.location.search,'');
+            let refresh = url.slice(0, url.lastIndexOf('/'));
+            window.history.pushState({ path: refresh }, '', refresh)
+            $('.department-edit-view').hide();
+            $('.department-table-list').show();
         });
 
         //Select2 employee list
