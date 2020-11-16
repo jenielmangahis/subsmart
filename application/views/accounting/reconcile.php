@@ -1971,13 +1971,13 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <td><a href="javascript:void(0);" class="remove_recurr_int"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <?php 
-                            $recurrservicechargecount_int =0;
-                            if(!empty($this->reconcile_model->select_recurr_interest($rows[0]->id,$rows[0]->chart_of_accounts_id)))
+                            $recurrinterestearnedcount_int =0;
+                            if(!empty($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id)))
                             {
                             $recurrrowcount_int =2;
-                            foreach($this->reconcile_model->select_recurr_interest($rows[0]->id,$rows[0]->chart_of_accounts_id) as $recurrrowtabint)
+                            foreach($this->reconcile_model->select_interest($rows[0]->id,$rows[0]->chart_of_accounts_id) as $recurrrowtabint)
                             {
-                                $recurrservicechargecount_int+=$recurrrowtabint->interest_earned_sub;
+                                $recurrinterestearnedcount_int+=$recurrrowtabint->interest_earned_sub;
                             ?>
                             <tr onclick="trClickRecurr_Int(<?=$recurrrowcount_int?>)">
                                 <td data-id="<?=$recurrrowtabint->id?>"><i class="fa fa-th"></i></td>
@@ -2035,7 +2035,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <td><a href="javascript:void(0);" class="remove_recurr_int"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <?php } ?>
-                            <input type="hidden" name="recurrservicechargecount_int" id="recurrservicechargecount_int" value="<?=$recurrservicechargecount_int?>">
+                            <input type="hidden" name="recurrinterestearnedcount_int" id="recurrinterestearnedcount_int" value="<?=$recurrinterestearnedcount_int?>">
                             <tr class="pr participantRecurrIntRow RecurrhideInt">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>0</td>
@@ -2101,7 +2101,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                            {
                             ?>
                             <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
-                            <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                            <?php endif ?> <?php if($row->id == $rows[0]->cash_back_account): echo "selected"; endif?> value="<?=$row->id?>"><?=$row->name?></option>
                           <?php
                           $i++;
                           }
@@ -2111,12 +2111,12 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 <div class="col-md-2">
                     <label>Cash back memo</label>
                     </br>
-                    <textarea name="cash_back_memo_recurr" id="cash_back_memo_recurr" rows="4"></textarea>
+                    <textarea name="cash_back_memo_recurr" id="cash_back_memo_recurr" rows="4"><?=$rows[0]->cash_back_memo?></textarea>
                 </div>
                 <div class="col-md-3">
                     <label>Cash back amount</label>
                     </br>
-                    <input type="number" name="cash_back_amount_recurr" id="cash_back_amount_recurr" class="form-control">
+                    <input type="number" name="cash_back_amount_recurr" id="cash_back_amount_recurr" class="form-control" value="<?=$rows[0]->cash_back_amount?>">
                 </div>
                 <div class="col-md-2">
                     <h6 id="intrecurrtotal_final">Total : $<?=number_format($rows[0]->interest_earned,2)?></h6>
@@ -5749,10 +5749,18 @@ function closeAddaccount()
        $("#inttotal").text("Other Fund Total : $"+maintot_int.toFixed(2));
        if($('#cash_back_amount').val()!='')
        {
-        var subint = $('#cash_back_amount').val();
         maintot_int = maintot_int - $('#cash_back_amount').val();
        }
        $("#inttotal_final").text("Total : $"+maintot_int.toFixed(2));
+
+       var main_int_recurr = $(".recurr_interest_earned").text();
+       var maintot_int_recurr = parseInt(main_int_recurr) + parseInt($("#recurrinterestearnedcount_int").val());
+       $("#intrecurrtotal").text("Other Fund Total : $"+maintot_int_recurr.toFixed(2));
+       if($('#cash_back_amount_recurr').val()!='')
+       {
+        maintot_int_recurr = maintot_int_recurr - $('#cash_back_amount_recurr').val();
+       }
+       $("#intrecurrtotal_final").text("Total : $"+maintot_int_recurr.toFixed(2));
     });
 </script>
 <script type="text/javascript">
@@ -6023,7 +6031,7 @@ function closeAddaccount()
             var sub = parseInt($('#cash_back_amount_recurr').val());
             var total_recurr_int = total_recurr_int - sub;
         }
-        $('#intrecurrtotal_final').text('Total : $'+total.toFixed(2));
+        $('#intrecurrtotal_final').text('Total : $'+total_recurr_int.toFixed(2));
     }
     function crossClickRecurr_Int()
     {

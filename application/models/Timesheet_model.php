@@ -116,6 +116,7 @@ class Timesheet_model extends MY_Model {
                 'user_id' => $user_id,
                 'action' => 'Check in',
                 'user_location' => $this->employeeCoordinates(),
+                'user_location_address' => $this->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s'),
                 'entry_type' => $entry,
                 'approved_by' => $approved_by,
@@ -135,6 +136,7 @@ class Timesheet_model extends MY_Model {
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'user_location' => $this->employeeCoordinates(),
+                'user_location_address' => $this->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s'),
                 'entry_type' => $entry,
                 'approved_by' => $approved_by,
@@ -287,6 +289,7 @@ class Timesheet_model extends MY_Model {
             'user_id' => $user_id,
             'action' => 'Break in',
             'user_location' => $this->employeeCoordinates(),
+            'user_location_address' => $this->employeeAddress(),
             'date_created' => date('Y-m-d H:i:s',$time),
             'entry_type' => $entry,
             'approved_by' => $approved_by,
@@ -304,6 +307,7 @@ class Timesheet_model extends MY_Model {
             'user_id' => $user_id,
             'action' => 'Break out',
             'user_location' => $this->employeeCoordinates(),
+            'user_location_address' => $this->employeeAddress(),
             'date_created' => date('Y-m-d H:i:s',$time),
             'entry_type' => $entry,
             'approved_by' => $approved_by,
@@ -322,6 +326,16 @@ class Timesheet_model extends MY_Model {
     public function employeeCoordinates(){
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
         return $get_location->lat.",".$get_location->lon; //to get coordinates
+    }
+    public function employeeAddress(){
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
+        $lat = $get_location->lat;
+        $lng = $get_location->lon;
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true_or_false&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        $output = json_decode($g_map);
+        $status = $output->status;
+        $address = ($status=="OK")?$output->results[1]->formatted_address:'Address not found';
+        return $address;
     }
 
     public function updateBreakDuration($attn_id){
@@ -616,6 +630,20 @@ class Timesheet_model extends MY_Model {
     public function getDepartment(){
         $qry = $this->db->get('timesheet_departments');
         return $qry->result();
+    }
+    public function getDepartmentById($id){
+        $return = null;
+        if ($id != 0 || $id != null){
+            $qry = $this->db->get_where('timesheet_departments',array('id'=>$id));
+            if ($qry->num_rows() == 1){
+                $return = $qry->result();
+            }else{
+                $return = 0;
+            }
+        }else{
+            $return = 0;
+        }
+        return $return;
     }
     //Adding department
     public function addDepartment($dept){

@@ -180,6 +180,10 @@ class Timesheet extends MY_Controller {
 //        $this->page_data['user_logged'] = $this->checkLogin();
         //Department
         $this->page_data['department'] = $this->timesheet_model->getDepartment();
+        if ($this->uri->segment(3) != null){
+            $dept_id = $this->uri->segment(3);
+            $this->page_data['dept_id'] = $this->timesheet_model->getDepartmentById($dept_id);
+        }
 
 		$date_this_week = array(
             "Monday" => date("M d",strtotime('monday this week')),
@@ -1646,6 +1650,7 @@ class Timesheet extends MY_Controller {
                 'user_id' => $user_id,
                 'action' => 'Check in',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
+                'user_location_address' => $this->timesheet_model->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s',$clock_in),
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
@@ -1683,6 +1688,7 @@ class Timesheet extends MY_Controller {
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
+                'user_location_address' => $this->timesheet_model->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s',$clock_out),
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
@@ -1727,6 +1733,7 @@ class Timesheet extends MY_Controller {
             'user_id' => $user_id,
             'action' => 'Break in',
             'user_location' => $this->timesheet_model->employeeCoordinates(),
+            'user_location_address' => $this->timesheet_model->employeeAddress(),
             'date_created' => date('Y-m-d H:i:s',$lunch_in),
             'entry_type' => 'Normal',
             'company_id' => getLoggedCompanyID()
@@ -1761,6 +1768,7 @@ class Timesheet extends MY_Controller {
                 'user_id' => $user_id,
                 'action' => 'Break out',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
+                'user_location_address' => $this->timesheet_model->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s',$lunch_out),
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
@@ -1940,6 +1948,45 @@ class Timesheet extends MY_Controller {
         $this->db->where('id',$id);
         $this->db->delete('timesheet_departments');
         echo json_encode(1);
+    }
+    //Show department update page
+    public function showDeptUpdate(){
+	    $dept_id = $this->input->get('dept_id');
+	    $query = $this->db->get_where('timesheet_departments',array('id' => $dept_id));
+        $output = '<div class="department-edit-view">
+                    <div class="dept-header">
+                        <a href="javascript:void(0)" id="deptBckBtn"><i class="fas fa-arrow-left fa-lg" style="margin-right: 10px;color: #a2a2a2;"></i></a> <h3>'.$query->row()->name.'</h3> <a href="javascript:void(0)" title="Edit" data-toggle="tooltip"><i class="fas fa-pencil-alt"></i></a>
+                    </div>
+                    <div class="dept-sub-header">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="sub-header-title">Name</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="sub-header-title">Role</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dept-role-title">
+                        <h6>Managers</h6>
+                    </div>
+                    <div class="dept-role-add">
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-plus fa-lg"></i> <span class="dept-add-btn">Add Managers</span>
+                        </a>
+                    </div>
+                    <div class="dept-role-title">
+                        <h6>Members</h6>
+                    </div>
+                    <div class="dept-role-add">
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-plus fa-lg"></i> <span class="dept-add-btn">Add Members</span>
+                        </a>
+                    </div>
+                </div>';
+
+
+        echo json_encode($output);
     }
 
 //    Email Report for Timesheet test page

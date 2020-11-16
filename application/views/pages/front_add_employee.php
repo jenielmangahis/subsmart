@@ -75,16 +75,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <br/>
                 <h4 class="cn-address" style="font-size: 30px;">Add Employee</h4>
                 <form action="" id="addEmployeeForm">
+                <input type="hidden" name="eid" value="<?= $eid; ?>">
+                <div class="msg-container"></div>
                 <div class="section-title">Basic Details</div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="">First Name</label>
-                                <input type="text" name="firstname" class="form-control" placeholder="Enter First Name">
+                                <input type="text" name="firstname" class="form-control" required="" placeholder="Enter First Name">
                             </div>
                             <div class="col-md-6">
                                 <label for="">Last Name</label>
-                                <input type="text" name="lastname" class="form-control" placeholder="Enter Last Name">
+                                <input type="text" name="lastname" class="form-control" required="" placeholder="Enter Last Name">
                             </div>
                         </div>
                     </div>
@@ -93,13 +95,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="" style="display: block">Email</label>
-                                <input type="text" name="email" class="form-control" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
+                                <input type="text" name="email" class="form-control" required="" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
                                 <i class="fa fa-sync-alt check-if-exist" title="Check if Email is already exist" data-toggle="tooltip"></i>
                                 <span class="email-error"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="" style="display: block">Username</label>
-                                <input type="text" name="username" class="form-control" id="employeeUsername" placeholder="e.g: nsmartrac" style="width: 90%">
+                                <input type="text" name="username" class="form-control" required="" id="employeeUsername" placeholder="e.g: nsmartrac" style="width: 90%">
                                 <i class="fa fa-sync-alt check-if-exist" title="Check if Username already exist" data-toggle="tooltip"></i>
                                 <span class="username-error"></span>
                             </div>
@@ -110,13 +112,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="">Password</label>
-                                    <input type="password" name="password" id="employeePass" class="form-control">
+                                    <input type="password" name="password" required="" id="employeePass" class="form-control">
                                     <i class="fa fa-eye view-password" id="showPass" title="Show password" data-toggle="tooltip"></i>
                                     <span class="password-error"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">Confirm Password</label>
-                                    <input type="password" name="confirm_password" id="employeeConfirmPass" class="form-control">
+                                    <input type="password" name="confirm_password" required="" id="employeeConfirmPass" class="form-control">
                                     <i class="fa fa-eye view-password" id="showConfirmPass" title="Show password" data-toggle="tooltip"></i>
                                 </div>
                             </div>
@@ -137,16 +139,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <hr />
-                    <div style="margin-top: 32px;"><button type="button" class="btn btn-success" style="width: 12%">Save</button></div>
+                    <div style="margin-top: 32px;"><button type="submit" class="btn btn-success" style="width: 12%">Save</button></div>
                 </form>
               </div>
             </div>            
+        </div>
+
+        <div class="modal fade" id="modalNotification">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title"><i class="fa fa-globe"></i> Public URL</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body"></div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 <?php include viewPath('frontcommon/footer'); ?>
 <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script>
 <script>
+var base_url = "<?= base_url(); ?>";
 $(function(){
     // Switch button
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
@@ -182,14 +199,29 @@ $(function(){
         var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Saving...</div>';
         var url = base_url + '/save_company_employee';
 
+        $("#modalNotification").modal("show");
+        $("#modalNotification .modal-body").html(msg);
+
         setTimeout(function () {
             $.ajax({
                type: "POST",
                url: url,
-               data: $(this).serialize(),
+               data: $("#addEmployeeForm").serialize(),
+               dataType:"json",
                success: function(o)
-               {
-                  $(".modal-edit-service-item-container").html(o);
+               {    
+                  if( o.is_success ){
+                    var msg = "<div class='alert alert-success fade show' style='margin-top:26px;margin-bottom:10px;'>" + o.msg + "</div>";
+                    $(".msg-container").html(msg);
+                    $("#modalNotification").modal("hide");
+
+                    $("#addEmployeeForm")[0].reset();
+                  }else{
+                    var msg = "<div class='alert alert-danger fade show' style='margin-top:26px;margin-bottom:10px;'>" + o.msg + "</div>";
+                    $(".msg-container").html(msg);
+                    $("#modalNotification").modal("hide");
+                  }
+                  
                }
             });
         }, 1000);
