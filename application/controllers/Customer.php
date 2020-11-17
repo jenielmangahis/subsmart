@@ -1746,6 +1746,12 @@ class Customer extends MY_Controller
      */
     public function ticket()
     {
+        $is_allowed = $this->isAllowedModuleAccess(39);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'service_ticket';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerTicket = new CustomerTicket($this);
     }

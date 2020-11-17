@@ -15,6 +15,12 @@ class Workstatus extends MY_Controller {
 	public function index()
 	{ 
 		// ifPermissions('plan_list');
+		$is_allowed = $this->isAllowedModuleAccess(30);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'status';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 		
 		$company_id =  logged('company_id');
 		// $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
