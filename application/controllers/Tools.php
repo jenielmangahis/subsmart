@@ -26,6 +26,13 @@ class Tools extends MY_Controller {
 
 	public function business_tools()
 	{
+        $is_allowed = $this->isAllowedModuleAccess(48);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'business_tools';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('tools/business_tools', $this->page_data);
 	}

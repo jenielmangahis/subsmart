@@ -26,6 +26,13 @@ class Affiliate extends MY_Controller {
 
 	public function index()
 	{
+        $is_allowed = $this->isAllowedModuleAccess(50);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'affiliates';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		// ifPermissions('activity_log_list');
 		$get = $this->input->get();
 		$arg = array('company_id'=>logged('company_id'));

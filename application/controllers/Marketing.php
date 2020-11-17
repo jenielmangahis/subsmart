@@ -36,6 +36,13 @@ class Marketing extends MY_Controller
 
     public function index()
     {
+        $is_allowed = $this->isAllowedModuleAccess(47);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'marketing';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $this->load->view('marketing/main', $this->page_data);
     }
 }

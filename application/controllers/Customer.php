@@ -449,6 +449,13 @@ class Customer extends MY_Controller
 
     public function add_lead($lead_id=0)
     {
+        $is_allowed = $this->isAllowedModuleAccess(43);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_add_leads';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         if(isset($lead_id)){
             $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
         }
