@@ -405,6 +405,10 @@ $route['calendar/_load_upcoming_events'] = 'Workcalender/ajax_load_upcoming_even
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
+$route['workorder/checklists'] = 'Workorder/checklists';
+$route['workorder/add_checklist'] = 'Workorder/add_checklist';
+$route['workorder/create_checklist'] = 'Workorder/create_checklist';
+$route['workorder/edit_checklist/(:num)'] = 'Workorder/edit_checklist/$1';
 
 //Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';

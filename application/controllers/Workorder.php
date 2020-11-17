@@ -45,6 +45,12 @@ class Workorder extends MY_Controller
 
     public function index($tab_index = 0)
     {
+        $is_allowed = $this->isAllowedModuleAccess(24);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'workorder';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
         $role = logged('role');
         $this->page_data['workorderStatusFilters'] = array ();
@@ -664,6 +670,12 @@ class Workorder extends MY_Controller
      */
     public function map()
     {
+        $is_allowed = $this->isAllowedModuleAccess(25);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'bird_eye_view';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         $this->load->view('workorder/bird-eye-view', $this->page_data);
     }
 
@@ -705,6 +717,12 @@ class Workorder extends MY_Controller
      */
     public function job_type()
     {
+        $is_allowed = $this->isAllowedModuleAccess(26);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'job_type_list';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
         $jobType = new JobType($this);
     }
@@ -888,6 +906,68 @@ class Workorder extends MY_Controller
         }
 
         echo json_encode($json_data);
+    }
+
+    public function checklists(){
+        $checklists = array();
+
+        $this->page_data['checklist'] = $checklists;
+        $this->load->view('workorder/checklists', $this->page_data);
+    }
+
+    public function add_checklist(){
+        $this->load->model('Checklist_model');
+        $checklistAttachType = $this->Checklist_model->getAttachType();
+
+        $this->page_data['checklistAttachType'] = $checklistAttachType;
+        $this->load->view('workorder/add_checklist', $this->page_data);
+    }
+
+    public function create_checklist(){
+        $this->load->model('Checklist_model');
+
+        postAllowed();
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+        $user_id = logged('id');
+
+        $data = [
+            'user_id' => $user_id,
+            'checklist_name' => $post['checklist_name'],
+            'attach_to_work_order' => $post['attach_to_work_order'],
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        ];
+
+        $cid = $this->Checklist_model->create($data);
+
+
+        $this->session->set_flashdata('message', 'Checklist created. Now you can start adding the items.');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('workorder/edit_checklist/' . $cid);
+    }
+
+    public function edit_checklist($id){
+        $this->load->model('Checklist_model');
+        $this->load->model('ChecklistItem_model');
+        
+        $checklistAttachType = $this->Checklist_model->getAttachType();
+
+        $checklist = $this->Checklist_model->getById($id);
+
+        if( $checklist ){
+            $this->page_data['checklist'] = $checklist;
+            $this->page_data['checklistAttachType'] = $checklistAttachType;
+            $this->load->view('workorder/edit_checklist', $this->page_data);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('workorder/checklists');
+        }
     }
 }
 

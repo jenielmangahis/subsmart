@@ -349,7 +349,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											        <div class="input-group-prepend">
 											          <span class="input-group-text md-addon">Use Offer Code</span>
 											        </div>
-											        <input type="text" class="form-control pl-0 rounded-0" name="offer_code" id="offer-code"
+											        <input type="text" class="form-control pl-2 rounded-0" name="offer_code" id="offer-code"
 											          placeholder="">
 											      </div>
 											    </div>
@@ -357,7 +357,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 											    <!-- Grid column -->
 											    <div class="col-auto">
-											      <button type="button" class="btn btn-primary mb-0 btn-use-offer-code">Use Code</button>
+											      <button type="button" class="btn btn-primary mb-0 btn-use-offer-code" style="position: relative;top: -12px;">Use Code</button>
 											    </div>
 											    <!-- Grid column -->
 											  </div>
@@ -386,7 +386,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<!-- MODAL USE OFFER CODE -->
 						<div id="modalVerifyOfferCode" class="modal fade" role="dialog">
-						    <div class="modal-dialog modal-lg">
+						    <div class="modal-dialog modal-md">
 						        <!-- Modal content-->
 						        <div class="modal-content">
 						            <div class="modal-header">

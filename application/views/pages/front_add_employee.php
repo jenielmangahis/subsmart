@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="container spacing-ft">
         <div class="row container-contact">
             <div class="col-sm-12 pt-1 mt-3 mobile-width-100">
-              <div class="contact_container">
+              <div class="contact_container" id="form-container">
                 <h2 class="uppercase cn-tn">Company : <?= $client->business_name; ?></h2>
                 <br/>
                 <h4 class="cn-address" style="font-size: 30px;">Add Employee</h4>
@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="" style="display: block">Email</label>
-                                <input type="text" name="email" class="form-control" required="" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
+                                <input type="email" name="email" class="form-control" required="" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
                                 <i class="fa fa-sync-alt check-if-exist" title="Check if Email is already exist" data-toggle="tooltip"></i>
                                 <span class="email-error"></span>
                             </div>
@@ -210,17 +210,22 @@ $(function(){
                dataType:"json",
                success: function(o)
                {    
-                  if( o.is_success ){
-                    var msg = "<div class='alert alert-success fade show' style='margin-top:26px;margin-bottom:10px;'>" + o.msg + "</div>";
-                    $(".msg-container").html(msg);
-                    $("#modalNotification").modal("hide");
+                    if( o.is_success ){
+                        var msg = "<div class='alert alert-success fade show' style='margin-top:26px;margin-bottom:10px;'>" + o.msg + "</div>";
+                        $(".msg-container").html(msg);
+                        $("#modalNotification").modal("hide");
 
-                    $("#addEmployeeForm")[0].reset();
-                  }else{
-                    var msg = "<div class='alert alert-danger fade show' style='margin-top:26px;margin-bottom:10px;'>" + o.msg + "</div>";
-                    $(".msg-container").html(msg);
-                    $("#modalNotification").modal("hide");
-                  }
+                        $("#addEmployeeForm")[0].reset();
+                    }else{
+                        var msg = "<div class='alert alert-danger fade show' style='margin-top:26px;margin-bottom:10px;'>" + o.msg + "</div>";
+                        $(".msg-container").html(msg);
+                        $("#modalNotification").modal("hide");
+                    }
+
+                    $('html, body').animate({
+                        scrollTop: $("#form-container").offset().top
+                        }, 1000
+                    );
                   
                }
             });
