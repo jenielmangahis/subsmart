@@ -7,6 +7,9 @@
 .checklist-form .form-control{
     width: 50%;
 }
+.checklist-items-container{
+  margin-top: 15px;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
@@ -31,7 +34,7 @@
                         <hr />
                         <?php include viewPath('flash'); ?>
                         <?php echo form_open_multipart('workorder/create_checklist', [ 'class' => 'form-validate checklist-form', 'autocomplete' => 'off' ]); ?>
-
+                          <input type="hidden" value="<?= $checklist->id; ?>" name="cid" id="checklist-cid" />
                           <div class="form-group">
                               <label>Checklist Name</label> <span class="form-required">*</span>
                               <input type="text" name="checklist_name" value="<?= $checklist->checklist_name; ?>"  class="form-control" required="" autocomplete="off" />
@@ -63,7 +66,8 @@
 
                     <!-- Modal Add Checklist Item --> 
                     <div class="modal fade bd-example-modal-lg" id="modalAddChecklistItem" tabindex="-1" role="dialog" aria-labelledby="modalAddChecklistItemTitle" aria-hidden="true">
-                      <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-add-checklist-item' 'autocomplete' => 'off' ]); ?>
+                      <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-add-checklist-item', 'autocomplete' => 'off' ]); ?>
+                      <input type="hidden" value="<?= $checklist->id; ?>" name="cid" />
                       <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -90,6 +94,38 @@
                       </div>
                       <?php echo form_close(); ?>
                     </div>
+
+                    <!-- Modal Edit Checklist Item --> 
+                    <div class="modal fade bd-example-modal-lg" id="modalEditChecklistItem" tabindex="-1" role="dialog" aria-labelledby="modalEditChecklistItemTitle" aria-hidden="true">
+                      <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-edit-checklist-item', 'autocomplete' => 'off' ]); ?>
+                      <input type="hidden" value="<?= $checklist->id; ?>" name="cid" />
+                      <input type="hidden" value="" name="edit_cheklist_item" id="chk-list-id">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Edit Item</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label>Item Name</label>
+                                  <input type="text" name="edit_item_name" id="edit-item-name" value="" class="form-control" autocomplete="off" required="">
+                                </div>
+                              </div>          
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                          </div>
+                        </div>
+                      </div>
+                      <?php echo form_close(); ?>
+                    </div>
                 </div>
             </div>
             <!-- end row -->
@@ -101,12 +137,99 @@
 <?php include viewPath('includes/footer_plan_builder'); ?>
 <script>
 $(function(){
+  
+  load_checklist_items();
+
   $(".btn-add-checklist-item").click(function(){
     $("#modalAddChecklistItem").modal("show");
   });
 
-  function load_checklist_items(){
+  $("#modalAddChecklistItem").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'workorder/_create_checklist_item';
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: $("#frm-add-checklist-item").serialize(),
+             dataType: 'json',
+             success: function(o)
+             {
+                $("#item_name").val("");
+                $("#modalAddChecklistItem").modal("hide");
 
+                load_checklist_items();
+             }
+          });
+      }, 300);
+  });
+
+  function load_checklist_items(){
+      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Loading...</div>';
+      var url = base_url + 'workorder/_load_checklist_items';
+      var cid = $("#checklist-cid").val();
+
+      $(".checklist-items-container").html(msg);
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {cid:cid},
+             success: function(o)
+             {
+                $(".checklist-items-container").html(o);
+
+                $(".btn-edit-checklist-item").click(function(){                  
+                  var eid = $(this).attr("data-id");
+                  var item_name = $(this).attr("data-name");
+
+                  $("#modalEditChecklistItem").modal("show");
+
+                  $("#chk-list-id").val(eid);
+                  $("#edit-item-name").val(item_name);
+                });
+                  
+                $(".btn-delete-checklist-item").click(function(){
+                  var url = base_url + 'workorder/_delete_checklist_items';
+                  var eid = $(this).attr("data-id");
+                  
+                  setTimeout(function () {
+                      $.ajax({
+                         type: "POST",
+                         url: url,
+                         data: {eid:eid},
+                         success: function(o)
+                         {
+                            load_checklist_items();
+                         }
+                      });
+                  }, 1000);
+                });
+
+                $("#frm-edit-checklist-item").submit(function(e){
+                  e.preventDefault();
+
+                  var url = base_url + 'workorder/_update_checklist_item';
+                  setTimeout(function () {
+                      $.ajax({
+                         type: "POST",
+                         url: url,
+                         data: $("#frm-edit-checklist-item").serialize(),
+                         dataType: 'json',
+                         success: function(o)
+                         {
+                            $("#modalEditChecklistItem").modal("hide");
+
+                            load_checklist_items();
+                         }
+                      });
+                  }, 300);
+
+                });
+             }
+          });
+      }, 1000);
   }
 });
 </script>

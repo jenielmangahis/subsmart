@@ -920,7 +920,7 @@ class Workorder extends MY_Controller
         $checklistAttachType = $this->Checklist_model->getAttachType();
 
         $this->page_data['checklistAttachType'] = $checklistAttachType;
-        $this->load->view('workorder/add_checklist', $this->page_data);
+        $this->load->view('workorder/checklist/add_checklist', $this->page_data);
     }
 
     public function create_checklist(){
@@ -960,7 +960,7 @@ class Workorder extends MY_Controller
         if( $checklist ){
             $this->page_data['checklist'] = $checklist;
             $this->page_data['checklistAttachType'] = $checklistAttachType;
-            $this->load->view('workorder/edit_checklist', $this->page_data);
+            $this->load->view('workorder/checklist/edit_checklist', $this->page_data);
 
         }else{
             $this->session->set_flashdata('message', 'Cannot find data');
@@ -968,6 +968,69 @@ class Workorder extends MY_Controller
 
             redirect('workorder/checklists');
         }
+    }
+
+    public function ajax_load_checklist_items(){
+        $this->load->model('ChecklistItem_model');
+        $this->load->helper(array('hashids_helper'));
+
+        $post = $this->input->post();
+        $checklistItems = $this->ChecklistItem_model->getAllByChecklistId($post['cid']);
+
+        $this->page_data['checklistItems'] = $checklistItems;
+        $this->load->view('workorder/checklist/_checklist_items', $this->page_data);
+    }
+
+    public function ajax_create_checklist_item(){
+        $this->load->model('ChecklistItem_model');
+
+        $post = $this->input->post();
+
+        $data = [
+            'checklist_id' => $post['cid'],
+            'item_name' => $post['item_name'],
+        ];
+
+        $cid = $this->ChecklistItem_model->create($data);
+
+        $json_data = ['is_success' => true];
+
+        echo json_encode($json_data);
+
+        exit;
+    }
+
+    public function ajax_delete_checklist_items(){
+        $this->load->helper(array('hashids_helper'));
+        $this->load->model('ChecklistItem_model');
+
+        $post = $this->input->post();
+        $id   = hashids_decrypt($post['eid'], '', 15);
+        $this->ChecklistItem_model->deleteById($id);
+
+        $json_data = ['is_success' => true];
+
+        echo json_encode($json_data);
+
+        exit;
+    }
+
+    public function ajax_update_checklist_item(){
+        $this->load->helper(array('hashids_helper'));
+        $this->load->model('ChecklistItem_model');
+
+        $post = $this->input->post();
+        $id   = hashids_decrypt($post['edit_cheklist_item'], '', 15);
+
+        $this->ChecklistItem_model->update($id, array(
+            'item_name' => $post['edit_item_name']
+        ));
+
+        $json_data = ['is_success' => true];
+
+        echo json_encode($json_data);
+
+        exit;
     }
 }
 

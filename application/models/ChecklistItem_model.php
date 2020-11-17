@@ -38,6 +38,23 @@ class ChecklistItem_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    public function getAllByChecklistId($checklist_id)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('checklist_id', $checklist_id);
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function deleteById($id){
+        $this->db->delete($this->table, array('id' => $id));
+    }
 }
 
 /* End of file ChecklistItem_model.php */
