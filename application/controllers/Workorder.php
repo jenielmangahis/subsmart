@@ -127,6 +127,13 @@ class Workorder extends MY_Controller
     public function add()
     {
 
+        $is_allowed = $this->isAllowedModuleAccess(32);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'basic_work_order';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $get = $this->input->get();
 
         $user_id = logged('id');
@@ -682,6 +689,13 @@ class Workorder extends MY_Controller
 
     public function settings()
     {
+        $is_allowed = $this->isAllowedModuleAccess(28);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'settings2';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
 
         $company_id        = logged('company_id');
@@ -730,6 +744,12 @@ class Workorder extends MY_Controller
 
     public function priority()
     {
+        $is_allowed = $this->isAllowedModuleAccess(27);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'priority_list';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         new Priority($this);
     }
 

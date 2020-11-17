@@ -72,10 +72,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }elseif( $module == 'job_type_list' ){
             $module_title = "Job Type List";
             include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'priority_list' ){
+            $module_title = "Priority List";
+            include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'settings2' ){
+            $module_title = "Settings";
+            include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'status' ){
+            $module_title = "Status";
+            include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'basic_work_order' ){
+            $module_title = "Basic Work Order";
+            include viewPath('includes/sidebars/workorder');
+        }elseif( $module == 'invoice' ){
+            $module_title = "Invoice";
+            include viewPath('includes/sidebars/invoice');
+        }elseif( $module == 'recurring_invoices' ){
+            $module_title = "Recurring Invoices";
+            include viewPath('includes/sidebars/invoice');
+        }elseif( $module == 'settings3' ){
+            $module_title = "Settings";
+            include viewPath('includes/sidebars/invoice');
+        }elseif( $module == 'service_ticket' ){
+            $module_title = "Service Ticket";
+            include viewPath('includes/sidebars/ticket');
+        }elseif( $module == 'customer_add_leads' ){
+            $module_title = "Customer New Lead form";
+            include viewPath('includes/sidebars/customer');
+        }elseif( $module == 'accounting' ){
+            $module_title = "Accounting";
+            include viewPath('includes/sidebars/accounting/accounting');
+        }elseif( $module == 'vault' ){
+            $module_title = "File Vault";
+            include viewPath('includes/sidebars/filevault');
+        }elseif( $module == 'marketing' ){
+            $module_title = "Marketing";
+            include viewPath('includes/sidebars/marketing');
+        }elseif( $module == 'business_tools' ){
+            $module_title = "Business Tools";
+            include viewPath('includes/sidebars/business_tools');
+        }elseif( $module == 'affiliates' ){
+            $module_title = "Affiliates";
+            include viewPath('includes/sidebars/affiliate');
         }elseif( $module == 'form_builder' ) {
             $module_title = "Form Builder";
             $has_sidebar = false;
+        }elseif( $module == 'eSign_main' ) {
+            $module_title = "eSign";
+            $has_sidebar = false;
         }
+
+        
     ?>
     <?php if($has_sidebar){ ?>
     <!-- page wrapper start -->

@@ -42,6 +42,14 @@ class Invoice extends MY_Controller {
 
     public function index($tab = '')
     {
+
+        $is_allowed = $this->isAllowedModuleAccess(35);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'invoice';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $role = logged('role');
         $type = 0;
         if ($role == 2 || $role == 3) {
@@ -98,6 +106,13 @@ class Invoice extends MY_Controller {
 
     public function recurring($tab = '')
     {
+        $is_allowed = $this->isAllowedModuleAccess(37);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'recurring_invoices';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $role = logged('role');
         $type = 1;
         if ($role == 2 || $role == 3) {
@@ -185,6 +200,14 @@ class Invoice extends MY_Controller {
 
     public function settings()
     {
+        $is_allowed = $this->isAllowedModuleAccess(38);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'settings3';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+
         $comp_id = logged('company_id');
         $this->page_data['setting'] = null;
         $setting = $this->invoice_settings_model->getAllByCompany($comp_id);
