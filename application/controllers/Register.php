@@ -110,7 +110,7 @@ class Register extends MY_Controller {
 		$ns_plans = $this->NsmartPlan_model->getAll();      
 
 
-        $ip_address = ip_address();
+        $ip_address = getValidIpAddress();
         $ip_adds = $this->Clients_model->getByIPAddress($ip_address);
         
         $ip_count = 0;
@@ -159,7 +159,7 @@ class Register extends MY_Controller {
         if(!empty($post)) {
             $aemail = $post['a_email'];
             $abname = $post['a_bname'];
-            $client_ip_address = ip_address();
+            $client_ip_address = getValidIpAddress();
 
             $edata = $this->Clients_model->getByEmail($aemail); 
             $edata_business = $this->Clients_model->getByBusinessName($abname); 
@@ -204,7 +204,7 @@ class Register extends MY_Controller {
         if(!empty($post)) {
             $aemail = $post['a_email'];
             $abname = $post['a_bname'];
-            $client_ip_address = ip_address();
+            $client_ip_address = getValidIpAddress();
 
             $edata = $this->Clients_model->getByEmail($aemail); 
             $edata_business = $this->Clients_model->getByBusinessName($abname); 
@@ -265,7 +265,7 @@ class Register extends MY_Controller {
             'number_of_employee' => $post['number_of_employee'],
             'industry_type_id' => $post['industry_type_id'],
             'password' => $post['password'],
-            'ip_address' => ip_address(),
+            'ip_address' => getValidIpAddress(),
             'date_created'  => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s"),
             'is_trial' => 0
@@ -481,7 +481,7 @@ class Register extends MY_Controller {
                 'number_of_employee' => $post['number_of_employee'],
                 'industry_type_id' => $post['industry_type_id'],
                 'password' => $post['password'],
-                'ip_address' => ip_address(),
+                'ip_address' => getValidIpAddress(),
                 'date_created'  => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,

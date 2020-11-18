@@ -525,6 +525,27 @@ if (!function_exists('ip_address')) {
     }
 }
 
+function getValidIpAddress(){
+    $ip  = '';
+    $url = 'https://api.ipify.org?format=json';
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+    if( $data->ip != '' ){
+        $ip = $data->ip;
+    }
+
+    /*$json_data = file_get_contents($url);
+    $data = json_decode($json_data);  
+    if( $data ){
+        $ip = $data->ip;
+    }*/
+    return $ip;
+}
+
 
 /**
  * Provides the shortcodes which are available in any email template
