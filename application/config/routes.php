@@ -271,6 +271,14 @@ $route['accounting/reconcile/change/interestearned'] = 'reconcile/update_interes
 $route['accounting/reconcile/interestearned/update_it'] = 'reconcile/update_it';
 $route['accounting/reconcile/interestearned/remove_it'] = 'reconcile/remove_it';
 
+$route['accounting/reconcile/recurrint/save'] = 'reconcile/recurrint_save';
+$route['accounting/reconcile/addrecurr/interestearned'] = 'reconcile/insert_recurr_interestearned';
+$route['accounting/reconcile/changerecurr/interestearned'] = 'reconcile/update_recurr_interestearned';
+$route['accounting/reconcile/interestearned/remove_it_recurr'] = 'reconcile/remove_it_recurr';
+
+$route['accounting/reconcile/delete/delete_int'] = 'reconcile/delete_int';
+$route['accounting/reconcile/delete/delete_sc'] = 'reconcile/delete_sc';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';
@@ -409,6 +417,10 @@ $route['workorder/checklists'] = 'Workorder/checklists';
 $route['workorder/add_checklist'] = 'Workorder/add_checklist';
 $route['workorder/create_checklist'] = 'Workorder/create_checklist';
 $route['workorder/edit_checklist/(:num)'] = 'Workorder/edit_checklist/$1';
+$route['workorder/_load_checklist_items'] = 'Workorder/ajax_load_checklist_items';
+$route['workorder/_create_checklist_item'] = 'Workorder/ajax_create_checklist_item';
+$route['workorder/_delete_checklist_items'] = 'Workorder/ajax_delete_checklist_items';
+$route['workorder/_update_checklist_item'] = 'Workorder/ajax_update_checklist_item';
 
 //Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';

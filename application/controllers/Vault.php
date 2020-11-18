@@ -17,6 +17,13 @@ class Vault extends MY_Controller {
 
 	public function index()
 	{	
+		$is_allowed = $this->isAllowedModuleAccess(46);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'vault';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		$this->page_data['folder_manager'] = getFolderManagerView();
 		$this->load->view('vault/shared_library', $this->page_data);
 	}

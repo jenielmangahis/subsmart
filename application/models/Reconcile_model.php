@@ -306,5 +306,37 @@ class Reconcile_model extends MY_Model {
 		echo $this->db->query($query);
 		echo $query;
 	}
+
+	public function recurrint_save($reconcile_id,$chart_of_accounts_id,$template_name_int,$template_type_int,$template_interval_int,$advanced_day_int,$day_int,$dayname_int,$daynum_int,$weekday_int,$weekname_int,$monthday_int,$monthname_int,$startdate_int,$endtype_int,$enddate_int,$occurrence_int,$account_type_int,$memo_recurr_it,$cash_back_account_recurr,$cash_back_amount_recurr,$cash_back_memo_recurr)
+	{
+		$query="insert into accounting_recurr_int values('','$reconcile_id','$chart_of_accounts_id','$template_name_int','$template_type_int','$template_interval_int','$advanced_day_int','$day_int','$dayname_int','$daynum_int','$weekday_int','$weekname_int','$monthday_int','$monthname_int','$startdate_int','$endtype_int','$enddate_int','$occurrence_int','$account_type_int','$memo_recurr_it','$cash_back_account_recurr','$cash_back_amount_recurr','$cash_back_memo_recurr')";
+		$this->db->query($query);
+		$insert_id = $this->db->insert_id();
+
+   		echo $insert_id;
+	}
+
+	public function save_recurr_interest($mainid,$reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub)
+	{
+		$query="insert into accounting_reconcile_has_interestearned_recurr values('','$mainid','$reconcile_id','$chart_of_accounts_id','$income_account_sub','$interest_earned_sub','$descp_it_sub')";
+		echo $this->db->query($query);
+	}
+
+	public function update_recurr_interest($id,$income_account_sub,$interest_earned_sub,$descp_it_sub)
+	{
+		$query="update accounting_reconcile_has_interestearned_recurr set income_account_sub = '$income_account_sub',interest_earned_sub = '$interest_earned_sub',descp_it_sub = '$descp_it_sub'  where id = '$id'";
+		echo $this->db->query($query);
+	}
+
+	public function delete_int($id)
+	{
+		$query="update accounting_reconcile set income_account = '',interest_earned = '',descp_it = '', memo_it='',second_date='',cash_back_account='',cash_back_memo='',cash_back_amount=''  where active=1 and id = '$id'";
+		echo $this->db->query($query);
+	}
+
+	public function delete_sc()
+	{
+
+	}
 }
 ?>

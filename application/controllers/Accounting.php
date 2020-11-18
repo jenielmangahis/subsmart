@@ -73,6 +73,13 @@ class Accounting extends MY_Controller {
     }*/
     public function banking()
     {
+        $is_allowed = $this->isAllowedModuleAccess(45);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'accounting';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/dashboard', $this->page_data);
