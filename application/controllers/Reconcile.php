@@ -564,4 +564,75 @@ class Reconcile extends MY_Controller {
         $this->reconcile_model->remove_it_records($id);
         
     }
+
+    public function recurrint_save()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $template_name_int=$this->input->post('template_name_int');
+        $template_type_int=$this->input->post('template_type_int');
+        $template_interval_int=$this->input->post('template_interval_int');
+        $advanced_day_int=$this->input->post('advanced_day_int');
+        $day_int=$this->input->post('day_int');
+        $dayname_int=$this->input->post('dayname_int');
+        $daynum_int=$this->input->post('daynum_int');
+        $weekday_int=$this->input->post('weekday_int');
+        $weekname_int=$this->input->post('weekname_int');
+        $monthday_int=$this->input->post('monthday_int');
+        $monthname_int=$this->input->post('monthname_int');
+        $startdate_int=$this->input->post('startdate_int');
+        $endtype_int=$this->input->post('endtype_int');
+        $enddate_int=$this->input->post('enddate_int');
+        $occurrence_int=$this->input->post('occurrence_int');
+        $account_type_int=$this->input->post('account_type_int');
+        $memo_recurr_it=$this->input->post('memo_recurr_it');
+        
+        $cash_back_account_recurr=$this->input->post('cash_back_account_recurr');
+        $cash_back_amount_recurr=$this->input->post('cash_back_amount_recurr');
+        $cash_back_memo_recurr=$this->input->post('cash_back_memo_recurr');
+
+        echo $this->reconcile_model->recurrint_save($reconcile_id,$chart_of_accounts_id,$template_name_int,$template_type_int,$template_interval_int,$advanced_day_int,$day_int,$dayname_int,$daynum_int,$weekday_int,$weekname_int,$monthday_int,$monthname_int,$startdate_int,$endtype_int,$enddate_int,$occurrence_int,$account_type_int,$memo_recurr_it,$cash_back_account_recurr,$cash_back_amount_recurr,$cash_back_memo_recurr);
+    }
+
+    public function insert_recurr_interestearned()
+    {
+        $mainid=$this->input->post('mainid');
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $income_account_sub=$this->input->post('income_account_sub');
+        $interest_earned_sub=$this->input->post('interest_earned_sub');
+        $descp_it_sub=$this->input->post('descp_it_sub');
+        $this->reconcile_model->save_recurr_interest($mainid,$reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub);
+        
+    }
+
+    public function update_recurr_interestearned()
+    {
+        $id=$this->input->post('id');
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $income_account_sub=$this->input->post('income_account_sub');
+        $interest_earned_sub=$this->input->post('interest_earned_sub');
+        $descp_it_sub=$this->input->post('descp_it_sub');
+        $this->reconcile_model->update_recurr_interest($id,$income_account_sub,$interest_earned_sub,$descp_it_sub);
+    }
+
+    public function remove_it_recurr()
+    {
+        $id=$this->input->post('id');
+
+        $this->reconcile_model->remove_sc_recurr_records($id);
+        
+    }
+
+    public function delete_int()
+    {
+        $id = $this->input->post('id');
+        $this->reconcile_model->delete_int($id);
+    }
+    public function delete_sc()
+    {
+        $id = $this->input->post('id');
+        $this->reconcile_model->delete_sc($id);
+    }
 }
