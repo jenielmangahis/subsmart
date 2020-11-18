@@ -79,6 +79,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select" required>
+                            <?php if(isset($billing_info->mmr)){ ?>
+                                <option selected value="<?= $billing_info->mmr ?>"><?= $billing_info->mmr ?></option>
+                            <?php } ?>
                             <option value="0.00">0.00</option>
                             <option value="20.00">20.00</option>
                             <option value="24.99">24.99</option>

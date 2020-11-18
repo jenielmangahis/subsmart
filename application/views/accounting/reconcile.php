@@ -759,6 +759,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 </li>
             </ul>
             <a href="#" style="margin-left: 5%" onclick="OpenRecurrInt()">Make Recurring</a>
+            <a href="#" style="margin-left: 5%" onclick="DeleteInt(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)">Delete</a>
             <button type="button" onclick="save_close_edit_int(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
         <div id="to_print_both" style="display: none;">
@@ -3222,6 +3223,8 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<td></td>";
                                 echo "</tr>";
                                 $o++;
+                                if($row->interest_earned !='')
+                                {
                                 echo "<tr id='deposites' onclick='trClick(".$o.")'>";
                                 echo "<td contenteditable='true'>".$row->second_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
@@ -3279,6 +3282,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<td></td>";
                                 echo "<td></td>";
                                 echo "</tr>";
+                                }
                               $i++;
                               $o++;
                               }
@@ -5737,6 +5741,119 @@ function closeAddaccount()
 
     }
 </script>
+<!-- save recurr int start -->
+<script type="text/javascript">
+    function save_recurr_int(id,chart_of_accounts_id)
+    {
+      var reconcile_id = id;
+      var chart_of_accounts_id = chart_of_accounts_id;
+      var memo_it = $('#recurr_memo_it').val();
+      var descp_it = $('.recurr_descp_it').text();
+      var income_account=$('.recurr_income_account').text();
+      //var service_charge=$('.recurr_service_charge').text();
+      var interest_earned=$('#intrecurrtotal').text().substr(9);
+
+      var tablelength = $('#participantRecurrIntTable tr').length -2;
+
+      
+
+      var template_name_int = $('#template_name_int').val();
+      var template_type_int = $('#type_scheduled_int').val();
+      var template_interval_int = $('#interval_int').val();
+      var advanced_day_int='';
+      if($('#create_days_int').val()!='')
+      { advanced_day_int = $('#create_days_int').val();}
+      if($('#remine_days').val()!='')
+      { advanced_day_int = $('#remine_days_int').val();}
+
+      var day_int =$('#daily_days_int').val();
+      var dayname_int =$('#monthlymain_option_int').val();
+
+      var daynum_int='';
+      if($('#monthlyday_option_int').val()!='')
+      {var daynum_int =$('#monthlyday_option_int').val();}
+      if($('#yearlyday_option').val()!='')
+      {var daynum_int =$('#yearlyday_option_int').val();}
+
+      var weekday_int =$('#daily_weeks_int').val();
+
+      var weekname_int='';
+      if($('#weekly_option_int').val()!='')
+      {var weekname_int =$('#weekly_option_int').val();}
+      if($('#monthlyweek_option').val()!='')
+      {var weekname_int =$('#weekly_option_int').val();}
+
+      var monthday_int =$('#monthly_days_int').val();
+      var monthname_int =$('yearlymonth_option_int').val();
+
+      var startdate_int =$('#recurr_start_date_int').val();
+      var endtype_int =$('#recurr_select_int').val();
+      var enddate_int =$('#recurr_end_date_int').val();
+      var occurrence_int =$('#recurr_after_occurrences_int').val();
+      var account_type_int =$('#recurr_account_popup_int').val();
+      var memo_recurr_it =$('#recurr_memo_it').val();
+      var cash_back_account_recurr = $('#cashback_popup_recurr').val();
+      var cash_back_amount_recurr = $('#cash_back_amount_recurr').val();
+      var cash_back_memo_recurr = $('#cash_back_memo_recurr').val();
+
+      if(template_name_int!='')
+      {
+        $.ajax({
+            url:"<?php echo url('accounting/reconcile/recurrint/save') ?>",
+            method: "POST",
+            data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,template_name_int:template_name_int,template_type_int:template_type_int,template_interval_int:template_interval_int,advanced_day_int:advanced_day_int,day_int:day_int,dayname_int:dayname_int,daynum_int:daynum_int,weekday_int:weekday_int,weekname_int:weekname_int,monthday_int:monthday_int,monthname_int:monthname_int,startdate_int:startdate_int,endtype_int:endtype_int,enddate_int:enddate_int,occurrence_int:occurrence_int,account_type_int:account_type_int,memo_recurr_it:memo_recurr_it,cash_back_account_recurr:cash_back_account_recurr,cash_back_amount_recurr:cash_back_amount_recurr,cash_back_memo_recurr:cash_back_memo_recurr},
+            success:function(data)
+            {
+                var mainid = data;
+                for(var i = 2 ; i <= tablelength ; i++)
+                {
+
+                    var income_account_sub = $('.recurr_income_account_'+i).text();
+                    var interest_earned_sub = $('.recurr_interest_earned_'+i).text();
+                    var descp_it_sub = $('.recurr_descp_it_'+i).text();
+
+                  if(income_account_sub!='' || descp_it_sub!='' || interest_earned_sub!='')
+                  {
+                    if(interest_earned_sub!='')
+                    {
+                        if($('#recurr_income_account_'+i).hasClass('up_row'))
+                        {
+                            var id = $('#recurr_income_account_'+i).data('id');
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/changerecurr/interestearned') ?>",
+                                method: "POST",
+                                data: {id:id,income_account_sub:income_account_sub,interest_earned_sub:interest_earned_sub,descp_it_sub:descp_it_sub},
+                                success:function(data)
+                                {
+                                }
+                            })
+                        }
+                        else
+                        {
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/addrecurr/interestearned') ?>",
+                                method: "POST",
+                                data: {mainid:mainid,reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,income_account_sub:income_account_sub,interest_earned_sub:interest_earned_sub,descp_it_sub:descp_it_sub},
+                                success:function(data)
+                                {
+                                }
+                            })
+                        }
+                    }
+                  }
+                }
+                sweetAlert(
+                                            'Saved!',
+                                            'Recurring has been saved.',
+                                            'success'
+                                        );
+                closeRecurrInt();
+            }
+        })
+      }
+    }
+</script>
+<!-- save recurr int end -->
 <script type="text/javascript">
     $( document ).ready(function() {
        var main = $(".edit_service_charge").text();
@@ -6072,6 +6189,29 @@ function closeAddaccount()
     {
        // $('#cash_back_amount_recurr').val('');
         $('.hidemefinal_int').hide();
+    }
+</script>
+<script type="text/javascript">
+    function DeleteInt(id,chart_of_accounts_id)
+    {
+        if(id!='')
+        {
+            $.ajax({
+                    url:"<?php echo url('accounting/reconcile/delete/delete_int') ?>",
+                    method: "POST",
+                    data: {id:id},
+                    success:function(data)
+                    {
+                        sweetAlert(
+                                            'Deleted!',
+                                            'Interest has been deleted.',
+                                            'success'
+                                        );
+                        closeFullNav_int();
+                        location.href="<?php echo url('accounting/reconcile') ?>"+chart_of_accounts_id;
+                    }
+                });
+        }
     }
 </script>
 <!-- recurr int end-->

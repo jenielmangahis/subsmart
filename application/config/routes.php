@@ -271,6 +271,14 @@ $route['accounting/reconcile/change/interestearned'] = 'reconcile/update_interes
 $route['accounting/reconcile/interestearned/update_it'] = 'reconcile/update_it';
 $route['accounting/reconcile/interestearned/remove_it'] = 'reconcile/remove_it';
 
+$route['accounting/reconcile/recurrint/save'] = 'reconcile/recurrint_save';
+$route['accounting/reconcile/addrecurr/interestearned'] = 'reconcile/insert_recurr_interestearned';
+$route['accounting/reconcile/changerecurr/interestearned'] = 'reconcile/update_recurr_interestearned';
+$route['accounting/reconcile/interestearned/remove_it_recurr'] = 'reconcile/remove_it_recurr';
+
+$route['accounting/reconcile/delete/delete_int'] = 'reconcile/delete_int';
+$route['accounting/reconcile/delete/delete_sc'] = 'reconcile/delete_sc';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

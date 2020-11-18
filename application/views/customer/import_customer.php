@@ -14,10 +14,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <form action="<?php echo base_url('customer/import_customer_data'); ?>" method="post" enctype="multipart/form-data" style="text-align: center;">
                             <h6 >Import Customer</h6>
                             <label for="file-upload" class="">
-                                 Choose file to Import ( .csv , .xlsx)
+                                 Choose file to Import ( .csv)
                             </label>
                             <br>
-                            <input id="file-upload" name="file" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+                            <input id="file-upload" name="file" type="file" accept=".csv"/>
                             <br><br>
                             <div class="">
                                 <a href="<?= url('customer/') ?>">
