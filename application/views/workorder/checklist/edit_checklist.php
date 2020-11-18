@@ -33,7 +33,7 @@
                     <div class="card" style="min-height: 400px !important;">
                         <hr />
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('workorder/create_checklist', [ 'class' => 'form-validate checklist-form', 'autocomplete' => 'off' ]); ?>
+                        <?php echo form_open_multipart('workorder/update_checklist', [ 'class' => 'form-validate checklist-form', 'autocomplete' => 'off' ]); ?>
                           <input type="hidden" value="<?= $checklist->id; ?>" name="cid" id="checklist-cid" />
                           <div class="form-group">
                               <label>Checklist Name</label> <span class="form-required">*</span>

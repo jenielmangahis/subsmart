@@ -929,10 +929,13 @@ class Workorder extends MY_Controller
     }
 
     public function checklists(){
-        $checklists = array();
+        $this->load->helper(array('hashids_helper'));
+        $this->load->model('Checklist_model');
 
-        $this->page_data['checklist'] = $checklists;
-        $this->load->view('workorder/checklists', $this->page_data);
+        $checklists = $this->Checklist_model->getAllByUserId();
+
+        $this->page_data['checklists'] = $checklists;
+        $this->load->view('workorder/checklist/list', $this->page_data);
     }
 
     public function add_checklist(){
@@ -1051,6 +1054,33 @@ class Workorder extends MY_Controller
         echo json_encode($json_data);
 
         exit;
+    }
+
+    public function update_checklist(){
+        $this->load->helper(array('hashids_helper'));
+        $this->load->model('Checklist_model');
+
+        $post = $this->input->post();
+        $cid  = $post['cid'];
+        $checklist = $this->Checklist_model->getById($cid);
+
+        if( $checklist ){
+            $this->Checklist_model->update($cid, array(
+                'checklist_name' => $post['checklist_name'],
+                'attach_to_work_order' => $post['attach_to_work_order'],
+                'date_modified' => date("Y-m-d H:i:s")
+            ));
+
+            $this->session->set_flashdata('message', 'Checklist was successfully updated.');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('workorder/edit_checklist/'.$cid);
+
     }
 }
 
