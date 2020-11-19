@@ -75,24 +75,18 @@
                         <li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img class="icon-logo-nav" width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a></li>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                             <!--                            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>-->
-                            <div class="icon-loader">
-                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                            </div> 
                             <div class="plus-icon-container">
                                 <a href="javascript:void (0)">
-                                    <img class="plus-icon-static" src="<?php echo base_url('assets/css/icons/images/add-1.1s-47px.svg'); ?>" alt="">
-                                    <img class="plus-icon-hover" src="<?php echo base_url('assets/css/icons/images/add-1.1s-47px%20(2).svg'); ?>" alt="">
+                                    <img class="plus-icon-static" src="/assets/css/icons/images/add-1.1s-47px.svg" alt="">
+                                    <img class="plus-icon-hover" src="/assets/css/icons/images/add-1.1s-47px%20(2).svg" alt="">
                                 </a>
                             </div>
                         </li>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                            <div class="icon-loader">
-                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                            </div> 
                             <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <a href="javascript:void (0)">
-                                    <img class="conversation-icon-static" src="<?php echo base_url('assets/css/icons/images/conversation-1.1s-47px.svg'); ?>" alt="">
-                                    <img class="conversation-icon-hover" src="<?php echo base_url('assets/css/icons/images/conversation-1.1s-47px%20(2).svg'); ?>" alt="">
+                                    <img class="conversation-icon-static" src="/assets/css/icons/images/conversation-1.1s-47px.svg" alt="">
+                                    <img class="conversation-icon-hover" src="/assets/css/icons/images/conversation-1.1s-47px%20(2).svg" alt="">
                                 </a>
                                 <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
                                 <!--                                    -->
@@ -102,13 +96,10 @@
 
 
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                            <div class="icon-loader">
-                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                            </div> 
-                            <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false"> 
+                            <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <a href="javascript:void (0)">
-                                    <img class="growth-icon-static" src="<?php echo base_url('assets/css/icons/images/growth-1.1s-47px (1).svg'); ?>" alt="">
-                                    <img class="growth-icon-hover" src="<?php echo base_url('assets/css/icons/images/growth-1.1s-47px (2).svg'); ?>" alt="">
+                                    <img class="growth-icon-static" src="/assets/css/icons/images/growth-1.1s-47px (1).svg" alt="">
+                                    <img class="growth-icon-hover" src="/assets/css/icons/images/growth-1.1s-47px (2).svg" alt="">
                                 </a>
                                 <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
                                 <!--                                    -->
@@ -117,13 +108,10 @@
                         </li>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                             <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates') ?><!--">-->
-                            <div class="icon-loader">
-                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                            </div> 
                             <div class="settings-icon-container">
                                 <a href="<?php echo base_url('settings/email_templates') ?>">
-                                    <img class="settings-icon-static" src="<?php echo base_url('assets/css/icons/images/wrench-1.1s-47px.svg'); ?>" alt="">
-                                    <img class="settings-icon-hover" src="<?php echo base_url('assets/css/icons/images/wrench-1.1s-47px%20(1).svg'); ?>" alt="">
+                                    <img class="settings-icon-static" src="/assets/css/icons/images/wrench-1.1s-47px.svg" alt="">
+                                    <img class="settings-icon-hover" src="/assets/css/icons/images/wrench-1.1s-47px%20(1).svg" alt="">
                                 </a>
                             </div>
                             <div class="prev-icon-title">Settings</div>
@@ -132,13 +120,10 @@
                         </li>
                         <?php $newtasks = getNewTasks();?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
-                            <div class="icon-loader">
-                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                            </div> 
                             <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0)?'visible':'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0)?count($newtasks):null; ?></span>
-                                <img class="schedule-icon-static" src="<?php echo base_url('assets/css/icons/images/schedule-icon.svg'); ?>" alt="">
-                                <img class="schedule-icon-hover" src="<?php echo base_url('assets/css/icons/images/schedule-icon2.svg'); ?>" alt="">
+                                <img class="schedule-icon-static" src="/assets/css/icons/images/schedule-icon.svg" alt="">
+                                <img class="schedule-icon-hover" src="/assets/css/icons/images/schedule-icon2.svg" alt="">
                             </div>
                             <div class="prev-icon-title">Schedule</div>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
@@ -164,9 +149,6 @@
                             <!--                                </a>-->
                             <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0)?'visible':'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
-                                <div class="icon-loader">
-                                    <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                                </div>
                                 <div class="bell" id="bell-1">
                                     <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-1 5000ms infinite':'unset'?>">notifications_active</div>
                                     <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-2 5000ms infinite':'unset'?>">notifications</div>
@@ -228,16 +210,9 @@
                             if ($in->user_id == $user_id && $in->status == 1){
                                 $clock_btn = 'clockOut';
                             }
-//                                    if ($in->user_id == $user_id && $in->status == 0){
-//                                        $clock_btn = null;
-//                                    }
-//                            if($in->user_id == $user_id && $in->date_in == date('Y-m-d',strtotime('yesterday')) && $in->date_out == date('Y-m-d')){
-//                                $clock_btn = 'clockIn';
-//                            }
-                            if ($in->user_id == $user_id && $in->status == 0 && $in->date_in == date('Y-m-d',strtotime('yesterday'))){
+                            if ($in->user_id == $user_id && $in->status == 0){
                                 $clock_btn = 'clockIn';
                             }
-
                         }
                         //Employee display shift status
                         $clock_in = '-';
@@ -254,67 +229,65 @@
                         //                        $expected_endbreak = null;
                         $shift_end = 0;
                         $overtime_status = 1;
-                        if(!empty($attendances)) {
-                            foreach ($attendances as $attn) {
-                                $attn_id = $attn->id;
+                        foreach ($attendances as $attn){
+                            $attn_id = $attn->id;
+                            $overtime_status =  1;
+                            foreach ($ts_logs_h as $log){
+                                if ($log->attendance_id == $attn->id && $attn->status == 1){
+                                    if ($log->action == 'Check in'){
+                                        $clock_in = date('h:i A',strtotime($log->date_created));
+                                        $shift_end = strtotime($log->date_created);
+                                        $hours = floor($attn->break_duration / 60);
+                                        $minutes = floor($attn->break_duration % 60);
+                                        $seconds = $attn->break_duration - (int)$attn->break_duration;
+                                        $seconds = round($seconds * 60);
+                                        $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                        $analog_active = 'clock-active';
+                                    }
+                                    if ($log->action == 'Break in'){
+                                        $analog_active = 'clock-break';
+                                        if ($attn->break_duration > 0){
+                                            $lunch_in = strtotime($log->date_created)  - (floor($attn->break_duration * 60));
+                                            $latest_lunch_in = strtotime($log->date_created);
+                                        }else{
+                                            $lunch_in = strtotime($log->date_created);
+                                            $latest_lunch_in = 0;
+                                        }
+                                    }
+                                    if ($log->action == 'Break out'){
+                                        if ($attn->status == 1){
+                                            $analog_active = 'clock-active';
+                                        }
+                                    }
+                                }else if($log->attendance_id == $attn->id && $attn->status == 0){
+                                    if ($log->action == 'Check in'){
+                                        $clock_in = date('h:i A',strtotime($log->date_created));
+                                        $shift_end = strtotime($log->date_created);
 
-                                $overtime_status = isset($attn->overtime_status) ? $attn->overtime_status : 0;
-                                foreach ($ts_logs_h as $log) {
-                                    if ($log->attendance_id == $attn->id && $attn->status == 1) {
-                                        if ($log->action == 'Check in') {
-                                            $clock_in = date('h:i A', $log->date_created);
-                                            $shift_end = $log->date_created;
-
-                                            $hours = floor($attn->break_duration / 60);
-                                            $minutes = floor($attn->break_duration % 60);
-                                            $seconds = $attn->break_duration - (int)$attn->break_duration;
-                                            $seconds = round($seconds * 60);
-                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
-                                        }
-                                        if ($log->action == 'Break in') {
-                                            $analog_active = 'clock-break';
-                                            if ($attn->break_duration > 0) {
-                                                $lunch_in = $log->date_created - (floor($attn->break_duration * 60));
-                                                $latest_lunch_in = $log->date_created;
-                                            } else {
-                                                $lunch_in = $log->date_created;
-                                                $latest_lunch_in = 0;
-                                            }
-                                        }
-                                        if ($log->action == 'Break out') {
-                                            if ($attn->status == 1) {
-                                                $analog_active = 'clock-active';
-                                            }
-                                        }
-                                    } else {
-                                        if ($log->action == 'Check in') {
-                                            $clock_in = isset($log->date_created) ? date('h:i A', $log->date_created) : '';
-                                            $shift_end = isset($log->date_created) ? $log->date_created : '';
-
-                                            $hours = floor($attn->break_duration / 60);
-                                            $minutes = floor($attn->break_duration % 60);
-                                            $seconds = $attn->break_duration - (int)$attn->break_duration;
-                                            $seconds = round($seconds * 60);
-                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
-                                        }
-                                        if ($log->action == 'Check out') {
-                                            $clock_out = isset($log->date_created) ? date('h:i A', $log->date_created) : '';
-                                            $analog_active = null;
-                                            $shift_s = ($attn->shift_duration * 3600);
-                                            $shift_h = floor($attn->shift_duration);
-                                            $shift_s -= $shift_h * 3600;
-                                            $shift_m = floor($shift_s / 60);
-                                            $shift_s -= $minutes * 60;
-                                            $shift_duration = str_pad($shift_h, 2, '0', STR_PAD_LEFT) . ":" . str_pad($shift_m, 2, '0', STR_PAD_LEFT);
-                                        }
-
+                                        $hours = floor($attn->break_duration / 60);
+                                        $minutes = floor($attn->break_duration % 60);
+                                        $seconds = $attn->break_duration - (int)$attn->break_duration;
+                                        $seconds = round($seconds * 60);
+                                        $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                    }
+                                    if ($log->action == 'Check out'){
+                                        $clock_out = date('h:i A',strtotime($log->date_created));
+                                        $analog_active = null;
+                                        $shift_s = ($attn->shift_duration * 3600);
+                                        $shift_h = floor($attn->shift_duration);
+                                        $shift_s -= $shift_h * 3600;
+                                        $shift_m = floor($shift_s / 60);
+                                        $shift_s -= $minutes * 60;
+                                        $shift_duration =  str_pad($shift_h, 2, '0', STR_PAD_LEFT).":".str_pad($shift_m, 2, '0', STR_PAD_LEFT);
                                     }
 
                                 }
 
-
                             }
+
+
                         }
+
                         $ts_settings = getEmpTSsettings();
                         $schedule = getEmpSched();
                         $expected_shift = 0;
@@ -325,8 +298,12 @@
                         $time_difference = 0;
                         foreach ($ts_settings as $setting){
                             foreach ($schedule as $sched){
-                                if ($setting->id == $sched->ts_settings_id){
-                                    $tz = isset($setting->timezone) && $setting->timezone != null ? $setting->timezone : 'America/Chicago';
+                                if ($setting->id == $sched->schedule_id){
+                                    if ($setting->timezone == null){
+                                        $tz = date_default_timezone_get();
+                                    }else{
+                                        $tz = /* $setting->timezone */ 'America/Chicago';
+                                    }
                                     $timestamp = time();
                                     $dt = new DateTime("now", new DateTimeZone($tz));
                                     $dt->setTimestamp($timestamp);
@@ -374,11 +351,8 @@
                             <input type="hidden" id="employeePingEnd" value="<?php echo $over_notify;?>">
                             <input type="hidden" id="employeeOvertime" value="<?php echo $expected_endshift;?>">
                             <input type="hidden" id="timeDifference" value="<?php echo $time_difference;?>">
-                            <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end;?>">
+                            <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end;?>" data-value="<?php echo date('h:i A',$shift_end)?>">
                             <input type="hidden" id="autoClockOut" value="<?php echo $overtime_status;?>">
-                            <div class="icon-loader">
-                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                            </div>
                             <div class="clock-users " id="<?php echo $clock_btn?>" >
                                 <div class="clock <?php echo $analog_active ?>">
                                     <div class="hour">
@@ -413,9 +387,6 @@
                             </div>
                         </li>
                         <li class="dropdown notification-list list-inline-item" style="vertical-align: middle">
-                            <div class="icon-loader">
-                                <img src="<?php echo base_url('assets/css/icons/images/spinner-1.1s-47px.svg'); ?>" alt="">
-                            </div>
                             <div class="dropdown notification-list nav-pro-img">
                                 <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
                                     <?php /*<img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle">*/ ?>

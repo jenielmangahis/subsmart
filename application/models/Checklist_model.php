@@ -21,7 +21,26 @@ class Checklist_model extends MY_Model
             }
         }
 
-        $this->db->where('user_id', $id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByUserId($filters=array())
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('title', $filters['search'], 'both');
+            }
+        }
+
+        $this->db->where('user_id', $user_id);
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();

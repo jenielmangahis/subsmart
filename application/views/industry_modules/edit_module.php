@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_plan_builder'); ?>
+<?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/nsmart_plans'); ?>
     <!-- page wrapper start -->

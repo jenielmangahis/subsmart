@@ -330,13 +330,14 @@ class Reconcile_model extends MY_Model {
 
 	public function delete_int($id)
 	{
-		$query="update accounting_reconcile set income_account = '',interest_earned = '',descp_it = '', memo_it='',second_date='',cash_back_account='',cash_back_memo='',cash_back_amount=''  where active=1 and id = '$id'";
+		$query="update accounting_reconcile set income_account = '',interest_earned = '0',descp_it = '', memo_it='',second_date='',cash_back_account='',cash_back_memo='',cash_back_amount=''  where active=1 and id = '$id'";
 		echo $this->db->query($query);
 	}
 
-	public function delete_sc()
+	public function delete_sc($id)
 	{
-
+		$query="update accounting_reconcile set expense_account = '',service_charge = '0',descp_sc = '', memo_sc='',first_date='',mailing_address='',checkno='',CHRG=''  where active=1 and id = '$id'";
+		echo $this->db->query($query);
 	}
 }
 ?>
