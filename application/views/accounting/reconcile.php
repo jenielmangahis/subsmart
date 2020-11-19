@@ -470,12 +470,13 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <button type="button" class="btn-cmn" onclick="closeFullNav()">Cancel</button>
             <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
             <a href="#" style="margin-left: 5%" onclick="OpenRecurr()">Make Recurring</a>
+            <a href="#" style="margin-left: 5%" onclick="Delete(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)">Delete</a>
             <button type="button" onclick="save_close_edit(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
     </div>
     <!-- End Edit New -->
 
-    <!-- Edit New -->
+    <!-- Edit New Int -->
     <div id="overlay-fullint-tx" class=""></div>
     <div id="side-menu-fullint-tx" class="main-side-nav">
         <div style="background-color: #f4f5f8">
@@ -890,7 +891,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             </div>
         </div>
     </div>
-    <!-- End Edit New -->
+    <!-- End Edit New Int -->
 
     <!-- Print popup -->
     <div id="overlay-print-tx" class=""></div>
@@ -3165,6 +3166,8 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                               foreach($rows as $row)
                               {
                                 echo "<input style='display:none' type='text' id='id' value='".$row->id."'/>";
+                                if($row->service_charge !=0 && $row->expense_account!='')
+                                {
                                 echo "<tr id='payments' onclick='trClick(".$o.")'>";
                                 echo "<td >".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
@@ -3222,8 +3225,9 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<td></td>";
                                 echo "<td></td>";
                                 echo "</tr>";
+                                }
                                 $o++;
-                                if($row->interest_earned !='')
+                                if($row->interest_earned !=0 && $row->income_account!='')
                                 {
                                 echo "<tr id='deposites' onclick='trClick(".$o.")'>";
                                 echo "<td contenteditable='true'>".$row->second_date."</td>";
@@ -5857,9 +5861,19 @@ function closeAddaccount()
 <script type="text/javascript">
     $( document ).ready(function() {
        var main = $(".edit_service_charge").text();
-       var maintot = main - $("#servicechargecount").val();
-       $(".edit_service_charge").text(maintot.toFixed(2));
-       $("#edit_service_charge").val(maintot.toFixed(2));
+       if(main!=0)
+       {
+        var maintot = main - $("#servicechargecount").val();
+        $(".edit_service_charge").text(maintot.toFixed(2));
+        $("#edit_service_charge").val(maintot.toFixed(2));
+       }
+       else{var maintot=$("#servicechargecount").val();}
+       if(main==0)
+       {
+        $('#total').text('Total : $'+$("#servicechargecount").val());
+        $('#amount').text('Amount : $'+$("#servicechargecount").val());
+       }
+       
 
        var main_int = $(".edit_interest_earned").text();
        var maintot_int = parseInt(main_int) + parseInt($("#interestearnedcount").val());
@@ -5871,6 +5885,7 @@ function closeAddaccount()
        $("#inttotal_final").text("Total : $"+maintot_int.toFixed(2));
 
        var main_int_recurr = $(".recurr_interest_earned").text();
+
        var maintot_int_recurr = parseInt(main_int_recurr) + parseInt($("#recurrinterestearnedcount_int").val());
        $("#intrecurrtotal").text("Other Fund Total : $"+maintot_int_recurr.toFixed(2));
        if($('#cash_back_amount_recurr').val()!='')
@@ -6208,7 +6223,28 @@ function closeAddaccount()
                                             'success'
                                         );
                         closeFullNav_int();
-                        location.href="<?php echo url('accounting/reconcile') ?>"+chart_of_accounts_id;
+                        location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+                    }
+                });
+        }
+    }
+    function Delete(id,chart_of_accounts_id)
+    {
+        if(id!='')
+        {
+            $.ajax({
+                    url:"<?php echo url('accounting/reconcile/delete/delete_sc') ?>",
+                    method: "POST",
+                    data: {id:id},
+                    success:function(data)
+                    {
+                        sweetAlert(
+                                            'Deleted!',
+                                            'Service has been deleted.',
+                                            'success'
+                                        );
+                        closeFullNav();
+                        location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
                     }
                 });
         }
