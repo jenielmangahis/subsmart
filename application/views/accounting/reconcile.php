@@ -471,6 +471,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
             <a href="#" style="margin-left: 5%" onclick="OpenRecurr()">Make Recurring</a>
             <a href="#" style="margin-left: 5%" onclick="Delete(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)">Delete</a>
+            <a style="margin-left: 5%" href="<?php echo url('/accounting/reconcile/journal-report/'.$rows[0]->id.'/sc') ?>">Transaction Journal</a>
             <button type="button" onclick="save_close_edit(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
     </div>
@@ -761,6 +762,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             </ul>
             <a href="#" style="margin-left: 5%" onclick="OpenRecurrInt()">Make Recurring</a>
             <a href="#" style="margin-left: 5%" onclick="DeleteInt(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)">Delete</a>
+            <a style="margin-left: 5%" href="<?php echo url('/accounting/reconcile/journal-report/'.$rows[0]->id.'/int') ?>">Transaction Journal</a>
             <button type="button" onclick="save_close_edit_int(<?=$rows[0]->id?>,<?=$rows[0]->chart_of_accounts_id?>)" class="savebtn">Save and close</button>
         </div>
         <div id="to_print_both" style="display: none;">

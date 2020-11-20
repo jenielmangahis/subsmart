@@ -327,11 +327,11 @@ class Timesheet_model extends MY_Model {
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
         return $get_location->lat.",".$get_location->lon; //to get coordinates
     }
-    public function employeeAddress(){
+    private function employeeAddress(){
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true_or_false&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
         $output = json_decode($g_map);
         $status = $output->status;
         $address = ($status=="OK")?$output->results[1]->formatted_address:'Address not found';

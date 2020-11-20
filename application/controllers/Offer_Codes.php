@@ -19,8 +19,7 @@ class Offer_Codes extends MY_Controller {
 	}
 
 	public function index() {
-		$ip = getValidIpAddress();
-		echo $ip;exit;
+		//$ip = getValidIpAddress();
 		$offerCodes   = $this->OfferCodes_model->getAll();
 		
 		$this->page_data['offerCodes'] = $offerCodes;

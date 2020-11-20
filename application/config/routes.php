@@ -279,6 +279,8 @@ $route['accounting/reconcile/interestearned/remove_it_recurr'] = 'reconcile/remo
 $route['accounting/reconcile/delete/delete_int'] = 'reconcile/delete_int';
 $route['accounting/reconcile/delete/delete_sc'] = 'reconcile/delete_sc';
 
+$route['accounting/reconcile/journal-report/(:any)/(:any)'] = 'reconcile/journal_report/$1/$2';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

@@ -1650,7 +1650,7 @@ class Timesheet extends MY_Controller {
                 'user_id' => $user_id,
                 'action' => 'Check in',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
-                'user_location_address' => $this->timesheet_model->employeeAddress(),
+                'user_location_address' => $this->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s',$clock_in),
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
@@ -1688,7 +1688,7 @@ class Timesheet extends MY_Controller {
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
-                'user_location_address' => $this->timesheet_model->employeeAddress(),
+                'user_location_address' => $this->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s',$clock_out),
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
@@ -1733,7 +1733,7 @@ class Timesheet extends MY_Controller {
             'user_id' => $user_id,
             'action' => 'Break in',
             'user_location' => $this->timesheet_model->employeeCoordinates(),
-            'user_location_address' => $this->timesheet_model->employeeAddress(),
+            'user_location_address' => $this->employeeAddress(),
             'date_created' => date('Y-m-d H:i:s',$lunch_in),
             'entry_type' => 'Normal',
             'company_id' => getLoggedCompanyID()
@@ -1768,7 +1768,7 @@ class Timesheet extends MY_Controller {
                 'user_id' => $user_id,
                 'action' => 'Break out',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
-                'user_location_address' => $this->timesheet_model->employeeAddress(),
+                'user_location_address' => $this->employeeAddress(),
                 'date_created' => date('Y-m-d H:i:s',$lunch_out),
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
@@ -1788,6 +1788,17 @@ class Timesheet extends MY_Controller {
         $data->lunch_time = date('h:i A',$lunch_out);
 
         echo json_encode($data);
+    }
+
+    private function employeeAddress(){
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
+        $lat = $get_location->lat;
+        $lng = $get_location->lon;
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        $output = json_decode($g_map);
+        $status = $output->status;
+        $address = ($status=="OK")?$output->results[1]->formatted_address:'Address not found';
+        return $address;
     }
 
     public function overtimeApproval(){
@@ -1979,7 +1990,7 @@ class Timesheet extends MY_Controller {
                         <h6>Members</h6>
                     </div>
                     <div class="dept-role-add">
-                        <a href="javascript:void(0)">
+                        <a href="javascript:void(0)" id="deptAddMembers">
                             <i class="fas fa-plus fa-lg"></i> <span class="dept-add-btn">Add Members</span>
                         </a>
                     </div>
