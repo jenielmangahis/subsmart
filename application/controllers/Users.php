@@ -41,6 +41,8 @@ class Users extends MY_Controller {
 			'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js'
         ));
 
+        $this->load->model('IndustryType_model');
+
 	}
 
 	public function businessprofile()
@@ -80,8 +82,31 @@ class Users extends MY_Controller {
 
 	public function services()
 	{	
+		$industryType = $this->IndustryType_model->getAll();
+		$businessTypes = [ 
+		  'Building Contractors' => 'Building Contractors',
+		  'Financial Services' => 'Financial Services',
+		  'Technical Services' => 'Technical Services',
+		  'Health And Beauty' => 'Health And Beauty',
+		  'Transportation' => 'Transportation',
+		  'Organization / Cleaning' => 'Organization / Cleaning',
+		  'Entertainment Services' => 'Entertainment Services',
+		  'Design Services' => 'Design Services',
+		  'Other' => 'Other',
+        ];
+
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
+
+		// echo "<pre>";
+		// print_r($businessTypes);
+		// print_r($industryType);
+		// echo "</pre>";
+
+		// exit();
+
+		$this->page_data['industryType'] = $industryType;
+		$this->page_data['businessTypes'] = $businessTypes;
 		//print_r($user);die;
 		$cid=logged('id');
 		$this->load->view('business_profile/services', $this->page_data);
