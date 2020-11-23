@@ -833,6 +833,7 @@ class Customer extends MY_Controller
                                             'monitor_comp' => $row['MonitoringCompany'],
                                             'install_date' => $row['InstallDate'],
                                             'monitor_id' => $row['MonitoringID'],
+                                            'acct_type' => $row['AccountType'],
                                         );
 
                                         $input_office = array(
@@ -872,6 +873,68 @@ class Customer extends MY_Controller
                 }
         }
         //redirect('customer');
+    }
+
+    public function customer_export()
+    {
+
+        $user_id = logged('id');
+        //$items = $this->customer_model->getByCompanyId(logged('company_id'));
+        //$items =  $this->customer_ad_model->get_customer_data('fk_user_id',$user_id,"acs_profile");
+        $items =  $this->customer_ad_model->get_customer_data($user_id);
+
+        $delimiter = ",";
+        $filename = getLoggedName()."_customers.csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
+                        'AbortCode','Address','Address1','Area','City','State','Zip','ContractTerm','CreditScore','CreditScore2','Email','MonitoringCompany','StatusID','Technician');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($items)) {
+            foreach ($items as $item) {
+                $csvData = array(
+                    $item->monitor_id,
+                    $item->last_name,
+                    $item->first_name,
+                    $item->business_name,
+                    $item->panel_type,
+                    $item->acct_type,
+                    $item->install_date,
+                    $item->sales_date,
+                    $item->mmr,
+                    $item->fk_sales_rep_office,
+                    $item->status,
+                    $item->status,
+                    $item->passcode,
+                    $item->mail_add,
+                    $item->mail_add,
+                    'COR',
+                    $item->city,
+                    $item->state,
+                    $item->zip_code,
+                    $item->contract_term,
+                    $item->credit_score,
+                    $item->credit_score,
+                    $item->email,
+                    $item->monitor_comp,
+                    3,
+                    $item->technician,
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
     }
 
 
@@ -1949,37 +2012,6 @@ class Customer extends MY_Controller
 
         return $result;
     }
-
-    public function exportItems()
-    {
-        $items = $this->customer_model->getByCompanyId(logged('company_id'));
-        $delimiter = ",";
-        $filename = getLoggedName()."_customer.csv";
-
-        $f = fopen('php://memory', 'w');
-
-        $fields = array('Customer Type', 'Company Name', 'Contact Name', 'Contact Email', 'Mobile', 'Phone', 'Birthday', 'Suite Unit', 'Street Address', 'City', 'State', 'Postal Code');
-        fputcsv($f, $fields, $delimiter);
-
-        if (!empty($items)) {
-            foreach ($items as $item) {
-                $csvData = array($item->customer_type, $item->company_name, $item->contact_name, $item->contact_email, $item->mobile, $item->phone, $item->birthday, $item->suite_unit, $item->street_address, $item->city, $item->state, $item->postal_code);
-                fputcsv($f, $csvData, $delimiter);
-            }
-        } else {
-            $csvData = array('');
-            fputcsv($f, $csvData, $delimiter);
-        }
-
-        fseek($f, 0);
-
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $filename . '";');
-
-        fpassthru($f);
-    }
-
-
         /*
      * Callback function to check file value and type during validation
      */

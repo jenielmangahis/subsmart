@@ -124,5 +124,5 @@ class Offer_Codes extends MY_Controller {
     }
 }
 
-/* End of file Nsmart_Addons.php */
-/* Location: ./application/controllers/Nsmart_Addons.php */
+/* End of file Offer_Codes.php */
+/* Location: ./application/controllers/Offer_Codes.php */
