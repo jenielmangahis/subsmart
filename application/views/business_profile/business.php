@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+<style>
+.list-availability li{
+	margin-top: 10px;
+}
+</style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
      
@@ -164,8 +168,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="margin-bottom" style="position: relative">
 							<a class="a-alert a-edit" href="<?php echo url('users/availability'); ?>"><span class="fa fa-edit"></span> edit</a>
 							<div class="side-title">Availability</div>
-							Working Days<br>
-							<div class="margin-bottom-sec text-ter">Mon - Fri</div>
+							<?php $schedules = unserialize($profiledata->working_days); ?>
+							<?php if( !empty($schedules) ){ ?>
+								<ul class="list-availability">
+								<?php foreach( $schedules as $s ){ ?>
+									<li><div class="text-ter"><?php echo $s['day'] . " : " . $s['time_from'] . ' - ' . $s['time_to']; ?></div></li>
+								<?php } ?>
+								</ul>
+							<?php }else{ ?>
+								<div class="margin-bottom-sec text-ter">Not Specified</div>
+							<?php } ?>
+							
 						</div>
 					</div>
 				</div>

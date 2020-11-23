@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    <div wrapper__section>
       <div class="col-md-12 col-lg-12">
         <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
         <div class="row">
             <div class="col-md-12">
                 <form id="form-business-credentials" method="post" action="#">
@@ -24,149 +25,95 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h3>Working Days</h3>
                         <p>Your working days will appear on your public profile.</p>
                         <div class="row">
-                            <div class="col-md-2">
-                                <h4>Hours</h4>
-                            </div>
-                            <div class="col-md-10">
-                            <div class="row">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                                    <label class="form-check-label" for="exampleRadios1">
-                                        Open on selected hours
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" checked>
-                                    <label class="form-check-label" for="exampleRadios2">
-                                        Always Open
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" checked>
-                                    <label class="form-check-label" for="exampleRadios3">
-                                        No hours available
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="option4" checked>
-                                    <label class="form-check-label" for="exampleRadios4">
-                                        Permanently closed
-                                    </label>
-                                </div>
-                            </div>
+                            <div class="col-md-12" style="margin-left: 14px;">
+                            
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[0]" value="1" checked="checked" id="weekday_0">
+                                    <input type="checkbox" name="weekday[0]" value="Monday" checked="checked" id="weekday_0">
                                     <label for="weekday_0"><span>Monday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="monHoursFromAvail" id="monHoursFromAvail" class="form-control">
+                                    <input type="text" name="monHoursFromAvail" placeholder="Start Time" id="monHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="monHoursToAvail" id="monHoursToAvail" class="form-control">
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                    <input type="text" name="monHoursToAvail" placeholder="End Time" id="monHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[1]" value="2" checked="checked" id="weekday_1">
+                                    <input type="checkbox" name="weekday[1]" value="Tuesday" checked="checked" id="weekday_1">
                                     <label for="weekday_1"><span>Tuesday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="tueHoursFromAvail" id="tueHoursFromAvail" class="form-control">
+                                    <input type="text" name="tueHoursFromAvail" placeholder="Start Time" id="tueHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="tueHoursToAvail" id="tueHoursToAvail" class="form-control">
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                    <input type="text" name="tueHoursToAvail" placeholder="End Time" id="tueHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[2]" value="3" checked="checked" id="weekday_2">
+                                    <input type="checkbox" name="weekday[2]" value="Wednesday" checked="checked" id="weekday_2">
                                     <label for="weekday_2"><span>Wednesday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="wedHoursFromAvail" id="wedHoursFromAvail" class="form-control">
+                                    <input type="text" name="wedHoursFromAvail" placeholder="Start Time" id="wedHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="wedHoursToAvail" id="wedHoursToAvail" class="form-control">
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                    <input type="text" name="wedHoursToAvail" placeholder="End Time" id="wedHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[3]" value="4" checked="checked" id="weekday_3">
+                                    <input type="checkbox" name="weekday[3]" value="Thursday" checked="checked" id="weekday_3">
                                     <label for="weekday_3"><span>Thursday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="thuHoursFromAvail" id="thuHoursFromAvail" class="form-control">
+                                    <input type="text" name="thuHoursFromAvail" placeholder="Start Time" id="thuHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="thuHoursToAvail" id="thuHoursToAvail" class="form-control">
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                    <input type="text" name="thuHoursToAvail" placeholder="End Time" id="thuHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[4]" value="5" checked="checked" id="weekday_4">
+                                    <input type="checkbox" name="weekday[4]" value="Friday" checked="checked" id="weekday_4">
                                     <label for="weekday_4"><span>Friday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="friHoursFromAvail" id="friHoursFromAvail" class="form-control">
+                                    <input type="text" name="friHoursFromAvail" placeholder="Start Time" id="friHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="friHoursToAvail" id="friHoursToAvail" class="form-control">
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                    <input type="text" name="friHoursToAvail" placeholder="End Time" id="friHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[5]" value="6" checked="checked" id="weekday_5">
+                                    <input type="checkbox" name="weekday[5]" value="Saturday" checked="checked" id="weekday_5">
                                     <label for="weekday_5"><span>Saturday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="satHoursFromAvail" id="satHoursFromAvail" class="form-control">
+                                    <input type="text" name="satHoursFromAvail" placeholder="Start Time" id="satHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="satHoursToAvail" id="satHoursToAvail" class="form-control">
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span></button>
+                                    <input type="text" name="satHoursToAvail" placeholder="End Time" id="satHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[6]" value="7" checked="checked" id="weekday_6">
+                                    <input type="checkbox" name="weekday[6]" value="Sunday" checked="checked" id="weekday_6">
                                     <label for="weekday_6"><span>Sunday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="sunHoursFromAvail" id="sunHoursFromAvail" class="form-control">
+                                    <input type="text" name="sunHoursFromAvail" placeholder="Start Time" id="sunHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="button" type="text" name="sunHoursToAvail" id="sunHoursToAvail" class="form-control">
+                                    <input type="text" name="sunHoursToAvail" placeholder="End Time" id="sunHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             </div>
                         </div>
                     </div>
-                    <hr class="card-hr">
-
                     <div class="card">
                         <h3>Time Off / Unavailability</h3>
                         <p>Please set your unavailable timings and time-off.</p>
@@ -200,11 +147,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="row">
                         <div class="col-md-8">
-                            <button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
-                        </div>
+                            <button class="btn btn-default btn-lg" name="btn-continue" value="availability" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+                        </div> 
                         <div class="col-md-4 text-right">
                             <a class="btn btn-default btn-lg" href="credentials">« Back</a>
-                            <a href="workpictures" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
+                            <a href="<?php echo base_url('users/portfolio'); ?>" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
                         </div>
                     </div>
                 </div>

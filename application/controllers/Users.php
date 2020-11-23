@@ -56,8 +56,10 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		$cid=logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));	
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
+		$profiledata = $this->business_model->getByUserId($cid);	
+		$schedules   = unserialize($profiledata->working_days);
+		
+		$this->page_data['profiledata'] = $profiledata;
 		$this->load->view('business_profile/business', $this->page_data);
 
 	}
@@ -65,8 +67,8 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid=logged('id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$cid  = logged('id');
+		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));	
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
@@ -104,9 +106,11 @@ class Users extends MY_Controller {
 	public function availability()
 	{	
 		//ifPermissions('businessdetail');
-		$user = (object)$this->session->userdata('logged');		
-		//print_r($user);die;
-		$cid=logged('id');
+		$user = (object)$this->session->userdata('logged');	
+		$cid = logged('id');
+		$profiledata = $this->business_model->getByUserId($cid);	
+
+		$this->page_data['profiledata'] = $profiledata;
 		$this->load->view('business_profile/availability', $this->page_data);
 
 	}
@@ -187,14 +191,86 @@ class Users extends MY_Controller {
 	
 	public function savebusinessdetail() {
 		
-		$user = (object)$this->session->userdata('logged');	
-		/* echo "<pre>"; print_r($_POST); die; */
-		$pdata=$_POST;
+		$user  = (object)$this->session->userdata('logged');	
+		$pdata = $this->input->post();
+		$action = $pdata['btn-continue'];
 		unset($pdata['btn-continue']);
-		$bid=$pdata['id'];
-		
+		$bid = $pdata['id'];
+
 		if($bid!=''){
-			$this->business_model->update($bid,$pdata);
+			if( $action == 'availability' ){
+
+				$schedules = array();
+
+				foreach( $pdata['weekday'] as $value ){
+					switch ($value) {
+						case 'Monday':
+							$schedules[] = [
+								'day' => 'Monday',
+								'time_from' => $pdata['monHoursFromAvail'],
+								'time_to' => $pdata['monHoursToAvail']
+							];
+							break;
+						case 'Tuesday':
+							$schedules[] = [
+								'day' => 'Tuesday',
+								'time_from' => $pdata['tueHoursFromAvail'],
+								'time_to' => $pdata['tueHoursToAvail']
+							];
+							break;
+						case 'Wednesday':
+							$schedules[] = [
+								'day' => 'Wednesday',
+								'time_from' => $pdata['wedHoursFromAvail'],
+								'time_to' => $pdata['wedHoursToAvail']
+							];
+							break;
+						case 'Thursday':
+							$schedules[] = [
+								'day' => 'Thursday',
+								'time_from' => $pdata['thurHoursFromAvail'],
+								'time_to' => $pdata['thurHoursToAvail']
+							];
+							break;
+						case 'Friday':	
+							$schedules[] = [
+								'day' => 'Friday',
+								'time_from' => $pdata['friHoursFromAvail'],
+								'time_to' => $pdata['friHoursToAvail']
+							];					
+							break;
+						case 'Saturday':
+							$schedules[] = [
+								'day' => 'Saturday',
+								'time_from' => $pdata['satHoursFromAvail'],
+								'time_to' => $pdata['satHoursToAvail']
+							];
+							break;
+						case 'Sunday':
+							$schedules[] = [
+								'day' => 'Sunday',
+								'time_from' => $pdata['sunHoursFromAvail'],
+								'time_to' => $pdata['sunHoursToAvail']
+							];
+							break;
+						default:
+							break;
+					}
+				}
+
+				$schedules = serialize($schedules);
+				$data_availability = [
+					'working_days' => $schedules,
+					'start_time_of_day' => $pdata['timeoff_from'],
+					'end_time_of_day' => $pdata['timeoff_to']
+				];
+
+				$this->business_model->update($bid,$data_availability);	
+
+			}else{
+				$this->business_model->update($bid,$pdata);	
+			}
+			
 			$imbid=$pdata['user_id'];
 		}else{
 			$pdata['user_id'] = $user->id;
