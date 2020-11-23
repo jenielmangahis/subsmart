@@ -649,12 +649,31 @@ class Reconcile extends MY_Controller {
         {
             $subrows = $this->reconcile_model->select_interest($this->page_data['rows']->id,$this->page_data['rows']->chart_of_accounts_id);
         }
-        $this->page_data['subrows']= $subrows[0];
+        $this->page_data['subrows']= $subrows;
         $this->page_data['type']= $type;
-        /*foreach ($subrows as $key => $value) {
-                 $subrows[$key]->expense_account_sub;
-            }*/
-       echo "Page in progress";die();
         $this->load->view('accounting/reconcile/journalreport',$this->page_data);
+    }
+
+     public function journal_report_ajax($id,$type)
+    {
+        $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rows'] =  $this->reconcile_model->getById($id);
+        if($type=='sc')
+        {
+            $subrows = $this->reconcile_model->select_service($this->page_data['rows']->id,$this->page_data['rows']->chart_of_accounts_id);
+        }
+        else
+        {
+            $subrows = $this->reconcile_model->select_interest($this->page_data['rows']->id,$this->page_data['rows']->chart_of_accounts_id);
+        }
+        $this->page_data['subrows']= $subrows;
+        $this->page_data['type']= $type;
+        $rows  =  $this->reconcile_model->selectonwherewithinactive($id);
+        $html = "";
+        foreach ($rows as $row) {
+      
+        }
+        echo $html;
     }
 }

@@ -46,22 +46,16 @@
             "pageLength": 10,
             "info": true,
             "responsive": true,
-            "scrollY":        '60vh',
-            // "scrollY":        '200px',
-            "scrollX":        false,
-            "scrollCollapse": true,
-            // "autoWidth": true,
-            //"order": [[ 1, "asc" ]],
+
             "order": [],
             initComplete: function () {
                 this.api().columns([11]).every( function () {
                     var column = this;
                     var select = $('<select class="input_select" style="padding: 5px;border-radius: 5px;display: inline-block !important;"><option value="">All</option></select>').appendTo($(".dataTables_filter"))
                         .on( 'change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                            );
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search( val ? val : '', false, true ).draw();
-                            $(this).val()
+                            $(this).val();
                         } );
                     column.data().unique().sort().each( function ( d, j ) {
                         //var val = $('<div/>').html(d).text();
@@ -125,12 +119,11 @@
                         //$('#leadtype_table_data').append(html);
                         $('#salesAreaForm')[0].reset();
                     }
-                    console.log(lead_types_data.length);
-                    console.log(lead_types_data);
+                  //  console.log(lead_types_data.length);
+                   // console.log(lead_types_data);
                 }
             });
         }
-
         function display_leadsource_data(){
             table_ls.clear();
             $.ajax({

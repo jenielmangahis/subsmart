@@ -134,31 +134,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="col-sm-6 col-md-12">
                                                                 <div class="float-right d-md-block">
                                                                     <div class="dropdown">
-                                                                        <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
                                                                             <!--<input type="file" name="file" /> -->
                                                                             <a href="<?= url('customer/import_customer') ?>">
                                                                                 <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
                                                                             </a>
-                                                                            <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
+                                                                            <a href="<?= url('customer/customer_export') ?>">
+                                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
+                                                                            </a>
                                                                             <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
                                                                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
                                                                             </a>-->
                                                                             <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
                                                                                     <span class="fa fa-print "></span> Print
                                                                             </a>-->
-                                                                            <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
+                                                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
                                                                             <a class="btn btn-primary btn-md"
                                                                                href="<?php echo url('customer/add_advance') ?>"><span
                                                                                         class="fa fa-plus"></span> New Customer</a>
                                                                             <?php //endif ?>
-                                                                        </form>
                                                                     </div>
                                                                 </div>
                                                                 <br><br><br>
                                                                 <div class="tab-content" id="myTabContent">
                                                                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                                                         <div id="status_sorting"  class=""></div>
-                                                                        <table class="table table-hover"  id="customer_list_table">
+                                                                        <table class="table"  id="customer_list_table">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th width="100px">Name</th>
