@@ -117,13 +117,10 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid=logged('id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
-		//dd($profiledata);die;
+		$cid  = logged('id');
+		$profiledata = $this->business_model->getByUserId($cid);	
 		$this->page_data['userid'] = $user->id;
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
-		
-		/* echo "<pre>"; print_r($this->page_data); die;  */
+		$this->page_data['profiledata'] = $profiledata;
 		
 		$this->load->view('business_profile/credentials', $this->page_data);
 	}
@@ -292,6 +289,45 @@ class Users extends MY_Controller {
 
 				$this->business_model->update($bid,$data_availability);	
 
+			}elseif( $action == 'credentials' ){
+				$is_licensed = 0;
+				if( isset($pdata['is_licensed']) ){
+					$is_licensed = 1;
+				}
+
+				$is_bonded = 0;
+				if( isset($pdata['is_bonded']) ){
+					$is_bonded = 1;
+				}
+
+				$is_insured = 0;
+				if( isset($pdata['is_insured']) ){
+					$is_insured = 1;
+				}
+
+				$is_bbb = 0;
+				if( isset($pdata['is_bbb']) ){
+					$is_bbb = 1;
+				}
+
+				$data_availability = [
+					'is_bonded' => $is_bonded,
+					'is_licensed' => $is_licensed,
+					'is_bbb_accredited' => $is_bbb,
+					'is_business_insured' => $is_insured,
+					'insured_amount' => $pdata['insured_amount'],
+					'insurance_expiry_date' => $pdata['insured_exp_date'],
+					'bond_amount' => $pdata['bonded_amount'],
+					'bond_expiry_date' => $pdata['bonded_exp_date'],
+					'license_class' => $pdata['license_class'],
+					'license_number' => $pdata['license_number'],
+					'license_state' => $pdata['license_state'],
+					'license_expiry_date' => $pdata['license_exp_date'],
+					'bbb_link' => $pdata['bbb_url']
+				];
+
+				$this->business_model->update($bid,$data_availability);	
+				
 			}else{
 				$this->business_model->update($bid,$pdata);	
 			}
