@@ -25,10 +25,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     display: none !important;
 }
  .line{
-width: 1000px;
+width: 970px;
 height: 4px;
 border-bottom: 1px solid black;
 position: absolute;
+margin-left: -10px;
+margin-top: 6px;
 }
 .dott{
   border:none;
@@ -58,20 +60,14 @@ position: absolute;
                     </div>
                 </div>
                 <div class="row align-items-center">
-                    <div class="col-md-5 col-sm-5">
+                    <div class="col-md-3 col-sm-3">
                         <div class="form-group">
-                            <label>Date</label>
-                            <select class="form-control" id="ending_date_select" name="ending_date_select">
-                                <?php
-                                   $i=1;
-                                   foreach($this->reconcile_model->selectAll() as $row)
-                                   {
-                                    ?>
-                                    <option value="<?=$row->id?>"><?=$row->ending_date?></option>
-                                  <?php
-                                  $i++;
-                                  }
-                                ?>
+                            <label>Report period</label>
+                            <select class="form-control" id="date_filter" name="date_filter">
+                                <option></option>
+                                <option></option>
+                                <option></option>
+                                <option></option>
                             </select>
                         </div>
                     </div>
@@ -79,148 +75,144 @@ position: absolute;
             </div>
             <!-- end row -->
             <div id="changeme">
-           <?php foreach ($rows as $row) {
-            $accBalance = $this->chart_of_accounts_model->getBalance($row->chart_of_accounts_id);
-            $adjustment = $row->ending_balance-(($accBalance-$row->service_charge)+$row->interest_earned);
-            ?>
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
-                             <div class="row">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-4"></div>
-                                <div class="col-md-3"></div>
-                                <div class="col-md-1 form-group">
-                                     <div class="dropdown">
-                                       <a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a>
-                                    </div>
-                                 </div>
-                             </div>
-                             <div style="text-align: center;margin-bottom: 10px;">
-                                 <div class="row">
-                                     <div class="col-md-12">
-                                        ADI
-                                     </div>
-                                 </div>
-                                 <div class="row">
-                                     <div class="col-md-12">
-                                        <?=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)?>,Period Ending <?=$row->ending_date?>
-                                     </div>
-                                 </div>
-                                 <div class="row">
-                                 <div class="col-md-12">
-                                        RCONCILATION REPORT
-                                     </div>
-                                 </div>
-                                 <div class="row">
-                                     <div class="col-md-12">
-                                        Reconciled on : <?=$row->adjustment_date?>
-                                     </div>
-                                 </div>
-                                 <div class="row">
-                                     <div class="col-md-12">
-                                        Reconciled by : -
-                                     </div>
-                                 </div>
-                            </div>
-                            Any changes made to transactions after this date aren't included in this report.
-                            <div class="line"></div>
-                            <div class="row" style="margin-top: 10px;">
-                                <div class="col-md-2">
-                                    Summary
+              <div class="row">
+                  <div class="col-xl-12">
+                      <div class="card">
+                          <div class="card-body">
+                               <div class="row">
+                                  <div class="col-md-4"></div>
+                                  <div class="col-md-4"></div>
+                                  <div class="col-md-3"></div>
+                                  <div class="col-md-1 form-group">
+                                       <div class="dropdown">
+                                         <a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a>
+                                      </div>
+                                   </div>
+                               </div>
+                               <div style="text-align: center;margin-bottom: 10px;">
+                                   <div class="row">
+                                       <div class="col-md-12">
+                                          ADI
+                                       </div>
+                                   </div>
+                                   <div class="row">
+                                       <div class="col-md-12">
+                                          JOURNAL
+                                       </div>
+                                   </div>
+                                   <div class="row">
+                                   <div class="col-md-12">
+                                          All Dates
+                                       </div>
+                                   </div>
+                              </div>
+                              <?php
+                               if($type=='sc')
+                              {
+                                 $date = $rows->first_date;
+                                 $memo = $rows->memo_sc;
+                                 $account = $rows->expense_account;
+                                 $descp = $rows->descp_sc;
+                                 $amount = $rows->service_charge;
+                              }
+                              else
+                              {
+                                  $date = $rows->second_date;
+                                  $memo = $rows->memo_it;
+                                  $account = $rows->income_account;
+                                  $descp = $rows->descp_it;
+                                  $amount = $rows->interest_earned;
+                              }
+                              $main_account = $this->chart_of_accounts_model->getName($rows->chart_of_accounts_id);
+                              $total = $amount;
+                              ?>
+                              <div class="row" style="margin-top:5%">
+                                <div class="col-md-12">
+                                  <table id="report_table" class="table accordion" style="width:100%;cursor: pointer;">
+                                    <thead>
+                                      <th>DATE</th>
+                                      <th>TRANSACTION TYPE</th>
+                                      <th>NUM</th>
+                                      <th>NAME</th>
+                                      <th>MEMO/DESCRIPTION</th>
+                                      <th>ACCOUNT</th>
+                                      <th>DEBIT</th>
+                                      <th>CREDIT</th>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td><?=$date?></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><?=$memo?></td>
+                                        <td><?=$main_account?></td>
+                                        <td></td>
+                                        <td class="total"></td>
+                                      </tr>
+                                      <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><?=$descp?></td>
+                                        <td><?=$account?></td>
+                                        <td><?=$amount?></td>
+                                        <td></td>
+                                      </tr>
+                                      <?php
+                                      $subtotal = 0;
+                                      foreach ($subrows as $key => $value) {
+                                        if($type=='sc')
+                                        {
+                                          $sub_account = $subrows[$key]->expense_account_sub;
+                                          $sub_amount = $subrows[$key]->service_charge_sub;
+                                          $sub_descp = $subrows[$key]->descp_sc_sub;
+                                        }
+                                        else
+                                        {
+                                          $sub_account = $subrows[$key]->income_account_sub;
+                                          $sub_amount = $subrows[$key]->interest_earned_sub;
+                                          $sub_descp = $subrows[$key]->descp_it_sub;
+                                        } 
+                                        $subtotal +=$sub_amount;
+                                      ?>
+                                      <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><?=$sub_descp?></td>
+                                        <td><?=$sub_account?></td>
+                                        <td><?=$sub_amount?></td>
+                                        <td></td>
+                                      </tr>
+                                      <?php
+                                      }
+                                      $finaltotal = $total +=$subtotal; 
+                                      ?>
+                                      <input type="hidden" id="finaltotal" value="<?=$finaltotal?>">
+                                      <tr>
+                                        <td colspan="6"></td>
+                                        <td class="total"></td>
+                                        <td class="total"></td>
+                                      </tr>
+                                      <tr><td colspan="8"><div class="line"></div></td></tr>
+                                      <tr>
+                                        <td colspan="6">Total</td>
+                                        <td></td>
+                                        <td class="total"><?=$finaltotal?></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
                                 </div>
-                                <div class="col-md-9"></div>
-                                <div class="col-md-1">
-                                    USD
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Statement beginning balance
-                                </div>
-                                <div class="col-md-8 dott"></div>
-                                <div class="col-md-1">
-                                    <?=number_format($accBalance,1)?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    Service Charge
-                                </div>
-                                <div class="col-md-9 dott"></div>
-                                <div class="col-md-1">
-                                    -<?=number_format($row->service_charge,1)?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    Interest Earned
-                                </div>
-                                <div class="col-md-9 dott"></div>
-                                <div class="col-md-1">
-                                    <?=number_format($row->interest_earned,1)?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Checks & payment cleared(0)
-                                </div>
-                                <div class="col-md-8 dott"></div>
-                                <div class="col-md-1">
-                                    0.00
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Deposit & other credit cleared(0)
-                                </div>
-                                <div class="col-md-8 dott"></div>
-                                <div class="col-md-1">
-                                    0.00
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    Adjustment
-                                </div>
-                                <div class="col-md-9 dott"></div>
-                                <div class="col-md-1">
-                                    <?=number_format($adjustment,1);?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Statement ending balance
-                                </div>
-                                <div class="col-md-8 dott"></div>
-                                <div class="col-md-1">
-                                    <?=number_format($row->ending_balance,1)?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-11"></div>
-                                <div class="col-md-1">
-                                    ======
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Register balance as of <?=$row->ending_date?>
-                                </div>
-                                <div class="col-md-8 dott"></div>
-                                <div class="col-md-1">
-                                    <?=number_format($row->ending_balance,1)?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-                </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- end card -->
+                  </div>
+              </div>
             </div>
-            <?php } ?>
-            </div>
-            <?php echo form_close(); ?>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -231,36 +223,20 @@ position: absolute;
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script type="text/javascript">
-$('#account_name').on('change', function() {
- select_acc(this.value);
- getReport(this.value);
-});
 $(document).ready(function () {
-    select_acc($('#account_name').val());
+    $(".total").text($('#finaltotal').val().toFixed(2));
+    var table = $('#report_table').DataTable();
 });
-function select_acc(chart_of_accounts_id)
+$('#date_filter').on('change', function() {
+ //getReport(this.value);
+});
+function getReport(id)
 {
-  var chart_of_accounts_id = chart_of_accounts_id;
-  if(chart_of_accounts_id!='')
+  var id = id;
+  if(id!='')
   {
     $.ajax({
-        url:"<?php echo url('accounting/reconcile/view/fetch_ending_date') ?>",
-        method: "POST",
-        data: {chart_of_accounts_id:chart_of_accounts_id},
-        success:function(data)
-        {
-            $("#ending_date_select").html(data);
-        }
-    })
-  }
-}
-function getReport(chart_of_accounts_id)
-{
-  var chart_of_accounts_id = chart_of_accounts_id;
-  if(chart_of_accounts_id!='')
-  {
-    $.ajax({
-        url:"<?php echo url('accounting/reconcile/view/reportajax/') ?>"+chart_of_accounts_id,
+        url:"<?php echo url('accounting/reconcile/view/journalreportajax/') ?>"+id,
         method: "POST",
         success:function(data)
         {
