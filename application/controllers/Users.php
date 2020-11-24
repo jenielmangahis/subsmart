@@ -178,8 +178,26 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');	
 		$cid = logged('id');
-		$profiledata = $this->business_model->getByUserId($cid);	
+		$profiledata = $this->business_model->getByUserId($cid);
 
+		$workingDays = unserialize($profiledata->working_days);
+		
+		$data_working_days = array();
+		if( !empty($workingDays) ){
+			foreach( $workingDays as $d ){
+				$data_working_days[$d['day']] = ['time_from' => $d['time_from'], 'time_to' => $d['time_to']];
+			}	
+		}else{
+			$data_working_days['Monday']    = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Tuesday']   = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Wednesday'] = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Thursday'] = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Friday']   = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Saturday'] = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Sunday']   = ['time_from' => '', 'time_to' => ''];
+		}
+
+		$this->page_data['data_working_days'] = $data_working_days;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->load->view('business_profile/availability', $this->page_data);
 
@@ -332,7 +350,7 @@ class Users extends MY_Controller {
 				$data_availability = [
 					'working_days' => $schedules,
 					'start_time_of_day' => $pdata['timeoff_from'],
-					'end_time_of_day' => $pdata['timeoff_to']
+					'end_time_of_day' => $pdata['timeoff_to']					
 				];
 
 				$this->business_model->update($bid,$data_availability);	
@@ -358,6 +376,22 @@ class Users extends MY_Controller {
 					$is_bbb = 1;
 				}
 
+				$license_image_name = '';
+				if(isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
+					$tmp_name = $_FILES['license_image']['tmp_name'];
+					$extension = strtolower(end(explode('.',$_FILES['license_image']['name'])));
+					$license_image_name = "license_" . basename($_FILES["license_image"]["name"]);
+					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$license_image_name");
+				}
+
+				$bond_image_name = '';
+				if(isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
+					$tmp_name = $_FILES['bond_image']['tmp_name'];
+					$extension = strtolower(end(explode('.',$_FILES['bond_image']['name'])));
+					$bond_image_name = "bond_" . basename($_FILES["bond_image"]["name"]);
+					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$bond_image_name");
+				}
+
 				$data_availability = [
 					'is_bonded' => $is_bonded,
 					'is_licensed' => $is_licensed,
@@ -371,7 +405,9 @@ class Users extends MY_Controller {
 					'license_number' => $pdata['license_number'],
 					'license_state' => $pdata['license_state'],
 					'license_expiry_date' => $pdata['license_exp_date'],
-					'bbb_link' => $pdata['bbb_url']
+					'bbb_link' => $pdata['bbb_url'],
+					'license_image' => $license_image_name,
+					'bond_image' => $bond_image_name
 				];
 
 				$this->business_model->update($bid,$data_availability);	

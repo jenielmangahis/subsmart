@@ -29,86 +29,86 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[0]" value="Monday" checked="checked" id="weekday_0">
+                                    <input type="checkbox" name="weekday[0]" value="Monday" <?= array_key_exists("Monday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_0">
                                     <label for="weekday_0"><span>Monday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="monHoursFromAvail" placeholder="Start Time" id="monHoursFromAvail" class="form-control">
+                                    <input type="text" name="monHoursFromAvail" value="<?= $data_working_days['Monday']['time_from']; ?>" placeholder="Start Time" id="monHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="monHoursToAvail" placeholder="End Time" id="monHoursToAvail" class="form-control">
+                                    <input type="text" name="monHoursToAvail" value="<?= $data_working_days['Monday']['time_to']; ?>" placeholder="End Time" id="monHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[1]" value="Tuesday" checked="checked" id="weekday_1">
+                                    <input type="checkbox" name="weekday[1]" value="Tuesday" <?= array_key_exists("Tuesday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_1">
                                     <label for="weekday_1"><span>Tuesday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="tueHoursFromAvail" placeholder="Start Time" id="tueHoursFromAvail" class="form-control">
+                                    <input type="text" name="tueHoursFromAvail" value="<?= $data_working_days['Tuesday']['time_from']; ?>" placeholder="Start Time" id="tueHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="tueHoursToAvail" placeholder="End Time" id="tueHoursToAvail" class="form-control">
+                                    <input type="text" name="tueHoursToAvail" value="<?= $data_working_days['Tuesday']['time_to']; ?>" placeholder="End Time" id="tueHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[2]" value="Wednesday" checked="checked" id="weekday_2">
+                                    <input type="checkbox" name="weekday[2]" value="Wednesday" <?= array_key_exists("Wednesday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_2">
                                     <label for="weekday_2"><span>Wednesday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="wedHoursFromAvail" placeholder="Start Time" id="wedHoursFromAvail" class="form-control">
+                                    <input type="text" name="wedHoursFromAvail" value="<?= $data_working_days['Wednesday']['time_from']; ?>" placeholder="Start Time" id="wedHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="wedHoursToAvail" placeholder="End Time" id="wedHoursToAvail" class="form-control">
+                                    <input type="text" name="wedHoursToAvail" value="<?= $data_working_days['Wednesday']['time_to']; ?>" placeholder="End Time" id="wedHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[3]" value="Thursday" checked="checked" id="weekday_3">
+                                    <input type="checkbox" name="weekday[3]" value="Thursday" <?= array_key_exists("Thursday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_3">
                                     <label for="weekday_3"><span>Thursday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="thuHoursFromAvail" placeholder="Start Time" id="thuHoursFromAvail" class="form-control">
+                                    <input type="text" name="thuHoursFromAvail" value="<?= $data_working_days['Thursday']['time_from']; ?>" placeholder="Start Time" id="thuHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="thuHoursToAvail" placeholder="End Time" id="thuHoursToAvail" class="form-control">
+                                    <input type="text" name="thuHoursToAvail" value="<?= $data_working_days['Thursday']['time_to']; ?>" placeholder="End Time" id="thuHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[4]" value="Friday" checked="checked" id="weekday_4">
+                                    <input type="checkbox" name="weekday[4]" value="Friday" <?= array_key_exists("Friday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_4">
                                     <label for="weekday_4"><span>Friday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="friHoursFromAvail" placeholder="Start Time" id="friHoursFromAvail" class="form-control">
+                                    <input type="text" name="friHoursFromAvail" value="<?= $data_working_days['Friday']['time_from']; ?>" placeholder="Start Time" id="friHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="friHoursToAvail" placeholder="End Time" id="friHoursToAvail" class="form-control">
+                                    <input type="text" name="friHoursToAvail" value="<?= $data_working_days['Friday']['time_to']; ?>" placeholder="End Time" id="friHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[5]" value="Saturday" checked="checked" id="weekday_5">
+                                    <input type="checkbox" name="weekday[5]" value="Saturday" <?= array_key_exists("Saturday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_5">
                                     <label for="weekday_5"><span>Saturday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="satHoursFromAvail" placeholder="Start Time" id="satHoursFromAvail" class="form-control">
+                                    <input type="text" name="satHoursFromAvail" value="<?= $data_working_days['Saturday']['time_from']; ?>" placeholder="Start Time" id="satHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="satHoursToAvail" placeholder="End Time" id="satHoursToAvail" class="form-control">
+                                    <input type="text" name="satHoursToAvail" value="<?= $data_working_days['Saturday']['time_to']; ?>" placeholder="End Time" id="satHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
-                                    <input type="checkbox" name="weekday[6]" value="Sunday" checked="checked" id="weekday_6">
+                                    <input type="checkbox" name="weekday[6]" value="Sunday" <?= array_key_exists("Sunday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_6">
                                     <label for="weekday_6"><span>Sunday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="sunHoursFromAvail" placeholder="Start Time" id="sunHoursFromAvail" class="form-control">
+                                    <input type="text" name="sunHoursFromAvail" value="<?= $data_working_days['Sunday']['time_from']; ?>" placeholder="Start Time" id="sunHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="sunHoursToAvail" placeholder="End Time" id="sunHoursToAvail" class="form-control">
+                                    <input type="text" name="sunHoursToAvail" value="<?= $data_working_days['Sunday']['time_to']; ?>" placeholder="End Time" id="sunHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             </div>
@@ -122,22 +122,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-lg-4 times-availability">
                                     <label>Time Off From</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" name="timeoff_from" id="timeoff_from" class="form-control">
-                                        <div class="input-group-append" data-for="timeoff_from">
-                                            <span class="input-group-text"><span class="fa fa-clock"></span></span>
+                                        <input type="text" name="timeoff_from" id="timeoff_date_from" value="<?= $profiledata->start_time_of_day; ?>" class="form-control default-datepicker">
+                                        <div class="input-group-append" data-for="timeoff_date_from">
+                                            <span class="input-group-text"><span class="fa fa-calendar"></span></span>
                                         </div>
                                     </div>
-                                    <span class="validation-error-field" data-formerrors-for-name="timeoff_from" data-formerrors-message="true" style="display: none;"></span>
+                                    <span class="validation-error-field" style="display: none;"></span>
                                 </div>
                                 <div class="col-lg-4 times-availability">
                                     <label>Time Off To</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" name="timeoff_to" id="timeoff_to" class="form-control">
-                                        <div class="input-group-append" data-for="timeoff_to">
-                                            <span class="input-group-text"><span class="fa fa-clock"></span></span>
+                                        <input type="text" name="timeoff_to" id="timeoff_date_to" value="<?= $profiledata->end_time_of_day; ?>" class="form-control default-datepicker">
+                                        <div class="input-group-append" data-for="timeoff_date_to">
+                                            <span class="input-group-text"><span class="fa fa-calendar"></span></span>
                                         </div>
                                     </div>
-                                    <span class="validation-error-field" data-formerrors-for-name="timeoff_to" data-formerrors-message="true" style="display: none;"></span>
+                                    <span class="validation-error-field" style="display: none;"></span>
                                 </div>
                             </div>
                         </div>
@@ -187,4 +187,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+    $('.default-datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    });
+});
+</script>
 

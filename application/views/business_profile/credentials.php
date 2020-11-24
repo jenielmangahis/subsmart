@@ -35,7 +35,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <input type="hidden" value="<?= $profiledata->id; ?>" name="id" />
         <div class="row">
     <div class="col-md-12">
-    <form id="form-business-credentials" method="post" action="#">
     <div class="validation-error" style="display: none;"></div>
 
     <div class="card">
@@ -102,20 +101,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <label>Upload License</label>
                 <div class="help help-sm">Optional. Upload a scanned copy of your license. Only image file types (JPG, PNG, GIF) are allowed.</div>
                 <div class="row margin-top-sec">
-                    <div class="col-sm-4 col-lg-3">
-                        <label class="credential-file" for="fileimage1"><img data-fileupload="image1" src="<?= $url->assets . "img/no_file.png"; ?>"></label>
+                    <div class="col-md-2" style="max-width: 10.666667%;">
+                        <img height="100" style="margin:0 auto;" id="license-image" src="<?php echo (licenseImage($profiledata->id)) ? licenseImage($profiledata->id) : $url->assets ?>">
                     </div>
-                    <div class="col-sm-4 col-lg-4">
-                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file1" name="fileimage1" id="fileimage1" type="file"></span>
-                        <a class="a-default margin-left" data-fileupload="delete1" href="#"><span class="fa fa-trash"></span> Delete File</a>
-
-                        <div class="" data-fileupload="progressbar1" style="display: none;">
-                            <div class="text">Uploading</div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                        <div class="alert alert-danger" data-fileupload="error1" role="alert" style="display: none;"></div>
+                    <div class="col-md-6">
+                        <input type="file" class="form-control" name="license_image" id="" placeholder="Upload Image" accept="image/*" onchange="readImageURL(this,'license-image');">
                     </div>
                 </div>
             </div>
@@ -160,28 +150,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <div class="form-group">
-                <div class="row">
-                    <div class="col-lg-24">
-                        <label>Upload Bond</label>
-                        <div class="help help-sm">Optional. Upload a scanned copy of your bond. Only image file types (JPG, PNG, GIF) are allowed.</div>
-                    <div class="row margin-top-sec">
-                    <div class="col-sm-8 col-lg-6">
-                        <label class="credential-file" for="fileimage2"><img data-fileupload="image2" src="<?= $url->assets . "img/no_file.png"; ?>"></label>
+                <label>Upload Bond</label>
+                <div class="help help-sm">Optional. Upload a scanned copy of your bond. Only image file types (JPG, PNG, GIF) are allowed.</div>
+                <div class="row margin-top-sec">
+                    <div class="col-md-2" style="max-width: 10.666667%;">
+                        <img height="100" style="margin:0 auto;" id="bond-image" src="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>">
                     </div>
-                    <div class="col-sm-16 col-lg-18">
-                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file2" name="fileimage2" id="fileimage2" type="file"></span>
-                        <a class="a-default margin-left" data-fileupload="delete2" href="#"><span class="fa fa-trash"></span> Delete File</a>
-
-                        <div class="" data-fileupload="progressbar2" style="display: none;">
-                            <div class="text">Uploading</div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                        <div class="alert alert-danger" data-fileupload="error2" role="alert" style="display: none;"></div>
+                    <div class="col-md-6">
+                        <input type="file" class="form-control" name="bond_image" id="" placeholder="Upload Image" accept="image/*" onchange="readImageURL(this,'bond-image');">
                     </div>
-                </div>
-            </div>
+                   
                 </div>
             </div>
         </div>

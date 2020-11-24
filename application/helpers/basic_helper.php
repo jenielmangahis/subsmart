@@ -155,6 +155,42 @@ if (!function_exists('businessProfileImage')) {
     }
 }
 
+if (!function_exists('licenseImage')) {
+
+    function licenseImage($id)
+    {
+
+        $CI = &get_instance();
+        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
+
+        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
+        // echo "<pre>fhdfhdfh"; print_r($res); die;
+
+        if ($id != 'default')
+            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'license_image') . '?' . time());
+
+        return $url;
+    }
+}
+
+if (!function_exists('bondImage')) {
+
+    function bondImage($id)
+    {
+
+        $CI = &get_instance();
+        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
+
+        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
+        // echo "<pre>fhdfhdfh"; print_r($res); die;
+
+        if ($id != 'default')
+            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'bond_image') . '?' . time());
+
+        return $url;
+    }
+}
+
 
 /**
  * Function to check and get 'post' request
