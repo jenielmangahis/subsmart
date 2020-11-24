@@ -79,10 +79,6 @@ class Industry_Type extends MY_Controller {
         ];
 		$industryTemplate   = $this->IndustryTemplate_model->getAll();
 
-		echo "<pre>";
-		print_r($industryTemplate);
-		echo "</pre>";
-	
 		$this->page_data['industryTemplate'] = $industryTemplate;
 		$this->page_data['businessTypes'] = $businessTypes;            
 		$this->load->view('industry_type/add_new_industry_type', $this->page_data);

@@ -38,6 +38,10 @@ class ServiceCategory_model extends MY_Model
         return $query->result();
     }
 
+    public function deleteCategoryByCompanyID($id){
+        $this->db->delete($this->table, array('company_id' => $id));
+    }  
+
 }
 
 /* End of file ServiceCategory_model.php */
