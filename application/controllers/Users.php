@@ -164,6 +164,9 @@ class Users extends MY_Controller {
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('id');
 		$profiledata = $this->business_model->getByUserId($cid);	
+		$states = statesList();
+
+		$this->page_data['states'] = $states;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata;
 		

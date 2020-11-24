@@ -4,6 +4,64 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .list-availability li{
 	margin-top: 10px;
 }
+.credential .credential-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    text-align: center;
+}
+.credential .credential-cnt {
+    padding-left: 140px;
+    position: relative;
+    margin: 0px !important;
+    width: 100%;
+}
+.credential .credential-badge img {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+}
+.credential .credential-badge .badge-label {
+    padding-top: 5px;
+    display: block;
+    color: #888;
+}
+.credential-cnt span{
+	margin: 10px 0px;
+	display: block;
+}
+.credential-badge-year-text {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+    color: #f38932;
+}
+.credential-verification {
+    margin-bottom: 6px;
+}
+.credential-verification .fa.active {
+    color: #2ab363;
+}
+.credential-verification .fa {
+    color: #888;
+    margin-right: 8px;
+}
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.credential-verification span{
+	display: inline-block !important; 
+}
 </style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
@@ -49,8 +107,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="credential-badge">
 												<img src="https://www.markate.com/assets/images/app/public/pros/badge_1.png"> <span class="badge-label">License</span>
 											</div>
-											<div class="credential-cnt">Not Licensed 
-											</div>
+											<?php if( $profiledata->is_licensed == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>State/Province : <?= $profiledata->license_state; ?>, Expires on: <?= date("Y-m-d",strtotime($profiledata->license_expiry_date)); ?></span>
+													<span>Class : <?= $profiledata->license_class; ?>, Nr:<?= $profiledata->license_number; ?></span>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Licensed</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -58,8 +122,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="credential-badge">
 												<img src="https://www.markate.com/assets/images/app/public/pros/badge_2.png"> <span class="badge-label">Bond</span>
 											</div>
-											<div class="credential-cnt">Not Bonded 
-											</div>
+											<?php if( $profiledata->is_bonded == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>Insured Amount: $<?= number_format($profiledata->bond_amount,2); ?></span>
+													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->bond_expiry_date)); ?></span>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Bonded</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -67,8 +137,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="credential-badge">
 												<img src="https://www.markate.com/assets/images/app/public/pros/badge_3.png"> <span class="badge-label">Insurance</span>
 											</div>
-											<div class="credential-cnt">Not Insured 
-											</div>
+											<?php if( $profiledata->is_business_insured == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>Insured amount: $<?= number_format($profiledata->insured_amount,2); ?></span>
+													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->insurance_expiry_date)); ?></span>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Insured</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -76,8 +152,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="credential-badge">
 												<img src="https://www.markate.com/assets/images/app/public/pros/badge_4.png"> <span class="badge-label">Accreditation</span>
 											</div>
-											<div class="credential-cnt">Not Accredited 
-											</div>
+											<?php if( $profiledata->is_bbb_accredited == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>BBB Accredited</span>
+													<span><a href="<?= $profiledata->bbb_link; ?>" target="_blank">View BBB page</a></span>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Accredited</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -86,16 +168,45 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												<img src="https://www.markate.com/assets/images/app/public/pros/badge_5.png"> <span class="badge-label">Verifications</span>
 											</div>
 											<div class="credential-cnt">
+												<div class="row credential-verification">
+													<div class="col-md-6">
+														<span class="fa fa-check active"></span> Phone
+													</div>
+													<div class="col-md-6">
+														<span class="fa fa-check active"></span> Email
+													</div>
+												</div>
+
+												<div class="row credential-verification">
+													<div class="col-md-6">
+														<span class="fa fa-circle-o"></span> Facebook
+													</div>
+													<div class="col-md-6">
+														<span class="fa fa-check active"></span> Google
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="credential">
 											<div class="credential-badge">
-												<img src="https://www.markate.com/assets/images/app/public/pros/badge_6.png"> <span class="badge-label">Since</span>
+												<div class="credential-badge-year">
+													<img src="https://www.markate.com/assets/images/app/public/pros/badge_5.png"> 
+													<div class="credential-badge-year-text"><?= $profiledata->year_est > 0 ? $profiledata->year_est : ''; ?></div>
+												</div>
+												<span class="badge-label">Since</span>
 											</div>
-											<div class="credential-cnt"> Business since:
-											</div>
+											<?php if( $profiledata->year_est > 0 ){ ?>
+												<div class="credential-cnt">
+													<span>Business since: <?= $profiledata->year_est; ?></span>
+														<?php 
+															$total_years = date("Y") - $profiledata->year_est;
+														?>
+													<span>(<?= $total_years . " years"; ?>)</span>
+												</div>
+											<?php } ?>
+											
 										</div>
 									</div>
 								</div>
