@@ -2,12 +2,37 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
+<style>
+.input-group-addon:first-child {
+    border-right: 0;
+}
+.input-group-addon:last-child {
+    border-left: 0;
+}
+.input-group-addon {
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.input-group-addon, .input-group-btn {
+    /* width: 1%; */
+    white-space: nowrap;
+    vertical-align: middle;
+}
+</style>
 <!-- page wrapper start -->
 <div role="wrapper">
    <?php include viewPath('includes/sidebars/business'); ?>
    <div wrapper__section>
       <div class="col-md-24 col-lg-24 col-xl-18">
         <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <input type="hidden" value="<?= $profiledata->id; ?>" name="id" />
         <div class="row">
     <div class="col-md-12">
     <form id="form-business-credentials" method="post" action="#">
@@ -23,23 +48,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <hr>
 
         <div class="checkbox checkbox-sec checkbox-selector">
-            <input type="checkbox" name="is_licensed" value="1" checked="checked" id="checkbox1">
-            <label for="checkbox1"><span class="checkbox-header">Licensed</span></label>
+            <input type="checkbox" name="is_licensed" id="chk-licensed">
+            <label for="chk-licensed"><span class="checkbox-header">Licensed</span></label>
         </div>
-        <div class="section-body" data-off-for="checkbox1" style="display: none;">
+        <div class="section-body licensed-group1">
             <span class="text-ter">Not licensed. Select to activate.</span>
         </div>
-        <div class="section-body" data-on-for="checkbox1" style="display: block;">
+        <div class="section-body licensed-group2" style="display: none;">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-4">
                         <label>License Number</label>
-                        <input type="text" name="license_number" value="EF, AL, MS" class="form-control">
+                        <input type="text" name="license_number" value="" class="form-control">
                         <span class="validation-error-field" data-formerrors-for-name="license_number" data-formerrors-message="true" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>License Class</label>
-                        <input type="text" name="license_class" value="Electrical" class="form-control">
+                        <input type="text" name="license_class" value="" class="form-control">
                         <span class="validation-error-field" data-formerrors-for-name="license_class" data-formerrors-message="true" style="display: none;"></span>
                     </div>
                 </div>
@@ -59,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <option value="CT">Connecticut</option>
                         <option value="DC">District of Columbia</option>
                         <option value="DE">Delaware</option>
-                        <option value="FL" selected="selected">Florida</option>
+                        <option value="FL">Florida</option>
                         <option value="GA">Georgia</option>
                         <option value="HI">Hawaii</option>
                         <option value="IA">Iowa</option>
@@ -107,7 +132,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-4">
                         <label>License Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="license_exp_date" value="2020-12-31" class="form-control hasDatepicker" id="license_exp_date">
+                            <input type="text" name="license_exp_date" value="" class="form-control default-datepicker" id="license_exp_date">
                             <div class="input-group-addon calendar-button" data-for="license_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
@@ -120,22 +145,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <label>Upload License</label>
                 <div class="help help-sm">Optional. Upload a scanned copy of your license. Only image file types (JPG, PNG, GIF) are allowed.</div>
                 <div class="row margin-top-sec">
-    <div class="col-sm-4 col-lg-3">
-        <label class="credential-file" for="fileimage1"><img data-fileupload="image1" src="https://www.markate.com/assets/images/app/business/credential/no_file.png"></label>
-    </div>
-    <div class="col-sm-4 col-lg-4">
-        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file1" name="fileimage1" id="fileimage1" type="file"></span>
-        <a class="a-default margin-left" data-fileupload="delete1" href="#"><span class="fa fa-trash"></span> Delete File</a>
+                    <div class="col-sm-4 col-lg-3">
+                        <label class="credential-file" for="fileimage1"><img data-fileupload="image1" src="<?= $url->assets . "img/no_file.png"; ?>"></label>
+                    </div>
+                    <div class="col-sm-4 col-lg-4">
+                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file1" name="fileimage1" id="fileimage1" type="file"></span>
+                        <a class="a-default margin-left" data-fileupload="delete1" href="#"><span class="fa fa-trash"></span> Delete File</a>
 
-        <div class="" data-fileupload="progressbar1" style="display: none;">
-            <div class="text">Uploading</div>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-            </div>
-        </div>
-        <div class="alert alert-danger" data-fileupload="error1" role="alert" style="display: none;"></div>
-    </div>
-</div>
+                        <div class="" data-fileupload="progressbar1" style="display: none;">
+                            <div class="text">Uploading</div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" data-fileupload="error1" role="alert" style="display: none;"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -143,27 +168,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <hr>
 
         <div class="checkbox checkbox-sec checkbox-selector">
-        <input type="checkbox" name="is_bonded" value="1" checked="checked" id="checkbox2">
-        <label for="checkbox1"><span class="checkbox-header">Bonded</span></label>
+        <input type="checkbox" name="is_bonded" id="chk-bonded">
+        <label for="chk-bonded"><span class="checkbox-header">Bonded</span></label>
         </div>
-        <div class="section-body" data-off-for="checkbox2" style="display: none;">
+        <div class="section-body bonded-group1">
             <span class="text-ter">Not bonded. Select to activate.</span>
         </div>
-        <div class="section-body" data-on-for="checkbox2" style="display: block;">
+        <div class="section-body bonded-group2" style="display: none;">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-4">
                         <label>Bond Amount</label>
                         <div class="input-group">
                             <div class="input-group-addon">$</div>
-                                <input type="text" name="bonded_amount" value="2000000" class="form-control">
+                                <input type="text" name="bonded_amount" value="0" class="form-control">
                             </div>
                         <span class="validation-error-field" data-formerrors-for-name="bonded_amount" data-formerrors-message="true" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>Bond Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="bonded_exp_date" value="2020-10-31" class="form-control hasDatepicker" id="bonded_exp_date">
+                            <input type="text" name="bonded_exp_date" value="" class="form-control default-datepicker" id="bonded_exp_date">
                             <div class="input-group-addon calendar-button" data-for="bonded_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
@@ -178,23 +203,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <label>Upload Bond</label>
                         <div class="help help-sm">Optional. Upload a scanned copy of your bond. Only image file types (JPG, PNG, GIF) are allowed.</div>
                     <div class="row margin-top-sec">
-    <div class="col-sm-8 col-lg-6">
-        <label class="credential-file" for="fileimage2"><img data-fileupload="image2" src="https://www.markate.com/assets/images/app/business/credential/no_file.png"></label>
-    </div>
-    <div class="col-sm-16 col-lg-18">
-        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file2" name="fileimage2" id="fileimage2" type="file"></span>
-        <a class="a-default margin-left" data-fileupload="delete2" href="#"><span class="fa fa-trash"></span> Delete File</a>
+                    <div class="col-sm-8 col-lg-6">
+                        <label class="credential-file" for="fileimage2"><img data-fileupload="image2" src="<?= $url->assets . "img/no_file.png"; ?>"></label>
+                    </div>
+                    <div class="col-sm-16 col-lg-18">
+                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file2" name="fileimage2" id="fileimage2" type="file"></span>
+                        <a class="a-default margin-left" data-fileupload="delete2" href="#"><span class="fa fa-trash"></span> Delete File</a>
 
-        <div class="" data-fileupload="progressbar2" style="display: none;">
-            <div class="text">Uploading</div>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-            </div>
-        </div>
-        <div class="alert alert-danger" data-fileupload="error2" role="alert" style="display: none;"></div>
-    </div>
-</div>
+                        <div class="" data-fileupload="progressbar2" style="display: none;">
+                            <div class="text">Uploading</div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" data-fileupload="error2" role="alert" style="display: none;"></div>
+                    </div>
                 </div>
+            </div>
                 </div>
             </div>
         </div>
@@ -202,27 +227,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <hr>
 
         <div class="checkbox checkbox-sec checkbox-selector">
-        <input type="checkbox" name="is_insured" value="1" checked="checked" id="checkbox3">
-        <label for="checkbox2"><span class="checkbox-header">Insured</span></label>
+            <input type="checkbox" name="is_insured" id="chk-insured">
+            <label for="chk-insured"><span class="checkbox-header">Insured</span></label>
         </div>
-        <div class="section-body" data-off-for="checkbox3" style="display: none;">
+        <div class="section-body insured-group1">
             <span class="text-ter">Not insured. Select to activate.</span>
         </div>
-        <div class="section-body" data-on-for="checkbox3" style="display: block;">
+        <div class="section-body insured-group2" style="display: none;">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-4">
                         <label>Insured Amount</label>
                         <div class="input-group">
                             <div class="input-group-addon">$</div>
-                                <input type="text" name="insured_amount" value="4000000" class="form-control">
+                                <input type="text" name="insured_amount" value="0" class="form-control">
                             </div>
                         <span class="validation-error-field" data-formerrors-for-name="insured_amount" data-formerrors-message="true" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>Insurance Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="insured_exp_date" value="2020-10-31" class="form-control hasDatepicker" id="insured_exp_date">
+                            <input type="text" name="insured_exp_date" value="" class="form-control default-datepicker" id="insured_exp_date">
                             <div class="input-group-addon calendar-button" data-for="insured_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
@@ -238,7 +263,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="help help-sm">Optional. Upload a scanned copy of your insurance. Only image file types (JPG, PNG, GIF) are allowed.</div>
                     <div class="row margin-top-sec">
     <div class="col-sm-8 col-lg-6">
-        <label class="credential-file" for="fileimage3"><img data-fileupload="image3" src="https://www.markate.com/assets/images/app/business/credential/no_file.png"></label>
+        <label class="credential-file" for="fileimage3"><img data-fileupload="image3" src="<?= $url->assets . "img/no_file.png"; ?>"></label>
     </div>
     <div class="col-sm-16 col-lg-18">
         <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file3" name="fileimage3" id="fileimage3" type="file"></span>
@@ -261,13 +286,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <hr>
 
         <div class="checkbox checkbox-sec checkbox-selector">
-        <input type="checkbox" name="is_bbb" value="1" id="checkbox4">
-        <label for="checkbox3"><span class="checkbox-header">BBB Accredited</span></label>
+            <input type="checkbox" name="is_bbb" id="chk-acredited">
+            <label for="chk-acredited"><span class="checkbox-header">BBB Accredited</span></label>
         </div>
-        <div class="section-body" data-off-for="checkbox4" style="display: block;">
+        <div class="section-body acredited-group1">
             <span class="text-ter">Not BBB accredited. Select to activate.</span>
         </div>
-        <div class="section-body" data-on-for="checkbox4" style="display: none;">
+        <div class="section-body acredited-group2" style="display: none;">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-16">
@@ -284,7 +309,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
+    		    		<button class="btn btn-default btn-lg" name="btn-continue" type="submit" value="credentials">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
     		    	</div>
     	<div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="services">« Back</a>
@@ -405,4 +430,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+    $('.default-datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    });
+
+    $("#chk-licensed").change(function(){
+        if($(this).is(':checked')) {
+            $(".licensed-group1").hide();
+            $(".licensed-group2").show();
+        }else{
+            $(".licensed-group1").show();
+            $(".licensed-group2").hide();
+        }
+    });
+
+    $("#chk-bonded").change(function(){
+        if($(this).is(':checked')) {
+            $(".bonded-group1").hide();
+            $(".bonded-group2").show();
+        }else{
+            $(".bonded-group1").show();
+            $(".bonded-group2").hide();
+        }
+    });
+
+    $("#chk-insured").change(function(){
+        if($(this).is(':checked')) {
+            $(".insured-group1").hide();
+            $(".insured-group2").show();
+        }else{
+            $(".insured-group1").show();
+            $(".insured-group2").hide();
+        }
+    });
+
+    $("#chk-acredited").change(function(){
+        if($(this).is(':checked')) {
+            $(".acredited-group1").hide();
+            $(".acredited-group2").show();
+        }else{
+            $(".acredited-group1").show();
+            $(".acredited-group2").hide();
+        }
+    });
+});
+</script>
 
