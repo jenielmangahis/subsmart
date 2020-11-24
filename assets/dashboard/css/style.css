@@ -10484,3 +10484,94 @@ select#select-employee {
     float: right;
 }
 /* ***** End Show Existing **** *
+
+/* **** Audit Page **** */
+.audit-wrp{
+    padding: 50px 0 0;
+}
+.audit-wrp .audit-heading{
+    border-bottom: 1px solid rgba(128,128,128,0.4);
+}
+.audit-wrp .audit-heading h5{
+    font-size: 15px;
+    color: #000;
+    font-weight: 600;
+    padding: 0 15px 15px 0;
+}
+.audit-wrp .audit-heading h5>a{
+    color: #54A4D8;
+}
+.audit-wrp .audit-heading h5>a:hover{
+    color: #000;
+}
+.audit-wrp .audit-heading a>i{
+    font-size: 20px;
+    color: #808080;
+    float: right;
+    padding-right: 10px;
+}
+.audit-wrp .audit-heading a>i:hover{
+    color: #000;
+}
+
+.card{
+    border:none;
+}
+.card-header{
+    border:none;
+}
+.card-header h5{
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+}
+.card-header h5>i{
+    font-size: 20px;padding: 0 10px 0 0;
+}
+.card-header h5>span{
+    color: #808080;
+    padding-left: 10px;
+}
+.card-body .table-dt .table{
+    width: 80%;
+}
+.card-body .table-dt .table td, .card-body .table-dt .table th{
+    border: none;
+    padding: 2px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+.table-block .table{
+    width: 100%;
+}
+.table-block thead{
+    background: #e7e7e7;
+}
+.table-block .table thead th{
+    border: 1px solid rgba(128,128,128,0.5);
+    border-top: none;
+    color: #000;
+}
+.table-block{
+    padding: 30px 0 0;
+}
+.table-block .table td{
+    border-top: none;
+    border: 1px solid rgba(128,128,128,0.5);
+    font-size: 14px;
+    font-weight: 600;
+    color: #808080
+}
+.table-block .table td:first-child {
+    border-left: none;
+}
+.table-block .table td:last-child {
+    border-right: none;
+}
+.table-block .table thead th:first-child {
+    border-left: none;
+}
+.table-block .table thead th:last-child {
+    border-right: none;
+}
+/* **** End Audit Page **** */ 
