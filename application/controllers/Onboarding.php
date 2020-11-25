@@ -13,6 +13,8 @@ class Onboarding extends MY_Controller {
 		$this->load->model('IndustryType_model');
         $this->load->model('Users_model');
         $this->load->model('ServiceCategory_model');
+        $this->load->model('NsmartUpgrades_model');
+		$this->load->model('SubscriberNsmartUpgrade_model');
 
 		$this->page_data['page_title'] = 'Onboarding';
 
@@ -28,7 +30,7 @@ class Onboarding extends MY_Controller {
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-		
+
 		$this->load->view('onboarding/business_info', $this->page_data);
 	}
 
@@ -59,6 +61,22 @@ class Onboarding extends MY_Controller {
 		$cid = logged('id');
 		
 		$this->load->view('onboarding/industry_type', $this->page_data);	
+	}
+
+	public function company_size() {
+		$this->load->view('onboarding/company_size', $this->page_data);	
+	}
+
+	public function add_ons() {
+		
+		$user = (object)$this->session->userdata('logged');
+		$cid  = logged('company_id');
+
+		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
+		
+		$this->load->view('onboarding/add_ons', $this->page_data);
 	}
 }
 
