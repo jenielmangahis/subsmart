@@ -282,7 +282,7 @@ $route['accounting/reconcile/delete/delete_sc'] = 'reconcile/delete_sc';
 $route['accounting/reconcile/journal-report/(:any)/(:any)'] = 'reconcile/journal_report/$1/$2';
 $route['accounting/reconcile/view/reportajax/(:any)'] = 'reconcile/journal_report_ajax/$1';
 
-$route['accounting/reconcile/audit-history/(:any)'] = 'reconcile/audit_history/$1';
+$route['accounting/reconcile/audit-history/(:any)/(:any)'] = 'reconcile/audit_history/$1/$2';
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

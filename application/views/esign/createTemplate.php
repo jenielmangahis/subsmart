@@ -85,9 +85,12 @@ ini_set('max_input_vars', 30000);
                                 <textarea id="summernote" name="template"></textarea>
                             </div>
                             <div class="form-group">
-                                <input type="submit" class="btn btn-primary" value="Submit">
-                                <input type="button" class="btn btn-info" onclick="printHtml()" value="Print">
-                                <input type="button" class="btn btn-warning" value="Upload">
+                                <button type="submit" class="btn btn-primary" ><span class="fa fa-paper-plane-o"></span> Save</button>
+                                 <button type="button" class="btn btn-primary" onclick="printHtml()"> <span class="fa fa-print"></span> Print </button>
+                                <label for="file-upload" class="btn btn-primary esign_upload">
+                                    <span class="fa fa-upload"></span> Upload Document
+                                </label>
+                                <input id="file-upload" type="file" accept="application/msword,application/pdf">
                             </div>
                         <?=form_close(); ?>
                         <?php if(isset($_GET['isSuccess']) && $_GET['isSuccess'] == 1){ ?>
@@ -145,6 +148,15 @@ ini_set('max_input_vars', 30000);
 <!-- Signature MODAL -->
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<style>
+    #file-upload {
+        display: none;
+    }
+    .esign_upload{
+        cursor: pointer;
+    }
+</style>
+
 <script>
         let defaultText = `<p>{client_first_name}&nbsp;{client_last_name}<br />{client_address}<br />{client_previous_address}<br />{bdate}<br />{ss_number}&nbsp;<br /><br />{bureau_address}</p>
 <p>Attn.: Consumer Relations&nbsp;</p>

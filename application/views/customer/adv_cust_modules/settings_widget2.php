@@ -38,6 +38,22 @@
                     </span>
                 </div>
             </div>
+            <center><a id="more_detail_furnisher" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"  data-toggle="collapse" style="color:#1E5DA9;">
+                Create a letter for a client (with no dispute items)
+            </a></center>
+            <div class="collapse" id="collapseExample">
+                <p>This tool is only for creating letters that do not have dispute items. If you require dispute items to be merged into your letter, please click on Dispute Wizard 3</p>
+                <div class="col-md-12 form-line">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Choose a letter: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="furn_address" id="furn_address" />
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="tips">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
