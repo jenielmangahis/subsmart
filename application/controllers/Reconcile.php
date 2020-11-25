@@ -677,10 +677,13 @@ class Reconcile extends MY_Controller {
         echo $html;
     }
 
-    public function audit_history($chart_of_accounts_id)
+    public function audit_history($chart_of_accounts_id,$type)
     {
+        $id=$chart_of_accounts_id;
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rows']  =  $this->reconcile_model->selectonwherehistory($id);
+        $this->page_data['type']  =  $type;
         $this->load->view('accounting/reconcile/audit_history',$this->page_data);
     }
 }

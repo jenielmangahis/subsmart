@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    <?php include viewPath('includes/sidebars/business'); ?>
    <div wrapper__section>
       <div class="col-md-24 col-lg-24 col-xl-18">
-        <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <?php echo form_open_multipart('users/saveservices', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
             <div class="col-md-12">
                 <form id="form-business-credentials" method="post" action="#">
@@ -31,24 +31,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <div class="validation-error" style="display: none;"></div>
 
-        
-        <?php foreach($businessTypes as $businessType){  ?>
+             
+        <?php  $service = 1;
+           foreach($businessTypes as $businessType){  ?>
         <div class="service-type">
-            <div class="checkbox checkbox-sec" data-action="toggle" data-id="servicetype3" data-checked="">
+            <div class="checkbox checkbox-sec" data-action="toggle" data-id="servicetype<?php echo $service; ?>" data-checked="">
                 <span class="icon">+</span>
                 <label><span class="section-header"><?php echo $businessType; ?></span></label>
-                <div class="section-body" data-off-for="servicetype3" style="">
+                <div class="section-body servicetype<?php echo $service; ?>" data-off-for="servicetype<?php echo $service; ?>" style="">
                     <span class="text-ter">Click to open and select services.</span>
                 </div>
             </div>
-            <div class="section-body" data-on-for="servicetype3" style="">
+            <div class="section-body servicetype<?php echo $service; ?>" data-on-for="servicetype<?php echo $service; ?>" style="">
                 <div class="row">
                     
                 <?php foreach($industryType as $industryValue){ ?>
-                    <?php if($industryValue->business_type_name == $industryValue){ ?>
+                    <?php if($industryValue->business_type_name == $businessType){ 
+                          $select = false;
+                          if($selectedCategories){
+                            foreach ($selectedCategories as $key => $selectedCategory) {
+                              if($industryValue->id == $selectedCategory->industry_type_id){
+                                $select = true;
+                              }
+                            }
+                          }
+                    ?>
                     <div class="col-xs-24 col-sm-12 col-md-6">
                         <div class="checkbox checkbox-sec">
-                            <input type="checkbox" name="categories[]" value="<?php echo $industryValue->id; ?>" class="cat-cat" id="category-195">
+                            <input type="checkbox"  <?php if($select){ ?> checked="checked" <?php } ?> name="categories[<?php echo $industryValue->id; ?>]" value="<?php echo $industryValue->name; ?>" class="cat-cat" id="category-<?php echo $industryValue->id; ?>">
                             <label for="category-<?php echo $industryValue->id; ?>"><span><?php echo $industryValue->name; ?></span></label>
                         </div>
                     </div>
@@ -61,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         
 
-      <?php } //endforeach ?>
+      <?php $service++;  } //endforeach ?>
 
     </div>
 
@@ -69,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+    		    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
     		    	</div>
     	<div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="businessdetail">« Back</a>
@@ -137,4 +147,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-
+<script type="text/javascript">  
+$(function(){
+   $(".checkbox-sec").click(function(){
+        var servicetype = $(this).attr("data-id");
+        $("."+servicetype).toggle();       
+    });
+});
+</script>

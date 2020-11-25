@@ -339,5 +339,32 @@ class Reconcile_model extends MY_Model {
 		$query="update accounting_reconcile set expense_account = '',service_charge = '0',descp_sc = '', memo_sc='',first_date='',mailing_address='',checkno='',CHRG=''  where active=1 and id = '$id'";
 		echo $this->db->query($query);
 	}
+
+	public function selectonwherehistory($id)  
+	{  
+	  	$this->db->from('accounting_reconcile_history');  
+    	$this->db->where('chart_of_accounts_id',$id); 
+    	$this->db->where('active','1'); 
+    	$result =  $this->db->get()->result();
+        return $result;
+	}
+
+	public function select_service_history($id,$chart_of_accounts_id)
+	{
+		$this->db->from('accounting_reconcile_has_servicecharge_history');  
+		$this->db->where('reconcile_id',$id);
+		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id);
+		$result =  $this->db->get()->result();
+	    return $result;	
+	}
+
+	public function select_interest_history($id,$chart_of_accounts_id)
+	{
+		$this->db->from('accounting_reconcile_has_interestearned_history');  
+		$this->db->where('reconcile_id',$id);
+		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id);
+		$result =  $this->db->get()->result();
+	    return $result;	
+	}
 }
 ?>

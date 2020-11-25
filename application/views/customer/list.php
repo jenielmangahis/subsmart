@@ -180,7 +180,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 <?php foreach ($profiles as $customer) : ?>
                                                                                     <tr>
                                                                                         <td>
-                                                                                            <a href="<?php echo url('/customer/index/tab3/'.$customer->prof_id).'/mt5'; ?>" style="color:#32243d;">
+                                                                                            <a href="<?= base_url('/customer/index/tab2/'.$customer->prof_id).''; ?>" style="color:#32243d;">
                                                                                                 <?= ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
                                                                                             </a>
                                                                                         </td>

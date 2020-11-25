@@ -1,6 +1,76 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+<style>
+.list-availability li{
+	margin-top: 10px;
+}
+.credential .credential-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    text-align: center;
+}
+.credential .credential-cnt {
+    padding-left: 140px;
+    position: relative;
+    margin: 0px !important;
+    width: 100%;
+}
+.credential .credential-badge img {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+}
+.credential .credential-badge .badge-label {
+    padding-top: 5px;
+    display: block;
+    color: #888;
+}
+.credential-cnt span{
+	margin: 10px 0px;
+	display: block;
+}
+.credential-badge-year-text {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+    color: #f38932;
+}
+.credential-verification {
+    margin-bottom: 6px;
+}
+.credential-verification .fa.active {
+    color: #2ab363;
+}
+.credential-verification .fa {
+    color: #888;
+    margin-right: 8px;
+}
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.credential-verification span{
+	display: inline-block !important; 
+}
+.credential .credential-cnt .credential-img {
+    width: 37px;
+    border: 1px solid #eaeaea;
+    margin-top: 5px;
+    margin-right: 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+</style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
      
@@ -31,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<a class="a-alert a-edit" href="services"><span class="fa fa-edit"></span> edit</a>
 									<div class="margin-bottom-sec">
 										<div class="profile-service-title">Residential Services Offered</div>
-										<span class="profile-service-category-item"><img class="profile-service-icon" width="36" src="https://www.markate.com/assets/images/icons/camera_check.png"> <span class="profile-service-item"><?php //echo $profiledata->service_loc ?></span></span>
+										<span class="profile-service-category-item"><img class="profile-service-icon" width="36" src="<?= $url->assets . "img/camera_check.png"; ?>"> <span class="profile-service-item"><?php //echo $profiledata->service_loc ?></span></span>
 									</div>
 								</div>
 							</div>
@@ -43,55 +113,116 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<div class="col-md-6">
 										<div class="credential">
 											<div class="credential-badge">
-												<img src="https://www.markate.com/assets/images/app/public/pros/badge_1.png"> <span class="badge-label">License</span>
+												<img src="<?= $url->assets . "img/badge_1.png" ?>"> <span class="badge-label">License</span>
 											</div>
-											<div class="credential-cnt">Not Licensed 
-											</div>
+											<?php if( $profiledata->is_licensed == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>State/Province : <?= $profiledata->license_state; ?>, Expires on: <?= date("Y-m-d",strtotime($profiledata->license_expiry_date)); ?></span>
+													<span>Class : <?= $profiledata->license_class; ?>, Nr:<?= $profiledata->license_number; ?></span>
+													<?php if( $profiledata->license_image != '' ){ ?>
+														<img class="credential-img" src="<?php echo (licenseImage($profiledata->id)) ? licenseImage($profiledata->id) : $url->assets ?>">
+														<a style="color:#888;" href="<?php echo (licenseImage($profiledata->id)) ? licenseImage($profiledata->id) : $url->assets ?>" target="_blank">View License</a>
+													<?php } ?>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Licensed</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="credential">
 											<div class="credential-badge">
-												<img src="https://www.markate.com/assets/images/app/public/pros/badge_2.png"> <span class="badge-label">Bond</span>
+												<img src="<?= $url->assets . "img/badge_2.png" ?>"> <span class="badge-label">Bond</span>
 											</div>
-											<div class="credential-cnt">Not Bonded 
-											</div>
+											<?php if( $profiledata->is_bonded == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>Insured Amount: $<?= number_format($profiledata->bond_amount,2); ?></span>
+													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->bond_expiry_date)); ?></span>
+													<?php if( $profiledata->bond_image != '' ){ ?>
+														<img class="credential-img" src="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>">
+														<a style="color:#888;" href="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>" target="_blank">View Bonded</a>
+													<?php } ?>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Bonded</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="credential">
 											<div class="credential-badge">
-												<img src="https://www.markate.com/assets/images/app/public/pros/badge_3.png"> <span class="badge-label">Insurance</span>
+												<img src="<?= $url->assets . "img/badge_3.png" ?>"> <span class="badge-label">Insurance</span>
 											</div>
-											<div class="credential-cnt">Not Insured 
-											</div>
+											<?php if( $profiledata->is_business_insured == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>Insured amount: $<?= number_format($profiledata->insured_amount,2); ?></span>
+													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->insurance_expiry_date)); ?></span>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Insured</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="credential">
 											<div class="credential-badge">
-												<img src="https://www.markate.com/assets/images/app/public/pros/badge_4.png"> <span class="badge-label">Accreditation</span>
+												<img src="<?= $url->assets . "img/badge_4.png" ?>"> <span class="badge-label">Accreditation</span>
 											</div>
-											<div class="credential-cnt">Not Accredited 
-											</div>
+											<?php if( $profiledata->is_bbb_accredited == 1 ){ ?>
+												<div class="credential-cnt">
+													<span>BBB Accredited</span>
+													<span><a href="<?= $profiledata->bbb_link; ?>" target="_blank">View BBB page</a></span>
+												</div>
+											<?php }else{ ?>
+												<div class="credential-cnt">Not Accredited</div>
+											<?php } ?>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="credential">
 											<div class="credential-badge">
-												<img src="https://www.markate.com/assets/images/app/public/pros/badge_5.png"> <span class="badge-label">Verifications</span>
+												<img src="<?= $url->assets . "img/badge_6.png" ?>"> <span class="badge-label">Verifications</span>
 											</div>
 											<div class="credential-cnt">
+												<div class="row credential-verification">
+													<div class="col-md-6">
+														<span class="fa fa-check active"></span> Phone
+													</div>
+													<div class="col-md-6">
+														<span class="fa fa-check active"></span> Email
+													</div>
+												</div>
+
+												<div class="row credential-verification">
+													<div class="col-md-6">
+														<span class="fa fa-circle-o"></span> Facebook
+													</div>
+													<div class="col-md-6">
+														<span class="fa fa-check active"></span> Google
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="credential">
 											<div class="credential-badge">
-												<img src="https://www.markate.com/assets/images/app/public/pros/badge_6.png"> <span class="badge-label">Since</span>
+												<div class="credential-badge-year">
+													<img src="<?= $url->assets . "img/badge_5.png" ?>"> 
+													<div class="credential-badge-year-text"><?= $profiledata->year_est > 0 ? $profiledata->year_est : ''; ?></div>
+												</div>
+												<span class="badge-label">Since</span>
 											</div>
-											<div class="credential-cnt"> Business since:
-											</div>
+											<?php if( $profiledata->year_est > 0 ){ ?>
+												<div class="credential-cnt">
+													<span>Business since: <?= $profiledata->year_est; ?></span>
+														<?php 
+															$total_years = date("Y") - $profiledata->year_est;
+														?>
+													<span>(<?= $total_years . " years"; ?>)</span>
+												</div>
+											<?php } ?>
+											
 										</div>
 									</div>
 								</div>
@@ -164,8 +295,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="margin-bottom" style="position: relative">
 							<a class="a-alert a-edit" href="<?php echo url('users/availability'); ?>"><span class="fa fa-edit"></span> edit</a>
 							<div class="side-title">Availability</div>
-							Working Days<br>
-							<div class="margin-bottom-sec text-ter">Mon - Fri</div>
+							<?php $schedules = unserialize($profiledata->working_days); ?>
+							<?php if( !empty($schedules) ){ ?>
+								<ul class="list-availability">
+								<?php 
+									$days = array();
+									foreach( $schedules as $s ){
+										$days[] = date("D",strtotime($s['day']));
+									}
+								?>	<li>
+										<span>Working Days</span>
+										<div class="text-ter"><?= implode(" - ", $days); ?></div>
+									</li>
+									<li>
+										<span>Time Off</span>
+										<div class="text-ter"><?= date("F j, Y", strtotime($profiledata->start_time_of_day)) . ' to ' . date("F j, Y", strtotime($profiledata->end_time_of_day)); ?></div>
+									</li>
+								</ul>
+							<?php }else{ ?>
+								<div class="margin-bottom-sec text-ter">Not Specified</div>
+							<?php } ?>
+							
 						</div>
 					</div>
 				</div>

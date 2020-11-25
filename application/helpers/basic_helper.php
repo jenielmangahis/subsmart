@@ -155,6 +155,42 @@ if (!function_exists('businessProfileImage')) {
     }
 }
 
+if (!function_exists('licenseImage')) {
+
+    function licenseImage($id)
+    {
+
+        $CI = &get_instance();
+        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
+
+        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
+        // echo "<pre>fhdfhdfh"; print_r($res); die;
+
+        if ($id != 'default')
+            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'license_image') . '?' . time());
+
+        return $url;
+    }
+}
+
+if (!function_exists('bondImage')) {
+
+    function bondImage($id)
+    {
+
+        $CI = &get_instance();
+        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
+
+        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
+        // echo "<pre>fhdfhdfh"; print_r($res); die;
+
+        if ($id != 'default')
+            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'bond_image') . '?' . time());
+
+        return $url;
+    }
+}
+
 
 /**
  * Function to check and get 'post' request
@@ -523,6 +559,27 @@ if (!function_exists('ip_address')) {
 
         return $ip_address;
     }
+}
+
+function getValidIpAddress(){
+    $ip  = '';
+    $url = 'https://api.ipify.org?format=json';
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+    if( $data->ip != '' ){
+        $ip = $data->ip;
+    }
+
+    /*$json_data = file_get_contents($url);
+    $data = json_decode($json_data);  
+    if( $data ){
+        $ip = $data->ip;
+    }*/
+    return $ip;
 }
 
 
@@ -2947,4 +3004,62 @@ function google_credentials(){
     ];
 
     return $credentials;
+}
+
+function statesList(){
+    $states = [
+        'AK' => 'Alaska',
+        'AL' => 'Alabama',
+        'AR' => 'Arkansas',
+        'AZ' => 'Arizona',
+        'CA' => 'California',
+        'CO' => 'Colorado',
+        'CT' => 'Connecticut',
+        'DC' => 'District of Columbia',
+        'DE' => 'Delaware',
+        'FL' => 'Florida',
+        'GA' => 'Georgia',
+        'HI' => 'Hawaii',
+        'IA' => 'Iowa',
+        'ID' => 'Idaho',
+        'IL' => 'Illinois',
+        'IN' => 'Indiana',
+        'KS' => 'Kansas',
+        'KY' => 'Kentucky',
+        'LA' => 'Louisiana',
+        'MA' => 'Massachusetts',
+        'MD' => 'Maryland',
+        'ME' => 'Maine',
+        'MI' => 'Michigan',
+        'MN' => 'Minnesota',
+        'MO' => 'Missouri',
+        'MS' => 'Mississippi',
+        'MT' => 'Montana',
+        'NC' => 'North Carolina',
+        'ND' => 'North Dakota',
+        'NE' => 'Nebraska',
+        'NH' => 'New Hampshire',
+        'NJ' => 'New Jersey',
+        'NM' => 'New Mexico',
+        'NV' => 'Nevada',
+        'NY' => 'New York',
+        'OH' => 'Ohio',
+        'OK' => 'Oklahoma',
+        'OR' => 'Oregon',
+        'PA' => 'Pennsylvania',
+        'RI' => 'Rhode Island',
+        'SC' => 'South Carolina',
+        'SD' => 'South Dakota',
+        'TN' => 'Tennessee',
+        'TX' => 'Texas',
+        'UT' => 'Utah',
+        'VA' => 'Virginia',
+        'VT' => 'Vermont',
+        'WA' => 'Washington',
+        'WI' => 'Wisconsin',
+        'WV' => 'West Virginia',
+        'WY' => 'Wyoming'
+    ];
+
+    return $states;
 }

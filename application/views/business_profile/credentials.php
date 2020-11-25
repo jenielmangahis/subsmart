@@ -35,7 +35,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <input type="hidden" value="<?= $profiledata->id; ?>" name="id" />
         <div class="row">
     <div class="col-md-12">
-    <form id="form-business-credentials" method="post" action="#">
     <div class="validation-error" style="display: none;"></div>
 
     <div class="card">
@@ -46,26 +45,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             Pick from the sections below if your business is Licensed/Bonded/Insured/BBB.<br> Adding your professional Credentials will help you attract more customers.
         </p>
         <hr>
-
+        <?php 
+            $licensed_checked = "";
+            if( $profiledata->is_licensed == 1 ){
+                $licensed_checked = "checked='checked'";
+            }
+        ?>
         <div class="checkbox checkbox-sec checkbox-selector">
-            <input type="checkbox" name="is_licensed" id="chk-licensed">
+            <input type="checkbox" name="is_licensed" <?= $licensed_checked; ?> id="chk-licensed">
             <label for="chk-licensed"><span class="checkbox-header">Licensed</span></label>
         </div>
-        <div class="section-body licensed-group1">
+        <div class="section-body licensed-group1" <?= $profiledata->is_licensed == 1 ? 'style="display:none;"' : ''; ?>>
             <span class="text-ter">Not licensed. Select to activate.</span>
         </div>
-        <div class="section-body licensed-group2" style="display: none;">
+        <div class="section-body licensed-group2" <?= $profiledata->is_licensed == 1 ? '' : 'style="display:none;"'; ?>>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-4">
                         <label>License Number</label>
-                        <input type="text" name="license_number" value="" class="form-control">
-                        <span class="validation-error-field" data-formerrors-for-name="license_number" data-formerrors-message="true" style="display: none;"></span>
+                        <input type="text" name="license_number" value="<?= $profiledata->license_number; ?>" class="form-control">
+                        <span class="validation-error-field" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>License Class</label>
-                        <input type="text" name="license_class" value="" class="form-control">
-                        <span class="validation-error-field" data-formerrors-for-name="license_class" data-formerrors-message="true" style="display: none;"></span>
+                        <input type="text" name="license_class" value="<?= $profiledata->license_class; ?>" class="form-control">
+                        <span class="validation-error-field" style="display: none;"></span>
                     </div>
                 </div>
             </div>
@@ -75,69 +79,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <label>License State</label>
                         <select name="license_state" class="form-control">
                         <option value="">- Select State -</option>
-                        <option value="AK">Alaska</option>
-                        <option value="AL">Alabama</option>
-                        <option value="AR">Arkansas</option>
-                        <option value="AZ">Arizona</option>
-                        <option value="CA">California</option>
-                        <option value="CO">Colorado</option>
-                        <option value="CT">Connecticut</option>
-                        <option value="DC">District of Columbia</option>
-                        <option value="DE">Delaware</option>
-                        <option value="FL">Florida</option>
-                        <option value="GA">Georgia</option>
-                        <option value="HI">Hawaii</option>
-                        <option value="IA">Iowa</option>
-                        <option value="ID">Idaho</option>
-                        <option value="IL">Illinois</option>
-                        <option value="IN">Indiana</option>
-                        <option value="KS">Kansas</option>
-                        <option value="KY">Kentucky</option>
-                        <option value="LA">Louisiana</option>
-                        <option value="MA">Massachusetts</option>
-                        <option value="MD">Maryland</option>
-                        <option value="ME">Maine</option>
-                        <option value="MI">Michigan</option>
-                        <option value="MN">Minnesota</option>
-                        <option value="MO">Missouri</option>
-                        <option value="MS">Mississippi</option>
-                        <option value="MT">Montana</option>
-                        <option value="NC">North Carolina</option>
-                        <option value="ND">North Dakota</option>
-                        <option value="NE">Nebraska</option>
-                        <option value="NH">New Hampshire</option>
-                        <option value="NJ">New Jersey</option>
-                        <option value="NM">New Mexico</option>
-                        <option value="NV">Nevada</option>
-                        <option value="NY">New York</option>
-                        <option value="OH">Ohio</option>
-                        <option value="OK">Oklahoma</option>
-                        <option value="OR">Oregon</option>
-                        <option value="PA">Pennsylvania</option>
-                        <option value="RI">Rhode Island</option>
-                        <option value="SC">South Carolina</option>
-                        <option value="SD">South Dakota</option>
-                        <option value="TN">Tennessee</option>
-                        <option value="TX">Texas</option>
-                        <option value="UT">Utah</option>
-                        <option value="VA">Virginia</option>
-                        <option value="VT">Vermont</option>
-                        <option value="WA">Washington</option>
-                        <option value="WI">Wisconsin</option>
-                        <option value="WV">West Virginia</option>
-                        <option value="WY">Wyoming</option>
+                        <?php foreach( $states as $key => $value ){ ?>
+                            <option <?= $profiledata->license_state == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                        <?php } ?>
                         </select>
-                        <span class="validation-error-field" data-formerrors-for-name="license_state" data-formerrors-message="true" style="display: none;"></span>
+                        <span class="validation-error-field" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>License Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="license_exp_date" value="" class="form-control default-datepicker" id="license_exp_date">
+                            <input type="text" name="license_exp_date" value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date("Y-m-d",strtotime($profiledata->license_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="license_exp_date">
                             <div class="input-group-addon calendar-button" data-for="license_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
                         </div>
-                        <span class="validation-error-field" data-formerrors-for-name="license_exp_date" data-formerrors-message="true" style="display: none;"></span>
+                        <span class="validation-error-field" style="display: none;"></span>
                     </div>
                 </div>
             </div>
@@ -145,20 +101,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <label>Upload License</label>
                 <div class="help help-sm">Optional. Upload a scanned copy of your license. Only image file types (JPG, PNG, GIF) are allowed.</div>
                 <div class="row margin-top-sec">
-                    <div class="col-sm-4 col-lg-3">
-                        <label class="credential-file" for="fileimage1"><img data-fileupload="image1" src="<?= $url->assets . "img/no_file.png"; ?>"></label>
+                    <div class="col-md-2" style="max-width: 10.666667%;">
+                        <img height="100" style="margin:0 auto;" id="license-image" src="<?php echo (licenseImage($profiledata->id)) ? licenseImage($profiledata->id) : $url->assets ?>">
                     </div>
-                    <div class="col-sm-4 col-lg-4">
-                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file1" name="fileimage1" id="fileimage1" type="file"></span>
-                        <a class="a-default margin-left" data-fileupload="delete1" href="#"><span class="fa fa-trash"></span> Delete File</a>
-
-                        <div class="" data-fileupload="progressbar1" style="display: none;">
-                            <div class="text">Uploading</div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                        <div class="alert alert-danger" data-fileupload="error1" role="alert" style="display: none;"></div>
+                    <div class="col-md-6">
+                        <input type="file" class="form-control" name="license_image" id="" placeholder="Upload Image" accept="image/*" onchange="readImageURL(this,'license-image');">
                     </div>
                 </div>
             </div>
@@ -166,88 +113,86 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
         <hr>
-
+        <?php 
+            $bonded_checked = "";
+            if( $profiledata->is_bonded == 1 ){
+                $bonded_checked = "checked='checked'";
+            }
+        ?>
         <div class="checkbox checkbox-sec checkbox-selector">
-        <input type="checkbox" name="is_bonded" id="chk-bonded">
+        <input type="checkbox" name="is_bonded" <?= $bonded_checked; ?> id="chk-bonded">
         <label for="chk-bonded"><span class="checkbox-header">Bonded</span></label>
         </div>
-        <div class="section-body bonded-group1">
+        <div class="section-body bonded-group1" <?= $profiledata->is_bonded == 1 ? 'style="display:none;"' : ''; ?>>
             <span class="text-ter">Not bonded. Select to activate.</span>
         </div>
-        <div class="section-body bonded-group2" style="display: none;">
+        <div class="section-body bonded-group2" <?= $profiledata->is_bonded == 1 ? '' : 'style="display:none;"'; ?>>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-4">
                         <label>Bond Amount</label>
                         <div class="input-group">
                             <div class="input-group-addon">$</div>
-                                <input type="text" name="bonded_amount" value="0" class="form-control">
+                                <input type="text" name="bonded_amount" value="<?= $profiledata->bond_amount; ?>" class="form-control">
                             </div>
-                        <span class="validation-error-field" data-formerrors-for-name="bonded_amount" data-formerrors-message="true" style="display: none;"></span>
+                        <span class="validation-error-field" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>Bond Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="bonded_exp_date" value="" class="form-control default-datepicker" id="bonded_exp_date">
+                            <input type="text" name="bonded_exp_date" value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date("Y-m-d",strtotime($profiledata->bond_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="bonded_exp_date">
                             <div class="input-group-addon calendar-button" data-for="bonded_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
                         </div>
-                        <span class="validation-error-field" data-formerrors-for-name="bonded_exp_date" data-formerrors-message="true" style="display: none;"></span>
+                        <span class="validation-error-field" style="display: none;"></span>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="row">
-                    <div class="col-lg-24">
-                        <label>Upload Bond</label>
-                        <div class="help help-sm">Optional. Upload a scanned copy of your bond. Only image file types (JPG, PNG, GIF) are allowed.</div>
-                    <div class="row margin-top-sec">
-                    <div class="col-sm-8 col-lg-6">
-                        <label class="credential-file" for="fileimage2"><img data-fileupload="image2" src="<?= $url->assets . "img/no_file.png"; ?>"></label>
+                <label>Upload Bond</label>
+                <div class="help help-sm">Optional. Upload a scanned copy of your bond. Only image file types (JPG, PNG, GIF) are allowed.</div>
+                <div class="row margin-top-sec">
+                    <div class="col-md-2" style="max-width: 10.666667%;">
+                        <img height="100" style="margin:0 auto;" id="bond-image" src="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>">
                     </div>
-                    <div class="col-sm-16 col-lg-18">
-                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload File <input data-fileupload="file2" name="fileimage2" id="fileimage2" type="file"></span>
-                        <a class="a-default margin-left" data-fileupload="delete2" href="#"><span class="fa fa-trash"></span> Delete File</a>
-
-                        <div class="" data-fileupload="progressbar2" style="display: none;">
-                            <div class="text">Uploading</div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                        <div class="alert alert-danger" data-fileupload="error2" role="alert" style="display: none;"></div>
+                    <div class="col-md-6">
+                        <input type="file" class="form-control" name="bond_image" id="" placeholder="Upload Image" accept="image/*" onchange="readImageURL(this,'bond-image');">
                     </div>
-                </div>
-            </div>
+                   
                 </div>
             </div>
         </div>
 
         <hr>
-
+        <?php 
+            $insured_checked = "";
+            if( $profiledata->is_business_insured == 1 ){
+                $insured_checked = "checked='checked'";
+            }
+        ?>
         <div class="checkbox checkbox-sec checkbox-selector">
-            <input type="checkbox" name="is_insured" id="chk-insured">
+            <input type="checkbox" name="is_insured" <?= $insured_checked; ?> id="chk-insured">
             <label for="chk-insured"><span class="checkbox-header">Insured</span></label>
         </div>
-        <div class="section-body insured-group1">
+        <div class="section-body insured-group1" <?= $profiledata->is_business_insured == 1 ? 'style="display:none;"' : ''; ?>>
             <span class="text-ter">Not insured. Select to activate.</span>
         </div>
-        <div class="section-body insured-group2" style="display: none;">
+        <div class="section-body insured-group2" <?= $profiledata->is_business_insured == 1 ? '' : 'style="display:none;"'; ?>>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-4">
                         <label>Insured Amount</label>
                         <div class="input-group">
                             <div class="input-group-addon">$</div>
-                                <input type="text" name="insured_amount" value="0" class="form-control">
+                                <input type="text" name="insured_amount" value="<?= $profiledata->insured_amount; ?>" class="form-control">
                             </div>
-                        <span class="validation-error-field" data-formerrors-for-name="insured_amount" data-formerrors-message="true" style="display: none;"></span>
+                        <span class="validation-error-field" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>Insurance Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="insured_exp_date" value="" class="form-control default-datepicker" id="insured_exp_date">
+                            <input type="text" name="insured_exp_date" value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date("Y-m-d",strtotime($profiledata->insurance_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="insured_exp_date">
                             <div class="input-group-addon calendar-button" data-for="insured_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
@@ -284,21 +229,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
 
         <hr>
-
+        <?php 
+            $bbb_acredited_checked = "";
+            if( $profiledata->is_bbb_acredited == 1 ){
+                $bbb_acredited_checked = "checked='checked'";
+            }
+        ?>
         <div class="checkbox checkbox-sec checkbox-selector">
-            <input type="checkbox" name="is_bbb" id="chk-acredited">
+            <input type="checkbox" name="is_bbb" <?= $bbb_acredited_checked; ?> id="chk-acredited">
             <label for="chk-acredited"><span class="checkbox-header">BBB Accredited</span></label>
         </div>
-        <div class="section-body acredited-group1">
+        <div class="section-body acredited-group1" <?= $profiledata->is_bbb_acredited == 1 ? 'style="display:none;"' : ''; ?>>
             <span class="text-ter">Not BBB accredited. Select to activate.</span>
         </div>
-        <div class="section-body acredited-group2" style="display: none;">
+        <div class="section-body acredited-group2" <?= $profiledata->is_bbb_acredited == 1 ? '' : 'style="display:none;"'; ?>>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-16">
                         <label>Please provide your business BBB Link</label>
-                    <input type="text" name="bbb_url" value="" class="form-control">
-                    <span class="validation-error-field" data-formerrors-for-name="bbb_url" data-formerrors-message="true" style="display: none;"></span>
+                    <input type="text" name="bbb_url" value="<?= $profiledata->bbb_link; ?>" class="form-control">
+                    <span class="validation-error-field" style="display: none;"></span>
                     </div>
                 </div>
             </div>
