@@ -2949,7 +2949,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                          <div class="row">
                             <div class="col-md-9">
                                 <div class="row">
-                                    <div class="col-md-4"><h3>$<?=$rows[0]->ending_balance?>.00</h3></div>
+                                    <div class="col-md-4"><h3 id="ending_balance">$<?=$rows[0]->ending_balance?>.00</h3></div>
                                     <div class="col-md-1"><h4>-</h4></div>
                                     <div class="col-md-4"><h3>$<?=($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned?>.00</h3></div>
                                 </div>
@@ -3827,6 +3827,9 @@ $('.savebt1').on('click', function() {
         }
     })
   }
+  var chart_of_accounts_id = $("#chart_of_accounts_id").text();
+  var action = 'updated';
+  callhistory(chart_of_accounts_id,action);
 });
 $('.savebt2').on('click', function() {
   var id = $('#id').val();
@@ -3850,6 +3853,9 @@ $('.savebt2').on('click', function() {
         }
     })
   }
+  var chart_of_accounts_id = $("#chart_of_accounts_id").text();
+  var action = 'updated';
+  callhistory(chart_of_accounts_id,action);
 });
 function savebtsc(i) {
   var id = $('#id').val();
@@ -3879,6 +3885,10 @@ function savebtsc(i) {
                 );
             }
         })}
+  var chart_of_accounts_id = $("#chart_of_accounts_id").text();
+  callschistory(reconcile_id,chart_of_accounts_id);
+  var action = 'updated';
+  callhistory(chart_of_accounts_id,action);
 }
 </script>
 <script type="text/javascript">
@@ -5341,7 +5351,9 @@ function closeAddaccount()
         })
       }
 
-
+      callschistory(reconcile_id,chart_of_accounts_id);
+      var action = 'updated';
+      callhistory(chart_of_accounts_id,action);
             /*datatab['edit_expense_account_'+i]=$('.edit_expense_account_'+i).text();
             datatab['edit_service_charge_'+i]=$('.edit_service_charge_'+i).text();
             datatab['edit_descp_'+i]=$('.edit_descp_'+i).text();*/
@@ -5397,7 +5409,10 @@ function closeAddaccount()
                     }
                 })
         }
-
+        var chart_of_accounts_id = $('#chart_of_accounts_id').text();
+      callschistory(id,chart_of_accounts_id);
+      var action = 'deleted';
+      callhistory(chart_of_accounts_id,action);
     }
 </script>
 <script type="text/javascript">
@@ -5473,7 +5488,9 @@ function closeAddaccount()
             }
         })
       }
-
+      callithistory(reconcile_id,chart_of_accounts_id);
+      var action = 'updated';
+      callhistory(chart_of_accounts_id,action);
 
     }
     function remove_func_int(id)
@@ -5520,7 +5537,10 @@ function closeAddaccount()
                     }
                 })
         }
-
+        var chart_of_accounts_id = $("#chart_of_accounts_id").text();
+        callithistory(reconcile_id,chart_of_accounts_id);
+        var action = 'deleted';
+      callhistory(chart_of_accounts_id,action);
     }
 </script>
 <script type="text/javascript">
@@ -6231,6 +6251,10 @@ function closeAddaccount()
                     }
                 });
         }
+         
+         callithistory(reconcile_id,chart_of_accounts_id);
+         var action = 'deleted';
+         callhistory(chart_of_accounts_id,action);
     }
     function Delete(id,chart_of_accounts_id)
     {
@@ -6252,6 +6276,95 @@ function closeAddaccount()
                     }
                 });
         }
+
+         callschistory(reconcile_id,chart_of_accounts_id);
+         var action = 'updated';
+         callhistory(chart_of_accounts_id,action);
     }
 </script>
 <!-- recurr int end-->
+
+<!-- history -->
+<script type="text/javascript">
+    function callschistory(id,chart_of_accounts_id)
+    {
+        var reconcile_id =id;
+        var chart_of_accounts_id = chart_of_accounts_id;
+        var tablelength = $('#participantTable tr').length -2;
+        for(var i = 2 ; i <= tablelength ; i++)
+        {
+
+                var expense_account_sub = $('.edit_expense_account_'+i).text();
+                var service_charge_sub = $('.edit_service_charge_'+i).text();
+                var descp_sc_sub = $('.edit_descp_'+i).text();
+
+              if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
+              {
+                if(service_charge_sub!='')
+                {
+                    
+                        $.ajax({
+                            url:"<?php echo url('accounting/reconcile/add/servicecharge/history') ?>",
+                            method: "POST",
+                            data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                            success:function(data)
+                            {
+                            }
+                        })
+                }
+              }
+            }
+    }
+    function callithistory(id,chart_of_accounts_id)
+    {
+        var reconcile_id =id;
+        var chart_of_accounts_id = chart_of_accounts_id;
+        var tablelength = $('#participantTable tr').length -2;
+        for(var i = 2 ; i <= tablelength ; i++)
+        {
+
+                var income_account_sub = $('.edit_income_account_'+i).text();
+                var interest_earned_sub = $('.edit_interest_earned_'+i).text();
+                var descp_it_sub = $('.edit_descp_it_'+i).text();
+
+              if(income_account_sub!='' || descp_it_sub!='' || interest_earned_sub!='')
+              {
+                if(interest_earned_sub!='')
+                {
+                    
+                        $.ajax({
+                            url:"<?php echo url('accounting/reconcile/add/interestearned/history') ?>",
+                            method: "POST",
+                            data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,income_account_sub:income_account_sub,interest_earned_sub:interest_earned_sub,descp_it_sub:descp_it_sub},
+                            success:function(data)
+                            {
+                            }
+                        })
+                }
+              }
+            }
+    }
+    function callhistory(chart_of_accounts_id,action)
+    {
+          var action = action;
+          var ending_balance = $('#ending_balance').text().substr(1);
+          var ending_date = $('#ending_date').val();
+          var first_date = $('#first_date').val();
+          var service_charge = $('#service_charge').val();
+          var expense_account = $('#expense_account').val();
+          var second_date = $('#second_date').val();
+          var interest_earned = $('#interest_earned').val();
+          var income_account = $('#income_account').val();
+          if(chart_of_accounts_id!='')
+          {
+            $.ajax({
+                url:"<?php echo url('accounting/reconcile/save/history') ?>",
+                method: "POST",
+                data: {chart_of_accounts_id:chart_of_accounts_id,ending_balance:ending_balance,ending_date:ending_date,first_date:first_date,service_charge:service_charge,expense_account:expense_account,second_date:second_date,interest_earned:interest_earned,income_account:income_account,action:action},
+                success:function(data)
+                {
+                }
+            })
+          }
+    }
+</script>

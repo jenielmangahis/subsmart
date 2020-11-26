@@ -686,4 +686,40 @@ class Reconcile extends MY_Controller {
         $this->page_data['type']  =  $type;
         $this->load->view('accounting/reconcile/audit_history',$this->page_data);
     }
+
+    public function addReconcile_history()
+    {
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $ending_balance=$this->input->post('ending_balance');
+        $ending_date=$this->input->post('ending_date');
+        $first_date=$this->input->post('first_date');
+        $service_charge=$this->input->post('service_charge');
+        $expense_account=$this->input->post('expense_account');
+        $second_date=$this->input->post('second_date');
+        $interest_earned=$this->input->post('interest_earned');
+        $income_account=$this->input->post('income_account');
+        $action=$this->input->post('action');
+
+        $this->reconcile_model->saverecords_history($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account,$action);
+    }
+
+    public function insert_servicecharge_history()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $expense_account_sub=$this->input->post('expense_account_sub');
+        $service_charge_sub=$this->input->post('service_charge_sub');
+        $descp_sc_sub=$this->input->post('descp_sc_sub');
+        $this->reconcile_model->save_service_history($reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub);
+    }
+
+    public function insert_interestearned_history()
+    {
+        $reconcile_id=$this->input->post('reconcile_id');
+        $chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $income_account_sub=$this->input->post('income_account_sub');
+        $interest_earned_sub=$this->input->post('interest_earned_sub');
+        $descp_it_sub=$this->input->post('descp_it_sub');
+        $this->reconcile_model->save_interest_history($reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub);
+    }
 }

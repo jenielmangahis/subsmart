@@ -455,7 +455,7 @@
                                                     aria-labelledby="surveyItems" data-parent="#accordion">
                                                     <div class="row" style="overflow-x: auto; heightL 250px;">
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="32">
+                                                            <div class="form-elements-draggable" data-element-id="6">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-font"></i> Short
@@ -465,7 +465,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="33">
+                                                            <div class="form-elements-draggable" data-element-id="5">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-font"></i> Long
@@ -475,7 +475,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="34">
+                                                            <div class="form-elements-draggable" data-element-id="1">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-dot-circle-o"></i> Single
@@ -485,7 +485,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="35">
+                                                            <div class="form-elements-draggable" data-element-id="3">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-check-square-o"></i>
@@ -495,7 +495,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="36">
+                                                            <div class="form-elements-draggable" data-element-id="4">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-envelope"></i> Email
@@ -505,7 +505,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="37">
+                                                            <div class="form-elements-draggable" data-element-id="8">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-square-o"></i> Number
@@ -515,7 +515,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="38">
+                                                            <div class="form-elements-draggable" data-element-id="15">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-image"></i> Image
@@ -525,7 +525,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6 col-sm-6 m-0">
-                                                            <div class="form-elements-draggable" data-element-id="39">
+                                                            <div class="form-elements-draggable" data-element-id="8">
                                                                 <div class="card p-1">
                                                                     <div class="card-content element-buttons">
                                                                         <span><i class="fa fa-phone"></i> Phone Number
@@ -2101,10 +2101,10 @@ $('#windowPreviewContent').sortable({
             type: 'POST',
             success: (res) => {
                 document.querySelector("#windowPreviewContent").innerHTML = "";
+                loadFormElements(<?= $form->forms_id?>, "edit");
                 return;
             }
         })
-        loadFormElements(<?= $form->forms_id?>, "edit");
         // let newIndex = ui.item.index();
         // let replacedEl = formElements[newIndex];
         // if(newIndex > startIndex) {

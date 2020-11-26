@@ -1,0 +1,48 @@
+<?php
+  defined('BASEPATH') OR exit('No direct script access allowed');
+  include viewPath('includes/header'); 
+?>
+
+<div class="wrapper">
+  <div __wrapper_section class="fb-wrapper">
+
+    <div class="fb-header py-2">
+      <h2 class="text-gray d-inline-block">My Forms</h2>
+      <a href="/fb/add" class="d-inline-block btn btn-outline-primary">&#43; Create New Form</a>
+    </div>
+
+    <div id="fb-table" class="container-fluid">
+      <div id="table-controls" class="row">
+        <div class="form-group col-12 col-md-3">
+          <div class="row">
+            <select name="folder" id="folder" class="form-control form-control-sm col-10">
+              <option value="0">All forms</option>
+            </select>
+            <button class="btn btn-sm btn-default col-2"><i class="fa fa-folder"></i></button>
+          </div>
+        </div>
+        <div class="form-group col-12 col-md-6 offset-md-3">
+            <div class="row">
+              <input type="text" class="form-control form-control-sm col-11" placeholder="Search">
+              <button class="btn btn-sm btn-default col-1"><i class="fa fa-columns"></i></button>
+            </div>
+          </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-hover table-bordered" id="formsIndexTable">
+          <thead class="bg-secondary color-white">
+            <td class="w-25">Form Name</td>
+            <td class="w-25">Results</td>
+            <td class="w-25">Daily Results</td>
+            <td class="w-25">Modified</td>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<?php include viewPath('includes/footer'); ?>
