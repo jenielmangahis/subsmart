@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <div class="validation-error" style="display: none;"></div>
 
-             
+
         <?php  $service = 1;
            foreach($businessTypes as $businessType){  ?>
         <div class="service-type">
@@ -44,9 +44,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="section-body servicetype<?php echo $service; ?>" data-on-for="servicetype<?php echo $service; ?>" style="">
                 <div class="row">
-                    
+
                 <?php foreach($industryType as $industryValue){ ?>
-                    <?php if($industryValue->business_type_name == $businessType){ 
+                    <?php if($industryValue->business_type_name == $businessType){
                           $select = false;
                           if($selectedCategories){
                             foreach ($selectedCategories as $key => $selectedCategory) {
@@ -69,7 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-        
+
 
       <?php $service++;  } //endforeach ?>
 
@@ -147,11 +147,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script type="text/javascript">  
+<script type="text/javascript">
 $(function(){
    $(".checkbox-sec").click(function(){
         var servicetype = $(this).attr("data-id");
-        $("."+servicetype).toggle();       
+        $("."+servicetype).toggle();
     });
 });
 </script>
