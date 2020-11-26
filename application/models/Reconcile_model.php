@@ -366,5 +366,23 @@ class Reconcile_model extends MY_Model {
 		$result =  $this->db->get()->result();
 	    return $result;	
 	}
+
+	public function saverecords_history($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account,$action)
+	{
+		$query="insert into accounting_reconcile_history values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','','','','','','','',1','','$action')";
+		echo $this->db->query($query);
+	}
+
+	public function save_interest_history($reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub)
+	{
+		$query="insert into accounting_reconcile_has_interestearned_history values('','$reconcile_id','$chart_of_accounts_id','$income_account_sub','$interest_earned_sub','$descp_it_sub')";
+		echo $this->db->query($query);
+	}
+
+	 public function save_service_history($reconcile_id,$chart_of_accounts_id,$expense_account_sub,$service_charge_sub,$descp_sc_sub)
+	{
+		$query="insert into accounting_reconcile_has_servicecharge_history values('','$reconcile_id','$chart_of_accounts_id','$expense_account_sub','$service_charge_sub','$descp_sc_sub')";
+		echo $this->db->query($query);
+	}
 }
 ?>

@@ -97,6 +97,22 @@ $route['terms-and-conditions'] = 'TermsAndConditionsController';
 $route['terms-and-conditions/(:num)'] = 'TermsAndConditionsController/view/$1';
 $route['terms-and-conditions/edit/(:num)'] = 'TermsAndConditionsController/edit/$1';
 $route['terms-and-conditions/add'] = 'TermsAndConditionsController/add';
+
+//gene fb
+$route['fb'] = 'fb';
+$route['fb/add'] = 'fb/add';
+$route['fb/edit/:active_tab'] = 'fb/edit';
+$route['fb/view/(:num)'] = 'fb/view/$1';
+$route['fb/get-all-by-active-user'] = 'fb/getAllByactiveUser';
+$route['fb/get-form-by-id/(:num)'] = 'fb/getByFormID/$1';
+$route['fb/create']['post'] = 'fb/create';
+
+//fb elements
+$route['fb/elements/create']['post'] = 'fb/createFormElement';
+$route['fb/elements/update-order']['post'] = 'fb/updateOrder';
+$route['fb/elements/update/(:num)']['post'] = 'fb/updateElement/$1';
+$route['fb/elements/destroy/(:num)']['post'] = 'fb/destroyElement/$1';
+
 // api
 $route['terms-and-conditions/get-all'] = 'TermsAndConditionsController/getAll';
 $route['terms-and-conditions/get-one-by-id/(:num)'] = 'TermsAndConditionsController/getOneByID/$1';
@@ -283,6 +299,11 @@ $route['accounting/reconcile/journal-report/(:any)/(:any)'] = 'reconcile/journal
 $route['accounting/reconcile/view/reportajax/(:any)'] = 'reconcile/journal_report_ajax/$1';
 
 $route['accounting/reconcile/audit-history/(:any)/(:any)'] = 'reconcile/audit_history/$1/$2';
+
+$route['accounting/reconcile/save/history'] = 'reconcile/addReconcile_history';
+$route['accounting/reconcile/add/servicecharge/history'] = 'reconcile/insert_servicecharge_history';
+$route['accounting/reconcile/add/interestearned/history'] = 'reconcile/insert_interestearned_history';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

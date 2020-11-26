@@ -1,0 +1,11 @@
+.indicator {
+  position: absolute;
+  top: 0;
+  right: 96px;
+  display: none;
+}
+
+.indicator p {
+  margin: 0 !important;
+  padding: 1px 3px;
+}
