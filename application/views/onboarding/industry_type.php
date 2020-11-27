@@ -128,7 +128,7 @@ span.text-ter {
 
 <div class="row">
     <div class="col-md-24 col-lg-24 col-xl-18"><form id="form-business-services" method="post" action="#">
-    <?php include viewPath('flash'); ?>
+      <?php include viewPath('flash'); ?>
     <div class="card">
         <div class="margin-bottom">
             Selected services:
@@ -146,10 +146,10 @@ span.text-ter {
         <?php  $service = 1;
            foreach($businessTypes as $businessType){  ?>
         <div class="service-type">
-            <div class="checkbox checkbox-sec" data-action="toggle" data-id="servicetype<?php echo $service; ?>" data-checked="">
+            <div class="checkbox checkbox-head" data-action="toggle" data-id="servicetype<?php echo $service; ?>" data-id2="servicetypeoff<?php echo $service; ?>"  data-checked="">
                 <span class="icon">+</span>
                 <label><span class="section-header"><?php echo $businessType; ?></span></label>
-                <div class="section-body servicetype<?php echo $service; ?>" data-off-for="servicetype<?php echo $service; ?>" style="">
+                <div class="section-body servicetypeoff<?php echo $service; ?>" data-off-for="servicetype<?php echo $service; ?>" style="">
                     <span class="text-ter">Click to open and select services.</span>
                 </div>
             </div>
@@ -190,11 +190,12 @@ span.text-ter {
 <div class="card mb-0">
     <div class="row">
     	<div class="col-md-8">
-    	     <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button>  
+    	    <!-- <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button>  -->
     	</div>
     	<div class="col-md-4 text-right-v">
-    		    		<a class="btn btn-default btn-lg" href="businessdetail">« Back</a>
-    		    		    		<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
+    		    		<a class="btn btn-default btn-lg" href="about">« Back</a>
+    		    		    	<!--	<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>  -->
+                        <button class="btn btn-primary btn-lg margin-left" name="btn-save" type="submit">Next »</button>            
     		    	</div>
     </div>
 </div>
@@ -260,9 +261,17 @@ span.text-ter {
 <?php include viewPath('includes/footer'); ?>
 <script type="text/javascript">
 $(function(){
-   $(".checkbox-sec").click(function(){
+   var service = 0;
+   $(".checkbox").click(function(){
         var servicetype = $(this).attr("data-id");
+        var servicetype2 = $(this).attr("data-id2");
         $("."+servicetype).toggle();
+        if(service==1){
+          $("."+servicetype2).toggle();
+        }
     });
+   $(".checkbox").click();
+   service = 1;  
+ 
 });
 </script>

@@ -98,7 +98,7 @@ class Onboarding extends MY_Controller {
 	        	$this->session->set_flashdata('alert_class', 'alert-danger');
 	        }
 
-	        redirect('onboarding/industry_type');
+	        redirect('onboarding/add_ons');
 
         }else{
         	$this->session->set_flashdata('message', 'Cannot find data');
