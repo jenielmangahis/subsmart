@@ -117,7 +117,7 @@ span.text-ter {
 <div>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
-        <?php echo form_open_multipart('users/saveservices', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <?php echo form_open_multipart('onboarding/saveservices', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
             <div class="col-md-12">
                 <form id="form-business-credentials" method="post" action="#">
@@ -128,7 +128,7 @@ span.text-ter {
 
 <div class="row">
     <div class="col-md-24 col-lg-24 col-xl-18"><form id="form-business-services" method="post" action="#">
-
+    <?php include viewPath('flash'); ?>
     <div class="card">
         <div class="margin-bottom">
             Selected services:
@@ -190,7 +190,7 @@ span.text-ter {
 <div class="card mb-0">
     <div class="row">
     	<div class="col-md-8">
-    	   <!--  <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span> -->
+    	     <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button>  
     	</div>
     	<div class="col-md-4 text-right-v">
     		    		<a class="btn btn-default btn-lg" href="businessdetail">« Back</a>

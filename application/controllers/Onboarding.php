@@ -63,6 +63,51 @@ class Onboarding extends MY_Controller {
 		$this->load->view('onboarding/industry_type', $this->page_data);	
 	}
 
+	public function saveservices() {
+		postAllowed();
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $industryTemplate = $this->IndustryType_model->getById($post['type_id']);
+        $user_id = $user['id'];	
+	    $userdata = $this->Users_model->getUser($user_id);
+        $categories = $post['categories'];
+	     
+        if( $userdata ){
+        	if( $post['categories'] != '' ){
+        	    $company_id = $userdata->company_id;
+        		$ServiceCategory = $this->ServiceCategory_model->deleteCategoryByCompanyID($company_id);
+
+		        $categories = $post['categories'];
+		        foreach ($categories as $key => $category) {
+		           	$data = [
+	        			'company_id' => $company_id,
+	        			'industry_type_id' => $key,
+	        			'service_name' => $category,
+	        			'date_created' => date("Y-m-d H:i:s"),
+	        			'date_modified' => date("Y-m-d H:i:s")
+	        		];
+	        		$ServiceCategory = $this->ServiceCategory_model->create($data);
+
+		        }
+
+        		$this->session->set_flashdata('message', 'Service was successfully updated');
+        		$this->session->set_flashdata('alert_class', 'alert-success');
+	        }else{
+	        	$this->session->set_flashdata('message', 'Please select a services');
+	        	$this->session->set_flashdata('alert_class', 'alert-danger');
+	        }
+
+	        redirect('onboarding/industry_type');
+
+        }else{
+        	$this->session->set_flashdata('message', 'Cannot find data');
+	        $this->session->set_flashdata('alert_class', 'alert-danger');
+
+	        redirect('onboarding/industry_type');
+        }
+	}
+
 	public function company_size() {
 		$this->load->view('onboarding/company_size', $this->page_data);	
 	}
