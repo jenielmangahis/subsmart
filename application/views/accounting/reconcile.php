@@ -5346,14 +5346,14 @@ function closeAddaccount()
             success:function(data)
             {
                 closeFullNav();
+                callschistory(reconcile_id,chart_of_accounts_id);
+                var action = 'updated';
+                callhistory(chart_of_accounts_id,action);
                 location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
             }
         })
       }
-
-      callschistory(reconcile_id,chart_of_accounts_id);
-      var action = 'updated';
-      callhistory(chart_of_accounts_id,action);
+      
             /*datatab['edit_expense_account_'+i]=$('.edit_expense_account_'+i).text();
             datatab['edit_service_charge_'+i]=$('.edit_service_charge_'+i).text();
             datatab['edit_descp_'+i]=$('.edit_descp_'+i).text();*/
@@ -5485,12 +5485,12 @@ function closeAddaccount()
             {
                 closeFullNav_int();
                 location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
+                callithistory(reconcile_id,chart_of_accounts_id);
+                var action = 'updated';
+                callhistory(chart_of_accounts_id,action);
             }
         })
       }
-      callithistory(reconcile_id,chart_of_accounts_id);
-      var action = 'updated';
-      callhistory(chart_of_accounts_id,action);
 
     }
     function remove_func_int(id)
@@ -6247,14 +6247,15 @@ function closeAddaccount()
                                             'success'
                                         );
                         closeFullNav_int();
+                        callithistory(reconcile_id,chart_of_accounts_id);
+                        var action = 'deleted';
+                        callhistory(chart_of_accounts_id,action);
                         location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
                     }
                 });
         }
          
-         callithistory(reconcile_id,chart_of_accounts_id);
-         var action = 'deleted';
-         callhistory(chart_of_accounts_id,action);
+         
     }
     function Delete(id,chart_of_accounts_id)
     {
@@ -6272,14 +6273,13 @@ function closeAddaccount()
                                             'success'
                                         );
                         closeFullNav();
+                        callschistory(reconcile_id,chart_of_accounts_id);
+                        var action = 'updated';
+                        callhistory(chart_of_accounts_id,action);
                         location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
                     }
                 });
         }
-
-         callschistory(reconcile_id,chart_of_accounts_id);
-         var action = 'updated';
-         callhistory(chart_of_accounts_id,action);
     }
 </script>
 <!-- recurr int end-->
