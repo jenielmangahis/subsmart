@@ -86,6 +86,21 @@ margin-top: 6px;
                                   <div class="col-md-1 form-group">
                                        <div class="dropdown">
                                          <a href="#" onclick = "print_this('print_section')"><i class="fa fa-print"></i></a>
+                                         <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-cog"></i>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            Change coloumns<br/>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_date()" name="chk_date" id="chk_date"> Date</p>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type">Type</p>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_num()" name="chk_num" id="chk_num"> Number</p>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_name()" name="chk_name" id="chk_name"> Name</p>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_memo()" name="chk_memo" id="chk_memo"> Memo</p>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_account()" name="chk_account" id="chk_account"> Account</p>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_debit()" name="chk_debit" id="chk_debit"> Debit</p>
+                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_credit()" name="chk_credit" id="chk_credit"> Credit</p>
+                                            <br/>
+                                        </div>
                                       </div>
                                    </div>
                                </div>
@@ -131,35 +146,35 @@ margin-top: 6px;
                                   <div class="col-md-12">
                                     <table id="report_table" class="table accordion" style="width:100%;cursor: pointer;">
                                       <thead>
-                                        <th>DATE</th>
-                                        <th>TRANSACTION TYPE</th>
-                                        <th>NUM</th>
-                                        <th>NAME</th>
-                                        <th>MEMO/DESCRIPTION</th>
-                                        <th>ACCOUNT</th>
-                                        <th>DEBIT</th>
-                                        <th>CREDIT</th>
+                                        <th class="date">DATE</th>
+                                        <th class="type">TRANSACTION TYPE</th>
+                                        <th class="num">NUM</th>
+                                        <th class="name">NAME</th>
+                                        <th class="memo">MEMO/DESCRIPTION</th>
+                                        <th class="account">ACCOUNT</th>
+                                        <th class="debit">DEBIT</th>
+                                        <th class="credit">CREDIT</th>
                                       </thead>
                                       <tbody>
                                         <tr>
-                                          <td><?=$date?></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td><?=$memo?></td>
-                                          <td><?=$main_account?></td>
-                                          <td></td>
-                                          <td class="total"></td>
+                                          <td class="date"><?=$date?></td>
+                                          <td class="type"></td>
+                                          <td class="num"></td>
+                                          <td class="name"></td>
+                                          <td class="memo"><?=$memo?></td>
+                                          <td class="account"><?=$main_account?></td>
+                                          <td class="debit"></td>
+                                          <td class="total credit"></td>
                                         </tr>
                                         <tr>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td><?=$descp?></td>
-                                          <td><?=$account?></td>
-                                          <td><?=$amount?></td>
-                                          <td></td>
+                                          <td class="date"></td>
+                                          <td class="type"></td>
+                                          <td class="num"></td>
+                                          <td class="name"></td>
+                                          <td class="memo"><?=$descp?></td>
+                                          <td class="account"><?=$account?></td>
+                                          <td class="debit"><?=$amount?></td>
+                                          <td class="credit"></td>
                                         </tr>
                                         <?php
                                         $subtotal = 0;
@@ -179,14 +194,14 @@ margin-top: 6px;
                                           $subtotal +=$sub_amount;
                                         ?>
                                         <tr>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td><?=$sub_descp?></td>
-                                          <td><?=$sub_account?></td>
-                                          <td><?=$sub_amount?></td>
-                                          <td></td>
+                                          <td class="date"></td>
+                                          <td class="type"></td>
+                                          <td class="num"></td>
+                                          <td class="name"></td>
+                                          <td class="memo"><?=$sub_descp?></td>
+                                          <td class="account"><?=$sub_account?></td>
+                                          <td class="debit"><?=$sub_amount?></td>
+                                          <td class="credit"></td>
                                         </tr>
                                         <?php
                                         }
@@ -256,5 +271,119 @@ function getReport(id)
     WinPrint.document.write(prtContent.innerHTML);
     WinPrint.document.close();
     WinPrint.print();
+}
+
+
+function col_date()
+{
+    if($('#chk_date').attr('checked'))
+    {
+        $('#chk_date').removeAttr('checked');
+        $('.date').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_date').attr('checked',"checked");
+        $('.date').css('display','');
+    }
+}
+function col_type()
+{
+    if($('#chk_type').attr('checked'))
+    {
+        $('#chk_type').removeAttr('checked');
+        $('.type').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_type').attr('checked',"checked");
+        $('.type').css('display','');
+    }
+}
+function col_num()
+{
+    if($('#chk_num').attr('checked'))
+    {
+        $('#chk_num').removeAttr('checked');
+        $('.num').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_num').attr('checked',"checked");
+        $('.num').css('display','');
+    }
+}
+function col_name()
+{
+    if($('#chk_name').attr('checked'))
+    {
+        $('#chk_name').removeAttr('checked');
+        $('.name').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_name').attr('checked',"checked");
+        $('.name').css('display','');
+    }
+}
+function col_memo()
+{
+    if($('#chk_memo').attr('checked'))
+    {
+        $('#chk_memo').removeAttr('checked');
+        $('.memo').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_memo').attr('checked',"checked");
+        $('.memo').css('display','');
+    }
+}
+function col_account()
+{
+    if($('#chk_account').attr('checked'))
+    {
+        $('#chk_account').removeAttr('checked');
+        $('.account').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_account').attr('checked',"checked");
+        $('.account').css('display','');
+    }
+}
+function col_debit()
+{
+    if($('#chk_debit').attr('checked'))
+    {
+        $('#chk_debit').removeAttr('checked');
+        $('.debit').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_debit').attr('checked',"checked");
+        $('.debit').css('display','');
+    }
+}
+function col_credit()
+{
+    if($('#chk_credit').attr('checked'))
+    {
+        $('#chk_credit').removeAttr('checked');
+        $('.credit').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_credit').attr('checked',"checked");
+        $('.credit').css('display','');
+    }
 }
 </script>

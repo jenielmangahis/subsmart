@@ -148,9 +148,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <span class="fa fa-print "></span> Print
                                                                             </a>-->
                                                                             <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
-                                                                            <a class="btn btn-primary btn-md"
-                                                                               href="<?php echo url('customer/add_advance') ?>"><span
-                                                                                        class="fa fa-plus"></span> New Customer</a>
+                                                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>">
+                                                                                <span class="fa fa-plus"></span> New Customer
+                                                                            </a>
                                                                             <?php //endif ?>
                                                                     </div>
                                                                 </div>

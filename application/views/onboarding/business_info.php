@@ -1,8 +1,71 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/no_menu_header'); ?>
-<div role="wrapper">
-   <div wrapper__section>
+<style type="text/css">
+.wrapper-onboarding {
+  padding: 40px;
+  max-width: 1340px;
+  margin: 0 auto;
+  width: 100%;
+}
+.profile-avatar-help-container span {
+  color: #6b3a96;
+}
+.submit-onboard {
+  width: 97.5%;
+  float: right;
+}
+.validation-error-field {
+  padding-top: 0px !important;
+}
+.margin-top-img {
+  margin-top: 24px;
+}
+.text-right {
+  text-align: right;
+}
+.card h3 {
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e6e3e3;
+  margin-bottom: 20px;
+}
+#form-business-details .card {
+  padding: 20px 30px !important;
+}
+@media only screen and (max-width: 600px) {
+  body #topnav {
+    min-height: 0px;
+  }
+  .col-md-9, .col-md-3, .col-md-4, .col-md-6 {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+  }
+  .profile-avatar-container {
+    margin-bottom: 15px;
+  }
+  .checkbox-sec label span {
+    font-size: 13px !important;
+  }
+  #form-business-details .card {
+    padding: 20px;
+  }
+  .wrapper-onboarding {
+    padding: 20px 10px 60px 10px;
+  }
+  .card {
+    width: 100% !important;
+  }
+  .col-md-6 {
+    padding-top: 10px !important;
+  }
+  .checkbox.checkbox-sec label span {
+      width: 100% !important;
+      font-size: 11px !important;
+  }
+}
+</style>
+<div>
+   <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
          <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
@@ -15,6 +78,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <label>Business Name</label> <span class="form-required">*</span>
                         <input type="text" name="business_name" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->business_name : '' ?>" placeholder="e.g. Acme Inc" required="">
                         <span class="validation-error-field" data-formerrors-for-name="name" data-formerrors-message="true" style="display: none;"></span>
+                        <br/>
+                        <label>Business Street Address</label> <span class="form-required">*</span>
+                        <div class="help help-sm help-block">Type in to search for your address</div>
+                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php echo $profiledata->address ?>" placeholder="e.g. 123 Old Oak Drive" required="">
+                        <span class="validation-error-field" data-formerrors-for-name="address" data-formerrors-message="true" style="display: none;"></span>
+                        <br/>
+                        <label>Suite/Unit</label> <span class="help">(optional)</span>
+                        <div class="help help-sm help-block">Suite #</div>
+                        <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo $profiledata->unit_nbr ?>" placeholder="e.g. Ap #12" required="">
+                        <span class="validation-error-field" data-formerrors-for-name="unit_nbr" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
                   <div class="col-md-6">
@@ -22,36 +95,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div>
                            <label>Profile Picture</label>
                            <div>
-                              <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo (businessProfileImage($profiledata->id)) ? businessProfileImage($profiledata->id) : $url->assets ?>"></a>
-                           </div>                           
-                           <div class="margin-top margin-bottom ">
+                              <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#">
+                                <?php if ($profiledata->business_image !== null) { ?>
+                                  <img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo (businessProfileImage($profiledata->id)) ? businessProfileImage($profiledata->id) : $url->assets ?>">
+                                <?php } else { ?>
+                                  <img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo base_url();?>assets/img/onboarding/profile-avatar.png">
+                                <?php } ?>
+                              </a>
+                           </div>
+                           <div class="margin-top-img mb-2">
                             <input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="readURL(this);">
                           </div>
                         </div>
                         <div class="profile-avatar-help-container">
                            <span class="validation-error-field text-left" data-formerrors-for-name="avatar" data-formerrors-message="true" ></span>
                            <span class="help help-sm profile-avatar-help">
-                           Help your customers recognize your business by uploading a profile picture.<br><br>
+                           Help your customers recognize your business by uploading a profile picture.<br>
                            Accepted files type: gif, jpg, png
                            </span>
                         </div>
                      </div>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-md-6">
-                     <div class="form-group">
-                        <label>Business Street Address</label> <span class="form-required">*</span>
-                        <div class="help help-sm help-block">Type in to search for your address</div>
-                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php echo $profiledata->address ?>" placeholder="e.g. 123 Old Oak Drive" required="">
-                        <span class="validation-error-field" data-formerrors-for-name="address" data-formerrors-message="true" style="display: none;"></span>
-                     </div>
-                  </div>
-                  <div class="col-md-6">
-                     <label>Suite/Unit</label> <span class="help">(optional)</span>
-                     <div class="help help-sm help-block">Suite #</div>
-                     <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo $profiledata->unit_nbr ?>" placeholder="e.g. Ap #12" required="">
-                     <span class="validation-error-field" data-formerrors-for-name="unit_nbr" data-formerrors-message="true" style="display: none;"></span>
                   </div>
                </div>
                <div class="form-group">
@@ -73,7 +136,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </div>
                </div>
             </div>
-            <hr class="card-hr">
             <div class="card">
                <h3>Contact Details</h3>
                <div class="row">
@@ -162,8 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </div>
                </div>
             </div>
-            <hr class="card-hr">
-            <div class="card">
+            <!-- <div class="card">
                <h3>About</h3>
                <div class="row">
                   <div class="col-md-6">
@@ -230,13 +291,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      </div>
                   </div>
                </div>
-            </div>
-            <hr class="card-hr">
-            <div class="card">
-               <div class="row">
-                  <div class="col-xs-16 text-right">
-                     <button class="btn btn-primary btn-lg margin-left" name="btn-continue" type="submit">Submit</button>
-                  </div>
+            </div> -->
+            <div class="row">
+               <div class="col-xs-16 text-right submit-onboard">
+                  <button class="btn btn-primary btn-lg margin-left" name="btn-continue" type="submit">Next »</button>
                </div>
             </div>
     <?php echo form_close(); ?>
@@ -349,4 +407,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </nav>
    </div>
 </div>
-<?php include viewPath('includes/footer'); ?> 
+<?php include viewPath('includes/footer'); ?>

@@ -27,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                            <div>
                               <!-- <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" src="<?php //echo (companyProfileImage($profiledata->id)) ? companyProfileImage($profiledata->id) : $url->assets ?>"></a> -->
                               <img id="img_profile">
-                           </div>                           
+                           </div>
 						   <div class="margin-top margin-bottom ">
 							<input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="readURL(this);">
 						  </div>
@@ -354,4 +354,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-

@@ -1,19 +1,130 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
-<?php include viewPath('includes/header'); ?>
+<style type="text/css">
+.wrapper-onboarding {
+  padding: 40px;
+  max-width: 1340px;
+  margin: 0 auto;
+  width: 100%;
+}
+.profile-avatar-help-container span {
+  color: #6b3a96;
+}
+.submit-onboard {
+  width: 97.5%;
+  float: right;
+}
+.card {
+  background: white !important;
+  box-shadow: none !important;
+}
+.validation-error-field {
+  padding-top: 0px !important;
+}
+.margin-top-img {
+  margin-top: 24px;
+}
+.text-right-v {
+  text-align: right;
+}
+.card h3 {
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e6e3e3;
+  margin-bottom: 0px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.label-default {
+  background-color: #64d28f !important;
+  font-size: 13px;
+  line-height: 13px;
+  padding: 3px 10px 4px 10px;
+  color: white;
+}
+.checkbox span.icon {
+  position: absolute;
+  left: 33px;
+  font-weight: bold;
+  padding-top: 5px;
+  font-size: 20px;
+  color: #22bf60;
+  cursor: pointer;
+}
+span.text-ter {
+  padding-top: 12px !important;
+  display: block;
+  margin-left: 40px;
+}
+.service-type {
+  padding-left: 25px;
+}
+#form-business-details .card {
+  padding: 20px 30px !important;
+}
+@media only screen and (max-width: 600px) {
+  header#topnav {
+    min-height: 0px !important;
+  }
+  .card.mb-0 {
+      text-align: center;
+      width: max-content;
+      margin: 0 auto;
+      display: contents;
+  }
+  body #topnav {
+    min-height: 0px;
+  }
+  .col-md-9, .col-md-3, .col-md-4, .col-md-6 {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+  }
+  .text-right-v {
+    text-align: center !important;
+  }
+  .profile-avatar-container {
+    margin-bottom: 15px;
+  }
+  span.text-ter {
+    font-size: 11px !important;
+  }
+  .checkbox-sec label span {
+    font-size: 13px !important;
+  }
+  .checkbox span.icon {
+    position: absolute;
+    left: 14px
+  }
+  #form-business-details .card {
+    padding: 20px 10px !important;
+  }
+  .wrapper-onboarding {
+    padding: 20px 10px 60px 10px;
+  }
+  .card {
+    width: 100% !important;
+  }
+  .col-md-6 {
+    padding-top: 10px !important;
+  }
+  .checkbox.checkbox-sec label span {
+      width: 100% !important;
+      font-size: 11px !important;
+  }
+}
+</style>
+<?php include viewPath('includes/no_menu_header'); ?>
 <!-- page wrapper start -->
-<div role="wrapper">
-   <div wrapper__section>
+<div>
+   <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
         <?php echo form_open_multipart('users/saveservices', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
             <div class="col-md-12">
                 <form id="form-business-credentials" method="post" action="#">
                 <div class="validation-error" style="display: none;"></div>
-                <div class="card">
+                <div class="card st-vl">
 
-<h1>Services</h1>
+<h3>Services</h3>
 
 <div class="row">
     <div class="col-md-24 col-lg-24 col-xl-18"><form id="form-business-services" method="post" action="#">
@@ -21,16 +132,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="card">
         <div class="margin-bottom">
             Selected services:
-            <div class="cat-selected" id="cat-selected">
-            <span class="label label-default tag">Security<a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a></span>            <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
-            <span class="label label-default tag">{{name}}<a class="cat-tag-remove" id="cat-tag-remove-{{id}}" href="#"><span class="icon fa fa-remove"></span></a></span>
-            </script>
+            <div class="cat-selected mt-2" id="cat-selected">
+              <span class="label label-default tag">Security<a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a></span>
+              <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
+                <span class="label label-default tag">{{name}}<a class="cat-tag-remove" id="cat-tag-remove-{{id}}" href="#"><span class="icon fa fa-remove"></span></a></span>
+              </script>
             </div>
         </div>
 
         <div class="validation-error" style="display: none;"></div>
 
-             
+
         <?php  $service = 1;
            foreach($businessTypes as $businessType){  ?>
         <div class="service-type">
@@ -43,9 +155,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="section-body servicetype<?php echo $service; ?>" data-on-for="servicetype<?php echo $service; ?>" style="">
                 <div class="row">
-                    
+
                 <?php foreach($industryType as $industryValue){ ?>
-                    <?php if($industryValue->business_type_name == $businessType){ 
+                    <?php if($industryValue->business_type_name == $businessType){
                           $select = false;
                           if($selectedCategories){
                             foreach ($selectedCategories as $key => $selectedCategory) {
@@ -68,19 +180,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-        
+
 
       <?php $service++;  } //endforeach ?>
 
     </div>
 
     <hr class="card-hr">
-<div class="card">
+<div class="card mb-0">
     <div class="row">
     	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
-    		    	</div>
-    	<div class="col-md-4 text-right">
+    	   <!--  <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span> -->
+    	</div>
+    	<div class="col-md-4 text-right-v">
     		    		<a class="btn btn-default btn-lg" href="businessdetail">« Back</a>
     		    		    		<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
     		    	</div>
@@ -146,11 +258,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script type="text/javascript">  
+<script type="text/javascript">
 $(function(){
    $(".checkbox-sec").click(function(){
         var servicetype = $(this).attr("data-id");
-        $("."+servicetype).toggle();       
+        $("."+servicetype).toggle();
     });
 });
 </script>
