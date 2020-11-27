@@ -109,6 +109,13 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function company_size() {
+		$user = (object)$this->session->userdata('logged');
+		$cid  = logged('company_id');
+
+		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
+		
 		$this->load->view('onboarding/company_size', $this->page_data);	
 	}
 
