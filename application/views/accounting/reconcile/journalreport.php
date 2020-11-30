@@ -64,13 +64,34 @@ margin-top: 6px;
                         <div class="form-group">
                             <label>Report period</label>
                             <select class="form-control" id="date_filter" name="date_filter">
-                                <option></option>
-                                <option></option>
-                                <option></option>
+                                <option value="">All dates</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="today">Today</option>
                                 <option></option>
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="form-group">
+                            <label>From</label>
+                            <div class="col-xs-10 date_picker">
+                            <input type="text" id="from_date" name="from_date" class="form-control disableFuturedate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="form-group">
+                            <label>To</label>
+                            <div class="col-xs-10 date_picker">
+                            <input type="text" id="to_date" name="to_date" class="form-control">
+                            </div>
+                        </div>
+                    </div>   
+                    <div class="col-md-2 col-sm-2">
+                        <div class="form-group">
+                            <button type="button" id="apply_date_filter" class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>                                    
                 </div>
             </div>
             <!-- end row -->
@@ -240,12 +261,31 @@ margin-top: 6px;
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script type="text/javascript">
+  $('.date_picker input').datepicker({
+           format: "dd.mm.yyyy",
+           todayBtn: "linked",
+           language: "de"
+        });
+   $('#from_date').attr("disabled", "disabled" );
+    $('#to_date').attr("disabled", "disabled" );
+
+    function convertDate(inputFormat) {
+      function pad(s) { return (s < 10) ? '0' + s : s; }
+      var d = new Date(inputFormat)
+      return [pad(d.getDate()), pad(d.getMonth()), d.getFullYear()].join('.')
+    }
+    
 $(document).ready(function () {
+   
+     
+   
     $('.total').text($('#finaltotal').val());
-    var table = $('#report_table').DataTable();
 });
 $('#date_filter').on('change', function() {
- //getReport(this.value);
+ date_filter()
+});
+$('#apply_date_filter').on('click', function() {
+ apply()
 });
 function getReport(id)
 {
@@ -386,4 +426,83 @@ function col_credit()
         $('.credit').css('display','');
     }
 }
+
+    function date_filter() {
+
+    var selectBox = document.getElementById("date_filter");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+       if(selectedValue == 'custom')
+       {
+        $('#from_date'). removeAttr("disabled","disabled");
+        $('#to_date'). removeAttr("disabled","disabled");
+        $('#from_date').val(null);
+        $('#to_date').val(null);
+
+      
+
+       }
+       else if (selectedValue == 'today')
+       {
+        $('#from_date'). removeAttr("disabled","disabled");
+        $('#from_date').val(null);
+        var ending_date = $("#ending_date").val();
+        $('#to_date').val(ending_date);
+        $('#to_date'). attr("disabled","disabled");
+        $('.disableFuturedate').datepicker().datepicker('setEndDate',ending_date);
+        
+       }
+       else
+       {
+
+        $('#from_date').val(null);
+        $('#to_date').val(null);
+        $('#from_date').attr("disabled", "disabled" );
+        $('#to_date').attr("disabled", "disabled" );
+       }
+   }
+var table = $('#report_table').DataTable();
+   function apply()
+   {
+        var selectBox = document.getElementById("date_filter");
+        var selectedValue1 = selectBox.options[selectBox.selectedIndex].value;
+       if(selectedValue1 == 'custom')
+       {
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        var temp_date = from_date.split(".");
+        var temp_date2 = to_date.split(".");
+        var xxx = "";
+        for (var d = new Date(temp_date[2],temp_date[1],temp_date[0]); d <= new Date(temp_date2[2],temp_date2[1],temp_date2[0]); d.setDate(d.getDate() + 1)) {
+            if(xxx == '')
+            {
+                xxx =convertDate(d);
+            }
+            else
+            {
+                xxx = xxx+'|'+convertDate(d);
+            }
+        }
+        $('#report_table').DataTable().search(xxx,true,false).draw();
+      }
+      if(selectedValue1 == 'today')
+      {
+         var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        //table.search( to_date ).draw();
+        var temp_date = from_date.split(".");
+        var temp_date2 = to_date.split(".");
+        var xxx = "";
+        for (var d = new Date(temp_date[2],temp_date[1],temp_date[0]); d <= new Date(temp_date2[2],temp_date2[1],temp_date2[0]); d.setDate(d.getDate() + 1)) {
+            if(xxx == '')
+            {
+                xxx =convertDate(d);
+            }
+            else
+            {
+                xxx = xxx+'|'+convertDate(d);
+            }
+        }
+        table.search(xxx,true,false).draw();
+      }
+ }
 </script>
