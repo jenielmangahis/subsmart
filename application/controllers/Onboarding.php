@@ -131,6 +131,18 @@ class Onboarding extends MY_Controller {
 		$this->load->view('onboarding/add_ons', $this->page_data);
 	}
 
+	public function booking_online_demo() {
+		
+		$user = (object)$this->session->userdata('logged');
+		$cid  = logged('company_id');
+
+		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
+		
+		$this->load->view('onboarding/booking_online_demo', $this->page_data);
+	}
+
 	public function about(){
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('id');
