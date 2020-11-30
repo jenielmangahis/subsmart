@@ -122,18 +122,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                <div class="form-group">
                   <label>Service Location</label>
                   <div class="help help-sm help-block">Enter the areas or neighborhoods where you provide your services.</div>
-                  <div class="bootstrap-tagsinput"><input type="text" placeholder="Area or neighborhood"></div>
-                  <input type="text" name="service_location" value="<?php echo $profiledata->service_location ?>"  class="form-control" id="service_locations" autocomplete="off" placeholder="Area or neighborhood" style="display: none;">
+                  <input type="text" name="service_location" value="<?php echo $profiledata->service_location ?>"  class="form-control" id="" autocomplete="off" placeholder="Area or neighborhood">
                   <span class="validation-error-field" data-formerrors-for-name="service_locations" data-formerrors-message="true" style="display: none;"></span>
                </div>
                <div class="row">
                   <div class="col-md-12">
                      <div class="form-group">
                         <div class="clearfix">
-                           <label>Business Short Description</label><span class="help help-sm help-bold pull-right">characters left: <span data-char="counter" data-char-max="2000">1962</span></span>
+                           <label>Business Short Description</label><span class="help help-sm help-bold pull-right">characters left: <span class="char-counter-left">1800</span></span>
                         </div>
                         <div class="help help-block help-sm">Give customers more details on what your business actually does. Describe your company's values and goals. Minimum 25 characters.</div>
-                        <textarea name="business_desc" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
+                        <textarea name="business_desc" id="business-desc" minlength="25" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
                         <span class="validation-error-field" data-formerrors-for-name="about" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -150,3 +149,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+  function bussinessDescriptionCharCounter(){
+      var chars_max   = 1800;
+      var chars_total = $("#business-desc").val().length;
+      var chars_left  = chars_max - chars_total;
+
+      $(".char-counter-left").html(chars_left);
+
+      return chars_left;
+  }
+
+  $("#business-desc").keydown(function(e){
+      var chars_left = bussinessDescriptionCharCounter();
+      if( chars_left <= 0 ){
+          if (e.keyCode != 46 && e.keyCode != 8 ) return false;
+      }else{
+          return true;
+      }
+  });
+
+  bussinessDescriptionCharCounter();
+});
+</script>

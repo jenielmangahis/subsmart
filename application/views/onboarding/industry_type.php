@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .icon-btn {
   background: #20bf60;
-  height: 24px;
+  height: 25px;
   width: 24px;
   position: absolute;
   border-radius: 190px;
@@ -156,6 +156,7 @@ span.text-ter {
 <div>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
+        <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">What type of services do you offer?</h3>
         <?php echo form_open_multipart('onboarding/saveservices', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
             <div class="col-md-12">
@@ -169,24 +170,11 @@ span.text-ter {
     <div class="col-md-12"><form id="form-business-services" method="post" action="#">
       <?php include viewPath('flash'); ?>
     <div class="card">
-        <div class="margin-bottom">
-            Selected services:
-            <div class="cat-selected mt-2" id="cat-selected">
-              <span class="label label-default tag">Security<a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a></span>
-              <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
-                <span class="label label-default tag">{{name}}<a class="cat-tag-remove" id="cat-tag-remove-{{id}}" href="#"><div class="icon-btn"><span class="icon fa fa-remove"></span></div></a></span>
-              </script>
-            </div>
-        </div>
-
-        <div class="validation-error" style="display: none;"></div>
-
-
         <?php  $service = 1;
            foreach($businessTypes as $businessType){  ?>
         <div class="service-type">
             <div class="checkbox checkbox-head" data-action="toggle" data-id="servicetype<?php echo $service; ?>" data-id2="servicetypeoff<?php echo $service; ?>"  data-checked="">
-                <div class="icon-btn"><span class="icon">+</span></div>
+                <div class="icon-btn"><span class="icon plus-icon collapse-group"><i class="fa fa-plus" style="font-size: 14px; line-height: 31px;"></i></span></div>
                 <label><span class="section-header"><?php echo $businessType; ?></span></label>
                 <div class="section-body servicetypeoff<?php echo $service; ?>" data-off-for="servicetype<?php echo $service; ?>" style="">
                     <span class="text-ter">Click to open and select services.</span>
@@ -311,6 +299,22 @@ $(function(){
     });
    $(".checkbox").click();
    service = 1;
+
+   $(".plus-icon").click(function(){
+    if( $(this).hasClass('collapse-group') ){
+      $(this).removeClass('collapse-group');
+      $(this).addClass('uncollapse-group');
+
+      $(this).find("i.fa").removeClass("fa-plus");
+      $(this).find("i.fa").addClass("fa-minus");
+    }else{
+      $(this).addClass('collapse-group');
+      $(this).removeClass('uncollapse-group');
+
+      $(this).find("i.fa").addClass("fa-plus");
+      $(this).find("i.fa").removeClass("fa-minus");
+    }
+   });
 
 });
 </script>
