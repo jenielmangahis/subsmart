@@ -18,6 +18,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   background: white !important;
   box-shadow: none !important;
 }
+.checkbox.checkbox-head label {
+  padding-top: 7px;
+  margin-bottom: 10px;
+}
+.row.sb-list {
+  padding-left: 22px;
+  margin-bottom: 10px;f
+}
 .validation-error-field {
   padding-top: 0px !important;
 }
@@ -41,27 +49,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   padding: 3px 10px 4px 10px;
   color: white;
 }
-.checkbox span.icon {
+.icon-btn:hover {
+  background: #4440ce;
+}
+.icon-btn {
+  background: #20bf60;
+  height: 24px;
+  width: 24px;
   position: absolute;
-  left: 33px;
-  font-weight: bold;
-  padding-top: 5px;
-  font-size: 20px;
-  color: #22bf60;
+  border-radius: 190px;
+  left: 27px;
+  margin-top: 7.3px;
   cursor: pointer;
 }
+.checkbox span.icon {
+  font-weight: bold;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  position: relative;
+  left: 6px;
+  bottom: 2.5px;
+}
 span.text-ter {
-  padding-top: 12px !important;
+  padding-top: 0px !important;
   display: block;
-  margin-left: 40px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  position: relative;
+  bottom: 10px;
 }
 .service-type {
-  padding-left: 25px;
+  padding-left: 10px;
 }
 #form-business-details .card {
   padding: 20px 30px !important;
 }
 @media only screen and (max-width: 600px) {
+  .icon-btn {
+    background: #20bf60;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    border-radius: 190px;
+    left: 8px;
+    margin-top: 7.3px;
+    cursor: pointer;
+  }
   header#topnav {
     min-height: 0px !important;
   }
@@ -91,8 +125,13 @@ span.text-ter {
     font-size: 13px !important;
   }
   .checkbox span.icon {
-    position: absolute;
-    left: 14px
+    font-weight: bold;
+    font-size: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    position: relative;
+    left: 6px;
+    bottom: 2.5px;
   }
   #form-business-details .card {
     padding: 20px 10px !important;
@@ -127,7 +166,7 @@ span.text-ter {
 <h3>Services</h3>
 
 <div class="row">
-    <div class="col-md-24 col-lg-24 col-xl-18"><form id="form-business-services" method="post" action="#">
+    <div class="col-md-12"><form id="form-business-services" method="post" action="#">
       <?php include viewPath('flash'); ?>
     <div class="card">
         <div class="margin-bottom">
@@ -135,7 +174,7 @@ span.text-ter {
             <div class="cat-selected mt-2" id="cat-selected">
               <span class="label label-default tag">Security<a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a></span>
               <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
-                <span class="label label-default tag">{{name}}<a class="cat-tag-remove" id="cat-tag-remove-{{id}}" href="#"><span class="icon fa fa-remove"></span></a></span>
+                <span class="label label-default tag">{{name}}<a class="cat-tag-remove" id="cat-tag-remove-{{id}}" href="#"><div class="icon-btn"><span class="icon fa fa-remove"></span></div></a></span>
               </script>
             </div>
         </div>
@@ -147,14 +186,14 @@ span.text-ter {
            foreach($businessTypes as $businessType){  ?>
         <div class="service-type">
             <div class="checkbox checkbox-head" data-action="toggle" data-id="servicetype<?php echo $service; ?>" data-id2="servicetypeoff<?php echo $service; ?>"  data-checked="">
-                <span class="icon">+</span>
+                <div class="icon-btn"><span class="icon">+</span></div>
                 <label><span class="section-header"><?php echo $businessType; ?></span></label>
                 <div class="section-body servicetypeoff<?php echo $service; ?>" data-off-for="servicetype<?php echo $service; ?>" style="">
                     <span class="text-ter">Click to open and select services.</span>
                 </div>
             </div>
             <div class="section-body servicetype<?php echo $service; ?>" data-on-for="servicetype<?php echo $service; ?>" style="">
-                <div class="row">
+                <div class="row sb-list">
 
                 <?php foreach($industryType as $industryValue){ ?>
                     <?php if($industryValue->business_type_name == $businessType){
@@ -195,7 +234,7 @@ span.text-ter {
     	<div class="col-md-4 text-right-v">
     		    		<a class="btn btn-default btn-lg" href="about">« Back</a>
     		    		    	<!--	<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>  -->
-                        <button class="btn btn-primary btn-lg margin-left" name="btn-save" type="submit">Next »</button>            
+                        <button class="btn btn-primary btn-lg margin-left" name="btn-save" type="submit">Next »</button>
     		    	</div>
     </div>
 </div>
@@ -271,7 +310,7 @@ $(function(){
         }
     });
    $(".checkbox").click();
-   service = 1;  
- 
+   service = 1;
+
 });
 </script>
