@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <li class="breadcrumb-item active">Track Employees Location</li>
                         </ol> -->
                     </div>
-                
+
                 </div>
             </div>
             <!-- end row -->
@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <p style="text-align: center;"><strong>Subscribe Now</strong></p>
                                 <div style="text-align: center;" class="card-price bottom-txt">$0.05/SMS + $5.00 service fee</div>
                             </div>
-                        </a>                       
+                        </a>
                     </div>
                     <!-- end card -->
                 </div>

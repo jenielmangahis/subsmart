@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <h1 class="page-title">Add-on Plugins</h1>
                     </div>
-                
+
                 </div>
             </div>
             <!-- end row -->
@@ -33,15 +33,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <p style="text-align: center;"><strong>Subscribe Now</strong></p>
                                 <div style="text-align: center;" class="card-price bottom-txt">$0.05/SMS + $5.00 service fee</div>
                             </div>
-                        </a>     
+                        </a>
                     </div> -->
 
-                    <?php  $row = 1; 
+                    <?php  $row = 1;
                            if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { ?>
-                           
+
                            <?php if($row == 1){ ?>
                              <div class="marketing-card-deck card-deck pl-50 pb-100"> <?php } $row++; ?>
-                            
+
                                 <a href="#" class="card border-gr btn-addon" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
                                     <div class="card-body align-left">
                                         <h5 class="card-title mb-0"><?php echo $NsmartUpgrade->name; ?></h5>
@@ -49,15 +49,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p style="text-align: center;"><strong>Subscribe Now</strong></p>
                                         <div style="text-align: center;" class="card-price bottom-txt">$<?php  echo $NsmartUpgrade->sms_fee; ?>/SMS + $<?php  echo $NsmartUpgrade->service_fee; ?> service fee</div>
                                     </div>
-                                </a>     
+                                </a>
                          <?php if($row == 4){ ?>
                           </div>
                         <?php $row = 1; }   ?>
 
 
-                    <?php    } 
+                    <?php    }
                           } ?>
-                   
+
                     <!-- end card -->
                 </div>
             </div>
@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 
-    <!-- Modal loading box --> 
+    <!-- Modal loading box -->
     <div class="modal fade" id="modalLoadingMsg" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
@@ -94,7 +94,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $(".btn-addon").click(function(){
         var aid = $(this).attr("data-id");
-        
+
         var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Loading...</div>';
         var url = base_url + '/more/_load_plugin_details';
 

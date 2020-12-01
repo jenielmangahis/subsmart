@@ -8,12 +8,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   margin: 0 auto;
   width: 100%;
 }
+body {
+  background: #f9f9f9 !important;
+}
+._2LpwQ___Wrapper__cls1._1cMla___Wrapper__media-tablet-up {
+  margin-top:30px !important;
+}
 .profile-avatar-help-container span {
   color: #6b3a96;
+}
+.text-booking {
+  text-align: center;color: #682998;font-size: 27px;
 }
 .submit-onboard {
   width: 97.5%;
   float: right;
+}
+.calendly-container {
+  min-width:320px;height:75vh;bottom:30px;
 }
 .validation-error-field {
   padding-top: 0px !important;
@@ -31,6 +43,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 #form-business-details .card {
   padding: 20px 30px !important;
+}
+@media only screen and (max-width: 800px) {
+  .text-booking {
+    text-align: center;color: #682998;font-size: 20px;
+  }
+  .calendly-container {
+      min-width: 320px;
+      height: 60vh;
+      bottom: 0px;
+      top: 20px;
+  }
 }
 @media only screen and (max-width: 600px) {
   body #topnav {
@@ -67,12 +90,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
-         <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">Would you like to learn more about our features, from one of our experts? </h3>
+         <h3 class="text-booking">Would you like to learn more about our features, from one of our experts? </h3>
           <!-- Calendly inline widget begin -->
-          <div class="calendly-inline-widget" data-url="https://calendly.com/bryann-revina03?primary_color=9d00ff" style="min-width:320px;height:630px;"></div>
+          <div class="calendly-inline-widget calendly-container" data-url="https://calendly.com/bryann-revina03?primary_color=9d00ff"></div>
           <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
           <!-- Calendly inline widget end -->
-        
+
       </div>
    </div>
 </div>
