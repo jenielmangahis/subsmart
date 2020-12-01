@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   width: 100%;
 }
 body {
-  background: #f9f9f9 !important;
+  /*background: #f9f9f9 !important;*/
 }
 a.card.border-gr.btn-addon {
   box-shadow: rgb(0 0 0 / 18%) 4px 5px 12px;
@@ -147,9 +147,13 @@ a.card.border-gr.btn-addon {
   }
 }
 </style>
-<div>
-   <div>
-      <div class="wrapper-onboarding">
+<div class="wrapper-onboarding">
+<div class="row">    
+   <div class="col-md-12">
+    <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">Which add ons do you like to use ?</h3>
+    <div class="card">      
+        <h5>Use our plugins for managing your business</h5>  
+        <p>Pick from our wide range of plugins which will greatly helps you in boosting and managing your business</p>
          <?php // echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <?php  $row = 1;
                            if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { 
@@ -167,7 +171,7 @@ a.card.border-gr.btn-addon {
                            <?php if($row == 1){ ?>
                              <div class="marketing-card-deck card-deck pl-50 pb-25"> <?php } $row++; ?>
                                 <!-- add class addon-selected for selector on anchor -->
-                                <a href="#" class="card border-gr btn-addon <?php echo $active_addons; ?>" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
+                                <a href="javascript:void(0);" class="card border-gr btn-addon <?php echo $active_addons; ?>" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
                                     <div class="card-body">
                                         <h5 class="card-title mb-0 text-center"><?php echo $NsmartUpgrade->name; ?></h5>
                                         <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>
@@ -183,13 +187,15 @@ a.card.border-gr.btn-addon {
                     <?php    }
                           } ?>
    </div>
-   <br class="clear"/>
-   <br/>
    <div class="row">
       <div class="col-xs-16 text-right submit-onboard-v2">
-         <button class="btn btn-primary btn-lg margin-left" name="action" value="business_info" type="submit">Next »</button>
+         <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/industry_type");?>">« Back</a>
+         <a class="btn btn-primary btn-lg margin-left" href="<?php echo base_url("/onboarding/availability");?>">Next »</a>
       </div>
    </div>
+    </div>
+   <br class="clear"/>
+   <br/>   
 <?php // echo form_close(); ?>
 
   <!-- Modal loading box --> 

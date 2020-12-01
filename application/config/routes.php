@@ -467,3 +467,5 @@ $route['save_company_employee'] = 'Pages/front_save_company_employee';
 //Onboarding
 $route['onboarding/_load_plugin_details'] = 'Onboarding/ajax_load_plugin_details';
 $route['onboarding/add_plugin'] = 'Onboarding/add_plugin';
+$route['onboarding/_save_business_availability'] = 'Onboarding/ajax_save_business_availability';
+$route['onboarding/_complete_onboarding'] = 'Onboarding/ajax_complete_onboarding';

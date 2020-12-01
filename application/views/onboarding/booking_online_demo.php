@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   width: 100%;
 }
 body {
-  background: #f9f9f9 !important;
+  /*background: #f9f9f9 !important;*/
 }
 ._2LpwQ___Wrapper__cls1._1cMla___Wrapper__media-tablet-up {
   margin-top:30px !important;
@@ -89,14 +89,45 @@ body {
 </style>
 <div>
    <div class="wrapper-onboarding">
-      <div class="col-md-24 col-lg-24 col-xl-18">
-         <h3 class="text-booking">Would you like to learn more about our features, from one of our experts? </h3>
+    <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">Would you like to learn more about our features, from one of our experts? </h3>
+    <div class="card">
+      <div class="col-md-24 col-lg-24 col-xl-18">         
           <!-- Calendly inline widget begin -->
           <div class="calendly-inline-widget calendly-container" data-url="https://calendly.com/bryann-revina03?primary_color=9d00ff"></div>
           <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
           <!-- Calendly inline widget end -->
-
+          <div class="msg-container"></div>
+      </div>
+      <div class="row">
+         <div class="col-xs-16 text-right submit-onboard">
+            <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/credentials");?>">« Back</a>
+            <a class="btn btn-primary btn-lg margin-left btn-onboarding-fin" href="javascript:void(0);">Finish</a>
+         </div>
       </div>
    </div>
+ </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+  $(".btn-onboarding-fin").click(function(){
+    var msg = '<img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...';
+    var url = base_url + 'onboarding/_complete_onboarding';
+    
+    $(".msg-container").html(msg);
+
+    setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: "json",
+             data: {},
+             success: function(o)
+             {
+                location.href = base_url + 'dashboard';
+             }
+          });
+      }, 500);
+  });
+});
+</script>

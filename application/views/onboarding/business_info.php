@@ -72,7 +72,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
             <input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>">
             <div class="card">
-               <h3>Basic Info</h3>
+               <h3>Let's introduce your business to your customers.</h3>
+               <h4>Basic Info</h4>
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group">
@@ -138,7 +139,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                </div>
             </div>
             <div class="card">
-               <h3>Contact Details</h3>
+               <h4>Contact Details</h4>
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group">
@@ -224,12 +225,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      </div>
                   </div>
                </div>
-            </div>
-            <div class="row">
+               <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="business_info" type="submit">Next »</button>
                </div>
             </div>
+            </div>            
     <?php echo form_close(); ?>
       </div>
    </div>

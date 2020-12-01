@@ -166,8 +166,14 @@ if (!function_exists('licenseImage')) {
         // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
         // echo "<pre>fhdfhdfh"; print_r($res); die;
 
-        if ($id != 'default')
-            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'license_image') . '?' . time());
+        if ($id != 'default'){
+            $image =  $CI->business_model->getRowByWhere(['id' => $id], 'license_image');
+            if( $image != '' ){
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
+            }else{
+                $url = urlUpload('users/business_profile/img_default.png');
+            }
+        }
 
         return $url;
     }
@@ -184,8 +190,38 @@ if (!function_exists('bondImage')) {
         // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
         // echo "<pre>fhdfhdfh"; print_r($res); die;
 
-        if ($id != 'default')
-            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'bond_image') . '?' . time());
+        if ($id != 'default'){
+            $image =  $CI->business_model->getRowByWhere(['id' => $id], 'bond_image');
+            if( $image != '' ){
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
+            }else{
+                $url = urlUpload('users/business_profile/img_default.png');
+            }
+        }
+
+        return $url;
+    }
+}
+
+if (!function_exists('insuranceImage')) {
+
+    function insuranceImage($id)
+    {
+
+        $CI = &get_instance();
+        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
+
+        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
+        // echo "<pre>fhdfhdfh"; print_r($res); die;
+
+        if ($id != 'default'){
+            $image =  $CI->business_model->getRowByWhere(['id' => $id], 'insurance_image');
+            if( $image != '' ){
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
+            }else{
+                $url = urlUpload('users/business_profile/img_default.png');
+            }
+        }
 
         return $url;
     }

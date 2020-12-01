@@ -67,12 +67,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
-         <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">More about your business</h3>
+         <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">Tell us more about your business</h3>
          <?php echo form_open_multipart('onboarding/save_business_info', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
             <input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>">
             <div class="card">
-               <h3>About</h3>
+               <h3>Let your customers know how big your business is.</h3>
+               <h4>About</h4>
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group">
@@ -137,13 +138,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      </div>
                   </div>
                </div>
-            </div>
-            <div class="row">
+               <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
                   <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/business_info");?>">« Back</a>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="about" type="submit">Next »</button>
                </div>
             </div>
+            </div>            
     <?php echo form_close(); ?>
   </div>
 </div>
