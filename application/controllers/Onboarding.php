@@ -123,11 +123,11 @@ class Onboarding extends MY_Controller {
 		
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('company_id');
-
+		$NsmartUpgradedItems = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
 		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
-		
+		$this->page_data['NsmartUpgradedItems'] = $NsmartUpgradedItems;
 		$this->load->view('onboarding/add_ons', $this->page_data);
 	}
 

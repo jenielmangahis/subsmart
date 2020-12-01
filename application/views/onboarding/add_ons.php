@@ -150,18 +150,28 @@ a.card.border-gr.btn-addon {
 <div>
    <div>
       <div class="wrapper-onboarding">
-         <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+         <?php // echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <?php  $row = 1;
-                           if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { ?>
-
+                           if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { 
+                                $active_addons = "";
+                                $active_subsciption = "Subscribe Now";
+                                if($NsmartUpgradedItems){
+                                    foreach ($NsmartUpgradedItems as $NsmartUpgradedItem) {
+                                           $plan_id = $NsmartUpgrade->id;
+                                           if ($plan_id == $NsmartUpgradedItem->plan_upgrade_id){
+                                              $active_addons = "addon-selected";
+                                              $active_subsciption = "Subscribed";
+                                           }
+                                    } 
+                                } ?>
                            <?php if($row == 1){ ?>
                              <div class="marketing-card-deck card-deck pl-50 pb-25"> <?php } $row++; ?>
                                 <!-- add class addon-selected for selector on anchor -->
-                                <a href="#" class="card border-gr btn-addon" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
+                                <a href="#" class="card border-gr btn-addon <?php echo $active_addons; ?>" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
                                     <div class="card-body">
                                         <h5 class="card-title mb-0 text-center"><?php echo $NsmartUpgrade->name; ?></h5>
                                         <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>
-                                        <p class="sc-bt"><strong>Subscribe Now</strong></p>
+                                        <p class="sc-bt"><strong><?php echo $active_subsciption; ?></strong></p>
                                         <div style="text-align: center;" class="card-price sc-bottom">$<?php  echo $NsmartUpgrade->sms_fee; ?>/SMS + $<?php  echo $NsmartUpgrade->service_fee; ?> service fee</div>
                                     </div>
                                 </a>
@@ -180,6 +190,56 @@ a.card.border-gr.btn-addon {
          <button class="btn btn-primary btn-lg margin-left" name="action" value="business_info" type="submit">Next »</button>
       </div>
    </div>
-<?php echo form_close(); ?>
+<?php // echo form_close(); ?>
+
+  <!-- Modal loading box --> 
+  <div class="modal fade" id="modalLoadingMsg" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="">Add Plugin</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <?php echo form_open_multipart('onboarding/add_plugin', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+          <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'pid'));?>
+          <div class="modal-body plugin-info-container"></div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button type="submit" class="btn btn-success">Yes</button>
+          </div>
+          <?php echo form_close(); ?>
+        </div>
+      </div>
+  </div>
+
 </div>
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+$(function(){
+    $(".btn-addon").click(function(){
+        var aid = $(this).attr("data-id");
+        
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Loading...</div>';
+        var url = base_url + 'onboarding/_load_plugin_details';
+
+        $("#pid").val(aid);
+        $("#modalLoadingMsg").modal("show");
+        $(".plugin-info-container").html(msg);
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {aid:aid},
+               success: function(o)
+               {
+                  $(".plugin-info-container").html(o);
+               }
+            });
+        }, 500);
+    });
+});
+</script>
