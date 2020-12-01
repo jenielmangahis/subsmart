@@ -369,7 +369,7 @@ class Reconcile_model extends MY_Model {
 
 	public function saverecords_history($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account,$action)
 	{
-		$query="insert into accounting_reconcile_history values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','','','','','','','',1','','$action')";
+		$query="insert into accounting_reconcile_history values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','','','','','','','','1','','$action')";
 		echo $this->db->query($query);
 	}
 

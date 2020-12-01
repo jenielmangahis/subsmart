@@ -131,6 +131,18 @@ class Onboarding extends MY_Controller {
 		$this->load->view('onboarding/add_ons', $this->page_data);
 	}
 
+	public function booking_online_demo() {
+		
+		$user = (object)$this->session->userdata('logged');
+		$cid  = logged('company_id');
+
+		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
+		
+		$this->load->view('onboarding/booking_online_demo', $this->page_data);
+	}
+
 	public function about(){
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('id');
@@ -217,6 +229,8 @@ class Onboarding extends MY_Controller {
 				];
 
 				$this->business_model->update($bid,$data_availability);	
+
+				redirect('onboarding/credentials');
 
 			}elseif( $action == 'credentials' ){
 				$is_licensed = 0;
@@ -328,6 +342,35 @@ class Onboarding extends MY_Controller {
 
 			return $name;
 		}
+	}
+
+	public function availability() {
+		
+		//ifPermissions('businessdetail');
+		$user = (object)$this->session->userdata('logged');	
+		$cid = logged('id');
+		$profiledata = $this->business_model->getByUserId($cid);
+
+		$workingDays = unserialize($profiledata->working_days);
+		
+		$data_working_days = array();
+		if( !empty($workingDays) ){
+			foreach( $workingDays as $d ){
+				$data_working_days[$d['day']] = ['time_from' => $d['time_from'], 'time_to' => $d['time_to']];
+			}	
+		}else{
+			$data_working_days['Monday']    = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Tuesday']   = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Wednesday'] = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Thursday'] = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Friday']   = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Saturday'] = ['time_from' => '', 'time_to' => ''];
+			$data_working_days['Sunday']   = ['time_from' => '', 'time_to' => ''];
+		}
+
+		$this->page_data['data_working_days'] = $data_working_days;
+		$this->page_data['profiledata'] = $profiledata;
+		$this->load->view('onboarding/availability', $this->page_data);
 	}
 }
 

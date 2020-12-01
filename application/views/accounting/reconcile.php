@@ -5346,10 +5346,10 @@ function closeAddaccount()
             success:function(data)
             {
                 closeFullNav();
+                location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
                 callschistory(reconcile_id,chart_of_accounts_id);
                 var action = 'updated';
                 callhistory(chart_of_accounts_id,action);
-                location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
             }
         })
       }
