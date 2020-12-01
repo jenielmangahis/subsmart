@@ -75,6 +75,7 @@ class Register extends MY_Controller {
 
                 	$this->Clients_model->update($cid, array(
 		        		'is_plan_active' => 1,
+                        'is_startup' => 1,
                         'plan_date_registered' => date("Y-m-d H:i:s")
 		    		));
 
@@ -486,7 +487,8 @@ class Register extends MY_Controller {
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
                 'nsmart_plan_id' => $post['plan_id'],
-                'is_trial' => 1
+                'is_trial' => 1,
+                'is_startup' => 1
             ]);
 
             $uid = $this->users_model->create([

@@ -53,6 +53,7 @@ class Login extends CI_Controller {
 
         $username = post('username');
         $password = post('password');
+        $is_startup = 0;
 
         $attempt = $this->users_model->attempt( compact('username', 'password') );
 
@@ -73,6 +74,10 @@ class Login extends CI_Controller {
         		$client = $this->Clients_model->getById($user->company_id);
 
         		if( $client ){
+        			if( $client->is_startup == 1 ){
+        				$is_startup = 1;
+        			}
+
         			$industryType = $this->IndustryType_model->getById($client->industry_type_id);
         			if( $industryType ){
         				$industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
@@ -115,8 +120,11 @@ class Login extends CI_Controller {
 
         }
 
-        redirect('dashboard');
-
+        if( $is_startup == 1 ){
+        	redirect('onboarding/business_info');
+        }else{
+        	redirect('dashboard');
+        }
 	}
 
 	public function validate_recaptcha($recaptchaResponse)
