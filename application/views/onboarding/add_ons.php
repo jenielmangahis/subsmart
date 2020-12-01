@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div role="wrapper">
    <div wrapper__section>
       <div class="col-md-24 col-lg-24 col-xl-18">
-         <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+         <?php // echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <?php  $row = 1; 
                            if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { ?>
                            
@@ -31,11 +31,61 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="business_info" type="submit">Next »</button>
                </div>
             </div>
-         <?php echo form_close(); ?>
+         <?php // echo form_close(); ?>
+
+
+         <!-- Modal loading box --> 
+        <div class="modal fade" id="modalLoadingMsg" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="">Add Plugin</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <?php echo form_open_multipart('onboarding/add_plugin', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'pid'));?>
+                <div class="modal-body plugin-info-container"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-success">Yes</button>
+                </div>
+                <?php echo form_close(); ?>
+              </div>
+            </div>
+        </div>
+
+
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?> 
+<script>
+$(function(){
+    $(".btn-addon").click(function(){
+        var aid = $(this).attr("data-id");
+        
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Loading...</div>';
+        var url = base_url + 'onboarding/_load_plugin_details';
 
+        $("#pid").val(aid);
+        $("#modalLoadingMsg").modal("show");
+        $(".plugin-info-container").html(msg);
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {aid:aid},
+               success: function(o)
+               {
+                  $(".plugin-info-container").html(o);
+               }
+            });
+        }, 500);
+    });
+});
+</script>
 
 
   

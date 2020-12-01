@@ -463,3 +463,7 @@ $route['registration/_use_offer_code'] = 'Register/registration_use_code';
 //Public Add Employee
 $route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
 $route['save_company_employee'] = 'Pages/front_save_company_employee';
+
+//Onboarding
+$route['onboarding/_load_plugin_details'] = 'Onboarding/ajax_load_plugin_details';
+$route['onboarding/add_plugin'] = 'Onboarding/add_plugin';
