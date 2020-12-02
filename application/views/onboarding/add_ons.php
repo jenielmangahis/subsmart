@@ -174,7 +174,7 @@ a.card.border-gr.btn-addon {
                            <?php if($row == 1){ ?>
                              <div class="marketing-card-deck card-deck pl-50 pb-25"> <?php } $row++; ?>
                                 <!-- add class addon-selected for selector on anchor -->
-                                <a href="javascript:void(0);" class="card border-gr btn-addon <?php echo $active_addons; ?>" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
+                                <a href="javascript:void(0);" class="card border-gr btn-addon <?php echo $active_addons; ?>" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/img/onboarding/'.$NsmartUpgrade->image_filename) ?>" data-holder-rendered="true">
                                     <div class="card-body">
                                         <h5 class="card-title mb-0 text-center"><?php echo $NsmartUpgrade->name; ?></h5>
                                         <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>
