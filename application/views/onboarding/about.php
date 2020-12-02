@@ -15,6 +15,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   width: 97.5%;
   float: right;
 }
+img.banner-reg-a {
+  background: black;
+  object-fit: cover;
+  height: 250px;
+  width: 100%;
+  margin-bottom: 8px;
+}
 .validation-error-field {
   padding-top: 0px !important;
 }
@@ -68,6 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
          <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">Tell us more about your business</h3>
+         <img class="banner-reg-a" src="<?php echo base_url('assets/img/business-registration/fp-a.jpg') ?>" alt="">
          <?php echo form_open_multipart('onboarding/save_business_info', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
             <input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>">
@@ -144,7 +152,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="about" type="submit">Next »</button>
                </div>
             </div>
-            </div>            
+            </div>
     <?php echo form_close(); ?>
   </div>
 </div>
