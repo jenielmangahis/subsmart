@@ -664,6 +664,58 @@ class Timesheet_model extends MY_Model {
         }
         return $return;
     }
+    //Workweek and Overtime settings
+    public function workweekOvertimeSettings($data){
+        $qry = $this->db->get_where('timesheet_settings',array('company_id'=>getLoggedCompanyID()));
+        if ($qry->num_rows() == 0){
+            $insert = array(
+                'company_id' => getLoggedCompanyID(),
+                'workweek_start_day' => $data['start_day'],
+                'regular_hours_per_week' => $data['hours_week'],
+                'regular_hours_per_day' => $data['hours_day'],
+                'overtime' => $data['overtime']
+            );
+            $this->db->insert('timesheet_settings',$insert);
+            return true;
+        }elseif($qry->num_rows() == 1){
+            $update = array(
+                'workweek_start_day' => $data['start_day'],
+                'regular_hours_per_week' => $data['hours_week'],
+                'regular_hours_per_day' => $data['hours_day'],
+                'overtime' => $data['overtime']
+            );
+            $this->db->where('company_id',getLoggedCompanyID());
+            $this->db->update('timesheet_settings',$update);
+            return true;
+        }else{
+            return false;
+        }
+    }
+    //Break Preference
+    public function breakPreference($data){
+        $qry = $this->db->get_where('timesheet_settings',array('company_id'=>getLoggedCompanyID()));
+        if ($qry->num_rows() == 0){
+            $insert = array(
+                'company_id' => getLoggedCompanyID(),
+                'break_rule' => $data['break_rule'],
+                'break_length' => $data['length'],
+                'break_type' => $data['type']
+            );
+            $this->db->insert('timesheet_settings',$insert);
+            return true;
+        }elseif($qry->num_rows() == 1){
+            $update = array(
+                'break_rule' => $data['break_rule'],
+                'break_length' => $data['length'],
+                'break_type' => $data['type']
+            );
+            $this->db->where('company_id',getLoggedCompanyID());
+            $this->db->update('timesheet_settings',$update);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }
 

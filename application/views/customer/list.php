@@ -301,7 +301,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt2' || $minitab=='' ){echo "active";} ?>" data-toggle="tab" href="#widget1">Import/Audit</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3'){echo "active";} ?>" data-toggle="tab" href="#widget2">Dispute Wizard</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3' || $minitab=='mt3-cdl'){echo "active";} ?>" data-toggle="tab" href="#widget2">Dispute Wizard</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4' || $minitab=='mt4-2'){echo "active";} ?>" data-toggle="tab" href="#widget3">Dispute Items</a>
@@ -342,9 +342,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         include viewPath('customer/adv_cust_modules/settings_widget1');
                                                     ?>
                                                 </div>
-                                                <div class="tab-pane <?php if($minitab=='mt3'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget2">
+                                                <div class="tab-pane <?php if($minitab=='mt3' || $minitab=='mt3-cdl' ){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget2">
                                                     <?php
-                                                        include viewPath('customer/adv_cust_modules/settings_widget2');
+                                                        if($minitab== 'mt3'){
+                                                            include viewPath('customer/adv_cust_modules/settings_widget2');
+                                                        }else{
+                                                            include viewPath('customer/adv_cust_modules/settings_widget2-1');
+                                                        }
                                                     ?>
                                                 </div>
                                                 <div class="tab-pane <?php if($minitab=='mt4' || $minitab=='mt4-2'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget3">

@@ -67,8 +67,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
-        <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">Your Business Availability</h3>
-        <?php echo form_open_multipart('onboarding/save_business_info', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">My Business Availability</h3>
+        <?php echo form_open_multipart(null, [ 'id'=> 'form-business-availability', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>        
         <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
         <div class="row">
             <div class="col-md-12">
@@ -81,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="validation-error" style="display: none;"></div>
 
                     <div class="card">
-                        <h3>Working Days</h3>
+                        <h4>Working Days</h3>
                         <p>Your working days will appear on your public profile.</p>
                         <div class="row">
                             <div class="col-md-12" style="margin-left: 14px;">
@@ -174,7 +174,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="card">
-                        <h3>Time Off / Unavailability</h3>
+                        <h4>Time Off / Unavailability</h3>
                         <p>Please set your unavailable timings and time-off.</p>
                         <div class="form-group">
                             <div class="row">
@@ -200,12 +200,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
+                        <br />
+                        <div class="msg-container"></div>
                     </div>
 
                     <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
-                  <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/industry_type");?>">« Back</a>
-                  <button class="btn btn-primary btn-lg margin-left" name="action" value="about" type="submit">Next »</button>
+                  <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/add_ons");?>">« Back</a>
+                  <button class="btn btn-primary btn-lg margin-left" name="action" value="availability" type="submit">Next »</button>
                </div>
             </div>
                 </div>
@@ -219,6 +221,34 @@ $(function(){
     $('.default-datepicker').datepicker({
         format: 'yyyy-mm-dd',
         autoclose: true
+    });
+
+    $("#form-business-availability").submit(function(e){
+      e.preventDefault();
+
+      var msg = '<img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...';
+      var url = base_url + 'onboarding/_save_business_availability';
+
+      $(".msg-container").html(msg);
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: "json",
+             data: $("#form-business-availability").serialize(),
+             success: function(o)
+             {
+                if( o.is_success ){
+                  $(".msg-container").html('');
+                  location.href = base_url + 'onboarding/credentials';
+                }else{
+                  var msg = '<div class="alert alert-danger" role="alert">'+o.msg+'</div>';
+                  $(".msg-container").html(msg);
+                }
+             }
+          });
+      }, 500);
     });
 });
 </script>

@@ -6,38 +6,45 @@
             <div class="formboxtext">
                 This is an ideal starting point for every client. You can accomplish all 3 very quickly.
             </div>
-
-            <h4 class="header-title">Quick Start</h4>
-            <div class="qUickStart">
-                <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">1</span>
+            <a href="#">
+                <div class="qUickStart">
+                    <span class="icon dispute-icon">1</span>
+                        <div class="qUickStartde">
+                            <h4>ORDER CREDIT HISTORY REPORTS</h4>
+                            <span>
+                                Contact the 3 Credit Major Bureaus to obtain up-to-date Credit History Reports.
+                                It is important that you view them from all 3 bureaus, as the data may differ.
+                            </span>
+                        </div>
+                </div>
+            </a>
+            <br>
+            <a href="#">
+                <div class="qUickStart">
+                    <span class="icon dispute-icon">2</span>
                     <div class="qUickStartde">
-                        <h4><a href="#">ORDER CREDIT HISTORY REPORTS</a></h4>
+                        <h4>REVIEW CREDIT HISTORY REPORTS</h4>
+                            <span>
+                                80% of all credit reports contain errors.  Review the reports and look for errors and inaccurate
+                                information that may affect your client's credit score.
+                            </span>
+                    </div>
+                </div>
+            </a>
+            <br>
+            <a href="<?= isset($profile_info)? url('/customer/index/tab3/'.$profile_info->prof_id).'/mt3-cdl' : '#'; ?>">
+                <div class="qUickStart">
+                    <span class="icon dispute-icon">3</span>
+                    <div class="qUickStartde">
+                        <h4>CREATE DISPUTE LETTERS</h4>
                         <span>
-                            Contact the 3 Credit Major Bureaus to obtain up-to-date Credit History Reports.
-                            It is important that you view them from all 3 bureaus, as the data may differ.
+                            Contact credit bureaus and creditors to request that inaccurate and
+                            outdated information be immediately removed from your client's credit history report.
                         </span>
                     </div>
-            </div>
-            <div class="qUickStart">
-                <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">2</span>
-                <div class="qUickStartde">
-                    <h4><a href="#">REVIEW CREDIT HISTORY REPORTS</a></h4>
-                        <span>
-                            80% of all credit reports contain errors.  Review the reports and look for errors and inaccurate
-                            information that may affect your client's credit score.
-                        </span>
                 </div>
-            </div>
-            <div class="qUickStart">
-                <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">3</span>
-                <div class="qUickStartde">
-                    <h4><a id="shortcut_link" href="#<?php //echo url('/workorder/add') ?>">CREATE DISPUTE LETTERS</a></h4>
-                    <span>
-                        Contact credit bureaus and creditors to request that inaccurate and
-                        outdated information be immediately removed from your client's credit history report.
-                    </span>
-                </div>
-            </div>
+            </a>
+
             <center><a id="more_detail_furnisher" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"  data-toggle="collapse" style="color:#1E5DA9;">
                 Create a letter for a client (with no dispute items)
             </a></center>
@@ -61,7 +68,11 @@
                         <tr>
                             <td width="5%" valign="top"><img src="https://app.creditrepaircloud.com/application/images/light_bulb.png" alt=" "></td>
                             <td width="95%" align="left" valign="top" class="normaltext1">
-                                <strong>Tip: </strong> Standard or Free Annual Reports Credit DO NOT include "scores". Credit "scores" must be purchased directly from the credit bureaus or services. We also provide links for purchasing credit scores on this web page: <a href="http://www.credit-aid.com/resources.htm" target="_blank">www.credit-aid.com/resources.htm</a>. Please do not contact us about your credit reports. We have no affiliation with the credit bureaus and we cannot give legal advice about your personal credit.              </td>
+                                <strong>Tip: </strong> Standard or Free Annual Reports Credit DO NOT include "scores". Credit "scores" must be purchased directly from the credit bureaus or services.
+                                We also provide links for purchasing credit scores on this web page:
+                                <a href="http://www.credit-aid.com/resources.htm" target="_blank">www.credit-aid.com/resources.htm</a>.
+                                Please do not contact us about your credit reports. We have no affiliation with the credit bureaus and we cannot give legal advice
+                                about your personal credit.              </td>
                         </tr>
                     </tbody>
                 </table>
@@ -75,6 +86,12 @@
         background-color: #f9f9f9;
         margin: 20px auto;
         padding: 10px;
+    }
+
+    .dispute-icon{
+        background-color: #32243d !important;
+        font-weight: bold;
+        font-size: 40px;
     }
     .qUickStart{
         /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fcfcfc+0,eaeaea+100 */
@@ -110,8 +127,6 @@
         text-transform: uppercase;
         font-weight: 700;
         margin: 0;
-        margin-bottom: 0px;
-        margin-bottom: 6px;
     }
     .qUickStart .qUickStartde span{
         opacity: 0.6;

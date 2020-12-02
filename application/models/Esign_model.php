@@ -63,6 +63,20 @@ class Esign_model extends MY_Model {
 		->get()->result_array();
 	}
 
+	public function get_library_categories(){
+        $query = $this->db->get($this->librariesMaster);
+        return $query->result();
+    }
+
+    public function get_library_template_by_category($userId){
+        $this->db->from($this->libraryTable)
+            ->select('*')
+            ->where('isActive',1 )
+            ->where('user_id',$userId);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 	public function getLibraries($userId = 0){
 		$this->db->from($this->librariesMaster)
 		->select('libraryName, pk_esignLibraryMaster, userId')

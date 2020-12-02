@@ -1966,7 +1966,7 @@ class Timesheet extends MY_Controller {
 	    $query = $this->db->get_where('timesheet_departments',array('id' => $dept_id));
         $output = '<div class="department-edit-view">
                     <div class="dept-header">
-                        <a href="javascript:void(0)" id="deptBckBtn"><i class="fas fa-arrow-left fa-lg" style="margin-right: 10px;color: #a2a2a2;"></i></a> <h3>'.$query->row()->name.'</h3> <a href="javascript:void(0)" title="Edit" data-toggle="tooltip"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="javascript:void(0)" id="deptBckBtn"><i class="fas fa-arrow-left fa-lg" style="margin-right: 10px;color: #a2a2a2;"></i></a> <h3>'.$query->row()->name.'</h3> <a href="javascript:void(0)" title="Edit" data-toggle="tooltip" id="deptEditName"><i class="fas fa-pencil-alt"></i></a>
                     </div>
                     <div class="dept-sub-header">
                         <div class="row">
@@ -1998,6 +1998,46 @@ class Timesheet extends MY_Controller {
 
 
         echo json_encode($output);
+    }
+    //Workweek and Overtime settings
+    public function workweekOvertimeSettings(){
+        $start_day = $this->input->post('values[start_day]');
+        $hours_week = $this->input->post('values[hours_week]');
+        $hours_day = $this->input->post('values[hours_day]');
+        $overtime = $this->input->post('values[overtime]');
+        $data = array(
+            'start_day' => $start_day,
+            'hours_week' => $hours_week,
+            'hours_day' => $hours_day,
+            'overtime' => $overtime
+        );
+        $query = $this->timesheet_model->workweekOvertimeSettings($data);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+    //Break Preference
+    public function breakPreference(){
+	    $break_rule = $this->input->post('values[break_rule]');
+	    $type = $this->input->post('values[type]');
+	    if ($break_rule == 'Manual'){
+	        $length = null;
+        }else{
+            $length = $this->input->post('values[length]');
+        }
+	    $data = array(
+	        'break_rule' => $break_rule,
+            'type' => $type,
+            'length' => $length
+        );
+	    $query = $this->timesheet_model->breakPreference($data);
+	    if ($query == true){
+	        echo json_encode(1);
+        }else{
+	        echo json_encode(0);
+        }
     }
 
 //    Email Report for Timesheet test page

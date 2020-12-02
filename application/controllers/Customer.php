@@ -22,6 +22,7 @@ class Customer extends MY_Controller
         $this->load->model('Customer_model', 'customer_model');
         $this->load->model('CustomerAddress_model', 'customeraddress_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('Esign_model', 'Esign_model');
         $this->checkLogin();
         $this->load->library('session');
         $this->load->library('form_validation');
@@ -59,7 +60,7 @@ class Customer extends MY_Controller
            // 'assets/frontend/js/creditcard.js',
            // 'assets/frontend/js/customer/add.js',
         ));
-        error_reporting(0);
+        //error_reporting(0);
     }
 
     public function leads()
@@ -1042,8 +1043,6 @@ class Customer extends MY_Controller
             $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
             $this->customer_ad_model->add($input,"ac_module_sort");
         }
-
-
         $userid = $this->uri->segment(4);
         if(!isset($userid) || empty($userid)){
             $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
@@ -1053,6 +1052,9 @@ class Customer extends MY_Controller
         }else{
             $this->qrcodeGenerator($userid);
         }
+
+        //$this->session->set_userdata('customer_data_session', 233);
+        //$this->session->unset_userdata('customer_data_session');
 
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
@@ -1066,6 +1068,8 @@ class Customer extends MY_Controller
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
            // print_r($this->page_data['alarm_info']);
         }
+        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
+        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
         $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");

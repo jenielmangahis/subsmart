@@ -156,7 +156,7 @@ span.text-ter {
 <div>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
-        <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">What type of services do you offer?</h3>
+        <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">My Services</h3>
         <?php echo form_open_multipart('onboarding/saveservices', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
             <div class="col-md-12">
@@ -164,7 +164,7 @@ span.text-ter {
                 <div class="validation-error" style="display: none;"></div>
                 <div class="card st-vl">
 
-<h3>Services</h3>
+<h3>What type of services does your business offer?</h3>
 
 <div class="row">
     <div class="col-md-12"><form id="form-business-services" method="post" action="#">

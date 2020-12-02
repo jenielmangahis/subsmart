@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2020 at 05:18 PM
+-- Generation Time: Dec 01, 2020 at 05:24 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -51,7 +51,7 @@ CREATE TABLE `accounting_reconcile_history` (
   `cash_back_memo` varchar(255) DEFAULT NULL,
   `cash_back_amount` varchar(255) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 = inactive , 1 = active	',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NULL DEFAULT NULL,
   `action` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -60,9 +60,12 @@ CREATE TABLE `accounting_reconcile_history` (
 --
 
 INSERT INTO `accounting_reconcile_history` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`, `CHRG`, `memo_sc`, `memo_it`, `mailing_address`, `checkno`, `descp_sc`, `descp_it`, `cash_back_account`, `cash_back_memo`, `cash_back_amount`, `active`, `created_at`, `action`) VALUES
-(1, 1, '2000', '28.08.2019', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '08.08.2020', 'SVCCHRG', 'Service Charge', 'Interest Earned', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2020-11-24 15:13:27', NULL),
+(0, 1, '2000', '28.08.2019', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '08.08.2020', 'SVCCHRG', 'Service Charge', 'Interest Earned', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2020-11-24 15:13:27', NULL),
+(1, 2, '10000.00', '09.06.2020', '11.06.2020', '121.00', 'Cash on hand', '20.06.2020', '201.00', 'Cash on hand', '', 'SVCCHRG', 'Service Charge', 'Interest Earned', '', '', '', '', '', '', '', 1, '0000-00-00 00:00:00', 'updated'),
 (4, 2, '10000', '09.06.2020', '11.06.2020', '110.00', 'Cash on hand', '20.06.2020', '200.00', 'Cash on hand', NULL, 'SVCCHRG', 'Service charge', 'Interest Earned', 'mailing add', 'SVCCHRG', '', '', '1', '                                            ', '15', 1, '2020-11-24 15:13:27', 'Added'),
-(14, 2, '10000', '09.06.2020', '', '0', '', '', '0', '', NULL, '', '', '', '', '', '', '', '', '', '', 1, '2020-11-24 15:13:27', 'Edited');
+(23, 2, '10000.00', '09.06.2020', '11.06.2020', '100.00', 'Cash on hand', '20.06.2020', '201.00', 'Cash on hand', '', 'SVCCHRG', 'Service Charge', 'Interest Earned', '', '', '', '', '', '', '', 1, '0000-00-00 00:00:00', 'updated'),
+(24, 2, '10000.00', '09.06.2020', '11.06.2020', '101.00', 'Cash on hand', '20.06.2020', '201.00', 'Cash on hand', '', 'SVCCHRG', 'Service charge', 'Interest Earned', '', '', '', '', '', '', '', 1, '0000-00-00 00:00:00', 'updated'),
+(25, 2, '10000.00', '09.06.2020', '11.06.2020', '120.00', 'Cash on hand', '20.06.2020', '201.00', 'Cash on hand', '', 'SVCCHRG', 'Service charge', 'Interest Earned', 'mailing add', 'SVCCHRG', '', '', '1', '                                                                                                                                                                                                                                                               ', '15', 1, '0000-00-00 00:00:00', 'updated');
 
 --
 -- Indexes for dumped tables
@@ -74,6 +77,16 @@ INSERT INTO `accounting_reconcile_history` (`id`, `chart_of_accounts_id`, `endin
 ALTER TABLE `accounting_reconcile_history`
   ADD PRIMARY KEY (`id`),
   ADD KEY `chart_of_accounts_id` (`chart_of_accounts_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `accounting_reconcile_history`
+--
+ALTER TABLE `accounting_reconcile_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
