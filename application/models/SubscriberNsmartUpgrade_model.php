@@ -54,6 +54,10 @@ class SubscriberNsmartUpgrade_model extends MY_Model
         return $query->result();
     }
 
+    public function deleteClientPlanUpgradeId($client_id, $plan_upgrade_id){
+        $this->db->delete($this->table, array('client_id' => $client_id, 'plan_upgrade_id' => $plan_upgrade_id));
+    } 
+
 }
 
 /* End of file SubscriberNsmartUpgrade_model.php */
