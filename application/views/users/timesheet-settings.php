@@ -618,6 +618,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         color: #c7c7c7;
         margin-left: 20px;
     }
+    .break-pref-length{
+        display: none;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -680,6 +683,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#empManualEntries">
                                                 Manual Entries
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#empNotifications">
+                                                Notifications
                                             </a>
                                         </li>
                                     </ul>
@@ -841,7 +849,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             ?>
                                                 <div class="department-edit-view">
                                                     <div class="dept-header">
-                                                        <a href="javascript:void(0)" id="deptBckBtn"><i class="fas fa-arrow-left fa-lg" style="margin-right: 10px;color: #a2a2a2;"></i></a>  <h3><?php echo $dept_id[0]->name;?></h3> <a href="javascript:void(0)" title="Edit" data-toggle="tooltip"><i class="fas fa-pencil-alt"></i></a>
+                                                        <a href="javascript:void(0)" id="deptBckBtn"><i class="fas fa-arrow-left fa-lg" style="margin-right: 10px;color: #a2a2a2;"></i></a>  <h3><?php echo $dept_id[0]->name;?></h3>
+                                                        <a href="javascript:void(0)" title="Edit" data-toggle="tooltip" id="deptEditName"><i class="fas fa-pencil-alt"></i></a>
                                                     </div>
                                                     <div class="dept-sub-header">
                                                         <div class="row">
@@ -921,10 +930,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <h4>Worksheet & Overtime</h4>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <button class="btn btn-success">Save changes</button>
+                                                        <button class="btn btn-success" id="savedWorkweekOTsettings">Save changes</button>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <form action="" method="post" id="formWorkweekOT">
                                             <div class="workweek-container">
                                                 <div class="workweek-header">
                                                     <span>Workweek Settings</span>
@@ -934,13 +944,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <span>Workweek Start Day</span>
                                                     </div>
                                                     <div class="workweek-menu">
-                                                        <select name="" id="" class="form-control workweek-days">
-                                                            <option value="">Monday</option>
-                                                            <option value="">Tuesday</option>
-                                                            <option value="">Wednesday</option>
-                                                            <option value="">Thursday</option>
-                                                            <option value="">Friday</option>
-                                                            <option value="">Saturday</option>
+                                                        <select name="start_day" id="" class="form-control workweek-days">
+                                                            <option value="Monday">Monday</option>
+                                                            <option value="Tuesday">Tuesday</option>
+                                                            <option value="Wednesday">Wednesday</option>
+                                                            <option value="Thursday">Thursday</option>
+                                                            <option value="Friday">Friday</option>
+                                                            <option value="Saturday">Saturday</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -949,7 +959,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <span>Regular Hours per Week</span>
                                                     </div>
                                                     <div class="workweek-menu">
-                                                        <input type="text" class="form-control" style="width: 80px">
+                                                        <input type="text" name="hours_week" class="form-control" style="width: 80px">
                                                     </div>
                                                 </div>
                                                 <div class="workweek-section">
@@ -957,7 +967,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <span>Regular Hours per Day</span>
                                                     </div>
                                                     <div class="workweek-menu">
-                                                        <input type="text" class="form-control" style="width: 80px">
+                                                        <input type="text" name="hours_day" class="form-control" style="width: 80px">
                                                     </div>
                                                 </div>
                                             </div>
@@ -967,7 +977,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <div class="workweek-section">
                                                     <div class="overtime-radio">
-                                                        <input name="overtime" type="radio" id="radio1">
+                                                        <input name="overtime" type="radio" id="radio1" value="No Overtime">
                                                         <label for="radio1"></label>
                                                     </div>
                                                     <div class="overtime-title-row">
@@ -977,7 +987,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <div class="workweek-section">
                                                     <div class="overtime-radio">
-                                                        <input name="overtime" type="radio" id="radio2">
+                                                        <input name="overtime" type="radio" id="radio2" value="Daily Overtime">
                                                         <label for="radio2"></label>
                                                     </div>
                                                     <div class="overtime-title-row">
@@ -987,7 +997,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <div class="workweek-section">
                                                     <div class="overtime-radio">
-                                                        <input name="overtime" type="radio" id="radio3">
+                                                        <input name="overtime" type="radio" id="radio3" value="Weekly Overtime" checked>
                                                         <label for="radio3"></label>
                                                     </div>
                                                     <div class="overtime-title-row">
@@ -996,6 +1006,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                             </div>
+                                            </form>
                                         </div>
                                         <div class="tab-pane container" id="empBreakPref">
                                             <div class="workweek-overtime-header">
@@ -1004,15 +1015,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <h4>Break Preferences</h4>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <button class="btn btn-success">Save changes</button>
+                                                        <button class="btn btn-success" id="savedBreakPref">Save changes</button>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <form action="" method="post" id="formBreakPreference">
                                             <div class="break-pref-container">
                                                 <div class="break-pref-section">
                                                     <div class="break-pref-title">Break Rule</div>
                                                     <div class="break-pref-dp">
-                                                        <select name="" id="" class="form-control"></select>
+                                                        <select name="break_rule" id="breakRule" class="form-control">
+                                                            <option value="Manual">Manual</option>
+                                                            <option value="Automatic">Automatic</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="break-pref-length">
+                                                        <div class="break-pref-title">Length</div>
+                                                        <div class="break-pref-dp">
+                                                            <input type="text" name="length" class="form-control" style="width: 100px">
+                                                        </div>
                                                     </div>
                                                     <div class="break-pref-sub-title">
                                                         Team members can start and end breaks at any time while on the clock.
@@ -1021,16 +1042,71 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="break-pref-section">
                                                     <div class="break-pref-title">Type</div>
                                                     <div class="break-pref-dp">
-                                                        <select name="" id="" class="form-control"></select>
+                                                        <select name="type" id="" class="form-control">
+                                                            <option value="Paid">Paid</option>
+                                                            <option value="Unpaid">Unpaid</option>
+                                                        </select>
                                                     </div>
                                                     <div class="break-pref-sub-title">
                                                         Break hours will be added to the total number of hours for every pay period.
                                                     </div>
                                                 </div>
                                             </div>
+                                            </form>
                                         </div>
                                         <div class="tab-pane container" id="empManualEntries">
-
+                                            <div class="workweek-overtime-header">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h4>Manual Entries</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="workweek-section" style="margin-bottom: 20px">
+                                                <div class="overtime-radio">
+                                                    <input name="overtime" type="checkbox" id="">
+                                                    <label for="radio1"></label>
+                                                </div>
+                                                <div class="overtime-title-row">
+                                                    <span class="overtime-title">Manual Entries</span>
+                                                    <span class="overtime-sub-title">When enabled, users with the roles selected below will be allowed to add, edit or delete time entries.</span>
+                                                </div>
+                                            </div>
+                                            <div class="workweek-container">
+                                                <div class="workweek-header">
+                                                    <span>Roles</span>
+                                                </div>
+                                                <div class="workweek-section">
+                                                    <div class="overtime-radio">
+                                                        <input name="overtime" type="radio" id="admins">
+                                                        <label for="admins"></label>
+                                                    </div>
+                                                    <div class="overtime-title-row">
+                                                        <span class="overtime-title">Admins</span>
+                                                    </div>
+                                                </div>
+                                                <div class="workweek-section">
+                                                    <div class="overtime-radio">
+                                                        <input name="overtime" type="radio" id="managers">
+                                                        <label for="managers"></label>
+                                                    </div>
+                                                    <div class="overtime-title-row">
+                                                        <span class="overtime-title">Managers</span>
+                                                    </div>
+                                                </div>
+                                                <div class="workweek-section">
+                                                    <div class="overtime-radio">
+                                                        <input name="overtime" type="radio" id="employees">
+                                                        <label for="employees"></label>
+                                                    </div>
+                                                    <div class="overtime-title-row">
+                                                        <span class="overtime-title">Employees</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane container" id="empNotifications">
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1667,8 +1743,113 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(document).on('click','#deptAddMembers',function () {
             $('#addMembersModal').modal({backdrop: 'static', keyboard: false});
         });
-        //Workweek settings
+        $(document).on('click','#deptEditName',function () {
+            let name = $(this).prev('h3').text();
+            Swal.fire({
+                title: "Edit Department",
+                html: '<input type="text" id="editField" value="'+name+'" class="form-control">',
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        resolve([
+                            $('#editField').val(),
+                        ])
+                    })
+                },
+                didOpen: function () {
+                    $('#editField').focus();
+                },
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Save changes',
+            }).then((result) => {
+                if (result.value) {
+                    console.log(result.value);
+                }
+            });
+        });
+
+        //Workweek and Overtime settings
         $('.workweek-days').select2();
+
+        //Workweek and Overtime save changes
+        $(document).on('click','#savedWorkweekOTsettings',function () {
+            let values = {};
+            $.each($('#formWorkweekOT').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            $.ajax({
+                url:"/timesheet/workweekOvertimeSettings",
+                type:"POST",
+                dataType:"json",
+                data:{values:values},
+                success:function (data) {
+                    if(data == 1){
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "Workweek and Overtime has been updated",
+                                icon: 'success'
+                            });
+                    }else{
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Failed',
+                                html: "Something is wrong in the process",
+                                icon: 'warning'
+                            });
+                    }
+                }
+            });
+        });
+        //Break Preference
+        //Prompt for automatic break rule
+        $(document).on('change','#breakRule',function () {
+            let select = $(this).val();
+            if (select == 'Automatic'){
+                $('.break-pref-length').css('display','block');
+            }else{
+                $('.break-pref-length').css('display','none');
+            }
+        });
+        //Break Preference save changes
+        $(document).on('click','#savedBreakPref',function () {
+            let values = {};
+            $.each($('#formBreakPreference').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            $.ajax({
+                url:"/timesheet/breakPreference",
+                method:"POST",
+                dataType:"json",
+                data:{values:values},
+                success:function (data) {
+                    if(data == 1){
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "Break Preference has been updated",
+                                icon: 'success'
+                            });
+                    }else{
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Failed',
+                                html: "Something is wrong in the process",
+                                icon: 'warning'
+                            });
+                    }
+                }
+            });
+        });
 
         //Select2 employee list
         $('.select2-employee-list').select2({

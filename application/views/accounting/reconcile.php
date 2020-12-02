@@ -175,7 +175,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <div id="overlay-cus-tx" class=""></div>
     <div id="side-menu-cus-tx" class="main-side-nav">
         <div class="side-title">
-            <h4>Statement attachments - Cash on hand</h4>
+            <h4>Statement attachments</h4>
             <a id="close-menu-cus-tx" class="menuCloseButton" onclick="closeSideNav3()"><span id="side-menu-close-text">
             <i class="fa fa-times"></i></span></a>
         </div>
@@ -687,6 +687,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <label>Cash back goes to</label>
                     </br>
                     <select class="form-control" id="int_cashback_popup">
+                        <option value="">Select account</option>
                         <?php
                            $i=1;
                            foreach($this->chart_of_accounts_model->select() as $row)
@@ -3829,7 +3830,8 @@ $('.savebt1').on('click', function() {
   }
   var chart_of_accounts_id = $("#chart_of_accounts_id").text();
   var action = 'updated';
-  callhistory(chart_of_accounts_id,action);
+  var action_descp = 'page';
+  callhistory(chart_of_accounts_id,action,action_descp);
 });
 $('.savebt2').on('click', function() {
   var id = $('#id').val();
@@ -3855,7 +3857,8 @@ $('.savebt2').on('click', function() {
   }
   var chart_of_accounts_id = $("#chart_of_accounts_id").text();
   var action = 'updated';
-  callhistory(chart_of_accounts_id,action);
+  var action_descp = 'page';
+  callhistory(chart_of_accounts_id,action,action_descp);
 });
 function savebtsc(i) {
   var id = $('#id').val();
@@ -3886,9 +3889,10 @@ function savebtsc(i) {
             }
         })}
   var chart_of_accounts_id = $("#chart_of_accounts_id").text();
-  callschistory(reconcile_id,chart_of_accounts_id);
+  //callschistory(reconcile_id,chart_of_accounts_id);
   var action = 'updated';
-  callhistory(chart_of_accounts_id,action);
+  var action_descp = 'scpage';
+  callhistory(chart_of_accounts_id,action,action_descp);
 }
 </script>
 <script type="text/javascript">
@@ -5347,9 +5351,10 @@ function closeAddaccount()
             {
                 closeFullNav();
                 location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
-                callschistory(reconcile_id,chart_of_accounts_id);
+                //callschistory(reconcile_id,chart_of_accounts_id);
                 var action = 'updated';
-                callhistory(chart_of_accounts_id,action);
+                var action_descp = 'edit';
+                callhistory(chart_of_accounts_id,action,action_descp);
             }
         })
       }
@@ -5410,9 +5415,10 @@ function closeAddaccount()
                 })
         }
         var chart_of_accounts_id = $('#chart_of_accounts_id').text();
-      callschistory(id,chart_of_accounts_id);
+      //callschistory(id,chart_of_accounts_id);
       var action = 'deleted';
-      callhistory(chart_of_accounts_id,action);
+      var action_descp = 'edit';
+      callhistory(chart_of_accounts_id,action,action_descp);
     }
 </script>
 <script type="text/javascript">
@@ -5485,9 +5491,10 @@ function closeAddaccount()
             {
                 closeFullNav_int();
                 location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
-                callithistory(reconcile_id,chart_of_accounts_id);
+                //callithistory(reconcile_id,chart_of_accounts_id);
                 var action = 'updated';
-                callhistory(chart_of_accounts_id,action);
+                var action_descp = 'edit';
+                callhistory(chart_of_accounts_id,action,action_descp);
             }
         })
       }
@@ -5538,9 +5545,10 @@ function closeAddaccount()
                 })
         }
         var chart_of_accounts_id = $("#chart_of_accounts_id").text();
-        callithistory(reconcile_id,chart_of_accounts_id);
+        //callithistory(reconcile_id,chart_of_accounts_id);
         var action = 'deleted';
-      callhistory(chart_of_accounts_id,action);
+        var action_descp = 'edit';
+      callhistory(chart_of_accounts_id,action,action_descp);
     }
 </script>
 <script type="text/javascript">
@@ -6247,9 +6255,10 @@ function closeAddaccount()
                                             'success'
                                         );
                         closeFullNav_int();
-                        callithistory(reconcile_id,chart_of_accounts_id);
+                        //callithistory(reconcile_id,chart_of_accounts_id);
                         var action = 'deleted';
-                        callhistory(chart_of_accounts_id,action);
+                        var action_descp = 'edit';
+                        callhistory(chart_of_accounts_id,action,action_descp);
                         location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
                     }
                 });
@@ -6273,9 +6282,10 @@ function closeAddaccount()
                                             'success'
                                         );
                         closeFullNav();
-                        callschistory(reconcile_id,chart_of_accounts_id);
+                        //callschistory(reconcile_id,chart_of_accounts_id);
                         var action = 'updated';
-                        callhistory(chart_of_accounts_id,action);
+                        var action_descp = 'edit';
+                        callhistory(chart_of_accounts_id,action,action_descp);
                         location.href="<?php echo url('accounting/reconcile/') ?>"+chart_of_accounts_id;
                     }
                 });
@@ -6286,34 +6296,52 @@ function closeAddaccount()
 
 <!-- history -->
 <script type="text/javascript">
-    function callschistory(id,chart_of_accounts_id)
+    function callschistory(id,chart_of_accounts_id,action_descp)
     {
         var reconcile_id =id;
         var chart_of_accounts_id = chart_of_accounts_id;
-        var tablelength = $('#participantTable tr').length -2;
-        for(var i = 2 ; i <= tablelength ; i++)
+        if(action_descp=='scpage')
         {
+            var expense_account_sub = $('#expense_account_sub_'+i).val();
+            var service_charge_sub = $('#service_charge_sub_'+i).val();
+            var descp_sc_sub = $('#descp_sc_sub_'+i).val();
+            $.ajax({
+                    url:"<?php echo url('accounting/reconcile/add/servicecharge/history') ?>",
+                    method: "POST",
+                    data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                    success:function(data)
+                    {
+                    }
+                })
+        }
+        else
+        {
+           var tablelength = $('#participantTable tr').length -2;
+            for(var i = 2 ; i <= tablelength ; i++)
+            {
 
-                var expense_account_sub = $('.edit_expense_account_'+i).text();
-                var service_charge_sub = $('.edit_service_charge_'+i).text();
-                var descp_sc_sub = $('.edit_descp_'+i).text();
+                    var expense_account_sub = $('.edit_expense_account_'+i).text();
+                    var service_charge_sub = $('.edit_service_charge_'+i).text();
+                    var descp_sc_sub = $('.edit_descp_'+i).text();
 
-              if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
-              {
-                if(service_charge_sub!='')
-                {
-                    
-                        $.ajax({
-                            url:"<?php echo url('accounting/reconcile/add/servicecharge/history') ?>",
-                            method: "POST",
-                            data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
-                            success:function(data)
-                            {
-                            }
-                        })
-                }
-              }
-            }
+                  if(expense_account_sub!='' || descp_sc_sub!='' || service_charge_sub!='')
+                  {
+                    if(service_charge_sub!='')
+                    {
+                        
+                            $.ajax({
+                                url:"<?php echo url('accounting/reconcile/add/servicecharge/history') ?>",
+                                method: "POST",
+                                data: {reconcile_id:reconcile_id,chart_of_accounts_id:chart_of_accounts_id,expense_account_sub:expense_account_sub,service_charge_sub:service_charge_sub,descp_sc_sub:descp_sc_sub},
+                                success:function(data)
+                                {
+                                }
+                            })
+                    }
+                  }
+                } 
+        }
+        
     }
     function callithistory(id,chart_of_accounts_id)
     {
@@ -6344,7 +6372,7 @@ function closeAddaccount()
               }
             }
     }
-    function callhistory(chart_of_accounts_id,action)
+    function callhistory(chart_of_accounts_id,action,action_descp)
     {
           var action = action;
           var ending_balance = $('#ending_balance').text().substr(1);
@@ -6355,14 +6383,39 @@ function closeAddaccount()
           var second_date = $('#second_date').val();
           var interest_earned = $('#interest_earned').val();
           var income_account = $('#income_account').val();
+          var memo_sc = $('#sc').val();
+          var memo_it = $('#it').val();
+          var mailing_address = $('#mailing_add').val();
+          var checkno = $('#checkno').val();
+          var descp_sc = $('.edit_descp').text();
+          var descp_it = $('.edit_descp_it').text();
+          var cash_back_account = $('#int_cashback_popup').val();
+          var cash_back_memo = $('#cash_back_memo').val();
+          var cash_back_amount = $('#cash_back_amount').val();
+
+          if(action_descp=='edit')
+          {
+             var first_date = $('#date_popup').val();
+             var service_charge = $('#total').text().substr(9);
+             var expense_account = $('#edit_expense_account').val();
+             var second_date = $('#int_date_popup').val();
+             var interest_earned = $('#edit_interest_earned').val();
+             var income_account = $('#edit_income_account').val();
+             var memo_sc = $('#memo_sc').val();
+             var memo_it = $('#memo_it').val();
+          }
+
           if(chart_of_accounts_id!='')
           {
             $.ajax({
                 url:"<?php echo url('accounting/reconcile/save/history') ?>",
                 method: "POST",
-                data: {chart_of_accounts_id:chart_of_accounts_id,ending_balance:ending_balance,ending_date:ending_date,first_date:first_date,service_charge:service_charge,expense_account:expense_account,second_date:second_date,interest_earned:interest_earned,income_account:income_account,action:action},
+                data: {chart_of_accounts_id:chart_of_accounts_id,ending_balance:ending_balance,ending_date:ending_date,first_date:first_date,service_charge:service_charge,expense_account:expense_account,second_date:second_date,interest_earned:interest_earned,income_account:income_account,memo_sc:memo_sc,memo_it:memo_it,mailing_address:mailing_address,checkno:checkno,descp_sc:descp_sc,descp_it:descp_it,cash_back_account:cash_back_account,cash_back_memo:cash_back_memo,cash_back_amount:cash_back_amount,action:action},
                 success:function(data)
                 {
+                    var id = data;
+                    callschistory(id,chart_of_accounts_id,action_descp);
+                    callithistory(id,chart_of_accounts_id);
                 }
             })
           }

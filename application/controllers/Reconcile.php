@@ -698,9 +698,18 @@ class Reconcile extends MY_Controller {
         $second_date=$this->input->post('second_date');
         $interest_earned=$this->input->post('interest_earned');
         $income_account=$this->input->post('income_account');
+        $memo_sc=$this->input->post('memo_sc');
+        $memo_it=$this->input->post('memo_it');
+        $mailing_address=$this->input->post('mailing_address');
+        $checkno=$this->input->post('checkno');
+        $descp_sc=$this->input->post('descp_sc');
+        $descp_it=$this->input->post('descp_it');
+        $cash_back_account=$this->input->post('cash_back_account');
+        $cash_back_memo=$this->input->post('cash_back_memo');
+        $cash_back_amount=$this->input->post('cash_back_amount');
         $action=$this->input->post('action');
 
-        $this->reconcile_model->saverecords_history($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account,$action);
+        echo $this->reconcile_model->saverecords_history($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account,$memo_sc,$memo_it,$mailing_address,$checkno,$descp_sc,$descp_it,$cash_back_account,$cash_back_memo,$cash_back_amount,$action);
     }
 
     public function insert_servicecharge_history()

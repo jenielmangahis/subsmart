@@ -367,10 +367,13 @@ class Reconcile_model extends MY_Model {
 	    return $result;	
 	}
 
-	public function saverecords_history($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account,$action)
+	public function saverecords_history($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account,$memo_sc,$memo_it,$mailing_address,$checkno,$descp_sc,$descp_it,$cash_back_account,$cash_back_memo,$cash_back_amount,$action)
 	{
-		$query="insert into accounting_reconcile_history values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','','','','','','','','1','','$action')";
-		echo $this->db->query($query);
+		$query="insert into accounting_reconcile_history values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','$memo_sc','$memo_it','$mailing_address','$checkno','$descp_sc','$descp_it','$cash_back_account','$cash_back_memo','$cash_back_amount','1','','$action')";
+		$this->db->query($query);
+		$insert_id = $this->db->insert_id();
+
+   		echo $insert_id;
 	}
 
 	public function save_interest_history($reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub)
