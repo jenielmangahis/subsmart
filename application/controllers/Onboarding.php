@@ -205,11 +205,11 @@ class Onboarding extends MY_Controller {
 					}
 					break;
 				case 'Thursday':
-					if( $pdata['thurHoursFromAvail'] != '' && $pdata['thurHoursToAvail'] != '' ){
+					if( $pdata['thuHoursFromAvail'] != '' && $pdata['thuHoursToAvail'] != '' ){
 						$schedules[] = [
 							'day' => 'Thursday',
-							'time_from' => $pdata['thurHoursFromAvail'],
-							'time_to' => $pdata['thurHoursToAvail']
+							'time_from' => $pdata['thuHoursFromAvail'],
+							'time_to' => $pdata['thuHoursToAvail']
 						];
 					}else{
 						$is_success = false;
@@ -301,7 +301,7 @@ class Onboarding extends MY_Controller {
 					$is_bbb = 1;
 				}
 
-				$license_image_name = '';
+				$license_image_name = $business->license_image;
 				if(isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
 					$tmp_name = $_FILES['license_image']['tmp_name'];
 					$extension = strtolower(end(explode('.',$_FILES['license_image']['name'])));
@@ -309,7 +309,7 @@ class Onboarding extends MY_Controller {
 					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$license_image_name");
 				}
 
-				$bond_image_name = '';
+				$bond_image_name = $business->bond_image;
 				if(isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
 					$tmp_name = $_FILES['bond_image']['tmp_name'];
 					$extension = strtolower(end(explode('.',$_FILES['bond_image']['name'])));
@@ -317,7 +317,7 @@ class Onboarding extends MY_Controller {
 					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$bond_image_name");
 				}
 
-				$insurance_image_name = '';
+				$insurance_image_name = $business->insurance_image;
 				if(isset($_FILES['insurance_image']) && $_FILES['insurance_image']['tmp_name'] != '') {
 					$tmp_name = $_FILES['insurance_image']['tmp_name'];
 					$extension = strtolower(end(explode('.',$_FILES['insurance_image']['name'])));
@@ -341,7 +341,7 @@ class Onboarding extends MY_Controller {
 					'bbb_link' => $pdata['bbb_url'],
 					'license_image' => $license_image_name,
 					'bond_image' => $bond_image_name,
-					'insurance_image' => $insurance_image
+					'insurance_image' => $insurance_image_name
 				];
 
 				$this->business_model->update($bid,$data_availability);	
@@ -446,22 +446,28 @@ class Onboarding extends MY_Controller {
 		$cid  = logged('company_id');
 
 		if( $post['pid'] > 0 ){
-			$upgrade = $this->SubscriberNsmartUpgrade_model->getByClientIdAndNsmartUpgradeId($cid, $post['pid']);
-			if( $upgrade ){
-				$this->session->set_flashdata('message', 'Plugin already availed');
-        		$this->session->set_flashdata('alert_class', 'alert-danger');
+			if( $post['action'] == 'add' ){
+				$upgrade = $this->SubscriberNsmartUpgrade_model->getByClientIdAndNsmartUpgradeId($cid, $post['pid']);
+				if( $upgrade ){
+					$this->session->set_flashdata('message', 'Plugin already availed');
+	        		$this->session->set_flashdata('alert_class', 'alert-danger');
+				}else{
+					$data = [
+		    			'client_id' => $cid,
+		    			'plan_upgrade_id' => $post['pid'],
+		    			'date_created' => date("Y-m-d H:i:s"),
+		    			'date_modified' => date("Y-m-d H:i:s")
+		    		];
+
+		    		$subscriberAddon = $this->SubscriberNsmartUpgrade_model->create($data);
+
+		    		$this->session->set_flashdata('message', 'Plugin list was successfully updated');
+		        	$this->session->set_flashdata('alert_class', 'alert-success');
+				}
 			}else{
-				$data = [
-	    			'client_id' => $cid,
-	    			'plan_upgrade_id' => $post['pid'],
-	    			'date_created' => date("Y-m-d H:i:s"),
-	    			'date_modified' => date("Y-m-d H:i:s")
-	    		];
-
-	    		$subscriberAddon = $this->SubscriberNsmartUpgrade_model->create($data);
-
-	    		$this->session->set_flashdata('message', 'Plugin list was successfully updated');
-	        	$this->session->set_flashdata('alert_class', 'alert-success');
+				$this->SubscriberNsmartUpgrade_model->deleteClientPlanUpgradeId($cid, $post['pid']);
+				$this->session->set_flashdata('message', 'Plugin list was successfully removed');
+		        	$this->session->set_flashdata('alert_class', 'alert-success');
 			}
 		}else{
 			$this->session->set_flashdata('message', 'Plugin not found');

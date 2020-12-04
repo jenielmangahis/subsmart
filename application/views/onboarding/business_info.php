@@ -69,8 +69,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="col-md-24 col-lg-24 col-xl-18">
          <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">My Business Information</h3>
          <?php echo form_open_multipart('onboarding/save_business_info', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-            <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
-            <input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>">
+           <!-- <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
+            <input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>"> -->
             <div class="card">
                <h3>Let's introduce your business to your customers.</h3>
                <h4>Basic Info</h4>

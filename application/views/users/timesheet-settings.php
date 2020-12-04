@@ -584,7 +584,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         margin-right: 12px;
         vertical-align: top;
     }
-    .overtime-radio,.overtime-title-row{
+    .role-checkbox input[type="checkbox"]:checked + label:before{
+        background: #63c95a;
+    }
+    .role-checkbox input[type="checkbox"]{
+        appearance: none;
+        width: 0!important;
+    }
+    .role-checkbox input[type="checkbox"]+label:before{
+        content: "";
+        /* create custom radiobutton appearance */
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        padding: 6px;
+        margin-right: 3px;
+        /* background-color only for content */
+        background-clip: content-box;
+        border: 2px solid #bbbbbb;
+        background-color: #e7e6e7;
+        border-radius: 50%;
+    }
+    .role-checkbox{
+        margin-right: 12px;
+        vertical-align: top;
+    }
+
+    .overtime-radio,.overtime-title-row,.role-checkbox{
         display: inline-block;
     }
     .overtime-title{
@@ -620,6 +646,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     .break-pref-length{
         display: none;
+    }
+    /*Manual Entries*/
+    .disabled-section{
+        color: #c7c7c7;
+    }
+    .disabled-section input[type="checkbox"]:checked + label:before{
+        background: #c7c7c7;
     }
 </style>
 <div class="wrapper" role="wrapper">
@@ -823,7 +856,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <div class="form-group" style="width: 200px">
                                                 <label for="" style="font-weight: bold">ROLE</label>
-                                                <select name="role" id="" class="form-control invite-role" >
+                                                <select name="role" class="form-control invite-role" >
                                                     <option value="Employee">Employee</option>
                                                     <option value="Manager">Manager</option>
                                                     <option value="Admin">Admin</option>
@@ -944,7 +977,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <span>Workweek Start Day</span>
                                                     </div>
                                                     <div class="workweek-menu">
-                                                        <select name="start_day" id="" class="form-control workweek-days">
+                                                        <select name="start_day" class="form-control workweek-days">
                                                             <option value="Monday">Monday</option>
                                                             <option value="Tuesday">Tuesday</option>
                                                             <option value="Wednesday">Wednesday</option>
@@ -959,7 +992,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <span>Regular Hours per Week</span>
                                                     </div>
                                                     <div class="workweek-menu">
-                                                        <input type="text" name="hours_week" class="form-control" style="width: 80px">
+                                                        <input type="text" name="hours_week" class="form-control" style="width: 80px" value="00:00">
                                                     </div>
                                                 </div>
                                                 <div class="workweek-section">
@@ -967,7 +1000,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <span>Regular Hours per Day</span>
                                                     </div>
                                                     <div class="workweek-menu">
-                                                        <input type="text" name="hours_day" class="form-control" style="width: 80px">
+                                                        <input type="text" name="hours_day" class="form-control" style="width: 80px" value="00:00">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1032,7 +1065,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="break-pref-length">
                                                         <div class="break-pref-title">Length</div>
                                                         <div class="break-pref-dp">
-                                                            <input type="text" name="length" class="form-control" style="width: 100px">
+                                                            <input type="text" name="length" class="form-control" style="width: 100px" value="00:00">
                                                         </div>
                                                     </div>
                                                     <div class="break-pref-sub-title">
@@ -1064,7 +1097,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <div class="workweek-section" style="margin-bottom: 20px">
                                                 <div class="overtime-radio">
-                                                    <input name="overtime" type="checkbox" id="">
+                                                    <input name="overtime" type="checkbox" id="manualEntries" checked>
                                                     <label for="radio1"></label>
                                                 </div>
                                                 <div class="overtime-title-row">
@@ -1072,13 +1105,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="overtime-sub-title">When enabled, users with the roles selected below will be allowed to add, edit or delete time entries.</span>
                                                 </div>
                                             </div>
-                                            <div class="workweek-container">
+                                            <div class="workweek-container " id="rolesContainer">
                                                 <div class="workweek-header">
                                                     <span>Roles</span>
                                                 </div>
                                                 <div class="workweek-section">
-                                                    <div class="overtime-radio">
-                                                        <input name="overtime" type="radio" id="admins">
+                                                    <div class="role-checkbox">
+                                                        <input name="admins" type="checkbox" id="admins" checked value="Admins">
                                                         <label for="admins"></label>
                                                     </div>
                                                     <div class="overtime-title-row">
@@ -1086,8 +1119,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                                 <div class="workweek-section">
-                                                    <div class="overtime-radio">
-                                                        <input name="overtime" type="radio" id="managers">
+                                                    <div class="role-checkbox">
+                                                        <input name="managers" type="checkbox" id="managers" checked value="Managers">
                                                         <label for="managers"></label>
                                                     </div>
                                                     <div class="overtime-title-row">
@@ -1095,8 +1128,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                                 <div class="workweek-section">
-                                                    <div class="overtime-radio">
-                                                        <input name="overtime" type="radio" id="employees">
+                                                    <div class="role-checkbox">
+                                                        <input name="employees" type="checkbox" id="employees" checked value="Employees">
                                                         <label for="employees"></label>
                                                     </div>
                                                     <div class="overtime-title-row">
@@ -1806,6 +1839,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             });
         });
+        $(document).on('keyup','input[name="hours_week"]',function () {
+            $(this).val(function(i, val) {
+                let timeParts = val.split(':'),
+                    totalSeconds = parseInt(timeParts[0], 10) * 60 + parseInt(timeParts[1], 10),
+                    minutes = Math.floor(totalSeconds / 60),
+                    seconds = totalSeconds - (minutes * 60);
+                return [minutes < 10 ? 0 : '', minutes, ':', seconds < 10 ? 0 : '', seconds].join('');
+            });
+        });
+
         //Break Preference
         //Prompt for automatic break rule
         $(document).on('change','#breakRule',function () {
@@ -1849,6 +1892,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     }
                 }
             });
+        });
+        //Manual Entries
+        $(document).on('click','#manualEntries',function () {
+            let checkbox = $(this).is(':checked');
+            if (checkbox == false){
+                $('#rolesContainer').addClass('disabled-section');
+                $('#rolesContainer input[name="admins"]').attr('disabled',true);
+                $('#rolesContainer input[name="managers"]').attr('disabled',true);
+                $('#rolesContainer input[name="employees"]').attr('disabled',true);
+            }else{
+                $('#rolesContainer').removeClass('disabled-section');
+                $('#rolesContainer input[name="admins"]').attr('disabled',false);
+                $('#rolesContainer input[name="managers"]').attr('disabled',false);
+                $('#rolesContainer input[name="employees"]').attr('disabled',false);
+            }
         });
 
         //Select2 employee list

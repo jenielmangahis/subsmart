@@ -18,6 +18,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   background: white !important;
   box-shadow: none !important;
 }
+img.banner-reg-b {
+  background: black;
+  object-fit: cover;
+  height: 250px;
+  width: 100%;
+  margin-bottom: 8px;
+}
 .checkbox.checkbox-head label {
   padding-top: 7px;
   margin-bottom: 10px;
@@ -157,6 +164,7 @@ span.text-ter {
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
         <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">My Services</h3>
+        <img class="banner-reg-b" src="<?php echo base_url('assets/img/business-registration/fp-b.jpg') ?>" alt="">
         <?php echo form_open_multipart('onboarding/saveservices', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
             <div class="col-md-12">
@@ -165,7 +173,6 @@ span.text-ter {
                 <div class="card st-vl">
 
 <h3>What type of services does your business offer?</h3>
-
 <div class="row">
     <div class="col-md-12"><form id="form-business-services" method="post" action="#">
       <?php include viewPath('flash'); ?>

@@ -160,18 +160,21 @@ a.card.border-gr.btn-addon {
                                 $active_addons = "";
                                 $active_subsciption = "Subscribe Now";
                                 if($NsmartUpgradedItems){
+                                  $is_subscribed = false;
                                     foreach ($NsmartUpgradedItems as $NsmartUpgradedItem) {
                                            $plan_id = $NsmartUpgrade->id;
+                                           
                                            if ($plan_id == $NsmartUpgradedItem->plan_upgrade_id){
                                               $active_addons = "addon-selected";
                                               $active_subsciption = "Subscribed";
+                                              $is_subscribed = true;
                                            }
                                     } 
                                 } ?>
                            <?php if($row == 1){ ?>
                              <div class="marketing-card-deck card-deck pl-50 pb-25"> <?php } $row++; ?>
                                 <!-- add class addon-selected for selector on anchor -->
-                                <a href="javascript:void(0);" class="card border-gr btn-addon <?php echo $active_addons; ?>" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
+                                <a href="javascript:void(0);" class="card border-gr btn-addon <?php echo $active_addons; ?>" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/img/onboarding/'.$NsmartUpgrade->image_filename) ?>" data-holder-rendered="true">
                                     <div class="card-body">
                                         <h5 class="card-title mb-0 text-center"><?php echo $NsmartUpgrade->name; ?></h5>
                                         <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>
@@ -203,7 +206,7 @@ a.card.border-gr.btn-addon {
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="">Add Plugin</h5>
+            <h5 class="modal-title" id="">Plugin</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -212,8 +215,8 @@ a.card.border-gr.btn-addon {
           <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'pid'));?>
           <div class="modal-body plugin-info-container"></div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-              <button type="submit" class="btn btn-success">Yes</button>
+              <button type="submit" class="btn btn-success btn-add-plugin" name="action" value="add">Add Plugin</button>
+              <button type="submit" class="btn btn-danger btn-remove-plugin" name="action" value="remove">Remove Plugin</button>
           </div>
           <?php echo form_close(); ?>
         </div>
@@ -227,9 +230,16 @@ a.card.border-gr.btn-addon {
 $(function(){
     $(".btn-addon").click(function(){
         var aid = $(this).attr("data-id");
-        
         var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Loading...</div>';
         var url = base_url + 'onboarding/_load_plugin_details';
+
+        if( $(this).hasClass("addon-selected") ){
+          $(".btn-add-plugin").hide();
+          $(".btn-remove-plugin").show();
+        }else{
+          $(".btn-add-plugin").show();
+          $(".btn-remove-plugin").hide();
+        }
 
         $("#pid").val(aid);
         $("#modalLoadingMsg").modal("show");

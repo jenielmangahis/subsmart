@@ -1,0 +1,193 @@
+<?php
+include_once("includes.php");
+require_once __DIR__.'/server.php';
+
+// init
+$response = "";
+
+// CHECK AUTHORIZATION
+/*if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
+    $server->getResponse()->send();
+
+    header("HTTP/1.0 403 Authorization Failed!");
+    $response = array("Status" => "error", "Code" => "403", "Message" => "Authorization Failed!");
+    echo json_encode($response);
+} else {*/
+    // get request method
+    $request_method = $_SERVER["REQUEST_METHOD"];
+
+    switch($request_method) {
+
+        case 'DELETE':
+			$flag	= trim($_GET["flag"]); // ALL
+
+			if ($flag == "ALL") {
+				DELETE_ALL();
+			} else {
+                DELETE(trim($_GET["id"]));
+            }
+            break;
+        case 'GET':
+            if (isset($_GET['id']) == true) {
+                GET(trim($_GET["id"]), "ONE");
+            } else {
+                GET(trim($_GET["user_id"]));
+            }
+            break;
+        case 'POST':
+            INSERT();
+            break;
+        case 'PUT':
+            UPDATE(trim($_GET["id"]));
+            break;
+        default:
+            // Unauthorized Request
+            header("HTTP/1.0 401 Unauthorized");
+            echo json_encode($response);
+            break;
+    }
+//}
+
+
+/***** FUNCTIONS *****/
+function DELETE_ALL() {
+
+    $db = new database_handler();
+    $delete = $db->executeQuery("delete from timesheet_leave");
+
+    if($delete) {
+        $response = array("Status" => "success", "Code" => "200", "Message" => "Deleting all data successful.");
+        header("HTTP/1.0 200 OK");
+    } else {
+        $response = array("Status" => "error", "Code" => "400", "Message" => "Deleting all data failed!");
+        header("HTTP/1.0 400 Bad Request");
+    }
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+function DELETE($id) {
+
+    $db = new database_handler();
+    $delete = $db->executeQuery("delete from timesheet_leave where id = $id");
+
+    if($delete) {
+        $response = array("Status" => "success", "Code" => "200", "Message" => "Deleting data successful.");
+        header("HTTP/1.0 200 OK");
+    } else {
+        $response = array("Status" => "error", "Code" => "400", "Message" => "Deleting data failed!");
+        header("HTTP/1.0 400 Bad Request");
+    }
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+function GET($id, $flag = "ALL") {
+    // curl
+    $db = new database_handler();
+    $rows = $db->fetchAll("select tl.*, tp.name from timesheet_leave tl, timesheet_pto tp where tl.user_id = $id and tp.id = tl.pto_id");
+
+    if ($flag == "ONE") {
+        $rows = $db->fetchAll("select tl.*, tp.name as pto_name from timesheet_leave tl, timesheet_pto tp where tl.id = $id and tp.id = tl.pto_id");
+    }
+
+    // init array
+    $data = array();
+
+    // iterate rows
+    foreach ($rows as $row) {
+        // get leave_id
+        $leave_id = $row['id'];
+
+        // get active attendance
+        $dates = $db->fetchAll("select date from timesheet_leave_date where leave_id = $leave_id");
+        $row['dates'] = $dates;
+
+        array_push($data, $row);
+    }
+
+    $response = array("Status" => "success", "Code" => 200, "Message" => "Fetching data successful.", "Data" => $data);
+    header("HTTP/1.0 200 OK");
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+function INSERT() {
+
+    $params = json_decode(file_get_contents('php://input'),true);
+    $dates = explode(", ", $params['dates']);
+    unset($params['dates']);
+
+    $db = new database_handler();
+    $insert = $db->insertQuery($params, "timesheet_leave");
+
+    if($insert) {
+        // $leave_id
+        $leave_id = $insert['inserted_id'];
+
+        // iterate dates
+        foreach ($dates as $date) {
+            $params2['leave_id'] = $leave_id;
+            $params2['date'] = $date;
+
+            // insert
+            $insert = $db->insertQuery($params2, "timesheet_leave_date");
+        }
+
+        $response = array("Status" => "success", "Code" => 200, "Message" => "Adding data successful.");
+        header("HTTP/1.0 200 OK");
+    } else {
+        $response = array("Status" => "error", "Code" => 400, "Message" => "Adding data failed!");
+        header("HTTP/1.0 400 Bad Request");
+    }
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+function UPDATE($id) {
+
+    $params = json_decode(file_get_contents('php://input'),true);
+    $dates = explode(", ", $params['dates']);
+    unset($params['dates']);
+
+    $db = new database_handler();
+    $update = $db->updateQuery($params,'timesheet_leave', $id,'id');
+
+    if($update) {
+        // remove dates first
+        $delete = $db->executeQuery("delete from timesheet_leave_date where leave_id = $id");
+
+        // insert again
+        // iterate dates
+        foreach ($dates as $date) {
+            $params2['leave_id'] = $id;
+            $params2['date'] = $date;
+
+            // insert
+            $insert = $db->insertQuery($params2, "timesheet_leave_date");
+        }
+
+        $response = array("Status" => "success", "Code" => "200", "Message" => "Updating data successful.");
+        header("HTTP/1.0 200 OK");
+    } else {
+        $response = array("Status" => "error", "Code" => "400", "Message" => "Updating data failed!");
+        header("HTTP/1.0 400 Bad Request");
+    }
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+
+
+//////////
+?>
