@@ -83,12 +83,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <br/>
                         <label>Business Street Address</label> <span class="form-required">*</span>
                         <div class="help help-sm help-block">Type in to search for your address</div>
-                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php echo $profiledata->address ?>" placeholder="e.g. 123 Old Oak Drive" required="">
+                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->address : '' ?>" placeholder="e.g. 123 Old Oak Drive" required="">
                         <span class="validation-error-field" data-formerrors-for-name="address" data-formerrors-message="true" style="display: none;"></span>
                         <br/>
                         <label>Suite/Unit</label> <span class="help">(optional)</span>
                         <div class="help help-sm help-block">Suite #</div>
-                        <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo $profiledata->unit_nbr ?>" placeholder="e.g. Ap #12" required="">
+                        <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->unit_nbr : '' ?>" placeholder="e.g. Ap #12" required="">
                         <span class="validation-error-field" data-formerrors-for-name="unit_nbr" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -98,7 +98,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                            <label>Profile Picture</label>
                            <div>
                               <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#">
-                                <?php if ($profiledata->business_image !== null) { ?>
+                                <?php if ($profiledata) { ?>
                                   <img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo (businessProfileImage($profiledata->id)) ? businessProfileImage($profiledata->id) : $url->assets ?>">
                                 <?php } else { ?>
                                   <img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo base_url();?>assets/img/onboarding/profile-avatar.png">
@@ -123,12 +123,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="row">
                      <div class="col-md-4">
                         <label>City</label> <span class="form-required">*</span>
-                        <input type="text" name="city"  class="form-control" id="city" value="<?php echo $profiledata->city ?>" autocomplete="off" placeholder="e.g. Phoenix" required="">
+                        <input type="text" name="city"  class="form-control" id="city" value="<?php echo ($profiledata) ? $profiledata->city : '' ?>" autocomplete="off" placeholder="e.g. Phoenix" required="">
                         <span class="validation-error-field" data-formerrors-for-name="city" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                      <div class="col-md-4">
                         <label>Zip/Postal Code</label> <span class="form-required">*</span>
-                        <input type="text" name="zip"  class="form-control" id="zip" value="<?php echo $profiledata->zip ?>" autocomplete="off" placeholder="e.g. 86336" required="">
+                        <input type="text" name="zip"  class="form-control" id="zip" value="<?php echo ($profiledata) ? $profiledata->zip : '' ?>" autocomplete="off" placeholder="e.g. 86336" required="">
                         <span class="validation-error-field" data-formerrors-for-name="zip" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                      <div class="col-md-4">
@@ -146,12 +146,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <label>Business Phone</label> <span class="form-required">*</span>
                         <div class="help help-sm help-block">We'll send you text/sms notifications to this nr.</div>
                         <div>
-                           <input type="text" name="business_phone" value="<?php echo $profiledata->business_phone ?>"  class="form-control" autocomplete="off" required="">
+                           <input type="text" name="business_phone" value="<?php echo ($profiledata) ? $profiledata->business_phone : '' ?>"  class="form-control" autocomplete="off" required="">
                            <span class="validation-error-field" data-formerrors-for-name="phone" data-formerrors-message="true" style="display: none;"></span>
                         </div>
                         <div>
                            <div class="checkbox checkbox-sec">
-                              <input type="checkbox" name="is_public_phone" value="1" <?php if($profiledata->is_public_phone==1){ ?> checked="checked" <?php } ?> id="is_public_phone">
+                              <?php 
+                                $is_public_phone = '';
+                                if( $profiledata ){
+                                  if($profiledata->is_public_phone==1){
+                                    $is_public_phone = 'checked="checked"';
+                                  }
+                                }
+                              ?>
+                              <input type="checkbox" name="is_public_phone" value="1" <?= $is_public_phone; ?> id="is_public_phone">
                               <label for="is_public_phone"><span>Show <i>business phone</i> on my public profile</span></label>
                            </div>
                            &nbsp; <a class="help-tooltip" data-toggle="tooltip" title="" data-original-title="Select this if you want to display this phone number on your public profile page."><span class="fa fa-question-circle"></span></a>
@@ -164,19 +172,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                            <div class="col-md-9">
                               <label>Office Phone</label> <span class="help">(optional)</span>
                               <div class="help help-block help-sm">If you want to show the office phone on profile</div>
-                              <input type="text" name="office_phone" value="<?php echo $profiledata->office_phone ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890">
+                              <input type="text" name="office_phone" value="<?php echo ($profiledata) ? $profiledata->office_phone : '' ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890">
                            </div>
                            <div class="col-md-3">
                               <label>Ext</label> <span class="help">(optional)</span>
                               <div class="help help-block help-sm">Extension</div>
-                              <input type="text" name="office_phone_extn" value="1" <?php echo $profiledata->office_phone_extn ?>  class="form-control" autocomplete="off" placeholder="e.g. 123">
+                              <input type="text" name="office_phone_extn" value="<?php echo ($profiledata) ? $profiledata->office_phone_extn : '' ?>" class="form-control" autocomplete="off" placeholder="e.g. 123">
                            </div>
                         </div>
                         <span class="validation-error-field" data-formerrors-for-name="office_phone" data-formerrors-message="true" style="display: none;"></span>
                         <span class="validation-error-field" data-formerrors-for-name="office_phone_extn" data-formerrors-message="true" style="display: none;"></span>
                         <div>
                            <div class="checkbox checkbox-sec">
-                              <input type="checkbox" name="is_public_office_phone" value="1" <?php if($profiledata->is_public_office_phone==1){ ?> checked="checked" <?php } ?> id="is_public_office_phone">
+                              <?php 
+                                $is_public_office_phone = '';
+                                if( $profiledata ){
+                                  if($profiledata->is_public_office_phone==1){
+                                    $is_public_office_phone = 'checked="checked"';
+                                  }
+                                }
+                              ?>
+                              <input type="checkbox" name="is_public_office_phone" value="1" <?= $is_public_office_phone; ?> id="is_public_office_phone">
                               <label for="is_public_office_phone"><span>Show <i>office phone</i> on my public profile
                               </span></label>
                            </div>
@@ -189,7 +205,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>Business Email</label> <span class="form-required">*</span>
-                        <input type="text" name="business_email" value="<?php echo $profiledata->business_email ?>"  class="form-control" autocomplete="off" placeholder="Business Email" required="">
+                        <input type="text" name="business_email" value="<?php echo ($profiledata) ? $profiledata->business_email : '' ?>"  class="form-control" autocomplete="off" placeholder="Business Email" required="">
                         <span class="validation-error-field" data-formerrors-for-name="email" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -206,12 +222,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      <div class="col-md-6">
                         <label>Do you provide Emergency Service?</label> <span class="form-required">*</span>
                         <div>
+                            <?php 
+                              $with_emergency_support = '';
+                              $without_emergency_support = '';
+                              if( $profiledata ){
+                                if($profiledata->is_emergency_support==1){
+                                  $with_emergency_support = 'checked="checked"';
+                                }else{
+                                  $without_emergency_support = 'checked="checked"';
+                                }
+                              }
+                            ?>
                            <div class="checkbox checkbox-sec margin-right">
-                              <input type="radio" name="is_emergency_support" value="1" <?php if($profiledata->is_emergency_support==1){ ?> checked="checked" <?php } ?> id="is_emergency_support_1">
+                              <input type="radio" name="is_emergency_support" value="1" <?= $with_emergency_support; ?> id="is_emergency_support_1">
                               <label for="is_emergency_support_1"><span>Yes</span></label>
                            </div>
                            <div class="checkbox checkbox-sec">
-                              <input type="radio" name="is_emergency_support" value="0" <?php if($profiledata->is_emergency_support==0){ ?> checked="checked" <?php } ?> id="is_emergency_support_2">
+                              <input type="radio" name="is_emergency_support" value="0" <?= $without_emergency_support; ?> id="is_emergency_support_2">
                               <label for="is_emergency_support_2"><span>No</span></label>
                            </div>
                         </div>
@@ -219,7 +246,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      <div class="col-md-6">
                         <div data-toggle-for="is_emergency_support">
                            <label>24/7 Emergency Phone Number</label> <span class="form-required">*</span>
-                           <input type="text" name="phone_emergency" value="<?php echo $profiledata->phone_emergency ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890" required="">
+                           <input type="text" name="phone_emergency" value="<?php echo ($profiledata) ? $profiledata->phone_emergency : '' ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890" required="">
                            <span class="validation-error-field" data-formerrors-for-name="phone_emergency" data-formerrors-message="true" style="display: none;"></span>
                         </div>
                      </div>
