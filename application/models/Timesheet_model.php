@@ -78,32 +78,25 @@ class Timesheet_model extends MY_Model {
         return $qry->result();
     }
     public function attendance($user_id,$status,$attn_id,$shift,$break,$overtime){
-//        if ($flag == 0){
-//            $week_id = $this->totalHoursShift($user_id,$week_ID);
-//        }
-        $qry = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id,'shift_duration' => 0));
+        $qry = $this->db->get_where('timesheet_attendance',array('user_id' => $user_id,'shift_duration >' => 0));
         if ($qry->num_rows() == 0 && $status == 1){
             $data = array(
-//                'week_id' => $week_id,
                 'user_id' =>  $user_id,
-//                'date_in' => date('Y-m-d'),
-//                'date_out' => date('Y-m-d'),
-                'status' => $status,
+                'status' => 1,
                 'date_created' => date('Y-m-d H:i:s')
             );
-            $this->db->insert($this->attn_tbl,$data);
+            $this->db->insert('timesheet_attendance',$data);
             return $this->db->insert_id();
-        }elseif($qry->num_rows() == 1 && $status == 0){
+        }else{
             $update = array(
-                'status' => $status,
-//                'date_out' => date('Y-m-d'),
+                'status' => 0,
                 'shift_duration' => $shift,
                 'break_duration' => $break,
                 'overtime' => $overtime
             );
             $this->db->where('id',$attn_id);
-            $this->db->update($this->attn_tbl,$update);
-//            $this->totalHoursShift($user_id,$week_ID);
+            $this->db->update('timesheet_attendance',$update);
+            return true;
         }
     }
 
@@ -147,8 +140,12 @@ class Timesheet_model extends MY_Model {
             $break = $this->calculateBreakDuration($attn_id);
             $overtime = $this->calculateOvertime($user_id,$attn_id);
 //            $this->updateWeeklyReport($week_ID,$user_id,$attn_id);
-            $this->attendance($user_id,0,$attn_id,$shift,$break,$overtime);
-            return true;
+            $attendance = $this->attendance($user_id,0,$attn_id,$shift,$break,$overtime);
+            if ($attendance == true){
+                return true;
+            }else{
+                return false;
+            }
         }else{
             return false;
         }
@@ -380,8 +377,8 @@ class Timesheet_model extends MY_Model {
 
     public function getTotalUsersLoggedIn(){
         $total_users = $this->users_model->getTotalUsers();
-//        $this->db->or_where('date_in',date('Y-m-d'));
-//        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $this->db->or_where('DATE(date_created)',date('Y-m-d'));
+        $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
         $this->db->where('status',1);
         $query =  $this->db->get('timesheet_attendance');
         $logged_in = $query->num_rows();
@@ -398,12 +395,12 @@ class Timesheet_model extends MY_Model {
         $query = $this->db->get_where('timesheet_attendance',array('status' => 0))->num_rows();
         return $query;
     }
-//    public function getAttendanceByDay($day){
-//        $this->db->or_where('date_in',$day);
-//        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
-//        $query = $this->db->get('timesheet_attendance')->result();
-//        return $query;
-//    }
+    public function getAttendanceByDay($day){
+        $this->db->or_where('DATE(date_created)',$day);
+        $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
+        $query = $this->db->get('timesheet_attendance')->result();
+        return $query;
+    }
     public function getTimeSettingsByUser(){
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('timesheet_schedule',array('user_id'=>$user_id));

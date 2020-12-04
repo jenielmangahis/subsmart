@@ -105,7 +105,13 @@ class database_handler {
 
 		$mysqli->real_query($sql);
 		$result = $mysqli->store_result();
-		$rows = $result->fetch_all(MYSQLI_ASSOC);
+		//$rows = $result->fetch_all(MYSQLI_ASSOC);
+
+		$rows = array();
+
+		while ($row = $result->fetch_assoc()) {
+			array_push($rows, $row);
+		}
 
 		return $rows;
 	}
@@ -121,9 +127,9 @@ class database_handler {
 
 		$mysqli->real_query($sql);
 		$result = $mysqli->store_result();
-		$rows = $result->fetch_all(MYSQLI_ASSOC);
+		$row = $result->fetch_assoc();
 
-		return $rows[0];
+		return $row;
 	}
 
 	/************** FUNCTION END *************/

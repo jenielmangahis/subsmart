@@ -1124,14 +1124,15 @@ class Timesheet extends MY_Controller {
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
 
-//    public function inNow(){
-//	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1));
-//	    echo json_encode($query->num_rows());
-//    }
-//    public function outNow(){
-//        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_out'=>date('Y-m-d')));
-//        echo json_encode($query->num_rows());
-//    }
+    public function inNow(){
+	    $this->db->where('DATE(date_created)',date('Y-m-d'));
+	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1));
+	    echo json_encode($query->num_rows());
+    }
+    public function outNow(){
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'DATE(date_created)'=>date('Y-m-d')));
+        echo json_encode($query->num_rows());
+    }
     public function loggedInToday(){
         $total_users = $this->users_model->getTotalUsers();
         $this->db->or_where('DATE(date_created)',date('Y-m-d'));
@@ -1145,7 +1146,7 @@ class Timesheet extends MY_Controller {
         $user_id = $this->input->post('id');
         $company_id = $this->input->post('company_id');
         $entry = $this->input->post('entry');
-        $approved_by = $this->input->post('approved_by');
+        $approved_by = logged('id');
         $query = $this->timesheet_model->checkInEmployee($user_id,$entry,$approved_by,$company_id);
         if ($query != 0){
             echo json_encode($query);
