@@ -1052,11 +1052,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         // Checking IN
         $(document).on('click','#employeeCheckIn',function () {
-            var id = $(this).attr('data-id');
-            var emp_name = $(this).attr('data-name');
-            var selected = this;
-            var entry = 'Manual';
-            var approved_by = $(this).attr('data-approved');
+            let id = $(this).attr('data-id');
+            let emp_name = $(this).attr('data-name');
+            let selected = this;
+            let entry = 'Manual';
+            let approved_by = $(this).attr('data-approved');
             let photo = $(this).attr('data-photo');
             let company_id = $(this).attr('data-company');
             Swal.fire({
@@ -1078,7 +1078,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             if (data != 0){
                                 inNow();
                                 notLoggedIn();
-                                var time = serverTime ();
+                                let time = serverTime ();
                                 $(selected).attr('data-attn',data);
                                 $(selected).next('i').removeClass('fa-times-circle');
                                 $(selected).next('i').addClass('fa-check');

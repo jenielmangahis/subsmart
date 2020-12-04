@@ -556,10 +556,10 @@ class Users extends MY_Controller {
                         if ($attn->id == $log->attendance_id){
                             $entry_type = $log->entry_type;
                             if ($log->action == 'Check in'){
-                                $clock_in = date('h:i A',$log->time);
+                                $clock_in = date('h:i A',strtotime($log->date_created));
                             }
                             if ($log->action == 'Check out'){
-                                $clock_out = date('h:i A',$log->time);
+                                $clock_out = date('h:i A',strtotime($log->date_created));
                             }
                         }
                     }
