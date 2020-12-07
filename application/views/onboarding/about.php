@@ -93,9 +93,22 @@ img.banner-reg-a {
                   </div>
                   <div class="col-md-6">
                      <div class="form-group">
+                        <?php 
+                          $num_emp = 1;
+                          if( $profiledata ){
+                            $num_emp = $profiledata->employee_count;
+                          } 
+                        ?>
                         <label>Number of Employees</label> <span class="form-required">*</span>
                         <div class="help help-block help-sm">Enter the number of people working for you.</div>
-                        <input type="text" name="employee_count" value="<?php echo ($profiledata) ? $profiledata->employee_count : '' ?>"  class="form-control" autocomplete="off" placeholder="e.g. 5" required="">
+                        <select class="form-control" id="number_of_employee" name="employee_count" required="">
+                            <option <?= $num_emp == '1' ? 'selected="selected"' : ''; ?> value="1">1 (Just Me)</option>
+                            <option <?= $num_emp == '2-3' ? 'selected="selected"' : ''; ?> value="2-3">2-3</option>
+                            <option <?= $num_emp == '4-10' ? 'selected="selected"' : ''; ?> value="4-10">4-10</option>
+                            <option <?= $num_emp == '11-15' ? 'selected="selected"' : ''; ?> value="11-15">11-15</option>
+                            <option <?= $num_emp == '16-20' ? 'selected="selected"' : ''; ?> value="16-20">16-20</option>
+                            <option <?= $num_emp == '20+' ? 'selected="selected"' : ''; ?> value="20+">20+</option>
+                        </select>
                         <span class="validation-error-field" data-formerrors-for-name="employee_count" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
