@@ -398,3 +398,17 @@ update esign_library_template  set  category_id  = 5 where  esignLibraryTemplate
 
 INSERT INTO `esign_library_template` (`title`, `content`, `user_id`, `category_id`, `status`) 
 select EDLT.title AS `title`, EDLT.content AS `content`, U.id AS `user_id`, EDLT.category_id AS `category_id` , 1 AS `status` from esign_default_library_template AS EDLT left join users AS U on (1 = 1 ) where EDLT.defaultLibraryTemplateId > 71;
+
+
+
+-- -- -- Category Chagnes
+UPDATE `admintom_nsmart_companies`.`esign_library_category` SET `fk_esignLibraryMaster`='2' WHERE `category_id`='1';
+
+UPDATE `admintom_nsmart_companies`.`esign_library_category` SET `fk_esignLibraryMaster`='3' WHERE `category_id` IN (4, 5, 6, 7) ;
+
+INSERT INTO `admintom_nsmart_companies`.`esign_library_category` (`categoryName`, `isDefault`, `isActive`, `fk_esignLibraryMaster`) VALUES ('Default', '1', '1', '3');
+
+update esign_library_template set category_id  = 5 where title IN (select title from esign_default_library_template);
+
+update esign_default_library_template set category_id = 5;
+

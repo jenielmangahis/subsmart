@@ -21,9 +21,9 @@ class FormElement {
         this.choices = obj.choices ? obj.choices : ['-'];
     }
 
-    getElementContainer() {
+    getElementContainer(remove_padding = false) {
         return {
-            open: `<div id="${this.id}" class="form-group col-12 col-md-${this.span} ${this.element_type} form-element ${this.editable ? 'editable' : ''}">`,
+            open: `<div id="${this.id}" class="form-group ${remove_padding ? 'px-0' : ''} col-12 col-md-${this.span} ${this.element_type} form-element ${this.editable ? 'editable' : ''}">`,
             content: '',
             close: `</div>`
         }

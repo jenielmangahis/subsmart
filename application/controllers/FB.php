@@ -8,6 +8,8 @@ class FB extends MY_Controller {
 			'assets/fb/css/accordion.min.css',
 			'assets/fb/css/loading.css',
 			'assets/fb/css/main.css',
+			'assets/fb/css/custom-themes/styles.css',
+			'assets/fb/css/datepicker.css',
         ));
         add_footer_js(array(
 			'assets/fb/js/accordion.min.js',
@@ -16,8 +18,19 @@ class FB extends MY_Controller {
 			'assets/fb/js/form-elements/dropdown.js',
 			'assets/fb/js/form-elements/checkbox.js',
 			'assets/fb/js/form-elements/email.js',
+			'assets/fb/js/form-elements/Calendar.js',
 			'assets/fb/js/form-elements/long-answer.js',
+			'assets/fb/js/form-elements/short-answer.js',
+			'assets/fb/js/form-elements/number.js',
+			'assets/fb/js/form-elements/file-upload.js',
+			'assets/fb/js/form-elements/text-list.js',
+			'assets/fb/js/form-elements/rating.js',
+			'assets/fb/js/form-elements/ranking.js',
+			'assets/fb/js/form-elements/hidden-field.js',
+			'assets/fb/js/form-elements/heading.js',
+			'assets/fb/js/form-elements/formatted-text.js',
 			'assets/fb/js/form-elements/element-types.js',
+			'assets/fb/js/datepicker.js',
 			'assets/fb/js/main.js',
 		));
 		$this->page_data['page']->title = 'nSmart - Front End About Us';
@@ -66,10 +79,15 @@ class FB extends MY_Controller {
 	public function edit($id){
 		add_css(array(
 			'assets/fb/css/edit.css',
+			'assets/terms_and_conditions/css/kothing-editor.min.css',
+			'assets/terms_and_conditions/css/main.css'
 		));
 		add_footer_js(array(
+			'assets/terms_and_conditions/js/common.js',
 			'assets/fb/js/jquery-sortable.js',
 			'assets/fb/js/jquery-ui.js',
+			'assets/terms_and_conditions/js/katex.min.js',
+			'assets/terms_and_conditions/js/kothing-editor.min.js',			
 			'assets/fb/js/edit.js',
 			'assets/fb/js/builder.js',
 		));
@@ -117,6 +135,14 @@ class FB extends MY_Controller {
 	public function updateElement($id) {
 		$data = $this->input->post();
 		$response = $this->form_elements->update($data, $id);
+		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
+	}
+
+	public function updateStyle($id) {
+		$data = $this->input->post();
+
+		$response = $this->form_builder->updateStyle($data, $id);
+
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 }

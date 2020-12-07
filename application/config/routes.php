@@ -106,6 +106,7 @@ $route['fb/view/(:num)'] = 'fb/view/$1';
 $route['fb/get-all-by-active-user'] = 'fb/getAllByactiveUser';
 $route['fb/get-form-by-id/(:num)'] = 'fb/getByFormID/$1';
 $route['fb/create']['post'] = 'fb/create';
+$route['fb/update-style/(:num)']['post'] = 'fb/updateStyle/$1';
 
 //fb elements
 $route['fb/elements/create']['post'] = 'fb/createFormElement';

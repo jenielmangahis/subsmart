@@ -1,0 +1,9 @@
+.form-slim .element-label {
+    font-size: 16px !important;   
+    font-weight: lighter;
+}
+
+.form-slim .form-check-label {
+    font-size: 14px !important;   
+    font-weight: lighter;
+}

@@ -302,6 +302,11 @@ class Esign extends MY_Controller {
 		return true;
 	}
 
+	public function content_editor(){
+        $tbl = $_POST['contents'];
+        echo html_entity_decode($tbl);
+    }
+
 	public function editTemplate(){
 		$loggedInUser = logged('id');
 		// $this->load->model('Esign_model', 'Esign_model');
@@ -354,6 +359,40 @@ class Esign extends MY_Controller {
 		}
 	}
 
+	/*
+	public function tempDefaultTemplate(){
+		// $this->load->model('Esign_model', 'Esign_model');
+		$loggedInUser = logged('id');
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);		
+		$this->load->view('esign/tempInsertDefaultTemplate', $this->page_data);
+	}
+
+	public function saveCreatedTemplateDefaultTemp(){
+		extract($this->input->post());
+		$data = [
+			'title' => $letterTitle,
+			'content' => $template,
+			'status' => 2,
+			'category_id' => 0
+		];
+		$isInserted = $this->db->insert('esign_default_library_template',$data);
+		if($isInserted){
+			$libraryId = $this->db->insert_id();
+			$file_path= "/var/www/html/nsmartrac/addonQueries.sql";
+			$fp = fopen($file_path, 'a');
+			if(!$fp){
+				echo 'file is not opend';
+				exit;
+			}
+			fwrite($fp, $this->db->last_query()."\n\n");
+			fclose($fp);
+			redirect('esign/tempDefaultTemplate?isSuccess=1');
+		}else{
+				redirect('esign/esignmain');
+		}		
+	}
+	*/
 
 	public function recipients() {
 

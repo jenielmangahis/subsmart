@@ -7,7 +7,7 @@ class RadioButton extends FormElement {
     getElement() {
         const element_controls = this.getElementControls();
         const element_container = this.getElementContainer();
-        element_container.content += `<label for="${this.id}">${this.question ? this.question : ''} <span class="text-danger">${this.required ? '*' : ''}</span></label>`;
+        element_container.content += `<label class="element-label" for="${this.id}">${this.question ? this.question : ''} <span class="text-danger">${this.required ? '*' : ''}</span></label>`;
         this.choices.forEach(choice => {
             element_container.content += `
                 <div class="form-check">

@@ -44,13 +44,13 @@
                     </div>
                     <ul class="nav nav-pills nav-fill">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#editBuildTab" data-toggle="tab">Build</a>
+                            <a class="nav-link build-tab builder-tabs active" href="#editBuildTab" data-toggle="tab">Build</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#styleBuildTab" data-toggle="tab">Style</a>
+                            <a class="nav-link style-tab builder-tabs" href="#styleBuildTab" data-toggle="tab">Style</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#rulesBuildTab" data-toggle="tab">Rules</a>
+                            <a class="nav-link rules-tab builder-tabs" href="#rulesBuildTab" data-toggle="tab">Rules</a>
                         </li>
                     </ul>
                     <div class="tab-content py-4">
@@ -67,13 +67,15 @@
                                                     <tbody id="commonItemTypes">
                                                         <tr>
                                                             <td class="item-type" id="radioButton">
-                                                                <div class="form-elements-template" element_type="RadioButton">
+                                                                <div class="form-elements-template"
+                                                                    element_type="RadioButton">
                                                                     <i class="fa fa-dot-circle-o template-icon"></i>
                                                                     Radio Button
                                                                 </div>
                                                             </td>
                                                             <td class="item-type" id="dropDown">
-                                                                <div class="form-elements-template" element_type="Dropdown">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Dropdown">
                                                                     <i
                                                                         class="fa fa-caret-square-o-down template-icon"></i>
                                                                     Dropdown
@@ -82,13 +84,15 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="item-type" id="checkBox">
-                                                                <div class="form-elements-template" element_type="Checkbox">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Checkbox">
                                                                     <i class="fa fa-check-square-o template-icon"></i>
                                                                     Check Box
                                                                 </div>
                                                             </td>
                                                             <td class="item-type" id="emailAddress">
-                                                                <div class="form-elements-template" element_type="Email">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Email">
                                                                     <i class="fa fa-envelope template-icon"></i> Email
                                                                     Address
                                                                 </div>
@@ -96,13 +100,15 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="item-type" id="checkBox">
-                                                                <div class="form-elements-template" element_type="LongAnswer">
+                                                                <div class="form-elements-template"
+                                                                    element_type="LongAnswer">
                                                                     <i class="fa fa-text-width template-icon"></i> Long
                                                                     Answer
                                                                 </div>
                                                             </td>
                                                             <td class="item-type" id="emailAddress">
-                                                                <div class="form-elements-template">
+                                                                <div class="form-elements-template"
+                                                                    element_type="ShortAnswer">
                                                                     <i class="fa fa-font template-icon"></i> Short
                                                                     Answer
                                                                 </div>
@@ -110,16 +116,60 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="item-type" id="calendar">
-                                                                <div class="form-elements-template">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Calendar">
                                                                     <i class="fa fa-calendar template-icon"></i>
                                                                     Calendar
                                                                 </div>
                                                             </td>
-                                                            <td class="item-type" id="emailAddress">
-                                                                <div class="form-elements-template">
+                                                            <td class="item-type" id="number">
+                                                                <div class="form-elements-template"
+                                                                    element_type="NumberInput">
                                                                     <i class="fa fa-font template-icon"></i> Number
                                                                 </div>
                                                             </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="item-type" id="file">
+                                                                <div class="form-elements-template"
+                                                                    element_type="FileUpload">
+                                                                    <i class="fa fa-file template-icon"></i> File Upload
+                                                                </div>
+                                                            </td>         
+                                                            <td class="item-type" id="textList">
+                                                                <div class="form-elements-template"
+                                                                    element_type="TextList">
+                                                                    <i class="fa fa-list template-icon"></i> Text List
+                                                                </div>
+                                                            </td>                                                    
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="item-type" id="rating">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Rating">
+                                                                    <i class="fa fa-star-half-alt template-icon"></i> Rating
+                                                                </div>
+                                                            </td>         
+                                                            <td class="item-type" id="ranking">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Ranking">
+                                                                    <i class="fa fa-boxes template-icon"></i> Ranking
+                                                                </div>
+                                                            </td>                                                    
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="item-type" id="hiddenField">
+                                                                <div class="form-elements-template"
+                                                                    element_type="HiddenField">
+                                                                    <i class="fa fa-eye-slash template-icon"></i> Hidden Field
+                                                                </div>
+                                                            </td>         
+                                                            <td class="item-type" id="ranking">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Ranking">
+                                                                    <i class="fa fa-boxes template-icon"></i> Ranking
+                                                                </div>
+                                                            </td>                                                    
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -130,7 +180,30 @@
                                         <div class="link"></i>Formatting Items<i class="fa fa-chevron-down"></i>
                                         </div>
                                         <ul class="submenu">
-                                            <li><a href="#" onclick="setActiveTemplate(0)">Blank Form</a></li>
+                                        <div class="container-fluid mt-0 py-2">
+                                                <table class="item-type-table" cellpadding="0" cellspacing="12"
+                                                    border="0">
+                                                    <tbody id="commonItemTypes">
+                                                        <tr>
+                                                            <td class="item-type" id="heading">
+                                                                <div class="form-elements-template"
+                                                                    element_type="Heading">
+                                                                    <i class="fa fa-heading template-icon"></i>
+                                                                    Heading
+                                                                </div>
+                                                            </td>
+                                                            <td class="item-type" id="formattedText">
+                                                                <div class="form-elements-template"
+                                                                    element_type="FormattedText">
+                                                                    <i
+                                                                        class="fa fa-align-center template-icon"></i>
+                                                                    Formatted Text
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </ul>
                                     <li>
                                     <li>
@@ -165,8 +238,219 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="styleBuildTab">
-                            <div class="container mt-0">
-                                lorem ipsum
+                            <div class="container-fluid px-0 mt-0">
+                                <ul class="accordion">
+                                    <li>
+                                        <div class="link"></i>Themes<i class="fa fa-chevron-down"></i>
+                                        </div>
+                                        <div class="submenu">
+                                            <div class="container-fluid mt-0 py-2">
+                                                <h6>Style: </h6>
+                                                <div class="row p-1">
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('default')" class="bg-secondary default-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Default</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('big')" class="bg-secondary big-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Big</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('bigger')" class="bg-secondary bigger-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Bigger</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('slim')" class="bg-secondary slim-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Slim</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('rounded')" class="bg-secondary rounded-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Rounded</p>
+                                                                <div class="w-100 h-25 border d-block rounded-pill"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block rounded-pill">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('narrow')" class="bg-secondary narrow-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Narrow</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>   
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('modern')" class="bg-secondary modern-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Modern</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('casual')" class="bg-secondary casual-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Casual</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('airy')" class="bg-secondary airy-control style-display-container form-style p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Airy</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>    
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleStyleChangePreview('bubbly')" class="bg-secondary bubbly-control style-display-container form-style p-1 text-center font-bubbly">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <p>Bubbly</p>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block">Button</div>
+                                                        </div>
+                                                    </div>                                              
+                                                </div>
+                                                <h6>Colors: </h6>
+                                                <div class="row p-1">
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('primary')" class="bg-secondary form-primary form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-primary mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-primary">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('secondary')" class="bg-secondary form-secondary form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-secondary mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-secondary">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('success')" class="bg-secondary form-success form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-success mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-success">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('danger')" class="bg-secondary form-danger form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-danger mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-danger">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('warning')" class="bg-secondary form-warning form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-warning mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-warning">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('info')" class="bg-secondary form-info form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block  bg-info mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-info">Button</div>
+                                                        </div>
+                                                    </div>   
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('light')" class="bg-secondary form-light form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light text-dark">
+                                                                <div class="w-100 h-25 border d-block bg-light mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-light text-dark">Button</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('dark')" class="bg-secondary form-dark form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-dark mb-1">
+                                                                    <p>Header</p>
+                                                                </div>                                                                
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-dark">Button</div>
+                                                        </div>
+                                                    </div>                                             
+                                                </div>                                                
+                                            </div>
+                                        </div>
+                                    <li>
+                                </ul>
                             </div>
                         </div>
                         <div class="tab-pane" id="rulesBuildTab">
@@ -186,6 +470,10 @@
                         </div>
                         <div id="successIndicator" class="bg-success indicator">
                             <p class="text-white">changes saved.</p>
+                        </div>
+                        <div id="styleSaveContainer" class="indicator text-right">
+                            <button onclick="handleFormStyleSave()" class="btn btn-sm btn-primary d-inline-block">Save</button>
+                            <button onclick="handleCopyFromFormClicked()" class="btn btn-sm btn-secondary d-inline-block">Copy From Form...</button>
                         </div>
                         <div id="formBuilderContainer" class="row">
                             <div class="col-12" id="blankFormPlaceHolder">
