@@ -28,8 +28,6 @@ class Business_model extends MY_Model {
     }
 }
 
-
-
 /* End of file Business_model.php */
 
 /* Location: ./application/models/Business_model.php */
