@@ -166,7 +166,7 @@ class Onboarding extends MY_Controller {
 
 		$num_emp          = $client->number_of_employee;
 		if( $profiledata ){
-			$num_emp          = $profiledata->number_of_employee;
+			$num_emp          = $profiledata->employee_count;
 		}
 
 		$this->page_data['num_emp'] = $num_emp;
@@ -177,6 +177,7 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function ajax_save_business_availability(){
+		error_reporting(0);
 		$is_success = true;
 		$msg = '';
 
