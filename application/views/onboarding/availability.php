@@ -63,6 +63,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       font-size: 11px !important;
   }
 }
+.btn-copy-time{
+  padding: 13px 13px;
+}
 </style>
 <div>
    <div class="wrapper-onboarding">
@@ -85,7 +88,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <p>Your working days will appear on your public profile.</p>
                         <div class="row">
                             <div class="col-md-12" style="margin-left: 14px;">
-                            
+                            <div class="row">
+                              <div class="col-md-2"></div>
+                              <div class="col-md-2"></div>
+                              <div class="col-md-2"></div>
+                              <div class="col-md-6">Copy start and end time to :</div>
+                            </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
                                     <input type="checkbox" name="weekday[0]" value="Monday" <?= array_key_exists("Monday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_0">
@@ -96,6 +104,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="monHoursToAvail" value="<?= $data_working_days['Monday']['time_to']; ?>" placeholder="End Time" id="monHoursToAvail" class="form-control">
+                                    
+                                </div>
+                                <div class="col-md-6">
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="tue" href="javascript:void(0);"><i class="fa fa-copy"></i> Tue</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="wed" href="javascript:void(0);"><i class="fa fa-copy"></i> Wed</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="thu" href="javascript:void(0);"><i class="fa fa-copy"></i> Thu</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="fri" href="javascript:void(0);"><i class="fa fa-copy"></i> Fri</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="sat" href="javascript:void(0);"><i class="fa fa-copy"></i> Sat</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="sun" href="javascript:void(0);"><i class="fa fa-copy"></i> Sun</a>
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -206,6 +223,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                     <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
+                  <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
                   <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/add_ons");?>">« Back</a>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="availability" type="submit">Next »</button>
                </div>
@@ -219,7 +237,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     $('.default-datepicker').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'mm-dd-yyyy',
         autoclose: true
     });
 
@@ -249,6 +267,15 @@ $(function(){
              }
           });
       }, 500);
+    });
+
+    $(".btn-copy-time").click(function(){
+      var dayKey = $(this).attr("data-key");
+      var startToCopy = $("#monHoursFromAvail").val();
+      var endToCopy   = $("#monHoursToAvail").val();
+
+      $("#" + dayKey + "HoursFromAvail").val(startToCopy);
+      $("#" + dayKey + "HoursToAvail").val(endToCopy);
     });
 });
 </script>

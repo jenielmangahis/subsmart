@@ -93,12 +93,6 @@ img.banner-reg-a {
                   </div>
                   <div class="col-md-6">
                      <div class="form-group">
-                        <?php 
-                          $num_emp = 1;
-                          if( $profiledata ){
-                            $num_emp = $profiledata->employee_count;
-                          } 
-                        ?>
                         <label>Number of Employees</label> <span class="form-required">*</span>
                         <div class="help help-block help-sm">Enter the number of people working for you.</div>
                         <select class="form-control" id="number_of_employee" name="employee_count" required="">
@@ -161,6 +155,7 @@ img.banner-reg-a {
                </div>
                <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
+                  <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
                   <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/business_info");?>">« Back</a>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="about" type="submit">Next »</button>
                </div>

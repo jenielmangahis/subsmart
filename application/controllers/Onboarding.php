@@ -26,10 +26,23 @@ class Onboarding extends MY_Controller {
 	public function business_info() {
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+		$uid  = logged('id');
+		$cid  = logged('company_id');
+		$profiledata = $this->business_model->getByUserId($uid);
+		$client      = $this->Clients_model->getById($cid);
+
+		$business_name    = $client->business_name;
+		$business_address = $client->business_address;
+
+		if( $profiledata ){
+			$business_name    = $profiledata->business_name;
+			$business_address = $profiledata->address;
+		}  
+
+		$this->page_data['business_name'] = $business_name;
+		$this->page_data['business_address'] = $business_address;
 		$this->page_data['userid'] = $user->id;
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata : null;
 
 		$this->load->view('onboarding/business_info', $this->page_data);
 	}
@@ -145,8 +158,18 @@ class Onboarding extends MY_Controller {
 
 	public function about(){
 		$user = (object)$this->session->userdata('logged');
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));	
+		$uid  = logged('id');
+		$cid  = logged('company_id');
+
+		$profiledata = $this->business_model->getByWhere(array('user_id'=>$uid));	
+		$client      = $this->Clients_model->getById($cid);
+
+		$num_emp          = $client->number_of_employee;
+		if( $profiledata ){
+			$num_emp          = $profiledata->number_of_employee;
+		}
+
+		$this->page_data['num_emp'] = $num_emp;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 

@@ -300,6 +300,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
+                  <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
                   <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/availability");?>">« Back</a>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="credentials" type="submit">Next »</button>
                </div>
@@ -314,7 +315,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     $('.default-datepicker').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'mm-dd-yyyy',
         autoclose: true
     });
 
