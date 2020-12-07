@@ -1,0 +1,13 @@
+.form-modern .form-control {
+    border-radius: 0rem!important;
+    border: 0!important;
+    border-bottom: 2px solid #e0e0e0 !important;
+}
+
+.form-modern .element-label {
+    font-family: "Raleway", sans-serif !important;
+}
+
+.form-modern .form-check-label {
+    font-family: "Raleway", sans-serif !important;
+}

@@ -47,8 +47,8 @@ class Customer extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             'assets/css/accounting/sales.css',
+            'assets/textEditor/summernote-bs4.css',
         ));
-
         // JS to add only Customer module
         add_footer_js(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
@@ -57,6 +57,7 @@ class Customer extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'assets/textEditor/summernote-bs4.js'
            // 'assets/frontend/js/creditcard.js',
            // 'assets/frontend/js/customer/add.js',
         ));
@@ -1066,6 +1067,12 @@ class Customer extends MY_Controller
             $this->page_data['minitab'] = $this->uri->segment(5);
             $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+
+            if($this->uri->segment(5) == "mt3-cdl"){
+                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
+                $this->page_data['letter_id'] = $template_id;
+                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
+            }
            // print_r($this->page_data['alarm_info']);
         }
         $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);

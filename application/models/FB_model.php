@@ -99,4 +99,25 @@ class FB_model extends MY_Model {
 		}
 		return $res;
 	}
+
+	function updateStyle($data, $id) {
+		try {
+			$this->db->set($data);
+			$this->db->where('id', $id);
+			$this->db->update($this->table);	
+
+			$res = [
+				'data' 	=> [],
+				'code'	=> 200,
+				'message'	=> 'Style Updated'
+			];
+		}catch(\Exception $e) {
+			$res = [
+				'data' 	=> [],
+				'code'	=> 500,
+				'message'	=> 'Error updating form styles. please try again later or contact customer support.'
+			];
+		}
+		return $res;
+	}
 }

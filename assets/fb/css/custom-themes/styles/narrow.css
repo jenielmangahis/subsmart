@@ -1,0 +1,11 @@
+.form-narrow .element-label {
+    font-family: "Titillium Web", sans-serif !important;
+    font-size: 16px !important;   
+    font-weight: 70 !important;
+}
+
+.form-narrow .form-check-label {
+    font-family: "Titillium Web", sans-serif !important;
+    font-size: 14px !important;   
+    font-weight: 70 !important;
+}

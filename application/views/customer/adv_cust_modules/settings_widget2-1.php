@@ -3,58 +3,56 @@
         <div class="col-lg-12">
             <div> <b>Credit Wizard</b> (<?= isset($profile_info) ?  $profile_info->first_name.' '.$profile_info->last_name : '';  ?>) </div>
             <br>
-            <div class="float-right d-md-block">
-                <div class="dropdown">
-                    <a class="btn btn-primary btn-md" href="#">
-                        <span class="fa fa-plus"></span> Add New</a>
-                </div>
+            <div class="float-right">
+                    <select class="input_select" name="library_category" id="library_category"  style="display: inline-block;">
+                        <option value="0">All</option>
+                        <?php
+                        foreach($library_categories as $library){
+                            ?>
+                            <option value="<?=$library->pk_esignLibraryMaster ?>"><?=$library->libraryName?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                <a style="display: inline-block;" class="btn btn-primary btn-md " href="<?= base_url('esign/templateLibrary'); ?> "> <span class="fa fa-plus"></span> Add New</a>
+
             </div>
+
+            <br>
+
+            <br>
+            <table class="table table-hover" id="dispute_table">
+                <thead>
+                    <tr>
+                        <th>Letter Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($library_templates as $lt) : ?>
+                        <tr>
+                            <td><?= $lt->title; ?></td>
+                            <td><?= $lt->category_id; ?></td>
+                            <td><?= $lt->isActive==1 ? 'Active' : 'In Active'; ?></td>
+                            <td>
+                                <a href="<?= isset($profile_info) ? url('/customer/index/tab3/'.$profile_info->prof_id).'/mt3-cdl'.'/'.$lt->esignLibraryTemplateId : '#'; ?>" style="text-decoration:none;display:inline-block;" title="Create Letter">
+                                    <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Create Letter">
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <br>
             <div class="float-left d-md-block">
                 <div class="dropdown">
                     <a class="btn btn-primary btn-md" href="<?= isset($profile_info)? url('/customer/index/tab3/'.$profile_info->prof_id).'/mt3' : '#'; ?>">
                         <span class="fa fa-arrow-left"></span> Back</a>
                 </div>
             </div>
-            <br> <br>
-            <div style="display: flex;">
-                <select class="librarySelect" name="" id="">
-                    <option value="0">All</option>
-                    <?php
-                        foreach($library_categories as $library){
-                            ?>
-                                <option value="<?=$library->pk_esignLibraryMaster ?>"><?=$library->libraryName?></option>
-                            <?php
-                        }
-                    ?>
-                </select>
-            </div>
-            <table class="table table-hover" id="dispute_table">
-                <thead>
-                <tr>
-                    <th>Letter Title</th>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($library_templates as $lt) : ?>
-                    <tr>
-                        <td><?= $lt->title; ?></td>
-                        <td><?= $lt->category_id; ?></td>
-                        <td><?= $lt->isActive==1 ? 'Active' : 'In Active'; ?></td>
-                        <td>
-                            <a href="" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                                <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
-                            </a>
-                            <a href="javascript:void(0);" id="" class="delete_lead" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                                <img src="/assets/img/customer/actions/cross.png" width="16px" height="16px" border="0" title="Delete Lead">
-                            </a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+            <br>
             <div class="tips">
                 <b>Wizard 3</b> is where you generate all dispute letters for clients. It auto-merges client/credit data into a letter in seconds.
                 All new clients start with a Round 1 Dispute. Next "Add New Items" manually or "Add Saved/Pending Items."

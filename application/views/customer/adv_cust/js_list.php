@@ -23,6 +23,9 @@
             "pageLength": 20,
             "info": false,
             "order": [],
+            initComplete: function () {
+
+            }
         });
 
         var table_notes =$('#internal_notes_table').DataTable({
@@ -703,6 +706,36 @@
         //     var insertHere = document.getElementById('write_custom_form');
         //     insertHere.parentNode.insertBefore(newFields,insertHere);
         // }
+        <?php if (isset($letter_template)): ?>
+
+            let url = "<?= isset($letter_template) ? htmlentities($letter_template->content)  : ''?>";
+
+            let result = {
+                'client_first_name': '<?= $profile_info->first_name; ?>',
+                'client_last_name':'<?= $profile_info->last_name; ?>',
+                'client_address':'<?= $profile_info->mail_add.' '.$profile_info->city.' '.$profile_info->state.' '.$profile_info->country.' '.$profile_info->zip_code; ?>',
+                'curr_date': new Date().toJSON().slice(0,10).replace(/-/g,'/'),
+            };
+
+            let replaceDoubleBraces = (str,result) =>{
+                return str.replace(/{(.+?)}/g, (_,g1) => result[g1] || g1)
+            };
+
+            let content = replaceDoubleBraces(url,result);
+        //console.log(content);
+        $.ajax({
+            type: "POST",
+            url: "/esign/content_editor",
+            data: { contents : content}, // serializes the form's elements.
+            success: function(data){
+                $('#summernote').summernote('code', data);
+                //console.log(data);
+            }
+        });
+
+        <?php  endif; ?>
+
+
     });
 
     $('#dataTable1').DataTable({

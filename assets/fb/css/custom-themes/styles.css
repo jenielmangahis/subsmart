@@ -1,0 +1,16 @@
+@import './styles/big.css';
+@import './styles/bigger.css';
+@import './styles/slim.css';
+@import './styles/rounded.css';
+@import './styles/narrow.css';
+@import './styles/modern.css';
+@import './styles/bubbly.css';
+
+@import './colors/primary.css';
+@import './colors/secondary.css';
+@import './colors/success.css';
+@import './colors/danger.css';
+@import './colors/warning.css';
+@import './colors/info.css';
+@import './colors/light.css';
+@import './colors/dark.css';

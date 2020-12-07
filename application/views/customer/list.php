@@ -346,6 +346,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <?php
                                                         if($minitab== 'mt3'){
                                                             include viewPath('customer/adv_cust_modules/settings_widget2');
+                                                        }else if(isset($letter_id) && $letter_id!=""){
+                                                            include viewPath('customer/adv_cust_modules/settings_widget2-2');
                                                         }else{
                                                             include viewPath('customer/adv_cust_modules/settings_widget2-1');
                                                         }

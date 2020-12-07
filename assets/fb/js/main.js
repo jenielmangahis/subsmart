@@ -1,6 +1,7 @@
 let form;
 let elements;
 const element_objs = [];
+
 const handleCreateForm = async (e) => {
     e.preventDefault()
     
@@ -97,22 +98,26 @@ const updateElementOrder = (elements) => {
         try {
             const data = [];
             elements.forEach((el, index) => {
-                if(el !== "") {
+                if(el !== "" && el !== 'blankFormPlaceHolder') {
                     element_objs[el].element_order = index;
                     const element = element_objs[el].getPostData(false);
                     data.push(element);
                 }
+                if(!data.length) {
+                    resolve('empty form');
+                } else {
+                    $.ajax({
+                        'type': 'POST',
+                        'url': `/fb/elements/update-order`,
+                        'data': {elements: data}
+                    }).done(response => {
+                        console.log(data);
+                        resolve(response)
+                    }).fail(err => {
+                        reject(err);
+                    })   
+                }
             });
-            $.ajax({
-                'type': 'POST',
-                'url': `/fb/elements/update-order`,
-                'data': {elements: data}
-            }).done(response => {
-                console.log(data);
-                resolve(response)
-            }).fail(err => {
-                reject(err);
-            })   
         } catch (error) {
                 reject(error);
         }
@@ -148,18 +153,48 @@ const choicesParserReverse = (choices) => {
 
 const loadElements = async (form_id, editable = false) =>  {
     await getFormByID(form_id).then(res => {
+        let container = '#formContainer';
         if(elements.length) {
             if(editable) {
-                $('#formBuilderContainer').empty();
-            } else {
-                $('#formContainer').empty();
+                container = '#formBuilderContainer';
+                $().empty();
             }
+            $(container).empty();
+            $(container).addClass(`form-${form.style}`);
+            $(container).addClass(`form-${form.color}`);
             res.data.elements.forEach(element => {
                 renderElement(element, editable);
             });
         }
-        if(editable) {
-            initEvents();
+        initCalendars();
+    })
+}
+
+const updateFormStyle = (data) => {
+    return new Promise((resolve, reject) => {
+        try {
+            $.ajax({
+                'type': 'POST',
+                'url': `/fb/update-style/${form.id}`,
+                'data': data
+            }).done(response => {
+                console.log(data);
+                resolve(response)
+            }).fail(err => {
+                reject(err);
+            })   
+        } catch (error) {
+                reject(error);
         }
     })
+}
+
+const initCalendars = () => {
+    $('.form-datepicker').datepicker({
+        weekStart: 1,
+        daysOfWeekHighlighted: "6,0",
+        autoclose: true,
+        todayHighlight: true,
+    });
+    $('#datepicker').datepicker("setDate", new Date());
 }

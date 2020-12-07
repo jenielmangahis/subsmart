@@ -1,4 +1,6 @@
-let tempElements;
+let tempElements, tempStyle, tempColor, editor;
+const styles = ['default', 'big', 'bigger', 'slim', 'rounded', 'narrow', 'casual', 'modern', 'airy', 'bubbly'];
+const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 'dark', 'light'];
 $('#formBuilderContainer').sortable({
     placeholder: 'placeholder-hor',
     grid: [20, 20],
@@ -11,13 +13,15 @@ $('#formBuilderContainer').sortable({
         $('#elementSettingsModal #elementID').val(null);
         $('#elementSettingsModal #saveMethod').val('create');
         const element = new element_types[elType]({}, false);
-        showModal(element.settingItems);
+        showModal(element);
     },
     update: (event, ui) => {
         showLoading();
         const elements = $('#formBuilderContainer').sortable("toArray");
-        updateElementOrder(elements).then(res => {
-            loadElements(form.id, true)
+        updateElementOrder(elements).then( async (res) => {
+            await loadElements(form.id, true).then(res => {
+                initBuilder();
+            });
             showSuccess();
         });
     }
@@ -33,7 +37,17 @@ $('.form-elements-template').draggable({
     cursorAt: { left: 0, top: 0 },
 })
 
+$('.builder-tabs').on('shown.bs.tab', (e) => {
+    const el = $(e.target) // newly activated tab
+    if(el.attr('href') === '#styleBuildTab') {
+        $('#styleSaveContainer').show();
+    } else {
+        $('#styleSaveContainer').hide();
+    }
+})
+
 const handleSaveEelement = (event) => {
+    editor.save();
     event.preventDefault();
     showLoading();
     const save_method = $('#elementSettingsModal #saveMethod').val();
@@ -45,8 +59,10 @@ const handleSaveEelement = (event) => {
         $('#elementSettingsModal #elementOrder').val(index);
     }
     const data = getModalValues();
-    saveElement(data, save_method).then(res => {
-        loadElements(form.id, true);
+    saveElement(data, save_method).then(async (res) => {
+        await loadElements(form.id, true).then(res1 => {
+            initBuilder();
+        });
         updateElementOrder(elements);
         $('#elementSettingsModal').modal('hide');
         showSuccess();
@@ -80,7 +96,9 @@ const handleDeleteElement = (id) => {
     deleteElement(id).then(async (res) => {
         showLoading();
         const html_element = $(`#formBuilderContainer #${id}`).remove();
-        await loadElements(form.id, true);
+        await loadElements(form.id, true).then(res => {
+            initBuilder();
+        });
         const elements = $('#formBuilderContainer').sortable("toArray");
         console.log(elements);
         await updateElementOrder(elements);
@@ -91,7 +109,7 @@ const handleDeleteElement = (id) => {
     })
 }
 
-const initEvents = () => {
+const initBuilder = () => {
     $('.form-elements-template').hover((event) =>{
         $(event.target).addClass('hover');
     });
@@ -99,6 +117,41 @@ const initEvents = () => {
     $('.form-elements-template').mouseout((event) =>{
         $(event.target).removeClass('hover');
     });
+    setStyleTabActives(form.style, form.color);
+}
+
+const initEditor = (id = 'elementQuestionEditor') => {
+    if ($(`#${id}`).length) {
+        editor = KothingEditor.create(`${id}`, {
+          height: '100px',
+          display: "block",
+          width: "100%",
+          popupDisplay: "full",
+          katex: katex,
+          toolbarItem: [
+            ["undo", "redo"],
+            ["font", "fontSize", "formatBlock"],
+            [
+              "bold",
+              "underline",
+              "italic",
+              "strike",
+              "subscript",
+              "superscript",
+              "fontColor",
+              "hiliteColor",
+            ],
+            ["outdent", "indent", "align", "list", "horizontalRule"],
+            ["link", "table", "image"],
+            ["lineHeight", "paragraphStyle", "textStyle"],
+            ["showBlocks", "codeView"],
+            ["math"],
+            ["preview", "print", "fullScreen"],
+            ["removeFormat"],
+          ],
+          charCounter: true,
+        });
+      }
 }
 
 const handleElementEdit = (id) => {
@@ -106,11 +159,12 @@ const handleElementEdit = (id) => {
     const element = element_objs[id];
     $('#elementSettingsModal #saveMethod').val('update');
     setModalElement(element);
-    showModal(element.settingItems);
+    showModal(element);
 }
 
 const setModalElement = (element) => {
     $('#elementQuestionInput').val(element.question);
+    $('#elementQuestionEditor').val(element.question);
     $('#elementType').val(element.element_type);
     $('#elementSpan').val(element.span);
     $('#elementChoicesInput').val(choicesParserReverse(element.choices));
@@ -131,7 +185,7 @@ const getModalValues = () => {
         form_element: {
             id: $('#elementSettingsModal #elementID').val(),
             form_id: form.id,
-            question: $('#elementQuestionInput').val(),
+            question: $('#elementQuestionInput').val() ? $('#elementQuestionInput').val() : $('#elementQuestionEditor').val() ? $('#elementQuestionEditor').val() : '',
             required: $('#requiredSwitch').is(":checked") ? 1 : 0,
             read_only: $('#readOnlySwitch').is(":checked") ? 1 : 0,
             admin_item: $('#adminItemSwitch').is(":checked") ? 1 : 0,
@@ -148,10 +202,21 @@ const getModalValues = () => {
     }
 }
 
-const showModal = (settings = ['question']) => {
+const showModal = (element) => {
+    const settings = (element) ? element.settingItems ? element.settingItems : ['question'] : ['question'];
     $('.element-setting-container').hide();
     settings.forEach(setting => {
         $(`[tag=${setting}]`).show();
+        if(setting == 'preview') {
+            const form_class_list = document.getElementById('formBuilderContainer').className.split(/\s+/);
+            form_class_list.forEach(class_item => {
+                if(class_item !== 'row' && class_item !== 'ui-sortable'){
+                    $('#elementPreview').addClass(class_item);
+                }
+            });
+            const content = element.getElement(true);
+            $('#elementPreview').html(content);
+        }
     });
     $('#elementSettingsModal').modal({backdrop: 'static', keyboard: false})  
 }
@@ -187,4 +252,97 @@ const showSuccess = () => {
 
 const hideSuccess = () => {
     $('#successIndicator').hide();
+}
+
+const handleStyleChangePreview = (style) => {
+    showLoading();
+    try {
+        tempStyle = style;
+        clearFormStyle();
+        clearFormStyleControlActive();
+        setFormStyleControlActive(tempStyle);
+        setFormStyle(tempStyle);
+        hideLoading();
+    } catch (error) {
+        showDanger();
+    }
+}
+
+const handleColorChangePreview = (color) => {
+    showLoading();
+    try {
+        tempColor = color;
+        clearFormColors();
+        clearFormColorControlActive();
+        setFormColorControlActive(tempColor);
+        setFormColor(tempColor);
+        hideLoading();
+    } catch (error) {
+        showDanger();
+    }
+}
+
+const clearFormStyle = () => {
+    styles.forEach((val, index) => {
+        $('#formBuilderContainer').removeClass(`form-${val}`);
+    });
+}
+
+const clearFormColors = () => {
+    colors.forEach((val, index) => {
+        $('#formBuilderContainer').removeClass(`form-${val}`);
+    });
+}
+
+const setFormStyle = (style) => {
+    $('#formBuilderContainer').addClass(`form-${style}`);
+}
+
+const setFormColor = (color) => {
+    $('#formBuilderContainer').addClass(`form-${color}`);
+}
+
+const clearFormStyleControlActive = () => {
+    $('.style-display-container.form-style.active').removeClass(`active`);
+}
+
+const clearFormColorControlActive = () => {
+    $('.style-display-container.form-color.active').removeClass(`active`);
+}
+
+const setFormColorControlActive = (color) => {
+    $(`.style-display-container.form-color.form-${color}`).addClass(`active`);
+}
+
+const setFormStyleControlActive = (style) => {
+    $(`.style-display-container.form-style.${style}-control`).addClass(`active`);
+}
+
+const handleFormStyleSave = async () => {
+    showLoading();
+    const data = {
+        style: tempStyle,
+        color: tempColor
+    };
+
+    await updateFormStyle(data).then((res) => {
+        showBuilderTab('build');
+        handleOnLoad(form.id, true);
+        showSuccess();
+    }).catch(err => {
+        showDanger();
+    });
+}
+
+const showBuilderTab = (tab) => {
+    $(`.${tab}-tab`).tab('show');
+}
+
+const setStyleTabActives = (style, color) => {
+    tempColor = color;
+    tempStyle = style;
+    clearFormColorControlActive();
+    clearFormStyleControlActive();
+    setFormStyleControlActive(style);
+    setFormColorControlActive(color);
 }

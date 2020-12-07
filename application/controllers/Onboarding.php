@@ -27,8 +27,7 @@ class Onboarding extends MY_Controller {
 		
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));	
-		//dd($profiledata);die;
+		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 

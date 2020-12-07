@@ -1,8 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); 
+<?php include viewPath('includes/header');
+
 ini_set('max_input_vars', 30000);
 ?>
+<!-- production version, optimized for size and speed -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://app.creditrepaircloud.com/application/js/jQuery/jqprint.js" language="javascript" type="text/javascript"></script> -->
 <style>
     fieldset {
@@ -81,35 +84,37 @@ ini_set('max_input_vars', 30000);
                                     </label>
                                 </div>
                             </div>
-                <div id="print" class="print form-group">
-                                <textarea id="summernote" name="template"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary" ><span class="fa fa-paper-plane-o"></span> Save</button>
-                                 <button type="button" class="btn btn-primary" onclick="printHtml()"> <span class="fa fa-print"></span> Print </button>
-                                <label for="file-upload" class="btn btn-primary esign_upload">
-                                    <span class="fa fa-upload"></span> Upload Document
-                                </label>
-                                <input id="file-upload" type="file" accept="application/msword,application/pdf">
-                            </div>
-                        <?=form_close(); ?>
-                        <?php if(isset($_GET['isSuccess']) && $_GET['isSuccess'] == 1){ ?>
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            Saved Successfully  
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                        <?php } ?>
-                    </div>
+                            <div id="print" class="print form-group">
 
+                                        <textarea id="summernote" name="template "></textarea>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary" ><span class="fa fa-paper-plane-o"></span> Save</button>
+                                         <button type="button" class="btn btn-primary" onclick="printHtml()"> <span class="fa fa-print"></span> Print </button>
+                                        <label for="file-upload" class="btn btn-primary esign_upload">
+                                            <span class="fa fa-upload"></span> Upload Document
+                                        </label>
+                                        <input id="file-upload" type="file" accept="application/msword,application/pdf">
+                                    </div>
+                                <?=form_close(); ?>
+                                <?php if(isset($_GET['isSuccess']) && $_GET['isSuccess'] == 1){ ?>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    Saved Successfully
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                <?php } ?>
+                            </div>
                     <div class="container">
+
                         <fieldset>
                             <legend><h3>Placeholder Information</h3></legend>
-                            <div style="padding-left:0px; padding-right:20px; float:left;"> 
+                            <div style="padding-left:0px; padding-right:20px; float:left;">
                                 {company_logo} - <b>Company logo</b><br>
                                 {client_suffix} - <b>Suffix of client</b><br>
-                                {client_first_name} - <b>First name of client</b><br>
+                                { client_first_name } - <b>First name of client</b><br>
                                 {client_middle_name} - <b>Middle name of client</b><br>
                                 {client_last_name} - <b>Last name of client</b><br>
                                 {client_address} - <b>Address of client</b><br>
@@ -142,12 +147,17 @@ ini_set('max_input_vars', 30000);
                 </div>
 			</div>
 		</div>
+
+    <div id="app">
+
+    </div>
 		<!-- end container-fluid -->
 </div>
 
 <!-- Signature MODAL -->
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+
 <style>
     #file-upload {
         display: none;
@@ -156,6 +166,7 @@ ini_set('max_input_vars', 30000);
         cursor: pointer;
     }
 </style>
+
 
 <script>
         let defaultText = `<p>{client_first_name}&nbsp;{client_last_name}<br />{client_address}<br />{client_previous_address}<br />{bdate}<br />{ss_number}&nbsp;<br /><br />{bureau_address}</p>
@@ -199,19 +210,21 @@ ini_set('max_input_vars', 30000);
                 tabsize: 2,
                 height: 450,
             });
-            <?php
+
+           // $("#app").append("<?php echo htmlspecialchars($template->content); ?>");
+           // document.getElementById("app").insertAdjacentHTML("afterend",'<?php echo htmlspecialchars($template->content); ?>');
+        <?php
             if(!isset($template)){
             ?>
                 $('#summernote').summernote('code', defaultText);
             <?php
             }else {
             ?>
-                $('#summernote').summernote('code', `<?=isset($template) ? $template->content : ""?>`);
+                $('#summernote').summernote('code', '<?= isset($template) ? $template->content : ""?>');
             <?php
             }
             ?>
         });
-
         function printHtml(){
             let currentHtml = $('#summernote').summernote('code');
             var a = window.open('', '_selfs', ''); 
@@ -223,4 +236,9 @@ ini_set('max_input_vars', 30000);
             a.print(); 
         }
     </script>
+
+
+<script>
+
+</script>
       

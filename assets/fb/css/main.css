@@ -13,7 +13,7 @@
     width: 340px;
     z-index: 6;
     position:absolute;                  
-    bottom:0;                          
+    bottom:-30px;                          
     left:0;     
     display: none;
 }
@@ -127,4 +127,35 @@ div#blankFormPlaceHolder {
 
 .element-setting-container {
     display: none;
+}
+
+#styleBuildTab .submenu {
+    text-align: left;
+    color: white;
+    max-height: max-content !important;
+    height: 500px !important;
+}
+
+#styleBuildTab .submenu > div{
+    height: 500px !important;
+    cursor: pointer;
+    max-height: 500px !important;
+}
+
+.style-display-container:hover, .style-display-container.active{
+    background-color: #32243d !important;
+}
+
+.height-3 {
+    height: 80px !important;
+}
+
+.form-header {
+    display: flex;
+    align-items:center;
+    justify-content:left;
+}
+
+.ke-btn-tray {
+    height: auto !important;
 }

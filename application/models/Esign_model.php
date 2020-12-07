@@ -77,6 +77,15 @@ class Esign_model extends MY_Model {
         return $query->result();
     }
 
+    public function get_template_by_id($template_id){
+        $this->db->from($this->libraryTable)
+            ->select('*')
+            ->where('isActive',1 )
+            ->where('esignLibraryTemplateId',$template_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
 	public function getLibraries($userId = 0){
 		$this->db->from($this->librariesMaster)
 		->select('libraryName, pk_esignLibraryMaster, userId')

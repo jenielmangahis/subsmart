@@ -230,7 +230,7 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php echo base_url('/esignmain') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
                         <a class="dropdown-item" href="<?php echo base_url('/affiliate') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
                         <a class="dropdown-item" href="<?php echo base_url('/inventory') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
-                        <a class="dropdown-item" href="<?php echo base_url('/formbuilder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Form Builder</a>
+                        <a class="dropdown-item" href="<?php echo base_url('/fb') ?>"><i class="mdi mdi-wallet m-r-5"></i> Form Builder</a>
                         <a class="dropdown-item" href="<?php echo base_url('/tools/api_connectors') ?>"><i class="mdi mdi-wallet m-r-5"></i> API Connectors</a>
                         <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i><b>Mobile Tools</b></a>
                         <a class="dropdown-item" href="<?php echo base_url('/trac360'); ?>"><i class="mdi mdi-wallet m-r-5"></i><b>Trac 360</b></a>
