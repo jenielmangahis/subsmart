@@ -1,5 +1,7 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); 
+error_reporting(0);
+?>
 <?php include viewPath('includes/no_menu_header'); ?>
 <style type="text/css">
 .wrapper-onboarding {
