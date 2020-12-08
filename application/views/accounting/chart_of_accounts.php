@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="row pb-2">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/chart_of_accounts')?>" class="banking-tab-active text-decoration-none">Chart of Accounts</a>
-                        <a href="#" class="banking-tab">Reconcile</a>
+                        <a href="<?php echo url('/accounting/reconcile')?>" class="banking-tab">Reconcile</a>
                     </div>
                 </div>
                 <div class="row align-items-center pt-3">
@@ -137,7 +137,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										  </a>
 
 										  <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
-											<a class='dropdown-item' href='#'>Connect Bank</a>
 											<a class='dropdown-item' href=".url('/accounting/chart_of_accounts/edit/'.$row->id).">Edit</a>
 											<a class='dropdown-item' href='#' onClick='make_inactive(".$row->id.")'>Make Inactive (Reduce usage)</a>
 											<a class='dropdown-item' href='#'>Run Report</a>

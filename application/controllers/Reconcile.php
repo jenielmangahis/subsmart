@@ -330,8 +330,7 @@ class Reconcile extends MY_Controller {
                         <img src='". base_url().'uploads/'.$data['filename']."' alt='' style='    max-height: 64px;max-width: 64px;'>
                     </div>";
                     }
-                    $html .="<div class='act-br'>
-                        <a href='#' class='txbtn'>Add</a>";
+                    $html .="<div class='act-br'>";
                         if($data['fileexe']=='jpg' || $data['fileexe']=='jpeg' || $data['fileexe']=='png'){
                             //$html .="<a href='". base_url().'accounting/reconcile/view/download/'.$data['id']."' class='txbtn previewbtn'>Preview</a>";
                              $html .="<a href='#preview' onClick='show_preview(".$data['id'].")' class='txbtn previewbtn' data-toggle='modal' data-target='#previewModal' data-image='".$data['filename']."' id='previewid_".$data['id']."'>Preview</a>";
@@ -731,4 +730,5 @@ class Reconcile extends MY_Controller {
         $descp_it_sub=$this->input->post('descp_it_sub');
         $this->reconcile_model->save_interest_history($reconcile_id,$chart_of_accounts_id,$income_account_sub,$interest_earned_sub,$descp_it_sub);
     }
+
 }
