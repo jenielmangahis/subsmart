@@ -223,15 +223,11 @@ span.text-ter {
     <hr class="card-hr">
 <div class="card mb-0">
     <div class="row">
-    	<div class="col-md-8">
-    	    <!-- <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button>  -->
-    	</div>
-    	<div class="col-xs-16 text-right submit-onboard">
-                <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
-    		    		<a class="btn btn-default btn-lg" href="about">« Back</a>
-    		    		<!--	<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>  -->
-                <button class="btn btn-primary btn-lg margin-left" name="btn-save" type="submit">Next »</button>
-    		    	</div>
+               <div class="col-xs-16 text-right submit-onboard">
+                  <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
+                  <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/about");?>">« Back</a>
+                  <button class="btn btn-primary btn-lg margin-left" name="action" value="about" type="submit">Next »</button>
+               </div>
     </div>
 </div>
 </form>
