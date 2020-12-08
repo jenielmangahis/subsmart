@@ -303,6 +303,10 @@ class Onboarding extends MY_Controller {
 		unset($pdata['action']);
 		if($business){
 			$bid = $business->id;
+			$target_dir = "./uploads/users/business_profile/$bid/";
+			if(!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
 			if( $action == 'credentials' ){
 				$is_licensed = 0;
 				if( isset($pdata['is_licensed']) ){
