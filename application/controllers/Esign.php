@@ -599,12 +599,14 @@ class Esign extends MY_Controller {
 			$status = ($member->status == 1)?'Active':'Inactive';
 			$favStatus = $member->isFavorite ? 'favorite' : 'notFavorite';
 			$fav = '<a href="#" onclick="changeFavorite(this)" class="changeFavorite"> <i id="'.$member->esignLibraryTemplateId.'" class="fa fa-star '.$favStatus.'"> </i></a>';
+			$editUrl = base_url('esign/editTemplate?id='.$member->esignLibraryTemplateId);
 			$action  = '
-				<a href="'.base_url('esign/editTemplate?id='.$member->esignLibraryTemplateId).'"><i class="fa fa-edit"></i></a>
+				<a href="'.$editUrl.'"><i class="fa fa-edit"></i></a>
 				<a class="trashColor" href="#"><i id="deleteId-'.$member->esignLibraryTemplateId.'" class="fa fa-trash"></i></a>
 			';
+			$title = '<a style="cursor: pointer;" redirectUrl="'.$editUrl.'" ondblclick="redirectOnDoubleClickToTitle(this)">'.$member->title.'</a>';
 			$data[] = array( 
-				$member->title, 
+				$title, 
 				$status, 
 				$member->categoryName, 
 				$fav,

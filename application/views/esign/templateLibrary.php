@@ -94,6 +94,10 @@ ini_set('max_input_vars', 30000);
             });
         }
 
+        function redirectOnDoubleClickToTitle(event){
+            window.open($(event).attr("redirectUrl"), "_self")
+        }
+
         $(document).ready(function() {
             var selected = "0";
 
