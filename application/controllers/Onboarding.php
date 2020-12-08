@@ -354,26 +354,26 @@ class Onboarding extends MY_Controller {
 					$insurance_image_name = "bond_" . basename($_FILES["insurance_image"]["name"]);
 					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$insurance_image_name");
 				}
-
+				
 				$data_availability = [
 					'is_bonded' => $is_bonded,
 					'is_licensed' => $is_licensed,
 					'is_bbb_accredited' => $is_bbb,
 					'is_business_insured' => $is_insured,
 					'insured_amount' => $pdata['insured_amount'],
-					'insurance_expiry_date' => date("Y-m-d",strtotime($pdata['insured_exp_date'])),
+					'insurance_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['insured_exp_date']))),
 					'bond_amount' => $pdata['bonded_amount'],
-					'bond_expiry_date' => date("Y-m-d",strtotime($pdata['bonded_exp_date'])),
+					'bond_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['bonded_exp_date']))),
 					'license_class' => $pdata['license_class'],
 					'license_number' => $pdata['license_number'],
 					'license_state' => $pdata['license_state'],
-					'license_expiry_date' => date("Y-m-d",strtotime($pdata['license_exp_date'])),
+					'license_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['license_exp_date']))),
 					'bbb_link' => $pdata['bbb_url'],
 					'license_image' => $license_image_name,
 					'bond_image' => $bond_image_name,
 					'insurance_image' => $insurance_image_name
 				];
-				
+
 				$this->business_model->update($bid,$data_availability);	
 				redirect('onboarding/booking_online_demo');
 				
