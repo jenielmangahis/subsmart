@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); 
+defined('BASEPATH') OR exit('No direct script access allowed');
 error_reporting(0);
 ?>
 <?php include viewPath('includes/no_menu_header'); ?>
@@ -9,6 +9,9 @@ error_reporting(0);
   max-width: 1340px;
   margin: 0 auto;
   width: 100%;
+}
+.card {
+  box-shadow: none !important;
 }
 .profile-avatar-help-container span {
   color: #6b3a96;
@@ -34,7 +37,41 @@ error_reporting(0);
 #form-business-details .card {
   padding: 20px 30px !important;
 }
+h3.sc-title {
+  padding: 11px;
+}
 @media only screen and (max-width: 600px) {
+  h3.sc-title {
+    padding: 11px;
+    margin: 0px;
+  }
+  .col-md-2 {
+    padding-left: 0px;
+  }
+  .card.mb-0 h4, .card.mb-0 p {
+    padding-left: 17px;
+  }
+  .col-md-2 input {
+    margin-bottom: 5px;
+  }
+  button.btn, a.btn {
+    width: 100px !important;
+    font-size: 12px;
+  }
+  .col-md-12 {
+    padding: 0px !important;
+  }
+  .text-right {
+    text-align: right !important;
+    padding-bottom: 10px !important;
+    padding-right: 20px !important;
+  }
+  .margin-right {
+    margin-right: 10px;
+  }
+  .margin-left {
+    margin-left: 10px;
+  }
   body #topnav {
     min-height: 0px;
   }
@@ -51,8 +88,12 @@ error_reporting(0);
   #form-business-details .card {
     padding: 20px;
   }
+  .submit-onboard {
+    width: 100%;
+    padding: 0px 8px;
+  }
   .wrapper-onboarding {
-    padding: 20px 10px 60px 10px;
+    padding: 10px 5px 10px 5px;
   }
   .card {
     width: 100% !important;
@@ -72,8 +113,8 @@ error_reporting(0);
 <div>
    <div class="wrapper-onboarding">
       <div class="col-md-24 col-lg-24 col-xl-18">
-        <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">My Business Availability</h3>
-        <?php echo form_open_multipart(null, [ 'id'=> 'form-business-availability', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>        
+        <h3 class="sc-title" style="background-color: #4A2268;color:#ffffff;">My Business Availability</h3>
+        <?php echo form_open_multipart(null, [ 'id'=> 'form-business-availability', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
         <div class="row">
             <div class="col-md-12">
@@ -106,7 +147,7 @@ error_reporting(0);
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="monHoursToAvail" value="<?= $data_working_days['Monday']['time_to']; ?>" placeholder="End Time" id="mondayHoursToAvail" class="form-control">
-                                    
+
                                 </div>
                                 <div class="col-md-6">
                                   <a class="btn btn-default btn-sm btn-copy-time" data-key="tuesday" href="javascript:void(0);"><i class="fa fa-copy"></i> Tue</a>
@@ -192,7 +233,7 @@ error_reporting(0);
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card mb-0">
                         <h4>Time Off / Unavailability</h3>
                         <p>Please set your unavailable timings and time-off.</p>
                         <div class="form-group">
@@ -281,4 +322,3 @@ $(function(){
     });
 });
 </script>
-

@@ -199,7 +199,7 @@ span.text-ter {
                                 $select = true;
                               }
                             }
-                          }   
+                          }
                     ?>
                     <div class="col-xs-24 col-sm-12 col-md-6">
                         <div class="checkbox checkbox-sec">
@@ -226,11 +226,11 @@ span.text-ter {
     	<div class="col-md-8">
     	    <!-- <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button>  -->
     	</div>
-    	<div class="col-md-4 text-right-v">
+    	<div class="col-xs-16 text-right submit-onboard">
                 <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
     		    		<a class="btn btn-default btn-lg" href="about">« Back</a>
-    		    		    	<!--	<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>  -->
-                        <button class="btn btn-primary btn-lg margin-left" name="btn-save" type="submit">Next »</button>
+    		    		<!--	<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>  -->
+                <button class="btn btn-primary btn-lg margin-left" name="btn-save" type="submit">Next »</button>
     		    	</div>
     </div>
 </div>
@@ -336,7 +336,7 @@ $(function(){
       $(group).prop("checked", false);
       $box.prop("checked", true);
     } else {
-      
+
       $box.attr('checked', status);
      // $box.prop("checked", false);
     }
