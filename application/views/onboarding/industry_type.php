@@ -199,11 +199,11 @@ span.text-ter {
                                 $select = true;
                               }
                             }
-                          }
+                          }   
                     ?>
                     <div class="col-xs-24 col-sm-12 col-md-6">
                         <div class="checkbox checkbox-sec">
-                            <input type="checkbox"  <?php if($select){ ?> checked="checked" <?php } ?> name="categories[<?php echo $industryValue->id; ?>]" value="<?php echo $industryValue->name; ?>" class="cat-cat" id="category-<?php echo $industryValue->id; ?>">
+                            <input type="checkbox"  <?php if($select){ ?> checked="checked" <?php } ?> name="categories[0][]" value="<?php echo $industryValue->id; ?>" class="cat-cat" id="category-<?php echo $industryValue->id; ?>">
                             <label for="category-<?php echo $industryValue->id; ?>"><span><?php echo $industryValue->name; ?></span></label>
                         </div>
                     </div>
@@ -227,6 +227,7 @@ span.text-ter {
     	    <!-- <button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button>  -->
     	</div>
     	<div class="col-md-4 text-right-v">
+                <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
     		    		<a class="btn btn-default btn-lg" href="about">« Back</a>
     		    		    	<!--	<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>  -->
                         <button class="btn btn-primary btn-lg margin-left" name="btn-save" type="submit">Next »</button>
@@ -323,5 +324,29 @@ $(function(){
     }
    });
 
+   $("input:checkbox").on('click', function() {
+    // in the handler, 'this' refers to the box clicked on
+    var $box = $(this);
+    if ($box.is(":checked")) {
+      // the name of the box is retrieved using the .attr() method
+      // as it is assumed and expected to be immutable
+      var group = "input:checkbox[name='" + $box.attr("name") + "']";
+      // the checked state of the group/box on the other hand will change
+      // and the current value is retrieved using .prop() method
+      $(group).prop("checked", false);
+      $box.prop("checked", true);
+    } else {
+      
+      $box.attr('checked', status);
+     // $box.prop("checked", false);
+    }
+  });
+
+  // $('input[type="checkbox"]').on('change', function() {
+  //   $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+  // });
+
 });
+
+
 </script>
