@@ -1,5 +1,7 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); 
+error_reporting(0);
+?>
 <?php include viewPath('includes/no_menu_header'); ?>
 <style type="text/css">
 .wrapper-onboarding {
@@ -95,7 +97,14 @@ img.banner-reg-a {
                      <div class="form-group">
                         <label>Number of Employees</label> <span class="form-required">*</span>
                         <div class="help help-block help-sm">Enter the number of people working for you.</div>
-                        <input type="text" name="employee_count" value="<?php echo ($profiledata) ? $profiledata->employee_count : '' ?>"  class="form-control" autocomplete="off" placeholder="e.g. 5" required="">
+                        <select class="form-control" id="number_of_employee" name="employee_count" required="">
+                            <option <?= $num_emp == '1' ? 'selected="selected"' : ''; ?> value="1">1 (Just Me)</option>
+                            <option <?= $num_emp == '2-3' ? 'selected="selected"' : ''; ?> value="2-3">2-3</option>
+                            <option <?= $num_emp == '4-10' ? 'selected="selected"' : ''; ?> value="4-10">4-10</option>
+                            <option <?= $num_emp == '11-15' ? 'selected="selected"' : ''; ?> value="11-15">11-15</option>
+                            <option <?= $num_emp == '16-20' ? 'selected="selected"' : ''; ?> value="16-20">16-20</option>
+                            <option <?= $num_emp == '20+' ? 'selected="selected"' : ''; ?> value="20+">20+</option>
+                        </select>
                         <span class="validation-error-field" data-formerrors-for-name="employee_count" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -148,6 +157,7 @@ img.banner-reg-a {
                </div>
                <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
+                  <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
                   <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/business_info");?>">« Back</a>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="about" type="submit">Next »</button>
                </div>

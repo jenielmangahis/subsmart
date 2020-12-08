@@ -3,6 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<style type="text/css">
+.loader
+{
+    display: none !important;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>

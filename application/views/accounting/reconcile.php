@@ -89,7 +89,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
 
                     <div class="action-popup">
                         <a href="#" class="btn-main uplobtn" id="menuButton" onclick="closedelete(<?=$rows[0]->id?>)">Close without saving</a>
-                        <a href="#" class="btn-main">Go back</a>
+                        <a href="#" class="btn-main" onclick="goback('popup-cls')">Go back</a>
                     </div>
                 </div>
             </div>
@@ -148,7 +148,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
 
                     <div class="action-popup">
                         <a href="#" class="btn-main uplobtn" id="menuButton" onclick="openFinishpop(<?=$rows[0]->id?>)">Add adjustment and finish</a>
-                        <a href="#" class="btn-main">Go back</a>
+                        <a href="#" class="btn-main" onclick="goback('popup-hold')">Go back</a>
                     </div>
                 </div>
             </div>
@@ -909,7 +909,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         <div style="margin-left: 20px;">
             <div class="row print_disnone">
                 <div class="col-md-3">
-                    <select class="form-control" id="account_printpopup">
+                    <select class="form-control" id="account_printpopup" disabled>
                         <?php
                            $i=1;
                            foreach($this->chart_of_accounts_model->select() as $row)
@@ -936,7 +936,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             </div>
             <div class="row print_disnone">
                 <div class="col-md-2">
-                    <button type="button" class="form-control">Remove from list</button>
+                    <!-- <button type="button" class="form-control">Remove from list</button> -->
                 </div>
                 <div class="col-md-2">
                    <!--  <select name="sort_print" class="form-control">
@@ -947,11 +947,11 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </select> -->
                 </div>
                 <div class="col-md-2">
-                    <select name="showall_print" class="form-control">
+                    <!-- <select name="showall_print" class="form-control">
                         <option>Show all checks</option>
                         <option>Show regular checks</option>
                         <option>Show bill payment checks</option>
-                    </select>
+                    </select> -->
                 </div>
                 <div class="col-md-2">
                     <label>Starting check no.</label>
@@ -2832,14 +2832,14 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         <div class="mainMenu nav">
             <div class="existing-listing">
                 <div class="inner-like">
-                    <div class="dropdown">
+                    <!-- <div class="dropdown">
                         <button class="btn-exisitng dropdown-toggle" type="button" data-toggle="dropdown">Unliked
                         <span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             <li><a href="#">All</a></li>
                             <li><a href="#">Unliked</a></li>
                         </ul>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div id="ajax_upload_data"></div>
@@ -2895,6 +2895,12 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
+                <div class="row pb-2">
+                    <div class="col-md-12 banking-tab-container">
+                        <a href="<?php echo url('/accounting/chart_of_accounts')?>" class="banking-tab">Chart of Accounts</a>
+                        <a href="<?php echo url('/accounting/reconcile')?>" class="banking-tab-active text-decoration-none">Reconcile</a>
+                    </div>
+                </div>
                 <div class="row align-items-center">
                     <div class="col-sm-2">
                         <h1 class="page-title">Reconcile</h1>
@@ -3011,13 +3017,13 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <div class="col-md-4">
                                     <ul class="nav nav-pills nav-fill" style="border: 5;">
                                       <li class="nav-item">
-                                        <a class="nav-link" href="#" onclick="payments()">Payments</a>
+                                        <a class="nav-link" href="#" id="nav_filter_pay" onclick="payments()">Payments</a>
                                       </li>
                                       <li class="nav-item">
-                                        <a class="nav-link" href="#" onclick="deposites()">Deposites</a>
+                                        <a class="nav-link" href="#" id="nav_filter_dep" onclick="deposites()">Deposites</a>
                                       </li>
                                       <li class="nav-item">
-                                        <a class="nav-link active" href="#" onclick="displayall()">All</a>
+                                        <a class="nav-link active" href="#" id="nav_filter_all" onclick="displayall()">All</a>
                                       </li>
                                     </ul>
                                 </div>
@@ -3037,10 +3043,10 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                         <p class="p-padding"><input type="checkbox" name="chk_memo" id="chk_memo" checked="checked" onchange="col_memo()"> Memo</p>
                                         <!-- <p class="p-padding"><input type="checkbox" name="chk_status" id="chk_status" checked="checked" onchange="col_status()"> Banking Status</p> -->
                                         <br/>
-                                        Display Density
+                                        <!-- Display Density
                                         <p class="p-padding"><input type="radio" name="" id=""> Regular</p>
                                         <p class="p-padding"><input type="radio" name="" id=""> Compact</p>
-                                        <p class="p-padding"><input type="radio" name="" id=""> Ultra compact</p>
+                                        <p class="p-padding"><input type="radio" name="" id=""> Ultra compact</p> -->
                                       </div>
                                     </div>
                                  </div>
@@ -3126,7 +3132,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                                         </div>
 
                                                         <div class="btn-group">
-                                                            <a href="#" class="btn-main">Reset</a>
+                                                            <a href="#" class="btn-main" onclick="resetbtn()">Reset</a>
                                                             <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applybtn()">Apply</a>
                                                         </div>
                                                     </div>
@@ -3523,6 +3529,13 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
        }
     }
 
+    function resetbtn()
+    {
+        $("#tbody").show();
+         let ele = document.getElementById('textContent');
+          ele.innerHTML = "";
+    }
+
     function myfunc() {
     var selectBox = document.getElementById("dropdate");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
@@ -3569,16 +3582,25 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     {
         $("#deposites").hide();
         $("#payments").show();
+        $("nav_filter_pay").addClass('active');
+        $("nav_filter_all").removeClass('active');
+        $("nav_filter_dep").removeClass('active');
     }
     function deposites()
     {
         $("#deposites").show();
         $("#payments").hide();
+        $("nav_filter_dep").addClass('active');
+        $("nav_filter_pay").removeClass('active');
+        $("nav_filter_all").removeClass('active');
     }
     function displayall()
     {
         $("#deposites").show();
         $("#payments").show();
+        $("nav_filter_all").addClass('active');
+        $("nav_filter_pay").removeClass('active');
+        $("nav_filter_dep").removeClass('active');
     }
 </script>
 
@@ -6420,4 +6442,9 @@ function closeAddaccount()
             })
           }
     }
+
+function goback(val)
+{
+    $('#'+val).trigger('click');
+}
 </script>

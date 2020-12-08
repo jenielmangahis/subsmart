@@ -14,10 +14,19 @@ class Business_model extends MY_Model {
 		parent::__construct();
 	}
 
-	
+	public function getByUserId($id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
-
-
 
 /* End of file Business_model.php */
 

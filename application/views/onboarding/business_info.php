@@ -1,5 +1,7 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); 
+error_reporting(0);
+?>
 <?php include viewPath('includes/no_menu_header'); ?>
 <style type="text/css">
 .wrapper-onboarding {
@@ -78,12 +80,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>Business Name</label> <span class="form-required">*</span>
-                        <input type="text" name="business_name" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->business_name : '' ?>" placeholder="e.g. Acme Inc" required="">
+                        <input type="text" name="business_name" class="form-control" autocomplete="off" value="<?php echo $business_name; ?>" placeholder="e.g. Acme Inc" required="">
                         <span class="validation-error-field" data-formerrors-for-name="name" data-formerrors-message="true" style="display: none;"></span>
                         <br/>
                         <label>Business Street Address</label> <span class="form-required">*</span>
                         <div class="help help-sm help-block">Type in to search for your address</div>
-                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->address : '' ?>" placeholder="e.g. 123 Old Oak Drive" required="">
+                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php echo $business_address; ?>" placeholder="e.g. 123 Old Oak Drive" required="">
                         <span class="validation-error-field" data-formerrors-for-name="address" data-formerrors-message="true" style="display: none;"></span>
                         <br/>
                         <label>Suite/Unit</label> <span class="help">(optional)</span>
@@ -133,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      </div>
                      <div class="col-md-4">
                         <label>State/Province</label> <span class="form-required">*</span>
-                        <input type="text" name="state" value="<?php echo $profiledata->zip ?>" class="form-control" id="state"/>
+                        <input type="text" name="state" value="<?php echo ($profiledata) ? $profiledata->state : '' ?>" class="form-control" id="state"/>
                      </div>
                   </div>
                </div>

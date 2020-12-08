@@ -11,12 +11,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row pb-2">
+                    <div class="col-md-12 banking-tab-container">
+                        <a href="<?php echo url('/accounting/chart_of_accounts')?>" class="banking-tab">Chart of Accounts</a>
+                        <a href="<?php echo url('/accounting/reconcile')?>" class="banking-tab-active text-decoration-none">Reconcile</a>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
                             <section class="taxs-wrp">
-                                <div class="taxs-tabs">
+                                <!-- <div class="taxs-tabs">
                                     <div class="container-fluid">
                                         <ul class="nav nav-tabs">
                                             <li class="nav-item">
@@ -27,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                                 
                                 <div class="tab-content">
                                     <div class="tab-pane fade" id="tax3">
