@@ -12,7 +12,7 @@ class Chart_of_accounts_model extends MY_Model {
 
 	public function saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date)
 	{
-		$query="insert into accounting_chart_of_accounts values('','$account_id','$acc_detail_id','$name','$description','$sub_acc_id','$time','$balance','$time_date','','')";
+		$query="insert into accounting_chart_of_accounts values('','$account_id','$acc_detail_id','$name','$description','$sub_acc_id','$time','$balance','$time_date','1','','')";
 		echo $this->db->query($query);
 	}
 

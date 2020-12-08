@@ -99,20 +99,20 @@ $route['terms-and-conditions/edit/(:num)'] = 'TermsAndConditionsController/edit/
 $route['terms-and-conditions/add'] = 'TermsAndConditionsController/add';
 
 //gene fb
-$route['fb'] = 'fb';
-$route['fb/add'] = 'fb/add';
-$route['fb/edit/:active_tab'] = 'fb/edit';
-$route['fb/view/(:num)'] = 'fb/view/$1';
-$route['fb/get-all-by-active-user'] = 'fb/getAllByactiveUser';
-$route['fb/get-form-by-id/(:num)'] = 'fb/getByFormID/$1';
-$route['fb/create']['post'] = 'fb/create';
-$route['fb/update-style/(:num)']['post'] = 'fb/updateStyle/$1';
+$route['fb'] = 'FB';
+$route['fb/add'] = 'FB/add';
+$route['fb/edit/(:num)'] = 'FB/edit/$1';
+$route['fb/view/(:num)'] = 'FB/view/$1';
+$route['fb/get-all-by-active-user'] = 'FB/getAllByactiveUser';
+$route['fb/get-form-by-id/(:num)'] = 'FB/getByFormID/$1';
+$route['fb/create']['post'] = 'FB/create';
+$route['fb/update-style/(:num)']['post'] = 'FB/updateStyle/$1';
 
 //fb elements
-$route['fb/elements/create']['post'] = 'fb/createFormElement';
-$route['fb/elements/update-order']['post'] = 'fb/updateOrder';
-$route['fb/elements/update/(:num)']['post'] = 'fb/updateElement/$1';
-$route['fb/elements/destroy/(:num)']['post'] = 'fb/destroyElement/$1';
+$route['fb/elements/create']['post'] = 'FB/createFormElement';
+$route['fb/elements/update-order']['post'] = 'FB/updateOrder';
+$route['fb/elements/update/(:num)']['post'] = 'FB/updateElement/$1';
+$route['fb/elements/destroy/(:num)']['post'] = 'FB/destroyElement/$1';
 
 // api
 $route['terms-and-conditions/get-all'] = 'TermsAndConditionsController/getAll';
@@ -304,7 +304,6 @@ $route['accounting/reconcile/audit-history/(:any)/(:any)'] = 'reconcile/audit_hi
 $route['accounting/reconcile/save/history'] = 'reconcile/addReconcile_history';
 $route['accounting/reconcile/add/servicecharge/history'] = 'reconcile/insert_servicecharge_history';
 $route['accounting/reconcile/add/interestearned/history'] = 'reconcile/insert_interestearned_history';
-
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

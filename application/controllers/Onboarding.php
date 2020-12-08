@@ -92,11 +92,13 @@ class Onboarding extends MY_Controller {
         		$ServiceCategory = $this->ServiceCategory_model->deleteCategoryByCompanyID($company_id);
 
 		        $categories = $post['categories'];
-		        foreach ($categories as $key => $category) {
+		        foreach ($categories[0] as $key => $category) {
+		        	$industry_type_name  = $this->IndustryType_model->getById($category);
+		        	$industry_name = $industry_type_name->name;
 		           	$data = [
 	        			'company_id' => $company_id,
-	        			'industry_type_id' => $key,
-	        			'service_name' => $category,
+	        			'industry_type_id' => $category,
+	        			'service_name' => $industry_name,
 	        			'date_created' => date("Y-m-d H:i:s"),
 	        			'date_modified' => date("Y-m-d H:i:s")
 	        		];
@@ -157,6 +159,7 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function about(){
+		error_reporting(0);
 		$user = (object)$this->session->userdata('logged');
 		$uid  = logged('id');
 		$cid  = logged('company_id');
