@@ -159,6 +159,7 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function about(){
+		error_reporting(0);
 		$user = (object)$this->session->userdata('logged');
 		$uid  = logged('id');
 		$cid  = logged('company_id');
