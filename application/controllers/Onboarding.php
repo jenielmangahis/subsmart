@@ -169,9 +169,9 @@ class Onboarding extends MY_Controller {
 
 		$num_emp          = $client->number_of_employee;
 		if( $profiledata ){
-			$num_emp          = $profiledata->employee_count;
+			$num_emp          = $profiledata[0]->employee_count;
 		}
-
+		
 		$this->page_data['num_emp'] = $num_emp;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
@@ -354,7 +354,7 @@ class Onboarding extends MY_Controller {
 					$insurance_image_name = "bond_" . basename($_FILES["insurance_image"]["name"]);
 					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$insurance_image_name");
 				}
-				
+
 				$data_availability = [
 					'is_bonded' => $is_bonded,
 					'is_licensed' => $is_licensed,
