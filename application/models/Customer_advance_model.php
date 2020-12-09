@@ -56,11 +56,12 @@ class Customer_advance_model extends MY_Model {
     public function get_customer_data($user_id){
         $this->db->from("acs_profile");
         //$this->db->where("fk_user_id", $user_id);
-        $this->db->select('acs_profile.*,acs_b.*');
+        $this->db->select('acs_profile.*,acs_b.*,acs_alarm.*,acs_office.*,acs_profile.city,acs_profile.state,users.LName,users.FName');
         $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
         $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
         $query = $this->db->get();
         return $query->result();
     }

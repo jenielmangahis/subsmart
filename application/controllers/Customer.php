@@ -703,7 +703,6 @@ class Customer extends MY_Controller
                 break;
             default;
         }
-
         if ($this->customer_ad_model->delete($input)) {
             echo  "nice";
         }
@@ -802,9 +801,6 @@ class Customer extends MY_Controller
                                 'zip_code' => $row['Zip'],
                                 'country' => 'USA',
                             );
-
-
-
                             if(!empty( $row['FirstName']) && !empty( $row['LastName'])) {
                                 $check_user = array(
                                     'where' => array(
@@ -949,90 +945,6 @@ class Customer extends MY_Controller
             die();
         }
 
-       //echo  $this->uri->segment(3);
-      // echo  $this->uri->segment(4);
-        $role = logged('role');
-
-        if ($role == 2 || $role == 3) {
-
-            $company_id = logged('company_id');
-
-            if (!empty($status_index)) {
-
-                $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('status' => $status_index), $company_id));
-            } else {
-
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('search' => get('search')), $company_id));
-                } elseif (!empty(get('type'))) {
-
-                    $this->page_data['type'] = get('type');
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id));
-                    } else {
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type')), $company_id));
-                    }
-                } else {
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id));
-                    } else {
-//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->getAllByCompany($company_id));
-                    }
-
-//                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
-                }
-            }
-
-            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount($company_id);
-
-        }
-
-        if ($role == 4) {
-
-            if (!empty($status_index)) {
-
-                $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('status' => $status_index)));
-            } else {
-
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('search' => get('search'))));
-                } elseif (!empty(get('type'))) {
-
-                    $this->page_data['type'] = get('type');
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order'))));
-                    } else {
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type'))));
-                    }
-                } else {
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order'))));
-                    } else {
-//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
-                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->getAllByUserId());
-                    }
-
-//                    $this->page_data['customers'] = $this->customer_model->getAllByUserId();
-                }
-            }
-
-            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
-        }
 
         $this->page_data['customers'] = $this->customer_model->getAllByUserId();
 

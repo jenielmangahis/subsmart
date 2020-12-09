@@ -78,7 +78,7 @@ class Timesheet_model extends MY_Model {
         return $qry->result();
     }
     public function attendance($user_id,$status,$attn_id,$shift,$break,$overtime){
-        $qry = $this->db->get_where('timesheet_attendance',array('user_id' => $user_id,'shift_duration >' => 0));
+        $qry = $this->db->get_where('timesheet_attendance',array('user_id' => $user_id,'shift_duration' => 0));
         if ($qry->num_rows() == 0 && $status == 1){
             $data = array(
                 'user_id' =>  $user_id,
@@ -139,7 +139,7 @@ class Timesheet_model extends MY_Model {
             $shift = $this->calculateShiftDuration($attn_id);
             $break = $this->calculateBreakDuration($attn_id);
             $overtime = $this->calculateOvertime($user_id,$attn_id);
-//            $this->updateWeeklyReport($week_ID,$user_id,$attn_id);
+
             $attendance = $this->attendance($user_id,0,$attn_id,$shift,$break,$overtime);
             if ($attendance == true){
                 return true;
@@ -150,50 +150,7 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
-//    public function updateWeeklyReport($week_ID,$user_id,$attn_id){
-//        $weekly_duration = 0;
-//        $weekly_break = 0;
-//        $weekly_overtime = 0;
-//        $get_attendance = $this->db->get_where('timesheet_attendance',array('week_id'=>$week_ID))->result();
-//        foreach ($get_attendance as $total){
-//            $weekly_duration += $total->shift_duration;
-//            $weekly_break += $total->break_duration;
-//            $weekly_overtime += $total->overtime;
-//        }
-//        $get_weekly = $this->db->get_where('ts_weekly_total_shift',array('id'=>$week_ID));
-//        if ($get_weekly->week_of != date("Y-m-d",strtotime('monday this week'))){
-//            $insert = array(
-//                'user_id' => $user_id,
-//                'week_of' => date("Y-m-d",strtotime('monday this week')),
-//            );
-//            $this->db->insert('ts_weekly_total_shift',$insert);
-//            $w_ID = $this->db->insert_id();
-//            //update week id
-//            $update_attn = array(
-//                'week_id' => $w_ID,
-//            );
-//            $this->db->where('id',$attn_id);
-//            $this->db->update('timesheet_attendance',$update_attn);
-//            //Recalculate total
-//            $update_week = array(
-//                'total_shift' => $this->calculateShiftDuration($attn_id),
-//                'total_break' => $this->calculateBreakDuration($attn_id),
-//                'total_overtime' => $this->calculateOvertime($user_id,$attn_id)
-//            );
-//            $this->db->where('id',$w_ID);
-//            $this->db->update('ts_weekly_total_shift',$update_week);
-//
-//        }else{
-//            $weekly_update = array(
-//                'total_shift' => $weekly_duration,
-//                'total_break' => $weekly_break,
-//                'total_overtime' => $weekly_overtime
-//            );
-//            $this->db->where('id',$week_ID);
-//            $this->db->update('ts_weekly_total_shift',$weekly_update);
-//        }
-//
-//    }
+
     public function calculateShiftDuration($attn_id){
         $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
         $start_time = 0;
@@ -247,36 +204,7 @@ class Timesheet_model extends MY_Model {
         }
         return round($overtime,2);
     }
-//    private function totalHoursShift($user_id,$week_ID){
-//        $total_shift = 0;
-//        if ($week_ID != 0){
-//            $qry = $this->db->get_where($this->attn_tbl,array('week_id'=>$week_ID))->result();
-//            foreach ($qry as $shift){
-//                $total_shift += $shift->shift_duration;
-//            }
-//        }
-//
-//        //Inserting or Updating weekly total shift
-//        $tbl_total_shift = $this->db->get_where('ts_weekly_total_shift',array('user_id'=>$user_id,'week_of'=>date("Y-m-d",strtotime('monday this week'))));
-//        if ($tbl_total_shift->num_rows() == 0){
-//            $insert = array(
-//                'user_id' => $user_id,
-//                'week_of' => (date('D',strtotime('tomorrow')) == "Mon")?date("Y-m-d",strtotime('monday next week')):date("Y-m-d",strtotime('monday this week')),
-//                'total_shift' => $total_shift
-//            );
-//            $this->db->insert('ts_weekly_total_shift',$insert);
-//            return $this->db->insert_id();
-//        }else{
-//            if ($week_ID != 0){
-//                $update = array(
-//                    'total_shift' => $total_shift
-//                );
-//                $this->db->where('id',$week_ID);
-//                $this->db->update('ts_weekly_total_shift',$update);
-//            }
-//            return $tbl_total_shift->row()->id;
-//        }
-//    }
+
     public function breakIn($user_id,$entry,$approved_by,$company_id){
         //Get timesheet_attendance id
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
@@ -385,16 +313,19 @@ class Timesheet_model extends MY_Model {
         return $total_users - $logged_in;
     }
     public function getInNow(){
-//        $this->db->or_where('date_in',date('Y-m-d'));
-//        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $this->db->or_where('DATE(date_created)',date('Y-m-d'));
+//        $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
         $this->db->where('status',1);
         $query = $this->db->get('timesheet_attendance');
         return $query->num_rows();
     }
     public function getOutNow(){
+        $total_user = $this->users_model->getTotalUsers();
+        $this->db->or_where('DATE(date_created)',date('Y-m-d'));
         $query = $this->db->get_where('timesheet_attendance',array('status' => 0))->num_rows();
-        return $query;
+        return $total_user - $query;
     }
+
     public function getAttendanceByDay($day){
         $this->db->or_where('DATE(date_created)',$day);
         $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));

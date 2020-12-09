@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
         var table_lt = $('#leadtype').DataTable({
             "lengthChange": false,
             "searching" : false,
@@ -24,7 +24,6 @@
             "info": false,
             "order": [],
             initComplete: function () {
-
             }
         });
 
@@ -176,7 +175,6 @@
                             }else{
                                 console.log(data);
                             }
-
                         }
                     });
                     // window.location.href="/customer";

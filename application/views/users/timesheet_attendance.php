@@ -330,12 +330,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>In Now</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-in-now"></span>
+                                                                <span id="employee-in-now"><?php echo $in_now;?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow=""
-                                                                     aria-valuemin="0" aria-valuemax="100" style="">
-                                                                    <!--                                                                --><?php //echo round(($in_now / $total_users) * 100,2).'%';?>
+                                                                <div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $in_now;?>"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php echo round(($in_now / $total_users) * 100,0).'%';?>">
+                                                                    <?php echo round(($in_now / $total_users) * 100,2).'%';?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -354,11 +354,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>Out Now</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-out-now"></span>
+                                                                <span id="employee-out-now"><?php echo $out_now?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow=""
-                                                                     aria-valuemin="0" aria-valuemax="100"">
+                                                                <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $out_now?>"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php echo round(($out_now / $total_users) * 100,0).'%';?>">
+                                                                    <?php echo round(($out_now / $total_users) * 100,2).'%';?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -997,17 +998,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(".bootstrap-tagsinput > input").datepicker();
 
         // In/Out Counter
-        let out_log = $('#outCounter').val();
-        let in_log = $('#inCounter').val();
+        // let out_log = $('#outCounter').val();
+        // let in_log = $('#inCounter').val();
         let total_user = $('#employeeTotal').val();
-        let in_log_cal = (in_log / total_user);
-        let in_ans = in_log_cal.toFixed(2) * 100
-        let out_log_cal = (out_log / total_user);
-        let out_ans =  out_log_cal.toFixed(2) * 100
-        $('#employee-in-now').text(in_log);
-        $('#progressInNow').attr('aria-valuenow',in_log).css('width',in_ans+"%").text(in_ans+"%");
-        $('#employee-out-now').text(out_log);
-        $('#progressOutNow').attr('aria-valuenow',out_log).css('width',out_ans+"%").text(out_ans+"%");
+        // let in_log_cal = (in_log / total_user);
+        // let in_ans = in_log_cal.toFixed(2) * 100
+        // let out_log_cal = (out_log / total_user);
+        // let out_ans =  out_log_cal.toFixed(2) * 100
+        // $('#employee-in-now').text(in_log);
+        // $('#progressInNow').attr('aria-valuenow',in_log).css('width',in_ans+"%").text(in_ans+"%");
+        // $('#employee-out-now').text(out_log);
+        // $('#progressOutNow').attr('aria-valuenow',out_log).css('width',out_ans+"%").text(out_ans+"%");
 
         function inNow() {
             $.ajax({
@@ -1016,9 +1017,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 success:function (data) {
                     $('#employee-in-now').text(data);
                     let percentage = (data / total_user) * 100;
-                    $('#progressInNow').attr('aria-valuenow',percentage.toFixed(2));
-                    $('#progressInNow').css('width',percentage.toFixed(2)+'%');
-                    $('#progressInNow').text(percentage.toFixed(2)+'%');
+                    $('#progressInNow').attr('aria-valuenow',percentage.toFixed(2)).css('width',percentage.toFixed(2)+'%').text(percentage.toFixed(2)+'%');
                 }
             });
         }
@@ -1030,9 +1029,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 success:function (data) {
                     $('#employee-out-now').text(data);
                     let percentage = (data / total_user) * 100;
-                    $('#progressOutNow').attr('aria-valuenow',percentage.toFixed(2));
-                    $('#progressOutNow').css('width',percentage.toFixed(2)+'%');
-                    $('#progressOutNow').text(percentage.toFixed(2)+'%');
+                    $('#progressOutNow').attr('aria-valuenow',percentage.toFixed(2)).css('width',percentage.toFixed(2)+'%').text(percentage.toFixed(2)+'%');
                 }
             });
         }
@@ -1042,10 +1039,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 success:function (data) {
                     $('#employee-not-loggedin').text(data);
-                    var percentage = (100 - (((total_user - data) / total_user) * 100));
-                    $('#progressNotLoggedIn').attr('aria-valuenow',percentage.toFixed(2));
-                    $('#progressNotLoggedIn').css('width',percentage.toFixed(2)+'%');
-                    $('#progressNotLoggedIn').text(percentage.toFixed(2)+'%');
+                    let percentage = (100 - (((total_user - data) / total_user) * 100));
+                    $('#progressNotLoggedIn').attr('aria-valuenow',percentage.toFixed(2)).css('width',percentage.toFixed(2)+'%').text(percentage.toFixed(2)+'%');
                 }
             });
         }
@@ -1122,7 +1117,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             let id = $(this).attr('data-id');
             let emp_name = $(this).attr('data-name');
             let selected = this;
-            // var week_id = $(this).attr('data-week');
             let attn_id = $(this).attr('data-attn');
             let entry = 'Manual';
             let approved_by = $(this).attr('data-approved');
@@ -1147,7 +1141,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             if (data == 1){
                                 inNow();
                                 outNow();
-                                var time = serverTime ();
+                                let time = serverTime ();
                                 $(selected).next('i').removeClass('fa-check');
                                 $(selected).next('i').addClass('fa-times-circle');
                                 $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(time);
