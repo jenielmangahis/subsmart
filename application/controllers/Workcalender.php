@@ -1369,7 +1369,12 @@ class Workcalender extends MY_Controller
     }
 
     public function ajax_load_upcoming_events(){
-        $this->load->model('Event_model', 'event_model');
+        $this->load->model('Event_model', 'event_model', 'settings_model');
+
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+        if( $settings[0] ){              
+            date_default_timezone_set($settings_data['calendar_timezone']);
+        }
 
         $company_id = logged('company_id');
         $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);

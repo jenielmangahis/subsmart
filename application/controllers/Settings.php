@@ -47,7 +47,7 @@ class Settings extends MY_Controller {
         }
 
         if (!empty($post)) {
-
+            echo 4;exit;
             $this->load->model('Settings_model', 'setting_model');
             if (!empty($settings)) {
                 $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);

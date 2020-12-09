@@ -1,6 +1,7 @@
 <?php if ( !empty($event) ) { ?>
     <div class="row">
         <div class="col-md-8" style="text-align: left;">
+        	<?php if( $event->customer_id ){ ?>
             <div class="margin-bottom-sec">
                 <div class="bold margin-bottom-sec" style="font-size: 18px; font-weight: 500;">
                     <?php //echo !empty($event->event_description) ? $event->event_description : '-'; ?>
@@ -13,6 +14,7 @@
                     <br> <br>
                 </a>
             </div>
+        	<?php } ?>
 
             <div class="margin-bottom-sec">
                 <div class="text-ter text-sm">WHEN (MY TIMEZONE)</div>       
@@ -52,11 +54,16 @@
                     <?php 
                         $event_date_from = date("Ymd\THis\Z", strtotime($event->start_date . ' ' . $event->start_time));
                         $event_date_to   = date("Ymd\THis\Z", strtotime($event->end_date . ' ' . $event->end_time));
-                        if( $event->description != '' ){
-                            $details = get_customer_by_id($event->customer_id)->contact_name . " - " . $event->description;
-                        }else{  
-                            $details = get_customer_by_id($event->customer_id)->contact_name;
-                        }                        
+                        if( $event->customer_id ){
+                        	if( $event->description != '' ){
+	                            $details = get_customer_by_id($event->customer_id)->contact_name . " - " . $event->description;
+	                        }else{  
+	                            $details = get_customer_by_id($event->customer_id)->contact_name;
+	                        }
+                        }else{
+                        	$details = $event->description;
+                        }
+                                                
 
                         $url_add_google_event = "https://www.google.com/calendar/event?action=TEMPLATE&text=".$event->description."&dates=".$event_date_from."/".$event_date_to."&details=".$details."&location=";
                     ?>

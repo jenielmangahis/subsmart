@@ -42,7 +42,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                            <?php if($row == 1){ ?>
                              <div class="marketing-card-deck card-deck pl-50 pb-100"> <?php } $row++; ?>
 
-                                <a href="#" class="card border-gr btn-addon" data-id="<?= $NsmartUpgrade->id; ?>"><img class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" data-holder-rendered="true">
+                                <a href="#" class="card border-gr btn-addon" data-id="<?= $NsmartUpgrade->id; ?>">
+                                    ><img class="marketing-img" alt="Add On" src="<?php echo base_url('/assets/img/onboarding/'.$NsmartUpgrade->image_filename) ?>" data-holder-rendered="true">
                                     <div class="card-body align-left">
                                         <h5 class="card-title mb-0"><?php echo $NsmartUpgrade->name; ?></h5>
                                         <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>

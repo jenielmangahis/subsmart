@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Workorder_model extends MY_Model
 {
 
-    public $table = 'workorders';
+    public $table = 'work_orders';
 
     public function getAllOrderByCompany($company_id, $options = array())
     {
