@@ -177,6 +177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
+                                                                                <?php if (isset($profiles) && !empty($profiles)) :  ?>
                                                                                 <?php foreach ($profiles as $customer) : ?>
                                                                                     <tr>
                                                                                         <td>
@@ -184,8 +185,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                                 <?= ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
                                                                                             </a>
                                                                                         </td>
-                                                                                        <td><?php echo ($customer) ? $customer->city : ''; ?></td>
-                                                                                        <td><?php echo ($customer) ? $customer->state : ''; ?></td>
+                                                                                        <td><?php echo  $customer->city; ?></td>
+                                                                                        <td><?php echo  $customer->state; ?></td>
                                                                                         <td><?php echo $customer->lead_source; ?></td>
                                                                                         <td><?php echo $customer->email; ?></td>
                                                                                         <td><?php echo $customer->entered_by; ?></td>
@@ -229,6 +230,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                 <?php endforeach; ?>
+                                                                            <?php endif; ?>
                                                                             </tbody>
                                                                         </table>
                                                                     </div>

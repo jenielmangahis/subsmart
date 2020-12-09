@@ -94,7 +94,7 @@
 
                             <ul>
                                 <li><a href="#">Expense</a></li>
-                                <li><a href="#">Check</a></li>
+                                <li><a href="<?php echo url('/accounting/check')?>">Check</a></li>
                                 <li><a href="#">Bill</a></li>
                                 <li><a href="#">Pay bills</a></li>
                                 <li><a href="#">Purchase order</a></li>

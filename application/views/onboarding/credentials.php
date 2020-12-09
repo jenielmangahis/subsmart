@@ -147,7 +147,7 @@ error_reporting(0);
                     <div class="col-md-4">
                         <label>License Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="license_exp_date" value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date("Y-m-d",strtotime($profiledata->license_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="license_exp_date">
+                            <input type="text" name="license_exp_date" value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date("m-d-Y",strtotime($profiledata->license_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="license_exp_date">
                             <div class="input-group-addon calendar-button" data-for="license_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
@@ -199,7 +199,7 @@ error_reporting(0);
                     <div class="col-md-4">
                         <label>Bond Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="bonded_exp_date" value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date("Y-m-d",strtotime($profiledata->bond_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="bonded_exp_date">
+                            <input type="text" name="bonded_exp_date" value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date("m-d-Y",strtotime($profiledata->bond_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="bonded_exp_date">
                             <div class="input-group-addon calendar-button" data-for="bonded_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>
@@ -251,7 +251,7 @@ error_reporting(0);
                     <div class="col-md-4">
                         <label>Insurance Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="insured_exp_date" value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date("Y-m-d",strtotime($profiledata->insurance_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="insured_exp_date">
+                            <input type="text" name="insured_exp_date" value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date("m-d-Y",strtotime($profiledata->insurance_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="insured_exp_date">
                             <div class="input-group-addon calendar-button" data-for="insured_exp_date">
                                 <span class="fa fa-calendar"></span>
                             </div>

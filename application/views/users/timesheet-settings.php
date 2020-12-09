@@ -654,6 +654,40 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .disabled-section input[type="checkbox"]:checked + label:before{
         background: #c7c7c7;
     }
+    /*Notification*/
+    .notify-section{
+        width: 100%;
+        height: 46px;
+        margin-bottom: 10px;
+    }
+    .notify-section .col-md-4 div{
+        float:right;
+    }
+    .notify-checkbox,.notify-label{
+        display: inline-block;
+        vertical-align: bottom;
+    }
+    .notify-label{
+        margin-left: 10px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .notify-arrow,.notify-text,.notify-time-in{
+        display: inline-block;
+        margin-left: 10px;
+    }
+    .notify-arrow{
+        color: #c7c7c7;
+    }
+    .notify-text{
+        font-size: 16px;
+    }
+    .notify-time-in{
+        width: 80px;
+    }
+    .notify-section .row .col-md-8{
+        margin-top: 11px;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -1139,7 +1173,78 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                         <div class="tab-pane container" id="empNotifications">
-                                           
+                                            <div class="workweek-overtime-header">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h4>Notifications</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="workweek-container">
+                                                <div class="workweek-header">
+                                                    <span>Reminders</span>
+                                                </div>
+                                                <div class="notify-section">
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="notify-checkbox">
+                                                                <input type="checkbox">
+                                                            </div>
+                                                            <div class="notify-label">Clock In Reminder</div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div>
+                                                                <i class="fa fa-arrow-right fa-lg notify-arrow"></i>
+                                                                <span class="notify-text">Remind me at</span>
+                                                                <input type="text" class="form-control notify-time-in">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="notify-section">
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="notify-checkbox">
+                                                                <input type="checkbox">
+                                                            </div>
+                                                            <div class="notify-label">Clock Out Reminder</div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div>
+                                                                <i class="fa fa-arrow-right fa-lg notify-arrow"></i>
+                                                                <span class="notify-text">Remind me at</span>
+                                                                <input type="text" class="form-control notify-time-in">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="notify-section">
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="notify-checkbox">
+                                                                <input type="checkbox">
+                                                            </div>
+                                                            <div class="notify-label">When I Enter a Job Site</div>
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="notify-section">
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="notify-checkbox">
+                                                                <input type="checkbox">
+                                                            </div>
+                                                            <div class="notify-label">When I Leave a Job Site</div>
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

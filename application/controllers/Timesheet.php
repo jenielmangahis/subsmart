@@ -1108,8 +1108,8 @@ class Timesheet extends MY_Controller {
         $this->page_data['user_roles'] = $this->users_model->getRoles();
         $this->page_data['total_users'] = $this->users_model->getTotalUsers();
         $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
-//        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
-//        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
+        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
+        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['logs'] = $this->timesheet_model->getTimesheetLogs();
 //        $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
@@ -1125,13 +1125,15 @@ class Timesheet extends MY_Controller {
     }
 
     public function inNow(){
-	    $this->db->where('DATE(date_created)',date('Y-m-d'));
+	    $this->db->or_where('DATE(date_created)',date('Y-m-d'));
+//	    $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
 	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1));
 	    echo json_encode($query->num_rows());
     }
     public function outNow(){
+        $total_user = $this->users_model->getTotalUsers();
         $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'DATE(date_created)'=>date('Y-m-d')));
-        echo json_encode($query->num_rows());
+        echo json_encode($total_user - $query->num_rows());
     }
     public function loggedInToday(){
         $total_users = $this->users_model->getTotalUsers();

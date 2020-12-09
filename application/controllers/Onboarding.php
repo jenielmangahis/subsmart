@@ -92,11 +92,13 @@ class Onboarding extends MY_Controller {
         		$ServiceCategory = $this->ServiceCategory_model->deleteCategoryByCompanyID($company_id);
 
 		        $categories = $post['categories'];
-		        foreach ($categories as $key => $category) {
+		        foreach ($categories[0] as $key => $category) {
+		        	$industry_type_name  = $this->IndustryType_model->getById($category);
+		        	$industry_name = $industry_type_name->name;
 		           	$data = [
 	        			'company_id' => $company_id,
-	        			'industry_type_id' => $key,
-	        			'service_name' => $category,
+	        			'industry_type_id' => $category,
+	        			'service_name' => $industry_name,
 	        			'date_created' => date("Y-m-d H:i:s"),
 	        			'date_modified' => date("Y-m-d H:i:s")
 	        		];
@@ -157,6 +159,7 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function about(){
+		error_reporting(0);
 		$user = (object)$this->session->userdata('logged');
 		$uid  = logged('id');
 		$cid  = logged('company_id');
@@ -166,9 +169,9 @@ class Onboarding extends MY_Controller {
 
 		$num_emp          = $client->number_of_employee;
 		if( $profiledata ){
-			$num_emp          = $profiledata->employee_count;
+			$num_emp          = $profiledata[0]->employee_count;
 		}
-
+		
 		$this->page_data['num_emp'] = $num_emp;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
@@ -303,6 +306,10 @@ class Onboarding extends MY_Controller {
 		unset($pdata['action']);
 		if($business){
 			$bid = $business->id;
+			$target_dir = "./uploads/users/business_profile/$bid/";
+			if(!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
 			if( $action == 'credentials' ){
 				$is_licensed = 0;
 				if( isset($pdata['is_licensed']) ){
@@ -354,13 +361,13 @@ class Onboarding extends MY_Controller {
 					'is_bbb_accredited' => $is_bbb,
 					'is_business_insured' => $is_insured,
 					'insured_amount' => $pdata['insured_amount'],
-					'insurance_expiry_date' => $pdata['insured_exp_date'],
+					'insurance_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['insured_exp_date']))),
 					'bond_amount' => $pdata['bonded_amount'],
-					'bond_expiry_date' => $pdata['bonded_exp_date'],
+					'bond_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['bonded_exp_date']))),
 					'license_class' => $pdata['license_class'],
 					'license_number' => $pdata['license_number'],
 					'license_state' => $pdata['license_state'],
-					'license_expiry_date' => $pdata['license_exp_date'],
+					'license_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['license_exp_date']))),
 					'bbb_link' => $pdata['bbb_url'],
 					'license_image' => $license_image_name,
 					'bond_image' => $bond_image_name,

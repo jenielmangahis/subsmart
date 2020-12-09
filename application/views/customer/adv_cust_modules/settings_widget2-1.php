@@ -17,9 +17,7 @@
                 <a style="display: inline-block;" class="btn btn-primary btn-md " href="<?= base_url('esign/templateLibrary'); ?> "> <span class="fa fa-plus"></span> Add New</a>
 
             </div>
-
             <br>
-
             <br>
             <table class="table table-hover" id="dispute_table">
                 <thead>
