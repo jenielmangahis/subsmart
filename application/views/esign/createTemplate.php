@@ -196,7 +196,7 @@ ini_set('max_input_vars', 30000);
                     }
                 });
             }
-            selectCategory(<?=isset($template) && $template->fk_esignLibraryMaster ? $template->fk_esignLibraryMaster : -1 ?>)
+            selectCategory(<?=isset($template) && $template->fk_esignLibraryMaster ? $template->fk_esignLibraryMaster : -1 ?>);
             $('.select2LibrarySelection').select2({
                 placeholder: 'Please Select',
                 allowClear: true
@@ -211,12 +211,10 @@ ini_set('max_input_vars', 30000);
                 tabsize: 2,
                 height: 450,
             });
-           // $("#app").append("<?php echo htmlspecialchars($template->content); ?>");
-           // document.getElementById("app").insertAdjacentHTML("afterend",'<?php echo htmlspecialchars($template->content); ?>');
         <?php
             if(!isset($template)){
             ?>
-               // $('#summernote').summernote('code', defaultText);
+                $('#summernote').summernote('code', defaultText);
             <?php
             }else {
             ?>

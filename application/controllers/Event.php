@@ -307,7 +307,7 @@ class Event extends MY_Controller
         $calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
 
         foreach ($events as $key => $event) {
-
+            $title    = '';
             $customer = get_customer_by_id($event->customer_id);
 
             // label of the event
