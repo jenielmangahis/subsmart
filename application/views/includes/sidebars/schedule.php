@@ -45,6 +45,11 @@
                 <span class="fa fa-book"></span><span class="total-online-booking left-sidebar-badge"></span>Online Booking
             </a>
         </li>
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'color_settings')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('color_settings/index') ?>" title="Online Booking">
+                <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Color Settings
+            </a>
+        </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
                 <span class="fa fa-gear"></span>
