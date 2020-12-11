@@ -18,15 +18,125 @@ class Color_Settings extends MY_Controller {
 
 
 	public function index(){			
-		$colorSettings = $this->ColorSettings_model->getAll();
+		$user_id = logged('id');
+		$colorSettings = $this->ColorSettings_model->getAllByUserId($user_id);
+
 		$this->page_data['colorSettings'] = $colorSettings;
 		$this->load->view('color_settings/index', $this->page_data);
 	}
 
-	public function add_new_color() {
+	public function add_new_color_setting(){
+
+		add_css(array(
+            'assets/css/bootstrap-colorpicker.min.css'
+        ));
+
+        add_footer_js(array(
+            'assets/js/bootstrap-colorpicker.min.js'
+        ));
 
 		$this->load->view('color_settings/add_new', $this->page_data);
 	}	
+
+	public function create_color_setting(){
+		postAllowed();
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if( $post['color_name'] != '' && $post['color_code'] != '' ){
+        	$data_color_setting = [
+        		'user_id' => $user_id,
+        		'color_name' => $post['color_name'],
+        		'color_code' => $post['color_code']
+        	];
+
+        	$colorSetting = $this->ColorSettings_model->create($data_color_setting);
+        	if( $colorSetting > 0 ){
+
+        		$this->session->set_flashdata('message', 'Add new color setting was successful');
+        		$this->session->set_flashdata('alert_class', 'alert-success');
+
+        		redirect('color_settings/index');
+
+        	}else{
+        		$this->session->set_flashdata('message', 'Cannot save data.');
+        		$this->session->set_flashdata('alert_class', 'alert-danger');
+
+        		redirect('color_settings/add_new_color');
+        	}
+
+        }else{
+        	$this->session->set_flashdata('message', 'Please specify color name and code');
+        	$this->session->set_flashdata('alert_class', 'alert-danger');
+
+        	redirect('color_settings/add_new_color');
+
+        }
+	}
+
+	public function edit_color_setting( $color_setting_id ){
+
+		add_css(array(
+            'assets/css/bootstrap-colorpicker.min.css'
+        ));
+
+        add_footer_js(array(
+            'assets/js/bootstrap-colorpicker.min.js'
+        ));
+
+        $colorSetting = $this->ColorSettings_model->getById($color_setting_id);
+
+        $this->page_data['colorSetting'] = $colorSetting;
+		$this->load->view('color_settings/edit', $this->page_data);
+	}
+
+	public function update_color_setting() {
+		postAllowed();
+		$post    = $this->input->post();
+
+        if( $post['color_name'] != '' && $post['color_code'] != '' ){
+
+        	$colorSetting = $this->ColorSettings_model->getById($post['cid']);
+        	if( $colorSetting ){
+        		$data_color_setting = [
+        			'color_name' => $post['color_name'],
+        			'color_code' => $post['color_code']
+        		];
+
+        		$this->ColorSettings_model->updateColorSettingById($post['cid'], $data_color_setting);
+
+        		$this->session->set_flashdata('message', 'Color setting was successful updated');
+        		$this->session->set_flashdata('alert_class', 'alert-success');
+
+        		redirect('color_settings/index');
+
+        	}else{
+        		$this->session->set_flashdata('message', 'Record not found.');
+        		$this->session->set_flashdata('alert_class', 'alert-danger');
+
+        		redirect('color_settings/index');
+        	}
+
+        }else{
+        	$this->session->set_flashdata('message', 'Please specify color name and code');
+        	$this->session->set_flashdata('alert_class', 'alert-danger');
+
+        	redirect('color_settings/edit_color_setting/'.$post['cid']);
+
+        }
+	}	
+
+	public function delete_color(){
+		$id = $this->ColorSettings_model->deleteColorById(post('cid'));
+
+		$this->session->set_flashdata('message', 'Color Setting has been Deleted Successfully');
+		$this->session->set_flashdata('alert_class', 'alert-success');
+
+		redirect('color_settings/index');
+	}
+
+
 }
 
 

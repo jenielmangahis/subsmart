@@ -144,6 +144,8 @@ class Event extends MY_Controller
 
     public function get_event_form()
     {
+        $this->load->model('ColorSettings_model');
+
         $get = $this->input->get();
 
         // popup open request to edit a particular event
@@ -162,7 +164,11 @@ class Event extends MY_Controller
         }
 
         // print_r($this->page_data['event']); die;
+        $user_id = logged('id');
+        $colorSettings = $this->ColorSettings_model->getAllByUserId($user_id);
 
+        $this->page_data['colorSettings'] = $colorSettings;
+        
         die($this->load->view('event/event_form', $this->page_data, true));
     }
 

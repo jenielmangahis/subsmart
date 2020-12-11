@@ -167,7 +167,23 @@ input#datepicker_startdate {
                 <label class="center">Select an event Color</label>
                 <br/>
                 <div class="calendar-modal-color-selector" data-calendar="color-selector">
-
+                  <?php if( $colorSettings ){ ?>
+                    <?php $counter = 0; foreach($colorSettings as $c){ ?>
+                      <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $c->color_code; ?>" style="background:<?php echo $c->color_code; ?>">
+                        <?php if(!empty($event)) { ?>
+                          <?php if ($event->event_color == $color) { ?>
+                              <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+                          <?php } ?>
+                        <?php }else{ ?>
+                          <?php if( $counter == 0 ){ ?>
+                            <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+                          <?php } ?>
+                        <?php } ?>
+                      </span>
+                      <br />
+                      <span><?= $c->color_name; ?></span>
+                    <?php $counter++;} ?>
+                  <?php }else{ ?>
                     <?php if (!empty(get_config_item('event_colors'))) { ?>
 
                         <?php foreach (get_config_item('event_colors') as $k => $color) { ?>
@@ -175,27 +191,18 @@ input#datepicker_startdate {
                             <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $color ?>"
                                   style="background:<?php echo $color ?>">
                                 <?php if (!empty($event)) { ?>
-
                                     <?php if ($event->event_color == $color) { ?>
-
                                         <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
-
                                     <?php } ?>
-
                                 <?php } else { ?>
-
                                     <?php if ($k === 0) { ?>
-
                                         <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
-
                                     <?php } ?>
-
                                 <?php } ?>
                             </span>
-
                         <?php } ?>
-
                     <?php } ?>
+                  <?php } ?>
 
                     <!-- <span class="calendar-modal-color-sq" data-calendar-color-id="#4cb052" style="background:#4cb052">
                         <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
