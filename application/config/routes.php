@@ -472,3 +472,7 @@ $route['onboarding/_complete_onboarding'] = 'Onboarding/ajax_complete_onboarding
 
 //check
 $route['accounting/check'] = 'Check/index';
+
+//Color Settings
+$route['color_settings/index'] = 'Color_Settings/index';
+$route['color_settings/add_new'] = 'Color_Settings/add_new';
