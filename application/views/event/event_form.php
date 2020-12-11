@@ -52,6 +52,9 @@ select.gray-first:invalid,
 select.gray-first option[value=""] {
   color: #999999;
 }
+label.center {
+  font-size: 14px;
+}
 .modal-body {
   padding: 40px 30px 10px 30px !important;
 }
