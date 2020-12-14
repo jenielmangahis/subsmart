@@ -132,30 +132,58 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   
 });
 function render_calender(calendarEl, timeZoneSelectorEl, events) {
+        var bc_events_url    = base_url + "/calendar/_get_main_calendar_events";
+        var bc_resources_url = base_url + "/calendar/_get_main_calendar_resources";
 
         calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+           schedulerLicenseKey: '0531798248-fcs-1598103289',
+            /*headerToolbar: {
+            center: 'employeeTimeline,monthView,dayView,weekView,listView' // buttons for switching between views
+          },*/
+          themeSystem : 'bootstrap',
+          eventDisplay: 'block',
+          views: {
+            employeeTimeline: {
+              type: 'resourceTimelineDay',
+              buttonText: 'Employee'
             },
-            defaultDate: "<?php echo (isset($default_date) && $default_date !='' )?date('Y-m-d',$default_date):date('Y-m-d') ?>",
-            defaultView: "<?php echo (isset($default_view) && $default_view !='' )?$default_view:'dayGridMonth' ?>",
+            dayView: {
+              type: 'timeGridDay',
+              buttonText: 'Day'
+            },
+            monthView: {
+              type: 'dayGridMonth',
+              buttonText: 'Month'
+            },
+            weekView: {
+              type: 'timeGridWeek',
+              buttonText: 'Week'
+            },
+            listView: {
+              type: 'listWeek',
+              buttonText: 'List'
+            }
+          },
+          resourceLabelDidMount: function(info) {
+            console.log(info);
+            let img = document.createElement('img');
+            img.src = info.resource.extendedProps.imageurl;
+            img.setAttribute("class", "datagrid-image");
+            info.el.prepend(img);
+          },
+          defaultDate: "<?php echo date('Y-m-d') ?>",
             editable: false,
             navLinks: false, // can click day/week names to navigate views
-            eventLimit: false, // allow "more" link when too many events
+            eventLimit: true, // allow "more" link when too many events
             events: events,
-            height: 500,
-
             eventClick: function (arg) {
+                //console.log(arg.event._def.extendedProps);
 
                 $("#modalEventDetails").modal('show');
-
                 $('#modalEventDetails .modal-body').html("loading...");
 
                 var apiUrl = '';
-
+                var isGet  = 1;
                 if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
 
                     apiUrl = base_url + 'event/modal_details/' + arg.event._def.extendedProps.eventId;
@@ -164,6 +192,15 @@ function render_calender(calendarEl, timeZoneSelectorEl, events) {
                     $("#edit_workorder").hide();
 
                     $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);
+                }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
+                    apiUrl = base_url + 'workcalender/modal_gevent_details';
+                    isGet = 0;
+                    var gData = {
+                      'gevent_id' : arg.event._def.extendedProps.geventID,
+                      'title' : arg.event._def.extendedProps.description,
+                      'start_date' : arg.event._def.extendedProps.start,
+                      'end_date' : arg.event._def.extendedProps.end,
+                    };
                 } else {
 
                     apiUrl = base_url + 'workcalender/short_details/' + arg.event._def.extendedProps.wordOrderId;
@@ -174,22 +211,65 @@ function render_calender(calendarEl, timeZoneSelectorEl, events) {
                     $("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
                 }
 
-                jQuery.ajax({
-                    url: apiUrl,
-                    // dataType: 'json',
-                    data: '',
-                    beforeSend: function () {
-                        jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
-                    },
-                    success: function (response) {
-                        $("#modalEventDetails").find('.modal-body').html(response);
-                    }
-                });
+                if( isGet == 1 ){
+                  jQuery.ajax({
+                      url: apiUrl,
+                      // dataType: 'json',
+                      data: '',
+                      beforeSend: function () {
+                          jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
+                      },
+                      success: function (response) {
+
+                          // console.log(response);
+                          $(".btn-event-edit").show();
+                          $(".btn-event-delete").show();
+                          $(".btn-event-edit-workorder").show();
+                          $("#modalEventDetails").find('.modal-body').html(response);
+                      }
+                  });
+                }else{
+                  jQuery.ajax({
+                      url: apiUrl,
+                      type: "POST",
+                      data: gData,
+                      beforeSend: function () {
+                          jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
+                      },
+                      success: function (response) {
+
+                          // console.log(response);
+                          $(".btn-event-edit").hide();
+                          $(".btn-event-delete").hide();
+                          $(".btn-event-edit-workorder").hide();
+                          $("#modalEventDetails").find('.modal-body').html(response);
+                      }
+                  });
+                }
+                
             },
-            loading: function (bool) {
-                document.getElementById('loading').style.display =
-                    bool ? 'block' : 'none';
-            }
+            loading: function (isLoading) {
+              if (isLoading) {
+                  $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Events...</div>');
+              }
+              else {
+                  $(".left-calendar-loading").html('');
+              }
+
+            },
+            resourceAreaColumns: [
+              {
+                field: 'title',
+                headerContent: 'Employees'
+              }
+            ],
+            resources: <?php echo json_encode($resources_users); ?>,
+            events: {
+              url: bc_events_url,
+              method: 'POST'
+            },
+            //events: <?php echo json_encode($resources_user_events); ?>,
+
         });
 
         calendar.render();

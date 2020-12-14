@@ -793,14 +793,16 @@ class Workcalender extends MY_Controller
         $this->load->model('Event_model', 'event_model');
 
         $role = logged('role');
-        if ($role == 2 || $role == 3) {
+        if ($role == 2 || $role == 3 || $role == 6) {
             $company_id = logged('company_id'); $company_id = 15;
             $events = $this->event_model->getAllByCompany($company_id);
+        }elseif( $role == 4 ){
+        	$events = $this->event_model->getAllByUserId();
+        }else{
+        	$company_id = logged('company_id');
+            $events = $this->event_model->getAllByCompany($company_id);
         }
-        if ($role == 4) {
-            $events = $this->event_model->getAllByUserId();
-        }
-
+        
         $this->page_data['events'] = array();
 
         // setting of the calender
