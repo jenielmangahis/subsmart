@@ -31,6 +31,10 @@ class Dashboard extends MY_Controller {
             $input['ds_values'] = "earning,analytics,report,activity,report2,newsletter,spotlight,bulletin,job,estimate,invoice,stats,installs" ;
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
+
+        // get customers data and display to modal for selecting an existing client
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+
         $this->page_data['dashboard_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_dashboard_sort");
 		$this->load->view('dashboard', $this->page_data);
 	}

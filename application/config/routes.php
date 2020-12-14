@@ -472,6 +472,8 @@ $route['onboarding/_complete_onboarding'] = 'Onboarding/ajax_complete_onboarding
 
 //check
 $route['accounting/check'] = 'Check/index';
+$route['accounting/check/do_upload'] = 'Check/do_upload';
+$route['accounting/check/view/showData'] = 'Check/showData';
 
 //Color Settings
 $route['color_settings/index'] = 'Color_Settings/index';
@@ -480,3 +482,5 @@ $route['color_settings/create_color_setting'] = 'Color_Settings/create_color_set
 $route['color_settings/edit_color_setting'] = 'Color_Settings/edit_color_setting';
 $route['color_settings/update_color_setting'] = 'Color_Settings/update_color_setting';
 $route['color_settings/delete_color'] = 'Color_Settings/delete_color';
+$route['color_settings/add_new'] = 'Color_Settings/add_new';
+

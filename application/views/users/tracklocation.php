@@ -16,14 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php //if (hasPermissions('users_add')): ?>
-                                    <a href="<?php echo url('users/add') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> New Employee
-                                    </a>
-                                <?php //endif ?>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -33,7 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <p>Google maps here</p>
+                            <div id="googleMap" style="width:100%;height:400px;"></div>
                         </div>
                     </div>
                     <!-- end card -->
@@ -46,3 +39,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+    function myMap() {
+        let mapProp= {
+            center:new google.maps.LatLng(29.8134,-95.4641),
+            zoom:5,
+        };
+        let map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=myMap"></script>

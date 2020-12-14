@@ -150,27 +150,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="card">
 						<div class="card-body">
 							<h4 class="mt-0 header-title mb-4">Quick Start</h4>
-							<div class="qUickStart">
-								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">A</span>
-								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/customer/add_lead') ?>">Add a New Client</a></h4>
-									<span>Sign up a new client and add to database</span>
-								</div>
-							</div>
-							<div class="qUickStart">
-								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">B</span>
-								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/customer') ?>">Select an Existing Client</a></h4>
-									<span>Work with an existing client</span>
-								</div>
-							</div>
-							<div class="qUickStart">
-								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">C</span>
-								<div class="qUickStartde">
-									<h4><a id="shortcut_link" href="#<?php //echo url('/workorder/add') ?>">Add a New Event</a></h4>
-									<span>Choose from a various quick shortcuts</span>
-								</div>
-							</div>
+                            <a href="<?php echo url('/customer/add_lead') ?>">
+                                <div class="qUickStart">
+                                    <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">A</span>
+                                    <div class="qUickStartde">
+                                        <h4>Add a New Client</h4>
+                                        <span>Sign up a new client and add to database</span>
+                                    </div>
+                                </div>
+                            </a><br>
+                            <a href="javascript:void(0);" id="btn_select_existing_client">
+                                <div class="qUickStart">
+                                    <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">B</span>
+                                    <div class="qUickStartde">
+                                        <h4>Select an Existing Client</h4>
+                                        <span>Work with an existing client</span>
+                                    </div>
+                                </div>
+                            </a><br>
+                            <a id="shortcut_link" href="#<?php //echo url('/workorder/add') ?>">
+                                <div class="qUickStart">
+                                    <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">C</span>
+                                    <div class="qUickStartde">
+                                        <h4>Add a New Event</h4>
+                                        <span>Choose from a various quick shortcuts</span>
+                                    </div>
+                                </div>
+                            </a><br>
 						</div>
 					</div>
 				</div>
@@ -528,6 +534,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</a>
 </div>
 
+<!-- Customers List Modal -->
+<?php include viewPath('customer/adv_modals/modal_customers_list'); ?>
+
 <!-- CSS for dashboard cards -->
 <style>
     .db-card{
@@ -848,6 +857,20 @@ display: block !important;
 
 <script type="text/javascript">
 	$(document).ready(function(){
+
+        $("#btn_select_existing_client").on( "click", function( event ) {
+            $('#modal_customer').modal('show');
+        });
+        var table_cust_list =$('#customer_list_table').DataTable({
+            "lengthChange": false,
+            "searching" : true,
+            "pageLength": 10,
+            "info": true,
+            "responsive": true,
+            "order": [],
+        });
+
+
 		$('.floating-btn-div').hide();
 		$('#shortcut_link').on('click', function(e){
 			if ( $('.float1').is(':hidden') && $('.float2').is(':hidden') && $('.float3').is(':hidden') ){

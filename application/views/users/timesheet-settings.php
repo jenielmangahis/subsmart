@@ -683,7 +683,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         font-size: 16px;
     }
     .notify-time-in{
-        width: 80px;
+        width: 120px;
     }
     .notify-section .row .col-md-8{
         margin-top: 11px;
@@ -2013,7 +2013,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $('#rolesContainer input[name="employees"]').attr('disabled',false);
             }
         });
-
+        // Notifications
+        $(".notify-time-in").timepicker({interval: 60});
         //Select2 employee list
         $('.select2-employee-list').select2({
             placeholder: 'Select employee',

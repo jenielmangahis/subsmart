@@ -272,14 +272,15 @@
                                         $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
                                     }
                                     if ($log->action == 'Check out'){
-                                        // $clock_out = date('h:i A',strtotime($log->date_created));
                                         $analog_active = null;
                                         $shift_s = ($attn->shift_duration * 3600);
                                         $shift_h = floor($attn->shift_duration);
                                         $shift_s -= $shift_h * 3600;
                                         $shift_m = floor($shift_s / 60);
                                         $shift_s -= $minutes * 60;
-                                        $shift_duration =  str_pad($shift_h, 2, '0', STR_PAD_LEFT).":".str_pad($shift_m, 2, '0', STR_PAD_LEFT);
+                                        if ($shift_h >= 0 && $clock_in != '-'){
+                                            $shift_duration =  str_pad($shift_h, 2, '0', STR_PAD_LEFT).":".str_pad($shift_m, 2, '0', STR_PAD_LEFT);
+                                        }
                                     }
 
                                 }
