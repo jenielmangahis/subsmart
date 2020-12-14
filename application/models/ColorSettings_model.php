@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class ColorSettings_model extends MY_Model
 {
-    public $table = 'nsmart_plans';
+    public $table = 'color_settings';
     public $status_active   = 1;
     public $status_inactive = 0;
     public $discount_percent = 1;
@@ -22,7 +22,7 @@ class ColorSettings_model extends MY_Model
             }
         }
 
-        $this->db->order_by('nsmart_plans_id', 'ASC');
+        $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
@@ -32,7 +32,7 @@ class ColorSettings_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->where('user_id', $user_id);
+        $this->db->where('user_id', $user_id);
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
@@ -40,7 +40,7 @@ class ColorSettings_model extends MY_Model
             }
         }
 
-        $this->db->order_by('nsmart_plans_id', 'ASC');
+        $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
@@ -58,6 +58,18 @@ class ColorSettings_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    public function updateColorSettingById($id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('id', $id);
+        $this->db->update();
+    }
+
+    public function deleteColorById($id){
+        $this->db->delete($this->table, array('id' => $id));
+    } 
 }
 
 /* End of file ColorSettings_model.php */

@@ -61,7 +61,7 @@ class Accounting extends MY_Controller {
                 array('/accounting/reports',array()),
                 array("",	array('#','#')),
                 array('#',	array()),
-                array("",	array('/accounting/chart_of_accounts','#')),
+                array("",	array('/accounting/chart_of_accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
     }

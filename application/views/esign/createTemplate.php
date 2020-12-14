@@ -6,7 +6,7 @@ ini_set('max_input_vars', 30000);
 
 ?>
 <!-- production version, optimized for size and speed -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
     <!-- <script src="https://app.creditrepaircloud.com/application/js/jQuery/jqprint.js" language="javascript" type="text/javascript"></script> -->
 <style>
     fieldset {
@@ -93,10 +93,12 @@ ini_set('max_input_vars', 30000);
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary" ><span class="fa fa-paper-plane-o"></span> Save</button>
                                          <button type="button" class="btn btn-primary" onclick="printHtml()"> <span class="fa fa-print"></span> Print </button>
+                                        <form id="upload_library_form" enctype="multipart/form-data" method="post">
                                         <label for="file-upload" class="btn btn-primary esign_upload">
                                             <span class="fa fa-upload"></span> Upload Document
                                         </label>
-                                        <input id="file-upload" type="file" accept="application/msword,application/pdf">
+                                        </form>
+                                        <input id="file-upload" type="file" accept=".docx,.pdf,.doc,.html">
                                     </div>
                                 <?=form_close(); ?>
                                 <?php if(isset($_GET['isSuccess']) && $_GET['isSuccess'] == 1){ ?>
@@ -222,6 +224,53 @@ ini_set('max_input_vars', 30000);
             <?php
             }
             ?>
+            $("#file-upload").change(function(){
+                console.log("A file has been selected.");
+                // var form = $('form')[0]; // You need to use standard javascript object here
+                // var formData = new FormData(form);
+               // var form = $('#upload_library_form').serialize();
+               // var formData = new FormData($(form)[0]);
+                 var input = document.getElementById('file-upload');
+               //  console.log(formData);
+                 console.log(input.files);
+                for (var i = 0; i < input.files.length; i++) {
+                    console.log(input.files[i]);
+                }
+                // The Javascript
+                var fileInput = document.getElementById('file-upload');
+                var file = fileInput.files[0];
+                var formDatas = new FormData();
+                formDatas.append('file', file);
+
+                //console.log(formDatas);
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: "/esign/esign_upload_docs",
+                    data: formDatas,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    beforeSend: function() {
+                        // setting a timeout
+                        //$(placeholder).addClass('loading');
+                        //i++;
+                        $('#summernote').summernote('code', '');
+                    },
+                    success: function (data) {
+                       // $("#result").text(data);
+                        console.log(data);
+                       // $("#btnSubmit").prop("disabled", false);
+                        $('#summernote').summernote('code', data);
+                    },
+                    error: function (e) {
+                        //$("#result").text(e.responseText);
+                        console.log("ERROR : ", e);
+                       // $("#btnSubmit").prop("disabled", false);
+                    }
+                });
+
+            });
         });
         function printHtml(){
             let currentHtml = $('#summernote').summernote('code');

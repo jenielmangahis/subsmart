@@ -111,6 +111,71 @@ class Esign extends MY_Controller {
 		redirect('esign');
 	}
 
+	public function esign_upload_docs(){
+
+        //$sourceFile = $_SERVER['DOCUMENT_ROOT']."/uploads/esign/Website Cross Sponsorship Agreement.docx";
+        //$sourceFile = $_SERVER['DOCUMENT_ROOT']."/uploads/esign/11.html";
+        //$this->load->library('DocxConversion');
+        // print_r(pathinfo($sourceFile));
+        // echo $this->docxconversion->read_docx($sourceFile);
+
+        //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
+        //echo $content;
+
+        //echo str_replace( '�',' ',$content);
+
+
+        //$handle = file_get_contents($sourceFile, FILE_USE_INCLUDE_PATH);
+       // print_r($handle);
+        if ( 0 < $_FILES['file']['error'] ) {
+            echo 'Error: ' . $_FILES['file']['error'] . '<br>';
+        }
+        else {
+            $uniquesavename=time().uniqid(rand());
+            $path = $_FILES['file']['name'];
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $destination = 'uploads/esign/' .$uniquesavename.'.'.$ext;
+            move_uploaded_file($_FILES['file']['tmp_name'], $destination);
+
+            $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
+            $content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
+            echo $content;
+        }
+        //  $sourceFile = "/uploads/esign/Website Cross Sponsorship Agreement.docx";
+
+
+
+    }
+
+    public function docx2text($filename) {
+        return $this->readZippedXML($filename, "word/document.xml");
+    }
+    public function readZippedXML($archiveFile, $dataFile)
+    {
+        // Create new ZIP archive
+        $zip = new ZipArchive;
+        // Open received archive file
+        if (true === $zip->open($archiveFile)) {
+            // If done, search for the data file in the archive
+            if (($index = $zip->locateName($dataFile)) !== false) {
+// If found, read it to the string
+                $data = $zip->getFromIndex($index);
+// Close archive file $zip->close();
+// Load XML from a string
+// Skip errors and warnings
+                $xml = new DOMDocument();
+                $xml->loadXML($data, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+// Return data without XML formatting tagsreturn
+
+                return strip_tags($xml->saveXML());
+            }
+            $zip->close();
+        }
+        return "";
+// In case of failure return empty string return ""; }
+
+    }
+
 	public function esignMain(){
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('esignMain/esignMain', $this->page_data);

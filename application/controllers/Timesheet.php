@@ -229,11 +229,11 @@ class Timesheet extends MY_Controller {
 
 	public function tracklocation()
 	{	
-		ifPermissions('users_list');
+//		ifPermissions('users_list');
 
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+//		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
-		$this->page_data['users'] = $this->users_model->getUsers();
+//		$this->page_data['users'] = $this->users_model->getUsers();
 			
 		
 		$this->load->view('users/tracklocation', $this->page_data);

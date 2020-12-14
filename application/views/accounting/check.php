@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
 .loader
 {
@@ -221,23 +223,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
                     <iframe name="hiddenFramecheck" width="0" height="0" border="0" style="display: none;"></iframe>
-                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="checkForm" enctype="multipart/form-data" target="hiddenFramecheck">
+                    <form action="<?php echo url('accounting/check/do_upload') ?>" class="uploadmy" method="post" name="checkForm" enctype="multipart/form-data" target="hiddenFramecheck">
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
                                 <i class="fa fa-cloud-upload"></i>
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
-                            <input type="file" name="userfile_newcheck" />
-                            <input type="hidden" name="reconcile_id">
-                            <input type="hidden" name="subfix" value="newcheck">
+                            <input type="file" name="userfile_check" />
+                            <input type="hidden" name="subfix" value="check">
                         </div>
                     </div>
                     </br>
                     <button type="submit" class="form-control">Upload</button>
                     </form>
                     </br>
-                    <a href="#" onclick="openSideNav()">Show existing</a>
+                    <a href="#" onclick="showData()">Show existing</a>
                 </div>
             </div>
         </div>
@@ -550,7 +551,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Attachment</label>
                     </br>
                     <iframe name="hiddenFramevendor" width="0" height="0" border="0" style="display: none;"></iframe>
-                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="vendorForm" enctype="multipart/form-data" target="hiddenFramevendor">
+                    <form action="<?php echo url('accounting/check/do_upload') ?>" class="uploadmy" method="post" name="vendorForm" enctype="multipart/form-data" target="hiddenFramevendor">
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
@@ -558,7 +559,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
                             <input type="file" name="userfile_vendor" />
-                            <input type="hidden" name="reconcile_id" value="">
                             <input type="hidden" name="subfix" value="vendor">
                         </div>
                     </div>
@@ -853,7 +853,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <label>Attachment</label>
                             </br>
                             <iframe name="hiddenFramecus" width="0" height="0" border="0" style="display: none;"></iframe>
-                            <form action="<?php echo url('accounting/reconcile/do_upload/') ?><?=$rows[0]->chart_of_accounts_id?>" class="uploadmy" method="post" name="cusForm" enctype="multipart/form-data" target="hiddenFramecus">
+                            <form action="<?php echo url('accounting/check/do_upload') ?>" class="uploadmy" method="post" name="cusForm" enctype="multipart/form-data" target="hiddenFramecus">
                             <div class="file-upload-block">
                                 <div class="upload-btn-wrapper">
                                     <button class="btn ubw">
@@ -861,7 +861,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <h6>Drag and drop files here or <span>browse to upload</span></h6>
                                     </button>
                                     <input type="file" name="userfile_cus" />
-                                    <input type="hidden" name="reconcile_id" value="">
                                     <input type="hidden" name="subfix" value="cus">
                                 </div>
                             </div>
@@ -927,6 +926,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!-- End Add Agency Sidebar -->
+
+    <!-- Preview Popup -->
+    <div id="overlay-preview-tx" class=""></div>
+    <div id="side-menu-preview-tx" class="main-side-nav">
+        <div class="side-title">
+            <a id="close-menu-preview-tx" class="menuCloseButton" onclick="closePreview()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        
+        <div class="mainMenu nav">
+            <img src="" name="previewImage" class="img-responsive" id="previewImage">
+        </div>
+    </div>
+    <!-- End Preview Popup -->
 
 <?php include viewPath('includes/footer_accounting'); ?>
 <script type="text/javascript">
@@ -1439,7 +1452,7 @@ function showData() {
     jQuery("#side-menu").addClass("open-side-nav");
     jQuery("#overlay").addClass("overlay");
     $.ajax({
-        url:"<?php echo url('accounting/reconcile/view/showData') ?>",
+        url:"<?php echo url('accounting/check/view/showData') ?>",
         method: "POST",
         success:function(data)
         {
@@ -1447,4 +1460,40 @@ function showData() {
         }
     })
 }
+</script>
+<script type="text/javascript">
+    function show_preview(id)
+    {
+        var image=$('#previewid_'+id).data('image');
+        $("#previewImage").attr('src','<?php echo base_url()?>uploads/'+image);
+        openPreview();
+    }
+    function openPreview() {
+     
+    jQuery("#side-menu-preview-tx").addClass("open-side-nav");
+    jQuery("#side-menu-preview-tx").css("width","100%");
+    jQuery("#side-menu-preview-tx").css("overflow-y","auto");
+    jQuery("#side-menu-preview-tx").css("overflow-x","hidden");
+    jQuery("#overlay-preview-tx").addClass("overlay");
+    }
+
+    function closePreview() {
+       
+        jQuery("#side-menu-preview-tx").removeClass("open-side-nav");
+        jQuery("#side-menu-preview-tx").css("width","0%");
+        jQuery("#overlay-preview-tx").removeClass("overlay");
+    }
+
+    $( ".uploadmy" ).submit(function(e) {
+        e.preventDefault();
+        this.submit();
+        setTimeout(function () { 
+                    sweetAlert(
+                            'Uploaded!',
+                            'File has been uploaded.',
+                            'success'
+                        );
+                    showData();
+                }, 100); 
+    });
 </script>

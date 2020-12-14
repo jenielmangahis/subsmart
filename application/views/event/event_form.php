@@ -18,7 +18,20 @@ select.gray-first option {
   color: #000000;
 }
 table.table-condensed thead tr td {
-    border-radius: 0px !important;
+  border-radius: 0px !important;
+}
+span.calendar-modal-color-sq i {
+  position: relative;
+  top: 8px;
+}
+.calendar-modal-color-sq {
+  width: 35px !important;
+  height: 35px !important;
+}
+span.color-name {
+  text-align: center;
+  position: relative;
+  right: 4px;
 }
 table.table-condensed thead tr th {
     border-radius: 0px !important;
@@ -39,12 +52,27 @@ select.gray-first:invalid,
 select.gray-first option[value=""] {
   color: #999999;
 }
+label.center {
+  font-size: 14px;
+}
 .modal-body {
   padding: 40px 30px 10px 30px !important;
+}
+.color-container {
+  width: auto;
+  float: left;
+  margin: 0 auto;
+  padding-right: 25px;
 }
 .calendar-modal-color-selector {
   margin-top: 10px;
   margin-bottom: 10px;
+  text-align: center;
+  width: fit-content;
+  margin: 0 auto;
+  position: relative;
+  left: 15px;
+  padding-top: 10px;
 }
 input#datepicker_startdate {
   position: relative;
@@ -167,7 +195,25 @@ input#datepicker_startdate {
                 <label class="center">Select an event Color</label>
                 <br/>
                 <div class="calendar-modal-color-selector" data-calendar="color-selector">
-
+                  <?php if( $colorSettings ){ ?>
+                    <?php $counter = 0; foreach($colorSettings as $c){ ?>
+                      <div class="color-container">
+                        <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $c->color_code; ?>" style="background:<?php echo $c->color_code; ?>">
+                          <?php if(!empty($event)) { ?>
+                            <?php if ($event->event_color == $color) { ?>
+                                <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+                            <?php } ?>
+                          <?php }else{ ?>
+                            <?php if( $counter == 0 ){ ?>
+                              <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+                            <?php } ?>
+                          <?php } ?>
+                        </span>
+                        <br/>
+                        <span class="color-name"><?= $c->color_name; ?></span>
+                      </div>
+                    <?php $counter++;} ?>
+                  <?php }else{ ?>
                     <?php if (!empty(get_config_item('event_colors'))) { ?>
 
                         <?php foreach (get_config_item('event_colors') as $k => $color) { ?>
@@ -175,27 +221,18 @@ input#datepicker_startdate {
                             <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $color ?>"
                                   style="background:<?php echo $color ?>">
                                 <?php if (!empty($event)) { ?>
-
                                     <?php if ($event->event_color == $color) { ?>
-
                                         <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
-
                                     <?php } ?>
-
                                 <?php } else { ?>
-
                                     <?php if ($k === 0) { ?>
-
                                         <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
-
                                     <?php } ?>
-
                                 <?php } ?>
                             </span>
-
                         <?php } ?>
-
                     <?php } ?>
+                  <?php } ?>
 
                     <!-- <span class="calendar-modal-color-sq" data-calendar-color-id="#4cb052" style="background:#4cb052">
                         <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
