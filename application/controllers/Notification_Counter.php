@@ -51,7 +51,9 @@ class Notification_Counter extends MY_Controller {
 			'group by a.task_id '.
 			'order by a.date_created DESC'
 		)->result();
+		
 		$total_taskhub = count($tasks);
+
 
 		//Online Booking
 		$inquiries = $this->BookingInquiry_model->findAllByUserId($uid);
