@@ -8,13 +8,13 @@ var options = {
 };
 
 $(document).ready(function() {
-    
+
 
     // open event popup
     $('#modalCreateEvent').on('shown.bs.modal', function (e) {
 
         var element = $(this);
-       
+
         $.ajax({
             url: options.urlEventForm,
             type: 'GET',
@@ -43,7 +43,7 @@ $(document).ready(function() {
                           // alter the remote JSON data, except to indicate that infinite
                           // scrolling can be used
                           params.page = params.page || 1;
-                    
+
                           return {
                             results: data,
                             // pagination: {
@@ -77,7 +77,7 @@ $(document).ready(function() {
                           // alter the remote JSON data, except to indicate that infinite
                           // scrolling can be used
                           params.page = params.page || 1;
-                    
+
                           return {
                             results: data,
                             // pagination: {
@@ -113,12 +113,12 @@ $(document).ready(function() {
         // clear all selection
         $('.calendar-modal-color-selector > .calendar-modal-color-sq').each(function(index, element) {
 
-            $(this).html('');
+            $(this).find('i').remove();
         });
 
         console.log($(this).attr('data-calendar-color-id'));
-
-        $(this).html('<i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>');
+        var color_name = $(this).attr('data-calendar-color-name');
+        $(this).html('<i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i><span class="color-name">'+color_name+'</span>');
 
         // add color code to input element for form submit
         $(this).parent().next().val($(this).attr('data-calendar-color-id'))
@@ -160,12 +160,12 @@ $(document).ready(function() {
                     url: options.urlEvents,
                     type: 'GET',
                     success: function(response) {
-        
+
                         console.log(response);
 
                         $("#calendar").css('opacity', '1');
                         $("#calendar").attr('disabled', false);
-        
+
                         $("#modalCreateEvent").modal('hide');
 
                         var calendarEl = document.getElementById('calendar');
@@ -179,12 +179,12 @@ $(document).ready(function() {
 
                         $(saveButton).attr('disabled', false);
                     }
-                }); 
-                
-                load_upcoming_events();               
+                });
+
+                load_upcoming_events();
             },
             error: function(er) {
-              
+
               $(saveButton).html(saveButtontext);
 
               $(saveButton).attr('disabled', false);
@@ -202,7 +202,7 @@ $(document).ready(function() {
          data: {},
          success: function(o)
          {
-            $("#upcoming-events-container").html(o);      
+            $("#upcoming-events-container").html(o);
          }
       });
     }
@@ -230,34 +230,34 @@ $(document).ready(function() {
                    $(button).text('removing...');
                 },
                 success: function(response) {
-    
+
                     console.log(response);
-    
+
                     jQuery.ajax({
                         url: options.urlEvents,
                         type: 'GET',
                         success: function(response) {
-            
+
                             console.log(response);
 
                             $("#calendar").css('opacity', '1');
                             $("#calendar").attr('disabled', false);
-            
+
                             $("#modalEventDetails").modal('hide');
-    
+
                             var calendarEl = document.getElementById('calendar');
                             var timeZoneSelectorEl = document.getElementById('time-zone-selector');
 
                             $(calendarEl).empty();
-    
+
                             render_calender(calendarEl, timeZoneSelectorEl, JSON.parse(response));
                         }
-                    });     
+                    });
                 }
             });
         }
     });
-    
+
 
     // edit button click on the event popup for the workorder
     // it will redirect the page to the partiular workorder edit page
@@ -265,7 +265,7 @@ $(document).ready(function() {
 
       location.href = base_url + 'workorder/edit/' + $(this).attr('data-workorder-id');
     });
-    
+
 
     // edit button click on the event popup for the event
     // it will open the popup of the event
@@ -282,7 +282,7 @@ $(document).ready(function() {
       // });
 
       open_create_event_modal_for_event($(element).attr('data-event-id'), true);
-      
+
     });
 });
 
@@ -298,7 +298,7 @@ function open_create_event_modal_for_customer(customer_id, customer) {
         // var customer = JSON.parse(customer);
 
         $(element).find('.modal-body').html("loading...");
-       
+
         $.ajax({
             url: options.urlEventForm,
             type: 'GET',
@@ -327,7 +327,7 @@ function open_create_event_modal_for_customer(customer_id, customer) {
                           // alter the remote JSON data, except to indicate that infinite
                           // scrolling can be used
                           params.page = params.page || 1;
-                    
+
                           return {
                             results: data,
                             // pagination: {
@@ -361,7 +361,7 @@ function open_create_event_modal_for_customer(customer_id, customer) {
                           // alter the remote JSON data, except to indicate that infinite
                           // scrolling can be used
                           params.page = params.page || 1;
-                    
+
                           return {
                             results: data,
                             // pagination: {
@@ -385,7 +385,7 @@ function open_create_event_modal_for_customer(customer_id, customer) {
                     format: 'L'
                 });
 
-                // select the customer 
+                // select the customer
                 $('#business-customer')
                 .empty() //empty select
                 .append($("<option/>") //add option tag in select
@@ -413,7 +413,7 @@ function open_create_event_modal_for_event(event_id, open_edit_modal) {
         // var customer = JSON.parse(customer);
 
         $(element).find('.modal-body').html("loading...");
-      
+
         $.ajax({
             url: options.urlEventForm,
             type: 'GET',
@@ -442,7 +442,7 @@ function open_create_event_modal_for_event(event_id, open_edit_modal) {
                           // alter the remote JSON data, except to indicate that infinite
                           // scrolling can be used
                           params.page = params.page || 1;
-                    
+
                           return {
                             results: data,
                             // pagination: {
@@ -476,7 +476,7 @@ function open_create_event_modal_for_event(event_id, open_edit_modal) {
                           // alter the remote JSON data, except to indicate that infinite
                           // scrolling can be used
                           params.page = params.page || 1;
-                    
+
                           return {
                             results: data,
                             // pagination: {
@@ -500,7 +500,7 @@ function open_create_event_modal_for_event(event_id, open_edit_modal) {
                     format: 'L'
                 });
 
-                // select the customer 
+                // select the customer
                 // $('#business-customer')
                 // .empty() //empty select
                 // .append($("<option/>") //add option tag in select
@@ -521,7 +521,7 @@ function formatRepo (repo) {
     if (repo) {
       return repo.contact_name;
     }
-  
+
     var $container = $(
       "<div class='select2-result-repository clearfix'>" +
         "<div class='select2-result-repository__meta'>" +
@@ -530,9 +530,9 @@ function formatRepo (repo) {
         "</div>" +
       "</div>"
     );
-  
+
     $container.find(".select2-result-repository__title").text(repo.contact_name);
-  
+
     return $container;
 }
 
@@ -548,7 +548,7 @@ function formatRepoUser (repo) {
     if (repo) {
       return repo.FName + ' ' + repo.LName;
     }
-  
+
     var $container = $(
       "<div class='select2-result-repository clearfix'>" +
         "<div class='select2-result-repository__meta'>" +
@@ -557,9 +557,9 @@ function formatRepoUser (repo) {
         "</div>" +
       "</div>"
     );
-  
+
     $container.find(".select2-result-repository__title").text(repo.name);
-  
+
     return $container;
 }
 

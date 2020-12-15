@@ -22,7 +22,8 @@ table.table-condensed thead tr td {
 }
 span.calendar-modal-color-sq i {
   position: relative;
-  top: 8px;
+  top: 10px;
+  left: 7px;
 }
 .calendar-modal-color-sq {
   width: 35px !important;
@@ -30,8 +31,11 @@ span.calendar-modal-color-sq i {
 }
 span.color-name {
   text-align: center;
-  position: relative;
-  right: 4px;
+  position: absolute;
+  top: 58px;
+  width: inherit;
+  margin: 0 auto;
+  display: block;
 }
 table.table-condensed thead tr th {
     border-radius: 0px !important;
@@ -63,15 +67,16 @@ label.center {
   float: left;
   margin: 0 auto;
   padding-right: 25px;
+  margin-right: 20px;
 }
 .calendar-modal-color-selector {
   margin-top: 10px;
   margin-bottom: 10px;
   text-align: center;
-  width: fit-content;
+  width: max-content;
   margin: 0 auto;
   position: relative;
-  left: 15px;
+  left: 6px;
   padding-top: 10px;
 }
 input#datepicker_startdate {
@@ -198,7 +203,7 @@ input#datepicker_startdate {
                   <?php if( $colorSettings ){ ?>
                     <?php $counter = 0; foreach($colorSettings as $c){ ?>
                       <!-- <div class="color-container"> -->
-                        <span class="calendar-modal-color-sq color-container" data-calendar-color-id="<?php echo $c->color_code; ?>" style="background:<?php echo $c->color_code; ?>">
+                        <span class="calendar-modal-color-sq color-container" data-calendar-color-name="<?php echo $c->color_name; ?>" data-calendar-color-id="<?php echo $c->color_code; ?>" style="background:<?php echo $c->color_code; ?>">
                           <?php if(!empty($event)) { ?>
                             <?php if ($event->event_color == $color) { ?>
                                 <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
@@ -208,9 +213,9 @@ input#datepicker_startdate {
                               <i class="calendar-modal-color-icon fa fa-check " aria-hidden="false"></i>
                             <?php } ?>
                           <?php } ?>
+                          <span class="color-name"><?= $c->color_name; ?></span>
                         </span>
-                        <br/>
-                        <span class="color-name"><?= $c->color_name; ?></span>
+                        <!-- <br/> -->
                       <!-- </div> -->
                     <?php $counter++;} ?>
                   <?php }else{ ?>
@@ -218,7 +223,7 @@ input#datepicker_startdate {
 
                         <?php foreach (get_config_item('event_colors') as $k => $color) { ?>
 
-                            <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $color ?>"
+                            <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $color ?>" data-calendar-color-name=""
                                   style="background:<?php echo $color ?>">
                                 <?php if (!empty($event)) { ?>
                                     <?php if ($event->event_color == $color) { ?>
