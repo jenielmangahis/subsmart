@@ -191,7 +191,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>dashboard/images/services-icon/01.png" alt=""></div>
 										<h5 class="font-16 text-uppercase mt-0 text-white-50">Earned Today</h5>
 										<h4 class="font-500">$0.00 <i class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-
 									</div>
 									<div class="pt-2">
 										<div class="float-right"><a href="index.html#" class="text-white-50"><i
@@ -209,7 +208,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												alt=""></div>
 										<h5 class="font-16 text-uppercase mt-0 text-white-50">Total Jobs month to date</h5>
 										<h4 class="font-500">0 (Avg: $0.00) <i class="mdi mdi-arrow-down text-danger ml-2"></i></h4>
-
 									</div>
 									<div class="pt-2">
 										<div class="float-right"><a href="index.html#" class="text-white-50"><i
@@ -465,6 +463,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </nav>
     </div>
 </div>
+<div style="display: none;" class="floating-btn-div div9">
+    <label class="label"><a href="#">Schedule</a></label>
+    <a href="#" class="float9">
+        <i class="fa fa-stop-circle my-float"></i>
+    </a>
+</div>
 <div style="display: none;" class="floating-btn-div div1">
 	<label class="label"><a href="#">Reschedule</a></label>
 	<a href="#" class="float1">
@@ -508,17 +512,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<i class="fa fa-edit my-float"></i>
 	</a>
 </div>
-
 <div style="display: none;" class="floating-btn-div div8">
 	<label class="label"><a href="#">Change Status</a></label>
 	<a href="#" class="float8">
 	<i class="fa fa-flag my-float"></i>
-	</a>
-</div>
-<div style="display: none;" class="floating-btn-div div9">
-	<label class="label"><a href="#">Cancel Schedule</a></label>
-	<a href="#" class="float9">
-	<i class="fa fa-stop-circle my-float"></i>
 	</a>
 </div>
 <div style="display: none;" class="floating-btn-div div10">
@@ -528,10 +525,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</a>
 </div>
 <div style="display: none;" class="floating-btn-div div11">
-	<label class="label"><a href="#">Assign New Lead</a></label>
+	<label class="label"><a href="#">Service Ticket</a></label>
 	<a href="#" class="float11">
 	<i class="fa fa-picture-o my-float"></i>
 	</a>
+</div>
+<div style="display: none;" class="floating-btn-div div12">
+    <label class="label"><a href="<?= base_url('customer/') ?>">Customers</a></label>
+    <a href="<?= base_url('customer/') ?>" class="float12">
+        <i class="fa fa-list my-float"></i>
+    </a>
 </div>
 
 <!-- Customers List Modal -->
@@ -554,13 +557,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         border: 0 !important;
         background: #dddddd !important;
     }
-.float1, .float2, .float3, .float4, .float5, .float6, .float7, .float8, .float9, .float10, .float11 {
+.float1, .float2, .float3, .float4, .float5, .float6, .float7, .float8, .float9, .float10, .float11, .float12 {
 	color: #2d1a3e;
     background-color: #fff;
     border-radius: 25px;
     margin-bottom: 5px;
 }
-.float1{
+.float1, .float12{
 	position:fixed;
 	width:40px;
 	height:40px;
@@ -572,7 +575,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	text-align:center;
 	box-shadow: 2px 2px 3px #999;
 }
-.div1 {
+.div1 , .div12{
 	width: 250px;
 	/*border: 1px solid #000;*/
 	position: fixed;
