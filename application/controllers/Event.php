@@ -35,6 +35,8 @@ class Event extends MY_Controller
 
     public function save()
     {
+        include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
+
         $company_id = logged('company_id');
         $post = $this->input->post();
 
@@ -98,6 +100,84 @@ class Event extends MY_Controller
                     'user_id' => $user_id,
                     'event_id' => $event_id
                 ]);
+            }
+        }
+
+        //Add to app default google calendar
+        $this->load->model('GoogleAccounts_model');
+        $google_user_api    = $this->GoogleAccounts_model->getByAuthUser();
+        $google_credentials = google_credentials();        
+        $access_token = "";
+        $refresh_token = "";
+        $google_client_id = "";
+        $google_secrect = "";
+
+        if(isset($google_user_api->google_access_token)) {
+            $access_token = $google_user_api->google_access_token;
+        }
+
+        if(isset($google_user_api->google_refresh_token)) {
+            $refresh_token = $google_user_api->google_refresh_token;
+        }
+
+        if(isset($google_credentials['client_id'])) {
+            $google_client_id = $google_credentials['client_id'];
+        }
+
+        if(isset($google_credentials['client_secret'])) {
+            $google_secrect = $google_credentials['client_secret'];
+        }
+
+        //Set Client
+        $client = new Google_Client();
+        $client->setClientId($google_client_id);
+        $client->setClientSecret($google_secrect);
+        $client->setAccessToken($access_token);
+        $client->refreshToken($refresh_token);
+
+        $cal = new Google_Service_Calendar($client);
+
+        //Check if default calendar existst
+        $calendars = $cal->calendarList->listCalendarList();
+        $is_exists = false;
+        $calendar_id = '';
+
+        foreach( $calendars as $c ){
+            if( $c->id == $google_user_api->auto_sync_calendar_id ){
+                $is_exists = true;
+                $calendar_id = $c->id;
+            }
+        }
+
+        if( $is_exists ){
+            $rfc_start_date = date("c", strtotime($post['start_date'] . ' ' . $post['start_time']));
+            $rfc_end_date   = date("Y-m-d H:i:s", strtotime($post['end_date'] . ' ' . $post['end_time']));
+            $rfc_end_date   = date("Y-m-d H:i:s",strtotime($rfc_end_date));
+            $rfc_end_date   = date("c", strtotime($rfc_end_date));
+
+            $event    = new Google_Service_Calendar_Event(array(
+              'summary' => $post['description'],
+              'location' => '',
+              'description' => $post['description'] . ' - ' . $post['instructions'],
+              'start' => array(
+                'dateTime' => $rfc_start_date,
+                'timeZone' => 'America/Los_Angeles'
+              ),
+              'end' => array(
+                'dateTime' => $rfc_end_date,
+                'timeZone' => 'America/Los_Angeles'
+              )/*,
+              'recurrence' => array(
+                'RRULE:FREQ=DAILY'
+              ),*/
+            ));
+
+            $calendarId = $post['gevent_gcid'];
+            $gEvent = $cal->events->insert($google_user_api->auto_sync_calendar_id, $event);
+
+            $event = $this->event_model->getEvent($event_id);
+            if( $event ){
+                $this->event_model->update($event_id, ['gevent_id' => $gEvent->id]);
             }
         }
 

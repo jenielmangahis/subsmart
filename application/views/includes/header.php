@@ -119,7 +119,8 @@
                             <!--                                <img src="/assets/css/icons/images/479-4794569_settings-cog-gear-optimization-icon-hd-png-download.png" aria-hidden="true" class="icon-settings-navbar" alt="">-->
                             <!--                            </a>-->
                         </li>
-                        <?php $newtasks = getNewTasks();?>
+                        <?php //$newtasks = getNewTasks();?>
+                        <?php $newtasks = getTasks();?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
                             <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0)?'visible':'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0)?count($newtasks):null; ?></span>
@@ -131,10 +132,10 @@
                                 <!-- item-->
                                 <h6 class="dropdown-item-text"><?php if(count($newtasks) > 0){ echo 'New Tasks (' . count($newtasks) . ')'; } else { echo 'No New Tasks'; } ?></h6>
                                 <div class="slimscroll notification-item-list">
-                                    <?php foreach ($newtasks as $key => $value) { ?>
-                                        <a href="<?php echo base_url('taskhub/view/' . $value['task_id']); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value['subject']; ?><span class="text-muted">
+                                    <?php foreach ($newtasks as $value) { ?>
+                                        <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
                                                 <?php
-                                                $date_created = date_create($value['date_created']);
+                                                $date_created = date_create($value->date_created);
                                                 echo date_format($date_created, "F d, Y h:i:s");
                                                 ?>
                                             </span></p>

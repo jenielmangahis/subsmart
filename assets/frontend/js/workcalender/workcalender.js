@@ -106,7 +106,7 @@ $(document).ready(function() {
 
 
     // color selector
-    $(document).on('click', '.calendar-modal-color-selector > .calendar-modal-color-sq', function(e) {
+    $(document).on('click', '.calendar-modal-color-selector > . .calendar-modal-color-sq', function(e) {
 
         e.preventDefault();
 

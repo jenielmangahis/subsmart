@@ -197,21 +197,21 @@ input#datepicker_startdate {
                 <div class="calendar-modal-color-selector" data-calendar="color-selector">
                   <?php if( $colorSettings ){ ?>
                     <?php $counter = 0; foreach($colorSettings as $c){ ?>
-                      <div class="color-container">
-                        <span class="calendar-modal-color-sq" data-calendar-color-id="<?php echo $c->color_code; ?>" style="background:<?php echo $c->color_code; ?>">
+                      <!-- <div class="color-container"> -->
+                        <span class="calendar-modal-color-sq color-container" data-calendar-color-id="<?php echo $c->color_code; ?>" style="background:<?php echo $c->color_code; ?>">
                           <?php if(!empty($event)) { ?>
                             <?php if ($event->event_color == $color) { ?>
                                 <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
                             <?php } ?>
                           <?php }else{ ?>
                             <?php if( $counter == 0 ){ ?>
-                              <i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i>
+                              <i class="calendar-modal-color-icon fa fa-check " aria-hidden="false"></i>
                             <?php } ?>
                           <?php } ?>
                         </span>
                         <br/>
                         <span class="color-name"><?= $c->color_name; ?></span>
-                      </div>
+                      <!-- </div> -->
                     <?php $counter++;} ?>
                   <?php }else{ ?>
                     <?php if (!empty(get_config_item('event_colors'))) { ?>
