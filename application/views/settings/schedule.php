@@ -101,13 +101,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <a href="javascript:void(0);" class="btn btn-outline-secondary btn-disconnect-gmail" style="text-align: left; width: 100% !important;">
                                                   <small class="plan">Gmail Account <span style="color:red;">(Unbind Account)</span></small><br/>
                                                   <i class="fab fa-google"></i>
-                                                  <big>Gmail / G Suite - Connected</big>
+                                                  <big>Gmail / G Suite - Connected</big><br />
+                                                  <small>Note : This will check or create NsmarTrac calendar for auto add events to google calendar</small>
                                                 </a> 
                                             <?php }else{ ?>
                                                 <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
                                                   <small class="plan">Gmail Account</small><br/>
                                                   <i class="fab fa-google"></i>
-                                                  <big>Gmail / G Suite</big>
+                                                  <big>Gmail / G Suite</big><br />
+                                                  <small>Note : This will check or create NsmarTrac calendar for auto add events to google calendar</small>
                                                 </a> 
                                             <?php } ?>
                                             

@@ -59,6 +59,11 @@ class GoogleAccounts_model extends MY_Model
         $this->db->delete($this->table, array('user_id' => $user_id));
 
     }
+
+    public function getDefaultAutoSyncCalendarName(){
+        $calendar_name = 'NsmarTrac';
+        return $calendar_name;
+    }
 }
 
 /* End of file BookingCoupon_model.php */

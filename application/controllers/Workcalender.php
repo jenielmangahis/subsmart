@@ -1544,6 +1544,73 @@ class Workcalender extends MY_Controller
         $this->page_data['events'] = $events;
         $this->load->view('workcalender/ajax_load_upcoming_events', $this->page_data);
     }
+
+    public function debugCalendar() {
+        $this->load->model('GoogleAccounts_model');
+        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+        if( $google_user_api ){
+            $google_credentials = google_credentials();        
+
+            $google_credentials = google_credentials();        
+
+            $access_token = "";
+            $refresh_token = "";
+            $google_client_id = "";
+            $google_secrect = "";
+            $calendar_list = array();
+
+            if(isset($google_user_api->google_access_token)) {
+                $access_token = $google_user_api->google_access_token;
+            }
+
+            if(isset($google_user_api->google_refresh_token)) {
+                $refresh_token = $google_user_api->google_refresh_token;
+            }
+
+            if(isset($google_credentials['client_id'])) {
+                $google_client_id = $google_credentials['client_id'];
+            }
+
+            if(isset($google_credentials['client_secret'])) {
+                $google_secrect = $google_credentials['client_secret'];
+            }    
+            
+            //Set Client
+            $client = new Google_Client();
+            $client->setClientId($google_client_id);
+            $client->setClientSecret($google_secrect);
+            $client->setAccessToken($access_token);
+            $client->refreshToken($refresh_token);
+
+            //Request
+            $service = new Google_Service_Calendar($client);
+            $calendarId = 'cv9aasvno50j35ci34sktumlbs1@group.calendar.google.com';            
+            $calendarListEntry = $service->calendarList->get($calendarId);            
+            echo $calendarListEntry->getSummary();exit;
+            echo "<pre>";
+            print_r($calendarListEntry);
+            exit;
+
+            $calendars = $service->calendarList->listCalendarList();
+            $calendar_name = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
+            $is_exists = false;
+            $calendar_id = '';
+
+            foreach( $calendars as $c ){
+                if( $c->summary == $calendar_name ){
+                    $is_exists = true;
+                    $calendar_id = $c->id;
+                }
+            }
+
+            echo $calendar_id;exit;
+            $calendarId = '7knabuhd3oucjobelbarl1i3ts@group.calendar.google.com';
+            $calendarListEntry = $service->calendarList->get($calendarId);
+            echo "<pre>";
+            print_r($calendarListEntry);
+            exit;
+        }
+    }
 }
 
 

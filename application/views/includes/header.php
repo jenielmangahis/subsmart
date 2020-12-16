@@ -78,16 +78,16 @@
                             <!--                            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>-->
                             <div class="plus-icon-container">
                                 <a href="javascript:void (0)">
-                                    <img class="plus-icon-static" src="/assets/css/icons/images/add-1.1s-47px.svg" alt="">
-                                    <img class="plus-icon-hover" src="/assets/css/icons/images/add-1.1s-47px%20(2).svg" alt="">
+                                    <img class="plus-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/add-1.1s-47px.svg" alt="">
+                                    <img class="plus-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/add-1.1s-47px%20(2).svg" alt="">
                                 </a>
                             </div>
                         </li>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                             <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <a href="javascript:void (0)">
-                                    <img class="conversation-icon-static" src="/assets/css/icons/images/conversation-1.1s-47px.svg" alt="">
-                                    <img class="conversation-icon-hover" src="/assets/css/icons/images/conversation-1.1s-47px%20(2).svg" alt="">
+                                    <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/conversation-1.1s-47px.svg" alt="">
+                                    <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/conversation-1.1s-47px%20(2).svg" alt="">
                                 </a>
                                 <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
                                 <!--                                    -->
@@ -99,8 +99,8 @@
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                             <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <a href="javascript:void (0)">
-                                    <img class="growth-icon-static" src="/assets/css/icons/images/growth-1.1s-47px (1).svg" alt="">
-                                    <img class="growth-icon-hover" src="/assets/css/icons/images/growth-1.1s-47px (2).svg" alt="">
+                                    <img class="growth-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/growth-1.1s-47px (1).svg" alt="">
+                                    <img class="growth-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/growth-1.1s-47px (2).svg" alt="">
                                 </a>
                                 <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
                                 <!--                                    -->
@@ -111,30 +111,31 @@
                             <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates') ?><!--">-->
                             <div class="settings-icon-container">
                                 <a href="<?php echo base_url('settings/email_templates') ?>">
-                                    <img class="settings-icon-static" src="/assets/css/icons/images/wrench-1.1s-47px.svg" alt="">
-                                    <img class="settings-icon-hover" src="/assets/css/icons/images/wrench-1.1s-47px%20(1).svg" alt="">
+                                    <img class="settings-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/wrench-1.1s-47px.svg" alt="">
+                                    <img class="settings-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/wrench-1.1s-47px%20(1).svg" alt="">
                                 </a>
                             </div>
                             <div class="prev-icon-title">Settings</div>
                             <!--                                <img src="/assets/css/icons/images/479-4794569_settings-cog-gear-optimization-icon-hd-png-download.png" aria-hidden="true" class="icon-settings-navbar" alt="">-->
                             <!--                            </a>-->
                         </li>
-                        <?php $newtasks = getNewTasks();?>
+                        <?php //$newtasks = getNewTasks();?>
+                        <?php $newtasks = getTasks();?>
                         <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
                             <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0)?'visible':'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0)?count($newtasks):null; ?></span>
-                                <img class="schedule-icon-static" src="/assets/css/icons/images/schedule-icon.svg" alt="">
-                                <img class="schedule-icon-hover" src="/assets/css/icons/images/schedule-icon2.svg" alt="">
+                                <img class="schedule-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/schedule-icon.svg" alt="">
+                                <img class="schedule-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/schedule-icon2.svg" alt="">
                             </div>
                             <div class="prev-icon-title">Schedule</div>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                 <!-- item-->
                                 <h6 class="dropdown-item-text"><?php if(count($newtasks) > 0){ echo 'New Tasks (' . count($newtasks) . ')'; } else { echo 'No New Tasks'; } ?></h6>
                                 <div class="slimscroll notification-item-list">
-                                    <?php foreach ($newtasks as $key => $value) { ?>
-                                        <a href="<?php echo base_url('taskhub/view/' . $value['task_id']); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value['subject']; ?><span class="text-muted">
+                                    <?php foreach ($newtasks as $value) { ?>
+                                        <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
                                                 <?php
-                                                $date_created = date_create($value['date_created']);
+                                                $date_created = date_create($value->date_created);
                                                 echo date_format($date_created, "F d, Y h:i:s");
                                                 ?>
                                             </span></p>
