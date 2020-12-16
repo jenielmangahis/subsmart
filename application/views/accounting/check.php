@@ -660,7 +660,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
                     <iframe name="hiddenFramerecurr" width="0" height="0" border="0" style="display: none;"></iframe>
-                    <form action="<?php echo url('accounting/reconcile/do_upload/') ?>" class="uploadmy" method="post" name="recurrForm" enctype="multipart/form-data" target="hiddenFramerecurr">
+                    <form action="<?php echo url('accounting/check/do_upload/') ?>" class="uploadmy" method="post" name="recurrForm" enctype="multipart/form-data" target="hiddenFramerecurr">
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
@@ -675,7 +675,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <button type="submit" class="form-control">Upload</button>
                     </form>
                     </br>
-                    <a href="#" onclick="openSideNav()">Show existing</a>
+                    <a href="#" onclick="showData()">Show existing</a>
                 </div>
             </div>
         </div>
@@ -2038,4 +2038,197 @@ function closeRecurr()
            openPayee();
           } 
       });
+</script>
+<script type="text/javascript">
+    /* Variables */
+    var p = 1;
+    var row_recurr = $(".participantRecurrRow");
+
+    function addRowRecurr() {
+      row_recurr.clone(true, true).removeClass('Recurrhide table-line').appendTo("#participantRecurrTable");
+      var index_recurr =$('#participantRecurrTable tr').length -1;
+      var final_index_recurr = index_recurr-1;
+      $('#participantRecurrTable tr:eq('+index_recurr+')').attr("onclick","trClickRecurr("+final_index_recurr+")");
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(1)').text(index_recurr-1);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(2)').find('select').attr("id","recurr_expense_account_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(2)').find('select').attr("name","recurr_expense_account_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(2)').find('div').attr("class","recurr_expense_account_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(3)').find('input').attr("id","recurr_descp_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(3)').find('input').attr("name","recurr_descp_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(3)').find('div').attr("class","recurr_descp_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(4)').find('input').attr("id","recurr_service_charge_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(4)').find('input').attr("name","recurr_service_charge_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(4)').find('div').attr("class","recurr_service_charge_"+final_index_recurr);
+    }
+
+    function removeRowRecurr(buttonrecurr) {
+        console.log(buttonrecurr.closest("tr").text());
+      buttonrecurr.closest("tr").remove();
+      var totrecurr = $('#recurrtotal').text().substr(9)-buttonrecurr.closest("tr").find('td:eq(4)').text().trim();
+      //var totrecurr = $('#recurrtotal').text().substr(9);
+      $('#recurrtotal').text('Total : $'+totrecurr);
+      if(buttonrecurr.closest("tr").find('td:eq(2)').find('select').hasClass("up_row"))
+        {
+            var id_to_remove =buttonrecurr.closest("tr").find('td:eq(0)').attr("data-id");
+            remove_func_recurr(id_to_remove);
+        }
+    }
+    /* Doc ready */
+    $(".add_recurr").on('click', function () {
+      if($("#participantRecurrTable tr").length < 17) {
+        addRowRecurr();
+        var i = Number(p)+1;
+        $("#participants").val(i);
+      }
+      $(this).closest("tr").appendTo("#participantRecurrTable");
+      if ($("#participantRecurrTable tr").length === 3) {
+        $(".remove_recurr").hide();
+      } else {
+        $(".remove_recurr").show();
+      }
+    });
+    $(".remove_recurr").on('click', function () {
+      if($("#participantRecurrTable tr").length === 3) {
+        //alert("Can't remove row.");
+        $(".remove_recurr").hide();
+      } else if($("#participantRecurrTable tr").length - 1 ==3) {
+        $(".remove_recurr").hide();
+        removeRowRecurr($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      } else {
+        removeRowRecurr($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      }
+    });
+    $("#participants").change(function () {
+      var i = 0;
+      p = $("#participants").val();
+      var rowCount = $("#participantRecurrTable tr").length - 2;
+      if(p > rowCount) {
+        for(i=rowCount; i<p; i+=1){
+          addRowRecurr();
+        }
+        $("#participantRecurrTable #addButtonRow").appendTo("#participantRecurrTable");
+      } else if(p < rowCount) {
+      }
+    });
+    $(".clear_recurr").on('click', function () {
+      if($("#participantRecurrTable tr").length - 1 >3) {
+        x = 1;
+        $('#participantRecurrTable > tbody  > tr').each(function() {
+            if(x >3)
+            {
+                $(this).remove();
+                var totrecurr_clear = $('#recurrtotal').text().substr(9)-$(this).closest("tr").find('td:eq(4)').text().trim();
+                $('#recurrtotal').text('Total : $'+totrecurr_clear.toFixed(2));
+            }
+            x = x+1;
+        });
+      }
+    });
+</script>
+<script type="text/javascript">
+    function trClickRecurrMain()
+    {
+        if($('#recurr_expense_account').css("display")== 'none')
+        {
+            $('.recurr_expense_account').css('display','none');
+            $('#recurr_expense_account').show();
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_service_charge').attr("type")== 'hidden')
+        {
+            $('.recurr_service_charge').css('display','none');
+            $('#recurr_service_charge').removeAttr('type','hidden');
+            $('#recurr_service_charge').attr('type','number');
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_descp').attr("type")== 'hidden')
+        {
+            $('.recurr_descp').css('display','none');
+            $('#recurr_descp').removeAttr('type','hidden');
+            $('.hidemerecurr').show();
+        }
+    }
+
+    function trClickRecurr(index_recurr)
+    {
+        if($('#recurr_expense_account_'+index_recurr).css("display")== 'none')
+        {
+            $('.recurr_expense_account_'+index_recurr).css('display','none');
+            $('#recurr_expense_account_'+index_recurr).show();
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_service_charge_'+index_recurr).attr("type")== 'hidden')
+        {
+            $('.recurr_service_charge_'+index_recurr).css('display','none');
+            $('#recurr_service_charge_'+index_recurr).removeAttr('type','hidden');
+            $('#recurr_service_charge_'+index_recurr).attr('type','number');
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_descp_'+index_recurr).attr("type")== 'hidden')
+        {
+            $('.recurr_descp_'+index_recurr).css('display','none');
+            $('#recurr_descp_'+index_recurr).removeAttr('type','hidden');
+            $('.hidemerecurr').show();
+        }
+    }
+    function rightclickRecurr()
+    {
+        length_recurr =$('#participantRecurrTable tr').length -2;
+        $('.recurr_expense_account').show();
+        $('.recurr_expense_account').text($('#recurr_expense_account').val());
+        $('#recurr_expense_account').css('display','none');
+        $('.recurr_service_charge').show();
+        $('.recurr_service_charge').text($('#recurr_service_charge').val());
+        $('#recurr_service_charge').attr('type','hidden');
+        $('.recurr_descp').show();
+        $('.recurr_descp').text($('#recurr_descp').val());
+        $('#recurr_descp').attr('type','hidden');
+        $('.hidemerecurr').hide();
+
+        for(var i = 2 ; i <= length_recurr ; i++)
+        {
+            $('.recurr_expense_account_'+i).show();
+            $('.recurr_expense_account_'+i).text($('#recurr_expense_account_'+i).val());
+            $('#recurr_expense_account_'+i).css('display','none');
+            $('.recurr_service_charge_'+i).show();
+            $('.recurr_service_charge_'+i).text($('#recurr_service_charge_'+i).val());
+            $('#recurr_service_charge_'+i).attr('type','hidden');
+            $('.recurr_descp_'+i).show();
+            $('.recurr_descp_'+i).text($('#recurr_descp_'+i).val());
+            $('#recurr_descp_'+i).attr('type','hidden');
+        }
+
+        var total_recurr = 0;
+        total_recurr += parseInt($('.recurr_service_charge').text());
+        for(var i = 2 ; i <= length_recurr ; i++)
+        {
+            if($('.recurr_service_charge_'+i).text() != '')
+            {total_recurr += parseInt($('.recurr_service_charge_'+i).text());}
+        }
+        $('#recurrtotal').text('Total : $'+total_recurr.toFixed(2));
+    }
+    function crossClickRecurr()
+    {
+        length_recurr =$('#participantRecurrTable tr').length -2;
+        $('.recurr_expense_account').show();
+        $('#recurr_expense_account').css('display','none');
+        $('.recurr_service_charge').show();
+        $('#recurr_service_charge').attr('type','hidden');
+        $('.recurr_descp').show();
+        $('#recurr_descp').attr('type','hidden');
+        $('.hidemerecurr').hide();
+        for(var i = 2 ; i <= length_recurr ; i++)
+        {
+            $('.recurr_expense_account_'+i).show();
+            $('#recurr_expense_account_'+i).css('display','none');
+            $('.recurr_service_charge_'+i).show();
+            $('#recurr_service_charge_'+i).attr('type','hidden');
+            $('.recurr_descp_'+i).show();
+            $('#recurr_descp_'+i).attr('type','hidden');
+        }
+    }
 </script>
