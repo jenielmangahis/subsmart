@@ -1395,7 +1395,6 @@ function addCheck()
 }
 function closeCheck() 
 {
-   
     jQuery("#side-menu-check-tx").removeClass("open-side-nav");
     jQuery("#side-menu-check-tx").css("width","0%");
     jQuery("#overlay-check-tx").removeClass("overlay");

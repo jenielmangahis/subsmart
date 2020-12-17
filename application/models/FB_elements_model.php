@@ -9,30 +9,49 @@ class FB_elements_model extends MY_Model {
 	{
 		parent::__construct();
 		$this->load->model('FB_element_choices_model', 'form_element_choices');
+		$this->load->model('FB_element_matrix_rows_model', 'form_element_matrix_rows');
+		$this->load->model('FB_element_matrix_columns_model', 'form_element_matrix_columns');
+		$this->load->model('FB_element_items_model', 'form_element_items');
     }
     
-	function create($data)
-	{
-		// $choiceData = [
-		// 	'element_id' 	=> $newID,
-		// 	'choice_text'	=> (gettype($data['choices'][1]) === 'array' ? $choice : $choice['choice_text'] )
-		// ];
-		// $response = [
-		// 	'code' 		=> 200,
-		// 	'message' 	=> 'created',
-		// 	'data'		=> $choiceData
-		// ];
-		// return $response;
+	function create($data){
 		try {
 			$this->db->insert($this->table, $data['form_element']);
 			$newID = $this->db->insert_id();
-			foreach ($data['choices'] as $i => $choice) {
-				$choiceData = [
-					'element_id' 	=> $newID,
-					'choice_text'	=> ( gettype($choice) === 'array' ? $choice['choice_text'] : $choice )
-				];
-				$this->db->insert($this->form_element_choices->table, $choiceData);			
+			if($data['choices']) {
+				foreach ($data['choices'] as $i => $choice) {
+					$choiceData = [
+						'element_id' 	=> $newID,
+						'choice_text'	=> ( gettype($choice) === 'array' ? $choice['choice_text'] : $choice )
+					];
+					$this->db->insert($this->form_element_choices->table, $choiceData);			
+				}
 			}
+			
+			if($data['choices_and_prices']) {
+				foreach ($data['choices_and_prices'] as $i => $row) {
+					$items_data = $row;
+					$items_data['element_id'] = $newID;
+					$this->db->insert($this->form_element_items->table, $items_data);			
+				}
+			}
+
+			if($data['matrix_rows']) {
+				foreach ($data['matrix_rows'] as $i => $matrixRow) {
+					$matrixRowData = [
+						'element_id' 	=> $newID,
+						'text'	=> ( gettype($matrixRow) === 'array' ? $matrixRow['text'] : $matrixRow )
+					];
+					$this->db->insert($this->form_element_matrix_rows->table, $matrixRowData);			
+				}
+				foreach ($data['matrix_columns'] as $i => $matrixColumn) {
+					$matrixColumnData = [
+						'element_id' 	=> $newID,
+						'text'	=> ( gettype($matrixColumn) === 'array' ? $matrixColumn['text'] : $matrixColumn )
+					];
+					$this->db->insert($this->form_element_matrix_columns->table, $matrixColumnData);			
+				}	
+			}		
 			$response = [
 				'code' 		=> 200,
 				'message' 	=> 'created',
@@ -49,8 +68,7 @@ class FB_elements_model extends MY_Model {
 	    return $response;
 	}
 
-	function update($data, $id)
-	{
+	function update($data, $id){
 		try {
 			$this->db->where('id', $id);
 			$this->db->update($this->table, $data['form_element']);
@@ -65,6 +83,41 @@ class FB_elements_model extends MY_Model {
 				];
 				$this->db->insert($this->form_element_choices->table, $choiceData);			
 			}
+
+
+			$this->db->where('element_id', $id);
+			$this->db->delete($this->form_element_items->table);
+			
+			foreach ($data['choices_and_prices'] as $i => $row) {
+				$items_data = $row;
+				$items_data['element_id'] = $id;
+				$this->db->insert($this->form_element_items->table, $items_data);			
+			}
+
+
+			$this->db->where('element_id', $id);
+			$this->db->delete($this->form_element_matrix_rows->table);
+			
+			foreach ($data['matrix_rows'] as $i => $row) {
+				$matrixRowData = [
+					'element_id' => $id,
+					'text'	=> $row
+				];
+				$this->db->insert($this->form_element_matrix_rows->table, $matrixRowData);			
+			}
+
+
+			$this->db->where('element_id', $id);
+			$this->db->delete($this->form_element_matrix_columns->table);
+			
+			foreach ($data['matrix_columns'] as $i => $column) {
+				$matrixColumnData = [
+					'element_id' => $id,
+					'text'	=> $column
+				];
+				$this->db->insert($this->form_element_matrix_columns->table, $matrixColumnData);			
+			}
+			
 			$response = [
 				'code' 		=> 200,
 				'message' 	=> 'updated',
@@ -103,6 +156,12 @@ class FB_elements_model extends MY_Model {
 		try {
 			$this->db->where('id', $id);
 			$this->db->delete($this->table);
+			$this->db->where('element_id', $id);
+			$this->db->delete($this->form_element_matrix_columns->table);
+			$this->db->where('element_id', $id);
+			$this->db->delete($this->form_element_choices->table);
+			$this->db->where('element_id', $id);
+			$this->db->delete($this->form_element_items->table);
 			$response = [
 				'code' 		=> 200,
 				'message' 	=> 'deleted',

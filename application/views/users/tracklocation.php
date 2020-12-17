@@ -1,6 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+    /*Tabs*/
+    .tab-pane{
+        margin-top: 20px;
+    }
+    .nav-item .active{
+        border-bottom: 3px solid #498002!important;
+        background-color: transparent!important;
+        font-weight: bold;
+    }
+    .nav-tabs .nav-link{
+        border: 0;
+    }
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
     <!-- page wrapper start -->
@@ -26,7 +40,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <div id="googleMap" style="width:100%;height:400px;"></div>
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#trackMap">Map</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#trackPlaces">Add Places</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#trackSettings">Settings</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane container active" id="trackMap">
+                                    <div id="googleMap" style="width:100%;height:400px;"></div>
+                                </div>
+                                <div class="tab-pane container fade" id="trackPlaces">
+                                </div>
+                                <div class="tab-pane container fade" id="trackSettings">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- end card -->

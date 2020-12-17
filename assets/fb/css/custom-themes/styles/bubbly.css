@@ -4,6 +4,11 @@
     font-weight: lighter !important;
 }
 
+.form-bubbly .heading-text, .form-bubbly .custom-code {
+    font-family: "Handlee", cursive !important;
+    font-weight: lighter !important;
+}
+
 .form-bubbly .form-check-label {
     font-family: "Handlee", cursive !important;
     font-size: 14px !important;   

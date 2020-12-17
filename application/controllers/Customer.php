@@ -666,6 +666,17 @@ class Customer extends MY_Controller
         }
     }
 
+    public function update_customer_profile(){
+        $input = array();
+        $input['notes'] = $_POST['notes'];
+        $input['prof_id'] = $_POST['id'];
+        if($this->customer_ad_model->update_data($input,"acs_profile","prof_id")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+    }
+
     public function fetch_leadtype_data()
     {
         $lead_types = $this->customer_ad_model->get_all(FALSE, "", "DESC", "ac_leadtypes", "lead_id");

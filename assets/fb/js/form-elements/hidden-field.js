@@ -11,6 +11,11 @@ class HiddenField extends FormElement {
             <div><p>[hidden field]</p></div
             <input type="hidden" name="${this.element_type}-${this.id}" id="${this.element_type}-${this.id}" class="form-control">
         `;
-        return element_container.open + ' ' + element_container.content + ' ' + element_controls + ' ' + element_container.close;
+
+        if(this.editable) {
+            return element_container.open + ' ' + element_container.content + ' ' + element_controls + ' ' + element_container.close;
+        } else {
+            return '';
+        }
     }
 }

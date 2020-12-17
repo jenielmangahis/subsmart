@@ -12,6 +12,9 @@ class FB_model extends MY_Model {
 		$this->load->model('FB_schedule_setting_model', 'form_schedule_setting');
 		$this->load->model('FB_elements_model', 'form_elements');
 		$this->load->model('FB_element_choices_model', 'form_element_choices');
+		$this->load->model('FB_element_matrix_rows_model', 'form_element_matrix_rows');
+		$this->load->model('FB_element_matrix_columns_model', 'form_element_matrix_columns');
+		$this->load->model('FB_element_items_model', 'form_element_items');
     }
     
 	function create($data){
@@ -78,7 +81,18 @@ class FB_model extends MY_Model {
 				$this->db->select("*");
 				$this->db->where('element_id', $element['id']);
 				$choice = $this->db->get($this->form_element_choices->table);
+				$this->db->select("*");
+				$this->db->where('element_id', $element['id']);
+				$matrix['rows'] = $this->db->get($this->form_element_matrix_rows->table)->result_array();
+				$this->db->select("*");
+				$this->db->where('element_id', $element['id']);
+				$matrix['columns'] = $this->db->get($this->form_element_matrix_columns->table)->result_array();
+				$this->db->select("*");
+				$this->db->where('element_id', $element['id']);
+				$item = $this->db->get($this->form_element_items->table);
+				$elementsArr[$i]['items'] = $item->result_array();				
 				$elementsArr[$i]['choices'] = $choice->result_array();				
+				$elementsArr[$i]['matrix'] = $matrix;				
 			}
 			$data = [
 				'form'		=> $form->row(),
@@ -100,7 +114,7 @@ class FB_model extends MY_Model {
 		return $res;
 	}
 
-	function updateStyle($data, $id) {
+	function update($data, $id) {
 		try {
 			$this->db->set($data);
 			$this->db->where('id', $id);
@@ -109,7 +123,7 @@ class FB_model extends MY_Model {
 			$res = [
 				'data' 	=> [],
 				'code'	=> 200,
-				'message'	=> 'Style Updated'
+				'message'	=> 'Updated'
 			];
 		}catch(\Exception $e) {
 			$res = [
