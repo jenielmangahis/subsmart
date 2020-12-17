@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  
   $("#addOnHandInventory, #closeAddNewItem, #cancelAddItemGroups").click(
     function () {
       $("#servicesInventory").hide();
@@ -280,6 +281,9 @@ function populateItem(item) {
   $("#unitItem").val(item.units);
   $("#productUrlItem").val(item.url);
   $("#cogsItem").val(item.COGS);
+  $("#reorder_point").val(item.reorder_point);
+  
+
   $("#modelNumItem").val(item.model);
 }
 

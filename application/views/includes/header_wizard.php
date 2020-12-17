@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -101,6 +100,22 @@
                                     <!-- item-->
                                     <h6 class="dropdown-item-text">Notifications (258)</h6>
                                     <div class="slimscroll notification-item-list">
+                                    <?php $reorders = getReorderItemsCount();
+                                        $reorders_count = 0;
+                                        if($reorders){
+                                            foreach ($reorders as $key => $reorder) {
+                                                if(!is_null($reorder['total_count'])){
+                                                    if($reorder['reorder_point'] > $reorder['total_count']){
+                                                        $reorders_count++;
+                                                    }
+                                                }    
+                                            }
+                                        }
+                                    ?>
+                                    <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                                        <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
+                                        <p class="notify-details">Item needs to reorder (<?php echo $reorders_count;?>)<span class="text-muted">Please replenish immediately.</span></p>
+                                    </a>
 										<a href="javascript:void(0);" class="dropdown-item notify-item active"><div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div><p class="notify-details">Your order is placed<span class="text-muted">Dummytext of the printing and typesetting industry.</span></p>
                                         </a>
 										<a href="javascript:void(0);" class="dropdown-item notify-item">
