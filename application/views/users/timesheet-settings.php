@@ -688,6 +688,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .notify-section .row .col-md-8{
         margin-top: 11px;
     }
+    .notify-row-days{
+        width: 80%;
+        margin: 0 auto;
+    }
+    .notify-day-cell{
+        display: inline-block;
+        width: 100px;
+        height: 50px;
+        border: 2px solid gray;
+        text-align: center;
+        cursor: pointer;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -1242,6 +1254,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-md-4">
 
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <div class="notify-section">
+                                                    <div class="notify-row-days">
+                                                        <div class="notify-day-cell" data="Monday">Monday</div>
+                                                        <div class="notify-day-cell" data="Tuesday">Tuesday</div>
+                                                        <div class="notify-day-cell" data="Wednesday">Wednesday</div>
+                                                        <div class="notify-day-cell" data="Thursday">Thursday</div>
+                                                        <div class="notify-day-cell" data="Friday">Friday</div>
+                                                        <div class="notify-day-cell" data="Saturday">Saturday</div>
+                                                        <div class="notify-day-cell" data="Sunday">Sunday</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2015,6 +2038,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         // Notifications
         $(".notify-time-in").timepicker({interval: 60});
+        // Notifications
+        $(document).on('click','.notify-day-cell',function () {
+            $('.notify-day-cell').css('background','none');
+            $(this).css('background','#5ec355');
+            console.log($(this).attr('data'));
+        });
+
         //Select2 employee list
         $('.select2-employee-list').select2({
             placeholder: 'Select employee',

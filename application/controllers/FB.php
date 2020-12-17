@@ -13,23 +13,6 @@ class FB extends MY_Controller {
         ));
         add_footer_js(array(
 			'assets/fb/js/accordion.min.js',
-			'assets/fb/js/form-elements/form-element.js',
-			'assets/fb/js/form-elements/radio-button.js',
-			'assets/fb/js/form-elements/dropdown.js',
-			'assets/fb/js/form-elements/checkbox.js',
-			'assets/fb/js/form-elements/email.js',
-			'assets/fb/js/form-elements/Calendar.js',
-			'assets/fb/js/form-elements/long-answer.js',
-			'assets/fb/js/form-elements/short-answer.js',
-			'assets/fb/js/form-elements/number.js',
-			'assets/fb/js/form-elements/file-upload.js',
-			'assets/fb/js/form-elements/text-list.js',
-			'assets/fb/js/form-elements/rating.js',
-			'assets/fb/js/form-elements/ranking.js',
-			'assets/fb/js/form-elements/hidden-field.js',
-			'assets/fb/js/form-elements/heading.js',
-			'assets/fb/js/form-elements/formatted-text.js',
-			'assets/fb/js/form-elements/element-types.js',
 			'assets/fb/js/datepicker.js',
 			'assets/fb/js/main.js',
 		));
@@ -94,6 +77,23 @@ class FB extends MY_Controller {
 		$this->page_data['form_id'] = $id;
 		$this->load->view('fb/element_settings_modal.php', $this->page_data);
 		$this->load->view('fb/edit.php', $this->page_data);
+		$this->load->view('fb/form_elements.php', $this->page_data);
+	}
+
+	public function settings($id){
+		add_css(array(
+			'assets/fb/css/settings.css',
+			'assets/terms_and_conditions/css/main.css'
+		));
+		add_footer_js(array(
+			'assets/terms_and_conditions/js/common.js',
+			'assets/fb/js/jquery-sortable.js',
+			'assets/fb/js/jquery-ui.js',
+			'assets/fb/js/settings.js',
+		));
+		$this->page_data['form_id'] = $id;
+		$this->load->view('fb/settings.php', $this->page_data);
+		$this->load->view('fb/form_elements.php', $this->page_data);
 	}
 
 	public function view($id){
@@ -105,6 +105,7 @@ class FB extends MY_Controller {
 		// ));
 		$this->page_data['form_id'] = $id;
 		$this->load->view('fb/view.php', $this->page_data);
+		$this->load->view('fb/form_elements.php', $this->page_data);
 	}
 
 	public function getByFormID($id) {
@@ -114,6 +115,7 @@ class FB extends MY_Controller {
 
 	public function createFormElement() {
 		$data = $this->input->post();
+		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($data));
 		$response = $this->form_elements->create($data);
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
@@ -138,10 +140,10 @@ class FB extends MY_Controller {
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
-	public function updateStyle($id) {
+	public function update($id) {
 		$data = $this->input->post();
 
-		$response = $this->form_builder->updateStyle($data, $id);
+		$response = $this->form_builder->update($data, $id);
 
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}

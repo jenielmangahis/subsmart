@@ -25,7 +25,7 @@ const appendContent = (obj) => {
             ${obj.name}
             <div class="form-table-row-controls btn-group" role="group">
                 <a href="/fb/edit/${obj.id}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
-                <a href="/fb/edit/settings" class="btn btn-sm btn-primary"><i class="fa fa-cog"></i> Settings</a>
+                <a href="/fb/settings/${obj.id}" class="btn btn-sm btn-primary"><i class="fa fa-cog"></i> Settings</a>
                 <a href="/fb/edit/share" class="btn btn-sm btn-primary"><i class="fa fa-external-link-alt"></i> Share</a>
                 <a href="/fb/edit/results" class="btn btn-sm btn-primary"><i class="fa fa-file-alt"></i> Results</a>
             </div>

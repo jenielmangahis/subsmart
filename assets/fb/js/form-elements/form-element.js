@@ -12,6 +12,7 @@ class FormElement {
         this.element_order = obj.element_order ? obj.element_order : null;
         this.element_type = obj.element_type ? obj.element_type : null;
         this.span = obj.span ? obj.span : 4;
+        this.height = obj.height ? obj.height : 3;
         this.columns = obj.columns ? obj.columns : 30;
         this.rows = obj.rows ? obj.rows : 50;
         this.min = obj.min ? obj.min : null;
@@ -19,6 +20,9 @@ class FormElement {
         this.limit_unit = obj.limit_unit ? obj.limit_unit : 'characters';
         this.placeholder_text = obj.placeholder_text ? obj.placeholder_text : `input ${this.element_type} here`;
         this.choices = obj.choices ? obj.choices : ['-'];
+        this.matrix_rows = obj.matrix ? obj.matrix.rows ? obj.matrix.rows : ['-'] : ['-'];
+        this.matrix_columns = obj.matrix ? obj.matrix.columns ? obj.matrix.columns : ['-'] : ['-'
+    ];
     }
 
     getElementContainer(remove_padding = false) {

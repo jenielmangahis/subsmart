@@ -111,7 +111,6 @@ const updateElementOrder = (elements) => {
                         'url': `/fb/elements/update-order`,
                         'data': {elements: data}
                     }).done(response => {
-                        console.log(data);
                         resolve(response)
                     }).fail(err => {
                         reject(err);
@@ -142,10 +141,46 @@ const choicesParser = (choice_text) => {
     return ['-'];
 }
 
+const choicesPriceParser = (choices_text, prices_text) => {
+    if(choices_text) {
+        choices_text = choices_text.trim();
+        const choices = choices_text.split(/\r\n|\n\r|\n|\r/);
+        const prices = prices_text.split(/\r\n|\n\r|\n|\r/);
+        const choice_price_arr = [];
+        choices.forEach((el, i) => {
+            let price = prices[i] ? prices[i]: 0;
+            const choice_price_obj = {
+                name: el,
+                price
+            }
+            choice_price_arr.push(choice_price_obj);
+        });
+        return choice_price_arr;
+    }
+
+    return [
+        {
+            'name': '-',
+            'price': 0,
+        }
+    ];
+}
+
+const choicesPriceParserReverse = (choices) => {
+    let choice_string = '';
+    choices.forEach((choice, i) => {
+        choice_string += choice.name ? choice.name : choice.text;
+        i < choices.length - 1 ? choice_string += '\n' : '';
+        price_string += choice.price ? choice.price : choice.text;
+        i < choices.length - 1 ? price_string += '\n' : '';
+    });
+    return {choice_string, price_string};
+}
+
 const choicesParserReverse = (choices) => {
     let choice_string = '';
     choices.forEach((choice, i) => {
-        choice_string += choice.choice_text;
+        choice_string += choice.choice_text ? choice.choice_text : choice.text;
         i < choices.length - 1 ? choice_string += '\n' : '';
     });
     return choice_string;
@@ -170,12 +205,12 @@ const loadElements = async (form_id, editable = false) =>  {
     })
 }
 
-const updateFormStyle = (data) => {
+const updateForm = (data) => {
     return new Promise((resolve, reject) => {
         try {
             $.ajax({
                 'type': 'POST',
-                'url': `/fb/update-style/${form.id}`,
+                'url': `/fb/update/${form.id}`,
                 'data': data
             }).done(response => {
                 console.log(data);

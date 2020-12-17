@@ -102,11 +102,12 @@ $route['terms-and-conditions/add'] = 'TermsAndConditionsController/add';
 $route['fb'] = 'FB';
 $route['fb/add'] = 'FB/add';
 $route['fb/edit/(:num)'] = 'FB/edit/$1';
+$route['fb/settings/(:num)'] = 'FB/settings/$1';
 $route['fb/view/(:num)'] = 'FB/view/$1';
 $route['fb/get-all-by-active-user'] = 'FB/getAllByactiveUser';
 $route['fb/get-form-by-id/(:num)'] = 'FB/getByFormID/$1';
 $route['fb/create']['post'] = 'FB/create';
-$route['fb/update-style/(:num)']['post'] = 'FB/updateStyle/$1';
+$route['fb/update/(:num)']['post'] = 'FB/update/$1';
 
 //fb elements
 $route['fb/elements/create']['post'] = 'FB/createFormElement';

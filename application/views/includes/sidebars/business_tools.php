@@ -36,5 +36,8 @@
         <li class="submenus <?php if( $uri == '/builder' ){ echo 'active';}?>">
             <a href="<?php echo base_url('builder') ?>" title="Employees"><span class="fa fa-user"></span>Form Builder</a>
         </li>
+        <li class="submenus <?php if( $uri == '/terms-and-conditions' ){ echo 'active';}?>">
+            <a href="<?php echo base_url('terms-and-conditions') ?>" title="My Terms and Conditions"><span class="fa fa-file"></span>Terms and Conditions</a>
+        </li>
     </ul>
 </nav>

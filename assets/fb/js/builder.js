@@ -47,8 +47,10 @@ $('.builder-tabs').on('shown.bs.tab', (e) => {
 })
 
 const handleSaveEelement = (event) => {
-    editor.save();
     event.preventDefault();
+    if(editor) {
+        editor.save();
+    }
     showLoading();
     const save_method = $('#elementSettingsModal #saveMethod').val();
     if(save_method === 'create') {
@@ -96,11 +98,18 @@ const handleDeleteElement = (id) => {
     deleteElement(id).then(async (res) => {
         showLoading();
         const html_element = $(`#formBuilderContainer #${id}`).remove();
+        if (!element_objs.length) {
+            $('#formBuilderContainer').html(`
+            <div class="col-12" id="blankFormPlaceHolder">
+                Drag items from the left and drop them here.
+            </div>`)
+            showSuccess();
+            return;
+        }
         await loadElements(form.id, true).then(res => {
             initBuilder();
         });
         const elements = $('#formBuilderContainer').sortable("toArray");
-        console.log(elements);
         await updateElementOrder(elements);
         showSuccess();
     }).catch(err => {
@@ -166,8 +175,12 @@ const setModalElement = (element) => {
     $('#elementQuestionInput').val(element.question);
     $('#elementQuestionEditor').val(element.question);
     $('#elementType').val(element.element_type);
-    $('#elementSpan').val(element.span);
+    $('#elementWidth').val(element.span);
+    $('#elementHeight').val(element.height);
     $('#elementChoicesInput').val(choicesParserReverse(element.choices));
+    $('#elementMatrixColumnsInput').val(choicesParserReverse(element.matrix_columns));
+    $('#elementMatrixRowsInput').val(choicesParserReverse(element.matrix_rows));
+    // $('#elementChoicesAndPricesChoiceInput').val(choicesParserReverse(element.matrix_rows));
     $('#requiredSwitch').val(element.required);
     $('#readOnlySwitch').val(element.read_only);
     $('#adminItemSwitch').val(element.admin_item);
@@ -178,6 +191,12 @@ const setModalElement = (element) => {
     $('#elementSettingsModal #rows').val(element.rows);
     $('#elementSettingsModal #columns').val(element.columns);
     $('#elementSettingsModal #limitUnit').val(element.limit_unit);
+    $('#elementSettingsModal #imageUrl').val(element.img_url);
+    $('#elementSettingsModal #imageAltText').val(element.img_alt_text);
+    $('#elementSettingsModal #optionalLinkText').val(element.optional_link_text);
+    $('#elementSettingsModal #url').val(element.url);
+    $('#elementSettingsModal #urlText').val(element.url_text);
+    $('#elementSettingsModal #customCode').val(element.custom_code);
 }
 
 const getModalValues = () => {
@@ -190,15 +209,26 @@ const getModalValues = () => {
             read_only: $('#readOnlySwitch').is(":checked") ? 1 : 0,
             admin_item: $('#adminItemSwitch').is(":checked") ? 1 : 0,
             element_type: $('#elementType').val(),
-            span: $('#elementSpan').val(),
+            span: $('#elementWidth').val(),
+            height: $('#elementHeight').val(),
             element_order: $('#elementSettingsModal #elementOrder').val(),
             min: $('#elementSettingsModal #minChar').val(),
             max: $('#elementSettingsModal #maxChar').val(),
             rows: $('#elementSettingsModal #rows').val(),
             columns: $('#elementSettingsModal #columns').val(),
             limit_unit: $('#elementSettingsModal #limitUnit').val(),
+            img_url: $('#elementSettingsModal #imageUrl').val(),
+            img_alt_text: $('#elementSettingsModal #imageAltText').val(),
+            optional_link_url: $('#elementSettingsModal #optionalLinkURL').val(),
+            url_text: $('#elementSettingsModal #urlText').val(),
+            url: $('#elementSettingsModal #url').val(),
+            custom_code: $('#elementSettingsModal #customCode').val(),
+            percentage_excluded: $('#percentageExcludeSwitch').is(":checked") ? 1 : 0,
         },
         choices: choicesParser($('#elementChoicesInput').val()),
+        choices_and_prices: choicesPriceParser($('#elementChoicesAndPricesChoiceInput').val(),$('#elementChoicesAndPricesPriceInput').val()),
+        matrix_columns: choicesParser($('#elementMatrixColumnsInput').val()),
+        matrix_rows: choicesParser($('#elementMatrixRowsInput').val()),
     }
 }
 
@@ -325,7 +355,7 @@ const handleFormStyleSave = async () => {
         color: tempColor
     };
 
-    await updateFormStyle(data).then((res) => {
+    await updateForm(data).then((res) => {
         showBuilderTab('build');
         handleOnLoad(form.id, true);
         showSuccess();
@@ -345,4 +375,10 @@ const setStyleTabActives = (style, color) => {
     clearFormStyleControlActive();
     setFormStyleControlActive(style);
     setFormColorControlActive(color);
+}
+
+const handleQuestionInput = (val) => {
+    if($('#elementPreview .heading-text').length) {
+        $('#elementPreview .heading-text').text(val);
+    }
 }

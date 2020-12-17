@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Function to create custom url
  * uses site_url() function
@@ -3040,6 +3039,23 @@ function google_credentials(){
     ];
 
     return $credentials;
+}
+
+if (!function_exists('getReorderItemsCount')){
+
+    function getReorderItemsCount(){
+        $CI = &get_instance();
+        $uid = logged('id');
+        $company_id = logged('company_id');
+
+        $sql = 'SELECT * ,(SELECT SUM(qty) AS total FROM `items_has_storage_loc` WHERE `item_id` = items.id ) AS total_count FROM items WHERE items.company_id = ' . $company_id . ' AND items.reorder_point != 0 ORDER BY `items`.`id` ASC'; 
+
+        $sql1 =  'select * , (select sum(qty) as total from `items_has_storage_loc` WHERE `item_id` = items.id ) as total_count from items where company_id = ' . $company_id .' order by `id` asc' ; 
+
+
+        return   $CI->db->query($sql1)->result_array();    
+
+    }
 }
 
 function statesList(){

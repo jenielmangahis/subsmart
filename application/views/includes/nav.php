@@ -251,9 +251,6 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> My Business </b>
                         </a>
-                        <a class="dropdown-item" href="<?php echo base_url('/terms-and-conditions') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i><b> My Terms and Conditions </b>
-                        </a>
                         <a class="dropdown-item" href="<?php echo base_url('/settings/email_templates') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> Settings </b>
                         </a>

@@ -350,18 +350,6 @@
         padding-left: 50px;
         float: left;
     }
-
-    .pencil {
-        background: url('https://app.creditrepaircloud.com/application/images/pencil_big.png') center no-repeat;
-        width: 400px;
-        height: 150px;
-        float: left;
-        margin-right: 10px;
-        cursor: pointer;
-        overflow: auto;
-        font-size: 13px;
-    }
-
     .invoice {
         background-image: url('https://app.creditrepaircloud.com/application/images/invoice_new.png');
         width: 480px;

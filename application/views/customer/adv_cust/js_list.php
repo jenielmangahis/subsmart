@@ -266,6 +266,36 @@
             $('[id="ls_id"]').val(ID);
         });
 
+        $("#save_memo").on( "click", function( event ) {
+            var note = $('#memo_txt').val();
+            $.ajax({
+                type: "POST",
+                url: "/customer/update_customer_profile",
+                data: { notes : note , id : <?= $this->uri->segment(4); ?> }, // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        //$('#momo_edit_btn').text("");
+                        $('#momo_edit_btn').text(note);
+                       // $('#memo_txt').text(note);
+                        document.getElementById('memo_input_div').style.display = "none";
+                        document.getElementById('momo_edit_btn').style.display = "block";
+                    }else {
+                        console.log(data);
+                    }
+                }
+            });
+        });
+
+        $("#momo_edit_btn").on( "click", function( event ) {
+            document.getElementById('memo_input_div').style.display = "block";
+            document.getElementById('momo_edit_btn').style.display = "none";
+        });
+
+        $("#memo_cancel").on( "click", function( event ) {
+            document.getElementById('memo_input_div').style.display = "none";
+            document.getElementById('momo_edit_btn').style.display = "block";
+        });
 
         $("#add_ls").on( "click", function( event ) {
             $('#leadSourceForm')[0].reset();
