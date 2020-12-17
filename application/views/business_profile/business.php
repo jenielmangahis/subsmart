@@ -1,5 +1,7 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); 
+error_reporting(0);
+?>
 <style>
 .list-availability li{
 	margin-top: 10px;
