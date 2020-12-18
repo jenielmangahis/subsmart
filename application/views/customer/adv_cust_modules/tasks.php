@@ -20,7 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <table class="table_all" width="100%" border="1" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td colspan="4" width="100%">
-                                        <strong style="vertical-align: super;">Due Today</strong>
+                                        <strong style="vertical-align: super;"></strong>
                                     </td>
                                 </tr>
                                 <tbody>

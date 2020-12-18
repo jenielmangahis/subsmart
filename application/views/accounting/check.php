@@ -1377,7 +1377,172 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- End Preview Popup -->
 
+    <!-- Print popup -->
+    <div id="overlay-print-tx" class=""></div>
+    <div id="side-menu-print-tx" class="main-side-nav" style="background-color: #f4f5f8">
+        <div class="side-title print_disnone">
+            <h4>Print Checks</h4>
+            <a id="close-menu-print-tx" class="menuCloseButton" onclick="closePrintNav()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        <div style="margin-left: 20px;">
+            <div class="row print_disnone">
+                <div class="col-md-3">
+                    <select class="form-control" id="account_printpopup" disabled>
+                        <?php
+                           $i=1;
+                           foreach($this->chart_of_accounts_model->select() as $row)
+                           {
+                            ?>
+                            <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                            <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                          <?php
+                          $i++;
+                          }
+                           ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <h6>Balance:0.00</h6>
+                </div>
+                <div class="col-md-4">
+                    <h6 id="check_count">1 Checks selected</h6><div id="check_amount">$0.00</div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-2">
+                    <button type="button" class="form-control" onclick="addnewCheck()">Add checks</button>
+                </div>
+            </div>
+            <div class="row print_disnone">
+                <div class="col-md-2">
+                    <!-- <button type="button" class="form-control">Remove from list</button> -->
+                </div>
+                <div class="col-md-2">
+                   <!--  <select name="sort_print" class="form-control">
+                        <option>Sort by Payee</option>
+                        <option>Sort by Order created</option>
+                        <option>Sort by Date/ Payee</option>
+                        <option selected>Sort by Date/ Order created</option>
+                    </select> -->
+                </div>
+                <div class="col-md-2">
+                    <!-- <select name="showall_print" class="form-control">
+                        <option>Show all checks</option>
+                        <option>Show regular checks</option>
+                        <option>Show bill payment checks</option>
+                    </select> -->
+                </div>
+                <div class="col-md-2">
+                    <label>Starting check no.</label>
+                    <input type="text" name="starting_check_no" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label>On first page print</label>
+                    <select name="checks_print" class="form-control">
+                        <option>1 checks</option>
+                        <option>2 checks</option>
+                        <option>3 checks</option>
+                    </select>
+                </div>
+                 <div class="col-md-2">
+                    <i class="fa fa-print" onclick="window.print()"></i>
+                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        Columns<br/>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_date_print()" name="chk_date_print" id="chk_date_print"> Date</p>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_type_print()" name="chk_type_print" id="chk_type_print"> Type</p>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_payee_print()" name="chk_payee_print" id="chk_payee_print"> Payee Type</p>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_amount_print()" name="chk_amount_print" id="chk_amount_print"> Amount</p>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="row print_disnone">
+                <section class="table-wrapper">
+                    <div class="container">
+                        <table class="table" id="print_table">
+                            <thead>
+                                <tr>
+                                   <th></th>
+                                   <th class="date_print">Date</th>
+                                   <th class="type_print">Type</th>
+                                   <th class="payee_print">Payee</th>
+                                   <th class="amount_print">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" checked name="print_service_charge_checkbox" id="print_service_charge_checkbox" onclick="Changecheck()"></td>
+                                    <td class="date_print"></td>
+                                    <td class="type_print">Check</td>
+                                    <td class="payee_print"></td>
+                                    <td class="amount_print">
+                                        $<div id="print_service_charge">0.00</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div style="display: none;" class="print_disshow">
+                <?php
+                function AmountInWords(float $amount)
+                {
+                   $amount_after_decimal = round($amount - ($num = floor($amount)), 2) * 100;
+                   // Check if there is any number after decimal
+                   $amt_hundred = null;
+                   $count_length = strlen($num);
+                   $x = 0;
+                   $string = array();
+                   $change_words = array(0 => '', 1 => 'One', 2 => 'Two',
+                     3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six',
+                     7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
+                     10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve',
+                     13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
+                     16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen',
+                     19 => 'Nineteen', 20 => 'Twenty', 30 => 'Thirty',
+                     40 => 'Forty', 50 => 'Fifty', 60 => 'Sixty',
+                     70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety');
+                    $here_digits = array('', 'Hundred','Thousand','Lakh', 'Crore');
+                    while( $x < $count_length ) {
+                      $get_divider = ($x == 2) ? 10 : 100;
+                      $amount = floor($num % $get_divider);
+                      $num = floor($num / $get_divider);
+                      $x += $get_divider == 10 ? 1 : 2;
+                      if ($amount) {
+                       $add_plural = (($counter = count($string)) && $amount > 9) ? 's' : null;
+                       $amt_hundred = ($counter == 1 && $string[0]) ? ' and ' : null;
+                       $string [] = ($amount < 21) ? $change_words[$amount].' '. $here_digits[$counter]. $add_plural.' 
+                       '.$amt_hundred:$change_words[floor($amount / 10) * 10].' '.$change_words[$amount % 10]. ' 
+                       '.$here_digits[$counter].$add_plural.' '.$amt_hundred;
+                        }
+                   else $string[] = null;
+                   }
+                   $implode_to_Rupees = implode('', array_reverse($string));
+                   $get_paise = ($amount_after_decimal > 0) ? "And " . ($change_words[$amount_after_decimal / 10] . " 
+                   " . $change_words[$amount_after_decimal % 10]) . ' Paise' : '';
+                   return ($implode_to_Rupees ? $implode_to_Rupees . 'Rupees ' : '') . $get_paise;
+                }
+                ?>
+                <p>
+                    <?=$rows[0]->first_date?><br>
+                    **<?=number_format($rows[0]->service_charge,2)?><br>
+                    <?php echo AmountInWords(number_format($rows[0]->service_charge,2));?> <br>*********************************************************************************************
+                    Service Charge edit
+                </p>
+            </div>
+        </div>
     
+
+        <div class="save-act print_disnone" style="position: unset !important;">
+            <button type="button" class="btn-cmn" onclick="closePrintNav()">Cancel</button>
+            <button type="button" class="savebtn" onclick="window.print()">Preview and print</button>
+        </div>
+    </div>
+    <!-- End Print popup -->
 
 <?php include viewPath('includes/footer_accounting'); ?>
 <script type="text/javascript">
@@ -2230,4 +2395,90 @@ function closeRecurr()
             $('#recurr_descp_'+i).attr('type','hidden');
         }
     }
+</script>
+<script type="text/javascript">
+function openPrintNav()
+{
+    jQuery("#side-menu-print-tx").addClass("open-side-nav");
+    jQuery("#side-menu-print-tx").css("width","100%");
+    jQuery("#side-menu-print-tx").css("overflow-y","auto");
+    jQuery("#side-menu-print-tx").css("overflow-x","hidden");
+    jQuery("#overlay-print-tx").addClass("overlay");
+}
+function closePrintNav() 
+{
+   
+    jQuery("#side-menu-print-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-print-tx").css("width","0%");
+    jQuery("#overlay-print-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
+    function col_date_print()
+    {
+        if($('#chk_date_print').attr('checked'))
+        {
+            $('#chk_date_print').removeAttr('checked');
+            $('.date_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_date_print').attr('checked',"checked");
+            $('.date_print').css('display','');
+        }
+    }
+    function col_type_print()
+    {
+        if($('#chk_type_print').attr('checked'))
+        {
+            $('#chk_type_print').removeAttr('checked');
+            $('.type_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_type_print').attr('checked',"checked");
+            $('.type_print').css('display','');
+        }
+    }
+    function col_payee_print()
+    {
+        if($('#chk_payee_print').attr('checked'))
+        {
+            $('#chk_payee_print').removeAttr('checked');
+            $('.payee_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_payee_print').attr('checked',"checked");
+            $('.payee_print').css('display','');
+        }
+    }
+    function col_amount_print()
+    {
+        if($('#chk_amount_print').attr('checked'))
+        {
+            $('#chk_amount_print').removeAttr('checked');
+            $('.amount_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_amount_print').attr('checked',"checked");
+            $('.amount_print').css('display','');
+        }
+    }
+</script>
+<script type="text/javascript">
+    $('#print_table').DataTable();
+</script>
+<script type="text/javascript">
+function addnewCheck()
+{
+    closePrintNav();
+    closeCheck();
+    addCheck();
+}
 </script>

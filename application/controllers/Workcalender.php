@@ -1162,8 +1162,6 @@ class Workcalender extends MY_Controller
             if( $google_user_api ){
                 $google_credentials = google_credentials();        
 
-                $google_credentials = google_credentials();        
-
                 $access_token = "";
                 $refresh_token = "";
                 $google_client_id = "";
@@ -1375,7 +1373,7 @@ class Workcalender extends MY_Controller
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
         if( $settings[0] ){              
-            date_default_timezone_set($settings_data['calendar_timezone']);
+            date_default_timezone_set($settings['calendar_timezone']);
         }
 
         $company_id = logged('company_id');
@@ -1584,13 +1582,6 @@ class Workcalender extends MY_Controller
 
             //Request
             $service = new Google_Service_Calendar($client);
-            $calendarId = 'cv9aasvno50j35ci34sktumlbs1@group.calendar.google.com';            
-            $calendarListEntry = $service->calendarList->get($calendarId);            
-            echo $calendarListEntry->getSummary();exit;
-            echo "<pre>";
-            print_r($calendarListEntry);
-            exit;
-
             $calendars = $service->calendarList->listCalendarList();
             $calendar_name = $this->GoogleAccounts_model->getDefaultAutoSyncCalendarName();
             $is_exists = false;

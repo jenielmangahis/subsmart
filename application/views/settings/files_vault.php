@@ -8,6 +8,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .cell-inactive{
     background-color: #d9534f;
 }
+.hide{
+    display: none;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/setting'); ?>

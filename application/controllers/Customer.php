@@ -830,6 +830,27 @@ class Customer extends MY_Controller
 //                                    $updateCount++;
 //                                }
                                 } else {
+                                    $cs2 = $row['CreditScore2'];
+                                    $score2 = 0;
+                                    switch ($cs2){
+                                        case 'A':
+                                            $score2 = 700;
+                                            break;
+                                        case 'B':
+                                            $score2 = 650;
+                                            break;
+                                        case 'C':
+                                            $score2 = 625;
+                                            break;
+                                        case 'D':
+                                            $score2 = 600;
+                                            break;
+                                        case 'F':
+                                            $score2 = 599;
+                                            break;
+                                        default:
+                                            $score2 = 0;
+                                    }
                                     //$insert = $this->customer_ad_model->insert($itemData);
                                     $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
                                     if ($fk_prod_id) {
@@ -850,6 +871,7 @@ class Customer extends MY_Controller
                                             'sales_date' => $row['SaleDate'],
                                             'fk_sales_rep_office' => 1,//$row['SalesRep'],
                                             'technician' => $row['Technician'],
+                                            'credit_score' => $score2,
                                         );
 
                                         $input_billing = array(
@@ -972,10 +994,15 @@ class Customer extends MY_Controller
             $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
             if(!empty($get_id)){
                 $userid =  $get_id[0]->prof_id;
+            }else{
+                $userid = 0;
             }
         }else{
             $this->qrcodeGenerator($userid);
         }
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $userid;
 
         //$this->session->set_userdata('customer_data_session', 233);
         //$this->session->unset_userdata('customer_data_session');

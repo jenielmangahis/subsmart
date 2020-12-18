@@ -271,7 +271,7 @@
             $.ajax({
                 type: "POST",
                 url: "/customer/update_customer_profile",
-                data: { notes : note , id : <?= $this->uri->segment(4); ?> }, // serializes the form's elements.
+                data: { notes : note , id : <?= isset($customer_profile_id) ? $customer_profile_id : 0; ?> }, // serializes the form's elements.
                 success: function(data)
                 {
                     if(data === "Success"){
