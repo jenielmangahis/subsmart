@@ -629,7 +629,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove_recurr"><i class="fa fa-trash"></i></a></td>
                             </tr>
-
                         </tbody>
                     </table>
 
