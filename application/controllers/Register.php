@@ -16,6 +16,9 @@ class Register extends MY_Controller {
         // Load Paypal SDK
         include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
 
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe-php/init.php';        
+
 		$this->page_data['page']->title = 'nSmart - Registration';
 	}
 
@@ -75,6 +78,7 @@ class Register extends MY_Controller {
 
                 	$this->Clients_model->update($cid, array(
 		        		'is_plan_active' => 1,
+                        'is_startup' => 1,
                         'plan_date_registered' => date("Y-m-d H:i:s")
 		    		));
 
@@ -110,7 +114,7 @@ class Register extends MY_Controller {
 		$ns_plans = $this->NsmartPlan_model->getAll();      
 
 
-        $ip_address = ip_address();
+        $ip_address = getValidIpAddress();
         $ip_adds = $this->Clients_model->getByIPAddress($ip_address);
         
         $ip_count = 0;
@@ -159,7 +163,7 @@ class Register extends MY_Controller {
         if(!empty($post)) {
             $aemail = $post['a_email'];
             $abname = $post['a_bname'];
-            $client_ip_address = ip_address();
+            $client_ip_address = getValidIpAddress();
 
             $edata = $this->Clients_model->getByEmail($aemail); 
             $edata_business = $this->Clients_model->getByBusinessName($abname); 
@@ -204,7 +208,7 @@ class Register extends MY_Controller {
         if(!empty($post)) {
             $aemail = $post['a_email'];
             $abname = $post['a_bname'];
-            $client_ip_address = ip_address();
+            $client_ip_address = getValidIpAddress();
 
             $edata = $this->Clients_model->getByEmail($aemail); 
             $edata_business = $this->Clients_model->getByBusinessName($abname); 
@@ -255,6 +259,10 @@ class Register extends MY_Controller {
         postAllowed();
         $post = $this->input->post(); 
 
+        echo "<pre>";
+        print_r($post);
+        exit;
+
         $cid = $this->Clients_model->create([
             'first_name' => $post['firstname'],
             'last_name'  => $post['lastname'],
@@ -265,7 +273,7 @@ class Register extends MY_Controller {
             'number_of_employee' => $post['number_of_employee'],
             'industry_type_id' => $post['industry_type_id'],
             'password' => $post['password'],
-            'ip_address' => ip_address(),
+            'ip_address' => getValidIpAddress(),
             'date_created'  => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s"),
             'is_trial' => 0
@@ -290,12 +298,16 @@ class Register extends MY_Controller {
         $subscription_price_discounted = $post['plan_price_discounted'];
         $subscription_type  = $post['subscription_type'];
 
-        //Add custom data such as item/subscription id etc.
-        //$userID = 123456;        
+        if( isset($post['stripeToken']) ){
+            //Stripe
 
-        /*
-         * Paypal Process Here - Start
-        */
+        }else{
+           //Add custom data such as item/subscription id etc.
+            //$userID = 123456;        
+
+            /*
+             * Paypal Process Here - Start
+            */
 
             $client_id     = paypal_credential('client_id');
             $client_secret = paypal_credential('client_secret');           
@@ -440,7 +452,9 @@ class Register extends MY_Controller {
                 var_dump($ex);
                 exit();
 
-            }
+            } 
+        }
+        
 
             $this->Clients_model->update($cid, array(
     			'paypal_plan_id' => $plan_id,
@@ -481,12 +495,13 @@ class Register extends MY_Controller {
                 'number_of_employee' => $post['number_of_employee'],
                 'industry_type_id' => $post['industry_type_id'],
                 'password' => $post['password'],
-                'ip_address' => ip_address(),
+                'ip_address' => getValidIpAddress(),
                 'date_created'  => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
                 'nsmart_plan_id' => $post['plan_id'],
-                'is_trial' => 1
+                'is_trial' => 1,
+                'is_startup' => 1
             ]);
 
             $uid = $this->users_model->create([

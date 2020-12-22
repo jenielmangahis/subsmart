@@ -9,6 +9,7 @@ class Esign extends MY_Controller {
         parent::__construct();
 		$this->checkLogin();
 		$this->load->model('Esign_model', 'Esign_model');
+		$this->load->model('Activity_model', 'activity');
 		add_css(array( 
             'assets/textEditor/summernote-bs4.css',
         ));
@@ -229,7 +230,11 @@ class Esign extends MY_Controller {
 		if(!$isUpdated){
 			$result['status'] = false;
 		}
-		echo json_encode($result);
+		$activity['activityName'] = "Template Deleted";
+		$activity['activity'] = "Tenplate ID : ".$id." Deleted By User ".logged('username');
+		$activity['user_id'] = logged('id');
+		$this->activity->addEsignActivity($activity);
+	 	echo json_encode($result);
 		return true;
 	}
 	public function getCategories($libraryId){
@@ -281,6 +286,10 @@ class Esign extends MY_Controller {
 		if($isInserted){
 			$result['status'] = true;
 		}
+		$activity['activityName'] = "Category Created";
+		$activity['activity'] = "Category ".$dataToInsert['categoryName']." Created By User ".logged('username');
+		$activity['user_id'] = logged('id');
+		$this->activity->addEsignActivity($activity);
 	 	echo json_encode($result);
 	}
 	
@@ -294,6 +303,10 @@ class Esign extends MY_Controller {
 		if($isInserted){
 			$result['status'] = true;
 		}
+		$activity['activityName'] = "Library Created";
+		$activity['activity'] = "Library ".$dataToInsert['libraryName']." Created By User ".logged('username');
+		$activity['user_id'] = logged('id');
+		$this->activity->addEsignActivity($activity);
 	 	echo json_encode($result);
 	}
 
@@ -319,6 +332,10 @@ class Esign extends MY_Controller {
 		if(!$isUpdated){
 			$result['status'] = false;
 		}
+		$activity['activityName'] = "Category Deleted";
+		$activity['activity'] = "Category ID : ".$id." Deleted By User ".logged('username');
+		$activity['user_id'] = logged('id');
+		$this->activity->addEsignActivity($activity);
 		echo json_encode($result);
 		return true;
 	}
@@ -332,6 +349,10 @@ class Esign extends MY_Controller {
 		if(!$isUpdated){
 			$result['status'] = false;
 		}
+		$activity['activityName'] = "Library Deleted";
+		$activity['activity'] = "Library ID : ".$id." Deleted By User ".logged('username');
+		$activity['user_id'] = logged('id');
+		$this->activity->addEsignActivity($activity);
 		echo json_encode($result);
 		return true;
 	}
@@ -347,6 +368,10 @@ class Esign extends MY_Controller {
 		if(!$isUpdated){
 			$result['status'] = false;
 		}
+		$activity['activityName'] = "Library Updated";
+		$activity['activity'] = "Library ID : ".$pk_esignLibraryMaster." Updated By User ".logged('username');
+		$activity['user_id'] = logged('id');
+		$this->activity->addEsignActivity($activity);
 		echo json_encode($result);
 		return true;
 	}
@@ -363,6 +388,11 @@ class Esign extends MY_Controller {
 		if(!$isUpdated){
 			$result['status'] = false;
 		}
+		$activity['activityName'] = "Update Updated";
+		$activity['activity'] = "Category ID : ".$categoryId." Updated By User ".logged('username');
+		$activity['user_id'] = logged('id');
+		$this->activity->addEsignActivity($activity);
+		
 		echo json_encode($result);
 		return true;
 	}
@@ -406,8 +436,12 @@ class Esign extends MY_Controller {
 			'category_id' => $category_id
 		];
 		if(isset($esignLibraryTemplateId) && $esignLibraryTemplateId > 0 ){
-			$this->db->where('user_id' , logged('id'))->where('esignLibraryTemplateId' , $esignLibraryTemplateId);
+			$this->db->where('user_id' , $loggedInUser)->where('esignLibraryTemplateId' , $esignLibraryTemplateId);
 			$isUpdated = $this->db->update('esign_library_template',$data);
+			$activity['activityName'] = "Template Updated";
+			$activity['activity'] = "Template Id : ".$esignLibraryTemplateId." Updated By User ".logged('username');
+			$activity['user_id'] = $loggedInUser;
+			$this->activity->addEsignActivity($activity);
 			if($isUpdated){
 				redirect('esign/editTemplate?id='.$esignLibraryTemplateId.'&isSuccess=1');
 			}else{
@@ -417,6 +451,10 @@ class Esign extends MY_Controller {
 			$isInserted = $this->db->insert('esign_library_template',$data);
 			if($isInserted){
 				$libraryId = $this->db->insert_id();
+				$activity['activityName'] = "Template Created";
+				$activity['activity'] = "Template Id : ".$libraryId." Created By User ".logged('username');
+				$activity['user_id'] = $loggedInUser;
+				$this->activity->addEsignActivity($activity);
 				redirect('esign/editTemplate?id='.$libraryId.'&isSuccess=1');
 			}else{
 				redirect('esign/esignmain');

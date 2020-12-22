@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Activity_model extends MY_Model {
 
 	public $table = 'activity_logs';
+	public $esign_table = 'esign_activity';
 
 	public function __construct()
 	{
@@ -18,7 +19,11 @@ class Activity_model extends MY_Model {
 			'ip_address' => !empty($ip_address) ? $ip_address : ip_address()
 		]);
 	}
-
+	
+	public function addEsignActivity($data){
+		return $this->db->insert($this->esign_table, $data); 	
+	}
+	
 }
 
 /* End of file Activity_model.php */
