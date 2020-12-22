@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header'); ?>
+<script src="https://js.stripe.com/v3/"></script>
 <style>
 	.steps-form {
 	    display: table;
@@ -128,6 +129,72 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	      width: 100%;
 	      margin-bottom: 40px;
 	  }
+	}
+	.payment-method{
+		padding: 0px;
+		list-style: none;
+	}
+	.payment-method li{
+		margin-bottom: 10px;
+	}
+	.payment-method li input{
+		margin-right: 10px;
+	}
+
+	/**
+	 * The CSS shown here will not be introduced in the Quickstart guide, but shows
+	 * how you can use CSS to style your Element's container.
+	 */
+	.StripeElement {
+	  box-sizing: border-box;
+
+	  height: 40px;
+
+	  padding: 10px 12px;
+
+	  border: 1px solid transparent;
+	  border-radius: 4px;
+	  background-color: white;
+
+	  box-shadow: 0 1px 3px 0 #e6ebf1;
+	  -webkit-transition: box-shadow 150ms ease;
+	  transition: box-shadow 150ms ease;
+	}
+
+	.StripeElement--focus {
+	  box-shadow: 0 1px 3px 0 #cfd7df;
+	}
+
+	.StripeElement--invalid {
+	  border-color: #fa755a;
+	}
+
+	.StripeElement--webkit-autofill {
+	  background-color: #fefde5 !important;
+	}
+	.stripe-btn{
+		border: none;
+	    border-radius: 4px;
+	    outline: none;
+	    text-decoration: none;
+	    color: #fff;
+	    background: #32325d;
+	    white-space: nowrap;
+	    display: inline-block;
+	    height: 40px;
+	    line-height: 40px;
+	    padding: 0 14px;
+	    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+	    border-radius: 4px;
+	    font-size: 15px;
+	    font-weight: 600;
+	    letter-spacing: 0.025em;
+	    text-decoration: none;
+	    -webkit-transition: all 150ms ease;
+	    transition: all 150ms ease;
+	    float: left;
+	    margin-left: 12px;
+	    margin-top: 28px;
 	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
@@ -337,7 +404,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
 								          	<hr />
 								          	<p><b>Payment Method</b></p>
-								          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+								          	<ul class="payment-method">
+								          		<li>
+								          			<input type="radio" id="paypal" name="payment_method" value="paypal">
+								          			<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+								          		</li>
+								          		<li>
+								          			<input type="radio" id="stripe" name="payment_method" value="stripe">
+								          			<img src="<?php echo $url->assets ?>img/stripe-logo.png" alt="" style="height: 62px;">
+								          		</li>
+								          	</ul>	
 								          	<hr />
 								          	<!-- Grid row -->
 											  <div class="form-row align-items-center" style="margin-top: 30px;">
@@ -367,6 +443,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
 								          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
 								        </div>
+							      	</div>
+
+							      	<div class="stripe-form" style="display: none;">
+							      		<div class="col-md-12">
+							      			<h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Stripe Payment Method</strong></h3>
+									          <div class="payment-method" style="display: block;margin-bottom: 16px;">
+									          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
+									          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
+									          	<hr />
+									          </div>
+											  <div id="card-element"></div>											  
+											  <div id="card-errors" role="alert"></div>
+											  <button class="stripe-btn">Submit Payment</button>`
+							      		</div>
 							      	</div>
 
 							      	<!-- 4th Step -->
@@ -589,8 +679,15 @@ $(function(){
 
     });
 
-    step3bBtnPrcPayment.click(function(){
-    	$( "#subscribe-form-payment" ).submit();
+    step3bBtnPrcPayment.click(function(e){
+    	e.preventDefault();
+    	var payment_method = $('input[name="payment_method"]:checked').val();    	    	
+    	if( payment_method == 'paypal' ){
+    		$( "#subscribe-form-payment" ).submit();
+    	}else{
+    		$("#step-3").hide();
+    		$(".stripe-form").show();
+    	}
    	});
 
     $('div.setup-panel div a.btn-indigo').trigger('click');
@@ -648,5 +745,77 @@ $(function(){
 	        });
 	    }, 500);  
     });
+
+
+    // Create a Stripe client.
+	var stripe = Stripe('pk_test_51Hzgs3IDqnMOqOtpSskepkfFhP2rFNJ0wTtuKB6Ye6wJA75uHL5rMOi7JwWajcag33ScyPywLTKMGNbgdsPxVJiG00kZxZnPNu');
+
+	// Create an instance of Elements.
+	var elements = stripe.elements();
+
+	// Custom styling can be passed to options when creating an Element.
+	// (Note that this demo uses a wider set of styles than the guide below.)
+	var style = {
+	  base: {
+	    color: '#32325d',
+	    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+	    fontSmoothing: 'antialiased',
+	    fontSize: '16px',
+	    '::placeholder': {
+	      color: '#aab7c4'
+	    }
+	  },
+	  invalid: {
+	    color: '#fa755a',
+	    iconColor: '#fa755a'
+	  }
+	};
+
+	// Create an instance of the card Element.
+	var card = elements.create('card', {style: style});
+
+	// Add an instance of the card Element into the `card-element` <div>.
+	card.mount('#card-element');
+
+	// Handle real-time validation errors from the card Element.
+	card.on('change', function(event) {
+	  var displayError = document.getElementById('card-errors');
+	  if (event.error) {
+	    displayError.textContent = event.error.message;
+	  } else {
+	    displayError.textContent = '';
+	  }
+	});
+
+	// Handle form submission.
+	var form = document.getElementById('subscribe-form-payment');
+	form.addEventListener('submit', function(event) {
+	  event.preventDefault();
+
+	  stripe.createToken(card).then(function(result) {
+	    if (result.error) {
+	      // Inform the user if there was an error.
+	      var errorElement = document.getElementById('card-errors');
+	      errorElement.textContent = result.error.message;
+	    } else {
+	      // Send the token to your server.
+	      stripeTokenHandler(result.token);
+	    }
+	  });
+	});
+
+	// Submit the form with the token ID.
+	function stripeTokenHandler(token) {
+	  // Insert the token ID into the form so it gets submitted to the server
+	  var form = document.getElementById('subscribe-form-payment');
+	  var hiddenInput = document.createElement('input');
+	  hiddenInput.setAttribute('type', 'hidden');
+	  hiddenInput.setAttribute('name', 'stripeToken');
+	  hiddenInput.setAttribute('value', token.id);
+	  form.appendChild(hiddenInput);
+
+	  // Submit the form
+	  form.submit();
+	}
 });
 </script>

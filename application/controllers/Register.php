@@ -16,6 +16,9 @@ class Register extends MY_Controller {
         // Load Paypal SDK
         include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
 
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe-php/init.php';        
+
 		$this->page_data['page']->title = 'nSmart - Registration';
 	}
 
@@ -256,6 +259,10 @@ class Register extends MY_Controller {
         postAllowed();
         $post = $this->input->post(); 
 
+        echo "<pre>";
+        print_r($post);
+        exit;
+
         $cid = $this->Clients_model->create([
             'first_name' => $post['firstname'],
             'last_name'  => $post['lastname'],
@@ -291,12 +298,16 @@ class Register extends MY_Controller {
         $subscription_price_discounted = $post['plan_price_discounted'];
         $subscription_type  = $post['subscription_type'];
 
-        //Add custom data such as item/subscription id etc.
-        //$userID = 123456;        
+        if( isset($post['stripeToken']) ){
+            //Stripe
 
-        /*
-         * Paypal Process Here - Start
-        */
+        }else{
+           //Add custom data such as item/subscription id etc.
+            //$userID = 123456;        
+
+            /*
+             * Paypal Process Here - Start
+            */
 
             $client_id     = paypal_credential('client_id');
             $client_secret = paypal_credential('client_secret');           
@@ -441,7 +452,9 @@ class Register extends MY_Controller {
                 var_dump($ex);
                 exit();
 
-            }
+            } 
+        }
+        
 
             $this->Clients_model->update($cid, array(
     			'paypal_plan_id' => $plan_id,

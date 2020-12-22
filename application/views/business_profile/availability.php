@@ -33,10 +33,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="weekday_0"><span>Monday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="monHoursFromAvail" value="<?= $data_working_days['Monday']['time_from']; ?>" placeholder="Start Time" id="monHoursFromAvail" class="form-control">
+                                    <input type="text" name="monHoursFromAvail" value="<?= $data_working_days['Monday']['time_from']; ?>" placeholder="Start Time" id="mondayHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="monHoursToAvail" value="<?= $data_working_days['Monday']['time_to']; ?>" placeholder="End Time" id="monHoursToAvail" class="form-control">
+                                    <input type="text" name="monHoursToAvail" value="<?= $data_working_days['Monday']['time_to']; ?>" placeholder="End Time" id="mondayHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -45,10 +45,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="weekday_1"><span>Tuesday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="tueHoursFromAvail" value="<?= $data_working_days['Tuesday']['time_from']; ?>" placeholder="Start Time" id="tueHoursFromAvail" class="form-control">
+                                    <input type="text" name="tueHoursFromAvail" value="<?= $data_working_days['Tuesday']['time_from']; ?>" placeholder="Start Time" id="tuesdayHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="tueHoursToAvail" value="<?= $data_working_days['Tuesday']['time_to']; ?>" placeholder="End Time" id="tueHoursToAvail" class="form-control">
+                                    <input type="text" name="tueHoursToAvail" value="<?= $data_working_days['Tuesday']['time_to']; ?>" placeholder="End Time" id="tuesdayHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -57,10 +57,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="weekday_2"><span>Wednesday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="wedHoursFromAvail" value="<?= $data_working_days['Wednesday']['time_from']; ?>" placeholder="Start Time" id="wedHoursFromAvail" class="form-control">
+                                    <input type="text" name="wedHoursFromAvail" value="<?= $data_working_days['Wednesday']['time_from']; ?>" placeholder="Start Time" id="wednesdayHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="wedHoursToAvail" value="<?= $data_working_days['Wednesday']['time_to']; ?>" placeholder="End Time" id="wedHoursToAvail" class="form-control">
+                                    <input type="text" name="wedHoursToAvail" value="<?= $data_working_days['Wednesday']['time_to']; ?>" placeholder="End Time" id="wednesdayHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -69,10 +69,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="weekday_3"><span>Thursday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="thuHoursFromAvail" value="<?= $data_working_days['Thursday']['time_from']; ?>" placeholder="Start Time" id="thuHoursFromAvail" class="form-control">
+                                    <input type="text" name="thuHoursFromAvail" value="<?= $data_working_days['Thursday']['time_from']; ?>" placeholder="Start Time" id="thursdayHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="thuHoursToAvail" value="<?= $data_working_days['Thursday']['time_to']; ?>" placeholder="End Time" id="thuHoursToAvail" class="form-control">
+                                    <input type="text" name="thuHoursToAvail" value="<?= $data_working_days['Thursday']['time_to']; ?>" placeholder="End Time" id="thursdayHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -81,10 +81,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="weekday_4"><span>Friday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="friHoursFromAvail" value="<?= $data_working_days['Friday']['time_from']; ?>" placeholder="Start Time" id="friHoursFromAvail" class="form-control">
+                                    <input type="text" name="friHoursFromAvail" value="<?= $data_working_days['Friday']['time_from']; ?>" placeholder="Start Time" id="fridayHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="friHoursToAvail" value="<?= $data_working_days['Friday']['time_to']; ?>" placeholder="End Time" id="friHoursToAvail" class="form-control">
+                                    <input type="text" name="friHoursToAvail" value="<?= $data_working_days['Friday']['time_to']; ?>" placeholder="End Time" id="fridayHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -93,10 +93,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="weekday_5"><span>Saturday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="satHoursFromAvail" value="<?= $data_working_days['Saturday']['time_from']; ?>" placeholder="Start Time" id="satHoursFromAvail" class="form-control">
+                                    <input type="text" name="satHoursFromAvail" value="<?= $data_working_days['Saturday']['time_from']; ?>" placeholder="Start Time" id="saturdayHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="satHoursToAvail" value="<?= $data_working_days['Saturday']['time_to']; ?>" placeholder="End Time" id="satHoursToAvail" class="form-control">
+                                    <input type="text" name="satHoursToAvail" value="<?= $data_working_days['Saturday']['time_to']; ?>" placeholder="End Time" id="saturdayHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -105,10 +105,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="weekday_6"><span>Sunday</span></label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="sunHoursFromAvail" value="<?= $data_working_days['Sunday']['time_from']; ?>" placeholder="Start Time" id="sunHoursFromAvail" class="form-control">
+                                    <input type="text" name="sunHoursFromAvail" value="<?= $data_working_days['Sunday']['time_from']; ?>" placeholder="Start Time" id="sundayHoursFromAvail" class="form-control">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="sunHoursToAvail" value="<?= $data_working_days['Sunday']['time_to']; ?>" placeholder="End Time" id="sunHoursToAvail" class="form-control">
+                                    <input type="text" name="sunHoursToAvail" value="<?= $data_working_days['Sunday']['time_to']; ?>" placeholder="End Time" id="sundayHoursToAvail" class="form-control">
                                 </div>
                             </div>
                             </div>
