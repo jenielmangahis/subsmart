@@ -17,7 +17,7 @@ class Register extends MY_Controller {
         include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
 
         // Stripe SDK
-        include APPPATH . 'libraries/stripe-php/init.php';        
+        //include APPPATH . 'libraries/stripe-php/init.php';        
 
 		$this->page_data['page']->title = 'nSmart - Registration';
 	}
@@ -254,14 +254,44 @@ class Register extends MY_Controller {
         echo json_encode($json_data);        
     }
 
+    function test_stripe(){
+        include APPPATH . 'libraries/stripe/init.php';    
+        \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");         
+        $plan = $this->NsmartPlan_model->getById(1);
+        if($plan->stripe_plan_id == ''){
+            //create new plan
+            $plan_name = strtolower($plan->plan_name);
+            $plan_name = str_replace(" ", "-", $plan_name);
+            $plan_id   = "test-" . $plan_name . "-" . $plan->id;
+            $plan = \Stripe\Plan::create(array(
+              "amount" => round($plan->price,2)*100,
+              "interval" => "month",
+              "product" => array(
+                "name" => $plan->plan_name
+              ),
+              "currency" => "usd",
+              "id" => $plan_id
+            ));
+            echo 5;
+            echo "<pre>";
+            print_r($plan);
+        }        
+        exit;
+        include APPPATH . 'libraries/stripe/init.php';    
+        $stripe = new \Stripe\StripeClient('sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY');
+        $customer = $stripe->customers->create([
+            'description' => 'bryann customer',
+            'email' => 'bryannrr@gmail.com',
+            'payment_method' => 'pm_card_visa',
+        ]);
+        print_r($customer);
+        exit;
+    }
+
     function subscribe(){
 
         postAllowed();
         $post = $this->input->post(); 
-
-        echo "<pre>";
-        print_r($post);
-        exit;
 
         $cid = $this->Clients_model->create([
             'first_name' => $post['firstname'],
@@ -300,9 +330,78 @@ class Register extends MY_Controller {
 
         if( isset($post['stripeToken']) ){
             //Stripe
+            include APPPATH . 'libraries/stripe-php/init.php';       
 
+            \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");      
+            $plan     = $this->NsmartPlan_model->getById($subscription_id);
+            $plan_id  = "test7-" . $plan_name . "-" . $plan->id;
+            if($plan->stripe_plan_id != ''){
+                $stripePlan = \Stripe\Plan::retrieve($plan->stripe_plan_id);
+                if( !$stripePlan ){
+                     //create new plan
+                    $plan_name = strtolower($plan->plan_name);
+                    $plan_name = str_replace(" ", "-", $plan_name);
+                    $stripePlan = \Stripe\Plan::create(array(
+                      "amount" => round($plan->price,2)*100,
+                      "interval" => "month",
+                      "product" => array(
+                        "name" => $plan->plan_name
+                      ),
+                      "currency" => "usd",
+                      "id" => $plan_id
+                    ));
+
+                    $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
+                        'stripe_plan_id' => $stripePlan->product
+                    ));
+                }
+            }else{
+                 //create new plan
+                $plan_name = strtolower($plan->plan_name);
+                $plan_name = str_replace(" ", "-", $plan_name);
+                
+                $stripePlan = \Stripe\Plan::create(array(
+                  "amount" => round($plan->price,2)*100,
+                  "interval" => "month",
+                  "product" => array(
+                    "name" => $plan->plan_name
+                  ),
+                  "currency" => "usd",
+                  "id" => $plan_id
+                ));
+
+                $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
+                    'stripe_plan_id' => $stripePlan->product
+                ));
+            }
+
+            $stripe = new \Stripe\StripeClient('sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY');
+            $customer = $stripe->customers->create([
+                'description' => $post['firstname'] . " " . $post['lastname'],
+                'email' => $post['email'],
+                'source' => $post['stripeToken'],
+            ]);
+
+            $subscription = \Stripe\Subscription::create(array(
+                'customer' => $customer->id,
+                'items' => array(array('plan' => $stripePlan->id)),
+            ));
+
+            $this->Clients_model->update($cid, array(
+                'paypal_plan_id' => $plan_id,
+                'nsmart_plan_id' => $post['plan_id'],
+                'stripe_token' => $post['stripeToken'],
+                'is_plan_active' => 1
+            ));
+
+            $this->users_model->update($uid, array('status' => 1));
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
+
+            redirect('login');
         }else{
-           //Add custom data such as item/subscription id etc.
+            //Add custom data such as item/subscription id etc.
             //$userID = 123456;        
 
             /*
@@ -453,24 +552,22 @@ class Register extends MY_Controller {
                 exit();
 
             } 
-        }
-        
 
             $this->Clients_model->update($cid, array(
-    			'paypal_plan_id' => $plan_id,
-        		'nsmart_plan_id' => $post['plan_id'],
-        		'is_plan_active' => 0
-    		));
+                'paypal_plan_id' => $plan_id,
+                'nsmart_plan_id' => $post['plan_id'],
+                'is_plan_active' => 0
+            ));
 
             $this->session->set_userdata('regiserUserId', $uid);
             $this->session->set_userdata('regiserClientId', $cid);
 
             header("Location:" . $approvalUrl);
 
-        /*
-         *  Paypal Process Here - End
-        */        
-        
+            /*
+             *  Paypal Process Here - End
+            */        
+        }
     }
 
     public function registration_use_code()
