@@ -15,6 +15,7 @@ class ReportsController: UIViewController {
     // MARK: - Properties -
     
     @IBOutlet var menuButtonItem: UIBarButtonItem!
+    @IBOutlet var homeButtonItem: UIBarButtonItem!
     @IBOutlet var chatButtonItem: UIBarButtonItem!
     @IBOutlet var inboxButtonItem: UIBarButtonItem!
     @IBOutlet var tableView: UITableView!
@@ -31,6 +32,15 @@ class ReportsController: UIViewController {
     let array10 = ["Sales Tax", "Non Taxable Sales"]
     
     let ids1 = ["sb_MonthlyCloseoutController", "sb_YearlyCloseoutController", "sb_ProfitLossController", "sb_SalesLeaderboardController"]
+    let ids2 = ["sb_PaymentByMethodController", "sb_PaymentByMonthController", "sb_PaymentByItemController", "sb_PaymentByMaterialItemController", "sb_PaymentByProductItemController", "sb_PaymentRepeatedByCustomerController", "sb_SalesDemographicsController"]
+    let ids3 = ["sb_AccountReceivableController", "sb_InvoiceByDateController", "sb_InvoiceAgingSummaryController"/*, "sb_AccountReceivableCommVsResController"*/]
+    let ids4 = ["sb_ExpensesByCategoryController", "sb_ExpensesByMonthByCategoryController", "sb_ExpensesByMonthByCustomerController", "sb_ExpensesByMonthByWorkOrderController", "sb_ExpensesByMonthByVendorController"]
+    let ids5 = ["sb_EstimatesByMonthController"]
+    let ids6 = ["sb_PaymentByCustomerController", "sb_PaymentByCustomerGroupController", "sb_PaymentByCustomerSourceController", "sb_CustomerTaxByMonthController", "sb_CustomerDemographicsController", "sb_CustomerBySourceController"]
+    let ids7 = ["sb_PayrollSummaryController", "sb_PayrollByEmployeeController", "sb_PayrollLogController", "sb_PercentSalesCommissionController"]
+    let ids8 = ["sb_TimesheetSummaryController", "sb_TimesheetEntriesController"]
+    let ids9 = ["sb_WorkOrderStatusController"]
+    let ids10 = ["sb_SalesTaxController", "sb_NonTaxableSalesController"]
     
     var titles: [[String]] = []
     var identifier: [[String]] = []
@@ -43,7 +53,7 @@ class ReportsController: UIViewController {
         initNavBar()
         
         titles = [array1, array2, array3, array4, array5, array6, array7, array8, array9, array10]
-        identifier = [ids1]
+        identifier = [ids1, ids2, ids3, ids4, ids5, ids6, ids7, ids8, ids9, ids10]
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -54,8 +64,8 @@ class ReportsController: UIViewController {
     
     func initNavBar() {
         // setup navBar icons
-        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars
-            , style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        homeButtonItem.image = UIImage.fontAwesomeIcon(name: .home, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         chatButtonItem.image = UIImage.fontAwesomeIcon(name: .comments, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         inboxButtonItem.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         
@@ -77,6 +87,11 @@ class ReportsController: UIViewController {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
     }
     
+    @IBAction func homeButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Home
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
     @IBAction func chatButtonTapped(_ sender: Any) {
         App.shared.selectedMenu = .Chat
         NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
@@ -87,24 +102,6 @@ class ReportsController: UIViewController {
         NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
     }
 
-}
-
-// MARK: - UISideMenuNavigationControllerDelegate -
-
-extension ReportsController: SideMenuNavigationControllerDelegate {
-    
-    func sideMenuWillAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuWillDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
 }
 
 // MARK: - TableView Datasource -
@@ -128,7 +125,7 @@ extension ReportsController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headers = ["Popular Reports", "Sales", "Receivables", "Expenses", "Estimates", "Customers", "Employees", "Timesheets", "Work Orders", "Taxes"]
-        return Utils.createHeader(AppTheme.defaultLightOpaque!, AppTheme.defaultColor, headers[section])
+        return Utils.createHeader(App.shared.headerBgColor, App.shared.headerColor, headers[section])
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -140,6 +137,6 @@ extension ReportsController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.pushTo(storyBoard: "Reports", identifier: "sb_PaymentByMonthController")
+        self.pushTo(storyBoard: "Reports", identifier: identifier[indexPath.section][indexPath.row])
     }
 }

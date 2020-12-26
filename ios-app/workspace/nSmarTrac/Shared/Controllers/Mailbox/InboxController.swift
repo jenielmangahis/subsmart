@@ -53,7 +53,7 @@ class InboxController: UIViewController {
     // MARK: - Search View -
     
     func initSearchView() {
-        searchView.backgroundColor = .groupTableViewBackground
+        searchView.backgroundColor = .systemGroupedBackground
         searchView.isHidden = false
         tableTop.constant = 0.0
         
@@ -196,7 +196,7 @@ extension InboxController: FloatyDelegate, UIGestureRecognizerDelegate {
         // init
         floaty.fabDelegate  = self
         floaty.sticky       = true
-        floaty.buttonColor  = AppTheme.defaultColor
+        floaty.buttonColor  = .greenColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .edit, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         
         // add action
@@ -209,6 +209,7 @@ extension InboxController: FloatyDelegate, UIGestureRecognizerDelegate {
     
     // new mail action
     @objc func handleNewMailButton(_ gestureRecognizer: UITapGestureRecognizer) {
-        
+        let viewController = self.storyboard?.instantiateViewController(withIdentifier: "sb_ComposeController")
+        self.present(viewController!, animated: true, completion: nil)
     }
 }

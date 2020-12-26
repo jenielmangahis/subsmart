@@ -143,21 +143,15 @@ open class BaseMaterialFormController: VerticalStackController {
         validFields.value.removeAll()
         
         requiredFields.forEach({ (field) in
-            field.rx.text
-                .asObservable()
-                .debounce(0.3, scheduler: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] (text) in
-                    guard let s = self else { return }
-                    
-                    // Usually, when a field is initially empty and the user hasn't attempted to edit
-                    // them yet, we also want to avoid displaying validity issues.
-                    if field.editAttempts == 0 && field.isEmpty {
-                        return
-                    }
-                    
-                    s.validateField(field)
-                })
-                .disposed(by: fieldValidityDetectorDisposeBag)
+            field.rx.text.subscribe(onNext:{ text in
+                // Usually, when a field is initially empty and the user hasn't attempted to edit
+                // them yet, we also want to avoid displaying validity issues.
+                if field.editAttempts == 0 && field.isEmpty {
+                    return
+                }
+                
+                self.validateField(field)
+            }).disposed(by: fieldValidityDetectorDisposeBag)
         })
         
         validFields

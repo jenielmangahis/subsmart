@@ -13,7 +13,7 @@ import RxCocoa
 
 open class MaterialTextField: TextField, MaterialFormFieldToolbarNavigable {
     
-    fileprivate var formActiveColor = AppTheme.defaultColor
+    fileprivate var formActiveColor = (App.shared.appearance == "Dark") ? UIColor.white : UIColor.black
     fileprivate var formFont = UIFont.robotoFont(ofSize: 13)
     
     open var editAttempts: Int = 0
@@ -49,12 +49,13 @@ open class MaterialTextField: TextField, MaterialFormFieldToolbarNavigable {
     open func applyBaseConfiguration() {
         clearButtonMode = .whileEditing
         font = formFont
-        textColor = UIColor.black
+        textColor = (App.shared.appearance == "Dark") ? UIColor.white : UIColor.black
         placeholderActiveColor = formActiveColor
         dividerActiveColor = formActiveColor
         autocorrectionType = .no
         spellCheckingType = .no
         isClearIconButtonEnabled = true
+        clearIconButton?.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
         
         if Utils.isOSAtLeast11 {
             placeholderVerticalOffset = 8
@@ -216,11 +217,13 @@ extension Utils {
     
 }
 
-// MARK: - Custom Configurations
-extension TextField {
+// MARK: - Custom Configurations -
+
+extension MaterialTextField {
     
     func configure() {
-        let formActiveColor = AppTheme.defaultColor
+        let formActiveColor = (App.shared.appearance == "Dark") ? UIColor.lightText : UIColor.darkText
+        let formNormalColor = UIColor.lightGray
         let formFont = UIFont.robotoFont(ofSize: 13)
         
         self.isClearIconButtonEnabled = true
@@ -228,13 +231,44 @@ extension TextField {
         self.autocorrectionType = .no
         self.spellCheckingType = .no
         self.font = formFont
+        self.placeholderNormalColor = formNormalColor
+        self.placeholderActiveColor = formActiveColor
+        self.placeholderVerticalOffset = 8
+        self.dividerActiveColor = .clear //formActiveColor
+        self.dividerNormalColor = .clear //formNormalColor
+        self.autocapitalizationType = .none
+        self.textColor = UIColor.label
+    }
+    
+    func configureForLogin() {
+        let formActiveColor = (App.shared.appearance == "Dark") ? UIColor.lightText : UIColor.darkText
+        let formNormalColor = UIColor.lightGray
+        let formFont = UIFont.robotoFont(ofSize: 13)
+        
+        self.isClearIconButtonEnabled = true
+        self.clearIconButton?.tintColor = formActiveColor
+        self.autocorrectionType = .no
+        self.spellCheckingType = .no
+        self.font = formFont
+        self.placeholderNormalColor = formNormalColor
         self.placeholderActiveColor = formActiveColor
         self.placeholderVerticalOffset = 8
         self.dividerActiveColor = formActiveColor
+        self.dividerNormalColor = formNormalColor
         self.autocapitalizationType = .none
+        self.textColor = UIColor.label
+    }
+    
+    func configCurrency() {
+        let leftView = UIView(frame: CGRect(x: 0, y: 7, width: 33, height: 20))
+        leftView.backgroundColor = .clear
         
-        // add background color
-        self.backgroundColor                    = self.isEnabled ? .clear : UIColor(rgb: 0xE1E1E1)
-        //self.placeholderLabel.backgroundColor   = self.isEnabled ? .clear : UIColor(rgb: 0xE1E1E1)
+        let imageView = UIImageView(frame: CGRect(x: 13, y: 0, width: 20, height: 20))
+        imageView.image = UIImage.fontAwesomeIcon(name: .dollarSign, style: .regular, textColor: .lightGray, size: CGSize(width: 20, height: 20))
+        imageView.contentMode = .scaleAspectFit
+        leftView.addSubview(imageView)
+        
+        self.leftViewMode = .always
+        self.leftView = leftView
     }
 }

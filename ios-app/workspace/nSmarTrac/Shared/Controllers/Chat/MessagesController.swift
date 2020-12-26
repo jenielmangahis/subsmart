@@ -16,6 +16,7 @@ class MessagesController: UIViewController {
     // MARK: - Properties -
     
     @IBOutlet var menuButtonItem: UIBarButtonItem!
+    @IBOutlet var homeButtonItem: UIBarButtonItem!
     @IBOutlet var chatButtonItem: UIBarButtonItem!
     @IBOutlet var inboxButtonItem: UIBarButtonItem!
     @IBOutlet var searchView: UIView!
@@ -47,6 +48,7 @@ class MessagesController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.selectedIndexPath.removeAll()
+        self.parent?.title = "Messages"
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -57,13 +59,14 @@ class MessagesController: UIViewController {
     
     func initNavBar() {
         // setup navBar icons
-        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars
-            , style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        homeButtonItem.image = UIImage.fontAwesomeIcon(name: .home, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         chatButtonItem.image = UIImage.fontAwesomeIcon(name: .comments, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         inboxButtonItem.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         
         // setup SideMenu
-        SideMenuManager.default.leftMenuNavigationController = storyboard?.instantiateViewController(withIdentifier: "sb_SideMenu") as? SideMenuNavigationController
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        SideMenuManager.default.leftMenuNavigationController = storyboard.instantiateViewController(withIdentifier: "sb_SideMenu") as? SideMenuNavigationController
         SideMenuManager.default.rightMenuNavigationController = nil
         SideMenuManager.default.addPanGestureToPresent(toView: self.navigationController!.navigationBar)
         SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: self.navigationController!.view)
@@ -76,7 +79,7 @@ class MessagesController: UIViewController {
     // MARK: - Search View -
     
     func initSearchView() {
-        searchView.backgroundColor = .groupTableViewBackground
+        searchView.backgroundColor = .systemGroupedBackground
         searchView.isHidden = true
         tableTop.constant = -50.0
         
@@ -176,6 +179,11 @@ class MessagesController: UIViewController {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
     }
     
+    @IBAction func homeButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Home
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
     @IBAction func chatButtonTapped(_ sender: Any) {
         App.shared.selectedMenu = .Chat
         NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
@@ -186,24 +194,6 @@ class MessagesController: UIViewController {
         NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
     }
 
-}
-
-// MARK: - UISideMenuNavigationControllerDelegate -
-
-extension MessagesController: SideMenuNavigationControllerDelegate {
-    
-    func sideMenuWillAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuWillDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
 }
 
 // MARK: - TableView Datasource -
@@ -260,7 +250,7 @@ extension MessagesController: FloatyDelegate {
         // init
         floaty.fabDelegate  = self
         floaty.sticky       = true
-        floaty.buttonColor  = AppTheme.defaultColor
+        floaty.buttonColor  = .greenColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .plus, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         floaty.addItem("Search", icon: UIImage.fontAwesomeIcon(name: .search, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             self.searchView.isHidden = false
@@ -268,7 +258,7 @@ extension MessagesController: FloatyDelegate {
             self.floaty.close()
         })
         floaty.addItem("New Message", icon: UIImage.fontAwesomeIcon(name: .edit, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
-            self.pushTo(storyBoard: "Main", identifier: "sb_ChatController")
+            self.pushTo(storyBoard: "Others", identifier: "sb_ChatController")
             self.floaty.close()
         })
         

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Bold.ttf">
+            <string>Roboto-Bold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ManualClockInController" customModule="nSmarTrac" customModuleProvider="target">
+            <connections>
+                <outlet property="closeButton" destination="hcv-NH-VLj" id="VvQ-Jh-3yF"/>
+                <outlet property="promptLabel" destination="7xQ-4w-szB" id="JzR-T8-2Ma"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_warning" translatesAutoresizingMaskIntoConstraints="NO" id="KUQ-K8-uGQ">
+                    <rect key="frame" x="157" y="63" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="ObL-Vu-qdc"/>
+                        <constraint firstAttribute="width" constant="100" id="nk0-g7-yLK"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manual Clock In" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V3C-QA-byy">
+                    <rect key="frame" x="57" y="193" width="300" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="300" id="4Qw-gO-aWK"/>
+                        <constraint firstAttribute="height" constant="30" id="VKK-t8-0gA"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="28"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7xQ-4w-szB">
+                    <rect key="frame" x="69" y="273" width="260" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="J0w-ii-zvr"/>
+                        <constraint firstAttribute="width" constant="260" id="QTX-Fx-IOc"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment content="Are you sure you want to ">
+                            <attributes>
+                                <font key="NSFont" size="15" name="Roboto-Regular"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="clock in">
+                            <attributes>
+                                <color key="NSColor" red="0.0" green="0.56031829119999998" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="15" name="Roboto-Bold"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content=" ">
+                            <attributes>
+                                <font key="NSFont" size="15" name="Roboto-Bold"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="on behalf of ">
+                            <attributes>
+                                <font key="NSFont" size="15" name="Roboto-Regular"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="Jonah Abanil?">
+                            <attributes>
+                                <font key="NSFont" size="15" name="Roboto-Bold"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dnu-l3-wfA" customClass="DesignableButton" customModule="nSmarTrac" customModuleProvider="target">
+                    <rect key="frame" x="107" y="377" width="200" height="40"/>
+                    <color key="backgroundColor" red="0.29803921570000003" green="0.69019607839999997" blue="0.32156862749999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="S1w-FI-Qxd"/>
+                        <constraint firstAttribute="height" constant="40" id="sX8-J5-1eD"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="18"/>
+                    <state key="normal" title="CLOCK IN">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="clockInButtonTapped:" destination="-1" eventType="touchUpInside" id="WIw-nH-LeJ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcv-NH-VLj">
+                    <rect key="frame" x="366" y="20" width="28" height="28"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="Lfe-0i-wZd"/>
+                        <constraint firstAttribute="width" constant="28" id="MdO-qS-2c5"/>
+                    </constraints>
+                    <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" image="error.png"/>
+                    <connections>
+                        <action selector="closeButtonTapped:" destination="-1" eventType="touchUpInside" id="CTY-nB-Gfl"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="hcv-NH-VLj" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="20" id="Gf4-zZ-Y7F"/>
+                <constraint firstItem="7xQ-4w-szB" firstAttribute="top" secondItem="V3C-QA-byy" secondAttribute="bottom" constant="50" id="LsN-C5-2TS"/>
+                <constraint firstItem="V3C-QA-byy" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="VQh-Kj-5yp"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="hcv-NH-VLj" secondAttribute="trailing" constant="20" id="Vz4-Aw-Pll"/>
+                <constraint firstItem="7xQ-4w-szB" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="-8" id="cBg-MU-Fmm"/>
+                <constraint firstItem="KUQ-K8-uGQ" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="63" id="dWK-iY-i7k"/>
+                <constraint firstItem="V3C-QA-byy" firstAttribute="top" secondItem="KUQ-K8-uGQ" secondAttribute="bottom" constant="30" id="mRf-nG-PU7"/>
+                <constraint firstItem="dnu-l3-wfA" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="p2N-Z1-kek"/>
+                <constraint firstItem="dnu-l3-wfA" firstAttribute="top" secondItem="7xQ-4w-szB" secondAttribute="bottom" constant="44" id="rn9-Ah-jmB"/>
+                <constraint firstItem="KUQ-K8-uGQ" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="tQs-u3-Zbn"/>
+            </constraints>
+            <point key="canvasLocation" x="137.68115942028987" y="146.73913043478262"/>
+        </view>
+    </objects>
+    <designables>
+        <designable name="dnu-l3-wfA">
+            <size key="intrinsicContentSize" width="80" height="34"/>
+        </designable>
+    </designables>
+    <resources>
+        <image name="error.png" width="28" height="28"/>
+        <image name="ic_warning" width="128" height="114"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

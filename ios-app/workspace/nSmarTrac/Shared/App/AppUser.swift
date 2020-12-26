@@ -12,8 +12,8 @@ import ObjectMapper
 
 class AppUser: AppService {
     
-    //private(set) var token: OAuthToken?
-    //private(set) var user: User?
+    private(set) var token: OAuthToken?
+    private(set) var user: User?
     
     /// Keys associated with UserDefaults values.
     private enum UDKeys: String {
@@ -28,17 +28,17 @@ class AppUser: AppService {
     override init() {
         super.init()
         
-        /*if let userData = UserDefaults.standard.value(forKey: UDKeys.user.envPrefixed) as? NSData {
+        if let userData = UserDefaults.standard.value(forKey: UDKeys.user.envPrefixed) as? NSData {
             user = NSKeyedUnarchiver.unarchiveObject(with: userData as Data) as? User
             updateUser(user)
         }
         if let tokenData = UserDefaults.standard.value(forKey: UDKeys.token.envPrefixed) as? NSData {
             token = NSKeyedUnarchiver.unarchiveObject(with: tokenData as Data) as? OAuthToken
             updateToken(token)
-        }*/
+        }
     }
     
-    /*private func deleteCachedData() {
+    private func deleteCachedData() {
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
         UserDefaults.standard.synchronize()
@@ -58,6 +58,30 @@ class AppUser: AppService {
         let data = NSKeyedArchiver.archivedData(withRootObject: user!)
         UserDefaults.standard.set(data, forKey: UDKeys.user.envPrefixed)
         UserDefaults.standard.synchronize()
+        
+        App.shared.user = user
+        App.shared.companyId = (user?.company_id.intValue)!
+        App.shared.company = user?.company!
+        App.shared.logoKey = "BUSINESS_LOGO_\(App.shared.companyId)"
+        App.shared.bannerKey = "BUSINESS_BANNER_\(App.shared.companyId)"
+        
+        // update logo
+        if let logo = user?.company!.business_logo, !logo.isEmpty {
+            app.api.downloadImage(logo, completion: { image in
+                UserDefaults.standard.setImage(image: image, forKey: App.shared.logoKey)
+                UserDefaults.standard.synchronize()
+                print("Logo is updated...")
+            })
+        }
+        
+        // update banner
+        if let banner = user?.company!.business_image, !banner.isEmpty {
+            app.api.downloadImage(banner, completion: { image in
+                UserDefaults.standard.setImage(image: image, forKey: App.shared.bannerKey)
+                UserDefaults.standard.synchronize()
+                print("Banner is updated...")
+            })
+        }
     }
     
     func isGuest() -> Bool {
@@ -68,9 +92,9 @@ class AppUser: AppService {
         return self.user!
     }
     
-    func getCompany() -> Company {
+    /*func getCompany() -> Company {
         return (self.user!.company)!
-    }
+    }*/
     
     func getToken() -> OAuthToken {
         return self.token!
@@ -85,12 +109,8 @@ class AppUser: AppService {
                 return completion(false, error)
             }
             
-            self.updateToken(response?.OAuth!)
+            //self.updateToken(response?.OAuth!)
             self.updateUser(response?.Data!)
-            
-            App.shared.currencyCode     = self.getCompany().currency_code
-            App.shared.currencySymbol   = Utils.getCurrencySymbol(self.getCompany().currency_code)
-            App.shared.taxRate          = self.getCompany().tax_rate.doubleValue
             
             // look data to cache
             App.shared.cache.loadLookupCaches()
@@ -118,13 +138,13 @@ class AppUser: AppService {
         
         // check if fcmToken is not nil
         guard token != nil else {
-            return Utils.shared.showAlertWithMessage(message: "You must enable the push Notification to use this service...")
+            return Utils.shared.showAlertWithMessage(title: nil, message: "You must enable the push Notification to use this service...")
         }
         
         let params: Parameters = ["fcm_token": token!,
                                   "device_type": "iOS"]
         
-        App.shared.api.putUser(self.user!.user_id, params: params) { (success, error) in
+        App.shared.api.putUser(self.user!.id.intValue, params: params) { (success, error) in
             guard error == nil else {
                 return print(error?.localizedDescription as Any)
             }
@@ -135,7 +155,7 @@ class AppUser: AppService {
     
     func refreshToken() {
         // refresh token
-        App.shared.api.refreshToken() { (token, error) in
+        App.shared.api.refreshToken(self.token!.refresh_token) { (token, error) in
             guard error == nil else {
                 return print(error?.localizedDescription as Any)
             }
@@ -149,17 +169,13 @@ class AppUser: AppService {
     
     func refreshUser() {
         // call api
-        App.shared.api.getUser(self.user!.user_id) { (user, error) in
+        App.shared.api.getUser(self.user!.id.intValue) { (user, error) in
             guard error == nil else {
                 return print(error?.localizedDescription as Any)
             }
             
             self.updateUser(user)
-            
-            App.shared.currencyCode     = self.getCompany().currency_code
-            App.shared.currencySymbol   = Utils.getCurrencySymbol(self.getCompany().currency_code)
-            App.shared.taxRate          = self.getCompany().tax_rate.doubleValue
         }
-    }*/
+    }
 
 }
