@@ -1,21 +1,110 @@
 PODS:
   - AFDateHelper (4.3.0)
-  - Alamofire (4.8.0)
+  - Alamofire (4.7.3)
+  - AlamofireImage (3.4.1):
+    - Alamofire (~> 4.7)
   - AlamofireJsonToObjects (2.4.1):
     - Alamofire
     - EVReflection
   - AlamofireObjectMapper (5.2.1):
     - Alamofire (~> 4.7)
     - ObjectMapper (~> 3.4)
+  - AnyFormatKit (2.0.1)
+  - AppAuth (1.4.0):
+    - AppAuth/Core (= 1.4.0)
+    - AppAuth/ExternalUserAgent (= 1.4.0)
+  - AppAuth/Core (1.4.0)
+  - AppAuth/ExternalUserAgent (1.4.0)
+  - BoxSDK (4.1.0):
+    - BoxSDK/Core (= 4.1.0)
+  - BoxSDK/Core (4.1.0)
+  - Charts (3.5.0):
+    - Charts/Core (= 3.5.0)
+  - Charts/Core (3.5.0)
+  - CropViewController (2.5.4)
   - DLRadioButton (1.4.12)
+  - DottedLineView (1.0.0)
   - DTTextField (0.3.0)
+  - EPSignature (1.0.6)
   - EVReflection (5.10.1):
     - EVReflection/Core (= 5.10.1)
   - EVReflection/Core (5.10.1)
   - EzPopup (1.1)
+  - Firebase/Analytics (6.34.0):
+    - Firebase/Core
+  - Firebase/Core (6.34.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 6.9.0)
+  - Firebase/CoreOnly (6.34.0):
+    - FirebaseCore (= 6.10.4)
+  - Firebase/Crashlytics (6.34.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 4.6.2)
+  - Firebase/Messaging (6.34.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 4.7.1)
+  - FirebaseAnalytics (6.9.0):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstallations (~> 1.7)
+    - GoogleAppMeasurement (= 6.9.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
+    - GoogleUtilities/MethodSwizzler (~> 6.7)
+    - GoogleUtilities/Network (~> 6.7)
+    - "GoogleUtilities/NSData+zlib (~> 6.7)"
+    - nanopb (~> 1.30906.0)
+  - FirebaseCore (6.10.4):
+    - FirebaseCoreDiagnostics (~> 1.6)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/Logger (~> 6.7)
+  - FirebaseCoreDiagnostics (1.7.0):
+    - GoogleDataTransport (~> 7.4)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/Logger (~> 6.7)
+    - nanopb (~> 1.30906.0)
+  - FirebaseCrashlytics (4.6.2):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstallations (~> 1.6)
+    - GoogleDataTransport (~> 7.2)
+    - nanopb (~> 1.30906.0)
+    - PromisesObjC (~> 1.2)
+  - FirebaseInstallations (1.7.0):
+    - FirebaseCore (~> 6.10)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+    - PromisesObjC (~> 1.2)
+  - FirebaseInstanceID (4.8.0):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstallations (~> 1.6)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+  - FirebaseMessaging (4.7.1):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstanceID (~> 4.7)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/Reachability (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+    - Protobuf (>= 3.9.2, ~> 3.9)
   - Floaty (4.2.0)
   - FontAwesome.swift (1.9.0)
   - FSCalendar (2.8.1)
+  - FSPagerView (0.8.3)
+  - GoogleAPIClientForREST/Calendar (1.2.1):
+    - GoogleAPIClientForREST/Core
+    - GTMSessionFetcher (>= 1.1.7)
+  - GoogleAPIClientForREST/Core (1.2.1):
+    - GTMSessionFetcher (>= 1.1.7)
+  - GoogleAPIClientForREST/Drive (1.2.1):
+    - GoogleAPIClientForREST/Core
+    - GTMSessionFetcher (>= 1.1.7)
+  - GoogleAppMeasurement (6.9.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
+    - GoogleUtilities/MethodSwizzler (~> 6.7)
+    - GoogleUtilities/Network (~> 6.7)
+    - "GoogleUtilities/NSData+zlib (~> 6.7)"
+    - nanopb (~> 1.30906.0)
+  - GoogleDataTransport (7.5.1):
+    - nanopb (~> 1.30906.0)
   - GoogleMaps (3.1.0):
     - GoogleMaps/Maps (= 3.1.0)
   - GoogleMaps/Base (3.1.0)
@@ -23,12 +112,46 @@ PODS:
     - GoogleMaps/Base
   - GooglePlaces (3.1.0):
     - GoogleMaps/Base (= 3.1.0)
+  - GoogleSignIn (5.0.2):
+    - AppAuth (~> 1.2)
+    - GTMAppAuth (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GoogleUtilities/AppDelegateSwizzler (6.7.2):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (6.7.2):
+    - PromisesObjC (~> 1.2)
+  - GoogleUtilities/Logger (6.7.2):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (6.7.2):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/Network (6.7.2):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (6.7.2)"
+  - GoogleUtilities/Reachability (6.7.2):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (6.7.2):
+    - GoogleUtilities/Logger
+  - GTMAppAuth (1.0.0):
+    - AppAuth/Core (~> 1.0)
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.4.0):
+    - GTMSessionFetcher/Full (= 1.4.0)
+  - GTMSessionFetcher/Core (1.4.0)
+  - GTMSessionFetcher/Full (1.4.0):
+    - GTMSessionFetcher/Core (= 1.4.0)
+  - ImagePicker (3.2.0)
   - InputBarAccessoryView (4.3.2):
     - InputBarAccessoryView/Core (= 4.3.2)
   - InputBarAccessoryView/Core (4.3.2)
-  - Kingfisher (5.13.3):
-    - Kingfisher/Core (= 5.13.3)
-  - Kingfisher/Core (5.13.3)
+  - iOSDropDown (0.3.4)
+  - JPSThumbnailAnnotation (1.0.0)
+  - Kingfisher (5.15.6):
+    - Kingfisher/Core (= 5.15.6)
+  - Kingfisher/Core (5.15.6)
   - Material (3.1.8):
     - Material/Core (= 3.1.8)
   - Material/Core (3.1.8):
@@ -38,97 +161,239 @@ PODS:
   - Motion (3.1.3):
     - Motion/Core (= 3.1.3)
   - Motion/Core (3.1.3)
+  - MSAL (0.8.0):
+    - MSAL/app-lib (= 0.8.0)
+  - MSAL/app-lib (0.8.0)
+  - MSGraphClientSDK (1.0.0):
+    - MSGraphClientSDK/Authentication (= 1.0.0)
+    - MSGraphClientSDK/Common (= 1.0.0)
+  - MSGraphClientSDK/Authentication (1.0.0)
+  - MSGraphClientSDK/Common (1.0.0):
+    - MSGraphClientSDK/Authentication
+  - MSGraphMSALAuthProvider (0.2.0):
+    - MSAL (~> 0.2)
+    - MSGraphClientSDK (~> 1.0.0)
+  - MultiSelectSegmentedControl (2.3.4):
+    - SweeterSwift
+  - nanopb (1.30906.0):
+    - nanopb/decode (= 1.30906.0)
+    - nanopb/encode (= 1.30906.0)
+  - nanopb/decode (1.30906.0)
+  - nanopb/encode (1.30906.0)
   - ObjectMapper (3.5.2)
+  - PromisesObjC (1.2.11)
+  - Protobuf (3.13.0)
+  - PullUpController (0.8.0)
+  - Pulsator (0.6.0)
   - PureLayout (3.1.5)
-  - RxCocoa (4.5.0):
-    - RxSwift (>= 4.4.2, ~> 4.4)
-  - RxSwift (4.5.0)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
   - ScrollableSegmentedControl (1.4.0)
+  - ScrollingContentViewController (1.4.0)
   - SearchTextField (1.2.4)
   - SideMenu (6.4.8)
   - SVProgressHUD (2.2.5)
+  - SweeterSwift (1.1.4)
+  - SwiftyDropbox (5.0.0):
+    - Alamofire (~> 4.7.3)
+  - TLPhotoPicker (2.0.12)
+  - WeScan (1.5.0)
 
 DEPENDENCIES:
   - AFDateHelper (~> 4.2)
-  - Alamofire (= 4.8)
+  - Alamofire (~> 4.7.3)
+  - AlamofireImage
   - AlamofireJsonToObjects
   - AlamofireObjectMapper
+  - AnyFormatKit
+  - BoxSDK (~> 4.0)
+  - Charts
+  - CropViewController
   - DLRadioButton
+  - DottedLineView
   - DTTextField
+  - EPSignature
   - EzPopup
+  - Firebase/Analytics
+  - Firebase/Crashlytics
+  - Firebase/Messaging
   - Floaty (~> 4.2.0)
   - FontAwesome.swift
   - FSCalendar
+  - FSPagerView
+  - GoogleAPIClientForREST/Calendar
+  - GoogleAPIClientForREST/Drive
   - GoogleMaps
   - GooglePlaces
+  - GoogleSignIn (~> 5.0)
+  - ImagePicker
+  - iOSDropDown
+  - JPSThumbnailAnnotation
   - Kingfisher
   - Material
   - MessageKit
+  - MSGraphClientSDK
+  - MSGraphMSALAuthProvider
+  - MultiSelectSegmentedControl
+  - PullUpController
+  - Pulsator
   - PureLayout
-  - RxCocoa (~> 4.0)
-  - RxSwift (~> 4.0)
+  - RxCocoa (~> 5)
+  - RxSwift (~> 5)
   - ScrollableSegmentedControl (~> 1.4.0)
+  - ScrollingContentViewController
   - SearchTextField
   - SideMenu
   - SVProgressHUD
+  - SwiftyDropbox (~> 5.0.0)
+  - TLPhotoPicker
+  - WeScan
 
 SPEC REPOS:
   trunk:
     - AFDateHelper
     - Alamofire
+    - AlamofireImage
     - AlamofireJsonToObjects
     - AlamofireObjectMapper
+    - AnyFormatKit
+    - AppAuth
+    - BoxSDK
+    - Charts
+    - CropViewController
     - DLRadioButton
+    - DottedLineView
     - DTTextField
+    - EPSignature
     - EVReflection
     - EzPopup
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseCrashlytics
+    - FirebaseInstallations
+    - FirebaseInstanceID
+    - FirebaseMessaging
     - Floaty
     - FontAwesome.swift
     - FSCalendar
+    - FSPagerView
+    - GoogleAPIClientForREST
+    - GoogleAppMeasurement
+    - GoogleDataTransport
     - GoogleMaps
     - GooglePlaces
+    - GoogleSignIn
+    - GoogleUtilities
+    - GTMAppAuth
+    - GTMSessionFetcher
+    - ImagePicker
     - InputBarAccessoryView
+    - iOSDropDown
+    - JPSThumbnailAnnotation
     - Kingfisher
     - Material
     - MessageKit
     - Motion
+    - MSAL
+    - MSGraphClientSDK
+    - MSGraphMSALAuthProvider
+    - MultiSelectSegmentedControl
+    - nanopb
     - ObjectMapper
+    - PromisesObjC
+    - Protobuf
+    - PullUpController
+    - Pulsator
     - PureLayout
     - RxCocoa
+    - RxRelay
     - RxSwift
     - ScrollableSegmentedControl
+    - ScrollingContentViewController
     - SearchTextField
     - SideMenu
     - SVProgressHUD
+    - SweeterSwift
+    - SwiftyDropbox
+    - TLPhotoPicker
+    - WeScan
 
 SPEC CHECKSUMS:
   AFDateHelper: b769c07d3d4784ee9a74633285304261bb27dc52
-  Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  AlamofireImage: 78d67ccbb763d87ba44b21583d2153500a195630
   AlamofireJsonToObjects: 2f652417f69ca86f229b704cdd00370bb892af45
   AlamofireObjectMapper: 1989f690e982b71921b9253f53a4f33a9bc00d88
+  AnyFormatKit: 61952b81da09f5d33f6e8c6f33eef43e33d6ff9d
+  AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  BoxSDK: b6b3cdc40e9cb1df31608dab2b69ec178680af2e
+  Charts: 40a08591df1f8ad5c223ddedfb1a06da92f24f7c
+  CropViewController: 980df34ffc499db89755b2f307f20eca00cd40c6
   DLRadioButton: d7c4e225ed0e8013cef7be61455230c7557ad7c1
+  DottedLineView: 750c5aee6eae69f9bc9acd3bc6ee9938e35856bb
   DTTextField: c26deead1a51c92156e2a638ac7d2c702c2f345e
+  EPSignature: 3fa3b520c80717b98019723faa60a41794b03fbc
   EVReflection: 8124de482178d34ccd56473e16cd95990f9a1113
   EzPopup: b959cfb0d70d782a28e770a96c454df0401467c7
+  Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
+  FirebaseAnalytics: 3bb096873ee0d7fa4b6c70f5e9166b6da413cc7f
+  FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
+  FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
+  FirebaseCrashlytics: 1a747c9cc084a24dc6d9511c991db1cd078154eb
+  FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
+  FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
+  FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   Floaty: e2bd5a0f6f7f70899e26ff2da31081c8bee8d1b0
   FontAwesome.swift: a403b88cec950511745ba8f2decd1b6a07346d13
   FSCalendar: 5245140456fcbcac5824c203b98bd8068bdfee1a
+  FSPagerView: 670405b2f18e2a87fa37f20b00de783e562c25a8
+  GoogleAPIClientForREST: a8b95a252014ce2e618df6b75dc72eca2c00b4af
+  GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
+  GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleMaps: 5c13302e6fe6bb6e686b267196586b91cd594225
   GooglePlaces: e874db179f2675c4f3eeda0b686b540273a578b0
+  GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
+  GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
+  GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
+  GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  ImagePicker: 1d950bbb2422548ed58791b4ec7f42fe42920511
   InputBarAccessoryView: 7985d418040a05fe894bd4b8328dd43ab35517c3
-  Kingfisher: d2b3d6a7200c93b34de9afcdf25c8dd9282ec277
+  iOSDropDown: c10a761f9a00c3f1cc9d3bce43ae504628e2f692
+  JPSThumbnailAnnotation: 4b35e87788d903db3fec294e7ef44136b9f741fb
+  Kingfisher: b3554e7bf6106115b44e8795300bad580ef2fdc7
   Material: a2a3f400a3b549d53ef89e56c58c4535b29db387
   MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
   Motion: cf1e060e489f6661126374d5c60dbd2ed991605c
+  MSAL: 86ff7c8575761cef25965d19927539f6ce6dc58e
+  MSGraphClientSDK: ffc07a58a838e0702c7bf2a856367035d4a335d7
+  MSGraphMSALAuthProvider: 68cd022f16fe87eeb04e75348f6aa377fc630434
+  MultiSelectSegmentedControl: 7d76f9ab6cbf0b23a479332a23dbdb08053d6263
+  nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   ObjectMapper: b53ae947d370bf89423e86be7d4e2d2b2a8d3f40
+  PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
+  PullUpController: 2f7ccaa0f35b31b47e3efbe1854c7f781552b3c7
+  Pulsator: eb5a9f9be4bdcbd19903984c65deca6aabe50a17
   PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a
-  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
-  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   ScrollableSegmentedControl: 56f7baa7f1d7e622e00abb9d6658856c2d52dd4b
+  ScrollingContentViewController: 1bff026d6f32c15489dcd22821911eda5fda3801
   SearchTextField: 40dc3cc57def5a211f263cac263622c163bbc25a
   SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  SweeterSwift: 8a90cf3156f5a1b6f39785c479369a16633b5ea9
+  SwiftyDropbox: 378b4425a2e8d0cb24c7b0f2e3af72bfbaaf1e73
+  TLPhotoPicker: 36001f4500867fea336c773c6013d6000e512a31
+  WeScan: b2e47d07f5da3dbf3db14b742e403a8924cf32b2
 
-PODFILE CHECKSUM: 7c382f0467603810b19aae9efa8a914ae27c1a5d
+PODFILE CHECKSUM: 827cd8d0c72f2666e88f4266c53dd2b2d7ef55f2
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.0

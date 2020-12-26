@@ -412,3 +412,13 @@ update esign_library_template set category_id  = 5 where title IN (select title 
 
 update esign_default_library_template set category_id = 5;
 
+
+-- -- Create Activity
+
+CREATE TABLE `admintom_nsmart_companies`.`esign_activity` (
+  `activity_id` INT NOT NULL AUTO_INCREMENT,
+  `activityName` VARCHAR(255) NOT NULL,
+  `activity` VARCHAR(255) NULL DEFAULT NULL,
+  `user_id` INT NOT NULL,
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`activity_id`));

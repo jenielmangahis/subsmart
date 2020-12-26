@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import Material
 
 /*extension UITextField {
     func loadDropdownData(data: [String]) {
@@ -16,7 +15,7 @@ import Material
     }
 }*/
 
-extension TextField {
+extension MaterialTextField {
     func loadDropdownData(data: [String]) {
         self.inputView = MyPickerView(pickerData: data, dropdownField: self)
     }

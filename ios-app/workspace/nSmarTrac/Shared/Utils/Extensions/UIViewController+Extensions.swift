@@ -18,10 +18,28 @@ extension UIViewController {
         return instanceFromNib()
     }
     
+    open override func awakeFromNib() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
     func pushTo(storyBoard: String, identifier: String) {
         let storyboard = UIStoryboard(name: storyBoard, bundle: Bundle.main)
         let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func presentTo(storyBoard: String, identifier: String) {
+        let storyboard = UIStoryboard(name: storyBoard, bundle: Bundle.main)
+        let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+        let navController = UINavigationController(rootViewController: viewController)
+        present(navController, animated: true, completion: nil)
+    }
+    
+    func presentFormSheet(storyBoard: UIStoryboard, identifier: String) {
+        let viewController = storyboard!.instantiateViewController(withIdentifier: identifier)
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.modalPresentationStyle = .formSheet
+        present(navController, animated: true, completion: nil)
     }
     
     func popViewController() {
@@ -36,22 +54,6 @@ extension UIViewController {
     
     func popToRootController() {
         navigationController?.popToRootViewController(animated: true)
-    }
-    
-    func topMostViewController() -> UIViewController {
-        if self.presentedViewController == nil {
-            return self
-        }
-        if let navigation = self.presentedViewController as? UINavigationController {
-            return navigation.visibleViewController!.topMostViewController()
-        }
-        if let tab = self.presentedViewController as? UITabBarController {
-            if let selectedTab = tab.selectedViewController {
-                return selectedTab.topMostViewController()
-            }
-            return tab.topMostViewController()
-        }
-        return self.presentedViewController!.topMostViewController()
     }
     
     func hideKeyboardWhenTappedAround() {

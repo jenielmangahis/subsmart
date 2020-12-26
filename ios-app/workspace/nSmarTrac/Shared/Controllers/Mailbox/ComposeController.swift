@@ -8,23 +8,41 @@
 
 import UIKit
 
-class ComposeController: UIViewController {
+class ComposeController: UITableViewController {
+    
+    // MARK: - Properties -
+    
+    @IBOutlet var toField: MaterialTextField!
+    @IBOutlet var fromField: MaterialTextField!
+    @IBOutlet var subjectField: MaterialTextField!
+    @IBOutlet var messageField: UITextView!
+    @IBOutlet var sendButton: UIButton!
+    
+
+    // MARK: - Lifecycle -
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        toField.dividerNormalColor      = .clear
+        toField.dividerActiveColor      = .clear
+        fromField.dividerNormalColor    = .clear
+        fromField.dividerActiveColor    = .clear
+        subjectField.dividerNormalColor = .clear
+        subjectField.dividerActiveColor = .clear
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
-    */
-
+    
+    // AMRK: - Actions -
+    
+    @IBAction func cancelButtonTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func sendButtonTapped(_ sender: Any) {
+    }
+    
 }

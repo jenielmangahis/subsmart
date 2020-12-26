@@ -40,7 +40,7 @@ open class MaterialFormFieldToolbar: UIToolbar {
     
     open func prepare() {
         barStyle = .default
-        tintColor = UIColor(rgb: 0x1c0b3b)
+        tintColor = App.shared.iconColor
         
         prevButton = UIBarButtonItem(title: "Previous", style: .plain, target: self, action: #selector(onPrevButtonTapped(_:)))
         nextButton = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(onNextButtonTapped(_:)))

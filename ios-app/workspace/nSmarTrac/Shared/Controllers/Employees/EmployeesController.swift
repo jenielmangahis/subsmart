@@ -10,12 +10,14 @@ import UIKit
 import Floaty
 import FontAwesome_swift
 import SideMenu
+import SVProgressHUD
 
 class EmployeesController: UIViewController {
     
     // MARK: - Properties -
     
     @IBOutlet var menuButtonItem: UIBarButtonItem!
+    @IBOutlet var homeButtonItem: UIBarButtonItem!
     @IBOutlet var chatButtonItem: UIBarButtonItem!
     @IBOutlet var inboxButtonItem: UIBarButtonItem!
     @IBOutlet var searchView: UIView!
@@ -28,10 +30,14 @@ class EmployeesController: UIViewController {
     var refreshControl = UIRefreshControl()
     var floaty = Floaty()
     
-    //var invoices: [Invoice] = []
-    //var filteredItems: [Invoice] = []
-    var selectedIndexPath: [IndexPath] = []
-    var isFiltered: Bool = false
+    var items: [User] = []
+    var filteredItems: [User] = []
+    var groupedItems: [Object] = []
+    
+    struct Object {
+        var group: String
+        var item: [User]
+    }
     
 
     // MARK: - Lifecycle -
@@ -46,24 +52,91 @@ class EmployeesController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.selectedIndexPath.removeAll()
+        loadData()
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
     }
     
+    // MARK: - Load data -
+    
+    func loadData() {
+        // call api
+        App.shared.api.getUsers() { (list, error) in
+            if let e = error {
+                return self.addErrorView(with: e)
+            }
+            
+            self.items = list
+            self.processData(list)
+        }
+    }
+    
+    func processData(_ list: [User]) {
+        // sort ungrouped
+        let ungrouped = list.sorted(by: {$0.FName.prefix(1) > $1.FName.prefix(1)})
+        // group
+        let grouped = ungrouped.group(by: {$0.FName.prefix(1)})
+        // sort
+        let sorted = grouped.sorted(by: {$0.key < $1.key})
+        // create temp groupedObjects
+        var tempGroupedObjects = [Object]()
+        // iterate
+        for (key, value) in sorted {
+            tempGroupedObjects.append(Object(group: String(key), item: value))
+        }
+        
+        self.groupedItems = tempGroupedObjects
+        self.tableView.backgroundView = nil
+        self.tableView.reloadData()
+        self.refreshControl.endRefreshing()
+    }
+    
+    // MARK: - ErrorView -
+
+    private lazy var errorView: BasicErrorView = {
+        let errorView = BasicErrorView()
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        return errorView
+    }()
+    
+    func addErrorView(with error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.tableView.backgroundView?.addSubview(self.errorView)
+            let safeAreaLayoutGuide = self.view.safeAreaLayoutGuide
+            NSLayoutConstraint.activate([
+                self.errorView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                self.errorView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+                self.errorView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+                self.errorView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+                ])
+            self.errorView.displayError(error)
+        }
+    }
+
+    func removeErrorView() {
+        if self.tableView.backgroundView == nil || !self.tableView.backgroundView!.subviews.contains(errorView) {
+            return
+        }
+        DispatchQueue.main.async {
+            self.errorView.removeFromSuperview()
+        }
+    }
+    
     // MARK: - Navigation Bar -
     
     func initNavBar() {
         // setup navBar icons
-        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars
-            , style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        homeButtonItem.image = UIImage.fontAwesomeIcon(name: .home, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         chatButtonItem.image = UIImage.fontAwesomeIcon(name: .comments, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         inboxButtonItem.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         
         // setup SideMenu
-        SideMenuManager.default.leftMenuNavigationController = storyboard?.instantiateViewController(withIdentifier: "sb_SideMenu") as? SideMenuNavigationController
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        SideMenuManager.default.leftMenuNavigationController = storyboard.instantiateViewController(withIdentifier: "sb_SideMenu") as? SideMenuNavigationController
         SideMenuManager.default.rightMenuNavigationController = nil
         SideMenuManager.default.addPanGestureToPresent(toView: self.navigationController!.navigationBar)
         SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: self.navigationController!.view)
@@ -76,7 +149,7 @@ class EmployeesController: UIViewController {
     // MARK: - Search View -
     
     func initSearchView() {
-        searchView.backgroundColor = .groupTableViewBackground
+        searchView.backgroundColor = .systemGroupedBackground
         searchView.isHidden = true
         tableTop.constant = -50.0
         
@@ -109,11 +182,9 @@ class EmployeesController: UIViewController {
     }
     
     @objc func cancelButtonTapped(_ sender: Any) {
-        self.isFiltered = false
+        self.processData(items)
         self.searchView.isHidden = true
         self.tableTop.constant = -50.0
-        self.selectedIndexPath.removeAll()
-        self.tableView.reloadData()
         self.view.endEditing(true)
     }
     
@@ -127,16 +198,15 @@ class EmployeesController: UIViewController {
     // MARK: - Filter Array -
     
     @objc func searchItem(_ textfield: UITextField) {
-        /*let searchText = textfield.text!
+        let searchText = textfield.text!
         
-        filteredItems = invoices.filter({ item in
-            return (item.customer_name.lowercased().contains(searchText.lowercased()) ||
-                    item.date.lowercased().contains(searchText.lowercased()) ||
-                    item.invoice_code.lowercased().contains(searchText.lowercased()))
-        })*/
+        filteredItems = items.filter({ item in
+            return (item.FName.lowercased().contains(searchText.lowercased()) ||
+                    item.LName.lowercased().contains(searchText.lowercased()) ||
+                    item.email.lowercased().contains(searchText.lowercased()))
+        })
         
-        self.isFiltered = true
-        self.tableView.reloadData()
+        self.processData(filteredItems)
     }
     
     // MARK: - Activity Indicator -
@@ -148,7 +218,7 @@ class EmployeesController: UIViewController {
         self.indicator.center = self.view.center
         self.view.addSubview(indicator)
         self.tableView.backgroundView = indicator
-        //self.indicator.startAnimating()
+        self.indicator.startAnimating()
     }
     
     // MARK: - Refresh Control -
@@ -161,19 +231,20 @@ class EmployeesController: UIViewController {
     }
     
     @objc func refreshData(_ sender: Any) {
-        
-    }
-    
-    // MARK: - Notification -
-    
-    @objc func reloadData(_ notification: Notification) {
-        self.refreshData(notification)
+        self.refreshControl.endRefreshing()
+        self.removeErrorView()
+        self.loadData()
     }
     
     // MARK: - Action -
 
     @IBAction func sideMenuTapped(_ sender: Any) {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
+    }
+    
+    @IBAction func homeButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Home
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
     }
     
     @IBAction func chatButtonTapped(_ sender: Any) {
@@ -188,34 +259,16 @@ class EmployeesController: UIViewController {
 
 }
 
-// MARK: - UISideMenuNavigationControllerDelegate -
-
-extension EmployeesController: SideMenuNavigationControllerDelegate {
-    
-    func sideMenuWillAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuWillDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-}
-
 // MARK: - TableView Datasource -
 
 extension EmployeesController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return groupedItems.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return groupedItems[section].item.count
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -225,12 +278,13 @@ extension EmployeesController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 1
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return Utils.createHeader(AppTheme.defaultLightOpaque!, AppTheme.defaultColor, "J")
+        return Utils.createHeader(App.shared.headerBgColor, App.shared.headerColor, groupedItems[section].group.uppercased())
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //let item = isFiltered ? filteredItems[indexPath.section] : invoices[indexPath.section]
+        let item = groupedItems[indexPath.section].item[indexPath.row]
         // Configure the cell...
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         
@@ -244,25 +298,95 @@ extension EmployeesController: UITableViewDelegate, UITableViewDataSource {
         cell.contentView.addSubview(avatar)
         
         // nameButton
-        let nameButton = Utils.createPurpleButton(76, 12, Int(Device.width-40), "Jane Smith", hasArrow: false)
+        let nameButton = Utils.createPurpleButton(76, 12, Int(Device.width-40), item.FName + " " + item.LName, hasArrow: false)
         cell.contentView.addSubview(nameButton)
         
         // topLeft view
-        let topLeft = Utils.createView(20, 50, Int((Device.width-40)/2), 50, "EMAIL", "user@example.com", [.top, .right])
+        let topLeft = Utils.createView(20, 50, Int(Device.width-40), 50, "EMAIL", item.email, [.top])
         cell.contentView.addSubview(topLeft)
         
-        // topRight view
-        let topRight = Utils.createView(Int(Device.width/2), 50, Int((Device.width-40)/2), 50, "PHONE", "(880) 888-8888", [.top])
-        cell.contentView.addSubview(topRight)
+        // chat icon
+        let chatButton = UIButton(frame: CGRect(x: Device.width-42, y: 64, width: 22, height: 22))
+        chatButton.setImage(UIImage.fontAwesomeIcon(name: .comment, style: .regular, textColor: .purple, size: CGSize(width: 24, height: 24)), for: .normal)
+        cell.contentView.addSubview(chatButton)
+        
+        // bottomLeft view
+        let bottomLeft = Utils.createView(20, 100, Int(Device.width-40), 50, "PHONE", item.phone.first?.number ?? "-", [.top])
+        cell.contentView.addSubview(bottomLeft)
+        
+        // check phone
+        //if let phone = item.phone.first?.number {
+            // call icon
+            let callButton = UIButton(frame: CGRect(x: Device.width-42, y: 114, width: 22, height: 22))
+            callButton.setImage(UIImage.fontAwesomeIcon(name: .phone, style: .regular, textColor: .purple, size: CGSize(width: 24, height: 24)), for: .normal)
+            cell.contentView.addSubview(callButton)
+        //}
         
         // bottom border
-        let bottomBorder = Utils.createBottomBorder(100)
+        let bottomBorder = Utils.createBottomBorder(150)
         cell.contentView.addSubview(bottomBorder)
         
-        // selected
-        cell.contentView.backgroundColor = selectedIndexPath.contains(indexPath) ? UIColor(rgb: 0xCDEDB6) : .white
-        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // edit button
+        let edit = UIContextualAction(style: .normal, title: "") {  (contextualAction, view, boolValue) in
+            // edit item at indexPath
+            let viewController = self.storyboard?.instantiateViewController(withIdentifier: "sb_EditEmployeeController") as? EditEmployeeController
+            viewController?.item = self.groupedItems[indexPath.section].item[indexPath.row]
+            self.navigationController?.pushViewController(viewController!, animated: true)
+        }
+        edit.image = UIImage.fontAwesomeIcon(name: .pen, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        edit.backgroundColor = .blueColor
+        
+        
+        // check role
+        if App.shared.user!.role.intValue <= 3 {
+            // delete button
+            let delete = UIContextualAction(style: .destructive, title: "") {  (contextualAction, view, boolValue) in
+                // show alert
+                let alertController = UIAlertController(title: "", message: "Are you sure you want to delete this item?", preferredStyle: .alert)
+                let yesAction = UIAlertAction(title: "Yes", style: .default) { (alertAction) -> Void in
+                    // delete item at indexPath
+                    let item = self.groupedItems[indexPath.section].item[indexPath.row]
+                    
+                    SVProgressHUD.setDefaultMaskType(.clear)
+                    SVProgressHUD.show(withStatus: "Deleting...")
+                    App.shared.api.deleteUser(item.id.intValue) { (success, error) in
+                        SVProgressHUD.setDefaultMaskType(.none)
+                        SVProgressHUD.dismiss()
+                        guard error == nil else {
+                            return SVProgressHUD.showError(withStatus: error?.localizedDescription ?? "")
+                        }
+                        guard success == true else {
+                            return SVProgressHUD.showError(withStatus: "Deleting item failed!")
+                        }
+                        
+                        self.groupedItems[indexPath.section].item.remove(at: indexPath.row)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        tableView.beginUpdates()
+                        tableView.endUpdates()
+                    }
+                }
+                alertController.addAction(yesAction)
+                
+                let noAction = UIAlertAction(title: "No", style: .cancel) { (alertAction) -> Void in
+                    self.dismiss(animated: true, completion: {
+                        tableView.beginUpdates()
+                        tableView.endUpdates()
+                    })
+                }
+                alertController.addAction(noAction)
+                
+                self.present(alertController, animated: true, completion: nil)
+            }
+            delete.image = UIImage.fontAwesomeIcon(name: .trashAlt, style: .regular, textColor: .white, size: CGSize(width: 24, height: 24))
+
+            return UISwipeActionsConfiguration(actions: [delete, edit])
+        }
+
+        return UISwipeActionsConfiguration(actions: [edit])
     }
 }
 
@@ -275,7 +399,7 @@ extension EmployeesController: FloatyDelegate {
         // init
         floaty.fabDelegate  = self
         floaty.sticky       = true
-        floaty.buttonColor  = AppTheme.defaultColor
+        floaty.buttonColor  = .greenColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .plus, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         floaty.addItem("Search", icon: UIImage.fontAwesomeIcon(name: .search, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             self.searchView.isHidden = false
@@ -283,7 +407,7 @@ extension EmployeesController: FloatyDelegate {
             self.floaty.close()
         })
         floaty.addItem("Add", icon: UIImage.fontAwesomeIcon(name: .edit, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
-            self.pushTo(storyBoard: "Main", identifier: "sb_AddEmployeeController")
+            self.pushTo(storyBoard: "Others", identifier: "sb_AddEmployeeController")
             self.floaty.close()
         })
         

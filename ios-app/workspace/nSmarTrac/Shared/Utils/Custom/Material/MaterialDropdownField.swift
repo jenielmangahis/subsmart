@@ -21,7 +21,7 @@ open class MaterialDropdownField: MaterialTextField {
         isClearIconButtonEnabled = true
         rightViewMode = .always
         rightView?.isUserInteractionEnabled = false
-        clearIconButton?.setImage(UIImage(named: "ic-arrow-down"), for: .normal)
+        clearIconButton?.setImage(UIImage.fontAwesomeIcon(name: .caretDown, style: .solid, textColor: .lightGray, size: CGSize(width: 24, height: 24)), for: .normal)
         isCutEnabled = false
         isPasteEnabled = false
         configure()
@@ -58,7 +58,6 @@ open class MaterialDropdownField: MaterialTextField {
     }
     
     @objc func selfTapped() {
-        debugPrint("tapped")
         _ = self.becomeFirstResponder()
     }
     

@@ -823,6 +823,7 @@ public enum FontAwesome: String, CaseIterable {
     case mapMarkedAlt = "fa-map-marked-alt"
     case mapMarker = "fa-map-marker"
     case mapMarkerAlt = "fa-map-marker-alt"
+    case mapMarkerAltSlash = "fa-map-marker-alt-slash"
     case mapPin = "fa-map-pin"
     case mapSigns = "fa-map-signs"
     case markdown = "fa-markdown"
@@ -1264,6 +1265,7 @@ public enum FontAwesome: String, CaseIterable {
     case tencentWeibo = "fa-tencent-weibo"
     case tenge = "fa-tenge"
     case terminal = "fa-terminal"
+    case text = "fa-text"
     case textHeight = "fa-text-height"
     case textWidth = "fa-text-width"
     case th = "fa-th"
@@ -1466,11 +1468,14 @@ public enum FontAwesome: String, CaseIterable {
     case youtube = "fa-youtube"
     case youtubeSquare = "fa-youtube-square"
     case zhihu = "fa-zhihu"
+    case badgePercent = "fa-badge-percent"
+    case books = "fa-books"
+    case scanner = "fa-scanner"
 
     /// An unicode code of FontAwesome icon
     public var unicode: String {
         switch self {
-            case .fiveHundredPixels: return "\u{f26e}"
+        case .fiveHundredPixels: return "\u{f26e}"
             case .accessibleIcon: return "\u{f368}"
             case .accusoft: return "\u{f369}"
             case .acquisitionsIncorporated: return "\u{f6af}"
@@ -2267,6 +2272,7 @@ public enum FontAwesome: String, CaseIterable {
             case .mapMarkedAlt: return "\u{f5a0}"
             case .mapMarker: return "\u{f041}"
             case .mapMarkerAlt: return "\u{f3c5}"
+            case .mapMarkerAltSlash: return "\u{f605}"
             case .mapPin: return "\u{f276}"
             case .mapSigns: return "\u{f277}"
             case .markdown: return "\u{f60f}"
@@ -2708,6 +2714,7 @@ public enum FontAwesome: String, CaseIterable {
             case .tencentWeibo: return "\u{f1d5}"
             case .tenge: return "\u{f7d7}"
             case .terminal: return "\u{f120}"
+            case .text: return "\u{f893}"
             case .textHeight: return "\u{f034}"
             case .textWidth: return "\u{f035}"
             case .th: return "\u{f00a}"
@@ -2910,6 +2917,9 @@ public enum FontAwesome: String, CaseIterable {
             case .youtube: return "\u{f167}"
             case .youtubeSquare: return "\u{f431}"
             case .zhihu: return "\u{f63f}"
+            case .badgePercent: return "\u{f646}"
+            case .books: return "\u{f5db}"
+            case .scanner: return "\u{f8f3}"
             default: return ""
         }
     }

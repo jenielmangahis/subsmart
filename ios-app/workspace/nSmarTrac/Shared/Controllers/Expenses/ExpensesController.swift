@@ -11,6 +11,7 @@ import Floaty
 import FontAwesome_swift
 import ScrollableSegmentedControl
 import SideMenu
+import SVProgressHUD
 
 class ExpensesController: UIViewController {
     
@@ -60,8 +61,7 @@ class ExpensesController: UIViewController {
     
     func initNavBar() {
         // setup navBar icons
-        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars
-            , style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         chatButtonItem.image = UIImage.fontAwesomeIcon(name: .comments, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         inboxButtonItem.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         
@@ -79,7 +79,7 @@ class ExpensesController: UIViewController {
     // MARK: - Search View -
     
     func initSearchView() {
-        searchView.backgroundColor = .groupTableViewBackground
+        searchView.backgroundColor = .systemGroupedBackground
         searchView.isHidden = true
         tableTop.constant = -50.0
         

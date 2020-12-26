@@ -11,14 +11,14 @@ import Floaty
 import FontAwesome_swift
 import SideMenu
 
-class MailboxController: UIViewController {
+class MailboxController: UITableViewController {
     
     // MARK: - Properties -
     
     @IBOutlet var menuButtonItem: UIBarButtonItem!
+    @IBOutlet var homeButtonItem: UIBarButtonItem!
     @IBOutlet var chatButtonItem: UIBarButtonItem!
     @IBOutlet var inboxButtonItem: UIBarButtonItem!
-    @IBOutlet var tableView: UITableView!
     
     var floaty = Floaty()
     
@@ -30,7 +30,7 @@ class MailboxController: UIViewController {
         initNavBar()
         initFAB()
         
-        self.pushTo(storyBoard: "Main", identifier: "sb_InboxController")
+        self.pushTo(storyBoard: "Others", identifier: "sb_InboxController")
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -41,13 +41,14 @@ class MailboxController: UIViewController {
     
     func initNavBar() {
         // setup navBar icons
-        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars
-            , style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        menuButtonItem.image = UIImage.fontAwesomeIcon(name: .bars, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        homeButtonItem.image = UIImage.fontAwesomeIcon(name: .home, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         chatButtonItem.image = UIImage.fontAwesomeIcon(name: .comments, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         inboxButtonItem.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         
         // setup SideMenu
-        SideMenuManager.default.leftMenuNavigationController = storyboard?.instantiateViewController(withIdentifier: "sb_SideMenu") as? SideMenuNavigationController
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        SideMenuManager.default.leftMenuNavigationController = storyboard.instantiateViewController(withIdentifier: "sb_SideMenu") as? SideMenuNavigationController
         SideMenuManager.default.rightMenuNavigationController = nil
         SideMenuManager.default.addPanGestureToPresent(toView: self.navigationController!.navigationBar)
         SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: self.navigationController!.view)
@@ -63,6 +64,11 @@ class MailboxController: UIViewController {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
     }
     
+    @IBAction func homeButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Home
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
     @IBAction func chatButtonTapped(_ sender: Any) {
         App.shared.selectedMenu = .Chat
         NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
@@ -73,63 +79,12 @@ class MailboxController: UIViewController {
         NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
     }
 
-}
+    // MARK: - TableView Datasource -
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.pushTo(storyBoard: "Others", identifier: "sb_InboxController")
+    }
 
-// MARK: - UISideMenuNavigationControllerDelegate -
-
-extension MailboxController: SideMenuNavigationControllerDelegate {
-    
-    func sideMenuWillAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidAppear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuWillDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-    func sideMenuDidDisappear(menu: SideMenuNavigationController, animated: Bool) {
-    }
-    
-}
-
-// MARK: - TableView Datasource -
-
-extension MailboxController: UITableViewDelegate, UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let titles = ["Inbox", "Drafts", "Sent", "Junk", "Trash", "Archive"]
-        let icons: [FontAwesome] = [.inbox, .file, .paperPlane, .trash, .trashAlt, .archive]
-        let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 24, height: 24))
-        
-        // Configure the cell...
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = titles[indexPath.row]
-        cell.imageView?.image = image
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.pushTo(storyBoard: "Main", identifier: "sb_InboxController")
-    }
-    
 }
 
 // MARK: - Floaty Delegate -
@@ -141,7 +96,7 @@ extension MailboxController: FloatyDelegate, UIGestureRecognizerDelegate {
         // init
         floaty.fabDelegate  = self
         floaty.sticky       = true
-        floaty.buttonColor  = AppTheme.defaultColor
+        floaty.buttonColor  = .greenColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .edit, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         
         // add action
@@ -154,6 +109,7 @@ extension MailboxController: FloatyDelegate, UIGestureRecognizerDelegate {
     
     // new mail action
     @objc func handleNewMailButton(_ gestureRecognizer: UITapGestureRecognizer) {
-        
+        let viewController = self.storyboard?.instantiateViewController(withIdentifier: "sb_ComposeController")
+        self.present(viewController!, animated: true, completion: nil)
     }
 }
