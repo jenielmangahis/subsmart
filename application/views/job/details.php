@@ -153,6 +153,7 @@ span.sc-item {
 }
 </style>
 <?php include viewPath('includes/header'); ?>
+<link rel="stylesheet" href="<?php echo $url->assets ?>css/bs-stepper.css">
 <div class="wrapper" role="wrapper">
     <?php //include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
@@ -197,6 +198,53 @@ span.sc-item {
                   </div>
                 </div>
 
+                <div class="col-md-12 mt-5">
+                  <div id="stepper2" class="bs-stepper">
+                    <div class="bs-stepper-header">
+                      <div class="step" data-target="#test-nl-1">
+                        <button type="button" class="btn step-trigger">
+                          <span class="bs-stepper-circle"><i class="fa fa-calendar"></i></span>
+                          <span class="bs-stepper-label">SCHEDULE</span>
+                        </button>
+                      </div>
+                      <div class="line"></div>
+                      <div class="step" data-target="#test-nl-2">
+                        <div class="btn step-trigger">
+                          <span class="bs-stepper-circle"><i class="fa fa-truck"></i></span>
+                          <span class="bs-stepper-label">OMW</span>
+                        </div>
+                      </div>
+                      <div class="line"></div>
+                      <div class="step" data-target="#test-nl-3">
+                        <button type="button" class="btn step-trigger">
+                          <span class="bs-stepper-circle"><i class="fa fa-play"></i></span>
+                          <span class="bs-stepper-label">START</span>
+                        </button>
+                      </div>
+                      <div class="line"></div>
+                      <div class="step" data-target="#test-nl-3">
+                        <button type="button" class="btn step-trigger">
+                          <span class="bs-stepper-circle"><i class="fa fa-stop"></i></span>
+                          <span class="bs-stepper-label">FINISH</span>
+                        </button>
+                      </div>
+                      <div class="line"></div>
+                      <div class="step" data-target="#test-nl-3">
+                        <button type="button" class="btn step-trigger">
+                          <span class="bs-stepper-circle"><i class="fa fa-paper-plane"></i></span>
+                          <span class="bs-stepper-label">INVOICE</span>
+                        </button>
+                      </div>
+                      <div class="line"></div>
+                      <div class="step" data-target="#test-nl-3">
+                        <button type="button" class="btn step-trigger">
+                          <span class="bs-stepper-circle"><i class="fa fa-credit-card-alt"></i></span>
+                          <span class="bs-stepper-label">PAY</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-xl-10">
                   <div class="card">
                     <div class="d-block">
@@ -268,3 +316,24 @@ span.sc-item {
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script src="<?php echo $url->assets ?>js/bs-stepper.min.js"></script>
+<script>
+  var stepper1Node = document.querySelector('#stepper1')
+  var stepper1 = new Stepper(document.querySelector('#stepper1'))
+
+  stepper1Node.addEventListener('show.bs-stepper', function (event) {
+    console.warn('show.bs-stepper', event)
+  })
+  stepper1Node.addEventListener('shown.bs-stepper', function (event) {
+    console.warn('shown.bs-stepper', event)
+  })
+
+  var stepper2 = new Stepper(document.querySelector('#stepper2'), {
+    linear: false,
+    animation: true
+  })
+  var stepper3 = new Stepper(document.querySelector('#stepper3'), {
+    animation: true
+  })
+  var stepper4 = new Stepper(document.querySelector('#stepper4'))
+</script>
