@@ -17,7 +17,7 @@ class Register extends MY_Controller {
         include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
 
         // Stripe SDK
-        //include APPPATH . 'libraries/stripe-php/init.php';        
+        include APPPATH . 'libraries/stripe/init.php';   
 
 		$this->page_data['page']->title = 'nSmart - Registration';
 	}
@@ -258,6 +258,10 @@ class Register extends MY_Controller {
         include APPPATH . 'libraries/stripe/init.php';    
         \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");         
         $plan = $this->NsmartPlan_model->getById(1);
+        $stripePlan = \Stripe\Plan::retrieve('test7--');
+        echo "<pre>";
+        print_r($stripePlan);
+        exit;
         if($plan->stripe_plan_id == ''){
             //create new plan
             $plan_name = strtolower($plan->plan_name);
@@ -330,17 +334,23 @@ class Register extends MY_Controller {
 
         if( isset($post['stripeToken']) ){
             //Stripe
-            include APPPATH . 'libraries/stripe-php/init.php';       
 
             \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");      
-            $plan     = $this->NsmartPlan_model->getById($subscription_id);
-            $plan_id  = "test7-" . $plan_name . "-" . $plan->id;
-            if($plan->stripe_plan_id != ''){
-                $stripePlan = \Stripe\Plan::retrieve($plan->stripe_plan_id);
+            $plan      = $this->NsmartPlan_model->getById($subscription_id);
+            $plan_name = strtolower($plan->plan_name);
+            $plan_name = str_replace(" ", "_", $plan_name);
+            $plan_id   = "price_test2_" . $plan_name . "_" . $plan->id;
+
+            if( $post['subscription_type'] == 'prospect' ){
+                $stripe_coupon = 'w1sqO9YX';
+            }else{
+                $stripe_coupon = 'xlglClNy';
+            }
+
+            if($plan->stripe_price_id != ''){
+                $stripePlan = \Stripe\Plan::retrieve($plan->stripe_price_id);
                 if( !$stripePlan ){
                      //create new plan
-                    $plan_name = strtolower($plan->plan_name);
-                    $plan_name = str_replace(" ", "-", $plan_name);
                     $stripePlan = \Stripe\Plan::create(array(
                       "amount" => round($plan->price,2)*100,
                       "interval" => "month",
@@ -352,14 +362,12 @@ class Register extends MY_Controller {
                     ));
 
                     $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
-                        'stripe_plan_id' => $stripePlan->product
+                        'stripe_plan_id' => $stripePlan->product,
+                        'stripe_price_id' => $plan_id
                     ));
                 }
             }else{
                  //create new plan
-                $plan_name = strtolower($plan->plan_name);
-                $plan_name = str_replace(" ", "-", $plan_name);
-                
                 $stripePlan = \Stripe\Plan::create(array(
                   "amount" => round($plan->price,2)*100,
                   "interval" => "month",
@@ -371,7 +379,8 @@ class Register extends MY_Controller {
                 ));
 
                 $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
-                    'stripe_plan_id' => $stripePlan->product
+                    'stripe_plan_id' => $stripePlan->product,
+                    'stripe_price_id' => $plan_id
                 ));
             }
 
@@ -385,6 +394,7 @@ class Register extends MY_Controller {
             $subscription = \Stripe\Subscription::create(array(
                 'customer' => $customer->id,
                 'items' => array(array('plan' => $stripePlan->id)),
+                'coupon' => $stripe_coupon
             ));
 
             $this->Clients_model->update($cid, array(

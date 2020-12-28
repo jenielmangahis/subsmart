@@ -515,6 +515,10 @@ class Job extends MY_Controller
 
         echo json_encode($data);
     }
+
+    function details(){
+    	$this->load->view('job/details', $this->page_data);
+    }
 }
 
 /* End of file Job.php */

@@ -459,7 +459,11 @@ a.top-1 {
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div class="right-calendar-loading"></div>
-                    <div id="right-calendar"></div>
+                    <h4  class="right-filter-header"><a class="btn-mini-calendar" href="javascript:void(0);"><i class="fa fa-minus cmini-icon icon-plus-cz"></i></a> <span class="pl-1">MINI CALENDAR</span></h4>
+                    <div class="min-calendar-container">
+                      <div id="right-calendar"></div>  
+                    </div>
+                    
                     <div class="calendar-tooltip"></div>
                 </div>
                 <!-- <div class="col-12" style="margin-top: 15px;">
@@ -529,10 +533,10 @@ a.top-1 {
                     </div>
                 </div>
                  <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header">RECENT CONTACTS</h4>
+                    <h4  class="right-filter-header"><a class="btn-contacts-list" href="javascript:void(0);"><i class="fa fa-plus contact-list-icon icon-plus-cz"></i></a><span class="pl-1">RECENT CONTACTS</span></h4>
 
-
-                    <ul class="list-group">
+                    <div class="recent-contacts-container" style="display: none;">
+                      <ul class="list-group">
                       <?php if(isset($get_recent_users)){
                                 foreach ($get_recent_users as $key => $recent_user) {  ?>
                                 <li class="list-group-item">
@@ -567,6 +571,7 @@ a.top-1 {
 
 
                     </ul>
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -1112,7 +1117,30 @@ a.top-1 {
       $(".clist-icon").removeClass("fa-minus");
       $(".clist-icon").addClass("fa-plus");
     }
+  });
 
+  $(".btn-mini-calendar").click(function(){
+    if( $(".cmini-icon").hasClass("fa-plus") ){
+      $(".min-calendar-container").slideDown();
+      $(".cmini-icon").removeClass("fa-plus");
+      $(".cmini-icon").addClass("fa-minus");
+    }else{
+      $(".min-calendar-container").slideUp();
+      $(".cmini-icon").removeClass("fa-minus");
+      $(".cmini-icon").addClass("fa-plus");
+    }
+  });
+
+  $(".btn-contacts-list").click(function(){
+    if( $(".contact-list-icon").hasClass("fa-plus") ){
+      $(".recent-contacts-container").slideDown();
+      $(".contact-list-icon").removeClass("fa-plus");
+      $(".contact-list-icon").addClass("fa-minus");
+    }else{
+      $(".recent-contacts-container").slideUp();
+      $(".contact-list-icon").removeClass("fa-minus");
+      $(".contact-list-icon").addClass("fa-plus");
+    }
   });
 
 	$(".btn-add-gevent").click(function(){
