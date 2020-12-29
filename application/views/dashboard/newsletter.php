@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="col-sm-4" id="newsletter">
-    <div class="expenses tile-container" style="top:0px; margin-bottom: 30px;">
+    <div class="expenses tile-container">
         <div class="inner-container">
             <div class="tileContent">
                 <div class="clear">

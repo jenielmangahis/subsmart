@@ -9,14 +9,23 @@ class Dashboard extends MY_Controller {
         parent::__construct();
         $this->checkLogin();
         $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('Users_model', 'user_model');
+        $this->load->model('Feeds_model', 'feeds_model');
+		$this->load->model('timesheet_model');
+        $this->load->model('users_model');
         add_css(array(
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             "assets/css/accounting/accounting.css",
+            'assets/css/dashboard.css'
         ));
 
         add_footer_js(array(
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'assets/frontend/js/dashboard/main.js'
+            'assets/frontend/js/dashboard/main.js',
+            "assets/css/dashboard/dasboard_box.js",
+            "assets/css/dashboard/dasboard.chunk.js",
+            "assets/css/dashboard/dasboard_client.js",
+            "assets/css/dashboard/hcui.chunk.js",
         ));
     }
 
@@ -31,11 +40,18 @@ class Dashboard extends MY_Controller {
             $input['ds_values'] = "earning,analytics,report,activity,report2,newsletter,spotlight,bulletin,job,estimate,invoice,stats,installs" ;
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
-
-        // get customers data and display to modal for selecting an existing client
+        $this->page_data['feeds'] = $this->feeds_model->getByCompanyId();
+        $this->page_data['employees'] = $this->user_model->getAllUsersByCompany(logged('company_id'));
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
-
-        $this->page_data['dashboard_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_dashboard_sort");
+        $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['user_roles'] = $this->users_model->getRoles();
+        $this->page_data['logs'] = $this->timesheet_model->getTimesheetLogs();        
+        $this->page_data['total_users'] = $this->users_model->getTotalUsers();
+        $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
+        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
+        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
+        $this->page_data['dashboard_sort'] = "report2,newsletter,bulletin";
 		$this->load->view('dashboard', $this->page_data);
 	}
 
@@ -64,18 +80,16 @@ class Dashboard extends MY_Controller {
 
         $id = $this->feeds_model->create([
             'company_id' => $comp_id,
-            'customer_id' => post('customer_id'),
-            'title' => post('title'),
-            'date' => date('Y-m-d', strtotime(post('date'))),
-            'subject' => post('subject'),
-            'description' => post('description')
+            'customer_id' => post('recipient_id'),
+            'subject' => post('feed_subject'),
+            'description' => post('feed_description')
         ]);
             
         $this->activity_model->add('New Feeds Added Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Feed Added Successfully');
 
-        redirect('invoice/genview/'.post('invoice_id'));
+        redirect('dashboard');
     }
 
 }

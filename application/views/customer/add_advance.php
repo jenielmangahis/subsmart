@@ -115,7 +115,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-12">
                         <div class="col-md-6" style="padding-left: 40px;">
                             <h6 >New Advance Customer</h6>
-                            <a class="btn btn-primary btn-md" href="#"><span class="fa fa-print "></span> Print</a>
+                            <button class="btn btn-primary btn-md" onclick="print_data_sheet()">
+                                <span class="fa fa-print "></span> Print</button>
                         </div>
 
                         <div class="cards">
@@ -125,6 +126,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="cards">
                                             <div class="card-body">
                                                 <div class="col-md-12">
+                                                    <div id="print" class="print form-group">
                                                     <form id="customer_form">
                                                         <div class="row">
                                                             <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
@@ -192,6 +194,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 </div>
                                                         </div>
                                                     </form>
+                                                    </div>
                                                     <div id="readroot" class="col-md-12" style="display: none;">
                                                         <a align="left" style="color:#58bc4f; padding-top:1px;font-size: 10px !important;" href="javascript:void(0);" onclick="this.parentNode.parentNode.removeChild(this.parentNode);" >
                                                             <span class="fa fa-minus"></span>Remove</a>
@@ -357,6 +360,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
             "pageLength": 5
         });
     });
+
+    function print_data_sheet(){
+        let currentHtml = $('#print').html();
+        var a = window.open('', '_selfs', '');
+        a.document.write('<html>');
+        a.document.write('<head>');
+        a.document.write('<link rel="stylesheet" href="http://nsmartrac/assets/dashboard/css/bootstrap.min.css">');
+        a.document.write('<style>');
+        a.document.write('body{ font-size : 10px; }');
+        a.document.write('</style>');
+        a.document.write('</head>');
+        a.document.write('<body>');
+        a.document.write(currentHtml);
+        a.document.write('</body></html>');
+        a.document.close();
+        a.print();
+    }
 </script>
 <script>
     $(document).ready(function() {

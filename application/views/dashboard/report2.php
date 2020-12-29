@@ -2,25 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="col-sm-4" id="job">
-    <div class="expenses tile-container" style="top:0px; margin-bottom: 30px;">
-        <div class="inner-container">
-            <div class="tileContent">
-                <div class="clear">
-                    <div class="inner-content">
-                        <div class="header-container" style="border-bottom:1px solid gray;">
-                            <h3 class="header-content"><i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs</h3>
-                        </div>
-                        <div class="expenses-money-section" style="margin-top:10px;">
-                            <div class="inner-news">
-                                <p>Welcome to nSmartrac!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="expenses tile-container" style="top:0px; margin-bottom: 30px;">
+    <div class="expenses tile-container">
         <div class="inner-container">
             <div class="tileContent">
                 <div class="clear">
@@ -31,7 +13,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="expenses-money-section" style="margin-top:10px;">
                             <div class="inner-news">
                                 <div class="card">
-                                    <div class="card-body pt-0">
+                                    <div class="card-body pt-0 pb-0">
+                                        <?php foreach($feeds as $feed) : ?>
+                                            <div class="wid-peity mb-4">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div>
+                                                            <p class="text-muted"><?php echo $feed->company_id; ?></p>
+                                                            <h5><?php echo $feed->subject; ?></h5>
+                                                            <p><?php echo $feed->description; ?></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-4"><span class="peity-line" data-width="100%"
+                                                                                data-peity='{ "fill": ["rgba(2, 164, 153,0.3)"],"stroke": ["rgba(2, 164, 153,0.8)"]}'
+                                                                                data-height="60"><?php echo $feed->date; ?></span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
                                         <a href="javascript:void(0)" class="card-link" data-toggle="modal" data-target="#exampleModal">Add New Feed</a>
                                     </div>
                                 </div>
@@ -56,8 +56,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </div>
       <div class="modal-body">
         <div class="row">
+        <?php echo form_open('dashboard/saveFeed', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
             <div class="col-md-6 form-group">
-                <label for="job_customer">Customer</label>
+                <label for="job_customer">Recipient</label>
                 <select class="form-control" id="job_customer" name="job_customer">
                     <?php if(!empty($customers)) : ?>
                         <option disabled selected>--Select--</option>
@@ -66,34 +67,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>
-                <input type="hidden" id="customer_id" name="customer_id" value="">
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="job_name">Job Title</label>
-                <input type="text" class="form-control" name="job_name" id="job_name" required/>
+                <input type="hidden" id="recipient_id" name="recipient_id" value="">
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 form-group">
+            <div class="col-md-12 form-group">
                 <label for="job_name">Subject</label>
-                <input type="text" class="form-control" name="job_name" id="job_name" required/>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="job_name">Date</label>
-                <input type="text" class="form-control" name="job_name" id="job_name" required/>
+                <input type="text" class="form-control" name="feed_subject" id="feed_subject" required/>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 form-group">
                 <label for="job_name">Description</label>
-                <textarea name="" class="form-control" id="" cols="30" rows="10"></textarea>
+                <textarea name="feed_description" class="form-control" id="feed_description" cols="30" rows="10"></textarea>
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Feed</button>
       </div>
+      <?php echo form_close(); ?>
     </div>
   </div>
 </div>
