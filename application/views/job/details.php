@@ -8,6 +8,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
   position: relative;
   top: 4px;
 }
+.bs-stepper {
+  margin-bottom: 10px;
+}
 .black-placeholder {
   background: black;
 }
@@ -123,18 +126,27 @@ span.sc-item {
 }
 .cs-7 {
   width: 70%;
+  min-height: 10px;
 }
 .cs-6 {
   width: 60%;
+  min-height: 10px;
 }
 .cs-5 {
   width: 50%;
+}
+.cs-4 {
+  width: 40%;
+  min-height: 10px;
 }
 .cs-42 {
   width: 41%;
 }
 .cs-4 {
   width: 40%;
+}
+.cs-34 {
+  width: 33.33%;
 }
 .cs-33 {
   width: 32.5%;
@@ -150,6 +162,31 @@ span.sc-item {
 }
 .pl-c6 {
   padding-left: 65px !important;
+}
+.tn-container {
+  border-top: 1px solid #868686;
+  margin-top: 30px;
+  padding: 20px 0px;
+}
+.cost-container {
+  border-top: 1px solid #868686;
+  margin-top: 10px;
+  padding: 20px;
+}
+.sum-container {
+  border-top: 1px solid #868686;
+  margin-top: 30px;
+  padding: 20px;
+}
+.text-right {
+  text-align: right;
+  width: 100%;
+  display: block;
+  padding-right: 33px;
+}
+.gray-area {
+  padding-bottom: 20px;
+  display: block;
 }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -198,7 +235,8 @@ span.sc-item {
                   </div>
                 </div>
 
-                <div class="col-md-12 mt-5">
+                <div class="col-xl-10">
+
                   <div id="stepper2" class="bs-stepper">
                     <div class="bs-stepper-header">
                       <div class="step" data-target="#test-nl-1">
@@ -244,8 +282,9 @@ span.sc-item {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-xl-10">
+
+
+
                   <div class="card">
                     <div class="d-block">
                       <div class="col-xl-5 left">
@@ -303,16 +342,129 @@ span.sc-item {
 
                     </div>
 
+                    <br/>
+
+                    <div class="form-service">
+                      <h3 class="gray-sc pl-3">Materials</h3>
+
+                      <div class="col-xl-12 service-container">
+                        <div class="ts-box pl-0 ml-0 mr-0 pr-0 left">
+                          <span class="sp-left fa fa-bars gray-color fa-margin-right"></span>
+                        </div>
+                        <div class="cs-4 pl-0 ml-0 mr-2 pr-0 left">
+                          <input placeholder="Item name" type="text" name="description" value="" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="cs-1 pl-0 ml-0 mr-2 pr-0 left">
+                          <input placeholder="Qty" type="text" name="description" value="" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
+                          <input placeholder="Unit Price" type="text" name="description" value="" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="cs-2 pl-0 ml-0 mr-0 pr-0 left">
+                          <span class="sc-price">$0.00 <span class="sc-price-icon fa fa-times fa-margin-right"></span></span>
+                        </div>
+                    </div>
+
+                    <div class="item-form pl-c6">
+                      <div class="cs-42 pl-0 ml-0 mr-2 pr-0 left">
+                        <input placeholder="Description (Optional)" type="text" name="description" value="" class="form-control" autocomplete="off">
+                      </div>
+                      <div class="cs-33 pl-0 ml-0 mr-2 pr-0 left">
+                        <input placeholder="Unit cost" type="text" name="description" value="" class="form-control" autocomplete="off">
+                      </div>
+                    </div>
+
+                    <div class="item-form pl-c6">
+                      <div class="sc-form-add">
+                        <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> MATERIALS ITEM</span>
+                      </div>
                     </div>
                   </div>
 
+                  <div class="pl-2 pr-2">
+                    <div class="sum-container">
+                        <div class="cs-6 left"></div>
+                        <div class="cs-4 left">
+                          <div class="cs-6 left">
+                            <span class="bold">Subtotal</span>
+                          </div>
+                          <div class="cs-4 left">
+                            <span class="bold text-right">$0.00</span>
+                          </div>
+                        </div>
+
+                        <br/>
+
+                        <div class="cs-6 pt-2 left"></div>
+                        <div class="cs-4 pt-2 left">
+                          <div class="cs-6 left">
+                            <select name="tax" id="tax" class="form-control gray-first">
+                                <option value="">Select tax rate</option>
+                            </select>
+                          </div>
+                          <div class="cs-4 pt-3 left">
+                            <span class="bold text-right">$0.00</span>
+                          </div>
+                        </div>
+
+                        <br/>
+
+                        <div class="cs-6 pt-3 left"></div>
+                        <div class="cs-4 pt-3 left">
+                          <div class="cs-6 left">
+                            <span class="bold">Total</span>
+                          </div>
+                          <div class="cs-4 left">
+                            <span class="bold text-right">$0.00</span>
+                          </div>
+                        </div>
+
+                    </div>
+                    <br/><br/>
+                    <div class="tn-container">
+                      <span class="bold">Thank you for your business, Please call dually at 850-292-299</span>
+                    </div>
+                    <div class="gray-area">
+                      <div class="cost-container">
+                        <div class="cs-34 left">
+                          <span class="bold">Cost Breakdown</span>
+                        </div>
+
+                        <div class="cs-34 left">
+                          <span class="bold">Material Cost</span>
+                        </div>
+
+                        <div class="cs-34 left">
+                          <span class="bold">Profit/Loss</span>
+                        </div>
+                      </div>
+
+                      <div class="mt-4 cost-container">
+                        <div class="cs-34 left">
+                          <span class="bold">$0.00</span>
+                        </div>
+
+                        <div class="cs-34 left">
+                          <span class="bold">$0.00</span>
+                        </div>
+
+                        <div class="cs-34 left">
+                          <span class="bold">$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                 </div>
+              </div>
 
-            </div>
-        </div>
-        <!-- end container-fluid -->
+
+          </div>
+
+      </div>
     </div>
+        <!-- end container-fluid -->
+  </div>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
