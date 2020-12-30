@@ -724,6 +724,8 @@ class Users extends MY_Controller {
 	    echo json_encode($check);
     }
     public function addNewEmployee(){
+    	$this->load->model('IndustryType_model');
+
         $fname = $this->input->post('values[firstname]');
         $lname = $this->input->post('values[lastname]');
         $email = $this->input->post('values[email]');
