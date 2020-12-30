@@ -236,8 +236,8 @@ span.sc-item {
                 </div>
 
                 <div class="col-xl-10">
-
-                  <div id="stepper2" class="bs-stepper">
+                  <!-- start of stepper 1 -->
+                  <div id="stepper1" class="bs-stepper">
                     <div class="bs-stepper-header">
                       <div class="step" data-target="#test-nl-1">
                         <button type="button" class="btn step-trigger">
@@ -281,31 +281,70 @@ span.sc-item {
                         </button>
                       </div>
                     </div>
-                  </div>
 
 
 
-                  <div class="card">
-                    <div class="d-block">
-                      <div class="col-xl-5 left">
-                        <h5>Invoice <span class="invoice-txt">#3076</span></h5>
+                    <div class="card">
+                      <div class="d-block">
+                        <div class="col-xl-5 left">
+                          <h5>Invoice <span class="invoice-txt">#3076</span></h5>
+                        </div>
+                        <div class="col-xl-7 left">
+                          <span class="icon-pb fa fa-print gray-color fa-margin-right"></span>
+                          <span class="icon-pb fa fa-file-pdf-o gray-color fa-margin-right"></span>
+                          <span class="icon-pb fa fa-plus-square-o gray-color fa-margin-right"></span>
+                        </div>
+                        <br class="clear"/>
+                        <div class="col-xl-5 ml-0 pl-0 left">
+                          <span class="pl-3">DUE: <span class="invoice-txt">Upon receipt</span></span>
+                        </div>
+                        <div class="col-xl-7 pr-4 left t-right">
+                          <span><span class="fa fa-user-o fa-margin-right"></span>Jessie Whitesmith</span>
+                        </div>
+                        <br class="clear"/>
+
+                        <div class="form-service">
+                          <h3 class="gray-sc pl-3">Services</h3>
+
+                          <div class="col-xl-12 service-container">
+                            <div class="ts-box pl-0 ml-0 mr-0 pr-0 left">
+                              <span class="sp-left fa fa-bars gray-color fa-margin-right"></span>
+                            </div>
+                            <div class="cs-4 pl-0 ml-0 mr-2 pr-0 left">
+                              <input placeholder="Item name" type="text" name="description" value="" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="cs-1 pl-0 ml-0 mr-2 pr-0 left">
+                              <input placeholder="Qty" type="text" name="description" value="" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
+                              <input placeholder="Unit Price" type="text" name="description" value="" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="cs-2 pl-0 ml-0 mr-0 pr-0 left">
+                              <span class="sc-price">$0.00 <span class="sc-price-icon fa fa-times fa-margin-right"></span></span>
+                            </div>
+                        </div>
+
+                        <div class="item-form pl-c6">
+                          <div class="cs-42 pl-0 ml-0 mr-2 pr-0 left">
+                            <input placeholder="Description (Optional)" type="text" name="description" value="" class="form-control" autocomplete="off">
+                          </div>
+                          <div class="cs-33 pl-0 ml-0 mr-2 pr-0 left">
+                            <input placeholder="Unit cost" type="text" name="description" value="" class="form-control" autocomplete="off">
+                          </div>
+                        </div>
+
+                        <div class="item-form pl-c6">
+                          <div class="sc-form-add">
+                            <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> SERVICE ITEM</span>
+                          </div>
+                        </div>
+
                       </div>
-                      <div class="col-xl-7 left">
-                        <span class="icon-pb fa fa-print gray-color fa-margin-right"></span>
-                        <span class="icon-pb fa fa-file-pdf-o gray-color fa-margin-right"></span>
-                        <span class="icon-pb fa fa-plus-square-o gray-color fa-margin-right"></span>
-                      </div>
-                      <br class="clear"/>
-                      <div class="col-xl-5 ml-0 pl-0 left">
-                        <span class="pl-3">DUE: <span class="invoice-txt">Upon receipt</span></span>
-                      </div>
-                      <div class="col-xl-7 pr-4 left t-right">
-                        <span><span class="fa fa-user-o fa-margin-right"></span>Jessie Whitesmith</span>
-                      </div>
-                      <br class="clear"/>
+
+                      <br/>
 
                       <div class="form-service">
-                        <h3 class="gray-sc pl-3">Services</h3>
+                        <h3 class="gray-sc pl-3">Materials</h3>
 
                         <div class="col-xl-12 service-container">
                           <div class="ts-box pl-0 ml-0 mr-0 pr-0 left">
@@ -336,128 +375,90 @@ span.sc-item {
 
                       <div class="item-form pl-c6">
                         <div class="sc-form-add">
-                          <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> SERVICE ITEM</span>
+                          <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> MATERIALS ITEM</span>
                         </div>
-                      </div>
-
-                    </div>
-
-                    <br/>
-
-                    <div class="form-service">
-                      <h3 class="gray-sc pl-3">Materials</h3>
-
-                      <div class="col-xl-12 service-container">
-                        <div class="ts-box pl-0 ml-0 mr-0 pr-0 left">
-                          <span class="sp-left fa fa-bars gray-color fa-margin-right"></span>
-                        </div>
-                        <div class="cs-4 pl-0 ml-0 mr-2 pr-0 left">
-                          <input placeholder="Item name" type="text" name="description" value="" class="form-control" autocomplete="off">
-                        </div>
-                        <div class="cs-1 pl-0 ml-0 mr-2 pr-0 left">
-                          <input placeholder="Qty" type="text" name="description" value="" class="form-control" autocomplete="off">
-                        </div>
-                        <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
-                          <input placeholder="Unit Price" type="text" name="description" value="" class="form-control" autocomplete="off">
-                        </div>
-                        <div class="cs-2 pl-0 ml-0 mr-0 pr-0 left">
-                          <span class="sc-price">$0.00 <span class="sc-price-icon fa fa-times fa-margin-right"></span></span>
-                        </div>
-                    </div>
-
-                    <div class="item-form pl-c6">
-                      <div class="cs-42 pl-0 ml-0 mr-2 pr-0 left">
-                        <input placeholder="Description (Optional)" type="text" name="description" value="" class="form-control" autocomplete="off">
-                      </div>
-                      <div class="cs-33 pl-0 ml-0 mr-2 pr-0 left">
-                        <input placeholder="Unit cost" type="text" name="description" value="" class="form-control" autocomplete="off">
                       </div>
                     </div>
 
-                    <div class="item-form pl-c6">
-                      <div class="sc-form-add">
-                        <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> MATERIALS ITEM</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="pl-2 pr-2">
-                    <div class="sum-container">
-                        <div class="cs-6 left"></div>
-                        <div class="cs-4 left">
-                          <div class="cs-6 left">
-                            <span class="bold">Subtotal</span>
-                          </div>
+                    <div class="pl-2 pr-2">
+                      <div class="sum-container">
+                          <div class="cs-6 left"></div>
                           <div class="cs-4 left">
-                            <span class="bold text-right">$0.00</span>
+                            <div class="cs-6 left">
+                              <span class="bold">Subtotal</span>
+                            </div>
+                            <div class="cs-4 left">
+                              <span class="bold text-right">$0.00</span>
+                            </div>
                           </div>
-                        </div>
 
-                        <br/>
+                          <br/>
 
-                        <div class="cs-6 pt-2 left"></div>
-                        <div class="cs-4 pt-2 left">
-                          <div class="cs-6 left">
-                            <select name="tax" id="tax" class="form-control gray-first">
-                                <option value="">Select tax rate</option>
-                            </select>
+                          <div class="cs-6 pt-2 left"></div>
+                          <div class="cs-4 pt-2 left">
+                            <div class="cs-6 left">
+                              <select name="tax" id="tax" class="form-control gray-first">
+                                  <option value="">Select tax rate</option>
+                              </select>
+                            </div>
+                            <div class="cs-4 pt-3 left">
+                              <span class="bold text-right">$0.00</span>
+                            </div>
                           </div>
+
+                          <br/>
+
+                          <div class="cs-6 pt-3 left"></div>
                           <div class="cs-4 pt-3 left">
-                            <span class="bold text-right">$0.00</span>
+                            <div class="cs-6 left">
+                              <span class="bold">Total</span>
+                            </div>
+                            <div class="cs-4 left">
+                              <span class="bold text-right">$0.00</span>
+                            </div>
                           </div>
-                        </div>
 
-                        <br/>
-
-                        <div class="cs-6 pt-3 left"></div>
-                        <div class="cs-4 pt-3 left">
-                          <div class="cs-6 left">
-                            <span class="bold">Total</span>
-                          </div>
-                          <div class="cs-4 left">
-                            <span class="bold text-right">$0.00</span>
-                          </div>
-                        </div>
-
-                    </div>
-                    <br/><br/>
-                    <div class="tn-container">
-                      <span class="bold">Thank you for your business, Please call dually at 850-292-299</span>
-                    </div>
-                    <div class="gray-area">
-                      <div class="cost-container">
-                        <div class="cs-34 left">
-                          <span class="bold">Cost Breakdown</span>
-                        </div>
-
-                        <div class="cs-34 left">
-                          <span class="bold">Material Cost</span>
-                        </div>
-
-                        <div class="cs-34 left">
-                          <span class="bold">Profit/Loss</span>
-                        </div>
                       </div>
+                      <br/><br/>
+                      <div class="tn-container">
+                        <span class="bold">Thank you for your business, Please call dually at 850-292-299</span>
+                      </div>
+                      <div class="gray-area">
+                        <div class="cost-container">
+                          <div class="cs-34 left">
+                            <span class="bold">Cost Breakdown</span>
+                          </div>
 
-                      <div class="mt-4 cost-container">
-                        <div class="cs-34 left">
-                          <span class="bold">$0.00</span>
+                          <div class="cs-34 left">
+                            <span class="bold">Material Cost</span>
+                          </div>
+
+                          <div class="cs-34 left">
+                            <span class="bold">Profit/Loss</span>
+                          </div>
                         </div>
 
-                        <div class="cs-34 left">
-                          <span class="bold">$0.00</span>
-                        </div>
+                        <div class="mt-4 cost-container">
+                          <div class="cs-34 left">
+                            <span class="bold">$0.00</span>
+                          </div>
 
-                        <div class="cs-34 left">
-                          <span class="bold">$0.00</span>
+                          <div class="cs-34 left">
+                            <span class="bold">$0.00</span>
+                          </div>
+
+                          <div class="cs-34 left">
+                            <span class="bold">$0.00</span>
+                          </div>
                         </div>
                       </div>
                     </div>
+
                   </div>
-
                 </div>
               </div>
 
+              <!-- end of stepper 1 -->
 
           </div>
 
