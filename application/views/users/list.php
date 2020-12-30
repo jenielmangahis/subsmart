@@ -24,17 +24,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #modalAddEmployee .modal-content{
         width: 100%;
     }
-    #modalAddEmployee .modal-body{
+    #modalAddEmployee .modal-body, #modalEditEmployee .modal-body{
         padding: 20px!important;
         max-height: 550px;
         overflow-y: auto;
     }
-    #modalAddEmployee .section-title{
+    #modalAddEmployee .section-title, #modalEditEmployee .section-title{
         font-size: 20px;
         font-weight: bold;
         color: grey;
     }
-    #modalAddEmployee label{
+    #modalAddEmployee label, #modalEditEmployee label{
         font-weight: bold;
     }
     .view-password{
@@ -227,6 +227,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
+<!--Edit Employee modal-->
+<!-- The Modal -->
+<div class="modal fade" id="modalEditEmployee">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-pencil"></i> Edit Employee</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="editEmployeeForm">
+                <div class="modal-body modal-edit-employee"></div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="closedEmployeeModal">Close</button>
+                <button type="button" class="btn btn-success" id="updateEmployee">Save & exit</button>
+            </div>
+        	</form>
+
+        </div>
+    </div>
+</div>
+
 <!--Adding Employee modal-->
 <!-- The Modal -->
 <div class="modal fade" id="modalAddEmployee">
@@ -664,10 +688,79 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     }
                 });
             }else{
-            	alert("Please check your entries and try again");
+            	Swal.fire(
+                {
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Failed',
+                    text: "Something is wrong in the process",
+                    icon: 'warning'
+                });
             }
         });
+        $(document).on('click','#updateEmployee',function () {
+            let values = {};
+            $.each($('#editEmployeeForm').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            if(values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['role']){
+                $.ajax({
+                    url: base_url + 'users/_update_employee',
+                    type:"POST",
+                    dataType:"json",
+                    data:{values:values},
+                    success:function (data) {
+                        if (data == 1){
+                            $("#modalEditEmployee").modal('hide');
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    text: "Employee record has been Updated",
+                                    icon: 'success'
+                                });
+                            location.reload();
+                        }else{
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Failed',
+                                    text: "Something is wrong in the process",
+                                    icon: 'warning'
+                                });
+                        }
+                    }
+                });
+            }else{
+            	Swal.fire(
+                {
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Failed',
+                    text: "Something is wrong in the process",
+                    icon: 'warning'
+                });
+            }
+        });
+
         $(document).on('click','#editEmployee',function () {
+            var user_id = $(this).attr('data-id');
+            $('#modalEditEmployee').modal({backdrop: 'static', keyboard: false});
+            $.ajax({
+                url: base_url + "users/load_edit_employee",
+                type:"POST",
+                dataType: "html",
+                data:{user_id:user_id},
+                success:function (data) {
+                	$(".modal-edit-employee").html(data);
+                }
+            });
+        });
+        
+        /*Old Edit*/
+        /*$(document).on('click','#editEmployee',function () {
             var user_id = $(this).attr('data-id');
             $('#modalAddEmployee').modal({backdrop: 'static', keyboard: false});
             var form = $('#modalAddEmployee').find('form');
@@ -688,7 +781,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     $('#employeeRole').next($('#select2-employeeRole-container').attr('title',data.role).html(data.role));
                 }
             });
-        });
+        });*/
     });
     $('#changePassword').click(function () {
         $('div.new-password-container').toggle();
