@@ -8,6 +8,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
   position: relative;
   top: 4px;
 }
+.gray {
+  color: #909090;
+}
 .bs-stepper {
   margin-bottom: 10px;
 }
@@ -17,12 +20,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
 .left {
   float:left;
 }
+.more-feed {
+  width: max-content;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 10px;
+}
+button.more-btn:hover {
+  background: green;
+}
+.right-icon {
+  float: right;
+  position: relative;
+  top: 4px;
+}
+button.more-btn {
+  box-shadow: none;
+  border: 0px;
+  background: #41a4ff;
+  color: white;
+  padding: 6px 20px;
+  text-transform: uppercase;
+  font-size: 15px;
+}
 span.invoice-txt {
   color: #45a6ff;
 }
 span.sc-price-icon{
   color: red;
   font-size: 16px;
+}
+span.scn {
+  font-size: 15px;
+  position: relative;
+  top: 0px;
+}
+.round-container {
+  background: #cecece;
+  padding: 10px 20px;
+  border-radius: 100px;
+  display: inline-block;
+}
+.img-round {
+  border-radius: 100px;
+  width: 21px;
+  height: 21px;
+  object-fit: cover;
+  margin-right: 10px;
 }
 .item-form {
   display: block;
@@ -124,6 +168,18 @@ span.sc-item {
   position: relative;
   left: 5px;
 }
+.cs-100 {
+  width: 100%;
+  min-height: 10px;
+}
+.cs-9 {
+  width: 90%;
+  min-height: 10px;
+}
+.cs-8 {
+  width: 80%;
+  min-height: 10px;
+}
 .cs-7 {
   width: 70%;
   min-height: 10px;
@@ -157,6 +213,9 @@ span.sc-item {
 .cs-2 {
   width: 21%;
 }
+.cs-20 {
+  width: 20%;
+}
 .cs-1 {
   width: 10%;
 }
@@ -171,6 +230,11 @@ span.sc-item {
 .cost-container {
   border-top: 1px solid #868686;
   margin-top: 10px;
+  padding: 20px;
+}
+.booking-container {
+  border-top: 1px solid #868686;
+  margin-top: 5px;
   padding: 20px;
 }
 .sum-container {
@@ -456,6 +520,140 @@ span.sc-item {
 
                   </div>
                 </div>
+
+                <div class="card">
+                  <div class="d-block">
+                    <h5><span class="fa fa-rss fa-margin-right"></span> Activity Feed</h5>
+
+                    <!-- start of activity content -->
+                    <div class="activity-container mt-4">
+                      <div class="cs-3 left">
+                        <div class="round-container">
+                          <span>
+                            <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                            <span class="scn">House Call Party</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="cs-4 pt-2 left">
+                        <span>
+                          <span class="fa fa-comments-o fa-margin-right"></span> Job Scheduled SMS sent to (251) 294 - 525</span>
+                      </div>
+
+                      <div class="cs-20 pt-2 left">
+                        <span>Wed 12/23/20 9:40am</span>
+                      </div>
+
+                      <div class="cs-1 pt-2 left">
+                        <span class="fa fa-angle-down fa-margin-right"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="activity-container mt-4">
+                    <div class="cs-3 left">
+                      <div class="round-container">
+                        <span>
+                          <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                          <span class="scn">House Call Sparky</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="cs-4 pt-2 left">
+                      <span>
+                        <span class="fa fa-envelope fa-margin-right"></span> Job Scheduled email sent to sample@gmail.com</span>
+                    </div>
+
+                    <div class="cs-20 pt-2 left">
+                      <span>Wed 12/22/20 10:40pm</span>
+                    </div>
+
+                    <div class="cs-1 pt-2 left">
+                      <span class="fa fa-angle-down fa-margin-right"></span>
+                    </div>
+                  </div>
+
+                  <div class="activity-container mt-4">
+                    <div class="cs-3 left">
+                      <div class="round-container">
+                        <span>
+                          <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                          <span class="scn">House Call Sparky</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="cs-4 pt-2 left">
+                      <span>
+                        <span class="fa fa-calendar-check-o fa-margin-right"></span> Job Scheduled for Mon, Dec 28 9:00am - 11:00am</span>
+                    </div>
+
+                    <div class="cs-20 pt-2 left">
+                      <span>Wed 12/22/20 11:00am</span>
+                    </div>
+
+                    <div class="cs-1 pt-2 left">
+                      <span class="fa fa-angle-down fa-margin-right"></span>
+                    </div>
+                  </div>
+
+
+                  <div class="activity-container mt-4">
+                    <div class="cs-3 left">
+                      <div class="round-container">
+                        <span>
+                          <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                          <span class="scn"> John Smith</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="cs-4 pt-2 left">
+                      <span>
+                        <span class="fa fa-book fa-margin-right"></span> Dispatched to Housecall Party</span>
+                    </div>
+
+                    <div class="cs-20 pt-2 left">
+                      <span>Tue 12/22/20 11:00am</span>
+                    </div>
+
+                    <div class="cs-1 pt-2 left">
+                      <span class="fa fa-angle-down fa-margin-right"></span>
+                    </div>
+                  </div>
+
+                  <div class="more-feed">
+                    <button class="more-btn">See all activity</button>
+                  </div>
+
+                </div>
+
+                <div class="card">
+                  <div class="d-block">
+                    <h5><span class="fa fa-bookmark fa-margin-right"></span> Quickbooks online <span class="fa fa-caret-down right-icon fa-margin-right"></span></h5>
+                  </div>
+                  <div class="booking-container">
+                    <div class="transaction-activity">
+                      <div class="left mr-3 pt-3">
+                        <span class="fa fa-gears fa-margin-right"></span>
+                      </div>
+                      <div class="cs-9 left">
+                        <span class="d-block">Invoice not sent to Quickbooks yet</span>
+                        <span class="gray d-block">Invoice will be sent to Quickbooks when job is finished, paid, or emailed to customer</span>
+                      </div>
+                      <div class="cs-100 mt-5 left">
+                        <span class="gray d-block">QBO Transactions (0)</span>
+                      </div>
+                      <div class="cs-100 mt-5 left">
+                        <span class="gray d-block">QBO Errors (0)</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                 <!-- end of activity content -->
               </div>
 
               <!-- end of stepper 1 -->
