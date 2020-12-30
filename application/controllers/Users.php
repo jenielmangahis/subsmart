@@ -1332,6 +1332,35 @@ class Users extends MY_Controller {
 
         echo json_encode(1);
     }
+
+    public function ajaxUpdateEmployeePassword(){
+    	$is_success = false;
+    	$msg = "";
+
+    	$new_password = $this->input->post('values[new_password]');
+    	$re_password  = $this->input->post('values[re_password]');
+    	$user_id = $this->input->post('values[change_password_user_id]');
+
+    	if( $new_password != $re_password ){
+    		$msg = "Password not same";
+    	}else{
+    		$data = array(
+	            'password' => hash("sha256",$new_password),
+	            'password_plain' => $new_password,
+	        );
+
+	        $user = $this->Users_model->update($user_id,$data);
+
+	        $is_success = true;
+    	}
+
+    	$json_data = [
+    		'is_success' => $is_success,
+    		'msg' => $msg
+    	];
+
+    	echo json_encode($json_data);
+    }
 }
 
 

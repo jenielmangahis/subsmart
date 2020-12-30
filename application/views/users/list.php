@@ -192,6 +192,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <?php //if (hasPermissions('users_edit')): ?>
                                                     <!--                                                        <a href="--><?php //echo url('users/edit/' . $row->id) ?><!--"  title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>-->
                                                     <a href="javascript:void(0)" data-id="<?php echo $row->id?>" id="editEmployee"  title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                    <a href="javascript:void(0)" data-name="<?php echo $row->FName.' '.$row->LName; ?>" data-id="<?php echo $row->id?>" id="changePassword"  title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
                                                     <?php //endif ?>
                                                     <?php //if (hasPermissions('users_view')): ?>
                                                     <a href="<?php echo url('users/view/' . $row->id) ?>" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
@@ -228,7 +229,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <!--Edit Employee modal-->
-<!-- The Modal -->
 <div class="modal fade" id="modalEditEmployee">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -242,8 +242,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="modal-body modal-edit-employee"></div>
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="closedEmployeeModal">Close</button>
+                <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Close</button>
                 <button type="button" class="btn btn-success" id="updateEmployee">Save & exit</button>
+            </div>
+        	</form>
+
+        </div>
+    </div>
+</div>
+<!--Change Password modal-->
+<div class="modal fade" id="modalChangePassword">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-lock"></i> Change Password</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="changePasswordForm">
+            	<input type="hidden" name="change_password_user_id" id="changePasswordUserId">
+                <div class="modal-body">
+                	<!-- <div class="row">
+                		<div class="col-md-12">
+                			<label for="">Employee Name</label>
+                            <input type="text" id="changePasswordEmployeeName" class="form-control" readonly="" disabled="">
+                		</div>
+                	</div>
+                	<br />
+                	<hr /> -->
+                	<div class="row">
+                        <div class="col-md-6">
+                            <label for="">New Password</label>
+                            <input type="password" name="new_password" id="newPassword" required="" class="form-control">
+                            <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+                            <span class="old-password-error"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Retype Password</label>
+                            <input type="password" name="re_password" id="rePassword" required="" class="form-control">
+                            <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+                        </div>
+                    </div>
+                </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
+                <button type="button" class="btn btn-success" id="updatePassword">Save & exit</button>
             </div>
         	</form>
 
@@ -252,7 +297,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <!--Adding Employee modal-->
-<!-- The Modal -->
 <div class="modal fade" id="modalAddEmployee">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -301,13 +345,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-6">
                                     <label for="">Password</label>
                                     <input type="password" name="addnew_password" id="employeePass" class="form-control">
-                                    <i class="fa fa-eye view-password" id="showPass" title="Show password" data-toggle="tooltip"></i>
+                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
                                     <span class="password-error"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">Confirm Password</label>
                                     <input type="password" name="confirm_password" id="employeeConfirmPass" class="form-control">
-                                    <i class="fa fa-eye view-password" id="showConfirmPass" title="Show password" data-toggle="tooltip"></i>
+                                    <i class="fa fa-eye view-password showConfirmPass" id="" title="Show password" data-toggle="tooltip"></i>
                                 </div>
                             </div>
                         </div>
@@ -317,13 +361,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-6">
                                     <label for="">Old Password</label>
                                     <input type="password" name="password" id="oldPassword" class="form-control">
-                                    <i class="fa fa-eye view-password" id="showPass" title="Show password" data-toggle="tooltip"></i>
+                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
                                     <span class="old-password-error"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">New Password</label>
                                     <input type="password" name="password" id="newPassword" class="form-control">
-                                    <i class="fa fa-eye view-password" id="showPass" title="Show password" data-toggle="tooltip"></i>
+                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
                                 </div>
                             </div>
                         </div>
@@ -500,7 +544,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(document).on('click','#addEmployeeData',function () {
             $('#modalAddEmployee').modal({backdrop: 'static', keyboard: false});
         });
-        $('#showPass').click(function () {
+        $('.showPass').click(function () {
             $(this).toggleClass('fa-eye-slash');
             if ($(this).prev('input[type="password"]').length == 1){
                 $(this).prev('input[type="password"]').attr('type','text');
@@ -510,7 +554,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $(this).attr('title','Show password').attr('data-original-title','Show password').tooltip('update').tooltip('show');
             }
         });
-        $('#showConfirmPass').click(function () {
+        $('.showConfirmPass').click(function () {
             $(this).toggleClass('fa-eye-slash');
             if ($(this).prev('input[type="password"]').length == 1){
                 $(this).prev('input[type="password"]').attr('type','text');
@@ -745,6 +789,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
 
+        $(document).on('click','#updatePassword',function () { 
+        	let values = {};
+            $.each($('#changePasswordForm').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });           
+            if(values['new_password'] && values['re_password']){
+                $.ajax({
+                    url: base_url + 'users/_update_employee_password',
+                    type:"POST",
+                    dataType:"json",
+                    data:{values:values},
+                    success:function (data) {
+                        if (data.is_success){
+                            $("#modalChangePassword").modal('hide');
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    text: "Employee password has been Updated",
+                                    icon: 'success'
+                                });
+                        }else{
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Failed',
+                                    text: data.msg,
+                                    icon: 'warning'
+                                });
+                        }
+                    }
+                });
+            }else{
+            	Swal.fire(
+                {
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Failed',
+                    text: "Please fillup form entries",
+                    icon: 'warning'
+                });
+            }
+        });
+
         $(document).on('click','#editEmployee',function () {
             var user_id = $(this).attr('data-id');
             $('#modalEditEmployee').modal({backdrop: 'static', keyboard: false});
@@ -757,6 +847,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 	$(".modal-edit-employee").html(data);
                 }
             });
+        });
+
+        $(document).on('click','#closeEditEmployeeModal',function () {
+            $("#modalEditEmployee").modal('hide');
+        });
+
+        $(document).on('click','#closedChangePasswordModal',function () {
+            $("#modalChangePassword").modal('hide');
+        });
+
+        $(document).on('click','#changePassword',function () {
+            var user_id = $(this).attr('data-id');
+            var employee_name = $(this).attr('data-name');
+            $("#changePasswordUserId").val(user_id);
+            $("#changePasswordEmployeeName").val(employee_name);
+            $("#modalChangePassword").modal('show');
         });
         
         /*Old Edit*/
@@ -783,11 +889,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
         });*/
     });
-    $('#changePassword').click(function () {
+    /*$('#changePassword').click(function () {
         $('div.new-password-container').toggle();
         var text =  $(this).text();
         $(this).text(text == "Want to change password?" ? "I changed my mind. Maybe later." : "Want to change password?").css('color','#0b97c4');
-    });
+    });*/
     Dropzone.autoDiscover = false;
     $(document).ready(function () {
         var fname = [];
