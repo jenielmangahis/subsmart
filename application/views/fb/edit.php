@@ -52,281 +52,12 @@
                             <a class="nav-link style-tab builder-tabs" href="#styleBuildTab" data-toggle="tab">Style</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link rules-tab builder-tabs" href="#rulesBuildTab" data-toggle="tab">Rules</a>
+                            <a class="nav-link rules-tab builder-tabs" href="/fb/rules/<?= $form_id ?>">Rules</a>
                         </li>
                     </ul>
                     <div class="tab-content py-4">
                         <div class="tab-pane active" id="editBuildTab">
                             <div class="container-fluid px-0 mt-0">
-                                <!-- <ul id="accordion" class="accordion">
-                                    <li>
-                                        <div class="link"></i>Common Items<i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <div class="submenu">
-                                            <div class="container-fluid mt-0 py-2">
-                                                <table class="item-type-table" cellpadding="0" cellspacing="12"
-                                                    border="0">
-                                                    <tbody id="commonItemTypes">
-                                                        <tr>
-                                                            <td class="item-type" id="radioButton">
-                                                                <div class="form-elements-template"
-                                                                    element_type="RadioButton">
-                                                                    <i class="fa fa-dot-circle-o template-icon"></i>
-                                                                    Radio Button
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="dropDown">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Dropdown">
-                                                                    <i
-                                                                        class="fa fa-caret-square-o-down template-icon"></i>
-                                                                    Dropdown
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="checkBox">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Checkbox">
-                                                                    <i class="fa fa-check-square-o template-icon"></i>
-                                                                    Check Box
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="emailAddress">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Email">
-                                                                    <i class="fa fa-envelope template-icon"></i> Email
-                                                                    Address
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="checkBox">
-                                                                <div class="form-elements-template"
-                                                                    element_type="LongAnswer">
-                                                                    <i class="fa fa-text-width template-icon"></i> Long
-                                                                    Answer
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="emailAddress">
-                                                                <div class="form-elements-template"
-                                                                    element_type="ShortAnswer">
-                                                                    <i class="fa fa-font template-icon"></i> Short
-                                                                    Answer
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="calendar">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Calendar">
-                                                                    <i class="fa fa-calendar template-icon"></i>
-                                                                    Calendar
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="number">
-                                                                <div class="form-elements-template"
-                                                                    element_type="NumberInput">
-                                                                    <i class="fa fa-font template-icon"></i> Number
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="file">
-                                                                <div class="form-elements-template"
-                                                                    element_type="FileUpload">
-                                                                    <i class="fa fa-file template-icon"></i> File Upload
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="textList">
-                                                                <div class="form-elements-template"
-                                                                    element_type="TextList">
-                                                                    <i class="fa fa-list template-icon"></i> Text List
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="rating">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Rating">
-                                                                    <i class="fa fa-star-half-alt template-icon"></i>
-                                                                    Rating
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="ranking">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Ranking">
-                                                                    <i class="fa fa-boxes template-icon"></i> Ranking
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="hiddenField">
-                                                                <div class="form-elements-template"
-                                                                    element_type="HiddenField">
-                                                                    <i class="fa fa-eye-slash template-icon"></i> Hidden
-                                                                    Field
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="ranking">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Ranking">
-                                                                    <i class="fa fa-boxes template-icon"></i> Ranking
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="link"></i>Formatting Items<i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <ul class="submenu">
-                                            <div class="container-fluid mt-0 py-2">
-                                                <table class="item-type-table" cellpadding="0" cellspacing="12"
-                                                    border="0">
-                                                    <tbody id="commonItemTypes">
-                                                        <tr>
-                                                            <td class="item-type" id="heading">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Heading">
-                                                                    <i class="fa fa-heading template-icon"></i>
-                                                                    Heading
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="formattedText">
-                                                                <div class="form-elements-template"
-                                                                    element_type="FormattedText">
-                                                                    <i class="fa fa-align-center template-icon"></i>
-                                                                    Formatted Text
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="image">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Image">
-                                                                    <i class="fa fa-image template-icon"></i>
-                                                                    Image
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="link">
-                                                                <div class="form-elements-template" element_type="Link">
-                                                                    <i class="fa fa-link template-icon"></i>
-                                                                    Link
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="customCode">
-                                                                <div class="form-elements-template"
-                                                                    element_type="CustomCode">
-                                                                    <i class="fa fa-code template-icon"></i>
-                                                                    Custom Code
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="image">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Image">
-                                                                    <i class="fa fa-image template-icon"></i>
-                                                                    Image
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="link"></i>Email Items<i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <ul class="submenu">
-                                            <div class="container-fluid mt-0 py-2">
-                                                <table class="item-type-table" cellpadding="0" cellspacing="12"
-                                                    border="0">
-                                                    <tbody id="commonItemTypes">
-                                                        <tr>
-                                                            <td class="item-type" id="emailAddress">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Email">
-                                                                    <i class="fa fa-envelope template-icon"></i> Email
-                                                                    Address
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="emailAddress">
-                                                                <div class="form-elements-template"
-                                                                    element_type="Email">
-                                                                    <i class="fa fa-envelope template-icon"></i> Email
-                                                                    Address
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="link"></i>Order Form Items<i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <ul class="submenu">
-                                            <li><a href="#" onclick="setActiveTemplate(0)">Blank Form</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="link"></i>Matrix/Grid Items<i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <ul class="submenu">
-                                            <div class="container-fluid mt-0 py-2">
-                                                <table class="item-type-table" cellpadding="0" cellspacing="12"
-                                                    border="0">
-                                                    <tbody id="matrixItemTypes">
-                                                        <tr>
-                                                            <td class="item-type" id="radioButtonMatrix">
-                                                                <div class="form-elements-template"
-                                                                    element_type="RadioButtonMatrix">
-                                                                    <i class="fa fa-dot-circle-o template-icon"></i> Radio
-                                                                    Button Matrix
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="radioButtonMatrixMultiScale">
-                                                                <div class="form-elements-template"
-                                                                    element_type="RadioButtonMatrixMultiScale">
-                                                                    <i class="fa fa-dot-circle-o template-icon"></i> Radio
-                                                                    Button Matrix Multi Scale
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="item-type" id="checkboxMatrix">
-                                                                <div class="form-elements-template"
-                                                                    element_type="CheckboxMatrix">
-                                                                    <i class="fa fa-check-square-o template-icon"></i> Checkbox Matrix
-                                                                </div>
-                                                            </td>
-                                                            <td class="item-type" id="checkboxMatrixMultiScale">
-                                                                <div class="form-elements-template"
-                                                                    element_type="CheckboxMatrixMultiScale">
-                                                                    <i class="fa fa-check-square-o template-icon"></i> Checkbox Matrix Multi Scale
-                                                                </div>
-                                                            </td>
-                                                        </tr>                                                        
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="link"></i>Item Blocks<i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <ul class="submenu">
-                                            <li><a href="#" onclick="setActiveTemplate(0)">Blank Form</a></li>
-                                        </ul>
-                                    </li>
-                                </ul> -->
                                 <div class="row sidebar-container">
                                     <div class="col-12 element-group-label my-2">
                                         <p class="sidebar-title"><span>Common Items</span></p>
@@ -406,8 +137,8 @@
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <div class="form-elements-template" element_type="Ranking">
-                                            <i class="fa fa-boxes template-icon"></i> Ranking
+                                        <div class="form-elements-template" element_type="Signature">
+                                            <i class="fa fa-signature template-icon"></i> Signature
                                         </div>
                                     </div>
                                     <div class="col-12 element-group-label my-2">
@@ -441,6 +172,12 @@
                                         <div class="form-elements-template" element_type="CustomCode">
                                             <i class="fa fa-code template-icon"></i>
                                             Custom Code
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-elements-template" element_type="ContainerBlock">
+                                            <i class="fa fa-columns template-icon"></i>
+                                            Container Block
                                         </div>
                                     </div>
                                     <div class="col-12 element-group-label my-2">
@@ -850,7 +587,7 @@
                             <button onclick="handleFormStyleSave()"
                                 class="btn btn-sm btn-primary d-inline-block">Save</button>
                             <button onclick="handleCopyFromFormClicked()"
-                                class="btn btn-sm btn-secondary d-inline-block">Copy From Form...</button>
+                                class="btn btn-sm btn-secondary d-inline-block" onclick="handleCopyFromFormClicked()">Copy From Form...</button>
                         </div>
                         <div id="formBuilderContainer" class="row">
                             <div class="col-12" id="blankFormPlaceHolder">

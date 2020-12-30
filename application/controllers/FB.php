@@ -12,8 +12,12 @@ class FB extends MY_Controller {
 			'assets/fb/css/datepicker.css',
         ));
         add_footer_js(array(
+			'assets/fb/js/pipes.js',
+			'assets/fb/js/jquery.qrcode.js',
+			'assets/fb/js/qrcode.js',
 			'assets/fb/js/accordion.min.js',
 			'assets/fb/js/datepicker.js',
+			'assets/fb/js/loading.js',
 			'assets/fb/js/main.js',
 		));
 		$this->page_data['page']->title = 'nSmart - Front End About Us';
@@ -21,21 +25,33 @@ class FB extends MY_Controller {
 		$this->load->library('form_validation');
 		$this->load->model('FB_model', 'form_builder');
 		$this->load->model('FB_elements_model', 'form_elements');
+		$this->load->model('FB_folders_model', 'form_folders');
 
 	}
 
 	public function index(){
 		add_footer_js(array(
+			'assets/fb/js/folder/move_folder_modal.js',
+			'assets/fb/js/form_delete_modal.js',
 			'assets/fb/js/index.js',
 		));
+		$this->load->view('fb/folder/move_folder_modal.php', $this->page_data);
+		$this->load->view('fb/form_delete_modal.php', $this->page_data);
 		$this->load->view('fb/index.php', $this->page_data);
 	}
 	
-	public function getAllByactiveUser() {
+	public function getByActiveUser() {
 		$user = (object)$this->session->userdata('logged');
-		$response = $this->form_builder->getAllByUserID($user->id);
+		$data = $this->input->get();
+		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($data));
+		$response = $this->form_builder->getByUserID($user->id, $data);
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
+	}
 
+	public function getFoldersByActiveUser() {
+		$user = (object)$this->session->userdata('logged');
+		$response = $this->form_folders->getByUserID($user->id);
+		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
     
     public function add(){
@@ -69,6 +85,7 @@ class FB extends MY_Controller {
 			'assets/terms_and_conditions/js/common.js',
 			'assets/fb/js/jquery-sortable.js',
 			'assets/fb/js/jquery-ui.js',
+			'assets/fb/js/copy_from_form.js',
 			'assets/terms_and_conditions/js/katex.min.js',
 			'assets/terms_and_conditions/js/kothing-editor.min.js',			
 			'assets/fb/js/edit.js',
@@ -76,7 +93,29 @@ class FB extends MY_Controller {
 		));
 		$this->page_data['form_id'] = $id;
 		$this->load->view('fb/element_settings_modal.php', $this->page_data);
+		$this->load->view('fb/copy_from_form_modal.php', $this->page_data);
 		$this->load->view('fb/edit.php', $this->page_data);
+		$this->load->view('fb/form_elements.php', $this->page_data);
+	}
+
+	public function rules($id){
+		add_css(array(
+			'assets/fb/css/edit.css',
+			'assets/terms_and_conditions/css/kothing-editor.min.css',
+			'assets/terms_and_conditions/css/main.css'
+		));
+		add_footer_js(array(
+			'assets/terms_and_conditions/js/common.js',
+			'assets/fb/js/jquery-sortable.js',
+			'assets/fb/js/jquery-ui.js',
+			'assets/terms_and_conditions/js/katex.min.js',
+			'assets/terms_and_conditions/js/kothing-editor.min.js',			
+			'assets/fb/js/edit.js',
+			'assets/fb/js/builder.js',
+		));
+		$this->page_data['form_id'] = $id;
+		$this->load->view('fb/element_settings_modal.php', $this->page_data);
+		$this->load->view('fb/rules.php', $this->page_data);
 		$this->load->view('fb/form_elements.php', $this->page_data);
 	}
 
@@ -93,6 +132,18 @@ class FB extends MY_Controller {
 		));
 		$this->page_data['form_id'] = $id;
 		$this->load->view('fb/settings.php', $this->page_data);
+		$this->load->view('fb/form_elements.php', $this->page_data);
+	}
+
+	public function share($id){
+		add_css(array(
+			'assets/fb/css/share.css',
+		));
+		add_footer_js(array(
+			'assets/fb/js/share.js',
+		));
+		$this->page_data['form_id'] = $id;
+		$this->load->view('fb/share.php', $this->page_data);
 		$this->load->view('fb/form_elements.php', $this->page_data);
 	}
 
@@ -145,6 +196,36 @@ class FB extends MY_Controller {
 
 		$response = $this->form_builder->update($data, $id);
 
+		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
+	}
+
+	public function foldersIndex() {
+		add_footer_js(array(
+			'assets/fb/js/folder/index.js',
+		));
+		$this->load->view('fb/folder/folder_delete_modal.php', $this->page_data);
+		$this->load->view('fb/folder/index.php', $this->page_data);
+	}
+
+	public function updateFolder($id) {
+		$data = $this->input->post();
+
+		$response = $this->form_folders->update($data, $id);
+
+		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));		
+	}
+
+	public function createFolder() {
+		$data = $this->input->post();
+		$user = (object)$this->session->userdata('logged');
+		$data['user_id'] = $user->id;
+		$response = $this->form_folders->create($data);
+
+		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));		
+	}
+
+	public function destroyFolder($id) {
+		$response = $this->form_folders->destroy($id);
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 }

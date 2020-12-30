@@ -102,9 +102,11 @@ $route['terms-and-conditions/add'] = 'TermsAndConditionsController/add';
 $route['fb'] = 'FB';
 $route['fb/add'] = 'FB/add';
 $route['fb/edit/(:num)'] = 'FB/edit/$1';
+$route['fb/rules/(:num)'] = 'FB/rules/$1';
 $route['fb/settings/(:num)'] = 'FB/settings/$1';
+$route['fb/share/(:num)'] = 'FB/share/$1';
 $route['fb/view/(:num)'] = 'FB/view/$1';
-$route['fb/get-all-by-active-user'] = 'FB/getAllByactiveUser';
+$route['fb/get-by-active-user'] = 'FB/getByActiveUser';
 $route['fb/get-form-by-id/(:num)'] = 'FB/getByFormID/$1';
 $route['fb/create']['post'] = 'FB/create';
 $route['fb/update/(:num)']['post'] = 'FB/update/$1';
@@ -114,6 +116,14 @@ $route['fb/elements/create']['post'] = 'FB/createFormElement';
 $route['fb/elements/update-order']['post'] = 'FB/updateOrder';
 $route['fb/elements/update/(:num)']['post'] = 'FB/updateElement/$1';
 $route['fb/elements/destroy/(:num)']['post'] = 'FB/destroyElement/$1';
+
+//fb folders
+$route['fb/folders/get-by-active-user'] = 'FB/getFoldersByActiveUser';
+$route['fb/folders/'] = 'FB/foldersIndex';
+$route['fb/folders'] = 'FB/foldersIndex';
+$route['fb/folders/update/(:num)']['post'] = 'FB/updateFolder/$1';
+$route['fb/folders/create']['post'] = 'FB/createFolder';
+$route['fb/folders/destroy/(:num)']['post'] = 'FB/destroyFolder/$1';
 
 // api
 $route['terms-and-conditions/get-all'] = 'TermsAndConditionsController/getAll';

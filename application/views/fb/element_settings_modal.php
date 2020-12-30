@@ -376,21 +376,22 @@
                                         </div>
                                         <div class="col-2 rule-method-selector">
                                             <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                                                <option selected>is</option>
-                                                <option value="1">is not</option>
+                                                <option selected="1">is</option>
+                                                <option value="2">is not</option>
+                                                <option value="3">greater than</option>
+                                                <option value="4">less than</option>
                                             </select>
                                         </div>
                                         <div class="col-4 rule-element-answer-selector">
-                                            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                                            <!-- <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
                                                 <option selected>Any response</option>
-                                            </select>
+                                            </select> -->
+                                            <input type="text" id="inlineFormCustomSelectPref" name="equalValue" class="form-control">
                                         </div>
                                         <div class="col-2 element-rule-actions">
                                             <div class="btn-group align-middle pt-1">
-                                                <button
-                                                    class="btn btn-sm btn-success rounded-circle align-middle m-1">+</button>
-                                                <button
-                                                    class="btn btn-sm btn-danger rounded-circle align-middle m-1">-</button>
+                                                <button type="button" class="btn btn-sm btn-success rounded-circle align-middle m-1">+</button>
+                                                <button type="button" class="btn btn-sm btn-danger rounded-circle align-middle m-1">-</button>
                                             </div>
                                         </div>
                                     </div>

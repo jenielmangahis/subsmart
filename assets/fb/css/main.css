@@ -18,7 +18,25 @@
     display: none;
 }
 
-.form-element-controls:hover > .btn-group {
+.form-element-controls > .element-handle, .form-element-controls > .contained-element-handle{
+    width: 25px;
+    height: 25px;
+    padding: 5px;
+    z-index: 6;
+    position:absolute;                  
+    top: 5px;
+    right: 5px; 
+    display: none;
+    color: white;
+    /* background-color: #32243d; */
+}
+
+.form-element-controls > .element-handle > i, .form-element-controls > .contained-element-handle > i{
+    margin: auto;
+    display: block;
+}
+
+.form-element-controls:hover > .btn-group, .form-element-controls:hover > .element-handle, .form-element-controls:hover > .contained-element-handle {
     display: block;
 }
 
@@ -88,7 +106,7 @@ div#blankFormPlaceHolder {
     text-align: center;
 }
 
-#formBuilderContainer, #formContainer {
+#formBuilderContainer, #formContainer, #formRulesContainer {
     padding: 20px;
     border: 2px solid lightgray;
     margin: 50px 100px;
@@ -163,3 +181,53 @@ div#blankFormPlaceHolder {
      max-height: 85vh !important;
      overflow-y: scroll;
  }
+
+ .folder-tr {
+     cursor: pointer;
+ }
+
+ .folder-tr:hover, .folder-tr.active {
+    background-color:rgb(186, 189, 190) !important;
+ }
+
+ .folder-tr.active .btn {
+    display: inline-block;
+ }
+
+ .folder-tr .btn {
+    display: none;
+ }
+
+ .tall-anchor {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+ }
+
+ .favorite-indicator {
+     cursor: pointer;
+ }
+
+ .signature-canvas {
+     height: 160px !important;
+ }
+
+ div.code {
+    white-space: nowrap;
+}
+.code {
+    background: #F3F7FB;
+    border: 1px solid rgba(98, 142, 166, 0.4);
+    border-radius: 4px;
+    color: #466D82;
+    cursor: text;
+    font-style: normal;
+    overflow: auto;
+    padding: 10px 15px;
+}
+
+.container-block {
+    background-color: lightgray;
+    min-height: 100px;
+    padding: 4px;
+}
