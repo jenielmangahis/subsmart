@@ -1,8 +1,21 @@
+let forms = [];
 const handleOnLoad = async (form_id) => {
   await loadElements(form_id, true).then(res => {
     initBuilder();
-    initEditor();
+    initSignPads();
+
+    try {
+      initEditor();      
+    } catch (error) {
+      console.log(error);
+    }
   });
+  getAllForms().then(res => {
+    forms = res.data;
+    forms.forEach(el => {
+      appendFormOptions(el);
+    })
+  })
 };
 
 const loadForm = async (form_id, editable) => {

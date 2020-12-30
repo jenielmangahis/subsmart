@@ -968,6 +968,32 @@ class Customer extends MY_Controller
         fpassthru($f);
     }
 
+    public function customer_signature_upload(){
+        if ( 0 < $_FILES['file']['error'] ) {
+            echo 'Error: ' . $_FILES['file']['error'] . '<br>';
+        } else {
+            $uniquesavename=time().uniqid(rand());
+            $path = $_FILES['file']['name'];
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $destination = 'uploads/customer/' .$uniquesavename.'.'.$ext;
+            move_uploaded_file($_FILES['file']['tmp_name'], $destination);
+
+            $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
+            $content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
+            $input =  array();
+
+            $input = array();
+            $input['prof_sign_img'] = '/'.$destination;
+            $input['prof_id'] = $_POST['id'];
+            if($this->customer_ad_model->update_data($input,"acs_profile","prof_id")){
+                echo '/'.$destination;
+            }else{
+                echo "Error";
+            }
+
+
+        }
+    }
 
     public function index($status_index = 0)
     {

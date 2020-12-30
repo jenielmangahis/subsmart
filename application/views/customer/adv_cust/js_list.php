@@ -739,6 +739,7 @@
                 'client_last_name':'<?= $profile_info->last_name; ?>',
                 'client_address':'<?= $profile_info->mail_add.' '.$profile_info->city.' '.$profile_info->state.' '.$profile_info->country.' '.$profile_info->zip_code; ?>',
                 'curr_date': new Date().toJSON().slice(0,10).replace(/-/g,'/'),
+                'client_signature': '<img src="<?= $profile_info->prof_sign_img; ?>" style="width: 200px;">',
             };
 
             let replaceDoubleBraces = (str,result) =>{
@@ -850,5 +851,51 @@
 
         });
     }
+
+    // form submit for customer signature upload
+        $("#submit_signature").on( "click", function( e ) {
+        //$("#customer_signature").submit(function(e) {
+            console.log("Customer Signature");
+            //e.preventDefault(); // avoid to execute the actual submit of the form.
+            //var form = $(this);
+            //var url = form.attr('action');
+            var input = document.getElementById('prof_sign_img');
+            //  console.log(formData);
+            console.log(input.files);
+            for (var i = 0; i < input.files.length; i++) {
+                console.log(input.files[i]);
+            }
+            // The Javascript
+            var fileInput = document.getElementById('prof_sign_img');
+            var file = fileInput.files[0];
+            var formDatas = new FormData();
+            formDatas.append('file', file);
+            formDatas.append('id', <?= $profile_info->prof_id; ?>);
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/customer/customer_signature_upload",
+                data: formDatas, // serializes the form's elements.
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data === 'Error'){
+
+                    }else{
+                        $("#prof_sign_img").val('');
+                        $('#customer-signature').attr('src',data);
+                    }
+                },
+                error: function (e) {
+                    //$("#result").text(e.responseText);
+                    console.log("ERROR : ", e);
+                    // $("#btnSubmit").prop("disabled", false);
+                }
+            });
+        });
 
 </script>

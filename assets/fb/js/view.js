@@ -1,5 +1,7 @@
 const handleOnLoad = async (form_id) => {
-    await loadElements(form_id, false);
+    await loadElements(form_id, false).then(res => {
+        initSignPads();
+    });
     setPageProperties();
 };
 

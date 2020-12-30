@@ -4,7 +4,10 @@ const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 
 $('#formBuilderContainer').sortable({
     placeholder: 'placeholder-hor',
     grid: [20, 20],
+    items: '> .in-parent',
     nested: true,
+    connectWith: '.container-block',
+    handle: '.element-handle',
     receive: (event, ui) => {
         tempElements = $('#formBuilderContainer').sortable("toArray");
         clearModalForm();
@@ -21,11 +24,29 @@ $('#formBuilderContainer').sortable({
         updateElementOrder(elements).then( async (res) => {
             await loadElements(form.id, true).then(res => {
                 initBuilder();
+                initContainers();
             });
             showSuccess();
         });
     }
 })
+
+const initContainers = () => {
+    $('.container-block').sortable({
+        placeholder: 'placeholder-hor',
+        grid: [20, 20],
+        nested: true,
+        items: '> .container-block',
+        connectWith: '#formBuilderContainer',
+        handle: '.contained-element-handle',
+        receive: (event, ui) => {
+        },
+        update: (event, ui) => {
+            const elements = $('.container-block').sortable("toArray");
+            console.log(elements);
+        }
+    })
+}
 
 $('.form-elements-template').draggable({
     scroll: false,
@@ -35,7 +56,7 @@ $('.form-elements-template').draggable({
     snapMode: "inner",
     grid: [20, 20],
     cursorAt: { left: 0, top: 0 },
-})
+});
 
 $('.builder-tabs').on('shown.bs.tab', (e) => {
     const el = $(e.target) // newly activated tab
@@ -200,16 +221,25 @@ const setModalElement = (element) => {
 }
 
 const getModalValues = () => {
+    const element_type = $('#elementType').val();
+    let span =  $('#elementSpan').val();
+    let question = $('#elementQuestionInput').val() ? $('#elementQuestionInput').val() : '';
+    if(element_type === "Heading") {
+        span = $('#elementWidth').val();
+    }
+    if(element_type === "FormattedText") {
+        question = $('#elementQuestionEditor').val() ? $('#elementQuestionEditor').val() : '';
+    }
     return {
         form_element: {
             id: $('#elementSettingsModal #elementID').val(),
             form_id: form.id,
-            question: $('#elementQuestionInput').val() ? $('#elementQuestionInput').val() : $('#elementQuestionEditor').val() ? $('#elementQuestionEditor').val() : '',
+            question: question,
             required: $('#requiredSwitch').is(":checked") ? 1 : 0,
             read_only: $('#readOnlySwitch').is(":checked") ? 1 : 0,
             admin_item: $('#adminItemSwitch').is(":checked") ? 1 : 0,
             element_type: $('#elementType').val(),
-            span: $('#elementWidth').val(),
+            span: span,
             height: $('#elementHeight').val(),
             element_order: $('#elementSettingsModal #elementOrder').val(),
             min: $('#elementSettingsModal #minChar').val(),
@@ -249,39 +279,6 @@ const showModal = (element) => {
         }
     });
     $('#elementSettingsModal').modal({backdrop: 'static', keyboard: false})  
-}
-
-const showLoading = () => {
-    hideSuccess();
-    hideDanger();
-    $('#loadingContainer').show();
-}
-
-const hideLoading = () => {
-    $('#loadingContainer').hide();
-}
-
-const showDanger = () => {
-    hideSuccess();
-    hideLoading();
-    $('#dangerIndicator').show();
-}
-
-const hideDanger = () => {
-    $('#dangerIndicator').hide();
-}
-
-const showSuccess = () => {
-    hideLoading();
-    hideDanger();
-    $('#successIndicator').show();
-    setTimeout(() => {
-        hideSuccess();
-    }, 2000);
-}
-
-const hideSuccess = () => {
-    $('#successIndicator').hide();
 }
 
 const handleStyleChangePreview = (style) => {
@@ -352,7 +349,8 @@ const handleFormStyleSave = async () => {
     showLoading();
     const data = {
         style: tempStyle,
-        color: tempColor
+        color: tempColor,
+        id: form.id
     };
 
     await updateForm(data).then((res) => {
@@ -381,4 +379,14 @@ const handleQuestionInput = (val) => {
     if($('#elementPreview .heading-text').length) {
         $('#elementPreview .heading-text').text(val);
     }
+}
+
+const handleCopyFromFormClicked = () => {
+    $('#copyFromFormModal').modal('show');
+}
+
+const appendFormOptions = (obj) => {
+    const select = $('#copyFromForm');
+    const el = `<option value="${obj.id}">${obj.name}</option>`
+    select.append(el);
 }
