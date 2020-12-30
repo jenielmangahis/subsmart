@@ -276,7 +276,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="">Password</label>
-                                    <input type="password" name="password" id="employeePass" class="form-control">
+                                    <input type="password" name="addnew_password" id="employeePass" class="form-control">
                                     <i class="fa fa-eye view-password" id="showPass" title="Show password" data-toggle="tooltip"></i>
                                     <span class="password-error"></span>
                                 </div>
@@ -349,8 +349,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                     </div>
                                 </div>
-                                <input type="hidden" name="profile_photo" id="photoId">
-                                <input type="hidden" name="img_id" id="photoName">
+                                <input type="hidden" name="img_id" id="photoId">
+                                <input type="hidden" name="profile_photo" id="photoName">
                             </div>
                             <div class="col-md-6">
                                 <div class="profile-container">
@@ -424,13 +424,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-            </form>
-
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="closedEmployeeModal">Close</button>
                 <button type="button" class="btn btn-success" id="savedNewEmployee">Save & exit</button>
             </div>
+        	</form>
 
         </div>
     </div>
@@ -537,7 +536,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $(this).css('border-color','#e0e0e0');
                 $('.email-error').css('visibility','hidden');
                 $.ajax({
-                    url:"/users/checkEmailExist",
+                    url: base_url + "users/checkEmailExist",
                     type:"GET",
                     data:{email:email},
                     dataType:'json',
@@ -567,7 +566,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var selected = this;
             var status = $(this).next('i');
             $.ajax({
-                url:"/users/checkUsername",
+                url: base_url + "users/checkUsername",
                 type:"GET",
                 dataType:'json',
                 data:{username:username},
@@ -607,7 +606,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var image_id = $('#photoId').val();
             var image = $('#photoName').val();
             $.ajax({
-                url:'/users/removeTemporaryImg',
+                url: base_url + 'users/removeTemporaryImg',
                 type:'POST',
                 dataType:'json',
                 data:{image_id:image_id,image:image},
@@ -631,9 +630,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $.each($('#addEmployeeForm').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
+            if( values['addnew_password'] != '' ){
+            	values['password'] = values['addnew_password'];
+            }
             if(values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['password'] && values['role']){
                 $.ajax({
-                    url:'/users/addNewEmployee',
+                    url: base_url + 'users/addNewEmployee',
                     type:"POST",
                     dataType:"json",
                     data:{values:values},
@@ -648,6 +650,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     text: "New Employee has been Added",
                                     icon: 'success'
                                 });
+                            location.reload();
                         }else{
                             Swal.fire(
                                 {
@@ -661,7 +664,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     }
                 });
             }else{
-
+            	alert("Please check your entries and try again");
             }
         });
         $(document).on('click','#editEmployee',function () {
@@ -669,7 +672,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('#modalAddEmployee').modal({backdrop: 'static', keyboard: false});
             var form = $('#modalAddEmployee').find('form');
             $.ajax({
-                url:"users/getEmployeeData",
+                url: base_url + "users/getEmployeeData",
                 type:"GET",
                 dataType:'json',
                 data:{user_id:user_id},
@@ -697,7 +700,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         var fname = [];
         var selected = [];
         var profilePhoto = new Dropzone('#employeeProfilePhoto', {
-            url: '/users/profilePhoto',
+            url: base_url + 'users/profilePhoto',
             acceptedFiles: "image/*",
             maxFilesize:20,
             maxFiles: 1,
@@ -718,7 +721,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }).filter(isFinite)[0];
                 $.ajax({
                     type:"POST",
-                    url:'/users/removeProfilePhoto',
+                    url: base_url + 'users/removeProfilePhoto',
                     dataType:'json',
                     data:{name:name,index:index},
                     success:function (data) {

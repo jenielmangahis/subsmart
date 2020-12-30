@@ -12,6 +12,7 @@ class FB_element_matrix_rows_model extends MY_Model {
     
 	function create($data)
 	{
+		
 		try {
 			$this->db->insert($this->table, $data['form_element']);
 			$newID = $this->db->insert_id();

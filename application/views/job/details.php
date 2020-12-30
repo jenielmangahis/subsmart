@@ -8,11 +8,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
   position: relative;
   top: 4px;
 }
+.gray {
+  color: #909090;
+}
+.bs-stepper {
+  margin-bottom: 10px;
+}
 .black-placeholder {
   background: black;
 }
 .left {
   float:left;
+}
+.more-feed {
+  width: max-content;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 10px;
+}
+button.more-btn:hover {
+  background: green;
+}
+.right-icon {
+  float: right;
+  position: relative;
+  top: 4px;
+}
+button.more-btn {
+  box-shadow: none;
+  border: 0px;
+  background: #41a4ff;
+  color: white;
+  padding: 6px 20px;
+  text-transform: uppercase;
+  font-size: 15px;
 }
 span.invoice-txt {
   color: #45a6ff;
@@ -20,6 +49,24 @@ span.invoice-txt {
 span.sc-price-icon{
   color: red;
   font-size: 16px;
+}
+span.scn {
+  font-size: 15px;
+  position: relative;
+  top: 0px;
+}
+.round-container {
+  background: #cecece;
+  padding: 10px 20px;
+  border-radius: 100px;
+  display: inline-block;
+}
+.img-round {
+  border-radius: 100px;
+  width: 21px;
+  height: 21px;
+  object-fit: cover;
+  margin-right: 10px;
 }
 .item-form {
   display: block;
@@ -121,20 +168,41 @@ span.sc-item {
   position: relative;
   left: 5px;
 }
+.cs-100 {
+  width: 100%;
+  min-height: 10px;
+}
+.cs-9 {
+  width: 90%;
+  min-height: 10px;
+}
+.cs-8 {
+  width: 80%;
+  min-height: 10px;
+}
 .cs-7 {
   width: 70%;
+  min-height: 10px;
 }
 .cs-6 {
   width: 60%;
+  min-height: 10px;
 }
 .cs-5 {
   width: 50%;
+}
+.cs-4 {
+  width: 40%;
+  min-height: 10px;
 }
 .cs-42 {
   width: 41%;
 }
 .cs-4 {
   width: 40%;
+}
+.cs-34 {
+  width: 33.33%;
 }
 .cs-33 {
   width: 32.5%;
@@ -145,11 +213,44 @@ span.sc-item {
 .cs-2 {
   width: 21%;
 }
+.cs-20 {
+  width: 20%;
+}
 .cs-1 {
   width: 10%;
 }
 .pl-c6 {
   padding-left: 65px !important;
+}
+.tn-container {
+  border-top: 1px solid #868686;
+  margin-top: 30px;
+  padding: 20px 0px;
+}
+.cost-container {
+  border-top: 1px solid #868686;
+  margin-top: 10px;
+  padding: 20px;
+}
+.booking-container {
+  border-top: 1px solid #868686;
+  margin-top: 5px;
+  padding: 20px;
+}
+.sum-container {
+  border-top: 1px solid #868686;
+  margin-top: 30px;
+  padding: 20px;
+}
+.text-right {
+  text-align: right;
+  width: 100%;
+  display: block;
+  padding-right: 33px;
+}
+.gray-area {
+  padding-bottom: 20px;
+  display: block;
 }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -198,8 +299,9 @@ span.sc-item {
                   </div>
                 </div>
 
-                <div class="col-md-12 mt-5">
-                  <div id="stepper2" class="bs-stepper">
+                <div class="col-xl-10">
+                  <!-- start of stepper 1 -->
+                  <div id="stepper1" class="bs-stepper">
                     <div class="bs-stepper-header">
                       <div class="step" data-target="#test-nl-1">
                         <button type="button" class="btn step-trigger">
@@ -243,30 +345,70 @@ span.sc-item {
                         </button>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div class="col-xl-10">
-                  <div class="card">
-                    <div class="d-block">
-                      <div class="col-xl-5 left">
-                        <h5>Invoice <span class="invoice-txt">#3076</span></h5>
+
+
+
+                    <div class="card">
+                      <div class="d-block">
+                        <div class="col-xl-5 left">
+                          <h5>Invoice <span class="invoice-txt">#3076</span></h5>
+                        </div>
+                        <div class="col-xl-7 left">
+                          <span class="icon-pb fa fa-print gray-color fa-margin-right"></span>
+                          <span class="icon-pb fa fa-file-pdf-o gray-color fa-margin-right"></span>
+                          <span class="icon-pb fa fa-plus-square-o gray-color fa-margin-right"></span>
+                        </div>
+                        <br class="clear"/>
+                        <div class="col-xl-5 ml-0 pl-0 left">
+                          <span class="pl-3">DUE: <span class="invoice-txt">Upon receipt</span></span>
+                        </div>
+                        <div class="col-xl-7 pr-4 left t-right">
+                          <span><span class="fa fa-user-o fa-margin-right"></span>Jessie Whitesmith</span>
+                        </div>
+                        <br class="clear"/>
+
+                        <div class="form-service">
+                          <h3 class="gray-sc pl-3">Services</h3>
+
+                          <div class="col-xl-12 service-container">
+                            <div class="ts-box pl-0 ml-0 mr-0 pr-0 left">
+                              <span class="sp-left fa fa-bars gray-color fa-margin-right"></span>
+                            </div>
+                            <div class="cs-4 pl-0 ml-0 mr-2 pr-0 left">
+                              <input placeholder="Item name" type="text" name="description" value="" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="cs-1 pl-0 ml-0 mr-2 pr-0 left">
+                              <input placeholder="Qty" type="text" name="description" value="" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
+                              <input placeholder="Unit Price" type="text" name="description" value="" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="cs-2 pl-0 ml-0 mr-0 pr-0 left">
+                              <span class="sc-price">$0.00 <span class="sc-price-icon fa fa-times fa-margin-right"></span></span>
+                            </div>
+                        </div>
+
+                        <div class="item-form pl-c6">
+                          <div class="cs-42 pl-0 ml-0 mr-2 pr-0 left">
+                            <input placeholder="Description (Optional)" type="text" name="description" value="" class="form-control" autocomplete="off">
+                          </div>
+                          <div class="cs-33 pl-0 ml-0 mr-2 pr-0 left">
+                            <input placeholder="Unit cost" type="text" name="description" value="" class="form-control" autocomplete="off">
+                          </div>
+                        </div>
+
+                        <div class="item-form pl-c6">
+                          <div class="sc-form-add">
+                            <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> SERVICE ITEM</span>
+                          </div>
+                        </div>
+
                       </div>
-                      <div class="col-xl-7 left">
-                        <span class="icon-pb fa fa-print gray-color fa-margin-right"></span>
-                        <span class="icon-pb fa fa-file-pdf-o gray-color fa-margin-right"></span>
-                        <span class="icon-pb fa fa-plus-square-o gray-color fa-margin-right"></span>
-                      </div>
-                      <br class="clear"/>
-                      <div class="col-xl-5 ml-0 pl-0 left">
-                        <span class="pl-3">DUE: <span class="invoice-txt">Upon receipt</span></span>
-                      </div>
-                      <div class="col-xl-7 pr-4 left t-right">
-                        <span><span class="fa fa-user-o fa-margin-right"></span>Jessie Whitesmith</span>
-                      </div>
-                      <br class="clear"/>
+
+                      <br/>
 
                       <div class="form-service">
-                        <h3 class="gray-sc pl-3">Services</h3>
+                        <h3 class="gray-sc pl-3">Materials</h3>
 
                         <div class="col-xl-12 service-container">
                           <div class="ts-box pl-0 ml-0 mr-0 pr-0 left">
@@ -297,22 +439,231 @@ span.sc-item {
 
                       <div class="item-form pl-c6">
                         <div class="sc-form-add">
-                          <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> SERVICE ITEM</span>
+                          <span class="sc-item"><span class="fa fa-plus fa-margin-right"></span> MATERIALS ITEM</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="pl-2 pr-2">
+                      <div class="sum-container">
+                          <div class="cs-6 left"></div>
+                          <div class="cs-4 left">
+                            <div class="cs-6 left">
+                              <span class="bold">Subtotal</span>
+                            </div>
+                            <div class="cs-4 left">
+                              <span class="bold text-right">$0.00</span>
+                            </div>
+                          </div>
+
+                          <br/>
+
+                          <div class="cs-6 pt-2 left"></div>
+                          <div class="cs-4 pt-2 left">
+                            <div class="cs-6 left">
+                              <select name="tax" id="tax" class="form-control gray-first">
+                                  <option value="">Select tax rate</option>
+                              </select>
+                            </div>
+                            <div class="cs-4 pt-3 left">
+                              <span class="bold text-right">$0.00</span>
+                            </div>
+                          </div>
+
+                          <br/>
+
+                          <div class="cs-6 pt-3 left"></div>
+                          <div class="cs-4 pt-3 left">
+                            <div class="cs-6 left">
+                              <span class="bold">Total</span>
+                            </div>
+                            <div class="cs-4 left">
+                              <span class="bold text-right">$0.00</span>
+                            </div>
+                          </div>
+
+                      </div>
+                      <br/><br/>
+                      <div class="tn-container">
+                        <span class="bold">Thank you for your business, Please call dually at 850-292-299</span>
+                      </div>
+                      <div class="gray-area">
+                        <div class="cost-container">
+                          <div class="cs-34 left">
+                            <span class="bold">Cost Breakdown</span>
+                          </div>
+
+                          <div class="cs-34 left">
+                            <span class="bold">Material Cost</span>
+                          </div>
+
+                          <div class="cs-34 left">
+                            <span class="bold">Profit/Loss</span>
+                          </div>
+                        </div>
+
+                        <div class="mt-4 cost-container">
+                          <div class="cs-34 left">
+                            <span class="bold">$0.00</span>
+                          </div>
+
+                          <div class="cs-34 left">
+                            <span class="bold">$0.00</span>
+                          </div>
+
+                          <div class="cs-34 left">
+                            <span class="bold">$0.00</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="d-block">
+                    <h5><span class="fa fa-rss fa-margin-right"></span> Activity Feed</h5>
+
+                    <!-- start of activity content -->
+                    <div class="activity-container mt-4">
+                      <div class="cs-3 left">
+                        <div class="round-container">
+                          <span>
+                            <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                            <span class="scn">House Call Party</span>
+                          </span>
                         </div>
                       </div>
 
+                      <div class="cs-4 pt-2 left">
+                        <span>
+                          <span class="fa fa-comments-o fa-margin-right"></span> Job Scheduled SMS sent to (251) 294 - 525</span>
+                      </div>
+
+                      <div class="cs-20 pt-2 left">
+                        <span>Wed 12/23/20 9:40am</span>
+                      </div>
+
+                      <div class="cs-1 pt-2 left">
+                        <span class="fa fa-angle-down fa-margin-right"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="activity-container mt-4">
+                    <div class="cs-3 left">
+                      <div class="round-container">
+                        <span>
+                          <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                          <span class="scn">House Call Sparky</span>
+                        </span>
+                      </div>
                     </div>
 
+                    <div class="cs-4 pt-2 left">
+                      <span>
+                        <span class="fa fa-envelope fa-margin-right"></span> Job Scheduled email sent to sample@gmail.com</span>
+                    </div>
+
+                    <div class="cs-20 pt-2 left">
+                      <span>Wed 12/22/20 10:40pm</span>
+                    </div>
+
+                    <div class="cs-1 pt-2 left">
+                      <span class="fa fa-angle-down fa-margin-right"></span>
+                    </div>
+                  </div>
+
+                  <div class="activity-container mt-4">
+                    <div class="cs-3 left">
+                      <div class="round-container">
+                        <span>
+                          <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                          <span class="scn">House Call Sparky</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="cs-4 pt-2 left">
+                      <span>
+                        <span class="fa fa-calendar-check-o fa-margin-right"></span> Job Scheduled for Mon, Dec 28 9:00am - 11:00am</span>
+                    </div>
+
+                    <div class="cs-20 pt-2 left">
+                      <span>Wed 12/22/20 11:00am</span>
+                    </div>
+
+                    <div class="cs-1 pt-2 left">
+                      <span class="fa fa-angle-down fa-margin-right"></span>
                     </div>
                   </div>
 
 
+                  <div class="activity-container mt-4">
+                    <div class="cs-3 left">
+                      <div class="round-container">
+                        <span>
+                          <img src="https://images.unsplash.com/photo-1572965733194-784e4b4efa45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" class="left img-round"/>
+                          <span class="scn"> John Smith</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="cs-4 pt-2 left">
+                      <span>
+                        <span class="fa fa-book fa-margin-right"></span> Dispatched to Housecall Party</span>
+                    </div>
+
+                    <div class="cs-20 pt-2 left">
+                      <span>Tue 12/22/20 11:00am</span>
+                    </div>
+
+                    <div class="cs-1 pt-2 left">
+                      <span class="fa fa-angle-down fa-margin-right"></span>
+                    </div>
+                  </div>
+
+                  <div class="more-feed">
+                    <button class="more-btn">See all activity</button>
+                  </div>
+
                 </div>
 
-            </div>
-        </div>
-        <!-- end container-fluid -->
+                <div class="card">
+                  <div class="d-block">
+                    <h5><span class="fa fa-bookmark fa-margin-right"></span> Quickbooks online <span class="fa fa-caret-down right-icon fa-margin-right"></span></h5>
+                  </div>
+                  <div class="booking-container">
+                    <div class="transaction-activity">
+                      <div class="left mr-3 pt-3">
+                        <span class="fa fa-gears fa-margin-right"></span>
+                      </div>
+                      <div class="cs-9 left">
+                        <span class="d-block">Invoice not sent to Quickbooks yet</span>
+                        <span class="gray d-block">Invoice will be sent to Quickbooks when job is finished, paid, or emailed to customer</span>
+                      </div>
+                      <div class="cs-100 mt-5 left">
+                        <span class="gray d-block">QBO Transactions (0)</span>
+                      </div>
+                      <div class="cs-100 mt-5 left">
+                        <span class="gray d-block">QBO Errors (0)</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                 <!-- end of activity content -->
+              </div>
+
+              <!-- end of stepper 1 -->
+
+          </div>
+
+      </div>
     </div>
+        <!-- end container-fluid -->
+  </div>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>

@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <div class="link"></i>Notifications<i class="fa fa-chevron-down"></i>
                                 </div>
                                 <div class="submenu">
@@ -70,8 +70,8 @@
                                         lorem ipsum
                                     </div>
                                 </div>
-                            </li>
-                            <li>
+                            </li> -->
+                            <!-- <li>
                                 <div class="link"></i>Success Pages<i class="fa fa-chevron-down"></i>
                                 </div>
                                 <div class="submenu">
@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>

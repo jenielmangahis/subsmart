@@ -1,5 +1,6 @@
 let form;
 let elements;
+let signpads;
 const element_objs = [];
 
 const handleCreateForm = async (e) => {
@@ -18,11 +19,44 @@ const handleCreateForm = async (e) => {
     })
 }
 
-const getAllForms = () => {
+const initSignPads = () => {
+    console.log('initializing signpads...')
+    signpads = [];
+    const canvas = $('.signature-canvas');
+    let i = 0;
+    while (i < canvas.length) {
+        const el = $(canvas[i]);
+        const id = el.attr('id')
+        let signpad = new SignaturePad(
+            document.querySelector(`#${id}`),
+            {
+              backgroundColor: "rgb(255, 255, 255)",
+            }
+          );
+        signpads[id] = signpad;
+        i++;
+    }
+}
+
+const getAllForms = (data = {}) => {
     return new Promise((resolve, reject) => {
         $.ajax({
             'type': 'GET',
-            'url' : '/fb/get-all-by-active-user'
+            'url' : '/fb/get-by-active-user',
+            'data': data
+        }).done((response) => {
+            resolve(response)
+        }).fail((err) => {
+            reject(err);
+        })
+    })
+}
+
+const getAllFolders = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'type': 'GET',
+            'url' : '/fb/folders/get-by-active-user'
         }).done((response) => {
             resolve(response)
         }).fail((err) => {
@@ -85,10 +119,14 @@ const deleteElement = (id) => {
 const renderElement = (el, editable = false) => {
     const element = new element_types[el.element_type](el, editable);
     element_objs[el.id] = element;
-    if(editable) {
-        $('#formBuilderContainer').append(element.getElement())
+    if(element.container_id !== null) {
+        $(`#ContainerBlock-${element.container_id}`).append(element.getElement())
     } else {
-        $('#formContainer').append(element.getElement())
+        if(editable) {
+            $('#formBuilderContainer').append(element.getElement())
+        } else {
+            $('#formContainer').append(element.getElement())
+        }
     }
 }
 
@@ -99,7 +137,12 @@ const updateElementOrder = (elements) => {
             const data = [];
             elements.forEach((el, index) => {
                 if(el !== "" && el !== 'blankFormPlaceHolder') {
-                    element_objs[el].element_order = index;
+                    const id = typeof el === 'object' ? el.id : el;
+                    try {
+                        element_objs[el].element_order = index;
+                    } catch (error) {
+                        console.log(el, typeof el === 'object');
+                    }
                     const element = element_objs[el].getPostData(false);
                     data.push(element);
                 }
@@ -210,10 +253,9 @@ const updateForm = (data) => {
         try {
             $.ajax({
                 'type': 'POST',
-                'url': `/fb/update/${form.id}`,
+                'url': `/fb/update/${data.id}`,
                 'data': data
             }).done(response => {
-                console.log(data);
                 resolve(response)
             }).fail(err => {
                 reject(err);
@@ -233,3 +275,50 @@ const initCalendars = () => {
     });
     $('#datepicker').datepicker("setDate", new Date());
 }
+
+const saveFolder = (data, save_method = 'create') => {
+    let url = '/fb/folders/create'
+    if(save_method === 'update') {
+        url = `/fb/folders/update/${data.id}`;
+    }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'type': 'POST',
+            'url': url,
+            'data': data
+        }).done(response => {
+            resolve(response)
+        }).fail(err => {
+            reject(err);
+        })
+    })
+}
+
+const deleteFolder = (folder_id) => {
+    let url = `/fb/folders/destroy/${folder_id}`;
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'type': 'POST',
+            'url': url,
+        }).done(response => {
+            resolve(response)
+        }).fail(err => {
+            reject(err);
+        })
+    })
+}
+
+const clearCanvas = (id) => {
+    signpads[`Signature-${id}`].clear();
+}
+
+const handleCopyFormLink = () => {
+    document.getElementById('formMainLink').select();
+    document.execCommand('copy');
+}
+
+const handleCopyFormEmbedCode = () => {
+    document.getElementById('formEmbedCode').select();
+    document.execCommand('copy');
+}
+

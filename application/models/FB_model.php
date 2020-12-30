@@ -26,6 +26,8 @@ class FB_model extends MY_Model {
 				'form_id' => $formID
 			];
 
+			$this->generateQR($formID);
+
 			$this->form_security->create($newData);
 			$this->form_schedule_setting->create($newData);
 
@@ -45,9 +47,20 @@ class FB_model extends MY_Model {
 	    return $response;
 	}
 
-	function getAllByUserID($userID) {
+	function getByUserID($userID, $data) {
 		try {
+			$folder_id = $data['folder'] ?: 0;
+			$search_string = $data['search_string'];
 			$this->db->select("*");
+			if($folder_id != 2) {
+				$this->db->where('folder_id <>', 2);
+			}
+			if($folder_id) {
+				$this->db->where('folder_id', $folder_id);
+			}
+			if($search_string) {
+				$this->db->like('name', $search_string);
+			}
 			$this->db->where('user_id', $userID);
 			$q = $this->db->get($this->table);
 			$res = [
@@ -75,6 +88,7 @@ class FB_model extends MY_Model {
 			$this->db->select("*");
 			$this->db->where('form_id', $id); 
 			$this->db->order_by('element_order', 'ASC');
+			$this->db->order_by('container_id', 'ASC');
 			$elements = $this->db->get($this->form_elements->table);
 			$elementsArr = $elements->result_array();
 			foreach ($elementsArr as $i => $element) {
@@ -134,4 +148,15 @@ class FB_model extends MY_Model {
 		}
 		return $res;
 	}
+
+	public function generateQR($form_id){
+        $this->load->library('qrcode/ciqrcode');
+        $SERVERFILEPATH = $_SERVER['DOCUMENT_ROOT'].'/assets/img/forms/qr/'.$form_id.'.png';
+
+        $params['data'] = $_SERVER['DOCUMENT_ROOT'].'/fb/view/'.$form_id;
+        $params['level'] = 'H';
+        $params['size'] = 10;
+        $params['savename'] = $SERVERFILEPATH;
+        $this->ciqrcode->generate($params);
+    }
 }

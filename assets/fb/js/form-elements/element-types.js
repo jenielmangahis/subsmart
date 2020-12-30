@@ -25,4 +25,6 @@ const element_types = {
     LongAnswerMatrix,
     StarMatrix,
     RadioButtonPricing,
+    Signature,
+    ContainerBlock,
 }

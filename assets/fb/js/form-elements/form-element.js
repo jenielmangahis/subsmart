@@ -21,13 +21,14 @@ class FormElement {
         this.placeholder_text = obj.placeholder_text ? obj.placeholder_text : `input ${this.element_type} here`;
         this.choices = obj.choices ? obj.choices : ['-'];
         this.matrix_rows = obj.matrix ? obj.matrix.rows ? obj.matrix.rows : ['-'] : ['-'];
-        this.matrix_columns = obj.matrix ? obj.matrix.columns ? obj.matrix.columns : ['-'] : ['-'
-    ];
+        this.matrix_columns = obj.matrix ? obj.matrix.columns ? obj.matrix.columns : ['-'] : ['-'];
+        this.container_id = obj.container_id ? obj.container_id : null;
     }
 
     getElementContainer(remove_padding = false) {
+        const container_selector = this.container_id !== null ? 'container-block' : 'in-parent';
         return {
-            open: `<div id="${this.id}" class="form-group ${remove_padding ? 'px-0' : ''} col-12 col-md-${this.span} ${this.element_type} form-element ${this.editable ? 'editable' : ''}">`,
+            open: `<div id="${this.id}" class="form-group ${remove_padding ? 'px-0' : ''} col-12 col-md-${this.span} ${this.element_type} form-element ${this.editable ? 'editable' : ''} ${container_selector}">`,
             content: '',
             close: `</div>`
         }
@@ -41,9 +42,11 @@ class FormElement {
 
     getElementControls() {
         let element_controls = ''
+        const handle_selector = this.container_id !== null ? 'contained-element-handle' : 'element-handle';
         if(this.editable) {
             element_controls = `
             <div class="form-element-controls">
+                <span class="${handle_selector}"><i class="fa fa-arrows-alt"></i></span>
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-sm btn-primary" onclick="handleElementEdit(${this.id})"><i class="fa fa-edit"></i> Edit</button>
                     <button type="button" class="btn btn-sm btn-primary" onclick="handleCopyElement(${this.id})"><i class="fa fa-cog"></i> Copy</button>

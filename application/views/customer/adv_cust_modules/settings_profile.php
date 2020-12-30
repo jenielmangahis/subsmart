@@ -268,12 +268,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <div class="col-md-6">
                 <h6>Signature</h6>
-                <img style="width: auto;" alt="Customer Signature" src="<?php echo base_url()."assets/img/customer/signature/".$profile_info->prof_id.".png"?>"  />
-                <form method="post">
+                <img width="200" id="customer-signature" alt="Customer Signature" src="<?php if(isset($profile_info)){ echo $profile_info->prof_sign_img; } ?>"  />
+                <form method="post" enctype="multipart/form-data">
                     <br/><br/>
-                    <input type="file" name="prof_sign_img" value="Customer Signature" id="prof_sign_img" accept="image/jpeg, image/png" required>
+                    <input type="file" name="file" value="Customer Signature" id="prof_sign_img" accept="image/jpeg, image/png" required>
                     <br/><br/>
-                    <button type="submit" class="btn btn-flat btn-primary">Upload</button>
+                    <button type="button" id="submit_signature" class="btn btn-flat btn-primary">Upload</button>
                 </form>
             </div>
         </div>
