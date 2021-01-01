@@ -252,6 +252,61 @@ span.sc-item {
   padding-bottom: 20px;
   display: block;
 }
+@media only screen and (max-width: 560px) {
+  .cs-9 {
+    width:83%;
+  }
+  .bs-stepper-header {
+      overflow-y: scroll;
+  }
+  input.form-control {
+      width: 92%;
+      margin: 0 auto;
+  }
+  .booking-container {
+    padding: 10px;
+  }
+  .sv-h5 {
+    padding-left: 15px;
+  }
+  .activity-container {
+    padding-left: 15px;
+  }
+  .tn-container {
+    width: 100%;
+    clear: both;
+    display: block;
+  }
+  .subtotal {
+    text-align: right;
+    width: 100%;
+    display: block;
+    padding-right: 20px;
+  }
+  .card {
+    padding: 10px 15px !important;
+  }
+  .sc-form-add {
+    padding-right: 15px;
+  }
+  .pl-c6 {
+    padding-left: 0px !important;
+  }
+  .cs-20 {
+    width: 70%;
+  }
+  .cs-1 {
+    position: relative;
+    top: 5px;
+  }
+  .cs-2, .cs-3, .cs-4, .cs-5, .cs-6, .cs-7, .cs-8, .cs-42, .cs-33 {
+    width: 100% !important;
+    padding-bottom: 20px !important;
+  }
+  .ts-box.pl-0.ml-0.mr-0.pr-0.left {
+    display: none;
+  }
+}
 </style>
 <?php include viewPath('includes/header'); ?>
 <link rel="stylesheet" href="<?php echo $url->assets ?>css/bs-stepper.css">
@@ -383,7 +438,7 @@ span.sc-item {
                             <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
                               <input placeholder="Unit Price" type="text" name="description" value="" class="form-control" autocomplete="off">
                             </div>
-                            <div class="cs-2 pl-0 ml-0 mr-0 pr-0 left">
+                            <div class="cs-2 pl-0 ml-0 mr-0 pr-0 desktop-only left">
                               <span class="sc-price">$0.00 <span class="sc-price-icon fa fa-times fa-margin-right"></span></span>
                             </div>
                         </div>
@@ -394,6 +449,9 @@ span.sc-item {
                           </div>
                           <div class="cs-33 pl-0 ml-0 mr-2 pr-0 left">
                             <input placeholder="Unit cost" type="text" name="description" value="" class="form-control" autocomplete="off">
+                          </div>
+                          <div class="cs-100 pl-0 ml-0 mr-0 pr-0 mobile-only left">
+                            <span class="sc-price">$0.00 <span class="sc-price-icon fa fa-times fa-margin-right"></span></span>
                           </div>
                         </div>
 
@@ -449,7 +507,7 @@ span.sc-item {
                           <div class="cs-6 left"></div>
                           <div class="cs-4 left">
                             <div class="cs-6 left">
-                              <span class="bold">Subtotal</span>
+                              <span class="bold subtotal">Subtotal</span>
                             </div>
                             <div class="cs-4 left">
                               <span class="bold text-right">$0.00</span>
@@ -490,15 +548,15 @@ span.sc-item {
                       <div class="gray-area">
                         <div class="cost-container">
                           <div class="cs-34 left">
-                            <span class="bold">Cost Breakdown</span>
+                            <span class="bold sv-mobile">Cost Breakdown</span>
                           </div>
 
                           <div class="cs-34 left">
-                            <span class="bold">Material Cost</span>
+                            <span class="bold sv-mobile">Material Cost</span>
                           </div>
 
                           <div class="cs-34 left">
-                            <span class="bold">Profit/Loss</span>
+                            <span class="bold sv-mobile">Profit/Loss</span>
                           </div>
                         </div>
 
@@ -523,7 +581,7 @@ span.sc-item {
 
                 <div class="card">
                   <div class="d-block">
-                    <h5><span class="fa fa-rss fa-margin-right"></span> Activity Feed</h5>
+                    <h5 class="sv-h5"><span class="fa fa-rss fa-margin-right"></span> Activity Feed</h5>
 
                     <!-- start of activity content -->
                     <div class="activity-container mt-4">
