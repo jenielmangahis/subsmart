@@ -216,6 +216,9 @@ span.sc-item {
 .cs-20 {
   width: 20%;
 }
+.cs-12 {
+  width: 10%;
+}
 .cs-1 {
   width: 10%;
 }
@@ -299,7 +302,7 @@ span.sc-item {
     position: relative;
     top: 5px;
   }
-  .cs-2, .cs-3, .cs-4, .cs-5, .cs-6, .cs-7, .cs-8, .cs-42, .cs-33 {
+  .cs-12, .cs-2, .cs-3, .cs-4, .cs-5, .cs-6, .cs-7, .cs-8, .cs-42, .cs-33 {
     width: 100% !important;
     padding-bottom: 20px !important;
   }
@@ -432,7 +435,7 @@ span.sc-item {
                             <div class="cs-4 pl-0 ml-0 mr-2 pr-0 left">
                               <input placeholder="Item name" type="text" name="description" value="" class="form-control" autocomplete="off">
                             </div>
-                            <div class="cs-1 pl-0 ml-0 mr-2 pr-0 left">
+                            <div class="cs-12 pl-0 ml-0 mr-2 pr-0 left">
                               <input placeholder="Qty" type="text" name="description" value="" class="form-control" autocomplete="off">
                             </div>
                             <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
@@ -475,7 +478,7 @@ span.sc-item {
                           <div class="cs-4 pl-0 ml-0 mr-2 pr-0 left">
                             <input placeholder="Item name" type="text" name="description" value="" class="form-control" autocomplete="off">
                           </div>
-                          <div class="cs-1 pl-0 ml-0 mr-2 pr-0 left">
+                          <div class="cs-12 pl-0 ml-0 mr-2 pr-0 left">
                             <input placeholder="Qty" type="text" name="description" value="" class="form-control" autocomplete="off">
                           </div>
                           <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
