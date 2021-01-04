@@ -23,7 +23,7 @@ class Check extends MY_Controller {
         $this->page_data['menu_name'] =
             array(
                 array("Dashboard",  array()),
-                array("Banking",    array('Link Bank','Rules','Receipts')),
+                array("Banking",    array('Link Bank','Rules','Receipts','Tags')),
                 array("Expenses",   array('Expenses','Vendors')),
                 array("Sales",      array('Overview','All Sales','Invoices','Customers','Deposits','Products and Services')),
                 array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
@@ -35,7 +35,7 @@ class Check extends MY_Controller {
         $this->page_data['menu_link'] = 
             array(
                 array('/accounting/banking',array()), 
-                array("",   array('/accounting/link_bank','/accounting/rules','/accounting/receipts')), 
+                array("",   array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')), 
                 array("",   array('/accounting/expenses','/accounting/vendors')), 
                 array("",   array('/accounting/sales-overview','/accounting/all-sales','/accounting/invoices','/accounting/customers','/accounting/deposits','/accounting/products-and-services')), 
                 array("",   array('#','#','#','#','#')), 

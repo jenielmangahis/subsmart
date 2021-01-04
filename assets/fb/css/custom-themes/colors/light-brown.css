@@ -1,0 +1,11 @@
+.form-light-brown .form-header {
+    background-color:#EAC66C !important;
+}
+
+form.form-light-brown button {
+    background-color: #EE9A5F !important;
+}
+
+.form-light-brown input, .form-light-brown textarea, .form-light-brown select {
+    border-color: #EAC66C !important;
+}

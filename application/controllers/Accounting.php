@@ -15,6 +15,7 @@ class Accounting extends MY_Controller {
         $this->load->model('expenses_model');
         $this->load->model('rules_model');
         $this->load->model('receipt_model');
+        $this->load->model('tags_model');
         $this->load->model('categories_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_receive_payment_model');
@@ -42,7 +43,7 @@ class Accounting extends MY_Controller {
         $this->page_data['menu_name'] =
             array(
                 array("Dashboard",	array()),
-                array("Banking", 	array('Link Bank','Rules','Receipts')),
+                array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
                 array("Expenses", 	array('Expenses','Vendors')),
                 array("Sales", 		array('Overview','All Sales','Invoices','Customers','Deposits','Products and Services')),
                 array("Payroll", 	array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
@@ -54,7 +55,7 @@ class Accounting extends MY_Controller {
         $this->page_data['menu_link'] =
             array(
                 array('/accounting/banking',array()),
-                array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts')),
+                array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
                 array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/invoices','/accounting/customers','/accounting/deposits','/accounting/products-and-services')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
@@ -155,6 +156,58 @@ class Accounting extends MY_Controller {
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->load->view('accounting/receipts', $this->page_data);
     }
+
+    //december 30 update
+    //Tags
+    public function tags()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/tags', $this->page_data);
+    }
+
+    public function addTagsGroup(){
+        $new_data = array(
+            'name' => $this->input->post('tags_group_name'),
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $tags = $this->tags_model->addtagGroup($new_data);
+        if ($tags != null){
+            $this->session->set_flashdata('tags_added','New rules added');
+            redirect('accounting/tags');
+        }else{
+            $this->session->set_flashdata('tags_failed','Rules name already exist.');
+            redirect('accounting/tags');
+        }
+
+    }
+
+    public function addTags(){
+        $new_data = array(
+            'name' => $this->input->post('tag_name'),
+            'type' => '0',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+
+        $tags = $this->tags_model->add($new_data);
+
+        $new_data2 = array(
+            'name' => $this->input->post('group_name'),
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $tags2 = $this->tags_model->addtagGroup($new_data2);
+
+        if ($tags != null){
+            $this->session->set_flashdata('tags_added','New rules added');
+            redirect('accounting/tags');
+        }else{
+            $this->session->set_flashdata('tags_failed','Rules name already exist.');
+            redirect('accounting/tags');
+        }
+
+    }
+
+    //---->
+
     public function salesoverview()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -226,6 +279,13 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
+    }
+
+    /* payscale */
+    
+    public function employeeinfo(){
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/employeeinfoReport', $this->page_data);
     }
 	
 	

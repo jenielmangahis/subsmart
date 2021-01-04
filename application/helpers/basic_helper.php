@@ -115,9 +115,13 @@ if (!function_exists('userProfileImage')) {
                 }                
             }
         }else{
-            if( $user->profile_img != '' ){
-                $url = urlUpload('users/user-profile/' . $user->profile_img);
-            }else{
+            if ($user->profile_img) {
+                $userprof = $CI->users_model->getProfilePhoto($user->profile_img);
+                $url = urlUpload('users/user-profile/' . $userprof->profile_image);
+                if( !file_exists(FCPATH."uploads/users/user-profile/" . $userprof->profile_image) ){
+                    $url = urlUpload('users/default.png');
+                }
+            } else {
                 $url = urlUpload('users/default.png');
             }
         }

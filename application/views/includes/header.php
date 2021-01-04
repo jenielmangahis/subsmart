@@ -24,6 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet"> -->
+    
 
     <!-- taxes page -->
     <link href="<?php echo $url->assets ?>dashboard/css/responsive.css" rel="stylesheet" type="text/css">
@@ -47,6 +48,31 @@
         }
         #topnav {
             font-family: "Ubuntu","Trebuchet MS",sans-serif !important;
+        }
+        
+        #division{
+            padding:20px !important;
+            margin-right:2%;
+            border: solid black 2px;
+        }
+        .progress-bar-success{
+            background-color: #5cb85c;
+        }
+        .progress-bar-info{
+            background-color: rgb(0, 166, 164);
+        }
+        .modaldivision{
+            padding:10px;
+            border: solid gray 2px;
+            border-radius: 15px;
+        }
+        .card-pricing.popular {
+            z-index: 1;
+            border: 3px solid #007bff;
+        }
+        .card-pricing .list-unstyled li {
+            padding: .5rem 0;
+            color: #6c757d;
         }
     </style>
 </head>

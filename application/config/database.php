@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'nsmartrac_updated',
+	'hostname' => 'gator4155.hostgator.com',
+	'username' => 'admintom_admin',
+	'password' => 'SmarTrac1$!',
+	'database' => 'admintom_nsmart_companies',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

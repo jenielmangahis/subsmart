@@ -23,6 +23,8 @@
         </form>
     </div>
 
+
+    <script>window.view_form_builder = true;</script>
     <script src="<?= base_url(); ?>assets/dashboard/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?= base_url(); ?>assets/signature_pad-master/js/signature_pad.js"></script>
     <script type="text/javascript" src="<?= base_url(); ?>assets/fb/js/view.js"></script>

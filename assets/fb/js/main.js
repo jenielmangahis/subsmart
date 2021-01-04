@@ -130,6 +130,113 @@ const renderElement = (el, editable = false) => {
     }
 }
 
+if (window.view_form_builder) {
+    setInterval(() => {
+        setElementRules()
+    }, 1000);
+}
+
+const setElementRules = () => {
+    for (var n in elements) {
+        var ruleSet = elements[n].rules;
+
+        if (ruleSet.length > 0) {
+            for (var i in ruleSet) {
+    
+                var mainElement = $(`div.form-element#${ruleSet[i].element_id}`); // the element show or hide based on the rule item
+                var ruleItem = $(`div#${ruleSet[i].rule_item} input`); // the element selected for the condition
+    
+                // if(ruleSet[i].rule_action === "1" && ruleSet[i].rule_item !== null) {
+                //     mainElement.hide();
+                // }
+    
+                var v = ruleItem.val();
+
+                // console.log("VALUE: ", v);
+                // console.log("RULE ANSWER: ", ruleSet[i].rule_answer);
+                // console.log("mainElement: ", mainElement);
+                // console.log("ruleSet[i].rule_condition: ", ruleSet[i].rule_condition);
+                console.log("RULE ITEM: ", ruleSet[i]);
+    
+                if (ruleSet[i].rule_condition == "1") {
+                    if (typeof v !== "undefined" && v.trim() == ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "1") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else if(typeof v !== "undefined" && v.trim() == ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "0") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else {
+                        ruleSet[i].flag = false; // mainElement.hide();
+                    }
+                } else if (ruleSet[i].rule_condition == "2") {
+                    if (typeof v !== "undefined" && v.trim() != ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "1") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else if (typeof v !== "undefined" && v.trim() != ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "0") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else {
+                        ruleSet[i].flag = false; // mainElement.hide();
+                    }
+                } else if (ruleSet[i].rule_condition == "3") {
+                    if (typeof v !== "undefined" && v.trim() > ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "1") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else if(typeof v !== "undefined" && v.trim() > ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "0") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else {
+                        ruleSet[i].flag = false; // mainElement.hide();
+                    }
+                } else if (ruleSet[i].rule_condition == "4") {
+                    if (typeof v !== "undefined" && v.trim() < ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "1") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else if(typeof v !== "undefined" && v.trim() < ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "0") {
+                        ruleSet[i].flag = true; // mainElement.show();
+                    } else {
+                        ruleSet[i].flag = false; // mainElement.hide();
+                    }
+                }
+            }
+
+            for (i in ruleSet) {
+                var mainElement = $(`div.form-element#${ruleSet[i].element_id}`);
+                var ruleItem = $(`div#${ruleSet[i].rule_item} input`); // the element selected for the condition
+                var v = ruleItem.val();
+
+                if(ruleSet[i].rule_action === "1" && v == "") {
+                    console.log(1);
+                    mainElement.hide();
+                    break;
+                } else if(ruleSet[i].rule_action === "0" && v == "") {
+                    console.log(2);
+                    mainElement.show();
+                    break;
+                } else if (ruleSet[0].rule_join == "1") {
+                    console.log(3);
+                    if (ruleSet[i].flag === true) {
+                        if (ruleSet[i].rule_action == "0") mainElement.hide();
+                        if (ruleSet[i].rule_action == "1") mainElement.show();
+                        break;
+                    } else {
+                        if (ruleSet[i].rule_action == "0") mainElement.show();
+                        if (ruleSet[i].rule_action == "1") mainElement.hide();
+                    }
+                } else if (ruleSet[0].rule_join == "2") {
+                    console.log(4);
+                    if (ruleSet[i].flag === false) {
+                        if (ruleSet[i].rule_action == "0") mainElement.show();
+                        if (ruleSet[i].rule_action == "1") mainElement.hide();
+                        break;
+                    } else if(ruleSet[i].rule_action == 0) {
+                        if (ruleSet[i].rule_action == "0") mainElement.hide();
+                        if (ruleSet[i].rule_action == "1") mainElement.show();
+                    } else {
+                        if (ruleSet[i].rule_action == "0") mainElement.hide();
+                        if (ruleSet[i].rule_action == "1") mainElement.show();
+                    }
+                }
+            }
+        }
+
+    }
+    ruleElementsFlag = [];
+}
+
 const updateElementOrder = (elements) => {
 
     return new Promise((resolve, reject) => {
@@ -168,6 +275,9 @@ const updateElementOrder = (elements) => {
 
 const clearModalForm = () => {
     document.getElementById('elementSettings').reset();
+    $('div.rule-item-container').each(function(index, val) {
+        if (index > 0) $(val).remove();
+    });
 }
 
 
@@ -240,6 +350,8 @@ const loadElements = async (form_id, editable = false) =>  {
             $(container).empty();
             $(container).addClass(`form-${form.style}`);
             $(container).addClass(`form-${form.color}`);
+            $('form').addClass(`form-${form.style}`);
+            $('form').addClass(`form-${form.color}`);
             res.data.elements.forEach(element => {
                 renderElement(element, editable);
             });

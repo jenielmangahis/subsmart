@@ -1,4 +1,8 @@
-.form-light .form-header, .form-light .form-button {
+.form-light .form-header, form.form-light button {
     background-color:#f8f9fa!important;
+    color: #2a3142 !important;
+}
+
+.form-light .form-header h3 {
     color: #2a3142 !important;
 }

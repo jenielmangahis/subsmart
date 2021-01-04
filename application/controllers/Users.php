@@ -748,7 +748,8 @@ class Users extends MY_Controller {
             'role' => $role,
             'status' => $status,
             'company_id' => $cid,
-            'profile_img' => $profile_img
+            'profile_img' => $profile_img,
+            'address' => $address
         );
         $query = $this->users_model->addNewEmployee($add);
         if ($query == true){
@@ -756,7 +757,7 @@ class Users extends MY_Controller {
         }else{
             echo json_encode(0);
         }
-    }
+    }    
     public function getEmployeeData(){
 	    $user_id = $this->input->get('user_id');
 	    $get_data = $this->db->get_where('users',array('id'=>$user_id));
@@ -775,6 +776,22 @@ class Users extends MY_Controller {
 	    echo json_encode($info);
 
     }
+    public function ajaxEditEmployee(){
+	    $user_id = $this->input->post('user_id');
+	    $get_user = $this->Users_model->getUser($user_id);
+	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
+
+        $roles = $this->users_model->getRoles();
+
+        $this->page_data['roles'] = $roles;
+	    $this->page_data['user'] = $get_user;
+	    $this->page_data['role'] = $get_role;
+	    $this->load->view('users/modal_edit_form', $this->page_data);
+
+	    echo $data;
+
+    }
+
     private $user_path = './uploads/users/user-profile/';
     public function profilePhoto(){
         if (! empty($_FILES)){
@@ -1278,6 +1295,72 @@ class Users extends MY_Controller {
 
 		die(json_encode($users));
 	}
+
+	public function ajaxUpdateEmployee(){
+
+    	$user_id = $this->input->post('values[user_id]');
+        $fname = $this->input->post('values[firstname]');
+        $lname = $this->input->post('values[lastname]');
+        $email = $this->input->post('values[email]');
+        $username = $this->input->post('values[username]');
+        $password = $this->input->post('values[password]');
+        $address = $this->input->post('values[address]');
+        $role = $this->input->post('values[role]');
+        $status = $this->input->post('values[status]');
+        $web_access = $this->input->post('values[web_access]');
+        $app_access = $this->input->post('values[app_access]');
+        $profile_img = $this->input->post('values[profile_photo]');
+
+        $user = $this->Users_model->getUser($user_id);
+
+        if( $profile_img == '' ){
+        	$profile_img = $user->profile_img;
+        }
+
+        $data = array(
+            'FName' => $fname,
+            'LName' => $lname,
+            'username' => $username,
+            'email' => $email,
+            'role' => $role,
+            'status' => $status,            
+            'profile_img' => $profile_img,
+            'address' => $address
+        );
+
+        $user = $this->Users_model->update($user_id,$data);
+
+        echo json_encode(1);
+    }
+
+    public function ajaxUpdateEmployeePassword(){
+    	$is_success = false;
+    	$msg = "";
+
+    	$new_password = $this->input->post('values[new_password]');
+    	$re_password  = $this->input->post('values[re_password]');
+    	$user_id = $this->input->post('values[change_password_user_id]');
+
+    	if( $new_password != $re_password ){
+    		$msg = "Password not same";
+    	}else{
+    		$data = array(
+	            'password' => hash("sha256",$new_password),
+	            'password_plain' => $new_password,
+	        );
+
+	        $user = $this->Users_model->update($user_id,$data);
+
+	        $is_success = true;
+    	}
+
+    	$json_data = [
+    		'is_success' => $is_success,
+    		'msg' => $msg
+    	];
+
+    	echo json_encode($json_data);
+    }
 }
 
 

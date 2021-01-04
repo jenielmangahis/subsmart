@@ -494,3 +494,9 @@ $route['color_settings/edit_color_setting'] = 'Color_Settings/edit_color_setting
 $route['color_settings/update_color_setting'] = 'Color_Settings/update_color_setting';
 $route['color_settings/delete_color'] = 'Color_Settings/delete_color';
 $route['color_settings/add_new'] = 'Color_Settings/add_new';
+
+//Users
+$route['users/load_edit_employee'] = 'Users/ajaxEditEmployee';
+$route['users/_update_employee_password'] = 'Users/ajaxUpdateEmployeePassword';
+
+

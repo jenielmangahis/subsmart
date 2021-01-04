@@ -1,0 +1,11 @@
+.form-san-marino-blue .form-header {
+    background-color:#4C6BB5 !important;
+}
+
+form.form-san-marino-blue button {
+    background-color: #E8BC63 !important;
+}
+
+.form-san-marino-blue input, .form-san-marino-blue textarea, .form-san-marino-blue select {
+    border-color: #4C6BB5 !important;
+}

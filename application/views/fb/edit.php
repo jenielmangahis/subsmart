@@ -462,6 +462,202 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('orange')"
+                                                            class="bg-secondary form-orange form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-orange mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-warning text-dark">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('violet')"
+                                                            class="bg-secondary form-violet form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-violet mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-violet">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('sky-blue')"
+                                                            class="bg-secondary form-sky-blue form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-sky-blue mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-sky-blue">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('persian-green')"
+                                                            class="bg-secondary form-persian-green form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-persian-green mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-persian-green-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-persian-green-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('green')"
+                                                            class="bg-secondary form-green form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-green mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-green-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-green-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('san-marino-blue')"
+                                                            class="bg-secondary form-san-marino-blue form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-san-marino-blue mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-san-marino-blue-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-san-marino-blue-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('mulberry')"
+                                                            class="bg-secondary form-mulberry form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-mulberry mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-mulberry-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-mulberry-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('valencia')"
+                                                            class="bg-secondary form-valencia form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-valencia mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-valencia-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-valencia-button text-dark">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('sandy')"
+                                                            class="bg-secondary form-sandy form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-sandy mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-sandy-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-sandy-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('terracotta')"
+                                                            class="bg-secondary form-terracotta form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-terracotta mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-terracotta-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-terracotta-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('comet')"
+                                                            class="bg-secondary form-comet form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-comet mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-comet-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-comet-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('jungle')"
+                                                            class="bg-secondary form-jungle form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-jungle mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-jungle-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-jungle-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('light-brown')"
+                                                            class="bg-secondary form-light-brown form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 bg-light">
+                                                                <div class="w-100 h-25 border d-block bg-light-brown mb-1">
+                                                                    <p>Header</p>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-light-brown-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-light-brown-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
+                                                        <div onclick="handleColorChangePreview('dark-theme')"
+                                                            class="bg-secondary form-dark-theme form-color style-display-container p-1 text-center">
+                                                            <div class="p-2 mb-1 border bg-dark-theme">
+                                                                <div class="w-100 h-25 d-block mb-1">
+                                                                    <div class="bg-dark-theme-heading">Header</div>
+                                                                </div>
+                                                                <div class="w-100 h-25 border d-block bg-dark-theme-fields"></div>
+                                                            </div>
+
+                                                            <div class="w-100 h-25 border d-block bg-dark-theme-button">Button
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('secondary')"
                                                             class="bg-secondary form-secondary form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -595,7 +791,7 @@
                             </div>
                         </div>
                         <div class="view-form text-center">
-                            <a class="btn btn-primary" href="/fb/view/<?= $form_id ?>">View Form</a>
+                            <a class="btn btn-primary" href="/fb/view/<?= $form_id ?>" target="__blank">View Form</a>
                         </div>
                     </div>
                 </div>
