@@ -1,6 +1,9 @@
 let tempElements, tempStyle, tempColor, editor;
 const styles = ['default', 'big', 'bigger', 'slim', 'rounded', 'narrow', 'casual', 'modern', 'airy', 'bubbly'];
-const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 'dark', 'light'];
+const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 'dark', 'light', 'orange', 'violet', 'sky-blue', 'persian-green', 'green', 'san-marino-blue', 'mulberry', 'valencia', 'sandy', 'terracotta', 'comet', 'jungle', 'light-brown', 'dark-theme'];
+var rule_item_el = $('div.rule-items').html();
+const ruleOrOperator = `<div class="row mt-2 operator-container"><div class="col-12"><h6>OR</h6></div></div>`;
+const ruleAndOperator = `<div class="row mt-2 operator-container"><div class="col-12"><h6>AND</h6></div></div>`;
 $('#formBuilderContainer').sortable({
     placeholder: 'placeholder-hor',
     grid: [20, 20],
@@ -193,6 +196,7 @@ const handleElementEdit = (id) => {
 }
 
 const setModalElement = (element) => {
+    setElementRulesConfig(element);
     $('#elementQuestionInput').val(element.question);
     $('#elementQuestionEditor').val(element.question);
     $('#elementType').val(element.element_type);
@@ -218,6 +222,47 @@ const setModalElement = (element) => {
     $('#elementSettingsModal #url').val(element.url);
     $('#elementSettingsModal #urlText').val(element.url_text);
     $('#elementSettingsModal #customCode').val(element.custom_code);
+
+    $('select[name="rule_item"] option').show();
+    $('select[name="rule_item"] option[value="'+element.id+'"]').hide();
+}
+
+const setElementRulesConfig = (element) => {
+    if(element.rules.length === 1) {
+        $('div.rule-items div.operator-container').remove();
+    }
+    for (var i in element.rules) {
+        if (i > 0) {
+            if(element.rules[i].rule_join == 1) {
+                $('div.rule-items').append(ruleOrOperator);
+            } else {
+                $('div.rule-items').append(ruleAndOperator);
+            }
+
+            $('div.rule-items').append(rule_item_el);            
+        };
+
+        var ruleItem = $('div.rule-item-container')[i];
+
+        $('select[name="rule_action"]').val(element.rules[i].rule_action);
+        $('select[name="rule_join"]').val(element.rules[i].rule_join);
+        if(element.rules[i].rule_item !== null) {
+            $(ruleItem).find('.rule-element-selector select[name="rule_item"]').val(element.rules[i].rule_item);
+            $(ruleItem).find('.rule-method-selector select[name="rule_condition"]').show();
+            $(ruleItem).find('.rule-element-answer-selector input[name="rule_answer"]').show();
+        } else {
+            $(ruleItem).find('.rule-method-selector select[name="rule_condition"]').hide();
+            $(ruleItem).find('.rule-element-answer-selector input[name="rule_answer"]').hide();
+        }
+        $(ruleItem).find('.rule-method-selector select[name="rule_condition"]').val(element.rules[i].rule_condition);
+        $(ruleItem).find('.rule-element-answer-selector input[name="rule_answer"]').val(element.rules[i].rule_answer);
+    }
+
+    if($('div.rule-item-container:first').next().next().hasClass('operator-container')) {
+        while($('div.rule-item-container:first').next().next().hasClass('operator-container')) {
+            $('div.rule-item-container:first').next().next().remove();
+        }
+    }
 }
 
 const getModalValues = () => {
@@ -230,7 +275,25 @@ const getModalValues = () => {
     if(element_type === "FormattedText") {
         question = $('#elementQuestionEditor').val() ? $('#elementQuestionEditor').val() : '';
     }
-    return {
+
+    var element_rule = [];
+    var rule = {};
+    
+    $('div.rule-item-container').each(function(index, val) {
+
+        rule = {
+            rule_action : $('select[name="rule_action"]').val(),
+            rule_join : $('select[name="rule_join"]').val(),
+            rule_item : $(val).find('select[name="rule_item"]').val(),
+            rule_condition : $(val).find('select[name="rule_condition"]').val(),
+            rule_answer : $(val).find('input[name="rule_answer"]').val() ?? "",
+            rule_order : (index+1)
+        };
+
+        element_rule.push(rule);
+    });
+
+    var return_data = {
         form_element: {
             id: $('#elementSettingsModal #elementID').val(),
             form_id: form.id,
@@ -255,11 +318,15 @@ const getModalValues = () => {
             custom_code: $('#elementSettingsModal #customCode').val(),
             percentage_excluded: $('#percentageExcludeSwitch').is(":checked") ? 1 : 0,
         },
+        element_rules: JSON.stringify(element_rule),
         choices: choicesParser($('#elementChoicesInput').val()),
         choices_and_prices: choicesPriceParser($('#elementChoicesAndPricesChoiceInput').val(),$('#elementChoicesAndPricesPriceInput').val()),
         matrix_columns: choicesParser($('#elementMatrixColumnsInput').val()),
         matrix_rows: choicesParser($('#elementMatrixRowsInput').val()),
     }
+
+
+    return return_data;
 }
 
 const showModal = (element) => {
@@ -389,4 +456,59 @@ const appendFormOptions = (obj) => {
     const select = $('#copyFromForm');
     const el = `<option value="${obj.id}">${obj.name}</option>`
     select.append(el);
+}
+
+const addItemRule = () => {
+    var ruleJoin = $('select[name="rule_join"]').val();
+    if(ruleJoin == 1) {
+        console.log(459);
+        $('div.rule-items').append(ruleOrOperator);
+    } else {
+        $('div.rule-items').append(ruleAndOperator);
+    }
+
+    $('div.rule-items').append(rule_item_el);
+    var elementItems = $('div.rule-items div.rule-item-container').find('div.rule-element-selector select[name="rule_item"]').html();
+
+    $('div.rule-items div.rule-item-container:last').find('div.rule-element-selector select[name="rule_item"] option').remove();
+    $('div.rule-items div.rule-item-container:last').find('div.rule-element-selector select[name="rule_item"]').append(elementItems);
+    $('div.rule-items div.rule-item-container:last').find('div.rule-method-selector select[name="rule_condition"]').hide();
+    $('div.rule-items div.rule-item-container:last').find('div.rule-element-answer-selector input[name="rule_answer"]').hide();
+}
+
+const removeItemRule = (el) => {
+    if( !$(el).parent().parent().parent().prev().hasClass('operator-container') && 
+        $(el).parent().parent().parent().next().hasClass('operator-container')
+    ) {
+        $(el).parent().parent().parent().next().remove();
+    }
+
+    if($(el).parent().parent().parent().prev().hasClass('operator-container')) {
+        $(el).parent().parent().parent().prev().remove();
+    }
+
+    if($('div.rule-item-container').length !== 1) {
+        $(el).parent().parent().parent().remove();
+    }
+}
+
+const setOperatorText = (el) => {
+    if($('div.operator-container').length !== 0) {
+        if($(el).val() === "1") {
+            $('div.rule-items div.operator-container div h6').html('OR');
+        } else {
+            $('div.rule-items div.operator-container div h6').html('AND');
+        }
+    }
+}
+
+const showFields = (el) => {
+    console.log($(el).val() === "null");
+    if($(el).val() === null || $(el).val() === "" || $(el).val() === "null") {
+        $(el).parent().parent().find('div.rule-method-selector select[name="rule_condition"]').hide();
+        $(el).parent().parent().find('div.rule-element-answer-selector input[name="rule_answer"]').hide();
+    } else {
+        $(el).parent().parent().find('div.rule-method-selector select[name="rule_condition"]').show();
+        $(el).parent().parent().find('div.rule-element-answer-selector input[name="rule_answer"]').show();
+    }
 }

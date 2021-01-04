@@ -12,7 +12,30 @@ class FB_elements_model extends MY_Model {
 		$this->load->model('FB_element_matrix_rows_model', 'form_element_matrix_rows');
 		$this->load->model('FB_element_matrix_columns_model', 'form_element_matrix_columns');
 		$this->load->model('FB_element_items_model', 'form_element_items');
-    }
+		$this->load->model('FB_element_rules_model', 'form_element_rules');
+	}
+	
+	function getFormElements($id) {
+		try {
+			$this->db->select('*');
+			$this->db->where('form_id', $id);
+			$elements = $this->db->get($this->table);
+
+			$res = [
+				'data' 	=> $elements->result(),
+				'code'	=> 200,
+				'message'	=> 'Here are your form elements, master'
+			];
+		} catch(\Exception $e) {
+			$res = [
+				'data' 	=> [],
+				'code'	=> 500,
+				'message'	=> 'Error fetching form elements. please try again later or contact customer support.'
+			];
+		}
+
+		return $res;
+	}
     
 	function create($data){
 		try {
@@ -52,6 +75,19 @@ class FB_elements_model extends MY_Model {
 					$this->db->insert($this->form_element_matrix_columns->table, $matrixColumnData);			
 				}	
 			}		
+
+			$elementRules = json_decode($data['element_rules']);
+
+			foreach($elementRules as $elementRule) {
+				$elementRule->element_id = $data['form_element']['id'];
+				$elementRule->form_id = $data['form_element']['form_id'];
+				$elementRule->status = 1;
+				if($elementRule->rule_item = "null") {
+					unset($elementRule->rule_item);
+				}
+				$this->db->insert($this->form_element_rules->table, $elementRule);
+			}
+
 			$response = [
 				'code' 		=> 200,
 				'message' 	=> 'created',
@@ -69,6 +105,7 @@ class FB_elements_model extends MY_Model {
 	}
 
 	function update($data, $id){
+
 		try {
 			$this->db->where('id', $id);
 			$this->db->update($this->table, $data['form_element']);
@@ -118,6 +155,21 @@ class FB_elements_model extends MY_Model {
 				$this->db->insert($this->form_element_matrix_columns->table, $matrixColumnData);			
 			}
 			
+			$elementRules = json_decode($data['element_rules']);
+
+			$this->db->where(['element_id' => $id, 'form_id' => $data['form_element']['form_id']]);
+			$this->db->delete($this->form_element_rules->table);
+			
+			foreach($elementRules as $elementRule) {
+				$elementRule->status = 1;
+				$elementRule->element_id = $id;
+				$elementRule->form_id = $data['form_element']['form_id'];
+				if($elementRule->rule_item == "null") {
+					unset($elementRule->rule_item);
+				}
+				$this->db->insert($this->form_element_rules->table, $elementRule);
+			}
+
 			$response = [
 				'code' 		=> 200,
 				'message' 	=> 'updated',
@@ -135,6 +187,9 @@ class FB_elements_model extends MY_Model {
 	}
 
 	function updateOrder($data) {
+		for($i = 0; $i < count($data); $i++) {
+			unset($data[$i]['rules']);
+		}
 		try {
 			$this->db->update_batch($this->table, $data, 'id');
 			$response = [
@@ -162,6 +217,8 @@ class FB_elements_model extends MY_Model {
 			$this->db->delete($this->form_element_choices->table);
 			$this->db->where('element_id', $id);
 			$this->db->delete($this->form_element_items->table);
+			$this->db->where('element_id', $id);
+			$this->db->delete($this->form_element_rules->table);
 			$response = [
 				'code' 		=> 200,
 				'message' 	=> 'deleted',

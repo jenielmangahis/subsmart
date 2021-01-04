@@ -1,0 +1,11 @@
+.form-sandy .form-header {
+    background-color:#F39E59 !important;
+}
+
+form.form-sandy button {
+    background-color: #479ECA !important;
+}
+
+.form-sandy input, .form-sandy textarea, .form-sandy select {
+    border-color: #F39E59 !important;
+}

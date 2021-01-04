@@ -104,6 +104,10 @@ class FB_model extends MY_Model {
 				$this->db->select("*");
 				$this->db->where('element_id', $element['id']);
 				$item = $this->db->get($this->form_element_items->table);
+				$this->db->select("*");
+				$this->db->where(['element_id' => $element['id'], 'form_id' => $id]);
+				$rules = $this->db->get($this->form_element_rules->table);
+				$elementsArr[$i]['rules'] = $rules->result_array();				
 				$elementsArr[$i]['items'] = $item->result_array();				
 				$elementsArr[$i]['choices'] = $choice->result_array();				
 				$elementsArr[$i]['matrix'] = $matrix;				

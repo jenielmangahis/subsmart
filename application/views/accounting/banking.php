@@ -16,6 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
                         <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
                         <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
+                        <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
                     </div>
                 </div>
                 <div class="row" style="padding-bottom: 20px;">

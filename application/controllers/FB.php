@@ -79,7 +79,8 @@ class FB extends MY_Controller {
 		add_css(array(
 			'assets/fb/css/edit.css',
 			'assets/terms_and_conditions/css/kothing-editor.min.css',
-			'assets/terms_and_conditions/css/main.css'
+			'assets/terms_and_conditions/css/main.css',
+			'assets/fb/css/form-color-pallete.css'
 		));
 		add_footer_js(array(
 			'assets/terms_and_conditions/js/common.js',
@@ -92,6 +93,8 @@ class FB extends MY_Controller {
 			'assets/fb/js/builder.js',
 		));
 		$this->page_data['form_id'] = $id;
+		$elements = $this->form_elements->getFormElements($id);
+		$this->page_data['form_elements'] = $elements['data'];
 		$this->load->view('fb/element_settings_modal.php', $this->page_data);
 		$this->load->view('fb/copy_from_form_modal.php', $this->page_data);
 		$this->load->view('fb/edit.php', $this->page_data);

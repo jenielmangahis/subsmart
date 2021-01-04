@@ -1,0 +1,11 @@
+.form-terracotta .form-header {
+    background-color:#E07A5F !important;
+}
+
+form.form-terracotta button {
+    background-color: #E59681 !important;
+}
+
+.form-terracotta input, .form-terracotta textarea, .form-terracotta select {
+    border-color: #E07A5F !important;
+}

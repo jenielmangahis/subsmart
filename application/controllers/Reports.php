@@ -669,6 +669,7 @@ class Reports extends MY_Controller {
         fpassthru($f);
     }
 
+
 }
 
 /* End of file Comapny.php */

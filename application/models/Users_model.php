@@ -382,6 +382,16 @@ class Users_model extends MY_Model {
 	    $this->db->insert('user_profile_photo',$photo);
 	    return $this->db->insert_id();
 	}
+
+	public function getProfilePhoto($photo_id){
+		$this->db->select('*');
+		$this->db->from('user_profile_photo');
+		$this->db->where('id', $photo_id);
+		// $this->db->where('role !=', 1);
+		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
+		return $query->row();
+	}
 	
 
 	public function getAllUserId(){

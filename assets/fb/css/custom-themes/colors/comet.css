@@ -1,0 +1,11 @@
+.form-comet .form-header {
+    background-color:#605F7D !important;
+}
+
+form.form-comet button {
+    background-color: #B39FF9 !important;
+}
+
+.form-comet input, .form-comet textarea, .form-comet select {
+    border-color: #605F7D !important;
+}

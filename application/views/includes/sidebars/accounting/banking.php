@@ -117,6 +117,9 @@
                     <li>
                         <a href="<?php echo url('/accounting/receipts')?>">Receipts</a>
                     </li>
+                    <li>
+                        <a href="<?php echo url('/accounting/tags')?>">Tags</a>
+                    </li>
                 </ul>
             </li>
             <li>

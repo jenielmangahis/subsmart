@@ -46,11 +46,67 @@ Chartist Chart-->
 
 <script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
 <script src="<?php echo $url->assets;?>js/icons/icon.navbar.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 <!--Accounting JS-->
 <?php echo put_footer_assets();?>
 <script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
 </script>
+
+<script>
+jQuery(document).ready(function () {
+$('#reportstable').DataTable();
+});
+</script>
+
+<script>
+// jQuery(document).ready(function () {
+	$("#division").hover(function(){
+		$('.to-show-div').show();
+		$('.to-hide-div').hide();
+	},function(){
+		$('.to-show-div').hide();
+		$('.to-hide-div').show();
+	});
+// });
+$('#e2').on('click', function(){
+    var title = $(this).val();
+    $(this).css('background-color', title);
+});
+</script>
+
+<script>
+window.onload = function () {
+
+//Better to construct options first and then pass it as a parameter
+var options = {
+	title: {
+		text: "Salary Trends"
+	},
+	animationEnabled: true,
+	exportEnabled: true,
+	data: [
+	{
+		type: "spline", //change it to line, area, column, pie, etc
+		dataPoints: [
+			{ x: 10, y: 10 },
+			{ x: 20, y: 12 },
+			{ x: 30, y: 8 },
+			{ x: 40, y: 14 },
+			{ x: 50, y: 6 },
+			{ x: 60, y: 24 },
+			{ x: 70, y: -4 },
+			{ x: 80, y: 10 }
+		]
+	}
+	]
+};
+$("#chartContainer").CanvasJSChart(options);
+
+}
+</script>
+
+
 <script>
   $(function () {
     "use strict";

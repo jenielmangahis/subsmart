@@ -23,6 +23,7 @@ class FormElement {
         this.matrix_rows = obj.matrix ? obj.matrix.rows ? obj.matrix.rows : ['-'] : ['-'];
         this.matrix_columns = obj.matrix ? obj.matrix.columns ? obj.matrix.columns : ['-'] : ['-'];
         this.container_id = obj.container_id ? obj.container_id : null;
+        this.rules = obj.rules ? obj.rules : null;
     }
 
     getElementContainer(remove_padding = false) {
@@ -80,6 +81,7 @@ class FormElement {
                     rows: this.rows,
                     columns: this.columns,
                     limit_unit: this.limit_unit,
+                    rules: this.rules,
                 },
                 choices: this.choices,
             }
@@ -99,6 +101,7 @@ class FormElement {
                 rows: this.rows,
                 columns: this.columns,
                 limit_unit: this.limit_unit,
+                rules: this.rules,
             }
         }
     }

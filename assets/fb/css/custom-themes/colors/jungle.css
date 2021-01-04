@@ -1,0 +1,11 @@
+.form-jungle .form-header {
+    background-color:#2A9D8F !important;
+}
+
+form.form-jungle button {
+    background-color: #F4A261 !important;
+}
+
+.form-jungle input, .form-jungle textarea, .form-jungle select {
+    border-color: #2A9D8F !important;
+}
