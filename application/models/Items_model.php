@@ -19,7 +19,10 @@ class Items_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
+        if( $company_id > 0 ){
+            $this->db->where('company_id', $company_id);
+        }
+        
         $this->db->where('type', $type);
 
         if (!empty($filters)) {

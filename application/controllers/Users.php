@@ -678,7 +678,13 @@ class Users extends MY_Controller {
 
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		
-		$this->page_data['users'] = $this->users_model->getUsers();
+		$role_id = logged('role');
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['users'] = $this->users_model->getAllUsers();
+		}else{
+			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
+		}
+		
 
 		// echo '<pre>';print_r($this->page_data);die;
 
