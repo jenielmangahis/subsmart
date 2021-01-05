@@ -21,12 +21,20 @@ class Plans extends MY_Controller {
             die();
         }
 
+        $role = logged('role');
+        if( $role == 1 || $role == 2 ){
+        	$this->page_data['plans'] = $this->plans_model->getByWhere([]);
+        }else{
+        	$company_id =  logged('company_id');
+			$this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
+        }
+        
 		// ifPermissions('plan_list');
 
 		// $this->page_data['items'] = $this->items_model->get();
-		$company_id =  logged('company_id');
+		//$company_id =  logged('company_id');
 		// $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-		$this->page_data['plans'] = array();
+		//$this->page_data['plans'] = array();
 		/* echo "<pre>"; print_r($this->page_data['items']); die; */
 		$this->load->view('plans/list', $this->page_data);
 	}

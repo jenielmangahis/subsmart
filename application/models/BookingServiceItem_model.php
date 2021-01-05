@@ -30,11 +30,16 @@ class BookingServiceItem_model extends MY_Model
 
         $result_group_array = array();
         $id = logged('id');
+        $company_id = logged('company_id');
+        $role_id = logged('role');
 
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where('user_id', $id);
+        if( $role_id > 2 ){
+            $this->db->where('company_id', $company_id);
+        }
+        //$this->db->where('user_id', $id);
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();

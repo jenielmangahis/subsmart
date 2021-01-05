@@ -36,7 +36,16 @@ class JobType
         }
 
         $app->load->model('JobType_model', 'jobType_model');
-        $app->page_data['jobTypes'] = $app->jobType_model->getJobTypes();
+        $role = logged('role');
+        $company_id = logged('company_id');
+
+        if( $role == 1 || $role == 2 ){
+            $app->page_data['jobTypes'] = $app->jobType_model->getAllJobTypes();
+        }else{
+            $app->page_data['jobTypes'] = $app->jobType_model->getAllCompanyJobTypes($company_id);
+        }
+        
+        
         $app->load->view('workorder/job-type/list', $app->page_data);
     }
 

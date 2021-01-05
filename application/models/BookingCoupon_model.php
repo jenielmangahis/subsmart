@@ -85,6 +85,8 @@ class BookingCoupon_model extends MY_Model
     public function getAllActive($filters=array())
     {
         $id = logged('id');
+        $company_id = logged('company_id');
+        $role_id = logged('role');
 
         $this->db->select('*');
         $this->db->from($this->table);
@@ -95,8 +97,14 @@ class BookingCoupon_model extends MY_Model
             }
         }
 
-        $this->db->where('user_id', $id);
-        $this->db->where('status', $this->status_active);
+        if( $role_id == 1 || $role_id == 2 ){
+            $this->db->where('status', $this->status_active);
+        }else{
+            $this->db->where('company_id', $company_id);
+            $this->db->where('status', $this->status_active);
+        }
+        //$this->db->where('user_id', $id);
+        //$this->db->where('status', $this->status_active);
 
         $this->db->order_by('id', 'DESC');
 
