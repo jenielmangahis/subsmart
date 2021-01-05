@@ -56,6 +56,8 @@ $route['translate_uri_dashes'] = FALSE;
 $route['customer/tickets/(:any)?'] = 'customer/ticket/$1';
 $route['customer/tickets'] = 'customer/ticket';
 
+$route['customer/add_data_sheet'] = 'customer/add_data_sheet';
+
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';
 $route['equipments'] = 'equipment';
