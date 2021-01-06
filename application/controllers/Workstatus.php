@@ -22,9 +22,15 @@ class Workstatus extends MY_Controller {
             die();
         }
 		
-		$company_id =  logged('company_id');
-		// $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-		$this->page_data['workstatus'] = array();
+		$company_id = logged('company_id');
+		$role_id    = logged('role');
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['workstatus'] = $this->Workstatus_model->getByWhere([]);
+		}else{
+			$this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+		}
+		
+		//$this->page_data['workstatus'] = array();
 		$this->load->view('workstatus/list', $this->page_data);
 	}
 	
