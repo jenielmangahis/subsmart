@@ -110,6 +110,22 @@ class Users_model extends MY_Model {
 
 		return $query->result();
 	}
+
+	public function getAllUsers() {
+		$this->db->select('*');
+		$this->db->from($this->table);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function getCompanyUsers( $company_id ) {
+		$this->db->select('*');
+		$this->db->from($this->table);
+		$this->db->where('company_id', $company_id);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function getTotalUsers(){
         $this->db->where('id', getLoggedUserID());
 	    $this->db->or_where('company_id',logged('company_id'));
@@ -128,6 +144,22 @@ class Users_model extends MY_Model {
 		//$this->db->where('parent_id', $parent_id);
 		$this->db->where('id', $parent_id);
 		$this->db->or_where('company_id',$cid );
+		 $this->db->order_by('id', 'DESC');
+		$this->db->limit(3);
+		$query = $this->db->get();
+
+		return $query->result();
+
+	}
+
+	public function getAllRecentUsers() {
+
+		
+		$parent_id = getLoggedUserID();
+		$this->db->select('*');
+		$this->db->from($this->table);
+		//$this->db->where('parent_id', $parent_id);
+		$this->db->where('id', $parent_id);
 		 $this->db->order_by('id', 'DESC');
 		$this->db->limit(3);
 		$query = $this->db->get();

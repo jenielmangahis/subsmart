@@ -79,7 +79,7 @@ class FB_elements_model extends MY_Model {
 			$elementRules = json_decode($data['element_rules']);
 
 			foreach($elementRules as $elementRule) {
-				$elementRule->element_id = $data['form_element']['id'];
+				$elementRule->element_id = $newID;
 				$elementRule->form_id = $data['form_element']['form_id'];
 				$elementRule->status = 1;
 				if($elementRule->rule_item = "null") {

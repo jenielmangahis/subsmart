@@ -1,14 +1,20 @@
+body.dark-theme {
+    background-color: #323B42 !important;
+}
+
 div.form-dark-theme {
     background-color: #455058 !important;
     color: #f8f9fa !important;
+    border: 2px solid #E2E2E2 !important;
 }
 
 .form-dark-theme .form-header {
     background-color: #283036 !important;
 }
 
-form.form-dark-theme button {
+form.form-dark-theme button, .form-dark-theme div.Signature div.container button {
     background-color: #7AB2B5 !important;
+    color: #fff !important;
 }
 
 .form-dark-theme input,

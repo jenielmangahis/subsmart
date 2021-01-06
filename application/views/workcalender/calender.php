@@ -925,8 +925,8 @@ a.top-1 {
 
 
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
-        var bc_events_url    = base_url + "/calendar/_get_main_calendar_events";
-        var bc_resources_url = base_url + "/calendar/_get_main_calendar_resources";
+        var bc_events_url    = base_url + "calendar/_get_main_calendar_events";
+        var bc_resources_url = base_url + "calendar/_get_main_calendar_resources";
 
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
@@ -1289,7 +1289,7 @@ a.top-1 {
     });
 
     function load_calendar(){
-        var events_url = base_url + "/settings/_get_google_enabled_calendars";
+        var events_url = base_url + "settings/_get_google_enabled_calendars";
         var calendarEl = document.getElementById('right-calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1403,7 +1403,7 @@ a.top-1 {
     load_upcoming_events();
 
     function load_upcoming_events(){
-      var url = base_url + '/calendar/_load_upcoming_events';
+      var url = base_url + 'calendar/_load_upcoming_events';
        $("#upcoming-events-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Upcoming Events...</div>');
 
       $.ajax({

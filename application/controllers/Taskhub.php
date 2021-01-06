@@ -19,7 +19,15 @@ class Taskhub extends MY_Controller {
             die();
         }
 
-		$this->page_data['tasks'] = getTasks();
+        $role_id = logged('role');
+        $comp_id = logged('company_id');
+
+        if( $role_id == 1 || $role_id == 2 ){
+        	$this->page_data['tasks'] = getAllTasks();
+        }else{
+        	$this->page_data['tasks'] = getAllCompanyTasks($comp_id);
+        }
+		
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$this->load->view('workcalender/taskhub/list', $this->page_data);

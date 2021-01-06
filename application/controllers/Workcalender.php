@@ -216,8 +216,12 @@ class Workcalender extends MY_Controller
         }
 
         $get_users = $this->Users_model->getUsers();
-        $get_recent_users = $this->Users_model->getRecentUsers();
-
+        if ($role == 2 || $role == 3) {
+           $get_recent_users = $this->Users_model->getAllRecentUsers();
+        }else{
+           $get_recent_users = $this->Users_model->getRecentUsers(); 
+        }
+        
         $resources_users = array();
         $resources_user_events = array();
 
@@ -853,14 +857,21 @@ class Workcalender extends MY_Controller
         $post = $this->input->post();
         $role = logged('role');
         
-        if ($role == 2 || $role == 3 || $role == 22) {
+        /*if ($role == 2 || $role == 3 || $role == 22) {
             $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
+        }*/
+
+        if( $role == 1 || $role == 2 ){
+           $events = $this->event_model->getAllEvents(); 
+        }else{
+           $company_id = logged('company_id');
+           $events = $this->event_model->getAllByCompany($company_id); 
         }
 
-        if ($role == 4) {
+        /*if ($role == 4) {
             $events = $this->event_model->getAllByUserId();
-        }
+        }*/
 
         if(empty($events) && $role == 1) {
             $events = $this->event_model->getAllByUserId();
@@ -1376,8 +1387,14 @@ class Workcalender extends MY_Controller
             date_default_timezone_set($settings['calendar_timezone']);
         }
 
-        $company_id = logged('company_id');
-        $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
+        $role_id = logged('role');
+        if( $role_id == 1 || $role_id == 2 ){
+            $upcoming_events = $this->event_model->getAllUpComingEvents();
+        }else{
+            $company_id = logged('company_id');
+            $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
+        }
+        
 
         //Google Events
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);

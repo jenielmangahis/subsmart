@@ -1201,6 +1201,62 @@ if (!function_exists('getTasks')){
     }
 
 }
+if (!function_exists('getAllTasks')){
+
+    function getAllTasks(){
+        $CI = &get_instance();
+        $uid = logged('id');
+
+        $sql = 'select '.
+
+               'a.task_id, '.
+               'a.subject, '.
+               'a.date_created, '.
+               'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
+
+               'b.status_text '.
+
+               'from tasks a '.
+               'left join tasks_status b on b.status_id = a.status_id '.
+               'left join tasks_participants c on c.task_id = a.task_id '.
+               'group by a.task_id '.
+
+               'order by date_created desc';
+
+        return $CI->db->query($sql)->result();
+    }
+
+}
+
+if (!function_exists('getAllCompanyTasks')){
+
+    function getAllCompanyTasks($company_id){
+        $CI = &get_instance();
+        $uid = logged('id');
+        $sql = 'select '.
+
+               'a.task_id, '.
+               'a.subject, '.
+               'a.date_created, '.
+               'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
+
+               'b.status_text '.
+
+               'from tasks a '.
+               'left join tasks_status b on b.status_id = a.status_id '.
+               'left join tasks_participants c on c.task_id = a.task_id '.
+
+               'where a.company_id = '. $company_id . ' ' .  
+
+               'group by a.task_id '.
+
+               'order by date_created desc';
+
+        return $CI->db->query($sql)->result();
+    }
+
+}
+
 if (!function_exists('getUserFileVaultPermissions')){
 
     function getUserFileVaultPermissions(){

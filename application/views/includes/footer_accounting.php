@@ -73,6 +73,21 @@ $('#e2').on('click', function(){
     var title = $(this).val();
     $(this).css('background-color', title);
 });
+
+$('.ajax-modal_invoice').click(function(e){
+  e.preventDefault(); 
+  alert("sana all");
+//   $.ajax({
+//    type: "POST",
+//    url: '<?php //echo base_url('/accounting/modal_invoice') ?>',
+//    success: function (html) {
+//     $("#addinvoiceModal").modal('show'); //insert retrieved data into modal, and then show it
+//    },
+//    error: function() {
+//     alert('Ajax did not succeed');
+//    }
+//   });
+});
 </script>
 
 <script>

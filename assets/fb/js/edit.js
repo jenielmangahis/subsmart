@@ -1,8 +1,12 @@
 let forms = [];
-const handleOnLoad = async (form_id) => {
+const handleOnLoad = async (form_id, laodColorPicker = true) => {
   await loadElements(form_id, true).then(res => {
     initBuilder();
     initSignPads();
+    initContainers();
+    if(laodColorPicker){
+      initColorPicker();
+    }
 
     try {
       initEditor();      

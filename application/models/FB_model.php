@@ -14,7 +14,7 @@ class FB_model extends MY_Model {
 		$this->load->model('FB_element_choices_model', 'form_element_choices');
 		$this->load->model('FB_element_matrix_rows_model', 'form_element_matrix_rows');
 		$this->load->model('FB_element_matrix_columns_model', 'form_element_matrix_columns');
-		$this->load->model('FB_element_items_model', 'form_element_items');
+		$this->load->model('FB_style_model', 'form_style');
     }
     
 	function create($data){
@@ -84,6 +84,9 @@ class FB_model extends MY_Model {
 			$this->db->where('id', $id);
 			$form = $this->db->get($this->table);
 
+			$this->db->select("*");
+			$this->db->where('form_id', $id);
+			$formStyle = $this->db->get($this->form_style->table);
 
 			$this->db->select("*");
 			$this->db->where('form_id', $id); 
@@ -113,8 +116,9 @@ class FB_model extends MY_Model {
 				$elementsArr[$i]['matrix'] = $matrix;				
 			}
 			$data = [
-				'form'		=> $form->row(),
-				'elements'	=> $elementsArr
+				'form'			=> $form->row(),
+				'form_style'	=> $formStyle->row(),
+				'elements'		=> $elementsArr
 			];	
 
 			$res = [
@@ -133,10 +137,24 @@ class FB_model extends MY_Model {
 	}
 
 	function update($data, $id) {
+		$customStyle = $data['customize_items'];
+		$customStyle['form_id'] = $id;
+		unset($data['customize_items']);
 		try {
 			$this->db->set($data);
 			$this->db->where('id', $id);
 			$this->db->update($this->table);	
+
+			$this->db->select("form_id");
+			$this->db->where('form_id', $id);
+			$rows = $this->db->get($this->form_style->table);
+			if($rows->num_rows()) {
+				$this->db->set($customStyle);
+				$this->db->where('form_id', $id);
+				$this->db->update($this->form_style->table);	
+			} else {
+				$this->db->insert($this->form_style->table, $customStyle);
+			}
 
 			$res = [
 				'data' 	=> [],
@@ -151,6 +169,11 @@ class FB_model extends MY_Model {
 			];
 		}
 		return $res;
+		// return $res = [
+	 	// 	'data' 	=> ['data' => $data, 'custom_style' => $customStyle],
+	 	// 	'code'	=> 500,
+	 	// 	'message'	=> 'Error updating form styles. please try again later or contact customer support.'
+	 	// ];
 	}
 
 	public function generateQR($form_id){

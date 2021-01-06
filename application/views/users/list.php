@@ -263,14 +263,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <form action="" id="changePasswordForm">
             	<input type="hidden" name="change_password_user_id" id="changePasswordUserId">
                 <div class="modal-body">
-                	<!-- <div class="row">
+                	<div class="row">
                 		<div class="col-md-12">
                 			<label for="">Employee Name</label>
                             <input type="text" id="changePasswordEmployeeName" class="form-control" readonly="" disabled="">
                 		</div>
                 	</div>
                 	<br />
-                	<hr /> -->
+                	<hr />
                 	<div class="row">
                         <div class="col-md-6">
                             <label for="">New Password</label>

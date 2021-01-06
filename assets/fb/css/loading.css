@@ -1,7 +1,7 @@
 .indicator {
   position: absolute;
-  top: 0;
-  right: 96px;
+  top: 15px;
+  right: 35px;
   display: none;
 }
 

@@ -2,10 +2,11 @@
     background-color:#009999 !important;
 }
 
-form.form-persian-green button {
+form.form-persian-green button, .form-persian-green div.Signature div.container button {
     background-color: #004D99 !important;
+    color: #fff !important;
 }
 
-.form-persian-green input, .form-persian-green textarea, .form-persian-green select {
+.form-persian-green input, .form-persian-green textarea, .form-persian-green select, .form-persian-green div.Signature div.container {
     border-color: #009999 !important;
 }
