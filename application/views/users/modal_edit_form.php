@@ -81,6 +81,27 @@
             </div>
             <input type="hidden" name="img_id" id="editPhotoId">
             <input type="hidden" name="profile_photo" id="editPhotoName">
+            <div>
+                <label for="">Payscale</label>
+                <select name="role" id="payScale" class="form-control">
+                    <option value="volvo" disabled selected>-select-</option>
+                    <option value="volvo">FullTime Hourly</option>
+                    <option value="volvo">PartTime Hourly</option>
+                    <option value="volvo">Base + Commission %</option>
+                    <option value="volvo">Commission Only</option>
+                    <option value="volvo">Salary</option>
+                    <option value="volvo">Base + Tips</option>
+                    <option value="volvo">Stocks Options</option>
+                    <option value="volvo">Bonuses</option>
+                    <option value="volvo">Incentive Pay</option>
+                    <option value="volvo">Variable Pay</option>
+                    <option value="volvo">Non-monetary</option>
+                    <option value="volvo">Referral Fee</option>
+                    <option value="volvo">Flat Fee</option>
+                    <option value="volvo">Outside Payroll</option>
+                    <option value="volvo">Temp Service</option>
+                </select>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="profile-container">

@@ -249,3 +249,13 @@ div#blankFormPlaceHolder {
 #customStyleInputControls select{
     height: fit-content !important;
 }
+
+.submit-button-element {
+    color: #fff;
+    background-color: #32243d;
+}
+
+#formBuilderContainer {
+    max-height: 80vh;
+    overflow-y: scroll;
+}

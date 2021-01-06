@@ -1,8 +1,8 @@
 .form-violet .form-header, form.form-violet button {
-    background-color:#551A8B !important;
+    background-color:#551A8B/*  !important */;
 }
 
 .form-violet div.Signature div.container button {
-    background-color:#551A8B !important;
-    color: #fff !important;
+    background-color:#551A8B/*  !important */;
+    color: #fff/*  !important */;
 }

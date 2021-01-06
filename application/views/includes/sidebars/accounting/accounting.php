@@ -78,10 +78,10 @@
 
                             <ul>
                                 <li><a href="#" class="ajax-modal_invoice" data-toggle="modal" data-target="#addinvoiceModal">Invoice</a></li>
-                                <li><a href="#">Receive payment</a></li>
-                                <li><a href="#">Estimate</a></li>
-                                <li><a href="#">Credit memo</a></li>
-                                <li><a href="#">Sales receipt</a></li>
+                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a></li>
+                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li>
+                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addcreditmemoModal">Credit memo</a></li>
+                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addsalesreceiptModal">Sales receipt</a></li>
                                 <li><a href="#">Refund receipt</a></li>
                                 <li><a href="#">Delayed credit</a></li>
                                 <li><a href="#">Delayed charge</a></li>
@@ -120,11 +120,11 @@
                             <h4>Other</h4>
 
                             <ul>
-                                <li><a href="#">Bank deposit</a></li>
-                                <li><a href="#">Transfer</a></li>
-                                <li><a href="#">Journal entry</a></li>
-                                <li><a href="#">Statement</a></li>
-                                <li><a href="#">Inventory qty adjustment</a></li>
+                                <li><a href="#" class="ajax-deposit_modal" data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
+                                <li><a href="#" class="ajax-transfer_modal" data-toggle="modal" data-target="#transferModal">Transfer</a></li>
+                                <li><a href="#" class="ajax-journal_entry_modal" data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
+                                <li><a href="#" class="ajax-statement_modal" data-toggle="modal" data-target="#statementModal">Statement</a></li>
+                                <li><a href="#" class="ajax-inventory_modal" data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
                                 <li><a href="#">Pay down credit card</a></li>
                                 <li><a href="#">Apply for Capital</a></li>
                             </ul>
@@ -139,5 +139,10 @@
         </div>
     </div>
 
-    <?php include viewPath('accounting/customer_invoice_modal'); ?>
+    <div><?php// include viewPath('accounting/customer_invoice_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_receive_payment_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_estimate_modal'); ?></div>
+    <div><?php// include viewPath('accounting/customer_credit_memo_modal'); ?></div>
+    <div><?php include viewPath('accounting/customer_sales_receipt_modal'); ?></div>
     <!-- End New Popup -->
+    

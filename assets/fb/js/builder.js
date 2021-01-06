@@ -21,6 +21,41 @@ const tab_assignment = {
     'item-required-icon' : 'customizeRequiredIconTab',
     'item-label-bold' : 'customizeBoldTab',
     'item-highlight' : 'customizeColorTab',
+    'field-border-color' : 'customizeColorTab',
+    'field-border-rounding' : 'customizeBorderRoundingTab',
+    'field-border-width' : 'customizeBorderWidthTab',
+    'field-font-family' : 'customizeFontFamilyTab',
+    'field-font-size' : 'customizeFontSizeTab',
+    'field-background' : 'customizeColorTab',
+    'field-text-color' : 'customizeColorTab',
+    'field-spacing' : 'customizeSpacingTab',
+    'field-padding' : 'customizePaddingTab',
+    'item-spacing' : 'customizeSpacingTab',
+    'submit-background': 'customizeColorTab',
+    'submit-background-size': 'customizeBackgroundSizeTab',
+    'submit-bold': 'customizeBoldTab',
+    'submit-border-style': 'customizeBorderStyleTab',
+    'submit-border-width': 'customizeBorderWidthTab',
+    'submit-capitalization': 'customizeCapitalizationTab',
+    'submit-font-family': 'customizeFontFamilyTab',
+    'submit-font-size': 'customizeFontSizeTab',
+    'submit-height-padding': 'customizePaddingTab',
+    'submit-hide': 'customizeHideTab',
+    'submit-hover-background': 'customizeColorTab',
+    'submit-rounding': 'customizeBorderRoundingTab',
+    'submit-shadows': 'customizeShadowTab',
+    'submit-text-color': 'customizeColorTab',
+    'submit-width': 'customizeWidthTab',
+    'matrix-alt-row-color' : "customizeColorTab",
+    'matrix-alt-row-header-color' : "customizeColorTab",
+    'matrix-alt-row-text-color' : "customizeColorTab",
+    'matrix-grid-lines' : "customizeColorTab",
+    'matrix-header-background' : "customizeColorTab",
+    'matrix-header-text' : "customizeColorTab",
+    'matrix-row-color' : "customizeColorTab",
+    'matrix-row-header-color' : "customizeColorTab",
+    'matrix-row-text-color' : "customizeColorTab",
+    'matrix-sub-header-background' : "customizeColorTab",
 }
 const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 'dark', 'light', 'orange', 'violet', 'sky-blue', 'persian-green', 'green', 'san-marino-blue', 'mulberry', 'valencia', 'sandy', 'terracotta', 'comet', 'jungle', 'light-brown', 'dark-theme'];
 var rule_item_el = $('div.rule-items').html();
@@ -117,7 +152,7 @@ const initColorPicker = () => {
         $('#colorValue').val(val);
         const custom_element = getActiveCustomElement();
         handleCustomElementModified(custom_element.active_option, val);
-        renderStyle(custom_element.element_name, val);
+        applyStyle(custom_element.element_name, val);
     });
 
     $('#colorPicker').append(`
@@ -157,6 +192,7 @@ const handleCustomElementModified = (element, value) => {
 const handleCustomizeSelectChange = ()  => {
     const val = $('#customizeSelect').val();
     $('#active-option').val(val);
+    console.log(val, tab_assignment[val]);
     $(`.nav-tabs a[href="#${tab_assignment[val]}"]`).tab('show')
 }
 
@@ -164,7 +200,7 @@ const handleCustomStyleChange = (val_element, output_element, property) => {
     const val = $(`${val_element}`).val();
     const custom_element = getActiveCustomElement();
     handleCustomElementModified(custom_element.active_option, val);
-    renderStyle(custom_element.element_name, val);
+    applyStyle(custom_element.element_name, val);
 }
 
 const expandSidebar = () => {

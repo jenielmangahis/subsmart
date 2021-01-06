@@ -1,12 +1,12 @@
 .form-comet .form-header {
-    background-color:#605F7D !important;
+    background-color:#605F7D/*  !important */;
 }
 
 form.form-comet button, .form-comet div.Signature div.container button {
-    background-color: #B39FF9 !important;
-    color: #fff !important;
+    background-color: #B39FF9/*  !important */;
+    color: #fff/*  !important */;
 }
 
 .form-comet input, .form-comet textarea, .form-comet select, .form-comet div.Signature div.container {
-    border-color: #605F7D !important;
+    border-color: #605F7D/*  !important */;
 }

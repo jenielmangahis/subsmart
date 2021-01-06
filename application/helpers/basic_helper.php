@@ -116,9 +116,8 @@ if (!function_exists('userProfileImage')) {
             }
         }else{
             if ($user->profile_img) {
-                $userprof = $CI->users_model->getProfilePhoto($user->profile_img);
-                $url = urlUpload('users/user-profile/' . $userprof->profile_image);
-                if( !file_exists(FCPATH."uploads/users/user-profile/" . $userprof->profile_image) ){
+                $url = urlUpload('users/user-profile/' . $user->profile_img);
+                if( !file_exists(FCPATH."uploads/users/user-profile/" . $user->profile_img) ){
                     $url = urlUpload('users/default.png');
                 }
             } else {
@@ -2058,6 +2057,41 @@ function get_format_date($date)
 {
     $new_date=date_create($date);
     return date_format($new_date,"M d, Y");
+}
+
+function get_format_date_with_day($date)
+{
+    $new_date=date_create($date);
+    return date_format($new_date,"D M d, Y");
+}
+
+function get_format_time($date)
+{
+    $new_date=date_create($date);
+    return date_format($new_date,"g:i a");
+
+    $effectiveDate = strtotime("+40 minutes", strtotime($idate));
+}
+
+function get_format_time_plus_hours($date)
+{
+    $effectiveDate = strtotime("+120 minutes", strtotime($date));
+    return date("g:i a",$effectiveDate);
+}
+
+function check_upcoming_date($date)
+{
+    $tomorrow = date('Y-m-d', strtotime(' +1 day'));
+    $new_date = date_format(date_create($date),"Y-m-d");
+
+    $dateTimestamp1 = strtotime($tomorrow); 
+    $dateTimestamp2 = strtotime($new_date); 
+
+    // dd($tomorrow . " " . $new_date);
+    if ($dateTimestamp1 == $dateTimestamp2) 
+        return true;
+    else
+        return false; 
 }
 
 /**

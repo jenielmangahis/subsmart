@@ -13,6 +13,9 @@ class Dashboard extends MY_Controller {
         $this->load->model('Feeds_model', 'feeds_model');
 		$this->load->model('timesheet_model');
         $this->load->model('users_model');
+        $this->load->model('jobs_model');
+        $this->load->model('estimate_model');
+        $this->load->model('invoice_model');
         add_css(array(
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             "assets/css/accounting/accounting.css",
@@ -41,6 +44,12 @@ class Dashboard extends MY_Controller {
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
         $this->page_data['feeds'] = $this->feeds_model->getByCompanyId();
+        
+        $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
+        $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
+        $this->page_data['invoice'] = $this->estimate_model->getAllByCompany(logged('company_id'));
+        $this->page_data['invoice'] = $this->invoice_model->getAllByCompany(logged('company_id'), 0);
+       
         $this->page_data['employees'] = $this->user_model->getAllUsersByCompany(logged('company_id'));
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();

@@ -472,7 +472,8 @@
                                                                 <div class="w-100 h-25 border d-block"></div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-warning text-dark">Button
+                                                            <div class="w-100 h-25 border d-block bg-warning text-dark">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -508,13 +509,18 @@
                                                         <div onclick="handleColorChangePreview('persian-green')"
                                                             class="bg-secondary form-persian-green form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
-                                                                <div class="w-100 h-25 border d-block bg-persian-green mb-1">
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-persian-green mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-persian-green-fields"></div>
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-persian-green-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-persian-green-button">Button
+                                                            <div
+                                                                class="w-100 h-25 border d-block bg-persian-green-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -525,10 +531,12 @@
                                                                 <div class="w-100 h-25 border d-block bg-green mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-green-fields"></div>
+                                                                <div class="w-100 h-25 border d-block bg-green-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-green-button">Button
+                                                            <div class="w-100 h-25 border d-block bg-green-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -536,13 +544,18 @@
                                                         <div onclick="handleColorChangePreview('san-marino-blue')"
                                                             class="bg-secondary form-san-marino-blue form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
-                                                                <div class="w-100 h-25 border d-block bg-san-marino-blue mb-1">
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-san-marino-blue mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-san-marino-blue-fields"></div>
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-san-marino-blue-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-san-marino-blue-button">Button
+                                                            <div
+                                                                class="w-100 h-25 border d-block bg-san-marino-blue-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -553,10 +566,13 @@
                                                                 <div class="w-100 h-25 border d-block bg-mulberry mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-mulberry-fields"></div>
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-mulberry-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-mulberry-button">Button
+                                                            <div class="w-100 h-25 border d-block bg-mulberry-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -567,10 +583,14 @@
                                                                 <div class="w-100 h-25 border d-block bg-valencia mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-valencia-fields"></div>
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-valencia-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-valencia-button text-dark">Button
+                                                            <div
+                                                                class="w-100 h-25 border d-block bg-valencia-button text-dark">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -581,10 +601,12 @@
                                                                 <div class="w-100 h-25 border d-block bg-sandy mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-sandy-fields"></div>
+                                                                <div class="w-100 h-25 border d-block bg-sandy-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-sandy-button">Button
+                                                            <div class="w-100 h-25 border d-block bg-sandy-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -592,13 +614,17 @@
                                                         <div onclick="handleColorChangePreview('terracotta')"
                                                             class="bg-secondary form-terracotta form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
-                                                                <div class="w-100 h-25 border d-block bg-terracotta mb-1">
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-terracotta mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-terracotta-fields"></div>
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-terracotta-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-terracotta-button">Button
+                                                            <div class="w-100 h-25 border d-block bg-terracotta-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -609,10 +635,12 @@
                                                                 <div class="w-100 h-25 border d-block bg-comet mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-comet-fields"></div>
+                                                                <div class="w-100 h-25 border d-block bg-comet-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-comet-button">Button
+                                                            <div class="w-100 h-25 border d-block bg-comet-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -623,10 +651,12 @@
                                                                 <div class="w-100 h-25 border d-block bg-jungle mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-jungle-fields"></div>
+                                                                <div class="w-100 h-25 border d-block bg-jungle-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-jungle-button">Button
+                                                            <div class="w-100 h-25 border d-block bg-jungle-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -634,13 +664,18 @@
                                                         <div onclick="handleColorChangePreview('light-brown')"
                                                             class="bg-secondary form-light-brown form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
-                                                                <div class="w-100 h-25 border d-block bg-light-brown mb-1">
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-light-brown mb-1">
                                                                     <p>Header</p>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-light-brown-fields"></div>
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-light-brown-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-light-brown-button">Button
+                                                            <div
+                                                                class="w-100 h-25 border d-block bg-light-brown-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -651,10 +686,13 @@
                                                                 <div class="w-100 h-25 d-block mb-1">
                                                                     <div class="bg-dark-theme-heading">Header</div>
                                                                 </div>
-                                                                <div class="w-100 h-25 border d-block bg-dark-theme-fields"></div>
+                                                                <div
+                                                                    class="w-100 h-25 border d-block bg-dark-theme-fields">
+                                                                </div>
                                                             </div>
 
-                                                            <div class="w-100 h-25 border d-block bg-dark-theme-button">Button
+                                                            <div class="w-100 h-25 border d-block bg-dark-theme-button">
+                                                                Button
                                                             </div>
                                                         </div>
                                                     </div>
@@ -849,64 +887,64 @@
                                                                         Item Spacing</option>
                                                                 </optgroup>
                                                                 <optgroup label="Matrix/Multi-Scale Rows">
-                                                                    <option value="header-text">
+                                                                    <option value="matrix-header-text">
                                                                         Header Text</option>
-                                                                    <option value="header-background">
+                                                                    <option value="matrix-header-background">
                                                                         Header Background</option>
-                                                                    <option value="sub-header-background">
+                                                                    <option value="matrix-sub-header-background">
                                                                         Sub Header Background</option>
-                                                                    <option value="row-text-color">Row Text
+                                                                    <option value="matrix-row-text-color">Row Text
                                                                         Color
                                                                     </option>
-                                                                    <option value="row-header-color">
+                                                                    <option value="matrix-row-header-color">
                                                                         Row Header Color</option>
-                                                                    <option value="row-color">
+                                                                    <option value="matrix-row-color">
                                                                         Row Color</option>
-                                                                    <option value="alt-row-text-color">Alt Row
+                                                                    <option value="matrix-alt-row-text-color">Alt Row
                                                                         Text
                                                                         Color</option>
-                                                                    <option value="alt-row-header-color">
+                                                                    <option value="matrix-alt-row-header-color">
                                                                         Alt Row Header Color</option>
-                                                                    <option value="alt-row-color">
+                                                                    <option value="matrix-alt-row-color">
                                                                         Alt Row Color</option>
-                                                                    <option value="grid-lines">
+                                                                    <option value="matrix-grid-lines">
                                                                         Grid Lines</option>
                                                                 </optgroup>
                                                                 <optgroup label="Submit Button">
-                                                                    <option value="button-background">Button
+                                                                    <option value="submit-background">Button
                                                                         Background
                                                                     </option>
-                                                                    <option value="button-hover-background">Button
+                                                                    <option value="submit-hover-background">Button
                                                                         Hover
                                                                         Background</option>
-                                                                    <option value="button-background-size">
+                                                                    <option value="submit-background-size">
                                                                         Button Background Size</option>
-                                                                    <option value="button-border-style">Button Border
+                                                                    <option value="submit-border-style">Button Border
                                                                         Style</option>
-                                                                    <option value="button-border-width">Button Border
+                                                                    <option value="submit-border-width">Button Border
                                                                         Width</option>
-                                                                    <option value="button-bold">Button Bold
+                                                                    <option value="submit-bold">Button Bold
                                                                     </option>
-                                                                    <option value="button-rounding">Button
+                                                                    <option value="submit-rounding">Button
                                                                         Rounding
                                                                     </option>
-                                                                    <option value="button-text-color">
+                                                                    <option value="submit-text-color">
                                                                         Button Text Color</option>
-                                                                    <option value="button-width">Button Width
+                                                                    <option value="submit-width">Button Width
                                                                     </option>
-                                                                    <option value="button-height-padding">Button Height
+                                                                    <option value="submit-height-padding">Button Height
                                                                         Padding
                                                                     </option>
-                                                                    <option value="button-font-family">Button Font
+                                                                    <option value="submit-font-family">Button Font
                                                                         Family
                                                                     </option>
-                                                                    <option value="button-font-size">Button Font Size
+                                                                    <option value="submit-font-size">Button Font Size
                                                                     </option>
-                                                                    <option value="button-capitalization">Button
+                                                                    <option value="submit-capitalization">Button
                                                                         Capitalization</option>
-                                                                    <option value="butotn-shadow">Button Shadow
+                                                                    <option value="submit-shadows">Button Shadow
                                                                     </option>
-                                                                    <option value="hide-buttons">Hide Buttons
+                                                                    <option value="submit-hide">Hide Buttons
                                                                     </option>
                                                                 </optgroup>
                                                             </select>
@@ -925,9 +963,19 @@
                                                                     <li><a href="#customizeBorderWidthTab">border
                                                                             width</a></li>
                                                                     <li><a href="#customizeShadowTab">shadow</a></li>
+                                                                    <li><a href="#customizeHideTab">hide</a></li>
                                                                     <li><a href="#customizeRequiredIconTab">required
                                                                             icon</a></li>
                                                                     <li><a href="#customizeBoldTab">bold</a></li>
+                                                                    <li><a href="#customizePaddingTab">padding</a></li>
+                                                                    <li><a href="#customizeSpacingTab">spacing</a></li>
+                                                                    <li><a href="#customizeWidthTab">width</a></li>
+                                                                    <li><a
+                                                                            href="#customizeCapitalizationTab">capitalization</a>
+                                                                    </li>
+                                                                    <li><a
+                                                                            href="#customizeBorderStyleTab">BorderStyle</a>
+                                                                    </li>
                                                                     <li><a href="#menu3">Menu 3</a></li>
                                                                 </ul>
                                                                 <input type="hidden" name="page-background"
@@ -951,6 +999,36 @@
                                                                         class="form-control">
                                                                         <option value="tile">Tile</option>
                                                                         <option value="cover">Full Cover</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeSpacingTab">
+                                                                    <select name="spacing" id="item-spacing-input"
+                                                                        size="10"
+                                                                        onchange="handleCustomStyleChange('#item-spacing-input', '.page-element', 'margin')"
+                                                                        class="form-control">
+                                                                        <option value="0">None</option>
+                                                                        <option value="1px">1px</option>
+                                                                        <option value="2px">2px</option>
+                                                                        <option value="5px">5px</option>
+                                                                        <option value="8px">8px</option>
+                                                                        <option value="10px">10px</option>
+                                                                        <option value="15px">15px</option>
+                                                                        <option value="20px">20px</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizePaddingTab">
+                                                                    <select name="padding" id="item-padding-input"
+                                                                        size="10"
+                                                                        onchange="handleCustomStyleChange('#item-padding-input', '.page-element', 'margin')"
+                                                                        class="form-control">
+                                                                        <option value="0">None</option>
+                                                                        <option value="1px">1px</option>
+                                                                        <option value="2px">2px</option>
+                                                                        <option value="5px">5px</option>
+                                                                        <option value="8px">8px</option>
+                                                                        <option value="10px">10px</option>
+                                                                        <option value="15px">15px</option>
+                                                                        <option value="20px">20px</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="tab-pane" id="customizeFontFamilyTab">
@@ -1093,13 +1171,62 @@
                                                                         <option value="20px">20px</option>
                                                                     </select>
                                                                 </div>
+                                                                <div class="tab-pane" id="customizeWidthTab">
+                                                                    <select name="width" id="form-width-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#form-width-input', '.form-container-element', 'width')"
+                                                                        class="form-control">
+                                                                        <option value="0">auto (default)</option>
+                                                                        <option value="20%">20%</option>
+                                                                        <option value="30%">30%</option>
+                                                                        <option value="40%">40%</option>
+                                                                        <option value="50%">50%</option>
+                                                                        <option value="60%">60%</option>
+                                                                        <option value="70%">70%</option>
+                                                                        <option value="80%">80%</option>
+                                                                        <option value="90%">90%</option>
+                                                                        <option value="100%">100%</option>
+                                                                    </select>
+                                                                </div>
                                                                 <div class="tab-pane" id="customizeShadowTab">
                                                                     <select name="shadow" id="form-shadow-input"
                                                                         size="10"
                                                                         onchange="handleCustomStyleChange('#form-shadow-input', '.form-container-element', 'shadow')"
                                                                         class="form-control">
-                                                                        <option value="0">Hide</option>
-                                                                        <option value="1">Show</option>
+                                                                        <option value="none">Hide</option>
+                                                                        <option value="rgba(0, 0, 0, 0.3) 0px 1px 6px;">Show</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeHideTab">
+                                                                    <select name="hide" id="form-hide-input"
+                                                                        size="10"
+                                                                        onchange="handleCustomStyleChange('#form-hide-input', '.form-container-element', 'display')"
+                                                                        class="form-control">
+                                                                        <option value="none">Hide</option>
+                                                                        <option value="inline-block">Show</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeCapitalizationTab">
+                                                                    <select name="capitalization"
+                                                                        id="submit-capitalization-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#submit-capitalization-input', '.submit-button-element', 'text-transform')"
+                                                                        class="form-control">
+                                                                        <option value="none">Normal</option>
+                                                                        <option value="uppercase">All Caps</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeBorderStyleTab">
+                                                                    <select name="border-style"
+                                                                        id="submit-border-style-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#submit-border-style-input', '.submit-button-element', 'border-style')"
+                                                                        class="form-control">
+                                                                        <option value="none">None</option>
+                                                                        <option value="solid">Solid</option>
+                                                                        <option value="dotted">Dotted</option>
+                                                                        <option value="dashed">Dashed</option>
+                                                                        <option value="double">Double</option>
+                                                                        <option value="groove">Groove</option>
+                                                                        <option value="outset">Raised</option>
+                                                                        <option value="ridge">Ridge</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="tab-pane" id="customizeRequiredIconTab">
@@ -1161,7 +1288,8 @@
                             </div>
                         </div>
                         <div class="view-form text-center">
-                            <a class="btn btn-primary" href="/fb/view/<?= $form_id ?>" target="__blank">View Form</a>
+                            <a class="btn submit-button-element" href="/fb/view/<?= $form_id ?>" target="__blank">View
+                                Form</a>
                         </div>
                     </div>
                 </div>

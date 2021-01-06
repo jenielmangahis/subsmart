@@ -1,8 +1,8 @@
 .form-danger .form-header, form.form-danger button {
-    background-color:#ec4561 !important;
+    background-color:#ec4561/*  !important */;
 }
 
 .form-danger div.Signature div.container button {
-    background-color: #ec4561 !important;
-    color: #fff !important;
+    background-color: #ec4561/*  !important */;
+    color: #fff/*  !important */;
 }
