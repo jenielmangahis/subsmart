@@ -56,6 +56,8 @@ $route['translate_uri_dashes'] = FALSE;
 $route['customer/tickets/(:any)?'] = 'customer/ticket/$1';
 $route['customer/tickets'] = 'customer/ticket';
 
+$route['customer/add_data_sheet'] = 'customer/add_data_sheet';
+
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';
 $route['equipments'] = 'equipment';
@@ -496,7 +498,7 @@ $route['color_settings/delete_color'] = 'Color_Settings/delete_color';
 $route['color_settings/add_new'] = 'Color_Settings/add_new';
 
 //Users
-$route['users/load_edit_employee'] = 'Users/ajaxEditEmployee';
+$route['users/load_edit_employee'] = 'Users/ajax_edit_employee';
 $route['users/_update_employee_password'] = 'Users/ajaxUpdateEmployeePassword';
 
 

@@ -81,6 +81,16 @@ const getFormByID = (form_id) => {
     })
 }
 
+const renderFormStyle = () => {
+    for (const key in form_style) {
+        if (form_style.hasOwnProperty(key)) {
+            if(key !== 'id' && key !== 'form_id') {
+                applyStyle(key, form_style[key]);
+            }
+        }
+    }
+}
+
 const saveElement = (data, save_method = 'create') => {
     let url = '/fb/elements/create'
     if(save_method === 'update') {
@@ -359,6 +369,7 @@ const loadElements = async (form_id, editable = false) =>  {
             res.data.elements.forEach(element => {
                 renderElement(element, editable);
             });
+            renderFormStyle();
         }
         initCalendars();
     })

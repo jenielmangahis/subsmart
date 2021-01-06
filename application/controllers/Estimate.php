@@ -43,35 +43,39 @@ class Estimate extends MY_Controller
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-
+        
         $role = logged('role');
         if ($role == 2 || $role == 3) {
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere([]);
+        }else{
             $company_id = logged('company_id');
-            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
-            if (!empty($tab)) {
-                $this->page_data['tab'] = $tab;
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $company_id);
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);   
+        }
+            
+        if (!empty($tab)) {
+            $this->page_data['tab'] = $tab;
+            $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $company_id);
+        } else {
+
+            // search
+            if (!empty(get('search'))) {
+
+                $this->page_data['search'] = get('search');
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id);
+            } elseif (!empty(get('order'))) {
+
+                $this->page_data['search'] = get('search');
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id);
+
             } else {
-
-                // search
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id);
-                } elseif (!empty(get('order'))) {
-
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id);
-
-                } else {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
-                }
+                $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
             }
-
-            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
         }
 
-        if ($role == 4) {
+        $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
+        
+
+        /*if ($role == 4) {
 
             if (!empty($tab)) {
 
@@ -96,7 +100,7 @@ class Estimate extends MY_Controller
             }
 
             $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount();
-        }
+        }*/
 
         $this->load->view('estimate/list', $this->page_data);
     }

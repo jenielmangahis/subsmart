@@ -1,5 +1,5 @@
 class FormElement {
-    constructor(obj, editable = false) {
+    constructor(obj, editable = false, is_matrix = false) {
         this.editable = editable;
         this.id = obj.id ? obj.id : null;
         this.form_id = obj.form_id ? obj.form_id : null;
@@ -24,12 +24,13 @@ class FormElement {
         this.matrix_columns = obj.matrix ? obj.matrix.columns ? obj.matrix.columns : ['-'] : ['-'];
         this.container_id = obj.container_id ? obj.container_id : null;
         this.rules = obj.rules ? obj.rules : null;
+        this.is_matrix = is_matrix;
     }
 
     getElementContainer(remove_padding = false) {
         const container_selector = this.container_id !== null ? 'container-block' : 'in-parent';
         return {
-            open: `<div id="${this.id}" class="form-group ${remove_padding ? 'px-0' : ''} col-12 col-md-${this.span} ${this.element_type} form-element ${this.editable ? 'editable' : ''} ${container_selector}">`,
+            open: `<div id="${this.id}" class="form-group ${remove_padding ? 'px-0' : ''} col-12 col-md-${this.span} ${this.element_type} form-element ${this.is_matrix ? 'matrix-element' : 'not-matrix-lol'} ${this.editable ? 'editable' : ''} ${container_selector}">`,
             content: '',
             close: `</div>`
         }

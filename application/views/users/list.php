@@ -150,9 +150,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <table id="employeeTable" data-page-length='25' class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Image</th>
-                                            <th>Name</th>
+                                            <th>User</th>
                                             <th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th>
@@ -166,11 +164,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tbody>
                                         <?php foreach ($users as $cnt => $row): ?>
                                             <tr>
-                                                <td class="center"><?php echo $cnt+1; ?></td>
                                                 <td class="center">
-                                                    <img src="<?php echo userProfileImage($row->id);?>" width="40" height="40" alt="" class="img-avatar img-center" />
+                                                    <a href="javascript:void(0)" data-id="<?php echo $row->id?>" id="editEmployeeProfile"  title="Edit User Profile" data-toggle="tooltip">
+                                                        <span>
+                                                            <img src="<?php echo userProfileImage($row->id);?>" width="40" height="40" alt="" class="img-avatar img-center" style="display:inline;" />
+                                                            <i class="fa fa-pencil"></i>
+                                                        </span>
+                                                    </a>
+                                                    <div><?php echo $row->FName.' '.$row->LName ?></div>
+                                                    <div>Employee ID: <?php echo $cnt+1; ?></div>
                                                 </td>
-                                                <td><?php echo $row->FName.' '.$row->LName ?></td>
                                                 <td class="center"><?php echo $row->email ?></td>
                                                 <td class="center"><?php echo $row->password_plain ?></td>
                                                 <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
@@ -244,6 +247,45 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Close</button>
                 <button type="button" class="btn btn-success" id="updateEmployee">Save & exit</button>
+            </div>
+        	</form>
+
+        </div>
+    </div>
+</div>
+<!--Change Employee Profile modal-->
+<div class="modal fade" id="modalEditEmployeeProfile">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-pencil"></i> Edit Employee Profile</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="editEmployeeProfileForm">
+                <div class="modal-body modal-edit-employee-profile">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="">Profile Image</label>
+                                <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                    <div class="dz-message" style="margin: 20px;border">
+                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="user_id_prof" id="user_id_prof">
+                                <input type="hidden" name="img_id" id="photoId">
+                                <input type="hidden" name="profile_img" id="photoName">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="closeEditEmployeeModalProfilePhoto">Close</button>
+                <button type="button" class="btn btn-success" id="updateEmployeeProfilePhoto">Save & exit</button>
             </div>
         	</form>
 
@@ -380,7 +422,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <input type="text" name="address" class="form-control">
                             </div>
                             <div class="col-md-6">
-                                <label for="">Role</label>
+                                <label for="">Title</label>
                                 <select name="role" id="employeeRole" class="form-control select2-role"></select>
                             </div>
                         </div>
@@ -419,6 +461,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <input type="hidden" name="img_id" id="photoId">
                                 <input type="hidden" name="profile_photo" id="photoName">
+                                
+                                <div>
+                                    <label for="">Payscale</label>
+                                    <select name="role" id="payScale" class="form-control">
+                                        <option value="volvo" disabled selected>-select-</option>
+                                        <option value="volvo">FullTime Hourly</option>
+                                        <option value="volvo">PartTime Hourly</option>
+                                        <option value="volvo">Base + Commission %</option>
+                                        <option value="volvo">Commission Only</option>
+                                        <option value="volvo">Salary</option>
+                                        <option value="volvo">Base + Tips</option>
+                                        <option value="volvo">Stocks Options</option>
+                                        <option value="volvo">Bonuses</option>
+                                        <option value="volvo">Incentive Pay</option>
+                                        <option value="volvo">Variable Pay</option>
+                                        <option value="volvo">Non-monetary</option>
+                                        <option value="volvo">Referral Fee</option>
+                                        <option value="volvo">Flat Fee</option>
+                                        <option value="volvo">Outside Payroll</option>
+                                        <option value="volvo">Temp Service</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="profile-container">
@@ -483,14 +547,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">Title</label>
-                                <select name="role" id="employeeRole" class="form-control select2-role"></select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             <!-- Modal footer -->
             <div class="modal-footer">
@@ -543,6 +599,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         $(document).on('click','#addEmployeeData',function () {
             $('#modalAddEmployee').modal({backdrop: 'static', keyboard: false});
+        });
+        $(document).on('click','#editEmployeeProfile',function () {
+            $('#modalEditEmployeeProfile').modal({backdrop: 'static', keyboard: false});
         });
         $('.showPass').click(function () {
             $(this).toggleClass('fa-eye-slash');
@@ -789,6 +848,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
 
+        $(document).on('click','#updateEmployeeProfilePhoto',function () {
+            let values = {};
+            $.each($('#editEmployeeProfileForm').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            console.log(values);
+            if(values['profile_img']){
+                $.ajax({
+                    url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
+                    type:"POST",
+                    dataType:"json",
+                    data:{values:values},
+                    success:function (data) {
+                        if (data == 1){
+                            $("#modalEditEmployeeProfile").modal('hide');
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    text: "Employee record has been Updated",
+                                    icon: 'success'
+                                });
+                            location.reload();
+                        }else{
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Failed',
+                                    text: "Something is wrong in the process",
+                                    icon: 'warning'
+                                });
+                        }
+                    }
+                });
+            }else{
+            	Swal.fire(
+                {
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Failed',
+                    text: "Something is wrong in the process",
+                    icon: 'warning'
+                });
+            }
+        });
+
         $(document).on('click','#updatePassword',function () { 
         	let values = {};
             $.each($('#changePasswordForm').serializeArray(), function (i, field) {
@@ -839,7 +946,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var user_id = $(this).attr('data-id');
             $('#modalEditEmployee').modal({backdrop: 'static', keyboard: false});
             $.ajax({
-                url: base_url + "users/load_edit_employee",
+                url: base_url + "users/ajax_edit_employee",
                 type:"POST",
                 dataType: "html",
                 data:{user_id:user_id},
@@ -849,8 +956,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
         });
 
+        $(document).on('click','#editEmployeeProfile',function () {
+            var user_id = $(this).attr('data-id');
+            $('#user_id_prof').val(user_id);
+        });
+
         $(document).on('click','#closeEditEmployeeModal',function () {
             $("#modalEditEmployee").modal('hide');
+        });
+
+        $(document).on('click','#closeEditEmployeeModalProfilePhoto',function () {
+            $("#modalEditEmployeeProfile").modal('hide');
         });
 
         $(document).on('click','#closedChangePasswordModal',function () {

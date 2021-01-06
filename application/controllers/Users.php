@@ -782,7 +782,7 @@ class Users extends MY_Controller {
 	    echo json_encode($info);
 
     }
-    public function ajaxEditEmployee(){
+    public function ajax_edit_employee(){
 	    $user_id = $this->input->post('user_id');
 	    $get_user = $this->Users_model->getUser($user_id);
 	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
@@ -794,7 +794,7 @@ class Users extends MY_Controller {
 	    $this->page_data['role'] = $get_role;
 	    $this->load->view('users/modal_edit_form', $this->page_data);
 
-	    echo $data;
+	    //echo $data;
 
     }
 
@@ -1301,6 +1301,25 @@ class Users extends MY_Controller {
 
 		die(json_encode($users));
 	}
+
+	public function ajaxUpdateEmployeeProfilePhoto(){
+
+    	$user_id = $this->input->post('values[user_id_prof]');
+        $profile_img = $this->input->post('values[profile_img]');
+
+        $user = $this->Users_model->getUser($user_id);
+
+        if( $profile_img == '' ){
+        	$profile_img = $user->profile_img;
+        }
+        $data = array(            
+			'profile_img' => $profile_img
+        );
+
+        $user = $this->Users_model->update($user_id,$data);
+
+        echo json_encode(1);
+    }
 
 	public function ajaxUpdateEmployee(){
 

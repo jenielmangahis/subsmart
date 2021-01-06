@@ -305,6 +305,7 @@ class Booking extends MY_Controller {
 
 	        	$data = array(
 	        		'user_id' => $user['id'],
+	        		'company_id' => logged('company_id'),
 	        		'coupon_name' => post('name'),
 	        		'coupon_code' => post('code'),
 	        		'discount_from_total' => $discount_amount,

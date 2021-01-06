@@ -1,12 +1,12 @@
 .form-sandy .form-header {
-    background-color:#F39E59 !important;
+    background-color:#F39E59  /* !important */;
 }
 
 form.form-sandy button, .form-sandy div.Signature div.container button {
-    background-color: #479ECA !important;
-    color: #fff !important;
+    background-color: #479ECA  /* !important */;
+    color: #fff  /* !important */;
 }
 
 .form-sandy input, .form-sandy textarea, .form-sandy select, .form-sandy div.Signature div.container {
-    border-color: #F39E59 !important;
+    border-color: #F39E59  /* !important */;
 }

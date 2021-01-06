@@ -100,8 +100,9 @@ class Customer extends MY_Controller
     }
 
     public function add_data_sheet(){
-
+  
         $user_id = logged('id');
+        $cid = logged('company_id');
         $input = $this->input->post();
 
         $input_profile = array();
@@ -111,6 +112,7 @@ class Customer extends MY_Controller
         $input_access = array();
         $input_profile['fk_user_id'] = logged('id');
         $input_profile['fk_sa_id'] = $input['fk_sa_id'];
+        $input_profile['company_id'] = $cid;
         $input_profile['first_name'] = $input['first_name'];
         $input_profile['last_name'] = $input['last_name'];
         $input_profile['middle_name'] = $input['middle_name'];

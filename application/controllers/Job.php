@@ -93,8 +93,8 @@ class Job extends MY_Controller
             if (!empty($get['job_num'])) {
                 $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
                 $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
-                $this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
-                $this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
+                //$this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
+                //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
                 $this->page_data['assignEmployees'] = $this->jobs_model->getAssignEmp($job_id);
             }
             

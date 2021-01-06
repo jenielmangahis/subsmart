@@ -1,0 +1,212 @@
+<!-- Modal for add account-->
+<div class="full-screen-modal">
+    <div id="addsalesreceiptModal" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="height: 100%;">
+                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+                    <h4 class="modal-title">Sales Receipt </h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Customer
+                                    <select class="form-control">
+                                        <option></option>
+                                        <option>Add New</option>
+                                        <option>John Doe</option>
+                                        <option>Alpha</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    Email
+                                    <input type="text" class="form-control">
+                                    <input type="checkbox"> Send later
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Billing address
+                                    <textarea style="height:100px;width:100%;"></textarea>
+                                </div>
+                                <div class="col-md-3">
+                                    Sales Receipt date<br>
+                                    <input type="text" class="form-control"><br>
+                                    Ship via<br>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <input type="text" class="form-control"><br>
+                                    Shipping date<br>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <br><br>
+                                    Tracking no.<br>
+                                    <input type="text" class="form-control">
+                                </div>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Shipping to
+                                    <textarea style="height:100px;width:100%;"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Tags <a href="#" style="float:right">Manage tags</a>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-6" align="right">
+                            AMOUNT<h2>$0.00</h2><br>
+                            Location of sale<br>
+                            <input type="text" class="form-control" style="width:200px;">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered" id="reportstable">
+                                <thead>
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>PRODUCT/SERVICE</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>QTY</th>
+                                    <th>RATE</th>
+                                    <th>AMOUNT</th>
+                                    <th>TAX</th>
+                                    <th></th>
+                                </thead>
+                                <tr>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        <div>
+                    </div>
+                <hr>
+                
+                    <div class="row">
+                        <div class="col-md-1">
+                           <button class="btn1">Add lines</button>
+                        </div>
+                        <div class="col-md-1">
+                           <button class="btn1">Clear all lines</button>
+                        </div>
+                        <div class="col-md-1">
+                           <!-- <button class="btn1">Add subtotal</button> -->
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                        <div class="col-md-1">
+                            <b>Subtotal</b>
+                        </div>
+                        <div class="col-md-1">
+                            <b>$0.00</b>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            Message on invoice<br>
+                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            Message on statement<br>
+                            <textarea style="height:100px;width:100%;"></textarea>
+                        </div>
+                        <div class="col-md-8">
+                        </div>
+                        <div class="col-md-2">
+                            Taxable subtotal <b>$0.00</b><br>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td></td>
+                                    <td><b>$0.00</b><br><a href="">See the math</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping</td>
+                                    <td><input type="text" class="form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tax on shipping</td>
+                                    <td>0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>$0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Balance due</td>
+                                    <td>$0.00</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="file-upload">
+                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+
+                                <div class="image-upload-wrap">
+                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                                    <div class="drag-text">
+                                    <i>Drag and drop files here or click the icon</i>
+                                    </div>
+                                </div>
+                                <div class="file-upload-content">
+                                    <img class="file-upload-image" src="#" alt="your image" />
+                                    <div class="image-title-wrap">
+                                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                        </div>
+                    </div>
+                    <hr>
+
+
+                </div>
+                
+                <div style="margin: auto;">
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
+                </div>
+                <div style="margin: auto">
+                    <a href="" style="text-align: center">Privacy</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--end of modal-->
+</div>

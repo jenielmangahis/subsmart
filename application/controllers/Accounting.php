@@ -2454,4 +2454,7 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/customer_invoice_modal', $this->page_data);
     }
+    public function modal_estimate(){
+        $this->load->view('accounting/customer_estimate_modal');
+    }
 }

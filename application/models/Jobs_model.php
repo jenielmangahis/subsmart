@@ -18,11 +18,11 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function getJob()
+    public function getJob($comp_id)
     {
         $this->db->select('*');
-        $this->db->from('jobs');
-        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->from($this->table);
+        $this->db->where('company_id', $comp_id);
         $query = $this->db->get();
 
         return $query->result();
