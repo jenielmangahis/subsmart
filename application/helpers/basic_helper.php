@@ -1937,24 +1937,44 @@ function get_source()
  */
 function get_estimate_status_total($status = 0, $count_only = false)
 {
+    $role = logged('role');
+    $company_id = logged('company_id');
+
     $CI =& get_instance();
     $CI->load->model('Estimate_model', 'estimate_model');
 
-    if (!empty($status)) {
+    if( $role == 1 || $role == 2){
+        if (!empty($status)) {
+            if ($count_only) {
+
+                return count($CI->estimate_model->getByWhere(array('status' => $status)));
+            } else {
+                return $CI->estimate_model->getByWhere(array('status' => $status));
+            }
+        }
 
         if ($count_only) {
+            return count($CI->estimate_model->getByWhere(array()));
+        }else{
+            return $CI->estimate_model->getByWhere(array());
+        }  
+    }else{
+        if (!empty($status)) {
+            if ($count_only) {
 
-            return count($CI->estimate_model->getByWhere(array('status' => $status)));
-        } else {
-            return $CI->estimate_model->getByWhere(array('status' => $status));
+                return count($CI->estimate_model->getByWhere(array('status' => $status)));
+            } else {
+                return $CI->estimate_model->getByWhere(array('status' => $status));
+            }
         }
-    }
 
-    if ($count_only) {
-        return count($CI->estimate_model->getByWhere(array('company_id' => logged('id'))));
+        if ($count_only) {
+            return count($CI->estimate_model->getByWhere(array('company_id' => $company_id)));
+        }else{
+            return $CI->estimate_model->getByWhere(array('company_id' => $company_id));
+        }  
     }
-
-    return $CI->estimate_model->getByWhere(array('company_id' => logged('id')));;
+    
 }
 
 

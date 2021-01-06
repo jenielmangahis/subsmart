@@ -386,7 +386,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "/customer/add_data_sheet",
+                url: base_url + "customer/add_data_sheet",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
