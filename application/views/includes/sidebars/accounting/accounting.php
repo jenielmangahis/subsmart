@@ -77,7 +77,7 @@
                             <h4>CUSTOMERS</h4>
 
                             <ul>
-                                <li><a href="#">Invoice</a></li>
+                                <li><a href="#" class="ajax-modal_invoice" data-toggle="modal" data-target="#addinvoiceModal">Invoice</a></li>
                                 <li><a href="#">Receive payment</a></li>
                                 <li><a href="#">Estimate</a></li>
                                 <li><a href="#">Credit memo</a></li>
@@ -138,4 +138,6 @@
             </div>
         </div>
     </div>
+
+    <?php include viewPath('accounting/customer_invoice_modal'); ?>
     <!-- End New Popup -->

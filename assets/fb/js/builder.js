@@ -1,5 +1,27 @@
 let tempElements, tempStyle, tempColor, editor;
 const styles = ['default', 'big', 'bigger', 'slim', 'rounded', 'narrow', 'casual', 'modern', 'airy', 'bubbly'];
+const customize_items = {};
+const tab_assignment = {
+    'page-background' : 'customizeColorTab',
+    'page-background-size' : 'customizeBackgroundSizeTab',
+    'page-font-family' : 'customizeFontFamilyTab',
+    'page-font-size' : 'customizeFontSizeTab',
+    'page-link-color' : 'customizeColorTab',
+    'form-border-color' : 'customizeColorTab',
+    'form-border-rounding' : 'customizeBorderRoundingTab',
+    'form-border-width' : 'customizeBorderWidthTab',
+    'form-background' : 'customizeColorTab',
+    'form-background-size' : 'customizeBackgroundSizeTab',
+    'form-shadow' : 'customizeShadowTab',
+    'form-text-color' : 'customizeColorTab',
+    'heading-text-color' : 'customizeColorTab',
+    'heading-background' : 'customizeColorTab',
+    'heading-background-size' : 'customizeBackgroundSizeTab',
+    'heading-border-rounding' : 'customizeBorderRoundingTab',
+    'item-required-icon' : 'customizeRequiredIconTab',
+    'item-label-bold' : 'customizeBoldTab',
+    'item-highlight' : 'customizeColorTab',
+}
 const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 'dark', 'light', 'orange', 'violet', 'sky-blue', 'persian-green', 'green', 'san-marino-blue', 'mulberry', 'valencia', 'sandy', 'terracotta', 'comet', 'jungle', 'light-brown', 'dark-theme'];
 var rule_item_el = $('div.rule-items').html();
 const ruleOrOperator = `<div class="row mt-2 operator-container"><div class="col-12"><h6>OR</h6></div></div>`;
@@ -19,12 +41,26 @@ $('#formBuilderContainer').sortable({
         $('#elementSettingsModal #elementID').val(null);
         $('#elementSettingsModal #saveMethod').val('create');
         const element = new element_types[elType]({}, false);
+
+        if($('#elementSettingsModal #elementID').val() === null || $('#elementSettingsModal #elementID').val() === "") {
+            $('.rule-method-selector select[name="rule_condition"]').hide();
+            $('.rule-element-answer-selector input[name="rule_answer"]').hide();
+        }
+
+        if(element_objs.length !== 0) {
+            for (var i in element_objs) {
+                if($('select#ruleItem').find(`option[value="${element_objs[i].id}"]`).length === 0) {
+                    $('select#ruleItem').append(`<option value="${element_objs[i].id}">${element_objs[i].question}</option>`);
+                }
+            }
+        }
+
         showModal(element);
     },
     update: (event, ui) => {
         showLoading();
         const elements = $('#formBuilderContainer').sortable("toArray");
-        updateElementOrder(elements).then( async (res) => {
+        updateElementOrder(elements).then(async (res) => {
             await loadElements(form.id, true).then(res => {
                 initBuilder();
                 initContainers();
@@ -63,21 +99,98 @@ $('.form-elements-template').draggable({
 
 $('.builder-tabs').on('shown.bs.tab', (e) => {
     const el = $(e.target) // newly activated tab
-    if(el.attr('href') === '#styleBuildTab') {
+    if (el.attr('href') === '#styleBuildTab') {
         $('#styleSaveContainer').show();
+        expandSidebar();
     } else {
         $('#styleSaveContainer').hide();
+        resetSidebar();
     }
 })
 
+const initColorPicker = () => {
+    // requirejs(['./colorjoe/colorjoe'], function(colorjoe) {
+
+    colorjoe.rgb('colorPicker', '#000').on('change', function (c) {
+        const val = c.hex();
+        $('#colorIndicator').css('background-color', `${val} !important`);
+        $('#colorValue').val(val);
+        const custom_element = getActiveCustomElement();
+        handleCustomElementModified(custom_element.active_option, val);
+        renderStyle(custom_element.element_name, val);
+    });
+
+    $('#colorPicker').append(`
+    <div class="container" style="clear: left; max-width: 200px">
+    <div class="row">
+      <div class="col-5 px-1">
+        <div class="py-2">
+          <div id="colorIndicator" class="border" style="background-color: #000"></div>
+        </div>
+      </div>
+      <div class="col-7 px-1">
+        <div class="py-2">
+          <input type="text" class="form-control" id="colorValue" value="#000000">
+        </div>
+      </div>
+    </div>
+  </div>
+    `)
+    // });
+}
+
+const getActiveCustomElement = () => {
+    const active_option = $('#active-option').val() ? $('#active-option').val() : 'page-background';
+    const active_option_arr = active_option.split('-');
+    const element = `${active_option_arr[0]}-element`;
+    active_option_arr.splice(0, 1);
+    const property = active_option_arr.join('-');
+    element_name = active_option.split('-').join('_');
+    return {active_option ,element, property, element_name};
+}
+
+const handleCustomElementModified = (element, value) => {
+    element_name = element.split('-').join('_');
+    customize_items[element_name] = value;
+}
+
+const handleCustomizeSelectChange = ()  => {
+    const val = $('#customizeSelect').val();
+    $('#active-option').val(val);
+    $(`.nav-tabs a[href="#${tab_assignment[val]}"]`).tab('show')
+}
+
+const handleCustomStyleChange = (val_element, output_element, property) => {
+    const val = $(`${val_element}`).val();
+    const custom_element = getActiveCustomElement();
+    handleCustomElementModified(custom_element.active_option, val);
+    renderStyle(custom_element.element_name, val);
+}
+
+const expandSidebar = () => {
+    $('#builderSidebar').removeClass('col-md-3');
+    $('#builderFormColumn').removeClass('col-md-9');
+    $('#builderSidebar').addClass('col-md-5');
+    $('#builderFormColumn').addClass('col-md-7');
+    $('#formBuilderContainer').addClass('mx-1');
+}
+
+const resetSidebar = () => {
+    $('#builderSidebar').removeClass('col-md-5');
+    $('#builderFormColumn').removeClass('col-md-7');
+    $('#builderSidebar').addClass('col-md-3');
+    $('#builderFormColumn').addClass('col-md-9');
+    $('#formBuilderContainer').removeClass('mx-1');
+}
+
 const handleSaveEelement = (event) => {
     event.preventDefault();
-    if(editor) {
+    if (editor) {
         editor.save();
     }
     showLoading();
     const save_method = $('#elementSettingsModal #saveMethod').val();
-    if(save_method === 'create') {
+    if (save_method === 'create') {
         const index = tempElements.indexOf("");
         if (index > -1) {
             tempElements.splice(index, 1);
@@ -88,6 +201,7 @@ const handleSaveEelement = (event) => {
     saveElement(data, save_method).then(async (res) => {
         await loadElements(form.id, true).then(res1 => {
             initBuilder();
+            initContainers();
         });
         updateElementOrder(elements);
         $('#elementSettingsModal').modal('hide');
@@ -132,8 +246,10 @@ const handleDeleteElement = (id) => {
         }
         await loadElements(form.id, true).then(res => {
             initBuilder();
+            initContainers();
         });
         const elements = $('#formBuilderContainer').sortable("toArray");
+        element_objs.splice(id);
         await updateElementOrder(elements);
         showSuccess();
     }).catch(err => {
@@ -143,11 +259,11 @@ const handleDeleteElement = (id) => {
 }
 
 const initBuilder = () => {
-    $('.form-elements-template').hover((event) =>{
+    $('.form-elements-template').hover((event) => {
         $(event.target).addClass('hover');
     });
-    
-    $('.form-elements-template').mouseout((event) =>{
+
+    $('.form-elements-template').mouseout((event) => {
         $(event.target).removeClass('hover');
     });
     setStyleTabActives(form.style, form.color);
@@ -156,35 +272,35 @@ const initBuilder = () => {
 const initEditor = (id = 'elementQuestionEditor') => {
     if ($(`#${id}`).length) {
         editor = KothingEditor.create(`${id}`, {
-          height: '100px',
-          display: "block",
-          width: "100%",
-          popupDisplay: "full",
-          katex: katex,
-          toolbarItem: [
-            ["undo", "redo"],
-            ["font", "fontSize", "formatBlock"],
-            [
-              "bold",
-              "underline",
-              "italic",
-              "strike",
-              "subscript",
-              "superscript",
-              "fontColor",
-              "hiliteColor",
+            height: '100px',
+            display: "block",
+            width: "100%",
+            popupDisplay: "full",
+            katex: katex,
+            toolbarItem: [
+                ["undo", "redo"],
+                ["font", "fontSize", "formatBlock"],
+                [
+                    "bold",
+                    "underline",
+                    "italic",
+                    "strike",
+                    "subscript",
+                    "superscript",
+                    "fontColor",
+                    "hiliteColor",
+                ],
+                ["outdent", "indent", "align", "list", "horizontalRule"],
+                ["link", "table", "image"],
+                ["lineHeight", "paragraphStyle", "textStyle"],
+                ["showBlocks", "codeView"],
+                ["math"],
+                ["preview", "print", "fullScreen"],
+                ["removeFormat"],
             ],
-            ["outdent", "indent", "align", "list", "horizontalRule"],
-            ["link", "table", "image"],
-            ["lineHeight", "paragraphStyle", "textStyle"],
-            ["showBlocks", "codeView"],
-            ["math"],
-            ["preview", "print", "fullScreen"],
-            ["removeFormat"],
-          ],
-          charCounter: true,
+            charCounter: true,
         });
-      }
+    }
 }
 
 const handleElementEdit = (id) => {
@@ -267,12 +383,12 @@ const setElementRulesConfig = (element) => {
 
 const getModalValues = () => {
     const element_type = $('#elementType').val();
-    let span =  $('#elementSpan').val();
+    let span = $('#elementSpan').val();
     let question = $('#elementQuestionInput').val() ? $('#elementQuestionInput').val() : '';
-    if(element_type === "Heading") {
+    if (element_type === "Heading") {
         span = $('#elementWidth').val();
     }
-    if(element_type === "FormattedText") {
+    if (element_type === "FormattedText") {
         question = $('#elementQuestionEditor').val() ? $('#elementQuestionEditor').val() : '';
     }
 
@@ -320,7 +436,7 @@ const getModalValues = () => {
         },
         element_rules: JSON.stringify(element_rule),
         choices: choicesParser($('#elementChoicesInput').val()),
-        choices_and_prices: choicesPriceParser($('#elementChoicesAndPricesChoiceInput').val(),$('#elementChoicesAndPricesPriceInput').val()),
+        choices_and_prices: choicesPriceParser($('#elementChoicesAndPricesChoiceInput').val(), $('#elementChoicesAndPricesPriceInput').val()),
         matrix_columns: choicesParser($('#elementMatrixColumnsInput').val()),
         matrix_rows: choicesParser($('#elementMatrixRowsInput').val()),
     }
@@ -334,10 +450,10 @@ const showModal = (element) => {
     $('.element-setting-container').hide();
     settings.forEach(setting => {
         $(`[tag=${setting}]`).show();
-        if(setting == 'preview') {
+        if (setting == 'preview') {
             const form_class_list = document.getElementById('formBuilderContainer').className.split(/\s+/);
             form_class_list.forEach(class_item => {
-                if(class_item !== 'row' && class_item !== 'ui-sortable'){
+                if (class_item !== 'row' && class_item !== 'ui-sortable') {
                     $('#elementPreview').addClass(class_item);
                 }
             });
@@ -345,7 +461,7 @@ const showModal = (element) => {
             $('#elementPreview').html(content);
         }
     });
-    $('#elementSettingsModal').modal({backdrop: 'static', keyboard: false})  
+    $('#elementSettingsModal').modal({ backdrop: 'static', keyboard: false })
 }
 
 const handleStyleChangePreview = (style) => {
@@ -415,6 +531,7 @@ const setFormStyleControlActive = (style) => {
 const handleFormStyleSave = async () => {
     showLoading();
     const data = {
+        customize_items,
         style: tempStyle,
         color: tempColor,
         id: form.id
@@ -422,7 +539,7 @@ const handleFormStyleSave = async () => {
 
     await updateForm(data).then((res) => {
         showBuilderTab('build');
-        handleOnLoad(form.id, true);
+        handleOnLoad(form.id, false);
         showSuccess();
     }).catch(err => {
         showDanger();
@@ -443,7 +560,7 @@ const setStyleTabActives = (style, color) => {
 }
 
 const handleQuestionInput = (val) => {
-    if($('#elementPreview .heading-text').length) {
+    if ($('#elementPreview .heading-text').length) {
         $('#elementPreview .heading-text').text(val);
     }
 }
@@ -503,7 +620,6 @@ const setOperatorText = (el) => {
 }
 
 const showFields = (el) => {
-    console.log($(el).val() === "null");
     if($(el).val() === null || $(el).val() === "" || $(el).val() === "null") {
         $(el).parent().parent().find('div.rule-method-selector select[name="rule_condition"]').hide();
         $(el).parent().parent().find('div.rule-element-answer-selector input[name="rule_answer"]').hide();

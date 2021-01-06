@@ -72,6 +72,7 @@ const getFormByID = (form_id) => {
             'url': `/fb/get-form-by-id/${form_id}`
         }).done(response => {
             form = response.data.form;
+            form_style = response.data.form_style;
             elements = response.data.elements;
             resolve(response)
         }).fail(err => {
@@ -350,8 +351,11 @@ const loadElements = async (form_id, editable = false) =>  {
             $(container).empty();
             $(container).addClass(`form-${form.style}`);
             $(container).addClass(`form-${form.color}`);
-            $('form').addClass(`form-${form.style}`);
-            $('form').addClass(`form-${form.color}`);
+            $('form#formElementsContainer').addClass(`form-${form.style}`);
+            $('form#formElementsContainer').addClass(`form-${form.color}`);
+            if(form.color === 'dark-theme') {
+                $('body').addClass('dark-theme');
+            }
             res.data.elements.forEach(element => {
                 renderElement(element, editable);
             });

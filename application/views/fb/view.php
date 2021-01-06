@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="container">
-        <form action="" method="post">
+        <form action="" method="post" id="formElementsContainer">
             <div id="formContainer" class="row bg-white"></div>
             <div class="w-100 text-center">
                 <button class="btn btn-primary">Submit</button>

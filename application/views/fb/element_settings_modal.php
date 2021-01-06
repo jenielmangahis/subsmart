@@ -373,9 +373,6 @@
                                             <div class="col-4 rule-element-selector">
                                                 <select class="custom-select my-1 mr-sm-2" id="ruleItem" name="rule_item" onchange="showFields(this)">
                                                     <option selected value="null">Elements</option>
-                                                    <?php foreach($form_elements as $element) : ?>
-                                                        <option value="<?= $element->id ?>"><?= $element->question ?></option>
-                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                             <div class="col-2 rule-method-selector">

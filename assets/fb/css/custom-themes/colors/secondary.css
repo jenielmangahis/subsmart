@@ -1,3 +1,8 @@
 .form-secondary .form-header, form.form-secondary button {
     background-color: #6c757d!important;
 }
+
+.form-secondary div.Signature div.container button {
+    background-color: #6c757d !important;
+    color: #fff !important;
+}

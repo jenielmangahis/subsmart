@@ -1,3 +1,8 @@
 .form-primary .form-header, form.form-primary button {
-    background-color: #2d1a3e !important
+    background-color: #2d1a3e !important;
+}
+
+.form-primary div.Signature div.container button {
+    background-color: #2d1a3e !important;
+    color: #fff !important;
 }

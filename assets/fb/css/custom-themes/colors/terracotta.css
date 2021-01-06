@@ -2,10 +2,11 @@
     background-color:#E07A5F !important;
 }
 
-form.form-terracotta button {
+form.form-terracotta button, .form-terracotta div.Signature div.container button {
     background-color: #E59681 !important;
+    color: #fff !important;
 }
 
-.form-terracotta input, .form-terracotta textarea, .form-terracotta select {
+.form-terracotta input, .form-terracotta textarea, .form-terracotta select, .form-terracotta div.Signature div.container {
     border-color: #E07A5F !important;
 }

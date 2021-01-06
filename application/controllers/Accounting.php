@@ -2448,4 +2448,10 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
+
+    // Jan 2, 2021 Update
+    public function modal_invoice(){
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/customer_invoice_modal', $this->page_data);
+    }
 }

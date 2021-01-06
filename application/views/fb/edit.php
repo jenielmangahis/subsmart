@@ -32,7 +32,7 @@
 
         <div class="content-container container-fluid bg-white pt-3 pb-5">
             <div class="row">
-                <div class="col-12 col-md-3 border-right">
+                <div class="col-12 col-md-3 border-right" id="builderSidebar">
                     <div class="row">
                         <div class="col-6">
                             <h4>Form Editor</h4>
@@ -289,7 +289,8 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="form-elements-template" element_type="DropdownMatrixMultiScale">
-                                            <i class="fa fa-caret-square-o-down template-icon"></i> Dropdown Matrix Multi
+                                            <i class="fa fa-caret-square-o-down template-icon"></i> Dropdown Matrix
+                                            Multi
                                             Scale
                                         </div>
                                     </div>
@@ -318,13 +319,13 @@
                                         <div class="form-elements-template" element_type="StarMatrix">
                                             <i class="fa fa-star template-icon"></i> Star Matrix
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="styleBuildTab">
                             <div class="container-fluid px-0 mt-0">
-                                <ul class="accordion">
+                                <ul class="accordion" id="styleAccordion">
                                     <li>
                                         <div class="link"></i>Themes<i class="fa fa-chevron-down"></i>
                                         </div>
@@ -332,7 +333,7 @@
                                             <div class="container-fluid mt-0 py-2">
                                                 <h6>Style: </h6>
                                                 <div class="row p-1">
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('default')"
                                                             class="bg-secondary default-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -343,7 +344,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('big')"
                                                             class="bg-secondary big-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -354,7 +355,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('bigger')"
                                                             class="bg-secondary bigger-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -365,7 +366,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('slim')"
                                                             class="bg-secondary slim-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -376,7 +377,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('rounded')"
                                                             class="bg-secondary rounded-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -389,7 +390,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('narrow')"
                                                             class="bg-secondary narrow-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -400,7 +401,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('modern')"
                                                             class="bg-secondary modern-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -411,7 +412,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('casual')"
                                                             class="bg-secondary casual-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -422,7 +423,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('airy')"
                                                             class="bg-secondary airy-control style-display-container form-style p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -433,7 +434,7 @@
                                                             <div class="w-100 h-25 border d-block">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleStyleChangePreview('bubbly')"
                                                             class="bg-secondary bubbly-control style-display-container form-style p-1 text-center font-bubbly">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -447,7 +448,7 @@
                                                 </div>
                                                 <h6>Colors: </h6>
                                                 <div class="row p-1">
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('primary')"
                                                             class="bg-secondary form-primary form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -461,7 +462,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('orange')"
                                                             class="bg-secondary form-orange form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -475,7 +476,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('violet')"
                                                             class="bg-secondary form-violet form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -489,7 +490,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('sky-blue')"
                                                             class="bg-secondary form-sky-blue form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -503,7 +504,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('persian-green')"
                                                             class="bg-secondary form-persian-green form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -517,7 +518,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('green')"
                                                             class="bg-secondary form-green form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -531,7 +532,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('san-marino-blue')"
                                                             class="bg-secondary form-san-marino-blue form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -545,7 +546,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('mulberry')"
                                                             class="bg-secondary form-mulberry form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -559,7 +560,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('valencia')"
                                                             class="bg-secondary form-valencia form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -573,7 +574,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('sandy')"
                                                             class="bg-secondary form-sandy form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -587,7 +588,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('terracotta')"
                                                             class="bg-secondary form-terracotta form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -601,7 +602,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('comet')"
                                                             class="bg-secondary form-comet form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -615,7 +616,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('jungle')"
                                                             class="bg-secondary form-jungle form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -629,7 +630,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('light-brown')"
                                                             class="bg-secondary form-light-brown form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -643,7 +644,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('dark-theme')"
                                                             class="bg-secondary form-dark-theme form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 border bg-dark-theme">
@@ -657,7 +658,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('secondary')"
                                                             class="bg-secondary form-secondary form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -672,7 +673,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('success')"
                                                             class="bg-secondary form-success form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -686,7 +687,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('danger')"
                                                             class="bg-secondary form-danger form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -700,7 +701,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('warning')"
                                                             class="bg-secondary form-warning form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -714,7 +715,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('info')"
                                                             class="bg-secondary form-info form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -727,7 +728,7 @@
                                                             <div class="w-100 h-25 border d-block bg-info">Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('light')"
                                                             class="bg-secondary form-light form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light text-dark">
@@ -741,7 +742,7 @@
                                                                 Button</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-4 p-1 mb-4">
+                                                    <div class="col-2 p-1 mb-4">
                                                         <div onclick="handleColorChangePreview('dark')"
                                                             class="bg-secondary form-dark form-color style-display-container p-1 text-center">
                                                             <div class="p-2 mb-1 bg-light">
@@ -757,18 +758,386 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </li>
                                     <li>
+                                        <div class="link"></i>Customize<i class="fa fa-chevron-down"></i>
+                                        </div>
+                                        <div class="submenu">
+                                            <div class="container-fluid mt-0 py-2">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="p-2">
+                                                            <select name="customize-select" id="customizeSelect"
+                                                                class="form-control" size="10"
+                                                                onchange="handleCustomizeSelectChange()">
+                                                                <optgroup label="Page">
+                                                                    <option value="page-background" selected="selected">
+                                                                        Page
+                                                                        Background</option>
+                                                                    <option value="page-background-size">Page Background
+                                                                        Size
+                                                                    </option>
+                                                                    <option value="page-font-family">
+                                                                        Font Family</option>
+                                                                    <option value="page-font-size">Font Size
+                                                                    </option>
+                                                                    <option value="page-header-footer-text-color">
+                                                                        Header/Footer Text Color</option>
+                                                                    <option value="page-link-color">Link Color
+                                                                    </option>
+                                                                </optgroup>
+                                                                <optgroup label="Form">
+                                                                    <option value="form-border-color">
+                                                                        Form Border Color</option>
+                                                                    <option value="form-border-rounding">
+                                                                        Form Border Rounding</option>
+                                                                    <option value="form-border-width">Form Border
+                                                                        Width
+                                                                    </option>
+                                                                    <option value="form-background">
+                                                                        Form Background</option>
+                                                                    <option value="form-background-size">
+                                                                        Form Background Size</option>
+                                                                    <option value="form-shadow">Form Shadow
+                                                                    </option>
+                                                                    <option value="form-text-color"> Form Text Color
+                                                                    </option>
+                                                                    <option value="heading-text-color">Heading Text
+                                                                        Color
+                                                                    </option>
+                                                                    <option value="heading-background">Heading
+                                                                        Background</option>
+                                                                    <option value="heading-background-size">Heading
+                                                                        Background Size</option>
+                                                                    <option value="heading-border-rounding">
+                                                                        Heading Border Rounding</option>
+                                                                    <!-- <option value="error-background">
+                                                                        Error
+                                                                        Background</option>
+                                                                    <option value="error-text-color">Error Text Color
+                                                                    </option> -->
+                                                                </optgroup>
+                                                                <optgroup label="Items">
+                                                                    <option value="item-required-icon">Required
+                                                                        Icon
+                                                                    </option>
+                                                                    <option value="item-label-bold">
+                                                                        Label Bold</option>
+                                                                    <option value="item-highlight">
+                                                                        Highlight</option>
+                                                                    <option value="field-border-color">
+                                                                        Field Border Color</option>
+                                                                    <option value="field-border-rounding">
+                                                                        Field Border Rounding</option>
+                                                                    <option value="field-border-width">
+                                                                        Field Border Width</option>
+                                                                    <option value="field-font-family">
+                                                                        Field Font Family</option>
+                                                                    <option value="field-font-size">
+                                                                        Field Font Size</option>
+                                                                    <option value="field-background">
+                                                                        Field Background</option>
+                                                                    <option value="field-text-color">
+                                                                        Field
+                                                                        Text Color</option>
+                                                                    <option value="field-padding">
+                                                                        Field
+                                                                        Padding</option>
+                                                                    <option value="item-padding">Item
+                                                                        Padding</option>
+                                                                    <option value="item-spacing">
+                                                                        Item Spacing</option>
+                                                                </optgroup>
+                                                                <optgroup label="Matrix/Multi-Scale Rows">
+                                                                    <option value="header-text">
+                                                                        Header Text</option>
+                                                                    <option value="header-background">
+                                                                        Header Background</option>
+                                                                    <option value="sub-header-background">
+                                                                        Sub Header Background</option>
+                                                                    <option value="row-text-color">Row Text
+                                                                        Color
+                                                                    </option>
+                                                                    <option value="row-header-color">
+                                                                        Row Header Color</option>
+                                                                    <option value="row-color">
+                                                                        Row Color</option>
+                                                                    <option value="alt-row-text-color">Alt Row
+                                                                        Text
+                                                                        Color</option>
+                                                                    <option value="alt-row-header-color">
+                                                                        Alt Row Header Color</option>
+                                                                    <option value="alt-row-color">
+                                                                        Alt Row Color</option>
+                                                                    <option value="grid-lines">
+                                                                        Grid Lines</option>
+                                                                </optgroup>
+                                                                <optgroup label="Submit Button">
+                                                                    <option value="button-background">Button
+                                                                        Background
+                                                                    </option>
+                                                                    <option value="button-hover-background">Button
+                                                                        Hover
+                                                                        Background</option>
+                                                                    <option value="button-background-size">
+                                                                        Button Background Size</option>
+                                                                    <option value="button-border-style">Button Border
+                                                                        Style</option>
+                                                                    <option value="button-border-width">Button Border
+                                                                        Width</option>
+                                                                    <option value="button-bold">Button Bold
+                                                                    </option>
+                                                                    <option value="button-rounding">Button
+                                                                        Rounding
+                                                                    </option>
+                                                                    <option value="button-text-color">
+                                                                        Button Text Color</option>
+                                                                    <option value="button-width">Button Width
+                                                                    </option>
+                                                                    <option value="button-height-padding">Button Height
+                                                                        Padding
+                                                                    </option>
+                                                                    <option value="button-font-family">Button Font
+                                                                        Family
+                                                                    </option>
+                                                                    <option value="button-font-size">Button Font Size
+                                                                    </option>
+                                                                    <option value="button-capitalization">Button
+                                                                        Capitalization</option>
+                                                                    <option value="butotn-shadow">Button Shadow
+                                                                    </option>
+                                                                    <option value="hide-buttons">Hide Buttons
+                                                                    </option>
+                                                                </optgroup>
+                                                            </select>
+                                                            <div class="d-none">
+                                                                <ul class="nav nav-tabs">
+                                                                    <li class="active"><a
+                                                                            href="#customizeColorTab">color</a></li>
+                                                                    <li><a href="#customizeBackgroundSizeTab">bg
+                                                                            size</a></li>
+                                                                    <li><a href="#customizeFontFamilyTab">font
+                                                                            family</a></li>
+                                                                    <li><a href="#customizeFontSizeTab">font
+                                                                            size</a></li>
+                                                                    <li><a href="#customizeBorderRoundingTab">border
+                                                                            rounding</a></li>
+                                                                    <li><a href="#customizeBorderWidthTab">border
+                                                                            width</a></li>
+                                                                    <li><a href="#customizeShadowTab">shadow</a></li>
+                                                                    <li><a href="#customizeRequiredIconTab">required
+                                                                            icon</a></li>
+                                                                    <li><a href="#customizeBoldTab">bold</a></li>
+                                                                    <li><a href="#menu3">Menu 3</a></li>
+                                                                </ul>
+                                                                <input type="hidden" name="page-background"
+                                                                    id="page-background-input"
+                                                                    onchange="handleCustomStyleChange('#page-background-input', '.page-element', 'background')">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="p-2">
+                                                            <div class="tab-content" id="customStyleInputControls">
+                                                                <input type="hidden" name="active-option"
+                                                                    id="active-option">
+                                                                <div class="tab-pane active" id="customizeColorTab">
+                                                                    <div id="colorPicker"></div>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeBackgroundSizeTab">
+                                                                    <select name="background-size"
+                                                                        id="page-background-size-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#page-background-size-input', '.page-element', 'background-size')"
+                                                                        class="form-control">
+                                                                        <option value="tile">Tile</option>
+                                                                        <option value="cover">Full Cover</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeFontFamilyTab">
+                                                                    <select name="font-family"
+                                                                        id="page-font-family-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#page-font-family-input', '.page-element', 'font-family')"
+                                                                        class="form-control">
+                                                                        <option
+                                                                            value="Arial,'Helvetica Neue',Helvetica,sans-serif">
+                                                                            Arial</option>
+                                                                        <option
+                                                                            value="'Century Gothic',CenturyGothic, AppleGothic, sans-serif">
+                                                                            Century Gothic</option>
+                                                                        <option value="'Courier New',Courier,mono">
+                                                                            Courier</option>
+                                                                        <option value="Georgia,serif">Georgia</option>
+                                                                        <option
+                                                                            value="'Lucida Sans Unicode','Lucida Grande',sans-serif">
+                                                                            Lucida</option>
+                                                                        <option value="Tahoma,sans-serif">Tahoma
+                                                                        </option>
+                                                                        <option value="'Times New Roman',Times,serif">
+                                                                            Times New Roman</option>
+                                                                        <option value="Verdana,Geneva,sans-serif">
+                                                                            Verdana</option>
+                                                                        <option value="'Alfa Slab One',cursive">Alfa
+                                                                            Slab One</option>
+                                                                        <option value="'Architects Daughter',cursive">
+                                                                            Architects Daughter</option>
+                                                                        <option value="'Arvo',serif">Arvo</option>
+                                                                        <option value="'Chewy',cursive">Chewy</option>
+                                                                        <option value="'Cinzel',serif">Cinzel</option>
+                                                                        <option value="'Cutive Mono',courier">Cutive
+                                                                            Mono</option>
+                                                                        <option value="'Dosis',sans-serif">Dosis
+                                                                        </option>
+                                                                        <option value="'Droid Serif', serif">Droid Serif
+                                                                        </option>
+                                                                        <option value="'Great Vibes',cursive">Great
+                                                                            Vibes</option>
+                                                                        <option value="'Handlee',cursive">Handlee
+                                                                        </option>
+                                                                        <option value="'Kaushan Script',cursive">Kaushan
+                                                                            Script</option>
+                                                                        <option value="'Lato',sans-serif">Lato</option>
+                                                                        <option value="'Lobster',cursive">Lobster
+                                                                        </option>
+                                                                        <option value="'Lora', serif">Lora</option>
+                                                                        <option value="'Luckiest Guy',cursive">Luckiest
+                                                                            Guy</option>
+                                                                        <option value="'Merriweather',serif">
+                                                                            Merriweather</option>
+                                                                        <option value="'Muli',sans-serif">Muli</option>
+                                                                        <option value="'Oswald',sans-serif">Oswald
+                                                                        </option>
+                                                                        <option value="'Open Sans',sans-serif">Open Sans
+                                                                        </option>
+                                                                        <option
+                                                                            value="'Open Sans Condensed',sans-serif">
+                                                                            Open Sans Condensed</option>
+                                                                        <option value="'Pacifico',cursive">Pacifico
+                                                                        </option>
+                                                                        <option value="'Playball',cursive">Playball
+                                                                        </option>
+                                                                        <option value="'Poiret One',cursive">Poiret One
+                                                                        </option>
+                                                                        <option value="'Questrial',sans-serif">Questrial
+                                                                        </option>
+                                                                        <option value="'Raleway',sans-serif">Raleway
+                                                                        </option>
+                                                                        <option value="'Roboto',sans-serif">Roboto
+                                                                        </option>
+                                                                        <option value="'Roboto Slab',serif">Roboto Slab
+                                                                        </option>
+                                                                        <option value="'Sanchez',serif">Sanchez</option>
+                                                                        <option value="'Share Tech Mono',courier">Share
+                                                                            Tech Mono</option>
+                                                                        <option value="'Sigmar One',cursive">Sigmar One
+                                                                        </option>
+                                                                        <option value="'Signika',sans-serif">Signika
+                                                                        </option>
+                                                                        <option value="'Titillium Web',sans-serif">
+                                                                            Titillium Web</option>
+                                                                        <option value="'Ubuntu',sans-serif">Ubuntu
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeFontSizeTab">
+                                                                    <select name="font-size" id="page-font-size-input"
+                                                                        size="10"
+                                                                        onchange="handleCustomStyleChange('#page-font-size-input', '.page-element', 'font-size')"
+                                                                        class="form-control">
+                                                                        <option value="10px">10px</option>
+                                                                        <option value="11px">11px</option>
+                                                                        <option value="12px">12px</option>
+                                                                        <option value="13px">13px</option>
+                                                                        <option value="14px">14px</option>
+                                                                        <option value="16px">16px</option>
+                                                                        <option value="18px">18px</option>
+                                                                        <option value="20px">20px</option>
+                                                                        <option value="24px">24px</option>
+                                                                        <option value="30px">30px</option>
+                                                                        <option value="36px">36px</option>
+                                                                        <option value="48px">48px</option>
+                                                                        <option value="56px">56px</option>
+                                                                        <option value="72px">72px</option>
+                                                                        <option value="90px">90px</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeBorderRoundingTab">
+                                                                    <select name="border-rounding"
+                                                                        id="form-border-rounding-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#form-border-rounding-input', '.form-container-element', 'border-rounding')"
+                                                                        class="form-control">
+                                                                        <option value="0px">Off</option>
+                                                                        <option value="2px">2px</option>
+                                                                        <option value="4px">4px</option>
+                                                                        <option value="6px">6px</option>
+                                                                        <option value="8px">8px</option>
+                                                                        <option value="10px">10px</option>
+                                                                        <option value="12px">12px</option>
+                                                                        <option value="16px">16px</option>
+                                                                        <option value="20px">20px</option>
+                                                                        <option value="24px">24px</option>
+                                                                        <option value="30px">30px</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeBorderWidthTab">
+                                                                    <select name="border-width"
+                                                                        id="form-border-width-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#form-border-width-input', '.form-container-element', 'border-width')"
+                                                                        class="form-control">
+                                                                        <option value="0px">None</option>
+                                                                        <option value="1px">1px</option>
+                                                                        <option value="2px">2px</option>
+                                                                        <option value="3px">3px</option>
+                                                                        <option value="5px">5px</option>
+                                                                        <option value="10px">10px</option>
+                                                                        <option value="15px">15px</option>
+                                                                        <option value="20px">20px</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeShadowTab">
+                                                                    <select name="shadow" id="form-shadow-input"
+                                                                        size="10"
+                                                                        onchange="handleCustomStyleChange('#form-shadow-input', '.form-container-element', 'shadow')"
+                                                                        class="form-control">
+                                                                        <option value="0">Hide</option>
+                                                                        <option value="1">Show</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeRequiredIconTab">
+                                                                    <select name="required-icon"
+                                                                        id="item-required-icon-input" size="10"
+                                                                        onchange="handleCustomStyleChange('#item-required-icon-input', '.item-container-element', 'shadow')"
+                                                                        class="form-control">
+                                                                        <option value="none">None</option>
+                                                                        <option value="asterisk">Asterisk</option>
+                                                                        <option value="asterisk_red">Red Asterisk
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="tab-pane" id="customizeBoldTab">
+                                                                    <select name="bold" id="bold-icon" size="10"
+                                                                        onchange="handleCustomStyleChange('#bold-icon', '.item-container-element', 'font-weight')"
+                                                                        class="form-control">
+                                                                        <option value="normal">Normal</option>
+                                                                        <option value="bold">Bold</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="tab-pane" id="rulesBuildTab">
+                        <!-- <div class="tab-pane" id="rulesBuildTab">
                             <div class="container mt-0">
                                 lorem ipsum
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
-                <div class="col-12 col-md-9 position-relative">
+                <div class="col-12 col-md-9 position-relative page-element" id="builderFormColumn">
                     <div class="container mt-1">
                         <div id="loadingContainer" class="bg-primary indicator">
                             <p class="text-white">loading...</p>
@@ -783,9 +1152,10 @@
                             <button onclick="handleFormStyleSave()"
                                 class="btn btn-sm btn-primary d-inline-block">Save</button>
                             <button onclick="handleCopyFromFormClicked()"
-                                class="btn btn-sm btn-secondary d-inline-block" onclick="handleCopyFromFormClicked()">Copy From Form...</button>
+                                class="btn btn-sm btn-secondary d-inline-block"
+                                onclick="handleCopyFromFormClicked()">Copy From Form...</button>
                         </div>
-                        <div id="formBuilderContainer" class="row">
+                        <div id="formBuilderContainer" class="row form-container-element">
                             <div class="col-12" id="blankFormPlaceHolder">
                                 Drag items from the left and drop them here.
                             </div>
