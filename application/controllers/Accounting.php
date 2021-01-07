@@ -32,12 +32,14 @@ class Accounting extends MY_Controller {
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
+            "assets/css/accounting/accounting-modal-forms.css"
         ));
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
-            "assets/js/accounting/accounting.js"
+            "assets/js/accounting/accounting.js",
+            "assets/js/accounting/modal-forms.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -84,6 +86,11 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/dashboard', $this->page_data);
+    }
+
+    public function apply_for_capital() {
+        $this->load->view('includes/header', $this->page_data);
+        $this->load->view('accounting/apply_for_capital', $this->page_data);
     }
 
     public function expenses()

@@ -1,11 +1,11 @@
 <!-- Modal for add account-->
 <div class="full-screen-modal">
-    <div id="addestimateModal" class="modal fade modal-fluid" role="dialog">
+    <div id="adddelayedchargeModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Estimate</h4>
+                    <h4 class="modal-title">Delayed Charge</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -21,43 +21,13 @@
                                         <option>Alpha</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
-                                    Email
-                                    <input type="text" class="form-control">
-                                    <input type="checkbox"> Send later
-                                </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-3">
-                                    Billing address
-                                    <textarea style="height:100px;width:100%;"></textarea>
-                                </div>
-                                <div class="col-md-3">
-                                    Estimate date<br>
-                                    <input type="text" class="form-control"><br>
-                                    Ship via<br>
+                                    Delayed Credit date<br>
                                     <input type="text" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    Expiration date<br>
-                                    <input type="text" class="form-control"><br>
-                                    Shipping date<br>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    <br><br>
-                                    Tracking no.<br>
-                                    <input type="text" class="form-control">
-                                </div>
-                                
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Shipping to
-                                    <textarea style="height:100px;width:100%;"></textarea>
-                                </div>
+                                </div>                                
                             </div>
                             <hr>
                             <div class="row">
@@ -69,9 +39,7 @@
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2>$0.00</h2><br>
-                            Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;">
+                            AMOUNT<h2>$0.00</h2>
                         </div>
                     </div>
                     <hr>
@@ -114,7 +82,7 @@
                             </table>
                         <div>
                     </div>
-                <hr>
+                    <hr>
                 
                     <div class="row">
                         <div class="col-md-1">
@@ -124,7 +92,6 @@
                            <button class="btn1">Clear all lines</button>
                         </div>
                         <div class="col-md-1">
-                           <button class="btn1">Add subtotal</button>
                         </div>
                         <div class="col-md-7">
                         </div>
@@ -139,37 +106,8 @@
 
                     <div class="row">
                         <div class="col-md-2">
-                            Message on invoice<br>
+                            Memo<br>
                             <textarea style="height:100px;width:100%;"></textarea><br>
-                            Message on statement<br>
-                            <textarea style="height:100px;width:100%;"></textarea>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                        <div class="col-md-2">
-                            Taxable subtotal <b>$0.00</b><br>
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td></td>
-                                    <td><b>$0.00</b><br><a href="">See the math</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping</td>
-                                    <td><input type="text" class="form-control"></td>
-                                </tr>
-                                <tr>
-                                    <td>Tax on shipping</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total</td>
-                                    <td>$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Balance due</td>
-                                    <td>$0.00</td>
-                                </tr>
-                            </table>
                         </div>
                     </div>
                     <hr>
