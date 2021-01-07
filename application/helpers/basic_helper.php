@@ -102,27 +102,14 @@ if (!function_exists('userProfileImage')) {
         $url = urlUpload('users/user-profile/p_' . $id . '.png?' . time());
         $user = $CI->users_model->getUser($id);
         $img_ext = 'png';
-        
-        if ($user->img_type != ''){
-            $img_ext = $user->img_type;
-            $url = urlUpload('users/user-profile/p_' . $id . '.' . $img_ext . '?' . time());
 
-            if( !file_exists(FCPATH."uploads/users/user-profile/p_".$id . '.' . $img_ext) ){
-                if( $user->profile_img != '' ){
-                    $url = urlUpload('users/user-profile/' . $user->profile_img);
-                }else{
-                    $url = urlUpload('users/default.png');
-                }                
-            }
-        }else{
-            if ($user->profile_img) {
-                $url = urlUpload('users/user-profile/' . $user->profile_img);
-                if( !file_exists(FCPATH."uploads/users/user-profile/" . $user->profile_img) ){
-                    $url = urlUpload('users/default.png');
-                }
-            } else {
+        if ($user->profile_img) {
+            $url = urlUpload('users/user-profile/' . $user->profile_img);
+            if( !file_exists(FCPATH."uploads/users/user-profile/" . $user->profile_img) ){
                 $url = urlUpload('users/default.png');
             }
+        } else {
+            $url = urlUpload('users/default.png');
         }
 
         return $url;

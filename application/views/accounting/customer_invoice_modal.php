@@ -62,12 +62,14 @@
                                 </div>
                                 
                             </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-md-3">
                                     Shipping to
                                     <textarea style="height:100px;width:100%;"></textarea>
                                 </div>
                             </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-md-12">
                                     Tags <a href="#" style="float:right">Manage tags</a>

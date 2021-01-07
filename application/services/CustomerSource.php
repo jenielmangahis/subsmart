@@ -41,8 +41,15 @@ class CustomerSource
             return;
         }
 
+        $role = logged('role');
+        $company_id = logged('company_id');
 
-        $this->app->page_data['customerSources'] = $this->app->customerSource_model->getAll();
+        if( $role == 1 || $role == 2 ){
+            $this->app->page_data['customerSources'] = $this->app->customerSource_model->getAllCustomerSource();
+        }else{
+            $this->app->page_data['customerSources'] = $this->app->customerSource_model->getAllByCompanyId($company_id);
+        }
+        
         $this->app->load->view('customer/source/list', $this->app->page_data);
     }
 

@@ -43,9 +43,15 @@ class CustomerTypes
             return;
         }
 
+        $role = logged('role');
+        $company_id = logged('company_id');
 
-
-        $this->app->page_data['customerTypes'] = $this->app->customerTypes_model->getAll();
+        if( $role == 1 || $role == 2 ){
+            $this->app->page_data['customerTypes'] = $this->app->customerTypes_model->getAllCustomerTypes();
+        }else{
+            $this->app->page_data['customerTypes'] = $this->app->customerTypes_model->getAllByCompanyId($company_id);
+        }
+        
         $this->app->load->view('customer/types/list', $this->app->page_data);
     }
 
@@ -80,7 +86,6 @@ class CustomerTypes
         if (empty($post['id'])) {
 
             $job_type_id = $this->app->customerTypes_model->create([
-
                 'company_id' => $company_id,
                 'title' => $post['title']
             ]);
