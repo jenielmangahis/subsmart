@@ -1,0 +1,84 @@
+/* Bank Deposit Modal */
+.modal textarea[name="memo"], .modal textarea[name="description"] {
+    height: auto !important;
+}
+
+#depositModal div.funds-table-container div.funds-table-footer button.btn,
+#journalEntryModal div.journal-table-container div.journal-table-footer button.btn,
+#inventoryModal div.inventory-table-container div.inventory-table-footer button.btn,
+#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn {
+    border-radius: 5px;
+    border-color: #6c757d !important;
+    padding: 5px 15px;
+    height: auto;
+}
+
+div.attachments button {
+    border: none;
+    height:auto;
+    background: none;
+    margin: 0 10px;
+}
+
+div.attachments div.attachments-list div.attachments-container {
+    padding: 14px;
+    margin-top: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+div.attachments div.attachments-list div.attachments-container:hover {
+    border: 1px dashed #dee2e6 !important;
+}
+
+div.attachments div.attachments-list div.attachments-container div.attachments-container-label {
+    font-style: italic;
+    padding: 5px;
+}
+
+/* Transfer Modal */
+#transferModal h3 {
+    height: 46px;
+    margin: 0;
+}
+
+/* Statements Modal */
+#statementModal #recipientsTab {
+    display: inline-flex;
+    border-radius: 20px;
+    border: 1px solid #6b6c72;
+}
+
+#statementModal #recipientsTab li:first-child {
+    border-right: 1px solid #6b6c72;
+}
+
+#statementModal #recipientsTab li:first-child a {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+#statementModal #recipientsTab li:nth-child(2) a {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#statementModal #recipientsTab li a.active {
+    border-bottom: none !important;
+    font-weight: 900;
+    background-color: #fff !important;
+}
+
+#statementModal #recipientsTab li a:hover,
+#statementModal #recipientsTab li a.active:hover {
+    border: none;
+    font-weight: 900;
+    color: #fff;
+    background-color: #6b6c72 !important;
+    border-bottom: 1px solid #6b6c72 !important;
+}
+
+/* Weekly Timesheet Modal */
+#weeklyTimesheetModal div.timesheet-table table select {
+    margin-bottom: 5px !important;
+}

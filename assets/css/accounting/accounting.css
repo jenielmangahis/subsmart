@@ -1051,3 +1051,37 @@ button {
 .border-bottom-dark{
 	border-bottom:1px solid #aaa;
 }
+
+#marketplace, #faq {
+    border-radius: 6px;
+    border: 1px solid #d4d7dc;
+}
+
+#marketplace h6 {
+    font-weight: 500;
+}
+
+#faq h3.faq-header {
+    border-bottom: 1px solid #363636;
+}
+
+#faq #faq-accordion div.card {
+    border-bottom: 1px solid #363636;
+}
+
+#faq #faq-accordion div.card-header {
+    background-color: transparent;
+}
+
+#faq #faq-accordion ul li {
+    margin-left: 30px;
+    list-style: disc;
+}
+
+#faq #faq-accordion div.card-header button {
+    padding: 0;
+}
+
+#faq #faq-accordion button:hover, #faq #faq-accordion button:focus {
+    color: #2a3142;
+}

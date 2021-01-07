@@ -78,13 +78,13 @@
 
                             <ul>
                                 <li><a href="#" class="ajax-modal_invoice" data-toggle="modal" data-target="#addinvoiceModal">Invoice</a></li>
-                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a></li>
-                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li>
-                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addcreditmemoModal">Credit memo</a></li>
-                                <li><a href="#" class="ajax-modal_estimate" data-toggle="modal" data-target="#addsalesreceiptModal">Sales receipt</a></li>
-                                <li><a href="#">Refund receipt</a></li>
-                                <li><a href="#">Delayed credit</a></li>
-                                <li><a href="#">Delayed charge</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addcreditmemoModal">Credit memo</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addsalesreceiptModal">Sales receipt</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addrefundreceiptModal">Refund receipt</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#adddelayedcreditModal">Delayed credit</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#adddelayedchargeModal">Delayed charge</a></li>
                             </ul>
                         </div>
                     </div>
@@ -108,10 +108,10 @@
                         <div class="new-listing">
                             <h4>Employees</h4>
 
-                            <ul>
-                                <li><a href="#">Payroll</a></li>
-                                <li><a href="#">Single time activity</a></li>
-                                <li><a href="#">Weekly timesheet</a></li>
+                            <ul id="accounting_employees">
+                                <li><a href="#" class="ajax-payroll_modal" data-view="payroll_modal" data-toggle="modal" data-target="#payrollModal">Payroll</a></li>
+                                <li><a href="#" class="ajax-single_time_activity_modal" data-view="single_time_activity_modal" data-toggle="modal" data-target="#singleTimeModal">Single time activity</a></li>
+                                <li><a href="#" class="ajax-weekly_timesheet_modal" data-view="weekly_timesheet_modal" data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
                             </ul>
                         </div>
                     </div>
@@ -119,14 +119,14 @@
                         <div class="new-listing">
                             <h4>Other</h4>
 
-                            <ul>
-                                <li><a href="#" class="ajax-deposit_modal" data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
-                                <li><a href="#" class="ajax-transfer_modal" data-toggle="modal" data-target="#transferModal">Transfer</a></li>
-                                <li><a href="#" class="ajax-journal_entry_modal" data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
-                                <li><a href="#" class="ajax-statement_modal" data-toggle="modal" data-target="#statementModal">Statement</a></li>
-                                <li><a href="#" class="ajax-inventory_modal" data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
-                                <li><a href="#">Pay down credit card</a></li>
-                                <li><a href="#">Apply for Capital</a></li>
+                            <ul id="accounting_order">
+                                <li><a href="#" class="ajax-bank_deposit_modal" data-view="bank_deposit_modal" data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
+                                <li><a href="#" class="ajax-transfer_modal" data-view="transfer_modal" data-toggle="modal" data-target="#transferModal">Transfer</a></li>
+                                <li><a href="#" class="ajax-journal_entry_modal" data-view="journal_entry_modal" data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
+                                <li><a href="#" class="ajax-statement_modal" data-view="statement_modal" data-toggle="modal" data-target="#statementModal">Statement</a></li>
+                                <li><a href="#" class="ajax-inventory_qty_modal" data-view="inventory_qty_modal" data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
+                                <li><a href="#" class="ajax-pay_down_credit_card_modal" data-view="pay_down_credit_card_modal" data-toggle="modal" data-target="#payDownCreditModal">Pay down credit card</a></li>
+                                <li><a href="<?php echo base_url('accounting/apply-for-capital') ?>">Apply for Capital</a></li>
                             </ul>
                         </div>
                     </div>
@@ -139,10 +139,20 @@
         </div>
     </div>
 
+    
+    <?php // include viewPath('accounting/bank_deposit_modal'); ?>
+    <?php // include viewPath('accounting/transfer_modal'); ?>
+    <?php // include viewPath('accounting/pay_down_credit_card_modal'); ?>
+    <?php // include viewPath('accounting/statement_modal'); ?>
+    <?php // include viewPath('accounting/inventory_qty_modal'); ?>
+    <?php // include viewPath('accounting/journal_entry_modal'); ?>
     <div><?php// include viewPath('accounting/customer_invoice_modal'); ?></div>
     <div><?php //include viewPath('accounting/customer_receive_payment_modal'); ?></div>
     <div><?php //include viewPath('accounting/customer_estimate_modal'); ?></div>
     <div><?php// include viewPath('accounting/customer_credit_memo_modal'); ?></div>
-    <div><?php include viewPath('accounting/customer_sales_receipt_modal'); ?></div>
+    <div><?php // include viewPath('accounting/customer_sales_receipt_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_refund_receipt_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_delayed_credit_modal'); ?></div>
+    <div><?php// include viewPath('accounting/customer_delayed_charge_modal'); ?></div>
     <!-- End New Popup -->
     

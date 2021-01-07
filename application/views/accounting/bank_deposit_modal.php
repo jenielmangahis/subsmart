@@ -152,13 +152,13 @@
                         </div>
 
                         <div class="col-md-4 p-0">
-                            <div class="attachments">
+                            <div class="deposit-attachments attachments">
                                 <div class="attachments-header">
-                                    <button type="button">Attachments</button>
+                                    <button type="button" onclick="document.getElementById('deposit-attachments').click();">Attachments</button>
                                     <span>Maximum size: 20MB</span>
                                 </div>
                                 <div class="attachments-list">
-                                    <div class="attachments-container border">
+                                    <div class="attachments-container border" onclick="document.getElementById('deposit-attachments').click();">
                                         <div class="attachments-container-label">
                                             Drag/Drop files here or click the icon
                                         </div>
@@ -167,6 +167,7 @@
                                 <div class="attachments-footer w-100 d-flex">
                                     <span class="m-auto"><a href="#" class="text-info">Show existing</a></span>
                                 </div>
+                                <input type="file" name="attachments" id="deposit-attachments" class="hide" multiple="multiple">
                             </div>
                         </div>
                     </div>
