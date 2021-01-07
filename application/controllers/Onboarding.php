@@ -60,6 +60,10 @@ class Onboarding extends MY_Controller {
 		  'Design Services' => 'Design Services',
 		  'Other' => 'Other',
         ];
+
+        $cid=logged('company_id');
+        $client      = $this->Clients_model->getById($cid);
+        $industryTypeId = $client->industry_type_id;
 		//ifPermissions('businessdetail');
 		$user = $this->session->userdata('logged');
 		$user_id = $user['id'];		
@@ -68,6 +72,7 @@ class Onboarding extends MY_Controller {
 	 	$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($company_id);
 	
 		$this->page_data['industryType'] = $industryType;
+		$this->page_data['industryTypeId'] = $industryTypeId;
 		$this->page_data['businessTypes'] = $businessTypes;
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		//print_r($user);die;
@@ -104,6 +109,10 @@ class Onboarding extends MY_Controller {
 	        		];
 	        		$ServiceCategory = $this->ServiceCategory_model->create($data);
 
+	        		$data2 = [
+	        			'industry_type_id' => $category
+	        		];
+		            $this->Clients_model->updateClient($company_id, $data2);
 		        }
 
         		$this->session->set_flashdata('message', 'Service was successfully updated');

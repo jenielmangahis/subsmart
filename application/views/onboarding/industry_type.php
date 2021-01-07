@@ -195,9 +195,13 @@ span.text-ter {
                           $select = false;
                           if($selectedCategories){
                             foreach ($selectedCategories as $key => $selectedCategory) {
-                              if($industryValue->id == $selectedCategory->industry_type_id){
+                              if($industryValue->id ==  $selectedCategory->industry_type_id){ 
                                 $select = true;
                               }
+                            }
+                          }else{
+                            if($industryTypeId  ==  $industryValue->id){
+                              $select = true;
                             }
                           }
                     ?>

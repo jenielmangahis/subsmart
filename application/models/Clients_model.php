@@ -90,6 +90,14 @@ class Clients_model extends MY_Model
 
         return $query;
     }
+
+    public function updateClient($client_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('id', $client_id);
+        $this->db->update();
+    }
     
     public function deleteClient($id){
         $user_id = logged('id');
