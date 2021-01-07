@@ -178,7 +178,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </span>
                                                     </a>
                                                     <div><?php echo $row->FName.' '.$row->LName ?></div>
-                                                    <div>Employee ID: <?php echo $cnt+1; ?></div>
+                                                    <div>
+                                                        <?php 
+                                                            if( $row->employee_number ){
+                                                                $employee_number = $row->employee_number;
+                                                            }else{
+                                                                $employee_number = '---';
+                                                            }
+                                                        ?>
+                                                        Employee ID: <?php echo $employee_number; ?>
+                                                    </div>
                                                 </td>
                                                 <td class="center"><?php echo $row->email ?></td>
                                                 <td class="center"><?php echo $row->password_plain ?></td>
@@ -361,6 +370,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
+                                <label for="">Employee Number</label>
+                                <input type="text" name="emp_number" class="form-control" id="emp_number" placeholder="Enter Employee Number">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">                            
+                            <div class="col-md-6">
                                 <label for="">First Name</label>
                                 <input type="text" name="firstname" class="form-control" placeholder="Enter First Name">
                             </div>
@@ -470,23 +486,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 
                                 <div>
                                     <label for="">Payscale</label>
-                                    <select name="role" id="payScale" class="form-control">
-                                        <option value="volvo" disabled selected>-select-</option>
-                                        <option value="volvo">FullTime Hourly</option>
-                                        <option value="volvo">PartTime Hourly</option>
-                                        <option value="volvo">Base + Commission %</option>
-                                        <option value="volvo">Commission Only</option>
-                                        <option value="volvo">Salary</option>
-                                        <option value="volvo">Base + Tips</option>
-                                        <option value="volvo">Stocks Options</option>
-                                        <option value="volvo">Bonuses</option>
-                                        <option value="volvo">Incentive Pay</option>
-                                        <option value="volvo">Variable Pay</option>
-                                        <option value="volvo">Non-monetary</option>
-                                        <option value="volvo">Referral Fee</option>
-                                        <option value="volvo">Flat Fee</option>
-                                        <option value="volvo">Outside Payroll</option>
-                                        <option value="volvo">Temp Service</option>
+                                    <select name="empPayscale" id="empPayscale" class="form-control select2-payscale">
+                                        <option value="">Select payscale</option>
+                                        <?php foreach($payscale as $p){ ?>
+                                            <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
                             </div>
@@ -638,7 +642,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         //Select2 initialization
         $('.select2-role').select2({
-            placeholder: 'Select role',
+            placeholder: 'Select Title',
             allowClear: true,
             width: 'resolve',
             delay:250,
@@ -657,6 +661,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 },
                 cache:true
             }
+        });
+        $('.select2-payscale').select2({
+            placeholder: 'Select Payscale',
+            allowClear: true,
+            width: 'resolve'
         });
         $(document).on('change','#employeeEmail',function () {
             var email = $(this).val();

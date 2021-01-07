@@ -3,6 +3,12 @@
 <div class="form-group">
     <div class="row">
         <div class="col-md-6">
+            <label for="">Employee Number</label>
+            <input type="text" name="emp_number" class="form-control" id="emp_number" value="<?= $user->employee_number ? $user->employee_number : '-'; ?>" placeholder="Enter Employee Number">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
             <label for="">First Name</label>
             <input type="text" name="firstname" class="form-control" value="<?= $user->FName; ?>" placeholder="Enter First Name">
         </div>
@@ -37,9 +43,9 @@
             <input type="text" name="address" value="<?= $user->address; ?>" class="form-control">
         </div>
         <div class="col-md-6">
-            <label for="">Role</label>
+            <label for="">Title</label>
             <select name="role" id="employeeRole" class="form-control edit-select2-role">
-                <option value="">Select Role</option>
+                <option value="">Select Title</option>
                 <?php foreach($roles as $r){ ?>
                     <option value="<?= $r->id; ?>" <?= $r->id == $user->role ? 'selected="selected"' : ''; ?>><?= $r->title; ?></option>
                 <?php } ?>
@@ -83,23 +89,11 @@
             <input type="hidden" name="profile_photo" id="editPhotoName">
             <div>
                 <label for="">Payscale</label>
-                <select name="role" id="payScale" class="form-control">
-                    <option value="volvo" disabled selected>-select-</option>
-                    <option value="volvo">FullTime Hourly</option>
-                    <option value="volvo">PartTime Hourly</option>
-                    <option value="volvo">Base + Commission %</option>
-                    <option value="volvo">Commission Only</option>
-                    <option value="volvo">Salary</option>
-                    <option value="volvo">Base + Tips</option>
-                    <option value="volvo">Stocks Options</option>
-                    <option value="volvo">Bonuses</option>
-                    <option value="volvo">Incentive Pay</option>
-                    <option value="volvo">Variable Pay</option>
-                    <option value="volvo">Non-monetary</option>
-                    <option value="volvo">Referral Fee</option>
-                    <option value="volvo">Flat Fee</option>
-                    <option value="volvo">Outside Payroll</option>
-                    <option value="volvo">Temp Service</option>
+                <select name="empPayscale" id="empPayscale" class="form-control select2-payscale">
+                    <option value="">Select payscale</option>
+                    <?php foreach($payscale as $p){ ?>
+                        <option value="<?= $p->id; ?>" <?= $user->payscale_id == $p->id ? 'selected="selected"' : ''; ?>><?= $p->payscale_name; ?></option>
+                    <?php } ?>
                 </select>
             </div>
         </div>
@@ -169,9 +163,15 @@
 <script>
 $(function(){
     $('.edit-select2-role').select2({
-        placeholder: 'Select role',
+        placeholder: 'Select Title',
         allowClear: true,
         width: 'resolve'            
+    });
+
+    $('.select2-payscale').select2({
+        placeholder: 'Select Payscale',
+        allowClear: true,
+        width: 'resolve'
     });
 
     Dropzone.autoDiscover = false;
