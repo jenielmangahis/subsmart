@@ -102,6 +102,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	float: right;
     	margin-right: 10px;
     }
+    .section-title{
+        background-color: #38a4f8;
+        color:#ffffff !important;
+        padding:10px;
+        margin-bottom: 27px;
+    }
 
 </style>
 <div class="wrapper" role="wrapper">
@@ -245,8 +251,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="modal-body modal-edit-employee"></div>
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Close</button>
-                <button type="button" class="btn btn-success" id="updateEmployee">Save & exit</button>
+                <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Cancel</button>
+                <button type="button" class="btn btn-success" id="updateEmployee">Save</button>
             </div>
         	</form>
 
@@ -269,7 +275,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="">Profile Image</label>
-                                <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                <div id="employeeProfilePhoto1" class="dropzone1" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                     <div class="dz-message" style="margin: 20px;border">
                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -351,7 +357,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <form action="" id="addEmployeeForm">
                 <input type="hidden" name="user_id" id="userID">
                 <div class="modal-body">
-                    <div class="section-title">Basic Details</div>
+                    <div class="section-title" style="">Basic Details</div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
@@ -367,15 +373,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="section-title">Login Details</div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <label for="" style="display: block">Email</label>
                                 <input type="text" name="email" class="form-control" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
                                 <i class="fa fa-sync-alt check-if-exist" title="Check if Email is already exist" data-toggle="tooltip"></i>
                                 <span class="email-error"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="" style="display: block">Username</label>
-                                <input type="text" name="username" class="form-control" id="employeeUsername" placeholder="e.g: nsmartrac" style="width: 90%">
+                            </div> -->
+                            <div class="col-md-7">
+                                <label for="" style="display: block">Email <small>(Will be use as your username)</small></label>
+                                <input type="email" name="username" class="form-control" id="employeeUsername" placeholder="e.g: nsmartrac" style="width: 90%">
                                 <i class="fa fa-sync-alt check-if-exist" title="Check if Username already exist" data-toggle="tooltip"></i>
                                 <span class="username-error"></span>
                             </div>
@@ -550,8 +556,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="closedEmployeeModal">Close</button>
-                <button type="button" class="btn btn-success" id="savedNewEmployee">Save & exit</button>
+                <button type="button" class="btn btn-default" id="closedEmployeeModal">Cancel</button>
+                <button type="button" class="btn btn-success" id="savedNewEmployee">Save</button>
             </div>
         	</form>
 
@@ -760,7 +766,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if( values['addnew_password'] != '' ){
             	values['password'] = values['addnew_password'];
             }
-            if(values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['password'] && values['role']){
+            //if(values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['password'] && values['role']){
+            if(values['firstname'] && values['lastname'] && values['username'] && values['password'] && values['role']){
                 $.ajax({
                     url: base_url + 'users/addNewEmployee',
                     type:"POST",

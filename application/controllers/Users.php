@@ -748,7 +748,7 @@ class Users extends MY_Controller {
             'FName' => $fname,
             'LName' => $lname,
             'username' => $username,
-            'email' => $email,
+            'email' => $username,
             'password' => hash("sha256",$password),
             'password_plain' => $password,
             'role' => $role,
