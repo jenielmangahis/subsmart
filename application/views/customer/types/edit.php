@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-sm-6">
                                 <div class="float-right d-none d-md-block">
                                     <div class="dropdown">
-                                        <a href="<?php echo url('customer/type') ?>" class="btn btn-primary"
+                                        <a href="<?php echo url('customer/types') ?>" class="btn btn-primary"
                                            aria-expanded="false">
                                             <i class="mdi mdi-settings mr-2"></i> Go Back to Groups
                                         </a>
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    <?php echo form_open('customer/type/save', ['class' => 'form-validate', 'method' => 'post']); ?>
+                    <?php echo form_open('customer/types/save', ['class' => 'form-validate', 'method' => 'post']); ?>
                     <div class="row custom__border">
                         <div class="col-xl-12">
                             <div class="card">
@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <input type="text" class="form-control"
                                                        name="title"
                                                        id="title"
-                                                       value="<?php echo (isset($old_data['title'])) ? $old_data['title'] : ((!empty($customerTypes)) ? $customerTypes->name : '') ?>"
+                                                       value="<?php echo (isset($old_data['title'])) ? $old_data['title'] : ((!empty($customerTypes)) ? $customerTypes->title : '') ?>"
                                                        required
                                                        placeholder="Enter title" autofocus/>
                                                 <?php if(isset($custom_errors['title']) && $custom_errors['title']!='' ) { ?>
