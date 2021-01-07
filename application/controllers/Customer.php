@@ -464,7 +464,6 @@ class Customer extends MY_Controller
             $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
         }
         $input = $this->input->post();
-
         $convert_lead = $this->input->post('convert_customer');
         if(isset($convert_lead)){
             if (!isset($input['leads_id'])) {
@@ -516,6 +515,8 @@ class Customer extends MY_Controller
                 }
             } else {
                 $user_id = logged('id');
+                $cid=logged('company_id');
+                $this->page_data['company_id'] = $cid;
                 $this->page_data['plans'] = "";
                 $this->page_data['users'] = $this->users_model->getUsers();
                 $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
