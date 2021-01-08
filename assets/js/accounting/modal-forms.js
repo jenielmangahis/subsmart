@@ -22,3 +22,42 @@ $(function() {
         });
     });
 });
+
+const submitModalForm = (event) => {
+    event.preventDefault();
+
+    var data = new FormData(document.getElementById('modal-form'));
+
+    $.ajax({
+        url: '/accounting/submit-modal-form',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+            var text = "";
+
+            $('.modal').modal('hide');
+
+            toast(res.success, res.message);
+        }
+    });
+}
+
+const toast = (status = true, text = "Success", position = "top-right") => {
+    var icon = status ? "success" : "error";
+    var heading = status ? "Success" : "Error";
+
+    $.toast({
+        icon: icon,
+        heading: heading,
+        text: text,
+        showHideTransition: 'fade',
+        hideAfter: 3000,
+        allowToastClose: true,
+        position: position,
+        stack: false,
+        loader: false,
+    });
+}

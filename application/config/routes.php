@@ -244,6 +244,7 @@ $route['register/subscribe'] = 'register/subscribe';
 
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
+$route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';

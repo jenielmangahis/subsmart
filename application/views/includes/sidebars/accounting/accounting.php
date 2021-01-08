@@ -98,9 +98,9 @@
                                 <li><a href="#">Bill</a></li>
                                 <li><a href="#">Pay bills</a></li>
                                 <li><a href="#">Purchase order</a></li>
-                                <li><a href="#">Vendor credit</a></li>
-                                <li><a href="#">Credit card credit</a></li>
-                                <li><a href="#">Print checks</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorcreditModal">Vendor credit</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorcreditcardModal">Credit card credit</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorprintchecksModal">Print checks</a></li>
                             </ul>
                         </div>
                     </div>
@@ -146,13 +146,20 @@
     <?php // include viewPath('accounting/statement_modal'); ?>
     <?php // include viewPath('accounting/inventory_qty_modal'); ?>
     <?php // include viewPath('accounting/journal_entry_modal'); ?>
-    <div><?php// include viewPath('accounting/customer_invoice_modal'); ?></div>
+    <div><?php include viewPath('accounting/customer_invoice_modal'); ?></div>
     <div><?php //include viewPath('accounting/customer_receive_payment_modal'); ?></div>
     <div><?php //include viewPath('accounting/customer_estimate_modal'); ?></div>
     <div><?php// include viewPath('accounting/customer_credit_memo_modal'); ?></div>
     <div><?php // include viewPath('accounting/customer_sales_receipt_modal'); ?></div>
     <div><?php //include viewPath('accounting/customer_refund_receipt_modal'); ?></div>
     <div><?php //include viewPath('accounting/customer_delayed_credit_modal'); ?></div>
-    <div><?php// include viewPath('accounting/customer_delayed_charge_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_delayed_charge_modal'); ?></div>
+
+    <!-- vendors -->
+    <div><?php //include viewPath('accounting/vendor_vendor_credit_modal'); ?></div>
+    <div><?php //include viewPath('accounting/vendor_credit_card_modal'); ?></div>
+    <div><?php //include viewPath('accounting/vendor_print_checks_modal'); ?></div>
+
+
     <!-- End New Popup -->
     
