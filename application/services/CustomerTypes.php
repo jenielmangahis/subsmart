@@ -125,7 +125,7 @@ class CustomerTypes
     private function remove($id)
     {
         if ($this->app->customerTypes_model->delete($id)) {
-
+            redirect('customer/types/');
             die(
             json_encode(
                 [

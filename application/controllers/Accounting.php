@@ -32,14 +32,16 @@ class Accounting extends MY_Controller {
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
-            "assets/css/accounting/accounting-modal-forms.css"
+            "assets/css/accounting/accounting-modal-forms.css",
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css"
         ));
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
-            "assets/js/accounting/modal-forms.js"
+            "assets/js/accounting/modal-forms.js",
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -1942,12 +1944,6 @@ class Accounting extends MY_Controller {
             'invoice_date' => $this->input->post('invoice_date'),
             'due_date' => $this->input->post('due_date'),
             'location_scale' => $this->input->post('location_scale'),
-            'products' => $this->input->post('products'),
-            'description' => $this->input->post('description'),
-            'qty' => $this->input->post('qty'),
-            'rate' => $this->input->post('rate'),
-            'amount' => $this->input->post('amount'),
-            'tax' => $this->input->post('tax'),
             'message_on_invoice' => $this->input->post('message_on_invoice'),
             'message_on_statement' => $this->input->post('message_on_statement'),
             'attachments' => $this->input->post('file_name'),
@@ -1957,7 +1953,20 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $addQuery = $this->accounting_invoices_model->createInvoice($new_data);
+        $new_data2 = array(
+            'invoice_id' => '0',
+            'products' => $this->input->post('products'),
+            'description' => $this->input->post('description'),
+            'qty' => $this->input->post('qty'),
+            'rate' => $this->input->post('rate'),
+            'amount' => $this->input->post('amount'),
+            'tax' => $this->input->post('tax'),
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_invoices_model->createInvoice($new_data,$new_data2);
 
         if($addQuery > 0){
             echo json_encode($addQuery);

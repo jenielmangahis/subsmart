@@ -44,7 +44,7 @@ class Users extends MY_Controller {
         $this->load->model('IndustryType_model');
         $this->load->model('Users_model');
         $this->load->model('ServiceCategory_model');
-        
+        $this->load->model('PayScale_model');
 
 	}
 
@@ -681,8 +681,10 @@ class Users extends MY_Controller {
 		$role_id = logged('role');
 		if( $role_id == 1 || $role_id == 2 ){
 			$this->page_data['users'] = $this->users_model->getAllUsers();
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
 		}else{
 			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
 		
 
@@ -743,19 +745,23 @@ class Users extends MY_Controller {
         $web_access = $this->input->post('values[web_access]');
         $app_access = $this->input->post('values[app_access]');
         $profile_img = $this->input->post('values[profile_photo]');
+        $payscale_id = $this->input->post('values[empPayscale]');
+        $emp_number  = $this->input->post('values[emp_number]');
         $cid=logged('company_id');
         $add = array(
             'FName' => $fname,
             'LName' => $lname,
             'username' => $username,
-            'email' => $email,
+            'email' => $username,
             'password' => hash("sha256",$password),
             'password_plain' => $password,
             'role' => $role,
             'status' => $status,
             'company_id' => $cid,
             'profile_img' => $profile_img,
-            'address' => $address
+            'address' => $address,
+            'payscale_id' => $payscale_id,
+            'employee_number' => $emp_number
         );
         $query = $this->users_model->addNewEmployee($add);
         if ($query == true){
@@ -787,7 +793,14 @@ class Users extends MY_Controller {
 	    $get_user = $this->Users_model->getUser($user_id);
 	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
 
+	    $cid   = logged('company_id');		
         $roles = $this->users_model->getRoles();
+
+        if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		}else{
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		}
 
         $this->page_data['roles'] = $roles;
 	    $this->page_data['user'] = $get_user;
@@ -1335,7 +1348,8 @@ class Users extends MY_Controller {
         $web_access = $this->input->post('values[web_access]');
         $app_access = $this->input->post('values[app_access]');
         $profile_img = $this->input->post('values[profile_photo]');
-
+        $payscale_id = $this->input->post('values[empPayscale]');
+        $emp_number  = $this->input->post('values[emp_number]');
         $user = $this->Users_model->getUser($user_id);
 
         if( $profile_img == '' ){
@@ -1350,7 +1364,9 @@ class Users extends MY_Controller {
             'role' => $role,
             'status' => $status,            
             'profile_img' => $profile_img,
-            'address' => $address
+            'address' => $address,
+            'payscale_id' => $payscale_id,
+            'employee_number' => $emp_number
         );
 
         $user = $this->Users_model->update($user_id,$data);
@@ -1386,6 +1402,91 @@ class Users extends MY_Controller {
 
     	echo json_encode($json_data);
     }
+
+    public function pay_scale()
+	{	
+		$company_id = logged('company_id');
+		$role_id    = logged('role');
+		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
+		
+		
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		}else{
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($company_id);
+		}
+
+		$this->load->view('users/payscale/list', $this->page_data);
+	}
+
+	public function ajax_add_payscale()
+	{
+        $payscale_name = $this->input->post('payscale_name');
+        $company_id    =logged('company_id');
+        $data = array(
+            'payscale_name' => $payscale_name,
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+        $query = $this->PayScale_model->create($data);
+
+        $json_data = ['is_success' => true, 'msg' => ''];
+
+        echo json_encode($json_data);
+	}
+
+	public function ajax_edit_payscale()
+	{
+		$pid = $this->input->post('pid');
+	    $payscale = $this->PayScale_model->getById($pid);
+
+        $this->page_data['payscale'] = $payscale;
+	    $this->load->view('users/payscale/modal_edit_form', $this->page_data);
+	}
+
+	public function ajax_update_payscale()
+	{
+        $is_success = false;
+    	$msg = "";
+
+    	$payscale_name = $this->input->post('payscale_name');
+    	$pid = $this->input->post('pid');
+
+    	$data = array(
+            'payscale_name' => $payscale_name,
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $payscale = $this->PayScale_model->update($pid,$data);
+
+        $is_success = true;
+
+    	$json_data = [
+    		'is_success' => $is_success,
+    		'msg' => $msg
+    	];
+
+    	echo json_encode($json_data);
+	}
+
+	public function ajax_delete_payscale()
+	{
+        $is_success = false;
+    	$msg = "";
+
+    	$post = $this->input->post();
+    	$id = $this->PayScale_model->deletePayScale($post['pid']);
+
+        $is_success = true;
+
+    	$json_data = [
+    		'is_success' => $is_success,
+    		'msg' => $msg
+    	];
+
+    	echo json_encode($json_data);
+	}
 }
 
 

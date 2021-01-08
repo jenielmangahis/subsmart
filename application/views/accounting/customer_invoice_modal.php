@@ -9,204 +9,205 @@
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Customer
-                                    <select class="form-control">
-                                        <option></option>
-                                        <option>Add New</option>
-                                        <option>John Doe</option>
-                                        <option>Alpha</option>
-                                    </select>
+                    <form action="<?php echo site_url()?>accounting/addInvoice" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Customer
+                                        <select class="form-control" name="customer">
+                                            <option></option>
+                                            <option value="1">Add New</option>
+                                            <option value="21">John Doe</option>
+                                            <option value="3">Alpha</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        Customer email
+                                        <input type="text" class="form-control" name="customer_email">
+                                        <input type="checkbox"> Send later
+                                    </div>
+                                    <div class="col-md-3">
+                                        Online payments<br>
+                                        <input type="checkbox" name="online_payments[]" value="1" checked> Cards<br>
+                                        <input type="checkbox" name="online_payments[]" value="2" checked> Bank Transfer
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    Customer email
-                                    <input type="text" class="form-control">
-                                    <input type="checkbox"> Send later
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Billing address
+                                        <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        Terms
+                                        <select class="form-control" name="terms">
+                                            <option></option>
+                                            <option>Add New</option>
+                                            <option>John Doe</option>
+                                            <option>Alpha</option>
+                                        </select><br><br>
+                                        Ship via<br>
+                                        <input type="text" class="form-control" name="ship_via">
+                                    </div>
+                                    <div class="col-md-3">
+                                        Invoice date<br>
+                                        <input type="text" class="form-control" name="invoice_date"><br>
+                                        Shipping date<br>
+                                        <input type="text" class="form-control" name="shipping_date">
+                                    </div>
+                                    <div class="col-md-3">
+                                        Due date<br>
+                                        <input type="text" class="form-control" name="due_date"><br>
+                                        Tracking no.<br>
+                                        <input type="text" class="form-control" name="tracking_number">
+                                    </div>
+                                    
                                 </div>
-                                <div class="col-md-3">
-                                    Online payments<br>
-                                    <input type="checkbox" checked> Cards<br>
-                                    <input type="checkbox" checked> Bank Transfer
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Shipping to
+                                        <textarea style="height:100px;width:100%;" name="shipping_to_address"></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Billing address
-                                    <textarea style="height:100px;width:100%;"></textarea>
-                                </div>
-                                <div class="col-md-3">
-                                    Terms
-                                    <select class="form-control">
-                                        <option></option>
-                                        <option>Add New</option>
-                                        <option>John Doe</option>
-                                        <option>Alpha</option>
-                                    </select><br><br>
-                                    Ship via<br>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    Invoice date<br>
-                                    <input type="text" class="form-control"><br>
-                                    Shipping date<br>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    Due date<br>
-                                    <input type="text" class="form-control"><br>
-                                    Tracking no.<br>
-                                    <input type="text" class="form-control">
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        Tags <a href="#" style="float:right">Manage tags</a>
+                                        <input type="text" class="form-control">
+                                    </div>
                                 </div>
                                 
                             </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Shipping to
-                                    <textarea style="height:100px;width:100%;"></textarea>
-                                </div>
+                            <div class="col-md-6" align="right">
+                                AMOUNT<h2>$0.00</h2><br>
+                                Location of sale<br>
+                                <input type="text" class="form-control" style="width:200px;" name="location_scale">
                             </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control">
-                                </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered" id="reportstable">
+                                    <thead>
+                                        <th></th>
+                                        <th>#</th>
+                                        <th>PRODUCT/SERVICE</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>QTY</th>
+                                        <th>RATE</th>
+                                        <th>AMOUNT</th>
+                                        <th>TAX</th>
+                                        <th></th>
+                                    </thead>
+                                    <tr>
+                                        <td></td>
+                                        <td>1</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>2</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            <div>
+                        </div>
+                        <hr>
+                    
+                        <div class="row">
+                            <div class="col-md-1">
+                            <button class="btn1">Add lines</button>
                             </div>
-                            
+                            <div class="col-md-1">
+                            <button class="btn1">Clear all lines</button>
+                            </div>
+                            <div class="col-md-1">
+                            <button class="btn1">Add subtotal</button>
+                            </div>
+                            <div class="col-md-7">
+                            </div>
+                            <div class="col-md-1">
+                                <b>Subtotal</b>
+                            </div>
+                            <div class="col-md-1">
+                                <b>$0.00</b>
+                            </div>
                         </div>
-                        <div class="col-md-6" align="right">
-                            AMOUNT<h2>$0.00</h2><br>
-                            Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>PRODUCT/SERVICE</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>QTY</th>
-                                    <th>RATE</th>
-                                    <th>AMOUNT</th>
-                                    <th>TAX</th>
-                                    <th></th>
-                                </thead>
-                                <tr>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                        <div>
-                    </div>
-                <hr>
-                
-                    <div class="row">
-                        <div class="col-md-1">
-                           <button class="btn1">Add lines</button>
-                        </div>
-                        <div class="col-md-1">
-                           <button class="btn1">Clear all lines</button>
-                        </div>
-                        <div class="col-md-1">
-                           <button class="btn1">Add subtotal</button>
-                        </div>
-                        <div class="col-md-7">
-                        </div>
-                        <div class="col-md-1">
-                            <b>Subtotal</b>
-                        </div>
-                        <div class="col-md-1">
-                            <b>$0.00</b>
-                        </div>
-                    </div>
-                    <hr>
+                        <hr>
 
-                    <div class="row">
-                        <div class="col-md-2">
-                            Message on invoice<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
-                            Message on statement<br>
-                            <textarea style="height:100px;width:100%;"></textarea>
+                        <div class="row">
+                            <div class="col-md-2">
+                                Message on invoice<br>
+                                <textarea style="height:100px;width:100%;" name="message_on_invoice"></textarea><br>
+                                Message on statement<br>
+                                <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                            <div class="col-md-2">
+                                Taxable subtotal <b>$0.00</b><br>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td></td>
+                                        <td><b>$0.00</b><br><a href="">See the math</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shipping</td>
+                                        <td><input type="text" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tax on shipping</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Balance due</td>
+                                        <td>$0.00</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                        <div class="col-md-8">
-                        </div>
-                        <div class="col-md-2">
-                            Taxable subtotal <b>$0.00</b><br>
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td></td>
-                                    <td><b>$0.00</b><br><a href="">See the math</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping</td>
-                                    <td><input type="text" class="form-control"></td>
-                                </tr>
-                                <tr>
-                                    <td>Tax on shipping</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total</td>
-                                    <td>$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Balance due</td>
-                                    <td>$0.00</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="file-upload">
-                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="file-upload">
+                                    <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
 
-                                <div class="image-upload-wrap">
-                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
-                                    <div class="drag-text">
-                                    <i>Drag and drop files here or click the icon</i>
+                                    <div class="image-upload-wrap">
+                                        <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" name="file_name/>
+                                        <div class="drag-text">
+                                        <i>Drag and drop files here or click the icon</i>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="file-upload-content">
-                                    <img class="file-upload-image" src="#" alt="your image" />
-                                    <div class="image-title-wrap">
-                                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                    <div class="file-upload-content">
+                                        <img class="file-upload-image" src="#" alt="your image" />
+                                        <div class="image-title-wrap">
+                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-8">
+                            </div>
                         </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <hr>
-
+                        <hr>
+                    </form>
 
                 </div>
                 

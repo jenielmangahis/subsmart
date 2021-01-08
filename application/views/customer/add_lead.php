@@ -113,6 +113,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row custom__border">
                 <div class="col-md-12">
                         <form method="post">
+                             <input type="hidden" name="company_id" value="<?php echo $company_id; ?>">
                                 <div class="col-md-12">
                                     <div class="row">
                                         <table cellpadding="0" cellspacing="0" width="500" style="border-collapse: collapse;">

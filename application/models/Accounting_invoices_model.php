@@ -14,7 +14,7 @@ class Accounting_invoices_model extends MY_Model {
 	    $vendor = $this->db->get('accounting_invoices');
 	    return $vendor->result();
     }
-	public function createInvoice($data){
+	public function createInvoice($data,$data2){
 	    $vendor = $this->db->insert('accounting_invoices', $data);
 	    $insert_id = $this->db->insert_id();
 

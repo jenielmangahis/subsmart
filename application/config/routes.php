@@ -244,6 +244,7 @@ $route['register/subscribe'] = 'register/subscribe';
 
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
+$route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -502,6 +503,11 @@ $route['color_settings/add_new'] = 'Color_Settings/add_new';
 
 //Users
 $route['users/load_edit_employee'] = 'Users/ajax_edit_employee';
+$route['users/_update_employee'] = 'Users/ajaxUpdateEmployee';
 $route['users/_update_employee_password'] = 'Users/ajaxUpdateEmployeePassword';
+$route['users/_add_payscale'] = 'Users/ajax_add_payscale';
+$route['users/_edit_payscale'] = 'Users/ajax_edit_payscale';
+$route['users/_update_payscale'] = 'Users/ajax_update_payscale';
+$route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 
 
