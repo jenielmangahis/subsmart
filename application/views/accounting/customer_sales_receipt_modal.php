@@ -1,13 +1,15 @@
-<!-- Modal for add account-->
 <div class="full-screen-modal">
-    <div id="addsalesreceiptModal" class="modal fade modal-fluid" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content" style="height: 100%;">
-                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Sales Receipt </h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
-                </div>
+   <div id="addsalesreceiptModal" class="modal fade modal-fluid" role="dialog">
+      <div class="modal-dialog">
+         <!-- Modal content-->
+         <div class="modal-content">
+            <div class="modal-header">
+               <div class="modal-title">
+                  <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                  Sales Receipt
+               </div>
+               <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+            </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">

@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'gator4155.hostgator.com',
-	'username' => 'admintom_admin',
-	'password' => 'SmarTrac1$!',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
 	'database' => 'admintom_nsmart_companies',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

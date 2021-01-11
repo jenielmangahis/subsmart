@@ -16,6 +16,9 @@ class Dashboard extends MY_Controller {
         $this->load->model('jobs_model');
         $this->load->model('estimate_model');
         $this->load->model('invoice_model');
+        $this->load->model('Crud', 'crud'); 
+        $this->load->model('taskhub_status_model');
+
         add_css(array(
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             "assets/css/accounting/accounting.css",
@@ -61,6 +64,26 @@ class Dashboard extends MY_Controller {
         $this->page_data['in_now'] = $this->timesheet_model->getInNow();
         $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['dashboard_sort'] = "report2,newsletter,bulletin";
+
+        $this->page_data['all_leads']           = $this->crud->total_record("ac_leads","leads_id!=0");
+        $this->page_data['assigned_leads']      = $this->crud->total_record("ac_leads","fk_assign_id!=0");
+        $this->page_data['unassigned_leads']    = $this->crud->total_record("ac_leads","fk_assign_id=0");
+        $this->page_data['converted_leads']     = $this->crud->total_record("ac_leads","status='Converted'");
+
+        $this->page_data['all_tasks']           = $this->crud->total_record("tasks","task_id!=0");
+        $this->page_data['my_assig_tasks']      = $this->crud->total_record("tasks","created_by='".logged('id')."'");
+        $today_date = date("Y-m-d");
+        $this->page_data['due_today_tasks']      = $this->crud->total_record("tasks","estimated_date_complete='".$today_date."'");
+
+        $status_arr = array();
+        $status_selection = $this->taskhub_status_model->get();
+        foreach ($status_selection as $status_selec) 
+        {
+            $task_status = $this->crud->total_record("tasks","status_id='".$status_selec->status_id."'");
+            $status_arr[] = $status_selec->status_text."@#@".$task_status;
+        }
+        $this->page_data['status_arr'] = $status_arr;
+        
 		$this->load->view('dashboard', $this->page_data);
 	}
 

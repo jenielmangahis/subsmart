@@ -5,6 +5,7 @@ class Accounting_modals extends MY_Controller {
 
     private $upload_path = "./uploads/accounting/attachments/";
     public $result = null;
+    public $page_data = [];
 
     public function __construct() {
         parent::__construct();
@@ -18,28 +19,39 @@ class Accounting_modals extends MY_Controller {
             'assets/js/accounting/modal-forms.js'
         ));
 
+        $this->load->model('vendors_model');
         $this->load->model('accounting_transfer_funds_model');
+        $this->load->model('accounting_pay_down_credit_card_model');
 		$this->load->library('form_validation');
     }
 
     public function index($view ="") {
         if ($view) {
-            $this->load->view("accounting/". $view);
+            switch ($view) {
+                case 'pay_down_credit_card_modal':
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                break;
+            }
+
+            $this->load->view("accounting/". $view, $this->page_data);
         }
     }
 
     public function action() {
         $data = $this->input->post();
-        $form = $data['modal_name'];
+        $modalName = $data['modal_name'];
 
         if(isset($_FILES['attachments'])) {
             $files = $_FILES['attachments'];
         }
 
         try {
-            switch ($form) {
-                case 'transfer':
+            switch ($modalName) {
+                case 'transferModal':
                     $this->result = $this->transfer_funds($data, $files);
+                break;
+                case 'payDownCreditModal':
+                    $this->result = $this->pay_down_credit_card($data, $files);
                 break;
             }
         } catch (\Exception $e) {
@@ -81,7 +93,7 @@ class Accounting_modals extends MY_Controller {
     
             $return['data'] = $transferId;
             $return['success'] = $transferId ? true : false;
-            $return['message'] = $transferId ? 'Transfer Successfully!' : 'An expected error occured!';
+            $return['message'] = $transferId ? 'Transfer Successfully!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -100,5 +112,44 @@ class Accounting_modals extends MY_Controller {
         }
 
         return $filenames;
+    }
+
+    private function pay_down_credit_card($data, $files) {
+        $this->form_validation->set_rules('credit_card', 'Credit Card', 'required');
+        $this->form_validation->set_rules('payee', 'Payee', 'required');
+        $this->form_validation->set_rules('amount', 'Amount', 'required');
+        $this->form_validation->set_rules('payment_date', 'Date of Payment', 'required');
+        $this->form_validation->set_rules('bank_account', 'Date of Payment', 'required');
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $filenames = $this->move_files($files, 'pay_down_credit_card');
+
+            $insertData = [
+                'credit_card_id' => $data['credit_card'],
+                'payee_id' => $data['payee'],
+                'amount' => $data['amount'],
+                'date' => $data['payment_date'],
+                'bank_account_id' => $data['bank_account'],
+                'memo' => $data['memo'],
+                'attachments' => json_encode($filenames),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
+
+            $payDownId = $this->accounting_pay_down_credit_card_model->create($insertData);
+
+            $return['data'] = $payDownId;
+            $return['success'] = $payDownId ? true : false;
+            $return['message'] = $payDownId ? 'Transfer Successfully!' : 'An unexpected error occured!';
+        }
+
+        return $return;
     }
 }

@@ -19,15 +19,7 @@ class Taskhub extends MY_Controller {
             die();
         }
 
-        $role_id = logged('role');
-        $comp_id = logged('company_id');
-
-        if( $role_id == 1 || $role_id == 2 ){
-        	$this->page_data['tasks'] = getAllTasks();
-        }else{
-        	$this->page_data['tasks'] = getAllCompanyTasks($comp_id);
-        }
-		
+		$this->page_data['tasks'] = getTasks();
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$this->load->view('workcalender/taskhub/list', $this->page_data);
@@ -55,12 +47,13 @@ class Taskhub extends MY_Controller {
 		}
 
 		$taskid = trim($this->input->post('taskid'));
+		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 		if(($id > 0) || ($taskid > 0)){
 			if($id > 0){
 				$taskid = $id;
 			}
 			$this->page_data['task'] = $this->taskhub_model->getById($taskid);
-			$this->page_data['status_selection'] = $this->taskhub_status_model->get();
+			
 			$this->page_data['selected_participants'] = $this->db->query(
 															'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
 															'left join users b on b.id = a.user_id '.
@@ -369,5 +362,4 @@ class Taskhub extends MY_Controller {
 		echo json_encode($result);
 	}
 }
-
 ?>

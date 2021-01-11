@@ -10575,3 +10575,47 @@ select#select-employee {
     border-right: none;
 }
 /* **** End Audit Page **** */ 
+/**/
+
+.MuiButton-textPrimary:hover {
+    background-color: rgba(33, 150, 243, 0.08);
+}
+.MuiCardHeader-action .jss57 {
+    padding: 6px;
+    margin-left: 4px;
+}
+.MuiCardHeader-action .MuiTouchRipple-root {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+    position: absolute;
+    border-radius: inherit;
+    pointer-events: none;
+}
+.jss107 {
+    float: left;
+    width: 100%;
+    padding: 16px !important;
+    text-transform: none;
+}
+.jss58 {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    line-height: 1px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.MuiCardHeader-action .MuiIconButton-root {
+    float: left;
+    width: 100%;
+}
+.MuiCardHeader-action .jss57 {
+    float: left;
+    width: 100%;
+}
+.progress-fill-card .top-block {
+    justify-content: space-between;
+}

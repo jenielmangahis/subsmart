@@ -6,9 +6,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/schedule'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-    	<div class="container-fluid">
-    		<div class="card card_holder">
-    			<div class="page-title-box">
+        <div class="container-fluid">
+            <div class="card card_holder">
+                <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
                             <h1 class="page-title">Task Hub</h1>
@@ -20,8 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
                                     <a href="#" class="btn btn-primary" id="btn-th-open-search"><i class="fa fa-search"></i> Search Task</a>
-                                    <a href="<?php echo base_url('taskhub/entry'); ?>" class="btn btn-primary"><i
-                                                class="fa fa-plus"></i> Add Task</a>
+                                    <a href="<?php echo base_url('taskhub/entry'); ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Add Task</a>
                                 </div>
                             </div>
                         </div>
@@ -46,27 +45,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                	<?php foreach ($tasks as $key => $row) { ?>
-	                                	<tr>
-					                        <td width="60"><?php echo $row->task_id ?></td>
-					                        <td>
-					                           <a href="<?php echo url('taskhub/view/' . $row->task_id) ?>"><?php echo $row->subject; ?></a>
-					                        </td>
-					                        <td>
-					                           <?php echo $row->status_text; ?>
-					                        </td>
-					                        <td>
-					                        	<?php
-					                        		echo $row->date_created_formatted;
-					                        	?>
-					                        </td>
-					                        <td>
-					                           <a href="<?php echo url('taskhub/entry/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                    <?php foreach ($tasks as $key => $row) { ?>
+                                        <tr>
+                                            <td width="60"><?php echo $row->task_id ?></td>
+                                            <td>
+                                               <a href="<?php echo url('taskhub/view/' . $row->task_id) ?>"><?php echo $row->subject; ?></a>
+                                            </td>
+                                            <td>
+                                               <?php echo $row->status_text; ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                    echo $row->date_created_formatted;
+                                                ?>
+                                            </td>
+                                            <td>
+                                               <a href="<?php echo url('taskhub/entry/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
 
                                                <a href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Add Update" data-toggle="tooltip"><i class="fa fa-sticky-note-o"></i></a>
-					                        </td>
-					                     </tr>
-					                <?php } ?>
+
+                                               <a href="<?php echo url('taskhub/view/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="View Comments" data-toggle="tooltip"><i class="fa fa-commenting-o"></i></a>
+                                            </td>
+                                         </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -79,9 +80,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <!-- /.box -->
                 </section>
                 <!-- end row -->
-    		</div>	
-    	</div>
-    	<!-- end container-fluid -->
+            </div>  
+        </div>
+        <!-- end container-fluid -->
     </div>
 </div>
 
@@ -191,6 +192,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                       '<a href="'+ base_url +'taskhub/addupdate/'+ task.task_id +'" class="btn btn-sm btn-default" title="Add Update" data-toggle="tooltip"><i class="fa ' +
                                       'fa-sticky-note-o"></i></a>' +
+
+                                      '<a href="'+ base_url +'taskhub/view/'+ task.task_id +'" class="btn btn-sm btn-default" title="View Comments" data-toggle="tooltip"><i class="fa fa-commenting-o"></i></a>' +
                                             
                                       '</td>';
                         append += '</tr>';

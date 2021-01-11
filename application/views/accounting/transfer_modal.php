@@ -4,7 +4,6 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <form onsubmit="submitModalForm(event)" id="modal-form">
-                <input type="hidden" name="modal_name" value="transfer">
                 <div class="modal-content" style="height: 100%;">
                     <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                         <h4 class="modal-title">Transfer</h4>

@@ -63046,3 +63046,47 @@ body .ab-feed-buttons-wrapper {
   z-index: 1101;
   position: fixed;
 }
+.jss96 {
+  display: flex;
+}
+.jss97 {
+  height: 24px;
+  margin-top: 4px;
+  background-color: #69F0AE;
+}
+.c169 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.5em;
+}
+.c171 {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1.46429em;
+  margin: 0px;
+}
+.c160 {
+  padding: 0 12px;
+  min-height: 35px;
+  border-bottom: 1px dashed #E0E0E0;
+}
+.jss88 {
+  border-bottom: 1px solid #E0E0E0;
+  background-color: #F5F5F5;
+}
+.jss81 {
+  bottom: 27px;
+  position: absolute;
+}
+.MuiCardHeader-action .MuiIconButton-root {
+  padding: 9px; 
+  height: 40px;
+  width: 40px !important;
+}
+.MuiCardContent-root.jss60 {
+  padding: 16px 16px 0px 16px;
+}

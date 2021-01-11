@@ -27,6 +27,7 @@ const submitModalForm = (event) => {
     event.preventDefault();
 
     var data = new FormData(document.getElementById('modal-form'));
+    data.append('modal_name', $('.full-screen-modal .modal').attr('id'));
 
     $.ajax({
         url: '/accounting/submit-modal-form',
@@ -36,7 +37,6 @@ const submitModalForm = (event) => {
         contentType: false,
         success: function(result) {
             var res = JSON.parse(result);
-            var text = "";
 
             $('.modal').modal('hide');
 

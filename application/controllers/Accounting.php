@@ -1946,30 +1946,32 @@ class Accounting extends MY_Controller {
             'location_scale' => $this->input->post('location_scale'),
             'message_on_invoice' => $this->input->post('message_on_invoice'),
             'message_on_statement' => $this->input->post('message_on_statement'),
-            'attachments' => $this->input->post('file_name'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'test',
             'status' => 1,
             'created_by' => logged('id'),
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
         );
 
-        $new_data2 = array(
-            'invoice_id' => '0',
-            'products' => $this->input->post('products'),
-            'description' => $this->input->post('description'),
-            'qty' => $this->input->post('qty'),
-            'rate' => $this->input->post('rate'),
-            'amount' => $this->input->post('amount'),
-            'tax' => $this->input->post('tax'),
-            'created_by' => logged('id'),
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
-        );
-
-        $addQuery = $this->accounting_invoices_model->createInvoice($new_data,$new_data2);
+        $addQuery = $this->accounting_invoices_model->createInvoice($new_data);
 
         if($addQuery > 0){
-            echo json_encode($addQuery);
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'invoice_id' => $addQuery,
+                'products' => $this->input->post('products'),
+                'description' => $this->input->post('description'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'created_by' => logged('id'),
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $addQuery = $this->accounting_invoices_model->createInvoiceProd($new_data2);
+            redirect('accounting/banking');
         }
         else{
             echo json_encode(0);
@@ -2472,5 +2474,10 @@ class Accounting extends MY_Controller {
     }
     public function modal_estimate(){
         $this->load->view('accounting/customer_estimate_modal');
+    }
+
+    public function purchase_order()
+    {
+        echo "string";
     }
 }
