@@ -75,10 +75,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                      <?php foreach($jobs as $job) : ?>
                                         <tr>
-                                            <td class="text-center"><input type="checkbox" class="jobCheckboxTd" data-id="<?php echo $job->jobs_id; ?>" value=""></td>
+                                            <td class="text-center"><input type="checkbox" class="jobCheckboxTd" data-id="<?php echo $job->id; ?>" value=""></td>
                                             <td class="pl-3"><?php echo $job->job_number; ?></td>
-                                            <td class="pl-3"><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
-                                            <td class="pl-3"><?php echo ucwords($job->job_name); ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
+                                            <td class="pl-3"><?php echo date_format(date_create($job->date_created),"Y/m/d"); ?></td>
+                                            <td class="pl-3"><?php echo ucwords($job->job_name); ?> - <?php echo getCustomerFullName($job->customer_id); ?></td>
                                             <td class="pl-3"><?php echo $job->status; ?></td>
                                             <td class="pl-3">$0.00</td>
                                             <td class="pl-3"><?php echo $job->status; ?></td>
@@ -91,7 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url() .'job/new_job?job_num=' . $job->job_number ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
                                                         <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url() .'job/delete?id=' . $job->jobs_id ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url() .'job/delete?id=' . $job->id ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-trash-o icon"></span> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             </td>

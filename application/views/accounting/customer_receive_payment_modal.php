@@ -1,20 +1,23 @@
 <!-- Modal for add account-->
 <div class="full-screen-modal">
-    <div id="addreceivepaymentModal" class="modal fade modal-fluid" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content" style="height: 100%;">
-                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Receive Payment</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
-                </div>
+   <div id="addreceivepaymentModal" class="modal fade modal-fluid" role="dialog">
+      <div class="modal-dialog">
+         <!-- Modal content-->
+         <div class="modal-content">
+            <div class="modal-header">
+               <div class="modal-title">
+                  <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                  Receive Payment
+               </div>
+               <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+            </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control">
+                                    <select class="form-control" name="customer_id">
                                         <option></option>
                                         <option>Add New</option>
                                         <option>John Doe</option>
@@ -31,13 +34,13 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment date
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="payment_date">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment method<br>
-                                    <select class="form-control">
+                                    <select class="form-control" name="payment_method">
                                         <option></option>
                                         <option>Add New</option>
                                         <option>John Doe</option>
@@ -46,11 +49,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     Reference no.
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="ref_number">
                                 </div>
                                 <div class="col-md-3">
                                     Deposit to
-                                    <select class="form-control">
+                                    <select class="form-control" name="deposit_to">
                                         <option>Cash on hand</option>
                                         <option>AAA</option>
                                         <option>AAA</option>
@@ -63,7 +66,7 @@
                         <div class="col-md-6" align="right">
                             AMOUNT RECEIVED<h2>$0.00</h2><br>
                             Amount received<br>
-                            <input type="text" class="form-control" style="width:200px;">
+                            <input type="text" class="form-control" style="width:200px;" name="amount_received">
                         </div>
                     </div>
                     <hr>
@@ -71,12 +74,12 @@
                     <div class="row">
                         <div class="col-md-2">
                             Memo<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="memo"></textarea><br>
                             <div class="file-upload">
                                 <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
 
                                 <div class="image-upload-wrap">
-                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" name="attachments"/>
                                     <div class="drag-text">
                                     <i>Drag and drop files here or click the icon</i>
                                     </div>

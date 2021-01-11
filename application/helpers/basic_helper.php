@@ -741,6 +741,22 @@ if (!function_exists('getLoggedFullName')) {
     }
 }
 
+if (!function_exists('getCustomerFullName')) {
+
+    function getCustomerFullName($customerId)
+    {
+        $CI =& get_instance();
+        $CI->db->select('*');
+        $CI->db->from('customers');
+        $CI->db->where('id', $customerId);
+        $customer = $CI->db->get()->row();
+
+        if ($customer) {
+            return ucwords($customer->contact_name);
+        }
+    }
+}
+
 if (!function_exists('getJobAddress')) {
 
     function getJobAddress($addressId)

@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="job_name"><?php echo (!empty($job_data)) ? date_format(date_create($job_data->created_date),"Y-m-d") : date('Y-m-d'); ?></label>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <input type="hidden" id="jobId" name="jobId" value="<?php echo(!empty($job_data)) ? $job_data->jobs_id : 0; ?>">
+                                    <input type="hidden" id="jobId" name="jobId" value="<?php echo(!empty($job_data)) ? $job_data->id : 0; ?>">
                                     <?php if(empty($job_data)) : ?>
                                     <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
                                     <?php else : ?>
@@ -218,7 +218,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td class="pl-3">Invoice</td>
                                                     <td class="pl-3"><?php echo $invoice->description; ?></td>
                                                     <td class="pl-3"><?php echo $invoice->status; ?></td>
-                                                    <td class="pl-3"><?php echo date_format(date_create($invoice->created_date),"d/m/Y"); ?></td>
+                                                    <td class="pl-3"><?php echo date_format(date_create($invoice->date_created),"d/m/Y"); ?></td>
                                                     <td class="pl-3">&nbsp;</td>
                                                     <td class="pl-3"><?php echo getLoggedFullName($invoice->created_by)?></td>
                                                     <td class="pl-3">

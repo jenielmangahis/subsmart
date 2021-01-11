@@ -444,6 +444,7 @@
                         $ts_logs_h = getEmployeeLogs();
                         $analog_active = null;
                         $attn_id = null;
+                        $minutes = 0;
                         //                        $expected_endbreak = null;
                         $shift_end = 0;
                         $overtime_status = 1;

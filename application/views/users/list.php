@@ -284,7 +284,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="">Profile Image</label>
-                                <div id="employeeProfilePhoto1" class="dropzone1" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                <div id="employeeProfilePhotoUpdate" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                     <div class="dz-message" style="margin: 20px;border">
                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -481,8 +481,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                     </div>
                                 </div>
-                                <input type="hidden" name="img_id" id="photoId">
-                                <input type="hidden" name="profile_photo" id="photoName">
+                                <input type="hidden" name="img_id" id="photoIdAdd">
+                                <input type="hidden" name="profile_photo" id="photoNameAdd">
                                 
                                 <div>
                                     <label for="">Payscale</label>
@@ -869,7 +869,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $.each($('#editEmployeeProfileForm').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
             });
-            console.log(values);
             if(values['profile_img']){
                 $.ajax({
                     url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
@@ -1031,6 +1030,43 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         var fname = [];
         var selected = [];
         var profilePhoto = new Dropzone('#employeeProfilePhoto', {
+            url: base_url + 'users/profilePhoto',
+            acceptedFiles: "image/*",
+            maxFilesize:20,
+            maxFiles: 1,
+            addRemoveLinks:true,
+            init: function() {
+                this.on("success", function(file,response) {
+                    var file_name = JSON.parse(response)['photo'];
+                    fname.push(file_name.replace(/\"/g, ""));
+                    selected.push(file);
+                    $('#photoIdAdd').val(JSON.parse(response)['id']);
+                    $('#photoNameAdd').val(JSON.parse(response)['photo']);
+                });
+            },
+            removedfile:function (file) {
+                var name = fname;
+                var index = selected.map(function(d, index) {
+                    if(d == file) return index;
+                }).filter(isFinite)[0];
+                $.ajax({
+                    type:"POST",
+                    url: base_url + 'users/removeProfilePhoto',
+                    dataType:'json',
+                    data:{name:name,index:index},
+                    success:function (data) {
+                        if (data == 1){
+                            $('#photoId').val(null);
+                        }
+                    }
+                });
+                //remove thumbnail
+                var previewElement;
+                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+            }
+        });
+
+        var profilePhoto = new Dropzone('#employeeProfilePhotoUpdate', {
             url: base_url + 'users/profilePhoto',
             acceptedFiles: "image/*",
             maxFilesize:20,

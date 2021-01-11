@@ -86,6 +86,17 @@ class Register extends MY_Controller {
 			            'status' => 1
 			        ]);
 
+                    $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+                    if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
+                    {
+                        $leads_input['tablename']   = "ac_leads";
+                        $leads_input['field_name']  = "leads_id";
+                        $leads_input['id']          = $reg_temp_user_id;
+                        $this->customer_ad_model->delete($leads_input);
+
+                        $this->session->unset_userdata('reg_temp_user_id');
+                    }
+
                 	$payment_complete = true;
                 	$payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
 
@@ -249,6 +260,27 @@ class Register extends MY_Controller {
         }
 
         //echo $is_authentic;
+        $leads_input = array(
+                        'firstname'     => $post['firstname'],
+                        'lastname'      => $post['lastname'],
+                        'phone_cell'    => $post['phone'],
+                        'email_add'     => $post['a_email'],
+                        'address'       => $post['business_address'],
+                    );
+
+        $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+        if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
+        {
+            $leads_input['leads_id'] = $reg_temp_user_id;
+            $this->customer_ad_model->update_data($leads_input, "ac_leads", "leads_id");
+        }
+        else
+        {
+            $reg_temp_user_id = $this->customer_ad_model->add($leads_input, "ac_leads");
+
+            $this->session->set_userdata('reg_temp_user_id', $reg_temp_user_id);
+        }
+
         $is_authentic = 1;
         $json_data = array('is_authentic' => $is_authentic);
         echo json_encode($json_data);        
@@ -405,6 +437,17 @@ class Register extends MY_Controller {
             ));
 
             $this->users_model->update($uid, array('status' => 1));
+
+            $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+            if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
+            {
+                $leads_input['tablename'] = "ac_leads";
+                $leads_input['field_name'] = "leads_id";
+                $leads_input['id'] = $reg_temp_user_id;
+                $this->customer_ad_model->delete($leads_input);
+
+                $this->session->unset_userdata('reg_temp_user_id');
+            }
 
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
@@ -628,6 +671,17 @@ class Register extends MY_Controller {
                 'status' => 1
             ));
 
+            $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+            if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
+            {
+                $leads_input['tablename'] = "ac_leads";
+                $leads_input['field_name'] = "leads_id";
+                $leads_input['id'] = $reg_temp_user_id;
+                $this->customer_ad_model->delete($leads_input);
+
+                $this->session->unset_userdata('reg_temp_user_id');
+            }
+            
             $is_valid = true;
             $msg      = 'Registration completed. Redirecting to login page.';
 

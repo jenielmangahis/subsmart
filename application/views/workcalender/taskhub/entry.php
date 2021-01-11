@@ -30,12 +30,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 ?>
 <div class="wrapper" role="wrapper">
-	<?php include viewPath('includes/sidebars/schedule'); ?>
+    <?php include viewPath('includes/sidebars/schedule'); ?>
 
-	<!-- page wrapper start -->
+    <!-- page wrapper start -->
     <div wrapper__section>
-    	<div class="container-fluid">
-    		<div class="page-title-box">
+        <div class="container-fluid">
+            <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title"><?php if(isset($id)){ echo 'Edit Task'; }else{echo 'New Task';} ?></h1>
@@ -194,11 +194,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <!-- end card -->
                     </div>
-                </div>         	
+                </div>          
 
-           	<?php echo form_close(); ?>
-    	</div>
-    	<!-- end container-fluid -->
+            <?php echo form_close(); ?>
+        </div>
+        <!-- end container-fluid -->
     </div>
 </div>
 <!-- page wrapper end -->

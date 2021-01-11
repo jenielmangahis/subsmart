@@ -585,7 +585,12 @@ $(function(){
         }
 
         if( isValid ){
-
+        	var firstname 			= $("input[name=firstname]").val();
+        	var lastname 			= $("input[name=lastname]").val();
+        	var phone 				= $("input[name=phone]").val();
+        	var business_address 	= $("#business_address").val(); 
+        	//var number_of_employee 	= $('#number_of_employee').find(":selected").val();
+        	//var industry_type_id 	= $('#industry_type_id').find(":selected").val();
         	var a_email = $("#email_address").val(); 
         	var a_bname = $(".business_name").val();
 
@@ -599,7 +604,11 @@ $(function(){
 	               url: authenticating_url,
 	               data: {
 	               		a_email:a_email,
-	               		a_bname:a_bname
+	               		a_bname:a_bname,
+	               		firstname:firstname,
+	               		lastname:lastname,
+	               		phone:phone,
+	               		business_address:business_address,
 	               	},
 	               success: function(o)
 	               {

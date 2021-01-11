@@ -1188,6 +1188,8 @@ $(document).ready(function () {
                             icon: 'warning'
                         });
                 }
+                $("#new-popup").css("display", "none");
+                $('.modal-backdrop').remove();
                 showExpenseTransactionsTable();
                 $('#expenseAttachment').next().next($('.dz-preview').remove());
                 $('#expenseAttachment').next($('.dz-message').css({"display":"inherit"}));

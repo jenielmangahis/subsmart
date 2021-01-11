@@ -196,8 +196,12 @@
                                 </div>
 
                                 <div class="timesheet-table-footer">
-                                    <button type="button" class="btn btn-outline-secondary border">Add lines</button>
-                                    <button type="button" class="btn btn-outline-secondary border">Clear all lines</button>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-outline-secondary border">Add lines</button>
+                                            <button type="button" class="btn btn-outline-secondary border">Clear all lines</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

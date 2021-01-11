@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
+            <div class="page-title-box accouting-modal">
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/expenses')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="expenses")?:'-active';?>" style="text-decoration: none">Expenses</a>
@@ -538,8 +538,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <span>$113,101.00</span>
                             </div>
                             <div class="col-md-3" style="text-align: right">
-                                <div>AMOUNT</div>
+                            <div class="d-flex align-items-center mt-2 justify-content-end">
+                                <div class="mr-4">AMOUNT</div>
                                 <div><h1 id="h1_amount-check">$0.00</h1></div>
+                            </div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px">
@@ -547,12 +549,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <label for="">Mailing address</label>
                                 <textarea name="mailing_address" id="check_mailing_address" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="">Payment date</label>
                                 <input type="date" name="payment_date" id="payment_date" class="form-control">
                             </div>
-                            <div class="col-md-3"></div>
-                            <div class="col-md-2">
+                            <!-- <div class="col-md-3"></div> -->
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Check no.</label>
                                     <input type="text" name="check_num" id="check_number" class="form-control" value="1">
@@ -561,12 +563,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <input type="checkbox" name="print_later" id="print_later" value="1">
                                     <label for="">Print later</label>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
+                                    <label for="">Permit no.</label>
+                                    <input type="text" name="permit_num" id="permit_number" class="form-control">
+                                </div> -->
+                            </div>
+                            <div class="col-md-3">
+                            <div class="form-group">
                                     <label for="">Permit no.</label>
                                     <input type="text" name="permit_num" id="permit_number" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-2"></div>
                         </div>
                         <div class="table-container">
                             <div class="table-loader">
@@ -632,12 +639,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line">Clear all lines</button>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="">Memo</label>
                             <textarea name="name" id="checkMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <div class="row">
+                            <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Memo</label>
+                                <textarea name="name" id="checkMemo" cols="30" rows="3" placeholder="" style="width: 100%;resize: none;" ></textarea>
+                            </div>
+                            </div>
                                 <div class="col-md-4">
                                     <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                                     <span>Maximum size: 20MB</span>
@@ -647,17 +660,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
                                         </div>
                                     </div>
-                                </div>
+                                
                                 <div class="col-md-8" style="padding-top: 30px;">
                                     <div class="file-container-list" id="file-list-check"></div>
                                 </div>
+                                <div class="form-group">
+                                        <div class="show-existing-file">
+                                            <a href="#" id="showExistingFile">Show existing file</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <div class="show-existing-file">
                                 <a href="#" id="showExistingFile">Show existing file</a>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="privacy">
                             <a href="#">Privacy</a>
                         </div>
@@ -870,16 +889,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									</select>
 								</div>
 								<div class="col-md-9" style="text-align: right">
-									<div>Balance Due</div>
+                                  <div class="d-flex align-items-center mt-2 justify-content-end">
+									<div class="mr-4">Balance Due</div>
 									<div><h1 id="h1_amount-bill">$0.00</h1></div>
+                                    </div>
 								</div>
 							</div>
-							<div class="row" style="margin-top: 20px;width: 80%;">
-								<div class="col-md-3">
+							<div class="row" style="margin-top: 20px;width: 100%;margin-bottom: 20px;">
+								<div class="col">
 									<label for="">Mailing address</label>
 									<textarea name="mailing_address" id="billMailingAddress" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
 								</div>
-								<div class="col-md-3">
+								<div class="col">
 									<label for="">Terms</label>
 									<select name="terms" id="billTerms" class="form-control select2-bill-terms">
 										<option></option>
@@ -889,19 +910,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<option>Net 60</option>
 									</select>
 								</div>
-								<div class="col-md-2">
+								<div class="col">
 									<label for="">Bill date</label>
 									<input type="date" name="bill_date" id="billDate" class="form-control">
 								</div>
-								<div class="col-md-2">
+								<div class="col">
 									<label for="">Due date</label>
 									<input type="date" name="due_date" id="billDueDate" class="form-control">
 								</div>
-								<div class="col-md-2">
+								<div class="col">
 									<div class="form-group">
 										<label for="">Bill no.</label>
 										<input type="text" name="bill_num" id="billNumber" class="form-control" value="">
 									</div>
+									<!-- <div class="form-group">
+										<label for="">Permit no.</label>
+										<input type="text" name="permit_num" id="billPermitNumber" class="form-control">
+									</div> -->
+								</div>
+                                <div class="col col-md-2">
+									<!-- <div class="form-group">
+										<label for="">Bill no.</label>
+										<input type="text" name="bill_num" id="billNumber" class="form-control" value="">
+									</div> -->
 									<div class="form-group">
 										<label for="">Permit no.</label>
 										<input type="text" name="permit_num" id="billPermitNumber" class="form-control">
@@ -970,12 +1001,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<button type="button" class="add-remove-line" id="add-four-line-bill">Add lines</button>
 								<button type="button" class="add-remove-line" id="clear-all-line-bill">Clear all lines</button>
 							</div>
-							<div class="form-group">
+							<!-- <div class="form-group">
 								<label for="">Memo</label>
 								<textarea name="memo" id="billMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
-							</div>
+							</div> -->
 							<div class="form-group">
                                 <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Memo</label>
+                                        <textarea name="memo" id="billMemo" cols="30" rows="3" placeholder="" style="width: 100%;resize: none;" ></textarea>
+                                    </div>
+                                    </div>
                                     <div class="col-md-4">
                                         <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                                         <span>Maximum size: 20MB</span>
@@ -985,17 +1022,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    
                                     <div class="col-md-8" style="padding-top: 30px;">
                                         <div class="file-container-list" id="file-list-bill"></div>
                                     </div>
-                                </div>
-							</div>
-                            <div class="form-group">
+                                    <div class="form-group">
                                 <div class="show-existing-file">
                                     <a href="#" id="showExistingFile">Show existing file</a>
                                 </div>
                             </div>
+                                </div>
+                                </div>
+							</div>
+                            <!-- <div class="form-group">
+                                <div class="show-existing-file">
+                                    <a href="#" id="showExistingFile">Show existing file</a>
+                                </div>
+                            </div> -->
                             <div class="privacy">
                                 <a href="#">Privacy</a>
                             </div>
@@ -1079,18 +1122,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <span>$133,101.00</span>
                             </div>
                             <div class="col-md-3" style="text-align: right">
-                                <div>AMOUNT</div>
+                              <div class="d-flex align-items-center mt-2 justify-content-end">
+                                <div class="mr-4">AMOUNT</div>
                                 <div><h1 id="h1_amount-expense">$0.00</h1></div>
+                                    </div>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 20px;width: 80%;">
+                        <div class="row" style="margin-top: 20px;">
                             <div class="col-md-3">
                                 <label for="">Payment date</label>
                                 <input type="date" name="payment_date" id="expensePaymentDate" class="form-control" required>
                             </div>
-                            <div class="col-md-2">
+                            <!-- <div class="col-md-2">
 
-                            </div>
+                            </div> -->
                             <div class="col-md-3">
                                 <label for="">Payment method</label>
                                 <select name="payment_method" id="expensePaymentMethod" class="form-control select2-method" required>
@@ -1100,12 +1145,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <option>Credit Card</option>
                                 </select>
                             </div>
-                            <div class="col-md-2"></div>
-                            <div class="col-md-2">
+                            <!-- <div class="col-md-2"></div> -->
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Ref no.</label>
                                     <input type="text" name="ref_num" id="expenseRefNumber" class="form-control" required>
                                 </div>
+                                <!-- <div class="form-group">
+                                    <label for="">Permit no.</label>
+                                    <input type="text" name="permit_num" id="expensePermitNumber" class="form-control" required>
+                                </div> -->
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Permit no.</label>
                                     <input type="text" name="permit_num" id="expensePermitNumber" class="form-control" required>
@@ -1174,13 +1225,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <button type="button" class="add-remove-line" id="add-four-line-expense">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line-expense">Clear all lines</button>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="">Memo</label>
                             <textarea name="memo" id="expenseMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                        </div> -->
+                        <div class="row">
+                          <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="">Memo</label>
+                            <textarea name="memo" id="expenseMemo" cols="30" rows="3" placeholder="" style="width: 100%;resize: none;" ></textarea>
                         </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-4">
+                          </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                                     <span>Maximum size: 20MB</span>
                                     <div id="expenseAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
@@ -1193,18 +1250,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-8" style="padding-top: 30px;">
                                     <div class="file-container-list" id="file-list-expense"></div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
+                                <div class="form-group">
                             <div class="show-existing-file">
                                 <a href="#" id="showExistingFile">Show existing file</a>
                             </div>
+                        </div> 
+                            </div>
                         </div>
+                        <!-- <div class="form-group">
+                            <div class="show-existing-file">
+                                <a href="#" id="showExistingFile">Show existing file</a>
+                            </div>
+                        </div> -->
                         <div class="privacy">
-                            <a href="#">Privacy</a>
+                            <a href="#">Privacy</a> 
                         </div>
                     </div>
-                    <div class="modal-footer-check">
+                    <div class="modal-footer-check"> 
                         <div class="row">
                             <div class="col-md-5">
                                 <button class="btn btn-dark cancel-button" id="closeModalExpense" type="button">Cancel</button>
