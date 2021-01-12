@@ -76,16 +76,18 @@ class FB_elements_model extends MY_Model {
 				}	
 			}		
 
-			$elementRules = json_decode($data['element_rules']);
-
-			foreach($elementRules as $elementRule) {
-				$elementRule->element_id = $newID;
-				$elementRule->form_id = $data['form_element']['form_id'];
-				$elementRule->status = 1;
-				if($elementRule->rule_item = "null") {
-					unset($elementRule->rule_item);
+			if($data['element_rules']) {
+				$elementRules = json_decode($data['element_rules']);
+	
+				foreach($elementRules as $elementRule) {
+					$elementRule->element_id = $newID;
+					$elementRule->form_id = $data['form_element']['form_id'];
+					$elementRule->status = 1;
+					if($elementRule->rule_item = "null") {
+						unset($elementRule->rule_item);
+					}
+					$this->db->insert($this->form_element_rules->table, $elementRule);
 				}
-				$this->db->insert($this->form_element_rules->table, $elementRule);
 			}
 
 			$response = [

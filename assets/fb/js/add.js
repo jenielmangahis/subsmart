@@ -16,3 +16,7 @@ const createForm = (e) => {
     console.log(e);
     // e.preventDefault();
 }
+
+const getFormTemplates = () => {
+    
+}

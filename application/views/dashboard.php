@@ -136,6 +136,364 @@
             opacity: 0.6;
             }
         </style>
+        <div class="row cus-dashboard-div">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-purple card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">monetization_on</i>
+                  </div>
+                  <p class="card-category">EARNED TODAY</p>
+                  <h3 class="card-title">$0.00</h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">date_range</i> Since last month
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-purple card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">receipt_long</i>
+                  </div>
+                  <p class="card-category">TOTAL JOBS MONTH TO DATE</p>
+                  <h3 class="card-title">0 (Avg: $0.00)</h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">date_range</i> Since last month
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-purple card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">assignment_turned_in</i>
+                  </div>
+                  <p class="card-category">TOTAL INVOICE DUE</p>
+                  <h3 class="card-title">$0.00 (0)</h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">date_range</i> Since last month
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-purple card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">pending_actions</i>
+                  </div>
+                  <p class="card-category">TOTAL ESTIMATE PENDING</p>
+                  <h3 class="card-title">0.00</h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">date_range</i> Since last month
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2">
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
+                <div class="c65 c61">
+                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                            <div class="MuiCardHeader-avatar">
+                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                    <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"></path>
+                                </svg>
+                            </div>
+                            <div class="MuiCardHeader-content">
+                                <span class="">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">
+                                        <span class="jss55 jss56">Activity</span>
+                                    </h6>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                        <div class="MuiCardContent-root jss60" style="height: 309px;">
+                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 30px;">
+                                    <ul class="timeline">
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                    </ul>
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <div class="MuiCardActions-root jss112 MuiCardActions-spacing">
+                            <div style="margin: auto;">
+                                <a class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" aria-disabled="false" href="#">
+                                <span class="MuiButton-label">Load More</span>
+                                <span class="MuiTouchRipple-root"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
+                <div class="c65 c61">
+                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                            <div class="MuiCardHeader-avatar">
+                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path>
+                                </svg>
+                            </div>
+                            <div class="MuiCardHeader-content">
+                                <span class="">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">
+                                        <span class="jss55 jss56">History</span>
+                                    </h6>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                        <div class="MuiCardContent-root jss60" style="height: 309px;">
+                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 30px;">
+                                    <ul class="timeline">
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                      <li class="timeline-item">
+                                        <p class="timeline-content"><a href="#">Ben Tossell</a> assign you a task</p>
+                                        <p class="event-time">Just now</p>
+                                      </li>
+                                    </ul>
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <div class="MuiCardActions-root jss112 MuiCardActions-spacing">
+                            <div style="margin: auto;">
+                                <a class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" aria-disabled="false" href="#">
+                                <span class="MuiButton-label">Load More</span>
+                                <span class="MuiTouchRipple-root"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
+                <div class="c65 c61">
+                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                            <div class="MuiCardHeader-avatar">
+                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path>
+                                </svg>
+                            </div>
+                            <div class="MuiCardHeader-content">
+                                <span class="">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">
+                                        <span class="jss55 jss56">Messages</span>
+                                    </h6>
+                                </span>
+                            </div>
+                            <div class="msg-count-cus badge badge-pill badge-warning ml-auto px-1 py-1">
+                                3
+                            </div>
+                        </div>
+                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                        <div class="MuiCardContent-root jss60" style="height: 347px;">
+                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 0px; margin: -8px;">
+
+                                    <div class="task-dashboard-cus wrapper d-flex align-items-center py-2 border-bottom">
+                                      <img class="img-sm rounded-circle" src="http://placehold.it/43x43" alt="profile">
+                                      <div class="wrapper ml-3">
+                                        <h6 class="ml-1 mb-1">Denise Jacobs <small class="text-muted mb-0">&nbsp;10 minutes ago</small></h6>
+                                        <small class="text-muted mb-0">Hi! i'd like to add you to Google</small>
+                                      </div>
+                                      <div class="ml-auto px-1 py-1">
+                                        <i class="fa fa-reply" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+
+                                    <div class="task-dashboard-cus wrapper d-flex align-items-center py-2 border-bottom">
+                                      <img class="img-sm rounded-circle" src="http://placehold.it/43x43" alt="profile">
+                                      <div class="wrapper ml-3">
+                                        <h6 class="ml-1 mb-1">Kyle Larson <small class="text-muted mb-0">&nbsp;4 minutes ago</small></h6>
+                                        <small class="text-muted mb-0">Hi! i'd like to add you to Google</small>
+                                      </div>
+                                      <div class="ml-auto px-1 py-1">
+                                        <i class="fa fa-reply" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+
+                                    <div class="task-dashboard-cus wrapper d-flex align-items-center py-2 border-bottom">
+                                      <img class="img-sm rounded-circle" src="http://placehold.it/43x43" alt="profile">
+                                      <div class="wrapper ml-3">
+                                        <h6 class="ml-1 mb-1">Carl <small class="text-muted mb-0">&nbsp;2 minutes ago</small></h6>
+                                        <small class="text-muted mb-0">Hi! i'd like to add you to Google</small>
+                                      </div>
+                                      <div class="ml-auto px-1 py-1">
+                                        <i class="fa fa-reply" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+
+                                    <div class="task-dashboard-cus wrapper d-flex align-items-center py-2 border-bottom">
+                                      <img class="img-sm rounded-circle" src="http://placehold.it/43x43" alt="profile">
+                                      <div class="wrapper ml-3">
+                                        <h6 class="ml-1 mb-1">Kyle Larson <small class="text-muted mb-0">&nbsp;4 minutes ago</small></h6>
+                                        <small class="text-muted mb-0">Hi! i'd like to add you to Google</small>
+                                      </div>
+                                      <div class="ml-auto px-1 py-1">
+                                        <i class="fa fa-reply" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
+                <div class="c65 c61">
+                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                            <div class="MuiCardHeader-avatar">
+                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path>
+                                </svg>
+                            </div>
+                            <div class="MuiCardHeader-content">
+                                <span class="">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">
+                                        <span class="jss55 jss56">Tasks</span>
+                                    </h6>
+                                </span>
+                            </div>
+                            <div class="msg-count-cus badge badge-pill badge-info ml-auto px-1 py-1 mr-1">
+                                8
+                            </div>
+                            <div class="msg-count-cus badge badge-pill badge-warning ml-auto px-1 py-1 mr-1">
+                                2
+                            </div>
+                            <div class="msg-count-cus badge badge-pill badge-success ml-auto px-1 py-1">
+                                +
+                            </div>
+                        </div>
+                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                        <div class="MuiCardContent-root jss60" style="height: 309px;">
+                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 0px; margin: -8px;">
+
+                                    <div class="message-box position-relative">
+                                        <div class="message-widget contact-widget position-relative">
+
+                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">S</span>
+                                                </div>
+                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                    <h5 class="text-truncate mb-0">Send Invoice</h5>
+                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 2 days delays</span>
+                                                </div>
+                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                </div>
+                                            </a>
+
+                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">P</span>
+                                                </div>
+                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                    <h5 class="text-truncate mb-0">Pay Bill (Re: Adam Dee)</h5>
+                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 2 days delays</span>
+                                                </div>
+                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                </div>
+                                            </a>
+
+                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-info msg-count-cus">N</span>
+                                                </div>
+                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                    <h5 class="text-truncate mb-0">New York Conference</h5>
+                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 10 days left</span>
+                                                </div>
+                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                </div>
+                                            </a>
+
+                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-info msg-count-cus">I</span>
+                                                </div>
+                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                    <h5 class="text-truncate mb-0">Interview Maria</h5>
+                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 12 days left</span>
+                                                </div>
+                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                </div>
+                                            </a>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
         <div class="row d-none d-lg-flex">
             <div class="col-md-5">
                 <div class="card">
@@ -297,6 +655,7 @@
                 ?>
         </div>
         <!-- end row -->
+        
         <div class="row progress-fill-card">
             <div class="col-md-3">
                 <div class="card">

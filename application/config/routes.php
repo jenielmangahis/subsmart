@@ -119,6 +119,9 @@ $route['fb/elements/update-order']['post'] = 'FB/updateOrder';
 $route['fb/elements/update/(:num)']['post'] = 'FB/updateElement/$1';
 $route['fb/elements/destroy/(:num)']['post'] = 'FB/destroyElement/$1';
 
+//fb templates
+$route['fb/templates/get-by-active-user'] = 'FB/getTemplatesByActiveUser';
+
 //fb folders
 $route['fb/folders/get-by-active-user'] = 'FB/getFoldersByActiveUser';
 $route['fb/folders/'] = 'FB/foldersIndex';

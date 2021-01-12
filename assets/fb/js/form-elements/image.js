@@ -1,7 +1,7 @@
 class Image extends FormElement {
     constructor(obj, editable = false) {
         super(obj, editable);
-        this.settingItems = ['image', 'options'];
+        this.settingItems = ['question','image', 'options'];
         this.img_url = obj.img_url ? obj.img_url : '';
         this.img_alt_text = obj.img_alt_text ? obj.img_alt_text : '';
         this.optional_link_url = obj.optional_link_url ? obj.optional_link_url : '';

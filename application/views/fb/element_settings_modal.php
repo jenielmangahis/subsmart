@@ -31,6 +31,7 @@
                         <input type="hidden" name="id" id="elementID">
                         <input type="hidden" name="element_type" id="elementType">
                         <input type="hidden" name="element_order" id="elementOrder">
+                        <input type="hidden" name="element_container" id="elementContainer">
                         <input type="hidden" name="save_method" id="saveMethod">
                         <div class="tab-pane active" id="elementSettingsTab">
                             <div class="container mt-0">
@@ -45,6 +46,13 @@
                                     </div>
                                 </div>
                                 <div class="w-100 row mt-2" id="elementSettingsChoices">
+                                    <div tag="text_field" class="element-setting-container col-12 col-md-6">
+                                        <h4>Text Field</h4>
+                                        <div class="form-group">
+                                            <label for="placeholder-text">Placeholder Text:</label>
+                                            <input type="text" id="placeholderText" name="placeholder-text" class="form-control">
+                                        </div>
+                                    </div>
                                     <div class="col-12 element-setting-container" tag="editor">
                                         <textarea name="elementQuestionEditor" id="elementQuestionEditor" cols="30"
                                             rows="100" class="form-control" placeholder="Question?"></textarea>
@@ -175,9 +183,11 @@
                                                     <input type="checkbox" data-toggle="switch"
                                                         class="custom-control-input" id="percentageExcludeSwitch">
                                                     <label class="custom-control-label"
-                                                        for="percentageExcludeSwitch">Exclude from percentage calculation</label>
+                                                        for="percentageExcludeSwitch">Exclude from percentage
+                                                        calculation</label>
                                                 </div>
-                                                <small><i>Example: exclude a shipping cost from a tax percentage.</i></small>
+                                                <small><i>Example: exclude a shipping cost from a tax
+                                                        percentage.</i></small>
                                             </div>
                                         </div>
                                     </div>
@@ -289,17 +299,205 @@
                                                     </em></small></p>
                                         </div>
                                     </div>
+                                    <div class="col-12 col-md-6 element-setting-container" tag="text">
+                                        <h4>Text</h4>
+                                        <div class="row mb-2">
+                                            <div class="col-2">
+                                                <label for="element-font-family">Font:</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <select name="element-font-family" id="elementFontFamily"
+                                                    class="form-control">
+                                                    <option value=""></option>
+                                                    <option value="Arial,'Helvetica Neue',Helvetica,sans-serif">Arial
+                                                    </option>
+                                                    <option
+                                                        value="'Century Gothic',CenturyGothic, AppleGothic, sans-serif">
+                                                        Century Gothic</option>
+                                                    <option value="'Courier New',Courier,mono">Courier</option>
+                                                    <option value="Georgia,serif">Georgia</option>
+                                                    <option value="'Lucida Sans Unicode','Lucida Grande',sans-serif">
+                                                        Lucida</option>
+                                                    <option value="Tahoma,sans-serif">Tahoma</option>
+                                                    <option value="'Times New Roman',Times,serif">Times New Roman
+                                                    </option>
+                                                    <option value="Verdana,Geneva,sans-serif">Verdana</option>
+                                                    <option value="'Alfa Slab One',cursive">Alfa Slab One</option>
+                                                    <option value="'Architects Daughter',cursive">Architects Daughter
+                                                    </option>
+                                                    <option value="'Arvo',serif">Arvo</option>
+                                                    <option value="'Chewy',cursive">Chewy</option>
+                                                    <option value="'Cinzel',serif">Cinzel</option>
+                                                    <option value="'Cutive Mono',courier">Cutive Mono</option>
+                                                    <option value="'Dosis',sans-serif">Dosis</option>
+                                                    <option value="'Droid Serif', serif">Droid Serif</option>
+                                                    <option value="'Great Vibes',cursive">Great Vibes</option>
+                                                    <option value="'Handlee',cursive">Handlee</option>
+                                                    <option value="'Kaushan Script',cursive">Kaushan Script</option>
+                                                    <option value="'Lato',sans-serif">Lato</option>
+                                                    <option value="'Lobster',cursive">Lobster</option>
+                                                    <option value="'Lora', serif">Lora</option>
+                                                    <option value="'Luckiest Guy',cursive">Luckiest Guy</option>
+                                                    <option value="'Merriweather',serif">Merriweather</option>
+                                                    <option value="'Muli',sans-serif">Muli</option>
+                                                    <option value="'Oswald',sans-serif">Oswald</option>
+                                                    <option value="'Open Sans',sans-serif">Open Sans</option>
+                                                    <option value="'Open Sans Condensed',sans-serif">Open Sans Condensed
+                                                    </option>
+                                                    <option value="'Pacifico',cursive">Pacifico</option>
+                                                    <option value="'Playball',cursive">Playball</option>
+                                                    <option value="'Poiret One',cursive">Poiret One</option>
+                                                    <option value="'Questrial',sans-serif">Questrial</option>
+                                                    <option value="'Raleway',sans-serif">Raleway</option>
+                                                    <option value="'Roboto',sans-serif">Roboto</option>
+                                                    <option value="'Roboto Slab',serif">Roboto Slab</option>
+                                                    <option value="'Sanchez',serif">Sanchez</option>
+                                                    <option value="'Share Tech Mono',courier">Share Tech Mono</option>
+                                                    <option value="'Sigmar One',cursive">Sigmar One</option>
+                                                    <option value="'Signika',sans-serif">Signika</option>
+                                                    <option value="'Titillium Web',sans-serif">Titillium Web</option>
+                                                    <option value="'Ubuntu',sans-serif">Ubuntu</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <select name="element-font-size" id="elementFontSize"
+                                                    class="form-control">
+                                                    <option value="12">12</option>
+                                                    <option value="14">14</option>
+                                                    <option value="16">16</option>
+                                                    <option value="18">18</option>
+                                                    <option value="24">24</option>
+                                                    <option value="30" selected>30</option>
+                                                    <option value="36">36</option>
+                                                    <option value="48">48</option>
+                                                    <option value="56">56</option>
+                                                    <option value="72">72</option>
+                                                    <option value="90">90</option>
+                                                    <option value="112">112</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" data-toggle="switch"
+                                                        class="custom-control-input" id="textBoldSwitch">
+                                                    <label class="custom-control-label"
+                                                        for="textBoldSwitch">Bold</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <label>Align:</label>
+                                            </div>
+                                            <div class="col-5">
+                                                <select name="element-font-horizontal-alignment"
+                                                    id="elementFontHorizontalAlignment" class="form-control">
+                                                    <option value="left">left</option>
+                                                    <option value="center">center</option>
+                                                    <option value="right">right</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-5">
+                                                <select name="element-font-certical-alignment"
+                                                    id="elementFontVerticalAlignment" class="form-control">
+                                                    <option value="top">top</option>
+                                                    <option value="middle">middle</option>
+                                                    <option value="bottom">bottom</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Color: <span id="fontColorValue"></span></label>
+                                            <br>
+                                            <div id="fontColorPicker"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 element-setting-container" tag="background">
+                                        <h4>Background</h4>
+                                        <ul class="nav nav-pills">
+                                            <li class="nav-item">
+                                                <a data-toggle="tab" class="nav-link active"
+                                                    href="#backgroundColorTab">Color</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a data-toggle="tab" class="nav-link"
+                                                    href="#backgroundImageTab">Image</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content my-2">
+                                            <div class="tab-pane active" id="backgroundColorTab">
+                                                <label>Color: <span id="backgroundColorValue"></span></label>
+                                                <br>
+                                                <div id="backgroundColorPicker"></div>
+                                            </div>
+                                            <div class="tab-pane" id="backgroundImageTab">
+                                                <div class="form-group">
+                                                    <label for="background-size">Background Size:</label>
+                                                    <select name="background-size" id="backgroundSize"
+                                                        class="form-control">
+                                                        <option value="tile">Tile</option>
+                                                        <option value="full cover" selected="selected">Full Cover
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-5">Darken</div>
+                                                        <div class="col-2 text-center">|</div>
+                                                        <div class="col-5 text-right">Lighten</div>
+                                                    </div>
+                                                    <input type="range" class="custom-range" min="-95" max="95" step="1"
+                                                        value="0" id="backgroundOverlay">
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="thumb-wrap" id="business-bg-1.jpg"
+                                                                title="business-bg-1.jpg" onclick="setPreviewBackgroundImage('<?= base_url('assets/fb/images/backgrounds/public/business-bg-1.jpg')?>')">
+                                                                <div class="thumb"
+                                                                    style="background-image: url('<?= base_url('assets/fb/images/backgrounds/public/business-bg-1.jpg')?>');">
+                                                                </div><span>business-bg-1.jpg</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-12 col-md-6 element-setting-container" tag="options">
                                         <h4>Options</h4>
                                         <div class="form-group">
                                             <label for="element_span">Width</label>
                                             <select name="element_span" id="elementSpan" class="form-control">
-                                                <option value="2">1</option>
-                                                <option value="3">2</option>
-                                                <option value="4">3</option>
-                                                <option value="6">4</option>
-                                                <option value="12">5</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group element-setting-container" tag="height">
+                                            <label for="element_height">Height</label>
+                                            <select name="element_height" id="elementHeight" class="form-control">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                        </div>
+                                        <div class="custom-control custom-switch element-setting-container"
+                                            tag="inline">
+                                            <input type="checkbox" data-toggle="switch" class="custom-control-input"
+                                                id="inlineSwitch">
+                                            <label class="custom-control-label" for="inlineSwitch">Inline</label>
                                         </div>
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" data-toggle="switch" class="custom-control-input"
@@ -319,29 +517,6 @@
                                         <p><small><em>Admin Items are not shown when users fill out your form.
                                                 </em></small></p>
                                     </div>
-                                    <div class="col-12 col-md-6 element-setting-container" tag="size">
-                                        <h4>Options</h4>
-                                        <div class="form-group">
-                                            <label for="element_span">Width</label>
-                                            <select name="element_span" id="elementWidth" class="form-control">
-                                                <option value="2">1</option>
-                                                <option value="3">2</option>
-                                                <option value="4">3</option>
-                                                <option value="6">4</option>
-                                                <option value="12">5</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="element_height">Height</label>
-                                            <select name="element_height" id="elementHeight" class="form-control">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -354,13 +529,15 @@
                                     <h5 class="modal-element-name">Element Name</h5>
                                     <div class="container-fluid mt-0 bg-secondary py-2">
                                         <div class="form-inline bg-secondary">
-                                            <select class="custom-select my-1 mr-sm-2" id="ruleAction" name="rule_action">
+                                            <select class="custom-select my-1 mr-sm-2" id="ruleAction"
+                                                name="rule_action">
                                                 <option value="1">show</option>
                                                 <option selected value="0">hide</option>
                                             </select>
                                             <label class="my-1 mr-2" for="inlineFormCustomSelectPref">This item when
                                             </label>
-                                            <select class="custom-select my-1 mr-sm-2" id="ruleJoin" name="rule_join" onchange="setOperatorText(this)">
+                                            <select class="custom-select my-1 mr-sm-2" id="ruleJoin" name="rule_join"
+                                                onchange="setOperatorText(this)">
                                                 <option selected value="1">Any</option>
                                                 <option value="2">All</option>
                                             </select>
@@ -371,12 +548,14 @@
                                     <div class="rule-items">
                                         <div class="row mt-2 rule-item-container">
                                             <div class="col-4 rule-element-selector">
-                                                <select class="custom-select my-1 mr-sm-2" id="ruleItem" name="rule_item" onchange="showFields(this)">
+                                                <select class="custom-select my-1 mr-sm-2" id="ruleItem"
+                                                    name="rule_item" onchange="showFields(this)">
                                                     <option selected value="null">Elements</option>
                                                 </select>
                                             </div>
                                             <div class="col-2 rule-method-selector">
-                                                <select class="custom-select my-1 mr-sm-2" id="ruleCondition" name="rule_condition">
+                                                <select class="custom-select my-1 mr-sm-2" id="ruleCondition"
+                                                    name="rule_condition">
                                                     <option selected value="1">is</option>
                                                     <option value="2">is not</option>
                                                     <option value="3">greater than</option>
@@ -387,12 +566,17 @@
                                                 <!-- <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
                                                     <option selected>Any response</option>
                                                 </select> -->
-                                                <input type="text" id="ruleAnswer" name="rule_answer" class="form-control">
+                                                <input type="text" id="ruleAnswer" name="rule_answer"
+                                                    class="form-control">
                                             </div>
                                             <div class="col-2 element-rule-actions">
                                                 <div class="btn-group align-middle pt-1">
-                                                    <button type="button" class="btn btn-sm btn-success rounded-circle align-middle m-1" onclick="addItemRule()">+</button>
-                                                    <button type="button" class="btn btn-sm btn-danger rounded-circle align-middle m-1" onclick="removeItemRule(this)">-</button>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-success rounded-circle align-middle m-1"
+                                                        onclick="addItemRule()">+</button>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger rounded-circle align-middle m-1"
+                                                        onclick="removeItemRule(this)">-</button>
                                                 </div>
                                             </div>
                                         </div>

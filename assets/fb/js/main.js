@@ -1,4 +1,5 @@
 let form;
+let products;
 let elements;
 let signpads;
 const element_objs = [];
@@ -20,7 +21,6 @@ const handleCreateForm = async (e) => {
 }
 
 const initSignPads = () => {
-    console.log('initializing signpads...')
     signpads = [];
     const canvas = $('.signature-canvas');
     let i = 0;
@@ -52,6 +52,20 @@ const getAllForms = (data = {}) => {
     })
 }
 
+const getAllFormTemplates = (data = {}) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'type': 'GET',
+            'url' : '/fb/templates/get-by-active-user',
+            'data': data
+        }).done((response) => {
+            resolve(response)
+        }).fail((err) => {
+            reject(err);
+        })
+    })
+}
+
 const getAllFolders = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -74,6 +88,7 @@ const getFormByID = (form_id) => {
             form = response.data.form;
             form_style = response.data.form_style;
             elements = response.data.elements;
+            products = response.data.products;
             resolve(response)
         }).fail(err => {
             reject(err);
@@ -96,14 +111,17 @@ const saveElement = (data, save_method = 'create') => {
     if(save_method === 'update') {
         url = `/fb/elements/update/${data.form_element.id}`;
     }
+    console.log('save element', data);
     return new Promise((resolve, reject) => {
         $.ajax({
             'type': 'POST',
             'url': url,
             'data': data
         }).done(response => {
+            console.log('200', response)
             resolve(response)
         }).fail(err => {
+            console.log(err)
             reject(err);
         })
     })
@@ -117,6 +135,7 @@ const deleteElement = (id) => {
                 'url': `/fb/elements/destroy/${id}`,
                 'data': []
             }).done(response => {
+                delete element_objs[id];
                 resolve(response)
             }).fail(err => {
                 reject(err);
@@ -130,7 +149,7 @@ const deleteElement = (id) => {
 const renderElement = (el, editable = false) => {
     const element = new element_types[el.element_type](el, editable);
     element_objs[el.id] = element;
-    if(element.container_id !== null) {
+    if(element.container_id !== null && element.container_id != 0) {
         $(`#ContainerBlock-${element.container_id}`).append(element.getElement())
     } else {
         if(editable) {
@@ -162,12 +181,6 @@ const setElementRules = () => {
                 // }
     
                 var v = ruleItem.val();
-
-                // console.log("VALUE: ", v);
-                // console.log("RULE ANSWER: ", ruleSet[i].rule_answer);
-                // console.log("mainElement: ", mainElement);
-                // console.log("ruleSet[i].rule_condition: ", ruleSet[i].rule_condition);
-                console.log("RULE ITEM: ", ruleSet[i]);
     
                 if (ruleSet[i].rule_condition == "1") {
                     if (typeof v !== "undefined" && v.trim() == ruleSet[i].rule_answer.trim() && ruleSet[i].rule_action === "1") {
@@ -210,15 +223,12 @@ const setElementRules = () => {
                 var v = ruleItem.val();
 
                 if(ruleSet[i].rule_action === "1" && v == "") {
-                    console.log(1);
                     mainElement.hide();
                     break;
                 } else if(ruleSet[i].rule_action === "0" && v == "") {
-                    console.log(2);
                     mainElement.show();
                     break;
                 } else if (ruleSet[0].rule_join == "1") {
-                    console.log(3);
                     if (ruleSet[i].flag === true) {
                         if (ruleSet[i].rule_action == "0") mainElement.hide();
                         if (ruleSet[i].rule_action == "1") mainElement.show();
@@ -228,7 +238,6 @@ const setElementRules = () => {
                         if (ruleSet[i].rule_action == "1") mainElement.hide();
                     }
                 } else if (ruleSet[0].rule_join == "2") {
-                    console.log(4);
                     if (ruleSet[i].flag === false) {
                         if (ruleSet[i].rule_action == "0") mainElement.show();
                         if (ruleSet[i].rule_action == "1") mainElement.hide();
@@ -248,7 +257,7 @@ const setElementRules = () => {
     ruleElementsFlag = [];
 }
 
-const updateElementOrder = (elements) => {
+const updateElementOrder = (elements, increment = 0, parent_element = null) => {
 
     return new Promise((resolve, reject) => {
         try {
@@ -257,27 +266,27 @@ const updateElementOrder = (elements) => {
                 if(el !== "" && el !== 'blankFormPlaceHolder') {
                     const id = typeof el === 'object' ? el.id : el;
                     try {
-                        element_objs[el].element_order = index;
+                        element_objs[id].element_order = index + increment;
                     } catch (error) {
-                        console.log(el, typeof el === 'object');
+                        console.log(error);
                     }
-                    const element = element_objs[el].getPostData(false);
+                    const element = element_objs[id].getPostData(false);
                     data.push(element);
                 }
-                if(!data.length) {
-                    resolve('empty form');
-                } else {
-                    $.ajax({
-                        'type': 'POST',
-                        'url': `/fb/elements/update-order`,
-                        'data': {elements: data}
-                    }).done(response => {
-                        resolve(response)
-                    }).fail(err => {
-                        reject(err);
-                    })   
-                }
             });
+            if(!data.length) {
+                resolve('empty form');
+            } else {
+                $.ajax({
+                    'type': 'POST',
+                    'url': `/fb/elements/update-order`,
+                    'data': {elements: data}
+                }).done(response => {
+                    resolve(response)
+                }).fail(err => {
+                    reject(err);
+                })   
+            }
         } catch (error) {
                 reject(error);
         }
@@ -286,6 +295,11 @@ const updateElementOrder = (elements) => {
 
 const clearModalForm = () => {
     document.getElementById('elementSettings').reset();
+    editor.setContents('');
+    $('#requiredSwitch').attr('checked', false);
+    $('#inlineSwitch').attr('checked', false);
+    $('#readOnlySwitch').attr('checked', false);
+    $('#adminItemSwitch').attr('checked', false);
     $('div.rule-item-container').each(function(index, val) {
         if (index > 0) $(val).remove();
     });

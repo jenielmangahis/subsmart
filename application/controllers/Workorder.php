@@ -167,7 +167,7 @@ class Workorder extends MY_Controller
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
-        $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        // $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         // $this->load->view('workorder/add', $this->page_data);
         $this->load->view('workorder/add', $this->page_data);
     }

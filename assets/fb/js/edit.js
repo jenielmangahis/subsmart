@@ -1,9 +1,11 @@
 let forms = [];
+let background_color_picker, font_color_picker;
 const handleOnLoad = async (form_id, laodColorPicker = true) => {
   await loadElements(form_id, true).then(res => {
     initBuilder();
     initSignPads();
     initContainers();
+    initModalColorPickers();
     if(laodColorPicker){
       initColorPicker();
     }
@@ -31,4 +33,15 @@ const loadForm = async (form_id, editable) => {
 
 const setPageProperties = () => {
     $('#navFormName').html(form.name);
+}
+
+const initModalColorPickers = () => {
+  background_color_picker = colorjoe.rgb('backgroundColorPicker', '#000').on('change', function (c) {
+    const val = c.hex();
+    $('#backgroundColorValue').html(val);
+  });
+  font_color_picker = colorjoe.rgb('fontColorPicker', '#000').on('change', function (c) {
+    const val = c.hex();
+    $('#fontColorValue').html(val);
+  });
 }

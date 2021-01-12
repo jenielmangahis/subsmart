@@ -29,6 +29,9 @@ class Customer extends MY_Controller
         $this->load->helper('url');
         $this->load->helper('functions');
 
+        //load Model
+        $this->load->model('CustomerGroup_model', 'customerGroup_model');
+
         $user_id = getLoggedUserID();
         // concept
         $uid = $this->session->userdata('uid');
@@ -1006,8 +1009,6 @@ class Customer extends MY_Controller
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-
-
         $this->page_data['customers'] = $this->customer_model->getAllByUserId();
 
         $user_id = logged('id');
@@ -1791,7 +1792,32 @@ class Customer extends MY_Controller
             die();
         }
         // pass the $this so that we can use it to load view, model, library or helper classes
-        $customerGroup = new CustomerGroup($this);
+        //$customerGroup = new CustomerGroup($this);
+
+        $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
+        $this->load->view('customer/group/list', $this->page_data);
+    }
+
+    public function group_add()
+    {
+        $is_allowed = $this->isAllowedModuleAccess(11);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_group';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+        // pass the $this so that we can use it to load view, model, library or helper classes
+        //$customerGroup = new CustomerGroup($this);
+        $input = $this->input->post();
+        if ($input) {
+            $input['user_id'] = logged('id');
+            $input['date_added'] = date("d-m-Y h:i A");
+            if($this->customer_ad_model->add($input,"customer_groups")){
+                redirect(base_url('customer/group'));
+            }
+        }
+        $this->page_data['page_title'] = 'Customer Group Add';
+        $this->load->view('customer/group/add', $this->page_data);
     }
 
 
