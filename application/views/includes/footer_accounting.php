@@ -47,6 +47,11 @@ Chartist Chart-->
 <script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
 <script src="<?php echo $url->assets;?>js/icons/icon.navbar.js"></script>
 <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
+
+<script src="https://cdn.rawgit.com/atatanasov/gijgo/master/dist/combined/js/gijgo.min.js" type="text/javascript"></script>
+<link href="https://cdn.rawgit.com/atatanasov/gijgo/master/dist/combined/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
 <!--Accounting JS-->
 <?php echo put_footer_assets();?>
 <script type="text/javascript">
@@ -122,6 +127,28 @@ $('.image-upload-wrap').bind('dragover', function () {
   $('.image-upload-wrap').bind('dragleave', function () {
     $('.image-upload-wrap').removeClass('image-dropping');
 });
+
+
+$(document).ready(function () {
+    $('#datepickerinv').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv2').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv3').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+
+	document.getElementById("addNewTerms").onchange = function() {
+    if (this.value == '0') {
+        // alert('yeah');
+		$('#exampleModal').modal('toggle');
+    	}
+	}
+});
+
+
 </script>
 
 <script>

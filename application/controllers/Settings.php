@@ -12,7 +12,19 @@ class Settings extends MY_Controller {
 
 		$this->page_data['page_title'] = 'Settings';
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
-		$this->load->library('session'); 
+		$this->load->library('session');
+
+		//load Model
+        $this->load->model('General_model', 'general_model');
+
+        add_css(array(
+            'assets/textEditor/summernote-bs4.css',
+        ));
+
+        // JS to add only Job module
+        add_footer_js(array(
+            'assets/textEditor/summernote-bs4.js'
+        ));
 	}
 
     public function schedule()
@@ -95,8 +107,38 @@ class Settings extends MY_Controller {
 
     public function email_templates() 
     {
+        $get_invoice_template = array(
+            'where' => array(
+                'type_id' => 1,
+                'user_id' => logged('id'),
+            )
+        );
+        $this->page_data['invoice_templates'] = $this->general_model->get_all_with_keys($get_invoice_template,'settings_email_template');
         $this->page_data['page']->menu = 'email_templates';
         $this->load->view('settings/email_templates', $this->page_data);
+    }
+
+    public function email_templates_edit($id=null)
+    {
+        $input = $this->input->post();
+        if ($input) {
+            $input['user_id'] = logged('id');
+            $input['date_added'] = date("d-m-Y h:i A");
+            if($this->customer_ad_model->add($input,"customer_groups")){
+                redirect(base_url('customer/group'));
+            }
+        }
+        $get_template_data = array(
+            'where' => array(
+                'id' => $id,
+            )
+        );
+        $this->page_data['template'] = $this->general_model->get_all_with_keys($get_template_data,'settings_email_template',FALSE);
+        if(empty($this->page_data['template'])){
+            redirect(base_url('settings/email_templates'));
+        }
+        $this->page_data['page']->menu = 'email_templates';
+        $this->load->view('settings/email_templates_edit', $this->page_data);
     }
 
     public function sms_templates()

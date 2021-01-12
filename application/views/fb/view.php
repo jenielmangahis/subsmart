@@ -9,12 +9,11 @@
     <link href="<?= base_url(); ?>assets/dashboard/css/style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/css/jquery.signaturepad.css" type="text/css" />
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fb/css/main.css" type="text/css" />
-    <link rel="stylesheet" href="<?= base_url(); ?>assets/fb/css/view.css" type="text/css" />
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fb/css/datepicker.css" type="text/css" />
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fb/css/custom-themes/styles.css" type="text/css" />
 </head>
 <body>
-    <div class="container page-element p-4">
+    <div class="page-element p-4">
         <form action="" method="post" id="formElementsContainer">
             <div id="formContainer" class="row form-container-element"></div>
             <div class="w-100 text-center">

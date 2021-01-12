@@ -86,7 +86,7 @@ ini_set('max_input_vars', 30000);
                                 </div>
                             </div>
                             <div id="print" class="print form-group">
-                                        <textarea id="summernote" name="template "></textarea>
+                                        <textarea id="summernote" name="template"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary" ><span class="fa fa-paper-plane-o"></span> Save</button>

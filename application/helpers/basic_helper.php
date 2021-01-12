@@ -3140,7 +3140,6 @@ function google_get_oauth2_token($code, $googleClientId, $googleSecretId) {
     $accessUserProfile = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" . $accessToken;
     $curl = curl_init($accessUserProfile);
 
-
     curl_setopt($curl, CURLOPT_POST, false);        
     curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

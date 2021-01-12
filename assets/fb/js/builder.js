@@ -61,20 +61,25 @@ const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 
 var rule_item_el = $('div.rule-items').html();
 const ruleOrOperator = `<div class="row mt-2 operator-container"><div class="col-12"><h6>OR</h6></div></div>`;
 const ruleAndOperator = `<div class="row mt-2 operator-container"><div class="col-12"><h6>AND</h6></div></div>`;
+let start_elements = [], container_start_elements = [];
 $('#formBuilderContainer').sortable({
     placeholder: 'placeholder-hor',
     grid: [20, 20],
     items: '> .in-parent',
-    nested: true,
     connectWith: '.container-block',
     handle: '.element-handle',
     receive: (event, ui) => {
+        if(ui.item.hasClass('form-element')){
+            return;
+        }
         tempElements = $('#formBuilderContainer').sortable("toArray");
         clearModalForm();
         const elType = ui.item.attr('element_type');
         $('#elementSettingsModal #elementType').val(elType);
         $('#elementSettingsModal #elementID').val(null);
         $('#elementSettingsModal #saveMethod').val('create');
+        $('#elementSettingsModal #elementContainer').val(null);
+        $('#elementOrder').val(tempElements.indexOf(""));
         const element = new element_types[elType]({}, false);
 
         if($('#elementSettingsModal #elementID').val() === null || $('#elementSettingsModal #elementID').val() === "") {
@@ -92,9 +97,20 @@ $('#formBuilderContainer').sortable({
 
         showModal(element);
     },
+    start: (event, ui) => {
+        start_elements = $('#formBuilderContainer').sortable("toArray");
+    },
     update: (event, ui) => {
         showLoading();
-        const elements = $('#formBuilderContainer').sortable("toArray");
+        let elements = $('#formBuilderContainer').sortable("toArray");
+        if(start_elements.length > elements.length)return;
+        if(start_elements.length < elements.length){
+            const el_id = ui.item.attr('id');
+            ui.item.addClass('in-parent');
+            element_objs[el_id].container_id = null;
+        }
+        elements = $('#formBuilderContainer').sortable("toArray");
+        console.log(elements);
         updateElementOrder(elements).then(async (res) => {
             await loadElements(form.id, true).then(res => {
                 initBuilder();
@@ -110,14 +126,68 @@ const initContainers = () => {
         placeholder: 'placeholder-hor',
         grid: [20, 20],
         nested: true,
-        items: '> .container-block',
         connectWith: '#formBuilderContainer',
         handle: '.contained-element-handle',
         receive: (event, ui) => {
+            if(ui.item.hasClass('form-element'))return;
+            const container_element_id = event.target.id;
+            const container = container_element_id.split('-')[1];
+            const container_elements = $(`#${container_element_id}`).sortable("toArray");
+            const index = container_elements.indexOf("");
+            const main_elements = $('#formBuilderContainer').sortable('toArray');
+            const element_order = main_elements.indexOf(container);
+            $('#elementContainer').val(container);
+            $('#elementOrder').val(element_order + (index + 2));
+            const new_order = $('#elementOrder').val();
+            // console.log({
+            //     container_element_id,
+            //     container,
+            //     container_elements,
+            //     index,
+            //     element_order,
+            //     new_order
+            // });
+        },
+        start: (event, ui) => {
+            const container_element_id = event.target.id;
+            container_start_elements = $(`#${container_element_id}`).sortable("toArray");
         },
         update: (event, ui) => {
-            const elements = $('.container-block').sortable("toArray");
-            console.log(elements);
+            showLoading();
+            const main_elements = $('#formBuilderContainer').sortable('toArray');
+            const container_element_id = event.target.id;
+            const container = container_element_id.split('-')[1];
+            // console.log({
+            //     container_element_id,
+            //     container,
+            //     main_elements,
+            //     // element_order,
+            //     // increment,
+            //     // elements
+            // });
+            const element_order = main_elements.indexOf(container);
+            const increment = element_order + 1;
+            const elements = $(`#${container_element_id}`).sortable("toArray");
+            if(container_start_elements.length > elements.length){
+                console.log('cancelled');
+                hideLoading();
+            };
+            if(ui.item.hasClass('form-element')){
+                const el_id = ui.item.attr('id');
+                element_objs[el_id].container_id = container;
+                if(ui.item.hasClass('in-parent')){
+                    ui.item.removeClass('in-parent');
+                }
+
+            }
+            updateElementOrder(main_elements);
+            updateElementOrder(elements, increment).then(async (res) => {
+                await loadElements(form.id, true).then(res => {
+                    initBuilder();
+                    initContainers();
+                });
+                showSuccess();
+            });
         }
     })
 }
@@ -192,7 +262,6 @@ const handleCustomElementModified = (element, value) => {
 const handleCustomizeSelectChange = ()  => {
     const val = $('#customizeSelect').val();
     $('#active-option').val(val);
-    console.log(val, tab_assignment[val]);
     $(`.nav-tabs a[href="#${tab_assignment[val]}"]`).tab('show')
 }
 
@@ -231,7 +300,10 @@ const handleSaveEelement = (event) => {
         if (index > -1) {
             tempElements.splice(index, 1);
         }
-        $('#elementSettingsModal #elementOrder').val(index);
+        const container = $('#elementContainer').val();
+        if(parseInt(container) === NaN) {
+            $('#elementSettingsModal #elementOrder').val(index);
+        }
     }
     const data = getModalValues();
     saveElement(data, save_method).then(async (res) => {
@@ -249,30 +321,32 @@ const handleSaveEelement = (event) => {
 }
 
 const handleCopyElement = (id) => {
-    console.log('copying...');
     showLoading();
     const element = element_objs[id];
     element.id = null;
     const parsed_data = element.getPostData();
+    parsed_data.element_order = parsed_data.element_order + 1;
     saveElement(parsed_data, 'create').then(async (res) => {
-        console.log('copied');
-        await loadElements(form.id, true);
+        await loadElements(form.id, true).then(res1 => {
+            initBuilder();
+            initContainers();
+        });
         const elements = $('#formBuilderContainer').sortable("toArray");
-        console.log(elements);
         await updateElementOrder(elements);
         showSuccess();
     }).catch(err => {
         showDanger();
-        console.log(err);
+        console.log(err)
     })
 }
 
 const handleDeleteElement = (id) => {
-    const element = element_objs[id];
+    // const element = element_objs[id];
     deleteElement(id).then(async (res) => {
         showLoading();
-        const html_element = $(`#formBuilderContainer #${id}`).remove();
-        if (!element_objs.length) {
+        $(`#formBuilderContainer #${id}`).remove();
+        const elements = $('#formBuilderContainer').sortable("toArray");
+        if (elements == 0) {
             $('#formBuilderContainer').html(`
             <div class="col-12" id="blankFormPlaceHolder">
                 Drag items from the left and drop them here.
@@ -284,9 +358,7 @@ const handleDeleteElement = (id) => {
             initBuilder();
             initContainers();
         });
-        const elements = $('#formBuilderContainer').sortable("toArray");
-        element_objs.splice(id);
-        await updateElementOrder(elements);
+        // await updateElementOrder(elements);
         showSuccess();
     }).catch(err => {
         showDanger();
@@ -342,6 +414,7 @@ const initEditor = (id = 'elementQuestionEditor') => {
 const handleElementEdit = (id) => {
     clearModalForm();
     const element = element_objs[id];
+    $('#elementSettingsModal .modal-title').html(element.element_type);
     $('#elementSettingsModal #saveMethod').val('update');
     setModalElement(element);
     showModal(element);
@@ -350,19 +423,27 @@ const handleElementEdit = (id) => {
 const setModalElement = (element) => {
     setElementRulesConfig(element);
     $('#elementQuestionInput').val(element.question);
-    $('#elementQuestionEditor').val(element.question);
+    editor.setContents(element.question);
     $('#elementType').val(element.element_type);
-    $('#elementWidth').val(element.span);
+    $('#elementFontFamily').val(element.text_font_family);
+    $('#elementFontSize').val(element.text_font_size);
+    $('#placeholderText').val(element.placeholder_text);
+    $('#textBoldSwitch').attr('checked', element.text_is_bold == 1 ? true : false);
+    $('#elementFontHorizontalAlignment').val(element.text_horizontal_align);
+    $('#elementFontVerticalAlignment').val(element.text_vertical_align);
+    $('#elementSpan').val(element.span);
     $('#elementHeight').val(element.height);
     $('#elementChoicesInput').val(choicesParserReverse(element.choices));
     $('#elementMatrixColumnsInput').val(choicesParserReverse(element.matrix_columns));
     $('#elementMatrixRowsInput').val(choicesParserReverse(element.matrix_rows));
     // $('#elementChoicesAndPricesChoiceInput').val(choicesParserReverse(element.matrix_rows));
-    $('#requiredSwitch').val(element.required);
-    $('#readOnlySwitch').val(element.read_only);
-    $('#adminItemSwitch').val(element.admin_item);
+    $('#requiredSwitch').attr('checked', element.required == 1 ? true : false);
+    $('#inlineSwitch').attr('checked', element.is_inline == 1 ? true : false);
+    $('#readOnlySwitch').attr('checked', element.read_only == 1 ? true : false);
+    $('#adminItemSwitch').attr('checked', element.admin_item == 1 ? true : false);
     $('#elementSettingsModal #elementID').val(element.id);
     $('#elementSettingsModal #elementOrder').val(element.element_order);
+    $('#elementSettingsModal #elementContainer').val(element.container_id);
     $('#elementSettingsModal #minChar').val(element.min);
     $('#elementSettingsModal #maxChar').val(element.max);
     $('#elementSettingsModal #rows').val(element.rows);
@@ -421,9 +502,7 @@ const getModalValues = () => {
     const element_type = $('#elementType').val();
     let span = $('#elementSpan').val();
     let question = $('#elementQuestionInput').val() ? $('#elementQuestionInput').val() : '';
-    if (element_type === "Heading") {
-        span = $('#elementWidth').val();
-    }
+    let placeholder_text = $('#placeholderText').val() ? $('#placeholderText').val() : '';
     if (element_type === "FormattedText") {
         question = $('#elementQuestionEditor').val() ? $('#elementQuestionEditor').val() : '';
     }
@@ -449,10 +528,14 @@ const getModalValues = () => {
         form_element: {
             id: $('#elementSettingsModal #elementID').val(),
             form_id: form.id,
+            placeholder_text,
+            container_id: parseInt($('#elementSettingsModal #elementContainer').val()) > 0 ? $('#elementSettingsModal #elementContainer').val() : null,
             question: question,
             required: $('#requiredSwitch').is(":checked") ? 1 : 0,
+            is_inline: $('#inlineSwitch').is(":checked") ? 1 : 0,
             read_only: $('#readOnlySwitch').is(":checked") ? 1 : 0,
             admin_item: $('#adminItemSwitch').is(":checked") ? 1 : 0,
+            text_is_bold: $('#textBoldSwitch').is(":checked") ? 1 : 0,
             element_type: $('#elementType').val(),
             span: span,
             height: $('#elementHeight').val(),
@@ -468,6 +551,11 @@ const getModalValues = () => {
             url_text: $('#elementSettingsModal #urlText').val(),
             url: $('#elementSettingsModal #url').val(),
             custom_code: $('#elementSettingsModal #customCode').val(),
+            text_font_family: $('#elementSettingsModal #elementFontFamily').val(),
+            text_font_size: $('#elementSettingsModal #elementFontSize').val(),
+            text_horizontal_align: $('#elementSettingsModal #elementFontHorizontalAlignment').val(),
+            text_vertical_align: $('#elementSettingsModal #elementFontVerticalAlignment').val(),
+            custom_code: $('#elementSettingsModal #customCode').val(),
             percentage_excluded: $('#percentageExcludeSwitch').is(":checked") ? 1 : 0,
         },
         element_rules: JSON.stringify(element_rule),
@@ -477,7 +565,7 @@ const getModalValues = () => {
         matrix_rows: choicesParser($('#elementMatrixRowsInput').val()),
     }
 
-
+    console.log('get modal values', return_data);
     return return_data;
 }
 
@@ -614,7 +702,6 @@ const appendFormOptions = (obj) => {
 const addItemRule = () => {
     var ruleJoin = $('select[name="rule_join"]').val();
     if(ruleJoin == 1) {
-        console.log(459);
         $('div.rule-items').append(ruleOrOperator);
     } else {
         $('div.rule-items').append(ruleAndOperator);
@@ -663,4 +750,9 @@ const showFields = (el) => {
         $(el).parent().parent().find('div.rule-method-selector select[name="rule_condition"]').show();
         $(el).parent().parent().find('div.rule-element-answer-selector input[name="rule_answer"]').show();
     }
+}
+
+const setPreviewBackgroundImage = (img) => {
+    alert(img);
+    $(`#elementPreview .form-header`).css('background-image', `url(${img})`);
 }

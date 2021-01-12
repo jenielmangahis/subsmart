@@ -22,19 +22,25 @@
                                 <li><a href="#" onclick="setActiveTemplate(0)">Blank Form</a></li>
                             </ul>
                         <li>
-                            <div class="link"></i>Test Templates<i class="fa fa-chevron-down"></i>
+                            <div class="link"></i>Business<i class="fa fa-chevron-down"></i>
                             </div>
                             <ul class="submenu">
                                 <li><a href="#">Blank Form</a></li>
                             </ul>
                         </li>
                         <li>
-                            <div class="link"></i>Lorem Ipsum<i class="fa fa-chevron-down"></i>
+                            <div class="link"></i>Zone List<i class="fa fa-chevron-down"></i>
                             </div>
                             <ul class="submenu">
                                 <li><a href="#">Blank Form</a></li>
                             </ul>
                         </li>
+                        <li>
+                            <div class="link"></i>User Templates<i class="fa fa-chevron-down"></i>
+                            </div>
+                            <ul class="submenu">
+                                <li><a href="#">Blank Form</a></li>
+                            </ul>
                         </li>
                     </ul>
                 </div>

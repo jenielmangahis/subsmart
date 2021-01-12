@@ -10,6 +10,13 @@ class Vendors_model extends MY_Model {
 		parent::__construct();
 	}
 
+	public function getAllByCompany() {
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->order_by('f_name', 'asc');
+		$query = $this->db->get($this->table);
+
+		return $query->result();
+	}
 	public function getVendors(){
 	    $vendor = $this->db->get('accounting_vendors');
 	    return $vendor->result();

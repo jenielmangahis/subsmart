@@ -1,3 +1,16 @@
+<style>
+#modal-dialog2 {
+  position: absolute;
+  top: 50px;
+  right: 100px;
+  bottom: 0;
+  left: 30%;
+  z-index: 10040;
+  overflow: auto;
+  overflow-y: auto;
+}
+</style>
+
 <!-- Modal for add account-->
 <div class="full-screen-modal">
    <div id="addinvoiceModal" class="modal fade modal-fluid" role="dialog">
@@ -20,9 +33,12 @@
                                         Customer
                                         <select class="form-control" name="customer_id">
                                             <option></option>
-                                            <option value="1">Add New</option>
+                                            <!-- <option value="1">Add New</option>
                                             <option value="2">John Doe</option>
-                                            <option value="3">Alpha</option>
+                                            <option value="3">Alpha</option> -->
+                                            <?php foreach($customers as $customer) : ?>
+                                            <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
@@ -44,24 +60,27 @@
                                     </div>
                                     <div class="col-md-3">
                                         Terms
-                                        <select class="form-control" name="terms">
+                                        <select class="form-control" name="terms" id="addNewTerms">
                                             <option></option>
-                                            <option>Add New</option>
-                                            <option>John Doe</option>
-                                            <option>Alpha</option>
+                                            <!-- <option>Add New</option>
+                                            <option>John Doe</option>-->
+                                            <option value="0">Add New</option> 
+                                            <?php foreach($terms as $term) : ?>
+                                            <option value="<?php echo $term->id; ?>"><?php echo $term->description . ' ' . $term->day; ?></option>
+                                            <?php endforeach; ?>
                                         </select><br><br>
                                         Ship via<br>
                                         <input type="text" class="form-control" name="ship_via">
                                     </div>
                                     <div class="col-md-3">
                                         Invoice date<br>
-                                        <input type="text" class="form-control" name="invoice_date"><br>
+                                        <input type="text" class="form-control" name="invoice_date" id="datepickerinv"><br>
                                         Shipping date<br>
-                                        <input type="text" class="form-control" name="shipping_date">
+                                        <input type="text" class="form-control" name="shipping_date" id="datepickerinv2">
                                     </div>
                                     <div class="col-md-3">
                                         Due date<br>
-                                        <input type="text" class="form-control" name="due_date"><br>
+                                        <input type="text" class="form-control" name="due_date" id="datepickerinv3"><br>
                                         Tracking no.<br>
                                         <input type="text" class="form-control" name="tracking_number">
                                     </div>
@@ -254,3 +273,5 @@
     </div>
     <!--end of modal-->
 </div>
+
+<?php include viewPath('accounting/add_new_term'); ?>

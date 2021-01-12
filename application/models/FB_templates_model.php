@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class FB_model extends MY_Model {
+class FB_templates_model extends MY_Model {
 
-	public $table = 'forms';
+	public $table = 'form_templates';
 	
 	public function __construct()
 	{
@@ -27,6 +27,7 @@ class FB_model extends MY_Model {
 				'form_id' => $formID
 			];
 
+			$this->generateQR($formID);
 
 			$this->form_security->create($newData);
 			$this->form_schedule_setting->create($newData);
@@ -55,8 +56,8 @@ class FB_model extends MY_Model {
 
 	function getByUserID($userID, $data) {
 		try {
-			$folder_id = isset($data['folder']) ? $data['folder'] : 0;
-			$search_string = isset($data['search_string']) ? $data['search_string']: 0;
+			$folder_id = $data['folder'] ?: 0;
+			$search_string = $data['search_string'];
 			$this->db->select("*");
 			if($folder_id != 2) {
 				$this->db->where('folder_id <>', 2);

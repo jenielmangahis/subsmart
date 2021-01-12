@@ -48,6 +48,14 @@ class FB extends MY_Controller {
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
+	public function getTemplatesByActiveUser() {
+		$user = (object)$this->session->userdata('logged');
+		$data = $this->input->get();
+		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($data));
+		$response = $this->form_builder->getByUserID($user->id, $data);
+		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
+	}
+
 	public function getFoldersByActiveUser() {
 		$user = (object)$this->session->userdata('logged');
 		$response = $this->form_folders->getByUserID($user->id);

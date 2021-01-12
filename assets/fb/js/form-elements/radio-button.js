@@ -1,7 +1,7 @@
 class RadioButton extends FormElement {
     constructor(obj, editable = false) {
         super(obj, editable);
-        this.settingItems = ['question', 'choices', 'options']
+        this.settingItems = ['question', 'choices', 'options', 'inline']
     }
 
     getElement() {
@@ -10,7 +10,7 @@ class RadioButton extends FormElement {
         element_container.content += `<label class="element-label" for="${this.id}">${this.question ? this.question : ''} <span class="text-danger">${this.required ? '*' : ''}</span></label>`;
         this.choices.forEach(choice => {
             element_container.content += `
-                <div class="form-check">
+                <div class="form-check ${this.inline ? 'form-check-inline': ''}">
                     <input class="form-check-input" type="radio" name="${this.element_type}-${this.id}" id="${this.element_type}-${this.id}-${choice.id}" value="${choice.id}">
                     <label class="form-check-label" for="${this.element_type}-${this.id}-${choice.id}">
                         ${choice.choice_text}

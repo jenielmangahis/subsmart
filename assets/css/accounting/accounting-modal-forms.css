@@ -13,6 +13,13 @@
     height: auto;
 }
 
+#depositModal div.funds-table-container div.funds-table-footer button.btn:focus,
+#journalEntryModal div.journal-table-container div.journal-table-footer button.btn:focus,
+#inventoryModal div.inventory-table-container div.inventory-table-footer button.btn:focus,
+#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn:focus {
+    color: #6c757d !important;
+}
+
 div.attachments button {
     border: none;
     height:auto;

@@ -103,9 +103,8 @@ class Customer_advance_model extends MY_Model {
         if ($query = $this->db->get($tablename, $limit, $start)) {
             return $query->result();
         } else {
-             return false;
+            return false;
         }
-
     }
 
     public function delete($input)

@@ -27,4 +27,8 @@ const element_types = {
     RadioButtonPricing,
     Signature,
     ContainerBlock,
+    BlankSpace,
+    ProductOrdering,
+    ZoneList,
+    ShortAnswerGroup,
 }
