@@ -368,13 +368,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="modal-body">
                     <div class="section-title" style="">Basic Details</div>
                     <div class="form-group">
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-6">
                                 <label for="">Employee Number</label>
                                 <input type="text" name="emp_number" class="form-control" id="emp_number" placeholder="Enter Employee Number">
                             </div>
                         </div>
-                        <br />
+                        <br /> -->
                         <div class="row">                            
                             <div class="col-md-6">
                                 <label for="">First Name</label>

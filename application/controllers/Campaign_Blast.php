@@ -28,7 +28,7 @@ class Campaign_Blast extends MY_Controller {
 
 		$campaign_blast_all = $this->MarketingCampaignBlast_model->getAll();
 
-		$this->page_data['count_campaign_blast']   = count($campaign_blast_all);
+		$this->page_data['count_campaign_blast']   = $campaign_blast_all;
 		$this->page_data['campaign_blast_draft']   = $campaign_blast_draft;
 		$this->page_data['campaign_blast_queue']   = $campaign_blast_queue;
 		$this->page_data['campaign_blast_sent']    = $campaign_blast_sent;

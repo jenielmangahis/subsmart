@@ -746,7 +746,7 @@ class Users extends MY_Controller {
         $app_access = $this->input->post('values[app_access]');
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
-        $emp_number  = $this->input->post('values[emp_number]');
+        $emp_number  = $this->users_model->generateRandomEmployeeNumber();
         $cid=logged('company_id');
         $add = array(
             'FName' => $fname,
@@ -770,6 +770,7 @@ class Users extends MY_Controller {
             echo json_encode(0);
         }
     }    
+
     public function getEmployeeData(){
 	    $user_id = $this->input->get('user_id');
 	    $get_data = $this->db->get_where('users',array('id'=>$user_id));
@@ -793,7 +794,8 @@ class Users extends MY_Controller {
 	    $get_user = $this->Users_model->getUser($user_id);
 	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
 
-	    $cid   = logged('company_id');		
+	    $cid   = logged('company_id');
+	    $role_id = logged('role');		
         $roles = $this->users_model->getRoles();
 
         if( $role_id == 1 || $role_id == 2 ){
