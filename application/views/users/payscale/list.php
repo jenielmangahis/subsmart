@@ -2,7 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
- 
+ #payscaleTable_filter label > input { 
+visibility: visible !important;
+position: inherit !important;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -33,11 +36,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12 table-responsive">
-                                    <table id="payscaleTable" data-page-length='25' class="table table-bordered table-striped">
+                                <div class="col-lg-12">
+                                    <table id="payscaleTable" class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
-                                            <th style="width: 70%;">Pay Scale</th>
+                                            <th>Pay Scale</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -46,8 +49,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <td><?= $p->payscale_name; ?></td>
                                                 <td class="center">
-                                                    <a href="javascript:void(0)" class="btn btn-info btn-sm editPayscale" data-id="<?= $p->id?>" title="Edit Pay Scale" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                    <a href="javascript:void(0)" title="Delete Pay Scale" data-toggle="tooltip" data-id="<?= $p->id?>" class="btn btn-danger btn-sm btn-delete-payscale"><i class="fa fa-trash"></i></a>
+                                                    <?php if( in_array($p->id, $default_ids) ){ ?>
+                                                        <?php if( $role_id == 1 || $role_id == 2 ){ ?>
+                                                            <a href="javascript:void(0)" class="btn btn-info btn-sm editPayscale" data-id="<?= $p->id?>" title="Edit Pay Scale" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                            <a href="javascript:void(0)" title="Delete Pay Scale" data-toggle="tooltip" data-id="<?= $p->id?>" class="btn btn-danger btn-sm btn-delete-payscale"><i class="fa fa-trash"></i></a>
+                                                        <?php } ?>
+                                                    <?php }else{ ?>
+                                                        <a href="javascript:void(0)" class="btn btn-info btn-sm editPayscale" data-id="<?= $p->id?>" title="Edit Pay Scale" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                        <a href="javascript:void(0)" title="Delete Pay Scale" data-toggle="tooltip" data-id="<?= $p->id?>" class="btn btn-danger btn-sm btn-delete-payscale"><i class="fa fa-trash"></i></a>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>
@@ -149,17 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('#modalAddPayScale').modal({backdrop: 'static', keyboard: false});
         });
 
-        $(document).on('click','#editPayscale',function () {
-            $('#modalEditPayScale').modal({backdrop: 'static', keyboard: false});
-        });
-
-        $(document).on('click','.btn-delete-payscale',function () {
-            var pid = $(this).attr("data-id");
-            $("#dpid").val(pid);
-            $('#modalDeletePayscale').modal({backdrop: 'static', keyboard: false});
-        });
-
-        $(".editPayscale").click(function(){
+        $(document).on('click','.editPayscale',function () {
             var pid = $(this).attr("data-id");
             $('#modalEditPayScale').modal({backdrop: 'static', keyboard: false});
             $.ajax({
@@ -173,6 +173,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
         });
 
+        $(document).on('click','.btn-delete-payscale',function () {
+            var pid = $(this).attr("data-id");
+            $("#dpid").val(pid);
+            $('#modalDeletePayscale').modal({backdrop: 'static', keyboard: false});
+        });
+        
         $("#btn-modal-delete-payscale").click(function(){
             var pid = $("#dpid").val();
             $.ajax({

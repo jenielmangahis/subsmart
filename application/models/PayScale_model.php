@@ -31,8 +31,8 @@ class PayScale_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where_in('id', $default_ids);
-        $this->db->order_by('id', 'ASC');
+        $this->db->or_where_in('id', $default_ids);
+        $this->db->order_by('payscale_name', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
