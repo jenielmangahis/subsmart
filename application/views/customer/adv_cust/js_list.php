@@ -747,16 +747,16 @@
             };
 
             let content = replaceDoubleBraces(url,result);
-        //console.log(content);
-        $.ajax({
-            type: "POST",
-            url: "/esign/content_editor",
-            data: { contents : content}, // serializes the form's elements.
-            success: function(data){
-                $('#summernote').summernote('code', data);
-                //console.log(data);
-            }
-        });
+            //console.log(content);
+            $.ajax({
+                type: "POST",
+                url: "/esign/content_editor",
+                data: { contents : content}, // serializes the form's elements.
+                success: function(data){
+                    $('#summernote').summernote('code', data);
+                    //console.log(data);
+                }
+            });
 
         <?php  endif; ?>
 

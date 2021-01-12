@@ -84,13 +84,13 @@
                                                             
                                                             <div class="tab-content mt-4">
                                                                 <div class="tab-pane standard-accordion active" id="alarmform1">
-                                                                    <iframe src="<?= base_url()?>/form/15?preview" frameborder="0" class="workorder-container"></iframe>
+                                                                    <iframe src="<?= base_url('/fb/view/20')?>" frameborder="0" class="workorder-container"></iframe>
                                                                 </div>
                                                                 <div class="tab-pane standard-accordion" id="alarmform2">
-                                                                    <iframe src="<?= base_url()?>/form/14?preview" frameborder="0" class="workorder-container"></iframe>
+                                                                    <iframe src="<?= base_url('/fb/view/24')?>" frameborder="0" class="workorder-container"></iframe>
                                                                 </div>
                                                                 <div class="tab-pane standard-accordion" id="alarmform3">
-                                                                    <iframe src="<?= base_url()?>/form/13" frameborder="0" class="workorder-container"></iframe>
+                                                                    <iframe src="<?= base_url('/fb/view/25')?>" frameborder="0" class="workorder-container"></iframe>
                                                                 </div>
                                                                 </div>
                                                             </div>

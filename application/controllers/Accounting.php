@@ -87,6 +87,8 @@ class Accounting extends MY_Controller {
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['terms'] = $this->accounting_invoices_model->getPayTerms();
         $this->load->view('accounting/dashboard', $this->page_data);
     }
 
@@ -1977,6 +1979,12 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
+
+    public function getCustomersAcc(){
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->load->view('accounting/customer_invoice_modal', $this->page_data);
+    }
+
 	public function updateInvoice()
     {
         $new_data = array(

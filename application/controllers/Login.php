@@ -84,7 +84,6 @@ class Login extends CI_Controller {
         			}
         		}
         	}
-
         }elseif( $attempt=='invalid_password' ){
 
         	// Show Message if invalid password
@@ -114,7 +113,11 @@ class Login extends CI_Controller {
             return;
 
         }
-
+		$this->load->model('Activity_model', 'activity');
+		$activity['activityName'] = "User Login";
+		$activity['activity'] = " User ".logged('username')." is loggedin";
+		$activity['user_id'] = logged('id');
+		$isUserInserted = $this->activity->addEsignActivity($activity);
         redirect('dashboard');
 
 	}

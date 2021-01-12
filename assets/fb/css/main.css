@@ -22,6 +22,10 @@
     display: none;
 }
 
+.FormattedText .form-element-controls > .btn-group {
+    bottom: -15px !important;
+}
+
 .form-element-controls > .element-handle, .form-element-controls > .contained-element-handle{
     width: 25px;
     height: 25px;
@@ -129,6 +133,7 @@ div#blankFormPlaceHolder {
     border: 0;
     border-left: 8px solid #626ed4;
     height: 100%;
+    max-height: 100px;
     min-height: 50px;
     float: left;
 }
@@ -140,6 +145,7 @@ div#blankFormPlaceHolder {
 
 #elementSettingsModal textarea{
     min-height: 100px;
+    max-height: 100px !important;
 }
 
 .element-setting-container {
@@ -163,8 +169,36 @@ div#blankFormPlaceHolder {
     background-color: #32243d !important;
 }
 
+.height-1 {
+    height: 10px !important;
+}
+
+.height-2 {
+    height: 30px !important;
+}
+
 .height-3 {
     height: 80px !important;
+}
+
+.height-4 {
+    height: 110px !important;
+}
+
+.height-5 {
+    height: 210px !important;
+}
+
+.height-6 {
+    height: 310px !important;
+}
+
+.height-7 {
+    height: 410px !important;
+}
+
+.height-7 {
+    height: 510px !important;
 }
 
 .form-header {
@@ -258,4 +292,42 @@ div#blankFormPlaceHolder {
 #formBuilderContainer {
     max-height: 80vh;
     overflow-y: scroll;
+    padding-bottom: 80px;
+}
+
+.container-block .LongAnswer textarea {
+    /* height: 90% !important; */
+}
+
+.color-placeholder {
+    border: 1px solid gray;
+    height: 46px;
+    width: 46px;
+}
+
+.thumb-wrap {
+    border: 1px solid transparent;
+    cursor: pointer;
+    float: left;
+    margin: 5px 1px 5px 0;
+    padding: 1px 1px 4px;
+}
+
+.thumb-wrap:hover {
+    background: gray;
+}
+
+.thumb {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    padding: 3px;
+    height: 80px;
+    width: 100%;
+}
+
+.thumb-wrap span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
 }

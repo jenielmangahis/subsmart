@@ -2513,7 +2513,7 @@ label {
 
 .form-control {
     font-size: 14px;
-    height: 46px !important;
+    height: 46px;
 }
 
 .form-control:focus {

@@ -444,6 +444,16 @@ class Users_model extends MY_Model {
 		$query = $this->db->get();
 		return $query->row();
 	}
+
+	public function generateRandomEmployeeNumber($length = 14) {
+	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+	    for ($i = 0; $i < $length; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
+	    return $randomString;
+	}
 }
 
 

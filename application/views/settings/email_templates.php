@@ -44,21 +44,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                    <tr>
+                                            <tr>
                                                 <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
                                                     <span class="bold">Invoice</span>
                                                 </td>
                                             </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send invoice without online payment option</a></td>
+                                            <?php foreach ($invoice_templates as $invoice_template): ?>
+                                             <tr>
+                                                <td data-title="Template Name">
+                                                    <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">Create and send invoice without online payment option</a>
+                                                </td>
                                                 <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
+                                                    <span class="text-ter"><?= $invoice_template->details; ?></span>
+                                                </td>
                                                 <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>" >
+                                                        <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                    </a>
                                                 </td>
                                             </tr>
-                                                    <tr>
+                                            <?php endforeach ?>
+                                            <tr>
                                                 <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send invoice with online payment option</a></td>
                                                 <td data-title="Details">
                                                                     <span class="text-ter">Default template</span>

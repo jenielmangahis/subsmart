@@ -233,7 +233,6 @@ const element_properties = {
     },
 }
 const applyStyle = (element, value) => {
-    console.log({element/* , el, prop */, value})
     const el = element_properties[element].element;
     const prop = element_properties[element].property;
     $(`.${el}`).css(prop, value);

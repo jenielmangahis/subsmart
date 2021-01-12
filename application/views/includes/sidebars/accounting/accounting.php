@@ -132,9 +132,6 @@
                 </div>
             </div>
          </div>
-         <div class="pop-footer">
-            <a href="#">Show Less</a>
-         </div>
       </div>
    </div>
 </div>

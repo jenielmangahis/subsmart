@@ -3,7 +3,7 @@
     <div id="transferModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
-            <form onsubmit="submitModalForm(event)" id="modal-form">
+            <form onsubmit="submitModalForm(event, this)" id="modal-form">
                 <div class="modal-content" style="height: 100%;">
                     <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                         <h4 class="modal-title">Transfer</h4>

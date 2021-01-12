@@ -23,7 +23,6 @@ class Accounting_invoices_model extends MY_Model {
 	public function createInvoiceProd($data){
 	    $vendor = $this->db->insert('accounting_invoice_prods', $data);
 	    $insert_id = $this->db->insert_id();
-
 		return  $insert_id;
     }
 	public function updateInvoice($id, $data){
@@ -47,5 +46,15 @@ class Accounting_invoices_model extends MY_Model {
 	public function getInvoiceDetails($id){
 	    $vendor = $this->db->get_where('accounting_invoices', array('id' => $id));
 	    return $vendor->result();
-    }
+	}
+	
+	public function getCustomers(){
+	    $vendor = $this->db->get('acs_profile');
+	    return $vendor->result();
+	}
+	
+	public function getPayTerms(){
+		$vendor = $this->db->get('payment_term');
+	    return $vendor->result();
+	}
 }

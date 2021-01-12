@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
                                     <?php ////if (hasPermissions('add_plan')): ?>
-                                    <a href="<?php echo url('customer/group/add') ?>" class="btn btn-primary"><i
+                                    <a href="<?php echo url('customer/group_add') ?>" class="btn btn-primary"><i
                                                 class="fa fa-plus"></i> Add Group</a>
 
                                 </div>
@@ -39,9 +39,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <table id="dataTable1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Group</th>
-                                    <th>Customers</th>
-                                    <th>Date Added</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -51,9 +52,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td>
                                                 <?php echo $customerGroup->title ?>
                                             </td>
-                                            <td>
-                                                0
-                                            </td>
+                                            <td><?= $customerGroup->description; ?></td>
+                                            <td><?= $customerGroup->date_added; ?></td>
                                             <td>
                                                 <?php //if (hasPermissions('plan_edit')): ?>
                                                     <a href="<?php echo url('customer/group/edit/' . $customerGroup->id) ?>"

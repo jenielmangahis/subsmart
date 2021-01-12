@@ -4,7 +4,7 @@
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/dropdown.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/checkbox.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/email.js'); ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/Calendar.js'); ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/calendar.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/long-answer.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/short-answer.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/number.js'); ?>"></script>
@@ -27,4 +27,8 @@
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/signature.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/radio-button-pricing.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/container-block.js'); ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/blank-space.js'); ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/product-ordering.js'); ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/zone-list.js'); ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/short-answer-group.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/element-types.js'); ?>"></script>

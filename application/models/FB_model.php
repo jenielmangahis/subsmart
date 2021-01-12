@@ -15,6 +15,7 @@ class FB_model extends MY_Model {
 		$this->load->model('FB_element_matrix_rows_model', 'form_element_matrix_rows');
 		$this->load->model('FB_element_matrix_columns_model', 'form_element_matrix_columns');
 		$this->load->model('FB_style_model', 'form_style');
+		$this->load->model('Items_model', 'products');
     }
     
 	function create($data){
@@ -26,7 +27,6 @@ class FB_model extends MY_Model {
 				'form_id' => $formID
 			];
 
-			$this->generateQR($formID);
 
 			$this->form_security->create($newData);
 			$this->form_schedule_setting->create($newData);
@@ -47,10 +47,16 @@ class FB_model extends MY_Model {
 	    return $response;
 	}
 
+	public function getActiveCompanyDataByUserID($userID) {
+		$profiledata = $this->business_model->getByWhere(array('id'=>$userID));	
+		$res = ($profiledata) ? $profiledata[0] : '';
+		return $res;
+	}
+
 	function getByUserID($userID, $data) {
 		try {
-			$folder_id = $data['folder'] ?: 0;
-			$search_string = $data['search_string'];
+			$folder_id = isset($data['folder']) ? $data['folder'] : 0;
+			$search_string = isset($data['search_string']) ? $data['search_string']: 0;
 			$this->db->select("*");
 			if($folder_id != 2) {
 				$this->db->where('folder_id <>', 2);
@@ -82,7 +88,18 @@ class FB_model extends MY_Model {
 		try {
 			$this->db->select("*");
 			$this->db->where('id', $id);
-			$form = $this->db->get($this->table);
+			$form = $this->db->get($this->table)->row();
+
+			// $company = $this->getActiveCompanyDataByUserID($form->user_id);
+
+			// $user = (object)$this->session->userdata('logged');		
+			// $cid=logged('id');
+
+			$products = $this->products->getByCompanyId(1);
+
+			$this->db->select("*");
+			$this->db->where('form_id', $id);
+			$formStyle = $this->db->get($this->form_style->table);
 
 			$this->db->select("*");
 			$this->db->where('form_id', $id);
@@ -116,9 +133,12 @@ class FB_model extends MY_Model {
 				$elementsArr[$i]['matrix'] = $matrix;				
 			}
 			$data = [
-				'form'			=> $form->row(),
+				'form'			=> $form,
 				'form_style'	=> $formStyle->row(),
-				'elements'		=> $elementsArr
+				'elements'		=> $elementsArr,
+				'products'		=> $products,
+				// 'company'		=> $company,
+				// 'cid'			=> $cid,
 			];	
 
 			$res = [

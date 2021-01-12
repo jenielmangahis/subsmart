@@ -119,6 +119,9 @@ $route['fb/elements/update-order']['post'] = 'FB/updateOrder';
 $route['fb/elements/update/(:num)']['post'] = 'FB/updateElement/$1';
 $route['fb/elements/destroy/(:num)']['post'] = 'FB/destroyElement/$1';
 
+//fb templates
+$route['fb/templates/get-by-active-user'] = 'FB/getTemplatesByActiveUser';
+
 //fb folders
 $route['fb/folders/get-by-active-user'] = 'FB/getFoldersByActiveUser';
 $route['fb/folders/'] = 'FB/foldersIndex';
@@ -473,6 +476,11 @@ $route['page/no_access'] = 'page/no_access';
 
 // Offer Code
 $route['offer_codes/index'] = 'Offer_Codes/index';
+$route['offer_codes/add_new_offer'] = 'Offer_Codes/add_new_offer';
+$route['offer_codes/create_offer_code'] = 'Offer_Codes/create_offer_code';
+$route['offer_codes/edit_offer/(:num)'] = 'Offer_Codes/edit_offer/$1';
+$route['offer_codes/update_edit_offer'] = 'Offer_Codes/update_edit_offer';
+
 
 //Registration
 $route['registration/_use_offer_code'] = 'Register/registration_use_code';
