@@ -2,6 +2,7 @@ const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
+var modalName = '';
 
 $(function() {
     $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a', function(e) {
@@ -9,6 +10,7 @@ $(function() {
         var target = e.currentTarget.dataset;
         var view = target.view
         var modal_element = target.target;
+        modalName = target.target;
 
         $.get(GET_OTHER_MODAL_URL+view, function(res) {
             if ($('div#modal-container').length > 0) {
@@ -30,6 +32,17 @@ $(function() {
 
                 $('div#modal-container table tbody tr:first-child()').html(blankRow);
                 $('div#modal-container table tbody tr:first-child() td:nth-child(2)').html(1);
+            }
+
+            if(view === "bank_deposit_modal") {
+                $('div#depositModal select#tags').select2({
+                    placeholder: 'Start typing to add a tag',
+                    allowClear: true,
+                    ajax: {
+                        url: '/accounting/get-job-tags',
+                        dataType: 'json'
+                    }
+                });
             }
         });
     });
@@ -64,8 +77,35 @@ $(function() {
             $(this).children('td:nth-child(2)').html(num);
             num++;
         });
+
+        if(modalName === '#depositModal') {
+            updateBankDepositTotal();
+        }
     });
 });
+
+const updateBankDepositTotal = () => {
+    var otherFundsTotal = 0;
+
+    $('div#depositModal input[name="amount[]"]').each(function() {
+        if($(this).val() !== "") {
+            var val = $(this).val();
+            otherFundsTotal = (parseFloat(otherFundsTotal) + parseFloat(val)).toFixed(2);
+        }
+    });
+
+    var cashBackAmount = 0;
+
+    if($('div#depositModal input[name="cash_back_amount"]').val() !== "") {
+        cashBackAmount = $('div#depositModal input[name="cash_back_amount"]').val();
+    }
+
+    var totalDepositAmount = (parseFloat(otherFundsTotal) - parseFloat(cashBackAmount)).toFixed(2);
+
+    $('div#depositModal span.other-funds-total').html(`$${otherFundsTotal}`);
+    $('div#depositModal h2.total-deposit-amount').html(`$${totalDepositAmount}`);
+    $('div#depositModal span.total-cash-back').html(`$${totalDepositAmount}`);
+}
 
 const addTableLines = (e) => {
     e.preventDefault();

@@ -136,73 +136,7 @@
             opacity: 0.6;
             }
         </style>
-        <div class="row cus-dashboard-div">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-purple card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">monetization_on</i>
-                  </div>
-                  <p class="card-category">EARNED TODAY</p>
-                  <h3 class="card-title">$0.00</h3>
-                </div>
-                <div class="card-footer">
-                  <div class="stats">
-                    <i class="material-icons">date_range</i> Since last month
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-purple card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">receipt_long</i>
-                  </div>
-                  <p class="card-category">TOTAL JOBS MONTH TO DATE</p>
-                  <h3 class="card-title">0 (Avg: $0.00)</h3>
-                </div>
-                <div class="card-footer">
-                  <div class="stats">
-                    <i class="material-icons">date_range</i> Since last month
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-purple card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">assignment_turned_in</i>
-                  </div>
-                  <p class="card-category">TOTAL INVOICE DUE</p>
-                  <h3 class="card-title">$0.00 (0)</h3>
-                </div>
-                <div class="card-footer">
-                  <div class="stats">
-                    <i class="material-icons">date_range</i> Since last month
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-purple card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">pending_actions</i>
-                  </div>
-                  <p class="card-category">TOTAL ESTIMATE PENDING</p>
-                  <h3 class="card-title">0.00</h3>
-                </div>
-                <div class="card-footer">
-                  <div class="stats">
-                    <i class="material-icons">date_range</i> Since last month
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-
+        
         <div class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2">
             <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
                 <div class="c65 c61">
@@ -533,77 +467,70 @@
                 </div>
             </div>
             <div class="col-md-7">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card mini-stat bg-primary text-white">
-                                    <div class="card-body">
-                                        <div class="mb-4">
-                                            <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>dashboard/images/services-icon/01.png" alt=""></div>
-                                            <h5 class="font-16 text-uppercase mt-0 text-white-50">Earned Today</h5>
-                                            <h4 class="font-500">$0.00 <i class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-                                        </div>
-                                        <div class="pt-2">
-                                            <div class="float-right"><a href="index.html#" class="text-white-50"><i
-                                                class="mdi mdi-arrow-right h5"></i></a></div>
-                                            <p class="text-white-50 mb-0">Since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card mini-stat bg-primary text-white">
-                                    <div class="card-body">
-                                        <div class="mb-4">
-                                            <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>dashboard/images/services-icon/02.png"
-                                                alt=""></div>
-                                            <h5 class="font-16 text-uppercase mt-0 text-white-50">Total Jobs month to date</h5>
-                                            <h4 class="font-500">0 (Avg: $0.00) <i class="mdi mdi-arrow-down text-danger ml-2"></i></h4>
-                                        </div>
-                                        <div class="pt-2">
-                                            <div class="float-right"><a href="index.html#" class="text-white-50"><i
-                                                class="mdi mdi-arrow-right h5"></i></a></div>
-                                            <p class="text-white-50 mb-0">Since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card mini-stat bg-primary text-white">
-                                    <div class="card-body">
-                                        <div class="mb-4">
-                                            <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>dashboard/images/services-icon/03.png"
-                                                alt=""></div>
-                                            <h5 class="font-16 text-uppercase mt-0 text-white-50">Total Invoice Due</h5>
-                                            <h4 class="font-500">$0.00 (0) <i class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-                                        </div>
-                                        <div class="pt-2">
-                                            <div class="float-right"><a href="index.html#" class="text-white-50"><i
-                                                class="mdi mdi-arrow-right h5"></i></a></div>
-                                            <p class="text-white-50 mb-0">Since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card mini-stat bg-primary text-white">
-                                    <div class="card-body">
-                                        <div class="mb-4">
-                                            <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>dashboard/images/services-icon/04.png"
-                                                alt=""></div>
-                                            <h5 class="font-16 text-uppercase mt-0 text-white-50">Total Estimate Pending</h5>
-                                            <h4 class="font-500">0.00 <i class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-                                        </div>
-                                        <div class="pt-2">
-                                            <div class="float-right"><a href="index.html#" class="text-white-50"><i
-                                                class="mdi mdi-arrow-right h5"></i></a></div>
-                                            <p class="text-white-50 mb-0">Since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="row cus-dashboard-div">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="card card-stats">
+                        <div class="card-header card-header-purple card-header-icon">
+                          <div class="card-icon">
+                            <i class="material-icons">monetization_on</i>
+                          </div>
+                          <p class="card-category">EARNED TODAY</p>
+                          <h3 class="card-title">$0.00</h3>
                         </div>
+                        <div class="card-footer">
+                          <div class="stats">
+                            <i class="material-icons">date_range</i> Since last month
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="card card-stats">
+                        <div class="card-header card-header-purple card-header-icon">
+                          <div class="card-icon">
+                            <i class="material-icons">receipt_long</i>
+                          </div>
+                          <p class="card-category">TOTAL JOBS MONTH TO DATE</p>
+                          <h3 class="card-title">0 (Avg: $0.00)</h3>
+                        </div>
+                        <div class="card-footer">
+                          <div class="stats">
+                            <i class="material-icons">date_range</i> Since last month
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="card card-stats">
+                        <div class="card-header card-header-purple card-header-icon">
+                          <div class="card-icon">
+                            <i class="material-icons">assignment_turned_in</i>
+                          </div>
+                          <p class="card-category">TOTAL INVOICE DUE</p>
+                          <h3 class="card-title">$0.00 (0)</h3>
+                        </div>
+                        <div class="card-footer">
+                          <div class="stats">
+                            <i class="material-icons">date_range</i> Since last month
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="card card-stats">
+                        <div class="card-header card-header-purple card-header-icon">
+                          <div class="card-icon">
+                            <i class="material-icons">pending_actions</i>
+                          </div>
+                          <p class="card-category">TOTAL ESTIMATE PENDING</p>
+                          <h3 class="card-title">0.00</h3>
+                        </div>
+                        <div class="card-footer">
+                          <div class="stats">
+                            <i class="material-icons">date_range</i> Since last month
+                          </div>
+                        </div>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -655,7 +582,7 @@
                 ?>
         </div>
         <!-- end row -->
-        
+
         <div class="row progress-fill-card">
             <div class="col-md-3">
                 <div class="card">
@@ -778,8 +705,8 @@
                 </div>
             </div>
         </div>
-        <div class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2">
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
+        <div class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2" id="sortable">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3 short_id" id="item_1">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -875,7 +802,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3 short_id" id="item_2">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -973,7 +900,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3 short_id" id="item_3">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -1045,7 +972,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-3">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-3 short_id" id="item_4">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: pointer; width: 100%; position: relative;">
                             <div class="jss53">
@@ -1100,7 +1027,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_5">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -1143,7 +1070,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_6">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -1259,7 +1186,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_7">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: pointer; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -1487,7 +1414,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_8">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -1574,7 +1501,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_9">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                             <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
@@ -1621,7 +1548,153 @@
                         </div>
                     </div>
                 </div>
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
+
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_10">
+                    <div class="c65 c61">
+                        <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                            <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                                <div class="MuiCardHeader-avatar">
+                                    <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                        <path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path>
+                                    </svg>
+                                </div>
+                                <div class="MuiCardHeader-content">
+                                    <span class="">
+                                        <h6 class="MuiTypography-root MuiTypography-subtitle1"><span class="jss55 jss91">Leads stats</span></h6>
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                            <div class="MuiCardContent-root jss60" style="height: 309px;">
+                                <div class="jss87">
+                                    <div class="MuiGrid-root jss88 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
+                                        <div class="c66 c161">
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171">All Leads</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$all_leads;?></span></h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="c66 c161">
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171">Assigned Leads</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$assigned_leads;?></span></h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="c66">
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171">Unassigned Leads</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$unassigned_leads;?></span></h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="MuiGrid-root jss89 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
+                                        <div class="c66 c161">
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171">Total Converted Leads</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$converted_leads;?></span></h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_11">
+                    <div class="c65 c61">
+                        <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                            <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                                <div class="MuiCardHeader-avatar">
+                                    <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                        <path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path>
+                                    </svg>
+                                </div>
+                                <div class="MuiCardHeader-content">
+                                    <span class="">
+                                        <h6 class="MuiTypography-root MuiTypography-subtitle1"><span class="jss55 jss91">Taskhub stats</span></h6>
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                            <div class="MuiCardContent-root jss60" style="height: 309px; overflow-x:scroll">
+                                <div class="jss87">
+                                    <div class="MuiGrid-root jss88 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
+                                        <div class="c66 c161">
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171">All Tasks</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$all_tasks;?></span></h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="c66 c161">
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171">My Assigned Tasks</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$my_assig_tasks;?></span></h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="MuiGrid-root jss89 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
+                                        <div class="c66">
+                                            <?php 
+                                                if(count($status_arr) > 0)
+                                                {
+                                                	foreach ($status_arr as $status_array) 
+                                                	{
+                                                		$exp_status_array = explode("@#@", $status_array);
+                                                		?>
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171"><?=ucwords($exp_status_array[0]);?> Tasks</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$exp_status_array[1];?></span></h3>
+                                                </div>
+                                            </div>
+                                            <?php
+                                                }
+                                                }
+                                                ?>
+                                            <div class="c65 c72 c83 c160">
+                                                <div class="c66">
+                                                    <p class="c162 c171">Due Today Tasks</p>
+                                                </div>
+                                                <div class="c66">
+                                                    <h3 class="c162 c169"><span><?=$due_today_tasks;?></span></h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2 short_id" id="item_12">
                     <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
                         <div class="jss53">
                             <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-xs-center">
@@ -1656,150 +1729,6 @@
                         <div class="MuiCardContent-root jss60" style="height: 309px;"></div>
                     </div>
                 </div>
-
-                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
-                <div class="c65 c61">
-                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
-                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
-                            <div class="MuiCardHeader-avatar">
-                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
-                                    <path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path>
-                                </svg>
-                            </div>
-                            <div class="MuiCardHeader-content">
-                                <span class="">
-                                    <h6 class="MuiTypography-root MuiTypography-subtitle1"><span class="jss55 jss91">Leads stats</span></h6>
-                                </span>
-                            </div>
-                        </div>
-                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
-                        <div class="MuiCardContent-root jss60" style="height: 309px;">
-                            <div class="jss87">
-                                <div class="MuiGrid-root jss88 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
-                                    <div class="c66 c161">
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171">All Leads</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$all_leads;?></span></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="c66 c161">
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171">Assigned Leads</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$assigned_leads;?></span></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="c66">
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171">Unassigned Leads</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$unassigned_leads;?></span></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="MuiGrid-root jss89 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
-                                    <div class="c66 c161">
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171">Total Converted Leads</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$converted_leads;?></span></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2">
-                <div class="c65 c61">
-                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
-                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
-                            <div class="MuiCardHeader-avatar">
-                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
-                                    <path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path>
-                                </svg>
-                            </div>
-                            <div class="MuiCardHeader-content">
-                                <span class="">
-                                    <h6 class="MuiTypography-root MuiTypography-subtitle1"><span class="jss55 jss91">Taskhub stats</span></h6>
-                                </span>
-                            </div>
-                        </div>
-                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
-                        <div class="MuiCardContent-root jss60" style="height: 100%;">
-                            <div class="jss87">
-                                <div class="MuiGrid-root jss88 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
-                                    <div class="c66 c161">
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171">All Tasks</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$all_tasks;?></span></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="c66 c161">
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171">My Assigned Tasks</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$my_assig_tasks;?></span></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="MuiGrid-root jss89 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
-                                    <div class="c66">
-                                        <?php 
-                                            if(count($status_arr) > 0)
-                                            {
-                                            	foreach ($status_arr as $status_array) 
-                                            	{
-                                            		$exp_status_array = explode("@#@", $status_array);
-                                            		?>
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171"><?=ucwords($exp_status_array[0]);?> Tasks</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$exp_status_array[1];?></span></h3>
-                                            </div>
-                                        </div>
-                                        <?php
-                                            }
-                                            }
-                                            ?>
-                                        <div class="c65 c72 c83 c160">
-                                            <div class="c66">
-                                                <p class="c162 c171">Due Today Tasks</p>
-                                            </div>
-                                            <div class="c66">
-                                                <h3 class="c162 c169"><span><?=$due_today_tasks;?></span></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             </div>
             <div class="row d-none d-lg-flex">
                 <div class="col-xl-12">
@@ -2363,7 +2292,92 @@
     }
     }
 </style>
+<!-- <ul id="sortable"> 
+    <li class="ui-state-default" id="item_1"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li> 
+    <li class="ui-state-default" id="item_2"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li> 
+    <li class="ui-state-default" id="item_3"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li> 
+    <li class="ui-state-default" id="item_4"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li> 
+    <li class="ui-state-default" id="item_5"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li> 
+    <li class="ui-state-default" id="item_6"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li> 
+    <li class="ui-state-default" id="item_7"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li> 
+</ul>  -->
 <?php include viewPath('includes/footer'); ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript">
+    $('#onoff-customize').click(function() {
+        if(this.checked) {
+            //var current = 1;
+            // $( ".short_id" ).each(function( index ) {
+            //     $('this').attr('id', 'item_'+current);
+            //     current++;
+            // });
+            $("#sortable").sortable({
+                /*stop: function(event, ui) {
+                    alert("New position: " + ui.item.index());
+                }*/
+                start: function(e, div) {
+                    // creates a temporary attribute on the element with the old index
+                    $(this).attr('data-previndex', div.item.index());
+                },
+                update: function(e, div) {
+                    // gets the new and old index then removes the temporary attribute
+                    var newIndex = div.item.index();
+                    var oldIndex = $(this).attr('data-previndex');
+                    var element_id = div.item.attr('id');
+                    //alert('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
+                    $(this).removeAttr('data-previndex');
+                }
+            });
+            $("#sortable").disableSelection();
+        }else{
+            $( "#sortable" ).sortable( "disable" );
+            //$( "#sortable" ).disableSelection();
+        }
+    });
+
+    
+
+    //$( ".sortable2" ).sortable( "enable" );
+    /*$( ".sortable2" ).sortable({
+       start: function(e, ui) {
+           // creates a temporary attribute on the element with the old index
+           $(this).attr('data-previndex', ui.item.index());
+       },
+       update: function(e, ui) {
+           // gets the new and old index then removes the temporary attribute
+           var newIndex = ui.item.index();
+           var oldIndex = $(this).attr('data-previndex');
+           var element_id = ui.item.attr('id');
+           console.log('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
+           $(this).removeAttr('data-previndex');
+           console.log("Module Changed!");
+
+           var idsInOrder = $(".sortable2").sortable("toArray");
+           console.log(idsInOrder);
+
+           var new_module_sort = "";
+           for(var x=0;x<idsInOrder.length;x++){
+               if(x===0){
+                   new_module_sort = new_module_sort + idsInOrder[x];
+               }else{
+                   new_module_sort = new_module_sort +","+idsInOrder[x];
+               }
+               console.log(idsInOrder[x]);
+           }
+           console.log(new_module_sort);
+           $.ajax({
+               type: "POST",
+               url: "/dashboard/ac_dashboard_sort",
+               data: {ds_values : new_module_sort,acds_id : <?php echo $dashboard_sort->acds_id; ?>}, // serializes the form's elements.
+               success: function(data)
+               {
+                   console.log(data);
+               }
+           });
+       }
+    });
+    $( ".sortable2" ).sortable( "disable" );*/
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
@@ -2399,56 +2413,6 @@
     			$('.floating-btn-div ').hide('slow');
     		}
     	});
-    
-           $('#onoff-customize').change(function() {
-               if(this.checked) {
-                   $( ".sortable2" ).sortable( "enable" );
-               }else{
-                   $( ".sortable2" ).sortable( "disable" );
-               }
-    
-           });
-    
-           //$( ".sortable2" ).sortable( "enable" );
-           $( ".sortable2" ).sortable({
-               start: function(e, ui) {
-                   // creates a temporary attribute on the element with the old index
-                   $(this).attr('data-previndex', ui.item.index());
-               },
-               update: function(e, ui) {
-                   // gets the new and old index then removes the temporary attribute
-                   var newIndex = ui.item.index();
-                   var oldIndex = $(this).attr('data-previndex');
-                   var element_id = ui.item.attr('id');
-                   console.log('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
-                   $(this).removeAttr('data-previndex');
-                   console.log("Module Changed!");
-    
-                   var idsInOrder = $(".sortable2").sortable("toArray");
-                   console.log(idsInOrder);
-    
-                   var new_module_sort = "";
-                   for(var x=0;x<idsInOrder.length;x++){
-                       if(x===0){
-                           new_module_sort = new_module_sort + idsInOrder[x];
-                       }else{
-                           new_module_sort = new_module_sort +","+idsInOrder[x];
-                       }
-                       console.log(idsInOrder[x]);
-                   }
-                   console.log(new_module_sort);
-                   $.ajax({
-                       type: "POST",
-                       url: "/dashboard/ac_dashboard_sort",
-                       data: {ds_values : new_module_sort,acds_id : <?php echo $dashboard_sort->acds_id; ?>}, // serializes the form's elements.
-                       success: function(data)
-                       {
-                           console.log(data);
-                       }
-                   });
-               }
-           });
-           $( ".sortable2" ).sortable( "disable" );
     });
 </script>
 <!-- monthy graph -->

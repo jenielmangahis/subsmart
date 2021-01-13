@@ -25,6 +25,9 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_pay_down_credit_card_model');
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_journal_entries_model');
+        $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('job_tags_model');
+        $this->load->model('users_model');
 		$this->load->library('form_validation');
     }
 
@@ -36,15 +39,38 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'single_time_activity_modal':
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
                 case 'journal_entry_modal':
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+                break;
+                case 'bank_deposit_modal':
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
             }
 
             $this->load->view("accounting/". $view, $this->page_data);
         }
+    }
+
+    public function get_job_tags() {
+        $tags = $this->job_tags_model->getJobTagsByCompany();
+
+        $return = [];
+
+        foreach($tags as $tag) {
+            $return['results'][] = [
+                'id' => $tag->id,
+                'text' => $tag->name
+            ];
+        }
+
+        echo json_encode($return);
     }
 
     public function action() {
@@ -68,6 +94,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'journalEntryModal':
                     $this->result = $this->journal_entry($data, $files);
+                break;
+                case 'depositModal':
+                    $this->result = $this->bank_deposit($data, $files);
                 break;
             }
         } catch (\Exception $e) {
@@ -94,6 +123,7 @@ class Accounting_modals extends MY_Controller {
             $filenames = $this->move_files($files, 'transfer');
 
             $insertData = [
+                'company_id' => logged('company_id'),
                 'transfer_from_account' => $data['transfer_from'],
                 'transfer_to_account' => $data['transfer_to'],
                 'transfer_amount' => $data['transfer_amount'],
@@ -147,6 +177,7 @@ class Accounting_modals extends MY_Controller {
             $filenames = $this->move_files($files, 'pay_down_credit_card');
 
             $insertData = [
+                'company_id' => logged('company_id'),
                 'credit_card_id' => $data['credit_card'],
                 'payee_id' => $data['payee'],
                 'amount' => $data['amount'],
@@ -191,9 +222,16 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
+            if(strpos($data['name'], 'employee-') === 0) {
+                $nameKey = 'employee';
+            } else {
+                $nameKey = 'vendor';
+            }
             $insertData = [
+                'company_id' => logged('company_id'),
                 'date' => $data['date'],
-                'employee_id' => $data['name'],
+                'name_key' => $nameKey,
+                'name_id' => ($nameKey === 'employee') ? str_replace('employee-', '', $data['name']) : str_replace('vendor-', '', $data['name']),
                 'customer_id' => $data['customer'],
                 'service_id' => $data['service'],
                 'billable' => (isset($data['billable'])) ? 1 : 0,
@@ -224,26 +262,43 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false || count($data['accounts']) < 2) {
+        if($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
+        } else if(isset($data['accounts']) && count($data['accounts']) < 2 || !isset($data['accounts'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'You must fill out at least two detail lines.';
         } else {
             $filenames = $this->move_files($files, 'journal_entry');
 
             $insertData = [];
             foreach ($data['accounts'] as $key => $value) {
+                if(strpos($data['names'][$key], 'customer-') === 0) {
+                    $nameKey = 'customer';
+                    $nameId = str_replace('customer-', '', $data['names'][$key]);
+                } else if(strpos($data['names'][$key], 'vendor-') === 0) {
+                    $nameKey = 'vendor';
+                    $nameId = str_replace('vendor-', '', $data['names'][$key]);
+                } else if(strpos($data['names'][$key], 'employee-') === 0) {
+                    $nameKey = 'employee';
+                    $nameId = str_replace('employee-', '', $data['names'][$key]);
+                } else {
+                    $nameKey = null;
+                    $nameId = null;
+                }
 
                 $insertData[] = [
+                    'company_id' => logged('company_id'),
                     'journal_no' => $data['journal_no'],
                     'journal_date' => $data['journal_date'],
                     'account_no' => $value,
                     'debits' => $data['debits'][$key],
                     'credits' => $data['credits'][$key],
                     'description' => $data['description'][$key],
-                    'customer_id' => (strpos($data['names'][$key], 'customer-') === 0) ? str_replace('customer-', '', $data['names'][$key]) : null,
-                    'vendor_id' => (strpos($data['names'][$key], 'vendor-') === 0) ? str_replace('vendor-', '', $data['names'][$key]) : null,
-                    'employee_id' => (strpos($data['names'][$key], 'employee-') === 0) ? str_replace('employee-', '', $data['names'][$key]) : null,
+                    'name_key' => $nameKey,
+                    'name_id' => $nameId,
                     'memo' => $data['memo'],
                     'attachments' => json_encode($filenames),
                     'status' => 1,
@@ -257,6 +312,77 @@ class Accounting_modals extends MY_Controller {
             $return['data'] = $entryId;
             $return['success'] = $entryId ? true : false;
             $return['message'] = $entryId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function bank_deposit($data, $files) {
+        $this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
+        $this->form_validation->set_rules('date', 'Date', 'required');
+
+        if(isset($data['account']) && isset($data['amount'])) {
+            $this->form_validation->set_rules('account[]', 'Account', 'required');
+            $this->form_validation->set_rules('amount[]', 'Amount', 'required');
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['account']) && !isset($data['amount'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $filenames = $this->move_files($files, 'bank_deposit');
+
+            $insertData = [];
+            foreach($data['account'] as $key => $value) {
+                if(strpos($data['received_from'][$key], 'customer-') === 0) {
+                    $nameKey = 'customer';
+                    $nameId = str_replace('customer-', '', $data['received_from'][$key]);
+                } else if(strpos($data['received_from'][$key], 'vendor-') === 0) {
+                    $nameKey = 'vendor';
+                    $nameId = str_replace('vendor-', '', $data['received_from'][$key]);
+                } else if(strpos($data['received_from'][$key], 'employee-') === 0) {
+                    $nameKey = 'employee';
+                    $nameId = str_replace('employee-', '', $data['received_from'][$key]);
+                } else {
+                    $nameKey = null;
+                    $nameId = null;
+                }
+
+                $insertData[] =[
+                    'account_no' => $data['bank_account'],
+                    'company_id' => logged('company_id'),
+                    'date' => $data['date'],
+                    'tags' => json_encode($data['tags']),
+                    'received_from_key' => $nameKey,
+                    'received_from_id' => $nameId,
+                    'received_from_account' => $value,
+                    'description' => $data['description'][$key],
+                    'payment_method' => $data['payment_method'][$key],
+                    'ref_no' => $data['reference_no'][$key],
+                    'amount' => $data['amount'][$key],
+                    'cash_back_account' => $data['cash_back_target'],
+                    'cash_back_memo' => $data['cash_back_memo'],
+                    'cash_back_amount' => $data['cash_back_amount'],
+                    'memo' => $data['memo'],
+                    'attachments' => json_encode($filenames),
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ];
+            }
+
+            $depositId = $this->accounting_bank_deposit_model->insertBatch($insertData);
+
+            $return['data'] = $depositId;
+            $return['success'] = $depositId ? true : false;
+            $return['message'] = $depositId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;

@@ -88,8 +88,8 @@
                             <h4>Vendors</h4>
 
                             <ul>
-                                 <li><a href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Expense</a></li>
-                                 <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li>
+                                 <li><a href="#" data-toggle="modal" data-target="#expense-modal-popup" id="addExpense_popup">Expense</a></li>
+                                 <li><a href="#" data-toggle="modal" data-target="#expensesCheck-popup" id="addCheck_popup">Check</a></li>
                                  <li><a href="#" data-toggle="modal" data-target="#bill-modal" id="addBill">Bill</a></li>
                                  <li><a href="#" data-toggle="modal" data-target="#pay-bills" id="payBills">Pay bills</a></li>
                                  <li><a href="#" data-toggle="modal" data-target="#purchase-order" id="purchaseorder">Purchase order</a></li>
@@ -142,231 +142,11 @@
 <?php // include viewPath('accounting/inventory_qty_modal'); ?>
 <?php // include viewPath('accounting/journal_entry_modal'); ?>
 
+<?php include viewPath('accounting/expense_add_model'); ?>
+<?php include viewPath('accounting/expense_check_add_model'); ?>
 
 <!-- End New Popup -->
-<!--    Expense modal-->
-<div class="full-screen-modal">
-   <div id="expense-modal" class="modal fade modal-fluid" role="dialog">
-      <div class="modal-dialog">
-         <!-- Modal content-->
-         <div class="modal-content">
-            <div class="modal-header">
-               <div class="modal-title">
-                  <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                  Expense
-               </div>
-               <button type="button" class="close" id="closeModalExpense"><i class="fa fa-times fa-lg"></i></button>
-            </div>
-            <form action="" method="post" id="expenseForm">
-               <div class="modal-body" style="margin-bottom: 100px">
-                  <div class="row">
-                     <div class="col-md-3">
-                        <label for="">Payee</label>
-                        <input type="hidden" id="expenseTransId" class="transaction_id">
-                        <input type="hidden" id="expenseId">
-                        <input type="hidden" id="exType" class="" value="Expense" data-id="">
-                        <select name="vendor_id" id="expenseVendorId" class="form-control select2-payee" required>
-                           <option value=""></option>
-                           <option disabled>&plus;&nbsp;Add new</option>
-                           <?php foreach ($vendors as $vendor):?>
-                           <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
-                           <?php endforeach; ?>
-                        </select>
-                     </div>
-                     <div class="col-md-3">
-                        <label for="">Payment account <i class="fa fa-question-circle"></i></label>
-                        <select name="payment_account" id="expensePaymentAccount" class="form-control select2-account" required>
-                           <option>Cash on hand</option>
-                           <option value="1">Cash on hand:Cash on hand</option>
-                           <option value="2">Corporate Account (XXXXXX 5850)</option>
-                           <option value="3">Corporate Account (XXXXXX 5850)Te</option>
-                           <option >Investment Asset</option>
-                           <option >Payroll Refunds</option>
-                           <option >Uncategorized Asset</option>
-                           <option >Undeposited Funds</option>
-                        </select>
-                     </div>
-                     <div class="col-md-3" style="line-height: 100px">
-                        <span style="font-weight: bold">Balance</span>
-                        <span>$133,101.00</span>
-                     </div>
-                     <div class="col-md-3" style="text-align: right">
-                        <div class="d-flex align-items-center mt-2 justify-content-end">
-                           <div class="mr-4">AMOUNT</div>
-                           <div>
-                              <h1 id="h1_amount-expense">$0.00</h1>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="row" style="margin-top: 20px;">
-                     <div class="col-md-3">
-                        <label for="">Payment date</label>
-                        <input type="date" name="payment_date" id="expensePaymentDate" class="form-control" required>
-                     </div>
-                     <!-- <div class="col-md-2">
-                        </div> -->
-                     <div class="col-md-3">
-                        <label for="">Payment method</label>
-                        <select name="payment_method" id="expensePaymentMethod" class="form-control select2-method" required>
-                           <option value=""></option>
-                           <option>Cash</option>
-                           <option>Check</option>
-                           <option>Credit Card</option>
-                        </select>
-                     </div>
-                     <!-- <div class="col-md-2"></div> -->
-                     <div class="col-md-3">
-                        <div class="form-group">
-                           <label for="">Ref no.</label>
-                           <input type="text" name="ref_num" id="expenseRefNumber" class="form-control" required>
-                        </div>
-                        <!-- <div class="form-group">
-                           <label for="">Permit no.</label>
-                           <input type="text" name="permit_num" id="expensePermitNumber" class="form-control" required>
-                           </div> -->
-                     </div>
-                     <div class="col-md-3">
-                        <div class="form-group">
-                           <label for="">Permit no.</label>
-                           <input type="text" name="permit_num" id="expensePermitNumber" class="form-control" required>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="table-container">
-                     <div class="table-loader">
-                        <p class="loading-text">Loading records</p>
-                     </div>
-                     <!--                        DataTables-->
-                     <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
-                        <thead>
-                           <tr>
-                              <th></th>
-                              <th>#</th>
-                              <th>CATEGORY</th>
-                              <th>DESCRIPTION</th>
-                              <th>AMOUNT</th>
-                              <th></th>
-                           </tr>
-                        </thead>
-                        <tbody id="line-container-expense">
-                           <tr id="tableLine-expense">
-                              <td></td>
-                              <td><span id="line-counter-expense">1</span></td>
-                              <td>
-                                 <div id="" style="display:none;">
-                                    <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
-                                       <option></option>
-                                       <?php foreach ($list_categories as $list): ?>
-                                       <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                       <?php endforeach;?>
-                                    </select>
-                                 </div>
-                              </td>
-                              <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: none;"></td>
-                              <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: none;"></td>
-                              <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
-                           </tr>
-                           <tr id="tableLine-expense">
-                              <td></td>
-                              <td><span id="line-counter-expense">2</span></td>
-                              <td>
-                                 <div id="" style="display:none;">
-                                    <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
-                                       <option></option>
-                                       <?php foreach ($list_categories as $list): ?>
-                                       <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                       <?php endforeach;?>
-                                    </select>
-                                 </div>
-                              </td>
-                              <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: none;"></td>
-                              <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: none;"></td>
-                              <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
-                           </tr>
-                        </tbody>
-                     </table>
-                  </div>
-                  <div class="addAndRemoveRow">
-                     <div class="total-amount-container">
-                        <span style="margin-right: 200px;font-size: 17px">Total</span>
-                        $<span id="total-amount-expense">0.00</span>
-                     </div>
-                     <button type="button" class="add-remove-line" id="add-four-line-expense">Add lines</button>
-                     <button type="button" class="add-remove-line" id="clear-all-line-expense">Clear all lines</button>
-                  </div>
-                  <!-- <div class="form-group">
-                     <label for="">Memo</label>
-                     <textarea name="memo" id="expenseMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
-                     </div> -->
-                  <div class="row">
-                     <div class="col-md-4">
-                        <div class="form-group">
-                           <label for="">Memo</label>
-                           <textarea name="memo" id="expenseMemo" cols="30" rows="3" placeholder="" style="width: 100%;resize: none;" ></textarea>
-                        </div>
-                     </div>
-                     <div class="col-md-4">
-                        <div class="form-group">
-                           <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                           <span>Maximum size: 20MB</span>
-                           <div id="expenseAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
-                              <div class="dz-message" style="margin: 20px;border">
-                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-8" style="padding-top: 30px;">
-                           <div class="file-container-list" id="file-list-expense"></div>
-                        </div>
-                        <div class="form-group">
-                           <div class="show-existing-file">
-                              <a href="#" id="showExistingFile">Show existing file</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <!-- <div class="form-group">
-                     <div class="show-existing-file">
-                         <a href="#" id="showExistingFile">Show existing file</a>
-                     </div>
-                     </div> -->
-                  <div class="privacy">
-                     <a href="#">Privacy</a> 
-                  </div>
-               </div>
-               <div class="modal-footer-check">
-                  <div class="row">
-                     <div class="col-md-5">
-                        <button class="btn btn-dark cancel-button" id="closeModalExpense" type="button">Cancel</button>
-                     </div>
-                     <div class="col-md-2" style="text-align: center;">
-                        <div>
-                           <a href="#" style="color: #ffffff;">Make recurring</a>
-                        </div>
-                     </div>
-                     <div class="col-md-5">
-                        <div class="dropdown" style="float: right;display: inline-block;position: relative;">
-                           <button type="button" data-dismiss="modal" id="expenseSaved" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
-                           <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                           <span class="fa fa-caret-down"></span></button>
-                           <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                              <li><a href="#">Save and close</a></li>
-                           </ul>
-                        </div>
-                        <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                           <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </form>
-         </div>
-      </div>
-   </div>
-</div>
-<!--    end of modal-->
+
 <!--    Bill modal-->
 <div class="full-screen-modal">
    <div id="bill-modal" class="modal fade modal-fluid" role="dialog">
@@ -584,230 +364,7 @@
    </div>
 </div>
 <!--    end of modal-->
-<!--    Add/Edit Checks Modal-->
-<div class="full-screen-modal">
-   <div id="edit-expensesCheck" class="modal fade modal-fluid" role="dialog">
-      <div class="modal-dialog">
-         <!-- Modal content-->
-         <div class="modal-content">
-            <div class="modal-header">
-               <div class="modal-title">
-                  <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                  Check #<span id="checkNUmberHeader"></span>
-               </div>
-               <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
-            </div>
-            <form action="" method="post" id="addEditCheckmodal">
-               <div class="modal-body" style="margin-bottom: 100px">
-                  <div class="row">
-                     <div class="col-md-3">
-                        <label for="">Payee</label>
-                        <input type="hidden" name="check_id" id="checkID" value="">
-                        <input type="hidden" name="transaction_id" class="transaction_id" id="checktransID">
-                        <input type="hidden" id="checkType" class="expenseType" value="Check">
-                        <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
-                           <option></option>
-                           <?php foreach ($vendors as $vendor):?>
-                           <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
-                           <?php endforeach; ?>
-                        </select>
-                     </div>
-                     <div class="col-md-3">
-                        <label for="">Bank Account</label>
-                        <select name="bank_id" id="bank_account" class="form-control select2-account">
-                           <option></option>
-                           <option value="1">Cash on hand</option>
-                           <option value="2">Corporate Account(XXXXXX 5850)</option>
-                           <option value="3">Corporate Account(XXXXXX 5850)Te</option>
-                        </select>
-                     </div>
-                     <div class="col-md-3" style="line-height: 100px">
-                        <span style="font-weight: bold">Balance</span>
-                        <span>$113,101.00</span>
-                     </div>
-                     <div class="col-md-3" style="text-align: right">
-                        <div class="d-flex align-items-center mt-2 justify-content-end">
-                           <div class="mr-4">AMOUNT</div>
-                           <div>
-                              <h1 id="h1_amount-check">$0.00</h1>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="row" style="margin-top: 20px">
-                     <div class="col-md-3">
-                        <label for="">Mailing address</label>
-                        <textarea name="mailing_address" id="check_mailing_address" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
-                     </div>
-                     <div class="col-md-3">
-                        <label for="">Payment date</label>
-                        <input type="date" name="payment_date" id="payment_date" class="form-control">
-                     </div>
-                     <!-- <div class="col-md-3"></div> -->
-                     <div class="col-md-3">
-                        <div class="form-group">
-                           <label for="">Check no.</label>
-                           <input type="text" name="check_num" id="check_number" class="form-control" value="1">
-                        </div>
-                        <div class="form-group">
-                           <input type="checkbox" name="print_later" id="print_later" value="1">
-                           <label for="">Print later</label>
-                        </div>
-                        <!-- <div class="form-group">
-                           <label for="">Permit no.</label>
-                           <input type="text" name="permit_num" id="permit_number" class="form-control">
-                           </div> -->
-                     </div>
-                     <div class="col-md-3">
-                        <div class="form-group">
-                           <label for="">Permit no.</label>
-                           <input type="text" name="permit_num" id="permit_number" class="form-control">
-                        </div>
-                     </div>
-                  </div>
-                  <div class="table-container">
-                     <div class="table-loader">
-                        <p class="loading-text">Loading records</p>
-                     </div>
-                     <!--                        DataTables-->
-                     <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
-                        <thead>
-                           <tr>
-                              <th></th>
-                              <th>#</th>
-                              <th>CATEGORY</th>
-                              <th>DESCRIPTION</th>
-                              <th>AMOUNT</th>
-                              <th></th>
-                           </tr>
-                        </thead>
-                        <tbody id="line-container-check">
-                           <tr id="tableLine">
-                              <td></td>
-                              <td><span id="line-counter">1</span></td>
-                              <td>
-                                 <div id="" style="display:none;">
-                                    <input type="hidden" id="prevent_process" value="true">
-                                    <select name="category[]" id="" class="form-control checkCategory select2-check-category">
-                                       <option></option>
-                                       <?php foreach ($list_categories as $list): ?>
-                                       <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                       <?php endforeach;?>
-                                    </select>
-                                 </div>
-                              </td>
-                              <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: none;"></td>
-                              <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: none;"></td>
-                              <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
-                           </tr>
-                           <tr id="tableLine">
-                              <td></td>
-                              <td><span id="line-counter">2</span></td>
-                              <td>
-                                 <div id="" style="display:none;">
-                                    <input type="hidden" id="prevent_process" value="true">
-                                    <select name="category[]" id="" class="form-control checkCategory select2-check-category">
-                                       <option></option>
-                                       <?php foreach ($list_categories as $list): ?>
-                                       <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                       <?php endforeach;?>
-                                    </select>
-                                 </div>
-                              </td>
-                              <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: none;"></td>
-                              <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: none;"></td>
-                              <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
-                           </tr>
-                        </tbody>
-                     </table>
-                  </div>
-                  <div class="addAndRemoveRow">
-                     <div class="total-amount-container">
-                        <span style="margin-right: 200px;font-size: 17px">Total</span>
-                        $<span id="total-amount-check">0.00</span>
-                     </div>
-                     <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
-                     <button type="button" class="add-remove-line" id="clear-all-line">Clear all lines</button>
-                  </div>
-                  <!-- <div class="form-group">
-                     <label for="">Memo</label>
-                     <textarea name="name" id="checkMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
-                     </div> -->
-                  <div class="form-group">
-                     <div class="row">
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <label for="">Memo</label>
-                              <textarea name="name" id="checkMemo" cols="30" rows="3" placeholder="" style="width: 100%;resize: none;" ></textarea>
-                           </div>
-                        </div>
-                        <div class="col-md-4">
-                           <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                           <span>Maximum size: 20MB</span>
-                           <div id="checkAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
-                              <div class="dz-message" style="margin: 20px;">
-                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                 <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
-                              </div>
-                           </div>
-                           <div class="col-md-8" style="padding-top: 30px;">
-                              <div class="file-container-list" id="file-list-check"></div>
-                           </div>
-                           <div class="form-group">
-                              <div class="show-existing-file">
-                                 <a href="#" id="showExistingFile">Show existing file</a>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <!-- <div class="form-group">
-                     <div class="show-existing-file">
-                         <a href="#" id="showExistingFile">Show existing file</a>
-                     </div>
-                     </div> -->
-                  <div class="privacy">
-                     <a href="#">Privacy</a>
-                  </div>
-               </div>
-               <div class="modal-footer-check">
-                  <div class="row">
-                     <div class="col-md-4">
-                        <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
-                        <button class="btn btn-dark cancel-button" type="reset">Revert</button>
-                     </div>
-                     <div class="col-md-5">
-                        <div class="middle-links">
-                           <a href="">Print check</a>
-                        </div>
-                        <div class="middle-links">
-                           <a href="">Order checks</a>
-                        </div>
-                        <div class="middle-links">
-                           <a href="">Make recurring</a>
-                        </div>
-                        <div class="middle-links end">
-                           <a href="">More</a>
-                        </div>
-                     </div>
-                     <div class="col-md-3">
-                        <div class="dropdown" style="float: right">
-                           <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                           <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                           <span class="fa fa-caret-down"></span></button>
-                           <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                              <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
-                           </ul>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </form>
-         </div>
-      </div>
-   </div>
-</div>
-<!--    end of modal-->
+
 <!--    Add/Edit Checks Modal-->
 <div class="full-screen-modal">
    <div id="pay-bills" class="modal fade modal-fluid" role="dialog">
@@ -819,7 +376,7 @@
                   <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                   Pay Bills<span id="checkNUmberHeader"></span>
                </div>
-               <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
+               <button type="button" data-dismiss="modal" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
             </div>
             <form action="" method="post" id="addEditCheckmodal">
                <div class="modal-body" style="margin-bottom: 100px">
@@ -919,7 +476,7 @@
                <div class="modal-footer-check">
                   <div class="row">
                      <div class="col-md-4">
-                        <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
+                        <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
                      </div>
                   </div>
                </div>
@@ -1510,7 +1067,260 @@
       </div>
    </div>
 </div>
+<<<<<<< HEAD
+
+    
+    <?php // include viewPath('accounting/bank_deposit_modal'); ?>
+    <?php // include viewPath('accounting/transfer_modal'); ?>
+    <?php // include viewPath('accounting/pay_down_credit_card_modal'); ?>
+    <?php // include viewPath('accounting/statement_modal'); ?>
+    <?php // include viewPath('accounting/inventory_qty_modal'); ?>
+    <?php // include viewPath('accounting/journal_entry_modal'); ?>
+    <div><?php include viewPath('accounting/customer_invoice_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_receive_payment_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_estimate_modal'); ?></div>
+    <div><?php// include viewPath('accounting/customer_credit_memo_modal'); ?></div>
+    <div><?php // include viewPath('accounting/customer_sales_receipt_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_refund_receipt_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_delayed_credit_modal'); ?></div>
+    <div><?php //include viewPath('accounting/customer_delayed_charge_modal'); ?></div>
+
+    <!-- vendors -->
+    <div><?php //include viewPath('accounting/vendor_vendor_credit_modal'); ?></div>
+    <div><?php //include viewPath('accounting/vendor_credit_card_modal'); ?></div>
+    <div><?php //include viewPath('accounting/vendor_print_checks_modal'); ?></div>
+
+
+    <!-- End New Popup -->
+    
+    <!-- Modal for add account-->
+<div class="full-screen-modal">
+    <div id="addinvoiceModal" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="height: 100%;">
+                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+                    <h4 class="modal-title">Invoice</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?php echo site_url()?>accounting/addInvoice" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Customer
+                                        <select class="form-control" name="customer">
+                                            <option></option>
+                                            <option value="1">Add New</option>
+                                            <option value="21">John Doe</option>
+                                            <option value="3">Alpha</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        Customer email
+                                        <input type="text" class="form-control" name="customer_email">
+                                        <input type="checkbox"> Send later
+                                    </div>
+                                    <div class="col-md-3">
+                                        Online payments<br>
+                                        <input type="checkbox" name="online_payments[]" value="1" checked> Cards<br>
+                                        <input type="checkbox" name="online_payments[]" value="2" checked> Bank Transfer
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Billing address
+                                        <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        Terms
+                                        <select class="form-control" name="terms">
+                                            <option></option>
+                                            <option>Add New</option>
+                                            <option>John Doe</option>
+                                            <option>Alpha</option>
+                                        </select><br><br>
+                                        Ship via<br>
+                                        <input type="text" class="form-control" name="ship_via">
+                                    </div>
+                                    <div class="col-md-3">
+                                        Invoice date<br>
+                                        <input type="text" class="form-control" name="invoice_date"><br>
+                                        Shipping date<br>
+                                        <input type="text" class="form-control" name="shipping_date">
+                                    </div>
+                                    <div class="col-md-3">
+                                        Due date<br>
+                                        <input type="text" class="form-control" name="due_date"><br>
+                                        Tracking no.<br>
+                                        <input type="text" class="form-control" name="tracking_number">
+                                    </div>
+                                    
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Shipping to
+                                        <textarea style="height:100px;width:100%;" name="shipping_to_address"></textarea>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        Tags <a href="#" style="float:right">Manage tags</a>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6" align="right">
+                                AMOUNT<h2>$0.00</h2><br>
+                                Location of sale<br>
+                                <input type="text" class="form-control" style="width:200px;" name="location_scale">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered" id="reportstable">
+                                    <thead>
+                                        <th></th>
+                                        <th>#</th>
+                                        <th>PRODUCT/SERVICE</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>QTY</th>
+                                        <th>RATE</th>
+                                        <th>AMOUNT</th>
+                                        <th>TAX</th>
+                                        <th></th>
+                                    </thead>
+                                    <tr>
+                                        <td></td>
+                                        <td>1</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>2</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            <div>
+                        </div>
+                        <hr>
+                    
+                        <div class="row">
+                            <div class="col-md-1">
+                            <button class="btn1">Add lines</button>
+                            </div>
+                            <div class="col-md-1">
+                            <button class="btn1">Clear all lines</button>
+                            </div>
+                            <div class="col-md-1">
+                            <button class="btn1">Add subtotal</button>
+                            </div>
+                            <div class="col-md-7">
+                            </div>
+                            <div class="col-md-1">
+                                <b>Subtotal</b>
+                            </div>
+                            <div class="col-md-1">
+                                <b>$0.00</b>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                Message on invoice<br>
+                                <textarea style="height:100px;width:100%;" name="message_on_invoice"></textarea><br>
+                                Message on statement<br>
+                                <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                            <div class="col-md-2">
+                                Taxable subtotal <b>$0.00</b><br>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td></td>
+                                        <td><b>$0.00</b><br><a href="">See the math</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shipping</td>
+                                        <td><input type="text" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tax on shipping</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Balance due</td>
+                                        <td>$0.00</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="file-upload">
+                                    <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+
+                                    <div class="image-upload-wrap">
+                                        <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" name="file_name/">
+                                        <div class="drag-text">
+                                        <i>Drag and drop files here or click the icon</i>
+                                        </div>
+                                    </div>
+                                    <div class="file-upload-content">
+                                        <img class="file-upload-image" src="#" alt="your image" />
+                                        <div class="image-title-wrap">
+                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                        </div>
+                        <hr>
+                    </form>
+
+                </div>
+                
+                <div style="margin: auto;">
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
+                </div>
+                <div style="margin: auto">
+                    <a href="" style="text-align: center">Privacy</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--end of modal-->
+</div>
+=======
     <!-- End New Popup -->`
+>>>>>>> 3028e348b55b95b43c3abb3c3280e469cc1aa7cb
 
 
 
@@ -1527,3 +1337,4 @@
 <div><?php include viewPath('accounting/vendor_vendor_credit_modal'); ?></div>
 <div><?php include viewPath('accounting/vendor_credit_card_modal'); ?></div>
 <div><?php include viewPath('accounting/vendor_print_checks_modal'); ?></div>
+
