@@ -20,6 +20,10 @@
     color: #6c757d !important;
 }
 
+#depositModal textarea[name="cash_back_memo"] {
+    height: 46px !important;
+}
+
 div.attachments button {
     border: none;
     height:auto;

@@ -54,12 +54,22 @@
                                                     <td><input type="text" name="descriptions[]" class="form-control"></td>
                                                     <td>
                                                         <select name="names[]" class="form-control">
-                                                            <?php foreach($dropdown['customers'] as $customer):?>
-                                                                <option value="customer-<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                            <?php endforeach; ?>
-                                                            <?php foreach($dropdown['vendors'] as $vendor):?>
-                                                                <option value="vendor-<?php echo $vendor->id;?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name;?></option>
-                                                            <?php endforeach; ?>
+                                                            <option value=""></option>
+                                                            <optgroup label="Customers">
+                                                                <?php foreach($dropdown['customers'] as $customer):?>
+                                                                    <option value="customer-<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
+                                                                <?php endforeach; ?>
+                                                            </optgroup>
+                                                            <optgroup label="Vendors">
+                                                                <?php foreach($dropdown['vendors'] as $vendor):?>
+                                                                    <option value="vendor-<?php echo $vendor->id;?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name;?></option>
+                                                                <?php endforeach; ?> 
+                                                            </optgroup>
+                                                            <optgroup label="Employees">
+                                                                <?php foreach($dropdown['employees'] as $employee):?>
+                                                                    <option value="employee-<?php echo $employee->id;?>"><?php echo $employee->FName . ' ' . $employee->LName;?></option>
+                                                                <?php endforeach; ?> 
+                                                            </optgroup>
                                                         </select>
                                                     </td>
                                                     <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>

@@ -108,6 +108,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         padding:10px;
         margin-bottom: 27px;
     }
+    #employeeTable_filter label > input { 
+        visibility: visible !important;
+        position: inherit !important;
+    }
 
 </style>
 <div class="wrapper" role="wrapper">

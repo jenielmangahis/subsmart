@@ -1418,6 +1418,8 @@ class Users extends MY_Controller {
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($company_id);
 		}
 
+		$this->page_data['default_ids'] = $this->PayScale_model->defaultPayScaleIds();
+		$this->page_data['role_id'] = $role_id;
 		$this->load->view('users/payscale/list', $this->page_data);
 	}
 

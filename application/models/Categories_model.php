@@ -9,7 +9,7 @@ class Categories_model extends MY_Model
     }
 
     public function getCategories(){
-        $qry = $this->db->get('accounting_list_category');
+        $qry = $this->db->get_where('accounting_list_category', array('type' => 'Expenses'));
         return $qry->result();
     }
 
