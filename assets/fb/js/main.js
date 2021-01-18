@@ -86,7 +86,6 @@ const getFormByID = (form_id) => {
             'url': `/fb/get-form-by-id/${form_id}`
         }).done(response => {
             form = response.data.form;
-            form_style = response.data.form_style;
             elements = response.data.elements;
             products = response.data.products;
             resolve(response)
@@ -94,16 +93,6 @@ const getFormByID = (form_id) => {
             reject(err);
         })
     })
-}
-
-const renderFormStyle = () => {
-    for (const key in form_style) {
-        if (form_style.hasOwnProperty(key)) {
-            if(key !== 'id' && key !== 'form_id') {
-                applyStyle(key, form_style[key]);
-            }
-        }
-    }
 }
 
 const saveElement = (data, save_method = 'create') => {
@@ -383,7 +372,6 @@ const loadElements = async (form_id, editable = false) =>  {
             res.data.elements.forEach(element => {
                 renderElement(element, editable);
             });
-            renderFormStyle();
         }
         initCalendars();
     })

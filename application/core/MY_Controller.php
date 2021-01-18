@@ -18,8 +18,10 @@ class MY_Controller extends CI_Controller {
 			$this->users_model->logout();
 			die('Database is not configured');
 		}
+
+		$this->setNewtimezone();
 		
-		date_default_timezone_set( setting('timezone') );
+		//date_default_timezone_set( setting('timezone') );
 
 		/* if(!is_logged()){
 			redirect('login','refresh');
@@ -44,6 +46,24 @@ class MY_Controller extends CI_Controller {
 			$company = getCompanyFolder();
 		}
 	}
+	public function gtMyIpGlobal(){
+		return $ipaddress = $this->timesheet_model->gtMyIpGlobal();
+	}
+	
+	public function setNewtimezone() {
+
+		 
+	    $ipaddress = $this->timesheet_model->gtMyIpGlobal();
+	   
+
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
+        $lat = $get_location->lat;
+        $lng = $get_location->lon;
+
+        $utimezone = $get_location->timezone;
+        //echo "->".$utimezone ;exit;
+        date_default_timezone_set($utimezone);
+    }
 
 	protected function checkLogin($is_front = '') {
 		$user_id =  logged('id');		

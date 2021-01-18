@@ -3,6 +3,7 @@ var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
 var modalName = '';
+var tagsListModal = '';
 
 $(function() {
     $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a', function(e) {
@@ -47,6 +48,27 @@ $(function() {
         });
     });
 
+    $(document).on('click', 'div#depositModal a#open-tags-modal', function(e) {
+        e.preventDefault();
+        var target = e.currentTarget.dataset;
+        var modal_element = target.target;
+
+        $.get('/accounting/get-job-tag-modal/', function(res) {
+            if($('#tags-modal').length > 0) {
+                $('#tags-modal').remove();
+            }
+
+            $('div#modal-container').append(res);
+            tagsListModal = $('#tags-modal div.modal-dialog div#tags-list').html();
+            if(!$.fn.dataTable.isDataTable('#tags-table')) {
+                loadTagsDataTable();
+            } else {
+                $('#tags-table').DataTable().ajax.reload();
+            }
+            $(modal_element).modal('show');
+        });
+    });
+
     $(document).on('keyup', 'div#journalEntryModal input#journalNo', function() {
         if($(this).val() !== "") {
             var val = $(this).val();
@@ -56,7 +78,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container table tbody tr', function() {
+    $(document).on('click', `div#modal-container .full-screen-modal table tbody tr`, function() {
         if($(this).children('td:nth-child(3)').children('select').length < 1) {
             var rowNum = $(this).children().next().html();
 
@@ -82,7 +104,102 @@ $(function() {
             updateBankDepositTotal();
         }
     });
+
+    $(document).on('keyup', '#search-tag', function(){
+        $('#tags-table').DataTable().ajax.reload();
+    });
+
+    $(document).on('click', 'div#tags-modal table#tags-table tbody tr td a', function(e) {
+        e.preventDefault();
+
+        getTagForm(e.currentTarget.dataset, 'update');
+    });
 });
+
+const loadTagsDataTable = () => {
+    $('#tags-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        ordering: false,
+        info: false,
+        ajax: {
+            url: 'load-job-tags/',
+            dataType: 'json',
+            contentType: 'application/json', 
+            type: 'POST',
+            data: function(d) {
+                d.columns[0].search.value = $('input#search-tag').val();
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers',
+        },
+        columns: [
+            { 
+                data: 'tag_name', 
+                name: 'tag_name',
+                fnCreatedCell: function (td, cellData, rowData, row, col) {
+                    $(td).html(`<span>${rowData.tag_name}</span><a href="#" class="float-right text-info" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
+                }
+            }
+        ]
+    });
+}
+
+const getTagForm = (data = {}, method) => {
+    $.get('/accounting/get-job-tag-form/', function(res) {
+        $('#tags-modal div.modal-dialog div#tags-list').remove();
+
+        if(method === 'create') {
+            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create-tag-form" onsubmit="submitTagsForm(this, 'create', event)"></form>`);
+        } else {
+            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="update-tag-form" onsubmit="submitTagsForm(this, 'update', event)"></form>`);
+        }
+
+        $('#tags-modal div.modal-dialog form').append(res);
+
+        if(method === 'update') {
+            var id = data.id;
+            var name = data.name;
+
+            $('#tags-modal div.modal-dialog form h5').html('Edit tag');
+            $('#tags-modal div.modal-dialog form input[name="tag_name"]').val(name);
+            $('#tags-modal div.modal-dialog form').prepend(`<input type="hidden" name="id" value="${id}">`);
+        }
+    });
+}
+
+const showTagsList = (el) => {
+    $(el).parent().parent().remove();
+
+    $('#tags-modal div.modal-dialog').append('<div class="modal-content" id="tags-list"></div>');
+    $('#tags-modal div.modal-dialog div#tags-list').append(tagsListModal);
+    loadTagsDataTable();
+}
+
+const submitTagsForm = (el, method = "", e) => {
+    e.preventDefault();
+    
+    var data = new FormData(document.getElementById($(el).attr('id')));
+    data.append('method', method);
+
+    $.ajax({
+        url: '/accounting/submit-job-tag-form',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            $('.modal#tags-modal').modal('hide');
+
+            toast(res.success, res.message);
+        }
+    });
+}
 
 const updateBankDepositTotal = () => {
     var otherFundsTotal = 0;
@@ -152,7 +269,7 @@ const submitModalForm = (event, el) => {
         success: function(result) {
             var res = JSON.parse(result);
 
-            $('.modal').modal('hide');
+            $('div#modal-container div.full-screen-modal .modal').modal('hide');
 
             toast(res.success, res.message);
         }

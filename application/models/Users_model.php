@@ -180,7 +180,8 @@ class Users_model extends MY_Model {
 		$this->db->where('id', $user_id);
 		// $this->db->where('role !=', 1);
 		$query = $this->db->get();
-		// echo $this->db->last_query(); die;
+		/*echo $this->db->last_query(); 
+		print_r($query->row()); die;*/
 		return $query->row();
 	}
 

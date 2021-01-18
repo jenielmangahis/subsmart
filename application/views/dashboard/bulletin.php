@@ -282,8 +282,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h3 class="header-content"><i class="fa fa-bullhorn" aria-hidden="true"></i> Timesheet</h3>
                         </div>
                         <div class="expenses-money-section" style="margin-top:10px;">
-                            <div class="inner-news" style="height: 300px; overflow-x: scroll;">
-                            <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
+                            <div class="inner-news">
+                            <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance table-responsive" style="height: 223px;overflow:scroll;">
                                             <thead>
                                             <tr>
                                                 <th rowspan="2">ID</th>
@@ -328,6 +328,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php $counter = 0;?>
                                             <?php foreach ($users as $cnt => $user): ?>
                                                 <?php $counter += 1;?>
+                                                <?php if ($counter <= 3) : ?>
                                                 <?php
                                                 $user_photo = userProfileImage($user->id);
                                                 $company_id = $user->company_id;
@@ -446,6 +447,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 $yesterday_in = null;
                                                 $yesterday_out = null;
                                                 ?>
+                                            <?php endif;?>
                                             <?php endforeach;?>
                                             </tbody>
                                         </table>

@@ -18,6 +18,7 @@ class Dashboard extends MY_Controller {
         $this->load->model('invoice_model');
         $this->load->model('Crud', 'crud'); 
         $this->load->model('taskhub_status_model');
+        $this->load->model('Activity_model', 'activity');
 
         add_css(array(
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -35,10 +36,20 @@ class Dashboard extends MY_Controller {
         ));
     }
 
-
+    
 	public function index()
 	{
         $user_id = logged('id');
+        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6,0], 0);
+        $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
+        if($this->page_data['activity_list_count'] > 5 ){
+            array_pop($this->page_data['activity_list']);
+        }
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->page_data['history_activity_list_count'] = sizeof($this->page_data['history_activity_list']);
+        if($this->page_data['history_activity_list_count'] > 5 ){
+            array_pop($this->page_data['history_activity_list']);
+        }
         $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_dashboard_sort");
         if(!$check_if_exist){
             $input = array();
@@ -47,12 +58,6 @@ class Dashboard extends MY_Controller {
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
         $this->page_data['feeds'] = $this->feeds_model->getByCompanyId();
-        
-        $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
-        $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
-        $this->page_data['invoice'] = $this->estimate_model->getAllByCompany(logged('company_id'));
-        $this->page_data['invoice'] = $this->invoice_model->getAllByCompany(logged('company_id'), 0);
-       
         $this->page_data['employees'] = $this->user_model->getAllUsersByCompany(logged('company_id'));
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
@@ -83,9 +88,62 @@ class Dashboard extends MY_Controller {
             $status_arr[] = $status_selec->status_text."@#@".$task_status;
         }
         $this->page_data['status_arr'] = $status_arr;
-        
-		$this->load->view('dashboard', $this->page_data);
-	}
+        $this->load->view('dashboard', $this->page_data);
+	}public
+
+    function tech_leaderboard()
+    {
+        $user_id = logged('id');
+        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6,0], 0);
+        $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
+        if($this->page_data['activity_list_count'] > 5 ){
+            array_pop($this->page_data['activity_list']);
+        }
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->page_data['history_activity_list_count'] = sizeof($this->page_data['history_activity_list']);
+        if($this->page_data['history_activity_list_count'] > 5 ){
+            array_pop($this->page_data['history_activity_list']);
+        }
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_dashboard_sort");
+        if(!$check_if_exist){
+            $input = array();
+            $input['fk_user_id'] = $user_id ;
+            $input['ds_values'] = "earning,analytics,report,activity,report2,newsletter,spotlight,bulletin,job,estimate,invoice,stats,installs" ;
+            $this->customer_ad_model->add($input,"ac_dashboard_sort");
+        }
+        $this->page_data['feeds'] = $this->feeds_model->getByCompanyId();
+        $this->page_data['employees'] = $this->user_model->getAllUsersByCompany(logged('company_id'));
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+        $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['user_roles'] = $this->users_model->getRoles();
+        $this->page_data['logs'] = $this->timesheet_model->getTimesheetLogs();        
+        $this->page_data['total_users'] = $this->users_model->getTotalUsers();
+        $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
+        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
+        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
+        $this->page_data['dashboard_sort'] = "report2,newsletter,bulletin";
+
+        $this->page_data['all_leads']           = $this->crud->total_record("ac_leads","leads_id!=0");
+        $this->page_data['assigned_leads']      = $this->crud->total_record("ac_leads","fk_assign_id!=0");
+        $this->page_data['unassigned_leads']    = $this->crud->total_record("ac_leads","fk_assign_id=0");
+        $this->page_data['converted_leads']     = $this->crud->total_record("ac_leads","status='Converted'");
+
+        $this->page_data['all_tasks']           = $this->crud->total_record("tasks","task_id!=0");
+        $this->page_data['my_assig_tasks']      = $this->crud->total_record("tasks","created_by='".logged('id')."'");
+        $today_date = date("Y-m-d");
+        $this->page_data['due_today_tasks']      = $this->crud->total_record("tasks","estimated_date_complete='".$today_date."'");
+
+        $status_arr = array();
+        $status_selection = $this->taskhub_status_model->get();
+        foreach ($status_selection as $status_selec) 
+        {
+            $task_status = $this->crud->total_record("tasks","status_id='".$status_selec->status_id."'");
+            $status_arr[] = $status_selec->status_text."@#@".$task_status;
+        }
+        $this->page_data['status_arr'] = $status_arr;
+        $this->load->view('tech_leaderboard', $this->page_data);
+    }
 
     public function ac_dashboard_sort(){
         //$user_id = logged('id');

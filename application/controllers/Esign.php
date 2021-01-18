@@ -184,16 +184,7 @@ class Esign extends MY_Controller {
 
 	public function Photos(){
 		$this->load->model('User_docphoto_model', 'User_docphoto_model');
-
-		$cid     = logged('company_id');
-		$role_id = logged('role');
-		if( $role_id == 1 || $role_id == 2 ){
-			$this->page_data['users'] = $this->User_docphoto_model->getAll();
-		}else{
-			$this->page_data['users'] = $this->User_docphoto_model->getAllByCompanyId($cid);
-		}
-
-		//$this->page_data['users'] = $this->User_docphoto_model->getUser(logged('id'));
+		$this->page_data['users'] = $this->User_docphoto_model->getUser(logged('id'));
 		
 		$this->load->view('esign/photos', $this->page_data);
 	}
@@ -240,7 +231,7 @@ class Esign extends MY_Controller {
 			$result['status'] = false;
 		}
 		$activity['activityName'] = "Template Deleted";
-		$activity['activity'] = "Tenplate ID : ".$id." Deleted By User ".logged('username');
+		$activity['activity'] = "Template ID : ".$id." Deleted By User ".logged('username');
 		$activity['user_id'] = logged('id');
 		$this->activity->addEsignActivity($activity);
 	 	echo json_encode($result);
@@ -524,8 +515,7 @@ class Esign extends MY_Controller {
 
 	public function photoSave(){
 		$this->load->model('User_docphoto_model', 'User_docphoto_model');
-		$id  = logged('id');
-		$cid = logged('company_id');
+		$id = logged('id');
 
 		// $extension = pathinfo($_FILES["docphoto"]["name"], PATHINFO_EXTENSION);
 		// print_r($extension);die();
@@ -560,9 +550,8 @@ class Esign extends MY_Controller {
 
 		$id = $this->User_docphoto_model->create([
 			'user_id' => $id,
-			'docphoto' => $name,
-			'company_id' => $cid
-		]); 
+			'docphoto' => $name
+		]);
 		
 		// print_r("expression");
 		redirect('esign/Photos');

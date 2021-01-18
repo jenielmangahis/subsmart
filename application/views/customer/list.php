@@ -406,7 +406,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
-                                                                <h6>Activity</h6>
+                                                                <div class="MuiCardContent-root jss60" style="height: 309px;">
+                                                                    <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                                                        <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 30px;">
+                                                                            <ul class="timeline">
+                                                                                <?php foreach($activity_list as $al) { ?>
+                                                                                    <li class="timeline-item">
+                                                                                        <p class="timeline-content"><?=$al['activity']?></p>
+                                                                                        <p class="event-time"><?=$al['createdAt']?></p>
+                                                                                    </li>
+                                                                                <?php } ?>
+                                                                            </ul>
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

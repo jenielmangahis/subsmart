@@ -28,6 +28,7 @@ class Customer extends MY_Controller
         $this->load->library('form_validation');
         $this->load->helper('url');
         $this->load->helper('functions');
+        $this->load->model('Activity_model', 'activity');
 
         //load Model
         $this->load->model('CustomerGroup_model', 'customerGroup_model');
@@ -1065,6 +1066,7 @@ class Customer extends MY_Controller
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
         $this->load->view('customer/list', $this->page_data);
     }
     public function view($id)
