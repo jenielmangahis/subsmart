@@ -2,10 +2,6 @@
     color: white;
 }
 
-#customizeSelect {
-    height: 450px !important;
-}
-
 .form-table-row-controls{
     bottom: 0;
     left: 0;
@@ -61,15 +57,6 @@
 
 .form-element-controls:hover:not(.ui-sortable-helper) {
     background-color: rgba(0, 0, 0, 0.2);
-}
-
-#styleAccordion {
-    margin: 30px 0px 20px 0px !important;
-    max-width: 100% !important;
-}
-
-#styleAccordion .link {
-    padding: 15px 15px 15px 5px !important;
 }
 
 .form-element {
@@ -278,6 +265,8 @@ div#blankFormPlaceHolder {
     background-color: lightgray;
     min-height: 100px;
     padding: 4px;
+<<<<<<< HEAD
+=======
 }
 
 #customStyleInputControls select{
@@ -330,4 +319,5 @@ div#blankFormPlaceHolder {
     display: block;
     overflow: hidden;
     text-align: center;
+>>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
 }

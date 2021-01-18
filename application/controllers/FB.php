@@ -88,21 +88,15 @@ class FB extends MY_Controller {
 			'assets/fb/css/edit.css',
 			'assets/terms_and_conditions/css/kothing-editor.min.css',
 			'assets/terms_and_conditions/css/main.css',
-			'assets/fb/css/colorjoe/colorjoe.css',
-			'assets/fb/css/colorjoe/iehacks.css',
-			'assets/fb/css/colorjoe/pygment_trac.css',
-			'assets/fb/css/colorjoe/styles.css',
 			'assets/fb/css/form-color-pallete.css'
 		));
 		add_footer_js(array(
 			'assets/terms_and_conditions/js/common.js',
 			'assets/fb/js/jquery-sortable.js',
 			'assets/fb/js/jquery-ui.js',
-			'assets/fb/js/colorjoe/colorjoe.js',
 			'assets/fb/js/copy_from_form.js',
 			'assets/terms_and_conditions/js/katex.min.js',
 			'assets/terms_and_conditions/js/kothing-editor.min.js',			
-			'assets/fb/js/custom-style.js',
 			'assets/fb/js/edit.js',
 			'assets/fb/js/builder.js',
 		));
@@ -213,7 +207,6 @@ class FB extends MY_Controller {
 
 		$response = $this->form_builder->update($data, $id);
 
-		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($data));
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 

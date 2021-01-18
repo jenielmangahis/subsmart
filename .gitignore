@@ -13,14 +13,18 @@ application/config/profiler.php
 application/config/routes.php 
 application/config/smileys.php
 application/config/user_agents.php
-<<<<<<< HEAD
-app/
-=======
-api/
->>>>>>> 99a8ded0d12a538491de7dfebd142e9e2b9d0536
+
 
 *application/config/database.php
-*application/libraries/
+*application/cache/
+*assets/img/customer/qr/
+.idea
+
+app/
+api/
+
+
+*application/config/database.php
 *api/
 .idea
 *app/

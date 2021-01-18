@@ -19,7 +19,7 @@ class Timesheet extends MY_Controller {
 		$this->page_data['page']->title = 'Timesheet Management';
 
 		$this->page_data['page']->menu = 'users';
-
+        
         add_css(array(
             "assets/css/timesheet.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -1635,6 +1635,8 @@ class Timesheet extends MY_Controller {
 //	    echo json_encode($data);
 //    }
     public function clockInEmployee(){
+
+
 	    $clock_in = time();
 	    $user_id = $this->session->userdata('logged')['id'];
 
@@ -1672,6 +1674,8 @@ class Timesheet extends MY_Controller {
         }
 
     }
+    
+
 
     public function clockOutEmployee(){
         $attn_id = $this->input->post('attn_id');
@@ -1794,7 +1798,10 @@ class Timesheet extends MY_Controller {
     }
 
     private function employeeAddress(){
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
+
+        $ipaddress = $this->gtMyIpGlobal();
+
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
         $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
@@ -2055,6 +2062,9 @@ class Timesheet extends MY_Controller {
 	    $data = array('name'=>'Tommy Nguyen','link'=>sha1(rand()));
         $this->load->view('users/invite_link_template',$data);
     }
+
+    
+
 }
 
 

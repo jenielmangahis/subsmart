@@ -35,7 +35,6 @@ class Settings extends MY_Controller {
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
         $post = $this->input->post();
@@ -109,11 +108,12 @@ class Settings extends MY_Controller {
     {
         $get_invoice_template = array(
             'where' => array(
-                'type_id' => 1,
-                'user_id' => logged('id'),
+                //'user_id' => logged('id'),
             )
         );
         $this->page_data['invoice_templates'] = $this->general_model->get_all_with_keys($get_invoice_template,'settings_email_template');
+
+
         $this->page_data['page']->menu = 'email_templates';
         $this->load->view('settings/email_templates', $this->page_data);
     }
@@ -122,10 +122,11 @@ class Settings extends MY_Controller {
     {
         $input = $this->input->post();
         if ($input) {
-            $input['user_id'] = logged('id');
-            $input['date_added'] = date("d-m-Y h:i A");
-            if($this->customer_ad_model->add($input,"customer_groups")){
-                redirect(base_url('customer/group'));
+            unset($input['files']);
+            $input['user_id'] = 0;
+            $input['date_created'] = date("d-m-Y h:i A");
+            if($this->general_model->update_with_key($input,$id,"settings_email_template")){
+                redirect(base_url('settings/email_templates'));
             }
         }
         $get_template_data = array(
@@ -139,6 +140,22 @@ class Settings extends MY_Controller {
         }
         $this->page_data['page']->menu = 'email_templates';
         $this->load->view('settings/email_templates_edit', $this->page_data);
+    }
+
+    public function email_templates_create()
+    {
+        $input = $this->input->post();
+        if ($input) {
+            unset($input['files']);
+            $input['user_id'] = 0;
+            $input['date_created'] = date("d-m-Y h:i A");
+            if($this->general_model->add_($input,"settings_email_template")){
+                redirect(base_url('settings/email_templates'));
+            }
+        }
+
+        $this->page_data['page']->menu = 'email_templates';
+        $this->load->view('settings/email_template_create', $this->page_data);
     }
 
     public function sms_templates()

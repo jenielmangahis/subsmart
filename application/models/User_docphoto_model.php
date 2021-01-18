@@ -20,11 +20,11 @@ class User_docphoto_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getAll()
+	 public function getAll()
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        //$this->db->where('id !=', 1);
+        $this->db->where('id !=', 1);
         $query = $this->db->get();
 
         return $query->result();
@@ -43,16 +43,6 @@ class User_docphoto_model extends MY_Model {
 		// echo $this->db->last_query(); die;
 		return $query->result();
 	}
-
-	public function getAllByCompanyId($company_id)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
-        $query = $this->db->get();
-
-        return $query->result();
-    }
 
 }
 

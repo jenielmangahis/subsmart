@@ -58,6 +58,78 @@ class Accounting_modals extends MY_Controller {
         }
     }
 
+    public function load_job_tags() {
+        $postData = json_decode(file_get_contents('php://input'), true);
+
+        $tags = $this->job_tags_model->getJobTagsByCompany();
+
+        $data = [];
+        $search = $postData['columns'][0]['search']['value'];
+
+        foreach($tags as $tag) {
+            if($search !== "" ) {
+                if(stripos($tag->name, $search) !== false) {
+                    $data[] = [
+                        'id' => $tag->id,
+                        'tag_name' => $tag->name
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $tag->id,
+                    'tag_name' => $tag->name
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $postData['draw'],
+            'recordsTotal' => count($tags),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function submit_job_tag() {
+        $data = [
+            'name' => $this->input->post('tag_name'),
+            'company_id' => logged('company_id')
+        ];
+
+        try {
+            if($this->input->post('method') === 'create') {
+                $jobTagId = $this->job_tags_model->create($data);
+            } else {
+                $id = $this->input->post('id');
+                $jobTagId = $this->job_tags_model->update($id, $data);
+            }
+
+            $return = [
+                'data' => $jobTagId,
+                'success' => $jobTagId ? true : false,
+                'message' => 'Success'
+            ];
+        } catch (\Exception $e) {
+            $return = [
+                'data' => null,
+                'success' => false,
+                'message' => 'Error'
+            ];
+        }
+
+        echo json_encode($return);
+    }
+
+    public function job_tag_modal() {
+        $this->load->view("accounting/job_tags_modal");
+    }
+
+    public function job_tag_form() {
+        $this->load->view("accounting/job_tag_modal_form");
+    }
+
     public function get_job_tags() {
         $tags = $this->job_tags_model->getJobTagsByCompany();
 

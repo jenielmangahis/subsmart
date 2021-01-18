@@ -245,14 +245,7 @@ class Event extends MY_Controller
 
         // print_r($this->page_data['event']); die;
         $user_id = logged('id');
-        $role_id = logged('role');
-        if( $role_id == 1 || $role_id == 2 ){
-            $args = array();
-        }else{
-            $args = array('company_id' => logged('company_id'));
-        }
-
-        $colorSettings = $this->ColorSettings_model->getByWhere($args);
+        $colorSettings = $this->ColorSettings_model->getAllByUserId($user_id);
 
         $this->page_data['colorSettings'] = $colorSettings;
         

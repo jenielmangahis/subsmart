@@ -1,12 +1,12 @@
 .form-jungle .form-header {
-    background-color:#2A9D8F /* !important */;
+    background-color:#2A9D8F !important;
 }
 
 form.form-jungle button, .form-jungle div.Signature div.container button {
-    background-color: #F4A261 /* !important */;
-    color: #fff /* !important */;
+    background-color: #F4A261 !important;
+    color: #fff !important;
 }
 
 .form-jungle input, .form-jungle textarea, .form-jungle select, .form-jungle div.Signature div.container {
-    border-color: #2A9D8F /* !important */;
+    border-color: #2A9D8F !important;
 }

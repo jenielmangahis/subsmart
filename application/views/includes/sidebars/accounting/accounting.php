@@ -1066,8 +1066,6 @@
          </div>
       </div>
    </div>
-</div>
-<<<<<<< HEAD
 
     
     <?php // include viewPath('accounting/bank_deposit_modal'); ?>
@@ -1318,9 +1316,9 @@
     </div>
     <!--end of modal-->
 </div>
-=======
+
+
     <!-- End New Popup -->`
->>>>>>> 3028e348b55b95b43c3abb3c3280e469cc1aa7cb
 
 
 
@@ -1337,4 +1335,3 @@
 <div><?php include viewPath('accounting/vendor_vendor_credit_modal'); ?></div>
 <div><?php include viewPath('accounting/vendor_credit_card_modal'); ?></div>
 <div><?php include viewPath('accounting/vendor_print_checks_modal'); ?></div>
-

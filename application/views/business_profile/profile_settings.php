@@ -31,9 +31,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Your Business Profile URL</label> <span class="form-required">*</span>
                     <div class="help help-block help-sm">Customize your profile URL so it can be easy to remember.</div>
                     <div class="profile-url">
-                        <span class="profile-url-prefix">Markate.com/business/</span>
+                        <span class="profile-url-prefix">nsmartrac.com/business/</span>
                         <div class="profile-url-input">
-                            <input type="text" name="profile_slug" value="adi-0" class="form-control" autocomplete="off" data-profile-url="input">
+                            <input type="text" name="profile_slug"  value="<?= isset($profile_data) ? $profile_data->profile_slug : '';  ?>" class="form-control" autocomplete="off" data-profile-url="input">
                         </div>
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="profile_slug" data-formerrors-message="true" style="display: none;"></span>
@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Preview</label>
                     <div class="help help-block help-sm">Click to preview your profile or copy the URL</div>
                     <div class="form-control-text">
-                        <a data-profile-url="preview" href="https://www.markate.com/business/adi-0" target="_blank">Markate.com/business/<span data-profile-url="slug">adi-0</span></a>
+                        <a data-profile-url="preview" href="https://www.nsmatrac.com/users/businessprofile" target="_blank">nsmatrac.com/business/<span data-profile-url="slug"><?= isset($profile_data) ? $profile_data->profile_slug : '';  ?></span></a>
                         <div class="text-ter hide" data-profile-url="change">...click Save below to update</div>
                     </div>
                 </div>
@@ -51,7 +51,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="form-group">
             <label>Business Tags</label>
             <div class="help help-sm help-block">Enter tags/keywords and get better visibility. This helps customers find you on search. Example: cleaner, plumber</div>
-            <div class="bootstrap-tagsinput"><span class="tag label label-default">Honeywell Security<span data-role="remove"></span></span> <input type="text" placeholder="add tag"></div><input type="text" name="profile_tags" value="Honeywell Security" class="form-control" autocomplete="off" placeholder="add tag" required="" style="display: none;">
+            <div class="bootstrap-tagsinput">
+                <span class="tag label label-default">Honeywell Security<span data-role="remove"></span></span>
+                <input type="text" placeholder="add tag"></div><input type="text" name="profile_tags" value="Honeywell Security" class="form-control" autocomplete="off" placeholder="add tag" required="" style="display: none;">
             <span class="validation-error-field" data-formerrors-for-name="profile_tags" data-formerrors-message="true" style="display: none;"></span>
         </div>
         <div class="form-group">
@@ -128,14 +130,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+    		    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+</form>
     		    	</div>
     	<div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="workpictures">« Back</a>
     		    		    		<a href="socialMedia" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
     		    	</div>
     </div>
-</div></form>
+</div>
 
     </div>
 </div>

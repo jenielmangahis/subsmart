@@ -19,13 +19,7 @@ class Color_Settings extends MY_Controller {
 
 	public function index(){			
 		$user_id = logged('id');
-        $role_id = logged('role');
-        if( $role_id == 1 || $role_id == 2 ){
-            $args = array();
-        }else{
-            $args = array('company_id' => logged('company_id'));
-        }
-		$colorSettings = $this->ColorSettings_model->getByWhere($args);
+		$colorSettings = $this->ColorSettings_model->getAllByUserId($user_id);
 
 		$this->page_data['colorSettings'] = $colorSettings;
 		$this->load->view('color_settings/index', $this->page_data);
@@ -53,7 +47,6 @@ class Color_Settings extends MY_Controller {
         if( $post['color_name'] != '' && $post['color_code'] != '' ){
         	$data_color_setting = [
         		'user_id' => $user_id,
-                'company_id' => logged('company_id'),
         		'color_name' => $post['color_name'],
         		'color_code' => $post['color_code']
         	];

@@ -10,11 +10,10 @@ class StarMatrix extends MatrixElement {
         element_container.content += `<label class="element-label" for="${this.id}">${this.question ? this.question : ''} <span class="text-danger">${this.required ? '*' : ''}</span></label>`;
         element_container.content += `<table class="table table-sm">
         <tbody>`;
-        this.matrix_rows.forEach((row, i) => {
-            const tr_class = (i % 2 === 0) ? 'matrix-tr' : 'matrix-tr-alt';
-            element_container.content += `<tr class="${tr_class}">`;
+        this.matrix_rows.forEach(row => {
+            element_container.content += `<tr>`;
             element_container.content += `
-                <td class="matrix-tr-header">${row.text}</td>
+                <td>${row.text}</td>
                 <td class="align-justify">
                     <i class="${row.id}-rating far fa-star"></i>
                     <i class="${row.id}-rating far fa-star"></i>
