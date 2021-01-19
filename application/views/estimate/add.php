@@ -46,9 +46,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-6 form-group">
                                     <label for="customers">Customer</label>
-                                    <select id="customers" name="customer_id" data-customer-source="dropdown"
-                                            class="form-control searchable-dropdown" placeholder="Select">
+                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
+                                        <?php foreach($customers as $c){ ?>
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
 
@@ -68,7 +70,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Estimate#</label>
-                                    <input type="text" class="form-control" name="estimate_date" id="estimate_date"
+                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date"
                                            required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
@@ -132,11 +134,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead>
                                         <tr>
-                                            <th>DESCRIPTION</th>
                                             <th>Type</th>
+                                            <th>Description</th>
                                             <th width="100px">Quantity</th>
-                                            <th>LOCATION</th>
-                                            <th width="100px">COST</th>
+                                            <th>Location</th>
+                                            <th width="100px">Cost</th>
                                             <th width="100px">Discount</th>
                                             <th>Tax(%)</th>
                                             <th>Total</th>
@@ -144,15 +146,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody id="table_body">
                                         <tr>
-                                            <td><input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="item[]">
-                                                <ul class="suggestions"></ul>
-                                            </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                 </select></td>
+                                            <td><input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="item[]">
+                                                <ul class="suggestions"></ul>
+                                            </td>
                                             <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="text" class="form-control" name="location[]"></td>
@@ -426,15 +428,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
     $(document).ready(function () {
-
+        $('#sel-customer').select2();
         var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
 
-        $('#customers')
+        /*$('#customers')
             .empty() //empty select
             .append($("<option/>") //add option tag in select
                 .val(customer_id) //set value for option to post it
                 .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
             .val(customer_id) //select option of select2
-            .trigger("change"); //apply to select2
+            .trigger("change"); //apply to select2*/
     });
 </script>

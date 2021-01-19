@@ -519,4 +519,13 @@ $route['users/_edit_payscale'] = 'Users/ajax_edit_payscale';
 $route['users/_update_payscale'] = 'Users/ajax_update_payscale';
 $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 
+//Jobs
+$route['job/details/(:any)'] = 'job/details/$1';
+
+//Estimates
+$route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';
+$route['estimate_customer_view/(:any)'] = 'Pages/estimate_customer_view/$1';
+$route['customer_approve_estimate'] = 'Pages/customer_update_estimate/1';
+$route['customer_disapprove_estimate'] = 'Pages/customer_update_estimate/2';
+$route['estimate/_load_scheduled_estimates'] = 'Estimate/ajax_load_scheduled_estimates';
 
