@@ -113,6 +113,7 @@ $user_id = getLoggedUserID();
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
                         <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
+                        <a class="dropdown-item" href="<?php echo url('credit_notes') ?>"><i class="fa fa-list"></i> Credit Notes</a>
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
                         <a class="dropdown-item" href="<?php echo url('customer/leads') ?>"><i class="fa fa-bullhorn"></i> Leads</a>

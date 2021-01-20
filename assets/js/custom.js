@@ -274,6 +274,10 @@ function calculation(counter) {
   var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
     2
   );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
   var total = (
     (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
     parseFloat(discount)
@@ -281,6 +285,7 @@ function calculation(counter) {
 
   $("#span_total_" + counter).text(total);
   $("#span_tax_" + counter).text(tax1);
+  $("#discount_" + counter).val(discount);
 
   var eqpt_cost = 0;
   var cnt = $("#count").val();
@@ -348,7 +353,7 @@ $(document).on("click", "#add_another", function (e) {
     '">0.00</span>\n' +
     "</td>\n" +
     "<td>\n" +
-    '<a href="#" class="remove">X</a>\n' +
+    '<a href="#" class="remove btn btn-sm btn-danger">x</a>\n' +
     "</td>\n" +
     "</tr> ";
 
@@ -396,6 +401,7 @@ $(document).on("click", ".remove", function (e) {
 });
 
 function cal_total_due() {
+  alert(4);
   var eqpt_cost = parseFloat($("#eqpt_cost").val());
   var sales_tax = parseFloat($("#sales_tax").val());
   var inst_cost = parseFloat($("#inst_cost").val());
