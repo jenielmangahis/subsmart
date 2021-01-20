@@ -50,7 +50,8 @@
                                         <h4>Text Field</h4>
                                         <div class="form-group">
                                             <label for="placeholder-text">Placeholder Text:</label>
-                                            <input type="text" id="placeholderText" name="placeholder-text" class="form-control">
+                                            <input type="text" id="placeholderText" name="placeholder-text"
+                                                class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-12 element-setting-container" tag="editor">
@@ -251,8 +252,17 @@
                                                 <div class="form-group w-50">
                                                     <label for="preFillChoices">Pre-fill choices:</label>
                                                     <select name="prefillChoices" id="prefillChoices"
-                                                        class="form-control">
+                                                        class="form-control" onchange="handlePreFillChoicesChanged()">
                                                         <option value="none">none</option>
+                                                        <option value="agree_disagree">Agree/Disagree</option>
+                                                        <option value="age">Age</option>
+                                                        <option value="education">Education</option>
+                                                        <option value="employment_status">Employment Status</option>
+                                                        <option value="race_ethnicity">Race/Ethnicity</option>
+                                                        <option value="income">Income</option>
+                                                        <option value="us_states">List of US States</option>
+                                                        <option value="countries">List of Countries</option>
+                                                        <option value="satisfied_dissatisfied">Satisfied/Dissatisfied</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -453,7 +463,8 @@
                                                     <div class="row">
                                                         <div class="col-4">
                                                             <div class="thumb-wrap" id="business-bg-1.jpg"
-                                                                title="business-bg-1.jpg" onclick="setPreviewBackgroundImage('<?= base_url('assets/fb/images/backgrounds/public/business-bg-1.jpg')?>')">
+                                                                title="business-bg-1.jpg"
+                                                                onclick="setPreviewBackgroundImage('<?= base_url('assets/fb/images/backgrounds/public/business-bg-1.jpg')?>')">
                                                                 <div class="thumb"
                                                                     style="background-image: url('<?= base_url('assets/fb/images/backgrounds/public/business-bg-1.jpg')?>');">
                                                                 </div><span>business-bg-1.jpg</span>

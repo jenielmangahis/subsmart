@@ -14,7 +14,9 @@
                             <div class="form-group w-25">
                                 <label for="statementType">Statement Type</label>
                                 <select name="statement_type" id="statementType" class="form-control">
-                                    <option value="">Balance Forward</option>
+                                    <option value="1">Balance Forward</option>
+                                    <option value="2">Open Item (Last 365 days)</option>
+                                    <option value="3">Transaction Statement</option>
                                 </select>
                             </div>
                         </div>
@@ -66,10 +68,10 @@
                         <div class="col-md-12">
                             <ul class="nav nav-tabs" id="recipientsTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link" id="missing-email-tab" data-toggle="tab" href="#missing-email" role="tab" aria-controls="missing-email" aria-selected="true">Missing email address (0)</a>
+                                    <a class="nav-link" id="missing-email-tab" data-toggle="tab" href="#missing-email" role="tab" aria-controls="missing-email" aria-selected="true">Missing email address (<?php echo count($withoutEmail); ?>)</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="statements-avail-tab" data-toggle="tab" href="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="true">Statements available (2)</a>
+                                    <a class="nav-link active" id="statements-avail-tab" data-toggle="tab" href="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="true">Statements available (<?php echo count($customers); ?>)</a>
                                 </li>
                             </ul>
 
@@ -77,13 +79,35 @@
                                 <div class="tab-pane fade" id="missing-email" role="tabpanel" aria-labelledby="missing-email-tab">
                                     <table class="table table-bordered table-hover" id="missing-email-table">
                                         <thead>
-                                            <th><input type="checkbox" tabindex="-1" aria-checked="false"></th>
+                                            <th>
+                                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                                    <input class="m-auto" type="checkbox" name="select_all" value="1" checked>
+                                                </div>
+                                            </th>
                                             <th>RECIPIENTS</th>
                                             <th>EMAIL ADDRESS</th>
                                             <th>BALANCE</th>
                                         </thead>
                                         <tbody>
-                                            
+                                            <?php foreach($withoutEmail as $cust) :
+                                                $displayName = "";
+                                                $displayName .= ($cust->last_name !== "") ? $cust->last_name . ', ': '' ;
+                                                $displayName .= ($cust->first_name !== "") ? $cust->first_name : '' ;
+                                            ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                                            <input class="m-auto" type="checkbox" name="select[]" value="1" checked>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $displayName; ?>
+                                                        <input type="hidden" name="customer_id[]" value="<?php echo $cust->prof_id; ?>">
+                                                    </td>
+                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $cust->email; ?>"></td>
+                                                    <td><p class="m-0 text-right">$0.00</p></td>
+                                                </tr>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                     
@@ -92,26 +116,37 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade show active" id="statements-avail" role="tabpanel" aria-labelledby="statements-avail-tab">
-                                    <table class="table table-bordered table-hover">
+                                    <table class="table table-bordered table-hover" id="statements-table">
                                         <thead>
-                                            <th><input type="checkbox" tabindex="-1" aria-checked="false"></th>
+                                            <th>
+                                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                                    <input class="m-auto" type="checkbox" name="select_all" value="1" checked>
+                                                </div>
+                                            </th>
                                             <th>RECIPIENTS</th>
                                             <th>EMAIL ADDRESS</th>
                                             <th class="text-right">BALANCE</th>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td><input type="checkbox" tabindex="-1" aria-checked="true" checked></td>
-                                                <td>Betty Fuller</td>
-                                                <td><input type="text" placeholder="betty.fuller@gmail.com" class="form-control"></td>
-                                                <td class="text-right">$3.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td><input type="checkbox" tabindex="-1" aria-checked="true" checked></td>
-                                                <td>Ken Curry</td>
-                                                <td><input type="text" placeholder="ken.curry@gmail.com" class="form-control"></td>
-                                                <td class="text-right">$1.00</td>
-                                            </tr>
+                                            <?php foreach($customers as $customer) :
+                                                $displayName = "";
+                                                $displayName .= ($customer->last_name !== "") ? $customer->last_name . ', ': '' ;
+                                                $displayName .= ($customer->first_name !== "") ? $customer->first_name : '' ;
+                                            ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                                            <input class="m-auto" type="checkbox" name="select[]" value="1" checked>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $displayName; ?>
+                                                        <input type="hidden" name="customer_id[]" value="<?php echo $customer->prof_id; ?>">
+                                                    </td>
+                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $customer->email; ?>"></td>
+                                                    <td><p class="m-0 text-right">$0.00</p></td>
+                                                </tr>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -125,7 +160,7 @@
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4 d-flex">
-                            <a href="#" class="text-white m-auto">Print or Preview</a>
+
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

@@ -139,11 +139,33 @@ $(document).ready(function () {
 	$('#datepickerinv3').datepicker({
       uiLibrary: 'bootstrap'
     });
+	$('#rp_payment_date').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv4').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv5').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv6').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv7').datepicker({
+      uiLibrary: 'bootstrap'
+    });
 
 	document.getElementById("addNewTerms").onchange = function() {
     if (this.value == '0') {
         // alert('yeah');
 		$('#exampleModal').modal('toggle');
+    	}
+	}
+
+	document.getElementById("rp_payment_method").onchange = function() {
+    if (this.value == '0') {
+        // alert('yeah');
+		$('#add_new_payment_method').modal('toggle');
     	}
 	}
 });

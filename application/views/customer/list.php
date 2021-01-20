@@ -379,9 +379,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="tab-pane <?php if($minitab=='mt7'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="messages">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                            <?php
-                                                            include viewPath('customer/adv_cust_modules/settings_messages');
-                                                            ?>
+                                                            <div class="col-lg-12">
+                                                                <h6>Messages</h6>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -14,7 +14,7 @@ class Settings extends MY_Controller {
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 
-		//load Model
+        //load Model
         $this->load->model('General_model', 'general_model');
 
         add_css(array(
@@ -92,13 +92,11 @@ class Settings extends MY_Controller {
 
         } else {
             $this->load->model('GoogleAccounts_model');
-
             $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
             $is_glink = false;
             if( $googleAccount ){
                 $is_glink = true;
             }
-
             $this->page_data['is_glink'] = $is_glink;
             $this->page_data['page']->menu = 'settings';
             $this->load->view('settings/schedule', $this->page_data);
@@ -139,6 +137,22 @@ class Settings extends MY_Controller {
         }
         $this->page_data['page']->menu = 'email_templates';
         $this->load->view('settings/email_templates_edit', $this->page_data);
+    }
+
+    public function email_templates_create()
+    {
+        $input = $this->input->post();
+        if ($input) {
+            unset($input['files']);
+            $input['user_id'] = 0;
+            $input['date_created'] = date("d-m-Y h:i A");
+            if($this->general_model->add_($input,"settings_email_template")){
+                redirect(base_url('settings/email_templates'));
+            }
+        }
+
+        $this->page_data['page']->menu = 'email_templates';
+        $this->load->view('settings/email_template_create', $this->page_data);
     }
 
     public function sms_templates()

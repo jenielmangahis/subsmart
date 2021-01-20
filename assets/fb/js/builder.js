@@ -756,3 +756,8 @@ const setPreviewBackgroundImage = (img) => {
     alert(img);
     $(`#elementPreview .form-header`).css('background-image', `url(${img})`);
 }
+
+const handlePreFillChoicesChanged = () => {
+    const val = $('#prefillChoices').val();
+    $('#elementChoicesInput').val(pre_fill_choices[val]);
+}

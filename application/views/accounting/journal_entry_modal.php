@@ -6,7 +6,7 @@
             <form onsubmit="submitModalForm(event, this)" id="modal-form">
                 <div class="modal-content" style="height: 100%;">
                     <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                        <h4 class="modal-title">Journal Entry</h4>
+                        <h4 class="modal-title">Journal Entry #<?php echo $journal_no; ?></h4>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <div class="modal-body pb-0">
@@ -20,7 +20,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="journalNo">Journal No</label>
-                                    <input type="number" name="journal_no" id="journalNo" class="form-control">
+                                    <input type="number" name="journal_no" id="journalNo" class="form-control" value="<?php echo $journal_no; ?>">
                                 </div>
                             </div>
                         </div>

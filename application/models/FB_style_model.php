@@ -10,4 +10,29 @@ class FB_style_model extends MY_Model {
 		parent::__construct();
     }
 
+<<<<<<< HEAD
+=======
+	function create($data)
+	{
+		try {
+			$this->db->insert($this->table, $data);
+			$newID = $this->db->insert_id();
+
+			$response = [
+				'code' 		=> 200,
+				'message' 	=> 'created',
+				'data'		=> []
+			];
+		} catch(\Exception $e) {
+			$response = [
+				'code' 		=> 500,
+				'message' 	=> $e->getMessage(),
+				'data'		=> []
+			];
+		}
+
+	    return $response;
+	}
+
+>>>>>>> staging
 }

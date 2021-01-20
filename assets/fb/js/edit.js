@@ -16,6 +16,7 @@ const handleOnLoad = async (form_id, laodColorPicker = true) => {
       console.log(error);
     }
   });
+  setPageProperties();
   getAllForms().then(res => {
     forms = res.data;
     forms.forEach(el => {

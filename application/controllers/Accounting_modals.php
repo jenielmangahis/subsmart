@@ -25,7 +25,9 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_pay_down_credit_card_model');
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_journal_entries_model');
+        $this->load->model('accounting_inventory_qty_adjustments_model');
         $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('accounting_weekly_timesheet_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
@@ -43,6 +45,8 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
                 case 'journal_entry_modal':
+                    $lastJournalNo = (int)$this->accounting_journal_entries_model->getLastJournalNo();
+                    $this->page_data['journal_no'] = $lastJournalNo + 1;
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
@@ -52,10 +56,135 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
+                case 'inventory_qty_modal':
+                    $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
+                    $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
+                break;
+                case 'statement_modal':
+                    $customers = $this->accounting_customers_model->getCompanyCustomersWithBalance();
+                    $this->page_data['customers'] = $customers;
+
+                    $withoutEmail = array_filter($customers, function($value, $key) {
+                        return $value->email === '';
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['withoutEmail'] = $withoutEmail;
+                break;
+                case 'weekly_timesheet_modal':
+                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+
+                    $date = date('m/d/Y');
+                    $yearLater = date('m/d/Y', strtotime($date . ' -1 year'));
+
+                    $dateTime = new DateTime($yearLater);
+                    $weekNo = $dateTime->format('W');
+                    $newDate = new DateTime();
+                    $firstDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 0);
+                    $firstDayString = $firstDay->format('m/d/Y');
+                    $lastDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 6);
+                    $lastDayString = $lastDay->format('m/d/Y');
+
+                    $weeks = [
+                        [
+                            'firstDay' => $firstDayString,
+                            'lastDay' => $lastDayString,
+                            'selected' => (strtotime($date) >= strtotime($firstDayString) && strtotime($date) <= strtotime($lastDayString)) ? true : false
+                        ]
+                    ];
+
+                    for($i = 2; $i <= 105; $i++) {
+                        $firstDay = $lastDay->add(new DateInterval('P1D'));
+                        $firstDayString = $firstDay->format('m/d/Y');
+                        $lastDay = $firstDay->add(new DateInterval('P6D'));
+                        $lastDayString = $lastDay->format('m/d/Y');
+
+                       $weeks[] = [
+                           'firstDay' => $firstDayString,
+                           'lastDay' => $lastDayString,
+                           'selected' => (strtotime($date) >= strtotime($firstDayString) && strtotime($date) <= strtotime($lastDayString)) ? true : false
+                       ];
+                    }
+
+                    $this->page_data['dropdown']['weeks'] = $weeks;
+                break;
             }
 
             $this->load->view("accounting/". $view, $this->page_data);
         }
+    }
+
+    public function load_job_tags() {
+        $postData = json_decode(file_get_contents('php://input'), true);
+
+        $tags = $this->job_tags_model->getJobTagsByCompany();
+
+        $data = [];
+        $search = $postData['columns'][0]['search']['value'];
+
+        foreach($tags as $tag) {
+            if($search !== "" ) {
+                if(stripos($tag->name, $search) !== false) {
+                    $data[] = [
+                        'id' => $tag->id,
+                        'tag_name' => $tag->name
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $tag->id,
+                    'tag_name' => $tag->name
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $postData['draw'],
+            'recordsTotal' => count($tags),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function submit_job_tag() {
+        $data = [
+            'name' => $this->input->post('tag_name'),
+            'company_id' => logged('company_id')
+        ];
+
+        try {
+            if($this->input->post('method') === 'create') {
+                $jobTagId = $this->job_tags_model->create($data);
+            } else {
+                $id = $this->input->post('id');
+                $jobTagId = $this->job_tags_model->update($id, $data);
+            }
+
+            $return = [
+                'data' => $jobTagId,
+                'success' => $jobTagId ? true : false,
+                'message' => 'Success'
+            ];
+        } catch (\Exception $e) {
+            $return = [
+                'data' => null,
+                'success' => false,
+                'message' => 'Error'
+            ];
+        }
+
+        echo json_encode($return);
+    }
+
+    public function job_tag_modal() {
+        $this->load->view("accounting/job_tags_modal");
+    }
+
+    public function job_tag_form() {
+        $this->load->view("accounting/job_tag_modal_form");
     }
 
     public function get_job_tags() {
@@ -97,6 +226,12 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'depositModal':
                     $this->result = $this->bank_deposit($data, $files);
+                break;
+                case 'inventoryModal':
+                    $this->result = $this->inventory_qty_adjustment($data);
+                break;
+                case 'weeklyTimesheetModal':
+                    $this->result = $this->weekly_timesheet($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -383,6 +518,171 @@ class Accounting_modals extends MY_Controller {
             $return['data'] = $depositId;
             $return['success'] = $depositId ? true : false;
             $return['message'] = $depositId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function inventory_qty_adjustment($data) {
+        $this->form_validation->set_rules('adjustment_date', 'Date', 'required');
+        $this->form_validation->set_rules('reference_no', 'Reference No.', 'required');
+        $this->form_validation->set_rules('inventory_adj_acc', 'Inventory Adjustment Account', 'required');
+
+        if(isset($data['product']) && isset($data['new_qty']) && isset($data['change_in_qty'])) {
+            $this->form_validation->set_rules('product[]', 'Product', 'required');
+            $this->form_validation->set_rules('new_qty[]', 'New Quantity', 'required');
+            $this->form_validation->set_rules('change_in_qty[]', 'Change in Quantity', 'required');
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['product']) && !isset($data['new_qty']) && !isset($data['change_in_qty'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one inventory item.';
+        } else {
+            $insertData = [];
+            if(strpos($data['inventory_adj_acc'], 'cogs-') === 0) {
+                $accountType = 'Cost of Goods Sold';
+                $accountId = str_replace('cogs-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'expenses-') === 0) {
+                $accountType = 'Expenses';
+                $accountId = str_replace('expenses-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'oexpense-') === 0) {
+                $accountType = 'Other Expense';
+                $accountId = str_replace('oexpense-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'income-') === 0) {
+                $accountType = 'Income';
+                $accountId = str_replace('income-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'oincome-') === 0) {
+                $accountType = 'Other Income';
+                $accountId = str_replace('oincome-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'equity-') === 0) {
+                $accountType = 'Equity';
+                $accountId = str_replace('equity-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'ocassets-') === 0) {
+                $accountType = 'Other Current Assets';
+                $accountId = str_replace('ocassets-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'oassets-') === 0) {
+                $accountType = 'Other Assets';
+                $accountId = str_replace('oassets-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'bank-') === 0) {
+                $accountType = 'Bank';
+                $accountId = str_replace('bank-', '', $data['inventory_adj_acc']);
+            } else if(strpos($data['inventory_adj_acc'], 'ocliab-') === 0) {
+                $accountType = 'Other Current Liabilities';
+                $accountId = str_replace('ocliab-', '', $data['inventory_adj_acc']);
+            }
+
+            foreach($data['product'] as $key => $value) {
+                $insertData[] = [
+                    'adjustment_no' => $data['reference_no'],
+                    'company_id' => logged('company_id'),
+                    'adjustment_date' => $data['adjustment_date'],
+                    'inventory_adjustment_account' => $accountId,
+                    'inventory_adjustment_account_type' => $accountType,
+                    'product_id' => $value,
+                    'new_quantity' => $data['new_qty'][$key],
+                    'change_in_quantity' => $data['change_in_qty'][$key],
+                    'memo' => $data['memo'],
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ];
+            }
+
+            $adjustmentId = $this->accounting_inventory_qty_adjustments_model->insertBatch($insertData);
+
+            $return['data'] = $adjustmentId;
+            $return['success'] = $adjustmentId ? true : false;
+            $return['message'] = $adjustmentId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function weekly_timesheet($data) {
+        $this->form_validation->set_rules('person_tracking', 'Person being Tracked', 'required');
+        $this->form_validation->set_rules('week_dates', 'Week Dates', 'required');
+
+        if(isset($data['billable'])) {
+            $this->form_validation->set_rules('hourly_rate[]', 'Week Dates', 'required');
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $insertData = [];
+
+            if(strpos($data['person_tracking'], 'employee-') === 0) {
+                $nameKey = 'employee';
+                $nameId = str_replace('employee-', '', $data['person_tracking']);
+            } else if(strpos($data['person_tracking'], 'vendor-') === 0){
+                $nameKey = 'vendor';
+                $nameId = str_replace('vendor-', '', $data['person_tracking']);
+            } else {
+                $nameKey = null;
+                $nameId = null;
+            }
+
+            $weekDate = explode('-', $data['week_dates']);
+            $weekStartDate = strtotime($weekDate[0]);
+            $weekEndDate = strtotime($weekDate[1]);
+
+            foreach($data['customer'] as $key => $value) {
+                if($value !== "") {
+                    $billable = isset($data['billable']) ? $data['billable'][$key] : null;
+                    $hourlyRate = isset($data['billable'][$key]) ? $data['hourly_rate'][$key] : null;
+                    $taxable = (isset($data['billable'][$key]) && isset($data['taxable'][$key])) ? $data['taxable'][$key] : null;
+
+                    $weekDailyHours = [
+                        'sunday' => $data['sunday_hours'][$key],
+                        'monday' => $data['monday_hours'][$key],
+                        'tuesday' => $data['tuesday_hours'][$key],
+                        'wednesday' => $data['wednesday_hours'][$key],
+                        'thursday' => $data['thursday_hours'][$key],
+                        'friday' => $data['friday_hours'][$key],
+                        'saturday' => $data['saturday_hours'][$key]
+                    ];
+
+                    $insertData[] = [
+                        'name_key' => $nameKey,
+                        'name_id' => $nameId,
+                        'week_start_date' => date('Y-m-d', $weekStartDate),
+                        'week_end_date' => date('Y-m-d', $weekEndDate),
+                        'customer_id' => $value,
+                        'service_id' => $data['service'][$key],
+                        'description' => $data['description'][$key],
+                        'billable' => $billable,
+                        'hourly_rate' => $hourlyRate,
+                        'taxable' => $taxable,
+                        'week_daily_hours' => json_encode($weekDailyHours),
+                        'status' => 1,
+                        'created_at' => date('Y-m-d h:i:s'),
+                        'updated_at' => date('Y-m-d h:i:s')
+                    ];
+                }
+            }
+
+            if(count($insertData) > 0) {
+                $timesheetRecordId = $this->accounting_weekly_timesheet_model->insertBatch($insertData);
+
+                $return['data'] = $timesheetRecordId;
+                $return['success'] = $timesheetRecordId ? true : false;
+                $return['message'] = $timesheetRecordId ? 'Entry Successful!' : 'An unexpected error occured!';
+            } else {
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Nothing inserted.';
+            }
         }
 
         return $return;

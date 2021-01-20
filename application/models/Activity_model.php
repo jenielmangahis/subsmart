@@ -23,6 +23,24 @@ class Activity_model extends MY_Model {
 	public function addEsignActivity($data){
 		return $this->db->insert($this->esign_table, $data); 	
 	}
+
+    public function getActivity($userId, $limit=[], $isHistoryActivity = 0){
+        $loginActivities = ['User Login', 'User Logout'];
+        $this->db->where('user_id', $userId);
+        if($isHistoryActivity){
+            $this->db->where_in('activityName', $loginActivities);
+        }else {
+            $this->db->limit($limit[0] , $limit[1]);
+         }
+		$this->db->order_by("createdAt", "desc");
+		return $this->db->get($this->esign_table)->result_array();
+		$result = $this->db->get($this->esign_table);
+		if($result){
+            return $result->result_array();
+        }else{
+            return false;
+        }
+	}
 	
 }
 

@@ -1383,9 +1383,8 @@ class Workcalender extends MY_Controller
         $this->load->model('Event_model', 'event_model', 'settings_model');
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
-        if( $settings[0] ){       
-            $a_settings = unserialize($settings[0]->value);
-            date_default_timezone_set($a_settings['calendar_timezone']);
+        if( $settings[0] ){              
+            date_default_timezone_set($settings['calendar_timezone']);
         }
 
         $role_id = logged('role');

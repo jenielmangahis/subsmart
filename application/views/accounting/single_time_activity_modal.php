@@ -42,6 +42,7 @@
                                 <div class="form-group">
                                     <label for="customer">Customer</label>
                                     <select name="customer" id="customer" class="form-control" required>
+                                        <option value="1">Betty Fuller</option>
                                         <?php foreach($dropdown['customers'] as $customer) :?>
                                             <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
                                         <?php endforeach; ?>

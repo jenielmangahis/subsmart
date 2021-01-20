@@ -273,8 +273,5 @@
     </div>
     <!--end of modal-->
 </div>
-<<<<<<< HEAD
-=======
 
 <?php include viewPath('accounting/add_new_term'); ?>
->>>>>>> 6e84d268d8b86938b48613c33cefb4d31060641b

@@ -46,6 +46,8 @@ class Users extends MY_Controller {
         $this->load->model('ServiceCategory_model');
         $this->load->model('PayScale_model');
 
+        $this->load->model('General_model', 'general_model');
+
 	}
 
 	public function businessprofile()
@@ -219,7 +221,13 @@ class Users extends MY_Controller {
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;
 		$cid=logged('id');
-		$this->load->view('business_profile/profile_settings', $this->page_data);
+        $get_business_data = array(
+            'where' => array(
+                'user_id' => $user->id,
+            )
+        );
+        $this->page_data['profile_data'] = $this->general_model->get_all_with_keys($get_business_data,'business_profile',FALSE);
+        $this->load->view('business_profile/profile_settings', $this->page_data);
 
 	}
 
@@ -234,7 +242,12 @@ class Users extends MY_Controller {
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
 		
 		/* echo "<pre>"; print_r($this->page_data); die;  */
-		
+        $get_business_data = array(
+            'where' => array(
+                'user_id' => $user->id,
+            )
+        );
+        $this->page_data['profile_data'] = $this->general_model->get_all_with_keys($get_business_data,'business_profile',FALSE);
 		$this->load->view('business_profile/social_media', $this->page_data);
 	}
 
@@ -418,6 +431,13 @@ class Users extends MY_Controller {
 			
 			$imbid=$pdata['user_id'];
 		}else{
+            if(isset($pdata) && isset($user)){
+                unset($pdata['btn-save']);
+                if($this->general_model->update_with_key_field($pdata,$user->id,"business_profile",'user_id')){
+                    redirect($_SERVER['HTTP_REFERER'], 'refresh');
+                }
+            }
+
 			$pdata['user_id'] = $user->id;
 			$imbid=$user->id;
 			$bid = $this->business_model->create($pdata);
@@ -746,7 +766,7 @@ class Users extends MY_Controller {
         $app_access = $this->input->post('values[app_access]');
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
-        $emp_number  = $this->users_model->generateRandomEmployeeNumber();
+        $emp_number  = $this->input->post('values[emp_number]');
         $cid=logged('company_id');
         $add = array(
             'FName' => $fname,
@@ -770,7 +790,6 @@ class Users extends MY_Controller {
             echo json_encode(0);
         }
     }    
-
     public function getEmployeeData(){
 	    $user_id = $this->input->get('user_id');
 	    $get_data = $this->db->get_where('users',array('id'=>$user_id));
@@ -794,8 +813,7 @@ class Users extends MY_Controller {
 	    $get_user = $this->Users_model->getUser($user_id);
 	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
 
-	    $cid   = logged('company_id');
-	    $role_id = logged('role');		
+	    $cid   = logged('company_id');		
         $roles = $this->users_model->getRoles();
 
         if( $role_id == 1 || $role_id == 2 ){
@@ -1418,8 +1436,6 @@ class Users extends MY_Controller {
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($company_id);
 		}
 
-		$this->page_data['default_ids'] = $this->PayScale_model->defaultPayScaleIds();
-		$this->page_data['role_id'] = $role_id;
 		$this->load->view('users/payscale/list', $this->page_data);
 	}
 

@@ -10,6 +10,15 @@ class Accounting_journal_entries_model extends MY_Model {
 		parent::__construct();
     }
 
+	function getLastJournalNo()
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->order_by('journal_no', 'desc');
+		$query = $this->db->get($this->table);
+
+		return $query->row()->journal_no;
+	}
+
 	function insertBatch($data)
 	{
         $this->db->insert_batch($this->table, $data);

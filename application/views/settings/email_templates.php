@@ -34,6 +34,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <!-- Tab Section Start -->
                             <div class="tab-content">
+                                <a style="float: right;" href="<?= base_url('settings/email_templates_create') ?>"  class="btn btn-sm btn-primary">
+                                    <span class="fa fa-plus"></span> Create New Email Template
+                                </a>
+                                <br><br>
                                 <div id="tab_residential" class="tab-panel">
                                     <table class="table table-hover table-to-list fix-reponsive-table">
                                         <thead>
@@ -49,150 +53,123 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="bold">Invoice</span>
                                                 </td>
                                             </tr>
-                                            <?php foreach ($invoice_templates as $invoice_template): ?>
-                                             <tr>
-                                                <td data-title="Template Name">
-                                                    <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">Create and send invoice without online payment option</a>
-                                                </td>
+                                            <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send invoice without online payment option</a></td>
                                                 <td data-title="Details">
-                                                    <span class="text-ter"><?= $invoice_template->details; ?></span>
+                                                    <span class="text-ter">Default template</span>
                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a class="" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>" >
-                                                        <span class="fa fa-pencil-square-o icon"></span> Edit
-                                                    </a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
+                                            <?php foreach ($invoice_templates as $invoice_template): ?>
+                                                <?php if ($invoice_template->type_id == 1) : ?>
+                                                    <tr>
+                                                        <td data-title="Template Name">
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">
+                                                                <?= $invoice_template->title; ?>
+                                                            </a>
+                                                        </td>
+                                                        <td data-title="Details">
+                                                            <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
+                                                        </td>
+                                                        <td class="text-right" data-title="">
+                                                            <a class="" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>" >
+                                                                <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
                                             <?php endforeach ?>
                                             <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send invoice with online payment option</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Invoice reminder</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Payment Receipt</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                            <tr>
                                                 <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
                                                     <span class="bold">Estimate</span>
                                                 </td>
                                             </tr>
+                                            <?php foreach ($invoice_templates as $invoice_template): ?>
+                                                <?php if ($invoice_template->type_id == 2) : ?>
                                                     <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Send Estimate</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Send Proposal</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                            <tr>
+                                                        <td data-title="Template Name">
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>"><?= $invoice_template->title; ?></a>
+                                                        </td>
+                                                        <td data-title="Details">
+                                                            <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
+                                                        </td>
+                                                        <td class="text-right" data-title="">
+                                                            <a class="" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>" >
+                                                                <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach ?>
+                                             <tr>
                                                 <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
                                                     <span class="bold">Schedule</span>
                                                 </td>
                                             </tr>
+                                            <?php foreach ($invoice_templates as $invoice_template): ?>
+                                                <?php if ($invoice_template->type_id == 3) : ?>
                                                     <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create Appointment</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Appointment Reminder</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">First Heads-up Notification</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Second Heads-up Notification</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                    <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Cancel Appointment</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                            <tr>
+                                                        <td data-title="Template Name">
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>"><?= $invoice_template->title; ?></a>
+                                                        </td>
+                                                        <td data-title="Details">
+                                                            <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
+                                                        </td>
+                                                        <td class="text-right" data-title="">
+                                                            <a class="" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>" >
+                                                                <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach ?>
+                                            <tr>
                                                 <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
                                                     <span class="bold">Ask For Review</span>
                                                 </td>
                                             </tr>
+                                            <?php foreach ($invoice_templates as $invoice_template): ?>
+                                                <?php if ($invoice_template->type_id == 4) : ?>
                                                     <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Ask For Review</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                            <tr>
+                                                        <td data-title="Template Name">
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>"><?= $invoice_template->title; ?></a>
+                                                        </td>
+                                                        <td data-title="Details">
+                                                            <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
+                                                        </td>
+                                                        <td class="text-right" data-title="">
+                                                            <a class="" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>" >
+                                                                <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach ?>
+                                            <tr>
                                                 <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
                                                     <span class="bold">Credit Notes</span>
                                                 </td>
                                             </tr>
+                                            <?php foreach ($invoice_templates as $invoice_template): ?>
+                                                <?php if ($invoice_template->type_id == 5) : ?>
                                                     <tr>
-                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Send credit note</a></td>
-                                                <td data-title="Details">
-                                                                    <span class="text-ter">Default template</span>
-                                                                </td>
-                                                <td class="text-right" data-title="">
-                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </td>
-                                            </tr>
-                                                        </tbody>
+                                                        <td data-title="Template Name">
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>"><?= $invoice_template->title; ?></a>
+                                                        </td>
+                                                        <td data-title="Details">
+                                                            <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
+                                                        </td>
+                                                        <td class="text-right" data-title="">
+                                                            <a class="" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>" >
+                                                                <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach ?>
+                                        </tbody>
                                     </table>
                                 </div>
 

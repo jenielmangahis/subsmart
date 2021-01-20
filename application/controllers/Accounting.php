@@ -69,9 +69,6 @@ class Accounting extends MY_Controller {
                 array("",	array('/accounting/chart_of_accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['vendors'] = $this->vendors_model->getVendors();
-        $this->page_data['list_categories'] = $this->categories_model->getCategories();
     }
 
     /*public function index()
@@ -89,15 +86,6 @@ class Accounting extends MY_Controller {
         }
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['vendors'] = $this->vendors_model->getVendors();
-        $this->page_data['checks'] = $this->expenses_model->getCheck();
-        $this->page_data['transactions'] = $this->expenses_model->getTransaction();
-        $this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
-        $this->page_data['bills'] = $this->expenses_model->getBill();
-        $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
-        $this->page_data['expenses'] = $this->expenses_model->getExpense();
-        $this->page_data['list_categories'] = $this->categories_model->getCategories();
-        $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['terms'] = $this->accounting_invoices_model->getPayTerms();
@@ -1188,8 +1176,8 @@ class Accounting extends MY_Controller {
             'payment_account' => $this->input->post('payment_account'),
             'payment_date' => $this->input->post('payment_date'),
             'payment_method' => $this->input->post('payment_method'),
-            'ref_number' => $this->input->post('ref_num'),
-            'permit_number' => $this->input->post('permit_num'),
+            'ref_number' => $this->input->post('ref_number'),
+            'permit_number' => $this->input->post('permit_number'),
             'memo' => $this->input->post('memo'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
@@ -1205,29 +1193,6 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-
-    public function addExpenseModel(){
-        $new_data = array(
-            'vendor_id' => $this->input->post('vendor_id'),
-            'payment_account' => $this->input->post('payment_account'),
-            'payment_date' => $this->input->post('payment_date'),
-            'payment_method' => $this->input->post('payment_method'),
-            'ref_number' => $this->input->post('referance_num'),
-            'permit_number' => $this->input->post('per_num'),
-            'memo' => $this->input->post('memo'),
-            'category' => $this->input->post('category'),
-            'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount'),
-            'total' => $this->input->post('expense_total')
-        );
-        $query = $this->expenses_model->addExpenseModel($new_data);
-        if ($query == true){
-            redirect(base_url('accounting/expenses'));
-        }else{
-            redirect(base_url('accounting/expenses'));
-        }
-    }
-
     public function getExpenseData(){
         $id = $this->input->get('id');
         $transaction_id = $this->input->get('transaction_id');
@@ -2519,9 +2484,8 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/customer_estimate_modal');
     }
 
-    public function get_data()
+    public function purchase_order()
     {
-       $data['list_categories'] = $this->categories_model->getCategories();
-       echo json_encode($data);
+        echo "string";
     }
 }

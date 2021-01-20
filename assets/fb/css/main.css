@@ -295,10 +295,6 @@ div#blankFormPlaceHolder {
     padding-bottom: 80px;
 }
 
-.container-block .LongAnswer textarea {
-    /* height: 90% !important; */
-}
-
 .color-placeholder {
     border: 1px solid gray;
     height: 46px;
@@ -330,4 +326,17 @@ div#blankFormPlaceHolder {
     display: block;
     overflow: hidden;
     text-align: center;
+<<<<<<< HEAD
+=======
+}
+
+#formTemplatePreviewPage {
+    height: 400px!important;
+    padding: 15px 50px;
+}
+
+#formTemplatePreview {
+    overflow-y: scroll;
+    height: 325px;
+>>>>>>> staging
 }
