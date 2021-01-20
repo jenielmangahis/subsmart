@@ -14,16 +14,27 @@ class FB_model extends MY_Model {
 		$this->load->model('FB_element_choices_model', 'form_element_choices');
 		$this->load->model('FB_element_matrix_rows_model', 'form_element_matrix_rows');
 		$this->load->model('FB_element_matrix_columns_model', 'form_element_matrix_columns');
-<<<<<<< HEAD
-		$this->load->model('FB_element_items_model', 'form_element_items');
-=======
 		$this->load->model('FB_style_model', 'form_style');
 		$this->load->model('Items_model', 'products');
->>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
+<<<<<<< HEAD
+=======
+		$this->load->model('FB_templates_model', 'form_templates');
+		$this->load->model('FB_template_elements_model', 'form_template_elements');
+		$this->load->model('FB_template_element_choices_model', 'form_template_element_choices');
+		$this->load->model('FB_template_element_matrix_rows_model', 'form_template_element_matrix_rows');
+		$this->load->model('FB_template_element_matrix_columns_model', 'form_template_element_matrix_columns');
+		$this->load->model('FB_template_style_model', 'form_template_style');
+		$this->load->model('FB_template_element_items_model', 'form_template_element_items');
+>>>>>>> staging
     }
     
-	function create($data){
+	function create($data, $from_template = false){
 		try {
+			if($from_template) {
+				$data->id = null;
+			} else {
+				$data['id'] = null;
+			}
 			$this->db->insert($this->table, $data);
 			$formID = $this->db->insert_id();
 
@@ -76,7 +87,7 @@ class FB_model extends MY_Model {
 			$res = [
 				'data' 	=> $q->result(),
 				'code'	=> 200,
-				'message'	=> 'Here are your forms, master'
+				'message'	=> 'Forms fetched successfuly'
 			];
 		}catch(\Exception $e) {
 			$res = [
@@ -105,7 +116,13 @@ class FB_model extends MY_Model {
 			$this->db->where('form_id', $id);
 			$formStyle = $this->db->get($this->form_style->table);
 
+<<<<<<< HEAD
+			$this->db->select("*");
+			$this->db->where('form_id', $id);
+			$formStyle = $this->db->get($this->form_style->table);
 
+=======
+>>>>>>> staging
 			$this->db->select("*");
 			$this->db->where('form_id', $id); 
 			$this->db->order_by('element_order', 'ASC');
@@ -134,17 +151,12 @@ class FB_model extends MY_Model {
 				$elementsArr[$i]['matrix'] = $matrix;				
 			}
 			$data = [
-<<<<<<< HEAD
-				'form'		=> $form->row(),
-				'elements'	=> $elementsArr
-=======
 				'form'			=> $form,
 				'form_style'	=> $formStyle->row(),
 				'elements'		=> $elementsArr,
 				'products'		=> $products,
 				// 'company'		=> $company,
 				// 'cid'			=> $cid,
->>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
 			];	
 
 			$res = [
@@ -163,10 +175,24 @@ class FB_model extends MY_Model {
 	}
 
 	function update($data, $id) {
+		$customStyle = $data['customize_items'];
+		$customStyle['form_id'] = $id;
+		unset($data['customize_items']);
 		try {
 			$this->db->set($data);
 			$this->db->where('id', $id);
 			$this->db->update($this->table);	
+
+			$this->db->select("form_id");
+			$this->db->where('form_id', $id);
+			$rows = $this->db->get($this->form_style->table);
+			if($rows->num_rows()) {
+				$this->db->set($customStyle);
+				$this->db->where('form_id', $id);
+				$this->db->update($this->form_style->table);	
+			} else {
+				$this->db->insert($this->form_style->table, $customStyle);
+			}
 
 			$res = [
 				'data' 	=> [],
@@ -181,6 +207,11 @@ class FB_model extends MY_Model {
 			];
 		}
 		return $res;
+		// return $res = [
+	 	// 	'data' 	=> ['data' => $data, 'custom_style' => $customStyle],
+	 	// 	'code'	=> 500,
+	 	// 	'message'	=> 'Error updating form styles. please try again later or contact customer support.'
+	 	// ];
 	}
 
 	public function generateQR($form_id){
@@ -192,5 +223,194 @@ class FB_model extends MY_Model {
         $params['size'] = 10;
         $params['savename'] = $SERVERFILEPATH;
         $this->ciqrcode->generate($params);
-    }
+	}
+	
+	public function generateFormFromTemplate($form_id, $name) {
+		try {
+			$fullTemplate = $this->form_templates->getByFormTemplateID($form_id)['data'];
+			$templateForm = $fullTemplate['form'];
+			$templateElements = $fullTemplate['elements'];
+			$templateFormStyle = $fullTemplate['form_style'];
+			$templateForm->name = $name;
+
+			$formCreate = $this->create($templateForm, true);
+
+			if($formCreate['code'] == 200) {
+				$containerIDs = [];
+				$waitList = [];
+				$formID = $formCreate['data']['form_id'];
+				
+				$templateFormStyle->id = null;
+				$templateFormStyle->form_id = $formID;
+				$this->form_style->create($templateFormStyle);
+
+				foreach ($templateElements as $i => $element) {
+					if($element['element_type'] == 'ContainerBlock') {
+						$oldContainerID = $element['id'];
+					}
+
+					$element['id'] = null;
+					$element['form_id'] = $formID;
+					$newElementData['choices_and_prices'] = $element['items'];
+					$newElementData['matrix_row'] = $element['matrix']['rows'];
+					$newElementData['matrix_column'] = $element['matrix']['columns'];
+					$newElementData['choices'] = $element['choices'];
+					
+					unset($element['items']);
+					unset($element['matrix']);
+					unset($element['choices']);
+
+					$newElementData['form_element'] = $element;
+
+					if($newElementData['form_element']['container_id'] != 0 && $newElementData['form_element']['container_id'] != null) {
+						if(array_key_exists($newElementData['form_element']['container_id'], $containerIDs)){
+							$newElementData['form_element']['container_id'] = $containerIDs[$newElementData['form_element']['container_id']];
+						} else {
+							$waitList = $newElementData;
+							continue;
+						}
+					}
+					
+					$newelement = $this->form_elements->create($newElementData);
+					if($element['element_type'] == 'ContainerBlock') {
+						$containerIDs[$oldContainerID] = $newelement['data']['new_id'];
+					}
+				}
+
+				if($waitList) {
+
+					foreach ($waitList as $i => $waitListItem) {
+						$waitListItemContainerID = $waitListItem['form_element']['container_id'];
+						$waitListItem['form_element']['container_id'] = $containerIDs[$waitListItemContainerID];
+					}
+
+					$newelement = $this->form_elements->create($waitListItem);
+				}
+			}
+			$res = [
+				'data' 	=> [
+					'form_id' => $formCreate['data']['form_id'],
+					'container_ids' => $containerIDs,
+					'new_element' => $newelement,
+					'wait_list'	=> $waitList,
+					'template'	=> $fullTemplate
+				],
+				// 'data'	=> $fullTemplate,
+				'code'	=> 200,
+				'message'	=> 'Created'
+			];
+		}catch(\Exception $e) {
+			$res = [
+				'data' 	=> [],
+				'code'	=> 500,
+				'message'	=> 'Error creating form from template. please try again later or contact customer support.'
+			];
+		}
+		return $res;
+	}
+
+	public function generateTemplateFromForm($form_id) {
+		try {
+			$fullForm = $this->getByFormID($form_id)['data'];
+			$form = $fullForm['form'];
+			$formElements = $fullForm['elements'];
+			$formStyle = $fullForm['form_style'];
+
+			unset($form->status);
+			unset($form->daily_summary_email);
+			unset($form->private_notes);
+			unset($form->social_description);
+			unset($form->social_image);
+			unset($form->favorite);
+
+			$formCreate = $this->form_templates->create($form, true);
+
+
+			// return $res = [
+			// 	'data' 	=> [
+			// 		'full_template' => $fullForm,
+			// 		'template_form'	=> $templateForm,
+			// 		'template_elements'	=> $formElements,
+			// 		'template_form_style'	=> $formStyle,
+			// 		// 'form_create'	=> $formCreate,
+			// 	],
+			// 	// 'data'	=> $fullForm,
+			// 	'code'	=> 200,
+			// 	'message'	=> 'Created'
+			// ];
+
+			if($formCreate['code'] == 200) {
+				$containerIDs = [];
+				$waitList = [];
+				$formID = $formCreate['data']['form_id'];
+				
+				$formStyle->id = null;
+				$formStyle->form_id = $formID;
+				$this->form_template_style->create($formStyle);
+
+				foreach ($formElements as $i => $element) {
+					if($element['element_type'] == 'ContainerBlock') {
+						$oldContainerID = $element['id'];
+					}
+
+					$element['id'] = null;
+					$element['form_id'] = $formID;
+					$newElementData['choices_and_prices'] = $element['items'];
+					$newElementData['matrix_row'] = $element['matrix']['rows'];
+					$newElementData['matrix_column'] = $element['matrix']['columns'];
+					$newElementData['choices'] = $element['choices'];
+					
+					unset($element['items']);
+					unset($element['matrix']);
+					unset($element['choices']);
+					unset($element['rules']);
+
+					$newElementData['form_element'] = $element;
+
+					if($newElementData['form_element']['container_id'] != 0 && $newElementData['form_element']['container_id'] != null) {
+						if(array_key_exists($newElementData['form_element']['container_id'], $containerIDs)){
+							$newElementData['form_element']['container_id'] = $containerIDs[$newElementData['form_element']['container_id']];
+						} else {
+							$waitList = $newElementData;
+							continue;
+						}
+					}
+					
+					$newelement = $this->form_template_elements->create($newElementData);
+					if($element['element_type'] == 'ContainerBlock') {
+						$containerIDs[$oldContainerID] = $newelement['data']['new_id'];
+					}
+				}
+
+				if($waitList) {
+
+					foreach ($waitList as $i => $waitListItem) {
+						$waitListItemContainerID = $waitListItem['form_element']['container_id'];
+						$waitListItem['form_element']['container_id'] = $containerIDs[$waitListItemContainerID];
+					}
+
+					$newelement = $this->form_template_elements->create($waitListItem);
+				}
+			}
+			$res = [
+				'data' 	=> [
+					'form_id' => $formCreate['data']['form_id'],
+					'container_ids' => $containerIDs,
+					'new_element' => $newelement,
+					'wait_list'	=> $waitList,
+					'template'	=> $fullTemplate
+				],
+				// 'data'	=> $fullTemplate,
+				'code'	=> 200,
+				'message'	=> 'Created'
+			];
+		}catch(\Exception $e) {
+			$res = [
+				'data' 	=> [],
+				'code'	=> 500,
+				'message'	=> 'Error creating form from template. please try again later or contact customer support.'
+			];
+		}
+		return $res;
+	}
 }

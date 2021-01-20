@@ -4,21 +4,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Dashboard extends MY_Controller {
 
 
-	public function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->checkLogin();
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Users_model', 'user_model');
         $this->load->model('Feeds_model', 'feeds_model');
-		$this->load->model('timesheet_model');
+        $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $this->load->model('jobs_model');
         $this->load->model('estimate_model');
         $this->load->model('invoice_model');
         $this->load->model('Crud', 'crud'); 
         $this->load->model('taskhub_status_model');
-        $this->load->model('Activity_model', 'activity');
+        $this->load->model('Activity_model','activity');
 
         add_css(array(
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -36,10 +36,11 @@ class Dashboard extends MY_Controller {
         ));
     }
 
-    
 	public function index()
-	{
+	{  
         $user_id = logged('id');
+        // temporary comment out not yet verify the error
+
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6,0], 0);
         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
         if($this->page_data['activity_list_count'] > 5 ){
@@ -89,21 +90,11 @@ class Dashboard extends MY_Controller {
         }
         $this->page_data['status_arr'] = $status_arr;
         $this->load->view('dashboard', $this->page_data);
-	}public
+	}
 
-    function tech_leaderboard()
+    public function tech_leaderboard()
     {
         $user_id = logged('id');
-        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6,0], 0);
-        $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
-        if($this->page_data['activity_list_count'] > 5 ){
-            array_pop($this->page_data['activity_list']);
-        }
-        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
-        $this->page_data['history_activity_list_count'] = sizeof($this->page_data['history_activity_list']);
-        if($this->page_data['history_activity_list_count'] > 5 ){
-            array_pop($this->page_data['history_activity_list']);
-        }
         $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_dashboard_sort");
         if(!$check_if_exist){
             $input = array();
@@ -112,6 +103,12 @@ class Dashboard extends MY_Controller {
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
         $this->page_data['feeds'] = $this->feeds_model->getByCompanyId();
+        
+        $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
+        $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
+        $this->page_data['invoice'] = $this->estimate_model->getAllByCompany(logged('company_id'));
+        $this->page_data['invoice'] = $this->invoice_model->getAllByCompany(logged('company_id'), 0);
+       
         $this->page_data['employees'] = $this->user_model->getAllUsersByCompany(logged('company_id'));
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
@@ -142,7 +139,8 @@ class Dashboard extends MY_Controller {
             $status_arr[] = $status_selec->status_text."@#@".$task_status;
         }
         $this->page_data['status_arr'] = $status_arr;
-        $this->load->view('tech_leaderboard', $this->page_data);
+        
+        $this->load->view('dashboard', $this->page_data);
     }
 
     public function ac_dashboard_sort(){
@@ -157,7 +155,7 @@ class Dashboard extends MY_Controller {
 
 
     public function blank() {
-	    $get = $this->input->get();
+        $get = $this->input->get();
         $this->page_data['page_name'] = $get['page'];
         $this->load->view('blank', $this->page_data);
     }

@@ -1,8 +1,8 @@
 .form-info .form-header, form.form-info button {
-    background-color:#38a4f8 !important;
+    background-color:#38a4f8 /* !important */;
 }
 
 .form-info div.Signature div.container button {
-    background-color: #38a4f8 !important;
-    color: #fff !important;
+    background-color: #38a4f8 /* !important */;
+    color: #fff /* !important */;
 }

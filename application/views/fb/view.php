@@ -13,15 +13,11 @@
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fb/css/custom-themes/styles.css" type="text/css" />
 </head>
 <body>
-<<<<<<< HEAD
-    <div class="container">
-=======
     <div class="page-element p-4">
->>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
         <form action="" method="post" id="formElementsContainer">
-            <div id="formContainer" class="row bg-white"></div>
+            <div id="formContainer" class="row form-container-element"></div>
             <div class="w-100 text-center">
-                <button class="btn btn-primary">Submit</button>
+                <button class="btn submit-button-element">Submit</button>
             </div>
         </form>
     </div>
@@ -30,6 +26,7 @@
     <script>window.view_form_builder = true;</script>
     <script src="<?= base_url(); ?>assets/dashboard/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?= base_url(); ?>assets/signature_pad-master/js/signature_pad.js"></script>
+    <script type="text/javascript" src="<?= base_url(); ?>assets/fb/js/custom-style.js"></script>
     <script type="text/javascript" src="<?= base_url(); ?>assets/fb/js/view.js"></script>
     <script type="text/javascript" src="<?= base_url(); ?>assets/fb/js/datepicker.js"></script>
     <script type="text/javascript" src="<?= base_url(); ?>assets/fb/js/main.js"></script>

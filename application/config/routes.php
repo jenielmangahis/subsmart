@@ -53,9 +53,10 @@ $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['tech-leaderboard'] = 'Dashboard/tech_leaderboard';
 $route['customer/tickets/(:any)?'] = 'customer/ticket/$1';
 $route['customer/tickets'] = 'customer/ticket';
+
+$route['customer/add_data_sheet'] = 'customer/add_data_sheet';
 
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';
@@ -248,10 +249,6 @@ $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
 $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 $route['accounting/get-job-tags'] = 'accounting_modals/get_job_tags';
-$route['accounting/load-job-tags']['post'] = 'accounting_modals/load_job_tags';
-$route['accounting/submit-job-tag-form']['post'] = 'accounting_modals/submit_job_tag';
-$route['accounting/get-job-tag-modal'] = 'accounting_modals/job_tag_modal';
-$route['accounting/get-job-tag-form'] = 'accounting_modals/job_tag_form';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -514,16 +511,21 @@ $route['color_settings/delete_color'] = 'Color_Settings/delete_color';
 $route['color_settings/add_new'] = 'Color_Settings/add_new';
 
 //Users
- 
-$route['users/load_edit_employee'] = 'Users/ajaxEditEmployee';
- 
 $route['users/load_edit_employee'] = 'Users/ajax_edit_employee';
 $route['users/_update_employee'] = 'Users/ajaxUpdateEmployee';
- 
 $route['users/_update_employee_password'] = 'Users/ajaxUpdateEmployeePassword';
 $route['users/_add_payscale'] = 'Users/ajax_add_payscale';
 $route['users/_edit_payscale'] = 'Users/ajax_edit_payscale';
 $route['users/_update_payscale'] = 'Users/ajax_update_payscale';
 $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 
+//Jobs
+$route['job/details/(:any)'] = 'job/details/$1';
+
+//Estimates
+$route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';
+$route['estimate_customer_view/(:any)'] = 'Pages/estimate_customer_view/$1';
+$route['customer_approve_estimate'] = 'Pages/customer_update_estimate/1';
+$route['customer_disapprove_estimate'] = 'Pages/customer_update_estimate/2';
+$route['estimate/_load_scheduled_estimates'] = 'Estimate/ajax_load_scheduled_estimates';
 

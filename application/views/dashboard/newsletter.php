@@ -12,7 +12,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="expenses-money-section" style="margin-top:10px;">
                             <div class="inner-news">
-                                <p>Welcome to nSmartrac!</p>
+                                <a href="javascript:void(0)" class="card-link" data-toggle="modal" data-target="#exampleModal2">Add News Letter</a>
                             </div>
                         </div>
                     </div>
@@ -22,23 +22,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">New Letter</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="row">
         <?php echo form_open('dashboard/saveFeed', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
-        </form></div>
+        </div>
         <div class="row">
             <div class="col-md-12 form-group">
                 <label for="job_name">Subject</label>
-                <input type="text" class="form-control" name="feed_subject" id="feed_subject" required="">
+                <input type="text" class="form-control" name="feed_subject" id="feed_subject" required/>
             </div>
         </div>
         <div class="row">
@@ -52,6 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
-          </div>
+      <?php echo form_close(); ?>
+    </div>
   </div>
 </div>

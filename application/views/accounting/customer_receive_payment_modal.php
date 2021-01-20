@@ -1,3 +1,17 @@
+<style>
+#add_new_payment_method {
+  position: absolute;
+  top: 50px;
+  /* right: 100px; */
+  bottom: 0;
+  left: -15%;
+  z-index: 10040;
+  overflow: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+</style>
 <!-- Modal for add account-->
 <div class="full-screen-modal">
    <div id="addreceivepaymentModal" class="modal fade modal-fluid" role="dialog">
@@ -11,7 +25,8 @@
                </div>
                <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-                <div class="modal-body">
+            <form action="<?php echo site_url()?>accounting/addreceivepay" method="post">
+                <div class="modal-body" style="height:1000px;">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">
@@ -19,9 +34,9 @@
                                     Customer
                                     <select class="form-control" name="customer_id">
                                         <option></option>
-                                        <option>Add New</option>
-                                        <option>John Doe</option>
-                                        <option>Alpha</option>
+                                        <?php foreach($customers as $customer) : ?>
+                                            <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
+                                            <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
@@ -34,17 +49,18 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment date
-                                    <input type="text" class="form-control" name="payment_date">
+                                    <input type="text" class="form-control" name="payment_date" id="rp_payment_date">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment method<br>
-                                    <select class="form-control" name="payment_method">
+                                    <select class="form-control" name="payment_method" id="rp_payment_method">
                                         <option></option>
-                                        <option>Add New</option>
-                                        <option>John Doe</option>
-                                        <option>Alpha</option>
+                                        <option value="0">Add New</option>
+                                        <option value="1">Cash</option>
+                                        <option value="2">Check</option>
+                                        <option value="3">Credit Card</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -54,10 +70,11 @@
                                 <div class="col-md-3">
                                     Deposit to
                                     <select class="form-control" name="deposit_to">
-                                        <option>Cash on hand</option>
-                                        <option>AAA</option>
-                                        <option>AAA</option>
-                                        <option>AAA</option>
+                                        <option></option>
+                                        <option value="1">Cash on hand</option>
+                                        <option value="2">AAA</option>
+                                        <option value="3">AAA</option>
+                                        <option value="4">AAA</option>
                                     </select>
                                 </div>
                             </div>
@@ -65,8 +82,8 @@
                         </div>
                         <div class="col-md-6" align="right">
                             AMOUNT RECEIVED<h2>$0.00</h2><br>
-                            Amount received<br>
-                            <input type="text" class="form-control" style="width:200px;" name="amount_received">
+                            <p style="margin-top:100px;">Amount received</p><br>
+                            <input type="text" class="form-control" style="width:200px;text-align:right;" name="amount_received" placeholder="0.00">
                         </div>
                     </div>
                     <hr>
@@ -96,6 +113,35 @@
 
 
                 </div>
+                <hr>
+                        <div class="modal-footer-check">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
+                                    
+                                </div>
+                                <div class="col-md-5" align="center">
+                                    <div class="middle-links">
+                                        <a href="">Print or Preview</a>
+                                    </div>
+                                    <div class="middle-links end">
+                                        <a href="">Make recurring</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="dropdown" style="float: right">
+                                        <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
+                                        <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                            <span class="fa fa-caret-down"></span></button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                            <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </form>
                 
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
@@ -109,3 +155,5 @@
     </div>
     <!--end of modal-->
 </div>
+
+<?php include viewPath('accounting/add_new_payment_method'); ?>

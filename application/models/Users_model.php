@@ -180,8 +180,7 @@ class Users_model extends MY_Model {
 		$this->db->where('id', $user_id);
 		// $this->db->where('role !=', 1);
 		$query = $this->db->get();
-		/*echo $this->db->last_query(); 
-		print_r($query->row()); die;*/
+		// echo $this->db->last_query(); die;
 		return $query->row();
 	}
 
@@ -444,16 +443,6 @@ class Users_model extends MY_Model {
 		$this->db->where('username', $user_name);
 		$query = $this->db->get();
 		return $query->row();
-	}
-
-	public function generateRandomEmployeeNumber($length = 14) {
-	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	    $charactersLength = strlen($characters);
-	    $randomString = '';
-	    for ($i = 0; $i < $length; $i++) {
-	        $randomString .= $characters[rand(0, $charactersLength - 1)];
-	    }
-	    return $randomString;
 	}
 }
 

@@ -1,8 +1,8 @@
 .form-success .form-header, form.form-success button {
-    background-color: #02a499 !important;
+    background-color: #02a499/*  !important */;
 }
 
 .form-success div.Signature div.container button {
-    background-color: #02a499 !important;
-    color: #fff !important;
+    background-color: #02a499/*  !important */;
+    color: #fff/*  !important */;
 }

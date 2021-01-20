@@ -45,6 +45,7 @@ class Users extends MY_Controller {
         $this->load->model('Users_model');
         $this->load->model('ServiceCategory_model');
         $this->load->model('PayScale_model');
+
         $this->load->model('General_model', 'general_model');
 
 	}
@@ -235,19 +236,18 @@ class Users extends MY_Controller {
 		
 		$user = (object)$this->session->userdata('logged');
 		$cid=logged('id');
-		//$profiledata = $this->business_model->getByWhere(array('id'=>$cid));
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		//dd($profiledata);die;
-		//$this->page_data['userid'] = $user->id;
-		//$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
-
+		$this->page_data['userid'] = $user->id;
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
+		
+		/* echo "<pre>"; print_r($this->page_data); die;  */
         $get_business_data = array(
             'where' => array(
                 'user_id' => $user->id,
             )
         );
         $this->page_data['profile_data'] = $this->general_model->get_all_with_keys($get_business_data,'business_profile',FALSE);
-		/* echo "<pre>"; print_r($this->page_data); die;  */
-		
 		$this->load->view('business_profile/social_media', $this->page_data);
 	}
 
@@ -291,6 +291,7 @@ class Users extends MY_Controller {
 	}
 	
 	public function savebusinessdetail() {
+		
 		$user  = (object)$this->session->userdata('logged');	
 		$pdata = $this->input->post();
 		$action = $pdata['btn-continue'];
@@ -430,13 +431,13 @@ class Users extends MY_Controller {
 			
 			$imbid=$pdata['user_id'];
 		}else{
-
-		    if(isset($pdata) && isset($user)){
+            if(isset($pdata) && isset($user)){
                 unset($pdata['btn-save']);
                 if($this->general_model->update_with_key_field($pdata,$user->id,"business_profile",'user_id')){
                     redirect($_SERVER['HTTP_REFERER'], 'refresh');
                 }
             }
+
 			$pdata['user_id'] = $user->id;
 			$imbid=$user->id;
 			$bid = $this->business_model->create($pdata);
@@ -673,169 +674,15 @@ class Users extends MY_Controller {
 	{	
 //		ifPermissions('users_list');
 
-		$company_id = logged('company_id');
-
-		/*-----------------------------------------------------*/
-            if(false){
-                    $marker = array();
-                    $marker['title'] = 'Test Marker';
-                    $marker['position'] = '49.164911,-123.17792';
-                    $marker['icon'] = base_url() . "uploads/users/default.png";
-                    $marker['icon_scaledSize'] = '30,30';
-
-                    $this->googlemaps->add_marker($marker);
-            }
-
-            $config['zoom'] = 13;
-            $config['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
-
-            $this->googlemaps->initialize($config);
-
-            $data = $this->googlemaps->create_map();
-
-
-            $this->page_data['map'] = $data['html'];
-            $this->page_data['map_js'] = $data['js'];
-             
-            //$this->page_data['categories'] = $this->users_geographic_positions_categories_model->getByWhere(array('company_id' => $company_id));
-            //$this->page_data['categories'] 
-
-            $categories = $this->db->query("SELECT * FROM trac360_circle WHERE 1=1 ")->result_array();
-
-            $new_category_data = array();
-            
-            foreach ($categories as $key => $category) {
-            	$temp = array();
-            	$users = $this->db->query("SELECT * FROM trac360_people WHERE circle_id='".$category['id']."' ")->result_array();
-            	$temp = $category;
-            	$temp['user'] =$users ;
-            	$new_category_data[] = $temp;
-            }
-            $this->page_data['categories'] = $new_category_data;
-            //echo '<pre>';print_r($new_category_data);exit;
-
-            $this->page_data['users'] = $this->users_model->getByWhere(array('company_id' => $company_id));   
-
-        
-        /*-------------------------------------------------------------*/
-
-		//$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
-		//$this->page_data['users'] = $this->users_model->getUsers();
+		$this->page_data['users'] = $this->users_model->getUsers();
 			
+		
 		$this->load->view('users/tracklocation', $this->page_data);
 
 	}
-	public function getUsersCategories(){
-            $company_id = logged('company_id');
-
-            $return = array(
-                    'categories' => $this->db->query('select * from trac360_circle where 1=1 order by id')->result_array(),// company_id = ' . $company_id . '
-                    'users' => $this->db->query(
-                                    'select '.
-
-                                    'a.user_id, '.
-                                    //'a.last_tracked_location, '.
-                                    //'a.last_tracked_location, '.
-                                    'SUBSTRING_INDEX(a.last_tracked_location, ",", 1) as latitude, '.
-                                    'SUBSTRING_INDEX(SUBSTRING_INDEX(a.last_tracked_location, ",", 2), ",", -1) as longitude, '.
-
-                                    'a.circle_id, '.
-                                    'b.img_type, '.
-                                    'b.FName, '.
-                                    'b.LName, '.
-                                    'c.name category_tag '.
-
-                                    'from trac360_people a '.
-
-                                    'left join users b on b.id = a.user_id '.
-                                    'left join trac360_circle c on c.id = a.circle_id '.
-
-                                    //'where a.company_id = ' . $company_id . ' ' .
-                                    'where a.last_tracked_location != "" '. 
-                                    'order by a.circle_id'
-                    )->result_array()
-            );
-
-            echo json_encode($return);
-    }
-    public function getcategoryUser($catId){
-
-    		//$categories = $this->db->query("SELECT * FROM trac360_circle WHERE id='".$catId."' ")->result_array();
- 
-            $users = $this->db->query("SELECT * FROM trac360_people WHERE circle_id='".$catId ."' ")->result_array();
-            	 
-            echo json_encode($users);
-    }
-	public function getUserGeoPosition($uid){
-            $company_id = logged('company_id');
-
-            //$return = $this->users_geographic_positions_model->getRowByWhere(array('user_id' => $uid,'company_id' => $company_id), 0, true);
-            $return['users'] = $this->db->query('select *,SUBSTRING_INDEX(last_tracked_location, ",", 1) as latitude, SUBSTRING_INDEX(SUBSTRING_INDEX(last_tracked_location, ",", 2), ",", -1) as longitude from trac360_people where user_id="'.$uid.'" order by id')->result_array();
-            //print_r($return );
-            echo json_encode($return);
-    }
-     public function getNewGeoInfos(){
-            $company_id = logged('company_id');
-
-            $return = array(
-                    'users' => array(),
-                    'groups' => array(),
-                    'users_count' => 0,
-                    'groups_count' => 0
-                    );
-
-            if(isset($_POST['user_ids'])){
-                    $ids = $_POST['user_ids'];
-                    if(!empty($ids)){
-                        $ids = 'and a.user_id not in('. $ids .') ';
-                    }
-
-                    $sql = 'select '.
-
-                            'a.user_id, '.
-                            //'a.last_tracked_location, '.
-                            //'a.last_tracked_location, '.
-                            'SUBSTRING_INDEX(a.last_tracked_location, ",", 1) as latitude, '. 
-                            'SUBSTRING_INDEX(SUBSTRING_INDEX(a.last_tracked_location, ",", 2), ",", -1) as longitude, '.
-                            'a.circle_id, '.
-                            'b.img_type, '.
-                            'b.FName, '.
-                            'b.LName, '.
-                            'c.name category_tag '.
-
-                            'from trac360_people a '.
-
-                            'left join users b on b.id = a.user_id '.
-                            'left join trac360_circle c on c.id = a.circle_id '.
-
-                            //'where a.company_id = ' . $company_id . ' ' .
-                            'where a.last_tracked_location != "" '. 
-                            'order by a.circle_id';
-
-                    $users = $this->db->query($sql);
-
-                    $return['users_count'] = $users->num_rows();
-                    $return['users'] = $users->result_array();        
-            }
-
-            if(isset($_POST['group_ids'])){
-                $ids = $_POST['group_ids'];
-                if(!empty($ids)){
-                    $ids = ' and id not in('. $ids .')';
-                }
-
-                //$sql = 'select * from users_geo_positions_categories where company_id = ' . $company_id . $ids;
-                $sql = 'select * from trac360_circle where 1=1 order by id';
-                $groups = $this->db->query($sql);
-
-                $return['groups_count'] = $groups->num_rows();
-                $return['groups'] = $groups->result_array();
-            } 
-
-            echo json_encode($return);
-    }
-
+	
 	public function index()
 
 	{	
@@ -851,9 +698,6 @@ class Users extends MY_Controller {
 
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		
- 
-		$this->page_data['users'] = $this->users_model->getUsers();
- 
 		$role_id = logged('role');
 		if( $role_id == 1 || $role_id == 2 ){
 			$this->page_data['users'] = $this->users_model->getAllUsers();
@@ -862,7 +706,7 @@ class Users extends MY_Controller {
 			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
-		 
+		
 
 		// echo '<pre>';print_r($this->page_data);die;
 
@@ -922,7 +766,7 @@ class Users extends MY_Controller {
         $app_access = $this->input->post('values[app_access]');
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
-        $emp_number  = $this->users_model->generateRandomEmployeeNumber();
+        $emp_number  = $this->input->post('values[emp_number]');
         $cid=logged('company_id');
         $add = array(
             'FName' => $fname,
@@ -946,7 +790,6 @@ class Users extends MY_Controller {
             echo json_encode(0);
         }
     }    
-
     public function getEmployeeData(){
 	    $user_id = $this->input->get('user_id');
 	    $get_data = $this->db->get_where('users',array('id'=>$user_id));
@@ -970,8 +813,7 @@ class Users extends MY_Controller {
 	    $get_user = $this->Users_model->getUser($user_id);
 	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
 
-	    $cid   = logged('company_id');
-	    $role_id = logged('role');		
+	    $cid   = logged('company_id');		
         $roles = $this->users_model->getRoles();
 
         if( $role_id == 1 || $role_id == 2 ){

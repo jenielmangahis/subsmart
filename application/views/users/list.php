@@ -108,10 +108,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         padding:10px;
         margin-bottom: 27px;
     }
-    #employeeTable_filter label > input { 
-        visibility: visible !important;
-        position: inherit !important;
-    }
 
 </style>
 <div class="wrapper" role="wrapper">
@@ -324,14 +320,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <form action="" id="changePasswordForm">
             	<input type="hidden" name="change_password_user_id" id="changePasswordUserId">
                 <div class="modal-body">
-                	<!-- <div class="row">
+                	<div class="row">
                 		<div class="col-md-12">
                 			<label for="">Employee Name</label>
                             <input type="text" id="changePasswordEmployeeName" class="form-control" readonly="" disabled="">
                 		</div>
                 	</div>
                 	<br />
-                	<hr /> -->
+                	<hr />
                 	<div class="row">
                         <div class="col-md-6">
                             <label for="">New Password</label>
@@ -372,13 +368,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="modal-body">
                     <div class="section-title" style="">Basic Details</div>
                     <div class="form-group">
-                        <!-- <div class="row">
+                        <div class="row">
                             <div class="col-md-6">
                                 <label for="">Employee Number</label>
                                 <input type="text" name="emp_number" class="form-control" id="emp_number" placeholder="Enter Employee Number">
                             </div>
                         </div>
-                        <br /> -->
+                        <br />
                         <div class="row">                            
                             <div class="col-md-6">
                                 <label for="">First Name</label>

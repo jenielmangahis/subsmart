@@ -19,7 +19,7 @@ class Timesheet extends MY_Controller {
 		$this->page_data['page']->title = 'Timesheet Management';
 
 		$this->page_data['page']->menu = 'users';
-        
+
         add_css(array(
             "assets/css/timesheet.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -1635,8 +1635,6 @@ class Timesheet extends MY_Controller {
 //	    echo json_encode($data);
 //    }
     public function clockInEmployee(){
-
-
 	    $clock_in = time();
 	    $user_id = $this->session->userdata('logged')['id'];
 
@@ -1674,10 +1672,84 @@ class Timesheet extends MY_Controller {
         }
 
     }
+
     
+
+    public function clockOutEmployeeManualy($attn_id){
+        echo "My Ip : ";
+        echo $ipaddress = $this->gtMyIpGlobal();
+        echo '<br>-----<br>';
+        echo "My Ip : ";
+        echo $ipaddress = $this->timesheet_model->gtMyIpGlobal();
+        echo '<br>-----<br>';
+        echo "Time : ".date("d-m-Y H:i:s A");
+
+        if (date_default_timezone_get()) {
+            echo '<br>-----<br>';
+            echo 'date_default_timezone_set: ' . date_default_timezone_get() . '<br />';
+        }
+        if (ini_get('date.timezone')) {
+            echo '<br>-----<br>';
+            echo 'date.timezone: ' . ini_get('date.timezone');
+        }
+        echo '<pre>';echo $attn_id; //= $this->input->post('attn_id');
+
+        $clock_out = 0;
+        $sched_clockOut = $this->input->post('time');
+        if ($sched_clockOut == 0 || $sched_clockOut == null){
+            $clock_out = time();
+        }else{
+            $clock_out = ($sched_clockOut / 1000);
+        }
+
+        $user_id = $this->session->userdata('logged')['id'];
+        $check_attn = $this->db->get_where('timesheet_attendance',array('id' => $attn_id,'user_id' => $user_id));
+        if ($check_attn->num_rows() == 1){
+            $out = array(
+                'attendance_id' => $attn_id,
+                'user_id' => $user_id,
+                'action' => 'Check out',
+                'user_location' => $this->timesheet_model->employeeCoordinates(),
+                'user_location_address' => $this->employeeAddress(),
+                'date_created' => date('Y-m-d H:i:s',$clock_out),
+                'entry_type' => 'Normal',
+                'company_id' => getLoggedCompanyID()
+            );
+
+            print_r($out);
+            exit;
+            $this->db->insert('timesheet_logs',$out);
+            $shift_duration = $this->timesheet_model->calculateShiftDuration($attn_id);
+//            $break_duration = $this->timesheet_model->calculateBreakDuration($attn_id);
+            $overtime = $this->timesheet_model->calculateOvertime($user_id,$attn_id);
+            $update = array(
+                'shift_duration' => $shift_duration,
+//                'break_duration' => $break_duration,
+                'overtime' => $overtime,
+//                'date_out' => date('Y-m-d'),
+                'status' => 0
+            );
+            $this->db->where('id',$attn_id);
+            $this->db->update('timesheet_attendance',$update);
+            $affected_row = $this->db->affected_rows();
+
+            if($affected_row != 1){
+                echo json_encode(0);
+            }else{
+                $data = new stdClass();
+                $data->clock_out_time = date('h:i A',$clock_out);
+                $data->attendance_id = $attn_id;
+                $data->shift_duration = $shift_duration;
+                echo json_encode($data);
+            }
+
+        }
+    }
 
 
     public function clockOutEmployee(){
+
+        
         $attn_id = $this->input->post('attn_id');
         $clock_out = 0;
         $sched_clockOut = $this->input->post('time');
@@ -1798,10 +1870,7 @@ class Timesheet extends MY_Controller {
     }
 
     private function employeeAddress(){
-
-        $ipaddress = $this->gtMyIpGlobal();
-
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
         $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
@@ -2062,9 +2131,6 @@ class Timesheet extends MY_Controller {
 	    $data = array('name'=>'Tommy Nguyen','link'=>sha1(rand()));
         $this->load->view('users/invite_link_template',$data);
     }
-
-    
-
 }
 
 

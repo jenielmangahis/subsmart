@@ -14,7 +14,7 @@ class Settings extends MY_Controller {
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 
-		//load Model
+        //load Model
         $this->load->model('General_model', 'general_model');
 
         add_css(array(
@@ -35,6 +35,7 @@ class Settings extends MY_Controller {
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
+
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
         $post = $this->input->post();
@@ -91,13 +92,11 @@ class Settings extends MY_Controller {
 
         } else {
             $this->load->model('GoogleAccounts_model');
-
             $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
             $is_glink = false;
             if( $googleAccount ){
                 $is_glink = true;
             }
-
             $this->page_data['is_glink'] = $is_glink;
             $this->page_data['page']->menu = 'settings';
             $this->load->view('settings/schedule', $this->page_data);
@@ -108,12 +107,11 @@ class Settings extends MY_Controller {
     {
         $get_invoice_template = array(
             'where' => array(
-                //'user_id' => logged('id'),
+                'type_id' => 1,
+                'user_id' => logged('id'),
             )
         );
         $this->page_data['invoice_templates'] = $this->general_model->get_all_with_keys($get_invoice_template,'settings_email_template');
-
-
         $this->page_data['page']->menu = 'email_templates';
         $this->load->view('settings/email_templates', $this->page_data);
     }
@@ -122,11 +120,10 @@ class Settings extends MY_Controller {
     {
         $input = $this->input->post();
         if ($input) {
-            unset($input['files']);
-            $input['user_id'] = 0;
-            $input['date_created'] = date("d-m-Y h:i A");
-            if($this->general_model->update_with_key($input,$id,"settings_email_template")){
-                redirect(base_url('settings/email_templates'));
+            $input['user_id'] = logged('id');
+            $input['date_added'] = date("d-m-Y h:i A");
+            if($this->customer_ad_model->add($input,"customer_groups")){
+                redirect(base_url('customer/group'));
             }
         }
         $get_template_data = array(

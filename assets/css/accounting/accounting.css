@@ -1085,10 +1085,3 @@ button {
 #faq #faq-accordion button:hover, #faq #faq-accordion button:focus {
     color: #2a3142;
 }
-
-.add-check-line, .remove-check-line, .add-check-item-line, .remove-check-item-line{
-    height: 30px;
-    padding: 5px;
-    border: 1px solid black;
-    border-radius: 36px;
-}

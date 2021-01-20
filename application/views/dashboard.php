@@ -178,7 +178,7 @@
                                 <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">D</span>
                                 <div class="qUickStartde">
                                     <h4>Add a New Feed</h4>
-                                    <span>Choose from a various quick shortcuts</span>
+                                    <span>Send a Private Message to Particular User</span>
                                 </div>
                             </div>
                         </a>
@@ -188,7 +188,7 @@
                                 <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">E</span>
                                 <div class="qUickStartde">
                                     <h4>Add a News Letter</h4>
-                                    <span>Choose from a various quick shortcuts</span>
+                                    <span>Send a Company Newslatter to All User</span>
                                 </div>
                             </div>
                         </a>
@@ -249,7 +249,7 @@
                       <div class="card card-stats">
                         <div class="card-header card-header-purple card-header-icon">
                           <div class="card-icon">
-                            <i class="material-icons">pending_actions</i>
+                            <i class="material-icons">account_circle</i>
                           </div>
                           <p class="card-category">TOTAL ESTIMATE PENDING</p>
                           <h3 class="card-title">0.00</h3>
@@ -889,6 +889,54 @@
                 </div>
             </div>
 
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-2 short_id" id="item_9">
+                <div class="c65 c61">
+                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                            <div class="MuiCardHeader-avatar">
+                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="MuiCardHeader-content">
+                                <span class="">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">
+                                        <span class="jss55 jss99">Tech leaderboard</span>
+                                    </h6>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                        <div class="MuiCardContent-root jss60" style="height: 309px;">
+                            <div class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1">
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="text-align: center;">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">All Time</h6>
+                                </div>
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12">
+                                    <?php $empCounter=0;?>
+                                    <?php foreach($users as $emp): ?>
+                                    <?php if($empCounter < 4): ?>
+                                    <?php $empCounter++;?>
+                                    <div class="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center">
+                                        <div class="MuiGrid-root jss96 MuiGrid-item MuiGrid-grid-xs-9">
+                                            <div class="MuiAvatar-root MuiAvatar-circle jss94" style="border: 2px solid transparent; border-radius: 50%; width: 40px; height: 40px;">
+                                                <img src="<?php echo userProfileImage($emp->id) ?>" alt="user" class="rounded-circle" style="height: 50px;">
+                                            </div>
+                                            <div style="width: 99.9829%;" class="jss97">
+                                                <p class="MuiTypography-root jss98 MuiTypography-body1">$0</p>
+                                            </div>
+                                        </div>
+                                        <div class="MuiGrid-root jss95 MuiGrid-item MuiGrid-grid-xs-3">0 jobs</div>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-2 short_id" id="item_12">
                 <div class="c65 c61">
                     <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
@@ -1442,7 +1490,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="bankList">
+                                    <div class="bankList" style="height: 189px;overflow:scroll;">
                                         <div class="dgrid-row connectedAccount">
                                             <div class="bankAccountRowLink bankAccountRow">
                                                 <div class="bankRow">
@@ -1570,7 +1618,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="moduleContent">
+                                    <div class="moduleContent" style="height: 258px;">
                                         <div class="subContainer salesValues">
                                             <div class="paid moneySection">
                                                 <div class="fancyMoney">$4</div>
@@ -1681,7 +1729,7 @@
                             </div>
                         </div>
                         <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
-                        <div class="MuiCardContent-root jss60" style="height: 309px;">
+                        <div class="MuiCardContent-root jss60" style="height: 290px;">
                             <div class="MuiGrid-root jss78 MuiGrid-container">
                                 <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12">
                                     <p class="MuiTypography-root jss77 MuiTypography-body1 MuiTypography-alignCenter">Paid</p>
@@ -1988,6 +2036,229 @@
                 </div>
             </div>
 
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-2 short_id MuiGrid-tab-custom" id="item_11">
+                <div class="c65 c61">
+                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">
+                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                            <div class="MuiCardHeader-avatar">
+                                <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
+                                    <path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path>
+                                </svg>
+                            </div>
+                            <div class="MuiCardHeader-content">
+                                <span class="">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1"><span class="jss55 jss91">Task stats</span></h6>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                        <div class="MuiCardContent-root jss60" style="height: 309px; overflow-x:scroll">
+                            <div class="jss87">
+                                <div class="MuiGrid-root jss88 MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-direction-xs-column">
+                                <div class="custom-tabs">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="all-tab" data-toggle="tab" href="#alltab" role="tab" aria-controls="alltab" aria-selected="true">All Tasks</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="my-tab" data-toggle="tab" href="#mytab" role="tab" aria-controls="mytab" aria-selected="false">My Tasks</a>
+                                        </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="alltab" role="tabpanel" aria-labelledby="alltab">
+
+                                        <div class="MuiCardContent-root jss60">
+                                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 0px; margin: -8px;">
+
+                                                    <div class="message-box position-relative">
+                                                        <div class="message-widget contact-widget position-relative">
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">S</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">Send Invoice</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 2 days delays</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">P</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">Pay Bill (Re: Adam Dee)</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 2 days delays</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-info msg-count-cus">N</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">New York Conference</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 10 days left</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-info msg-count-cus">I</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">Interview Maria</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 12 days left</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="mytab" role="tabpanel" aria-labelledby="mytab">
+                                        <div class="MuiCardContent-root jss60">
+                                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 0px; margin: -8px;">
+
+                                                    <div class="message-box position-relative">
+                                                        <div class="message-widget contact-widget position-relative">
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">S</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">Send Invoice</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 2 days delays</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">P</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">Pay Bill (Re: Adam Dee)</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 2 days delays</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-info msg-count-cus">N</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">New York Conference</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 10 days left</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                            <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
+                                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-info msg-count-cus">I</span>
+                                                                </div>
+                                                                <div class="w-75 d-inline-block v-middle pl-2">
+                                                                    <h5 class="text-truncate mb-0">Interview Maria</h5>
+                                                                    <span class="mail-desc font-12 text-truncate overflow-hidden text-nowrap d-block"><i class="fa fa-clock-o" aria-hidden="true"></i> 12 days left</span>
+                                                                </div>
+                                                                <div class="w-25 d-inline-block v-middle pl-2">
+                                                                    <i class="fa fa-ellipsis-v float-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </a>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3 short_id" id="item_4">
+                <div class="c65 c61">
+                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: pointer; width: 100%; position: relative;">
+                        <div class="jss53">
+                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-xs-center">
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto">
+                                    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" type="button">
+                                    <span class="MuiButton-label">Set up your plans</span>
+                                    <span class="MuiTouchRipple-root"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
+                            <div class="MuiCardHeader-avatar">
+                                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;">
+                                    <g>
+                                        <path d="M6.535,10.29l6.585,6.683c0.289,0.294,0.723,0.294,1.013,0l1.663-1.689c0.362-0.294,0.362-0.806,0.072-1.028l-6.584-6.68 c0.651-1.689,0.29-3.671-1.085-5.066C6.752,1.042,4.582,0.748,2.844,1.555l3.112,3.157l-2.17,2.203L0.601,3.758 c-0.868,1.762-0.507,3.963,0.94,5.432C2.917,10.584,4.87,10.953,6.535,10.29z"></path>
+                                        <path d="M21.708,12.354c-0.926-3.883-4.409-6.774-8.576-6.774c-0.538,0-1.06,0.062-1.571,0.154l0.518,2.057 c0.344-0.055,0.693-0.093,1.053-0.093c2.988,0,5.519,1.956,6.386,4.655H17.12l3.404,3.724l3.404-3.724H21.708z"></path>
+                                        <path d="M13.132,21.115c-3.126,0-5.746-2.144-6.49-5.038h2.232L5.47,12.354l-3.404,3.723h2.403 c0.782,4.075,4.361,7.156,8.664,7.156c2.982,0,5.615-1.482,7.212-3.749l-1.784-1.177C17.345,20.001,15.375,21.115,13.132,21.115z"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="MuiCardHeader-content">
+                                <span class="">
+                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">
+                                        <span class="jss55 jss74">Recurring service plans</span>
+                                    </h6>
+                                </span>
+                            </div>
+                            <div class="MuiCardHeader-action">
+                                <span title="More actions" class="jss57"></span>
+                            </div>
+                        </div>
+                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
+                        <div class="MuiCardContent-root jss60" style="height: 253px;">
+                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12">
+                                    <div class="MuiGrid-root jss75 MuiGrid-container">
+                                        <div class="MuiGrid-root jss76 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6">
+                                            <h1 class="MuiTypography-root MuiTypography-h1 MuiTypography-alignCenter">0</h1>
+                                            <div class="MuiTypography-root MuiTypography-caption MuiTypography-alignCenter">Active service plans</div>
+                                        </div>
+                                        <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6">
+                                            <h1 class="MuiTypography-root MuiTypography-h1 MuiTypography-colorError MuiTypography-alignCenter">0</h1>
+                                            <div class="MuiTypography-root MuiTypography-caption MuiTypography-alignCenter">Agreements expire in 30 days</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="more tile-container" >
                     <div class="inner-container">
@@ -2127,62 +2398,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3 short_id" id="item_4">
-                <div class="c65 c61">
-                    <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: pointer; width: 100%; position: relative;">
-                        <div class="jss53">
-                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-xs-center">
-                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto">
-                                    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary" tabindex="0" type="button">
-                                    <span class="MuiButton-label">Set up your plans</span>
-                                    <span class="MuiTouchRipple-root"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
-                            <div class="MuiCardHeader-avatar">
-                                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;">
-                                    <g>
-                                        <path d="M6.535,10.29l6.585,6.683c0.289,0.294,0.723,0.294,1.013,0l1.663-1.689c0.362-0.294,0.362-0.806,0.072-1.028l-6.584-6.68 c0.651-1.689,0.29-3.671-1.085-5.066C6.752,1.042,4.582,0.748,2.844,1.555l3.112,3.157l-2.17,2.203L0.601,3.758 c-0.868,1.762-0.507,3.963,0.94,5.432C2.917,10.584,4.87,10.953,6.535,10.29z"></path>
-                                        <path d="M21.708,12.354c-0.926-3.883-4.409-6.774-8.576-6.774c-0.538,0-1.06,0.062-1.571,0.154l0.518,2.057 c0.344-0.055,0.693-0.093,1.053-0.093c2.988,0,5.519,1.956,6.386,4.655H17.12l3.404,3.724l3.404-3.724H21.708z"></path>
-                                        <path d="M13.132,21.115c-3.126,0-5.746-2.144-6.49-5.038h2.232L5.47,12.354l-3.404,3.723h2.403 c0.782,4.075,4.361,7.156,8.664,7.156c2.982,0,5.615-1.482,7.212-3.749l-1.784-1.177C17.345,20.001,15.375,21.115,13.132,21.115z"></path>
-                                    </g>
-                                </svg>
-                            </div>
-                            <div class="MuiCardHeader-content">
-                                <span class="">
-                                    <h6 class="MuiTypography-root MuiTypography-subtitle1">
-                                        <span class="jss55 jss74">Recurring service plans</span>
-                                    </h6>
-                                </span>
-                            </div>
-                            <div class="MuiCardHeader-action">
-                                <span title="More actions" class="jss57"></span>
-                            </div>
-                        </div>
-                        <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
-                        <div class="MuiCardContent-root jss60" style="height: 253px;">
-                            <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
-                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12">
-                                    <div class="MuiGrid-root jss75 MuiGrid-container">
-                                        <div class="MuiGrid-root jss76 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6">
-                                            <h1 class="MuiTypography-root MuiTypography-h1 MuiTypography-alignCenter">0</h1>
-                                            <div class="MuiTypography-root MuiTypography-caption MuiTypography-alignCenter">Active service plans</div>
-                                        </div>
-                                        <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6">
-                                            <h1 class="MuiTypography-root MuiTypography-h1 MuiTypography-colorError MuiTypography-alignCenter">0</h1>
-                                            <div class="MuiTypography-root MuiTypography-caption MuiTypography-alignCenter">Agreements expire in 30 days</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"></div>
                             </div>
                         </div>
                     </div>
@@ -2992,10 +3207,8 @@
            console.log('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
            $(this).removeAttr('data-previndex');
            console.log("Module Changed!");
-
            var idsInOrder = $(".sortable2").sortable("toArray");
            console.log(idsInOrder);
-
            var new_module_sort = "";
            for(var x=0;x<idsInOrder.length;x++){
                if(x===0){

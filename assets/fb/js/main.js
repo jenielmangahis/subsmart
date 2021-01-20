@@ -1,19 +1,25 @@
 let form;
 let products;
 let elements;
+let template_form;
+let template_products;
+let template_elements;
 let signpads;
 const element_objs = [];
 
 const handleCreateForm = async (e) => {
     e.preventDefault()
-    
-    const name = $('#name').val();
-    
+    let url = '/fb/create';
+    if(active_template.id > 0){
+        url = `/fb/generate-from-template/${active_template.id}`
+    }
+    const name = $('#addName').val() == '' ? active_template.name : $('#addName').val();
     $.ajax({
         type: 'POST',
-        url: '/fb/create',
+        url,
         data: { name }
     }).done((response) => {
+        console.log('create response: ', response.data.template);
         window.location.replace(`/fb/edit/${response.data.form_id}`);
     }).fail((err) => {
         console.log(err);
@@ -52,12 +58,11 @@ const getAllForms = (data = {}) => {
     })
 }
 
-const getAllFormTemplates = (data = {}) => {
+const getAllFolders = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
             'type': 'GET',
-            'url' : '/fb/templates/get-by-active-user',
-            'data': data
+            'url' : '/fb/folders/get-by-active-user'
         }).done((response) => {
             resolve(response)
         }).fail((err) => {
@@ -66,11 +71,24 @@ const getAllFormTemplates = (data = {}) => {
     })
 }
 
-const getAllFolders = () => {
+const getAllFormTemplateFolders = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
             'type': 'GET',
-            'url' : '/fb/folders/get-by-active-user'
+            'url' : '/fb/template-folders/get-all'
+        }).done((response) => {
+            resolve(response)
+        }).fail((err) => {
+            reject(err);
+        })
+    })
+}
+
+const getAllFormTemplates = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'type': 'GET',
+            'url' : '/fb/templates/get-all'
         }).done((response) => {
             resolve(response)
         }).fail((err) => {
@@ -86,6 +104,7 @@ const getFormByID = (form_id) => {
             'url': `/fb/get-form-by-id/${form_id}`
         }).done(response => {
             form = response.data.form;
+            form_style = response.data.form_style;
             elements = response.data.elements;
             products = response.data.products;
             resolve(response)
@@ -95,6 +114,62 @@ const getFormByID = (form_id) => {
     })
 }
 
+<<<<<<< HEAD
+=======
+const getTemplateFormByID = (form_id) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'type': 'GET',
+            'url': `/fb/templates/get-by-form-template-id/${form_id}`
+        }).done(response => {
+            template_form = response.data.form;
+            template_form_style = response.data.form_style;
+            template_elements = response.data.elements;
+            products = response.data.products;
+            resolve(response)
+        }).fail(err => {
+            reject(err);
+        })
+    })
+}
+
+const getFormTemplateByID = (form_id) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            'type': 'GET',
+            'url': `/fb/templates/get-by-form-template-id/${form_id}`
+        }).done(response => {
+            resolve(response)
+        }).fail(err => {
+            reject(err);
+        })
+    })
+}
+
+>>>>>>> staging
+const renderFormStyle = () => {
+    for (const key in form_style) {
+        if (form_style.hasOwnProperty(key)) {
+            if(key !== 'id' && key !== 'form_id') {
+                applyStyle(key, form_style[key]);
+            }
+        }
+    }
+}
+
+<<<<<<< HEAD
+=======
+const renderFormTemplateStyle = () => {
+    for (const key in template_form_style) {
+        if (template_form_style.hasOwnProperty(key)) {
+            if(key !== 'id' && key !== 'form_id') {
+                applyStyle(key, template_form_style[key]);
+            }
+        }
+    }
+}
+
+>>>>>>> staging
 const saveElement = (data, save_method = 'create') => {
     let url = '/fb/elements/create'
     if(save_method === 'update') {
@@ -146,6 +221,15 @@ const renderElement = (el, editable = false) => {
         } else {
             $('#formContainer').append(element.getElement())
         }
+    }
+}
+
+const renderTemplateElement = (el) => {
+    const element = new element_types[el.element_type](el, false);
+    if(element.container_id !== null && element.container_id != 0) {
+        $(`#ContainerBlock-${element.container_id}`).append(element.getElement())
+    } else {
+        $('#formTemplatePreview').append(element.getElement())
     }
 }
 
@@ -372,6 +456,24 @@ const loadElements = async (form_id, editable = false) =>  {
             res.data.elements.forEach(element => {
                 renderElement(element, editable);
             });
+            renderFormStyle();
+        }
+        initCalendars();
+    })
+}
+
+const loadTemplatePreview = async (form_id) =>  {
+    console.log(form_id)
+    await getTemplateFormByID(form_id).then(res => {
+        let container = '#formTemplatePreview';
+        if(template_elements.length) {
+            $(container).empty();
+            $(container).addClass(`form-${template_form.style}`);
+            $(container).addClass(`form-${template_form.color}`);
+            res.data.elements.forEach(element => {
+                renderTemplateElement(element);
+            });
+            renderFormTemplateStyle();
         }
         initCalendars();
     })

@@ -74,7 +74,6 @@
             padding: .5rem 0;
             color: #6c757d;
         }
-
         .file-upload {
         background-color: #ffffff;
         width: 600px;
@@ -248,7 +247,6 @@
         label > input:checked + img { /* (RADIO CHECKED) IMAGE STYLES */
         border:2px solid #f00;
         }
->>>>>>> 8567d87ef7e797488cf25caf64180497754330cd
     </style>
 </head>
 

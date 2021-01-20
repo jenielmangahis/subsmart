@@ -94,6 +94,10 @@ div.attachments div.attachments-list div.attachments-container div.attachments-c
     margin-bottom: 5px !important;
 }
 
+#weeklyTimesheetModal div.timesheet-table table#timesheet-table input.day-input {
+    font-size: 14px !important;
+}
+
 /* Tags Modal */
 div#tags-modal.modal.right .modal-dialog {
     position: fixed;

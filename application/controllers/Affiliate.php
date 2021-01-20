@@ -35,7 +35,13 @@ class Affiliate extends MY_Controller {
 
 		// ifPermissions('activity_log_list');
 		$get = $this->input->get();
-		$arg = array('company_id'=>logged('company_id'));
+        $role_id = logged('role');
+        if( $role_id == 1 || $role_id == 2 ){
+            $arg = array();
+        }else{
+            $arg = array('company_id'=>logged('company_id')); 
+        }
+		
 		$this->page_data['affiliates'] = $this->affiliate_model->getByWhere($arg, [
 			'order' => [ 'id', 'desc' ]
 		]);

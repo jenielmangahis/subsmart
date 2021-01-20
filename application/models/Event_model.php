@@ -23,6 +23,21 @@ class Event_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllEvents()
+    {
+
+        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->from($this->table);
+
+        if ($user_id) {
+            $this->db->join('user_events', 'user_events.event_id = events.id');
+            $this->db->where('user_events.user_id', $user_id);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
     {

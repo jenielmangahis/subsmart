@@ -81,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-                <button class="btn btn-default btn-lg" type="submit">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
+            <button class="btn btn-default btn-lg" type="submit">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
             </div>
     	<div class="col-xs-16 text-right">
             <a class="btn btn-default btn-lg" href="business/profile">« Back</a>

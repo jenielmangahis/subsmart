@@ -30,8 +30,21 @@ class Cronsetup extends MY_Controller {
         $lng = $get_location->lon;
         echo '<br>-----<br>';
         echo "My Timezone : ";
-
         echo $utimezone = $get_location->timezone;
+        echo '<br>-----<br>';
+        echo "Time : ".date("d-m-Y H:i:s A");
+
+        if (date_default_timezone_get()) {
+            echo '<br>-----<br>';
+            echo 'date_default_timezone_set: ' . date_default_timezone_get() . '<br />';
+        }
+
+        if (ini_get('date.timezone')) {
+            echo '<br>-----<br>';
+            echo 'date.timezone: ' . ini_get('date.timezone');
+        }
+
+
     }
     public function cronSetForOvertime(){
         $check_attn = $this->db->get_where('timesheet_attendance',array('status' => 1 ))->result_array();

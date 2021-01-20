@@ -1,5 +1,5 @@
 class FormElement {
-    constructor(obj, editable = false) {
+    constructor(obj, editable = false, is_matrix = false) {
         this.editable = editable;
         this.id = obj.id ? obj.id : null;
         this.form_id = obj.form_id ? obj.form_id : null;
@@ -25,9 +25,6 @@ class FormElement {
         this.matrix_columns = obj.matrix ? obj.matrix.columns ? obj.matrix.columns : ['-'] : ['-'];
         this.container_id = obj.container_id > 0 ? obj.container_id : null;
         this.rules = obj.rules ? obj.rules : null;
-<<<<<<< HEAD
-    }
-=======
         this.is_matrix = is_matrix;
         this.text_font_family = obj.text_font_family ? obj.text_font_family : '';
         this.text_font_size = obj.text_font_size ? parseInt(obj.text_font_size) : 30;
@@ -35,16 +32,11 @@ class FormElement {
         this.text_is_bold = obj.text_is_bold ? parseInt(obj.text_is_bold) : 0;
         this.text_vertical_align = obj.text_vertical_align ? obj.text_vertical_align : 'middle';
     };
->>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
 
     getElementContainer(remove_padding = false) {
         const container_selector = (this.container_id !== null && this.container_id != 0) ? 'container-block-element' : 'in-parent';
         return {
-<<<<<<< HEAD
-            open: `<div id="${this.id}" class="form-group ${remove_padding ? 'px-0' : ''} col-12 col-md-${this.span} ${this.element_type} form-element ${this.editable ? 'editable' : ''} ${container_selector}">`,
-=======
             open: `<div id="${this.id}" class="${this.element_type == 'FormattedText' ? '': 'form-group'}  ${remove_padding ? 'px-0' : ''} ${this.element_type == 'ContainerBlock'? '' : 'pl-0' } col-12 col-md-${this.span} ${this.element_type} form-element ${this.is_matrix ? 'matrix-element' : 'not-matrix-lol'} ${this.editable ? 'editable' : ''} ${this.element_type == 'Heading' ? 'd-table' : ''} ${container_selector}" ${this.element_type == 'ContainerBlock' ? 'style="margin-bottom: 0 !important"' : ''} >`,
->>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
             content: '',
             close: `</div>`
         }

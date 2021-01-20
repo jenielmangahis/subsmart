@@ -178,7 +178,7 @@
                                 <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">D</span>
                                 <div class="qUickStartde">
                                     <h4>Add a New Feed</h4>
-                                    <span>Choose from a various quick shortcuts</span>
+                                    <span>Send a Private Message to Particular User</span>
                                 </div>
                             </div>
                         </a>
@@ -188,7 +188,7 @@
                                 <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">E</span>
                                 <div class="qUickStartde">
                                     <h4>Add a News Letter</h4>
-                                    <span>Choose from a various quick shortcuts</span>
+                                    <span>Send a Company Newslatter to All User</span>
                                 </div>
                             </div>
                         </a>

@@ -53,9 +53,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="bold">Invoice</span>
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send invoice without online payment option</a></td>
+                                                <td data-title="Details">
+                                                    <span class="text-ter">Default template</span>
+                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
                                             <?php foreach ($invoice_templates as $invoice_template): ?>
                                                 <?php if ($invoice_template->type_id == 1) : ?>
-                                                     <tr>
+                                                    <tr>
                                                         <td data-title="Template Name">
                                                             <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">
                                                                 <?= $invoice_template->title; ?>
@@ -69,7 +78,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span class="fa fa-pencil-square-o icon"></span> Edit
                                                             </a>
                                                         </td>
-                                                     </tr>
+                                                    </tr>
                                                 <?php endif; ?>
                                             <?php endforeach ?>
                                             <tr>
@@ -94,7 +103,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </tr>
                                                 <?php endif; ?>
                                             <?php endforeach ?>
-                                            <tr>
+                                             <tr>
                                                 <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
                                                     <span class="bold">Schedule</span>
                                                 </td>
@@ -103,9 +112,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <?php if ($invoice_template->type_id == 3) : ?>
                                                     <tr>
                                                         <td data-title="Template Name">
-                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">
-                                                                <?= $invoice_template->title; ?>
-                                                            </a>
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>"><?= $invoice_template->title; ?></a>
                                                         </td>
                                                         <td data-title="Details">
                                                             <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
@@ -127,9 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <?php if ($invoice_template->type_id == 4) : ?>
                                                     <tr>
                                                         <td data-title="Template Name">
-                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">
-                                                                <?= $invoice_template->title; ?>
-                                                            </a>
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>"><?= $invoice_template->title; ?></a>
                                                         </td>
                                                         <td data-title="Details">
                                                             <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
@@ -151,9 +156,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <?php if ($invoice_template->type_id == 5) : ?>
                                                     <tr>
                                                         <td data-title="Template Name">
-                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">
-                                                                <?= $invoice_template->title; ?>
-                                                            </a>
+                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>"><?= $invoice_template->title; ?></a>
                                                         </td>
                                                         <td data-title="Details">
                                                             <span class="text-ter"><?= $invoice_template->details==1 ? 'Default Template' : 'Custom Template'; ?></span>

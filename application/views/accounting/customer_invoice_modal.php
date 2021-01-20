@@ -100,137 +100,13 @@
                                         <input type="text" class="form-control">
                                     </div>
                                 </div>
+                                
                             </div>
                             <div class="col-md-6" align="right">
                                 AMOUNT<h2>$0.00</h2><br>
                                 Location of sale<br>
                                 <input type="text" class="form-control" style="width:200px;" name="location_scale">
                             </div>
-<<<<<<< HEAD
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>PRODUCT/SERVICE</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>QTY</th>
-                                    <th>RATE</th>
-                                    <th>AMOUNT</th>
-                                    <th>TAX</th>
-                                    <th></th>
-                                </thead>
-                                <tr>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                        <div>
-                    </div>
-                <hr>
-                
-                    <div class="row">
-                        <div class="col-md-1">
-                           <button class="btn">Add lines</button>
-                        </div>
-                        <div class="col-md-1">
-                           <button class="btn">Clear all lines</button>
-                        </div>
-                        <div class="col-md-1">
-                           <button class="btn">Add subtotal</button>
-                        </div>
-                        <div class="col-md-7">
-                        </div>
-                        <div class="col-md-1">
-                            <b>Subtotal</b>
-                        </div>
-                        <div class="col-md-1">
-                            <b>$0.00</b>
-                        </div>
-                    </div>
-                    <hr>
-
-
-                    
-                    <div class="container modal-container">
-                        <div class="header-modal"><h3>Let's get a picture of your profits</h3></div>
-                        <div class="sub-header-modal"><span>Connect your bank or credit card to bring in your transactions.</span></div>
-                        <div class="body-modal">
-                            <input type="text" class="form-control" placeholder="Enter your bank name or URL" style=" margin: 40px 0 50px 0;">
-                            <div class=""><span>Here are some of the most popular ones</span></div>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/citibank.png') ?>" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/chase-logo.png') ?>" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/bank-of-america.png') ?>" alt="">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/Wells_Fargo.png') ?>" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/us-bank-logo-vector.png') ?>" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/paypal_PNG20.png') ?>" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="bank-img-container">
-                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/pncbank_pms_c.png') ?>" alt="">
-=======
                         </div>
                         <hr>
                         <div class="row">
@@ -347,16 +223,12 @@
                                         <div class="image-title-wrap">
                                         <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
                                         </div>
->>>>>>> 8567d87ef7e797488cf25caf64180497754330cd
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-8">
                             </div>
                         </div>
-<<<<<<< HEAD
-                    </div>
-=======
                         <hr>
                         <div class="modal-footer-check">
                             <div class="row">
@@ -387,7 +259,6 @@
                         </div>
                     </form>
 
->>>>>>> 8567d87ef7e797488cf25caf64180497754330cd
                 </div>
                 
                 <div style="margin: auto;">
@@ -402,8 +273,5 @@
     </div>
     <!--end of modal-->
 </div>
-<<<<<<< HEAD
-=======
 
 <?php include viewPath('accounting/add_new_term'); ?>
->>>>>>> 6e84d268d8b86938b48613c33cefb4d31060641b

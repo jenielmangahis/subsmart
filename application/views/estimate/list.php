@@ -1,3 +1,14 @@
+<style> 
+button#dropdown-edit {
+    width: 100px;
+}       
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 54% !important;
+    right: 9px !important;
+}
+</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -99,7 +110,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <a class="nav-link active"
                                        href="<?php echo base_url('estimate') ?>"
                                        aria-controls="tab1" aria-selected="true">All
-                                        (<?php echo get_estimate_status_total(0, true) ?>)</a>
+                                        (<?php echo get_estimate_status_total(0, true, $role) ?>)</a>
                                 </li>
                             <?php } ?>
                             <li <?php echo ((!empty($tab)) && strtolower($status) === $tab) ? "class='active'" : "" ?>>
@@ -109,7 +120,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                    href="<?php echo base_url('estimate/tab/' . strtolower($status)) ?>"
                                    role="tab"
                                    aria-controls="profile" aria-selected="false"><?php echo $status ?>
-                                    (<?php echo get_estimate_status_total($key, true) ?>)</a>
+                                    (<?php echo get_estimate_status_total($status, true, $role) ?>)</a>
                             </li>
                         <?php } ?>
                     </ul>
@@ -167,7 +178,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <td>
                                             <a class="a-default"
                                                href="#">
-                                                <?php echo $estimate->id ?>
+                                                <?php echo $estimate->estimate_number; ?>
                                             </a>
                                         </td>
                                         <td>
@@ -189,15 +200,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-btn">
-                                                <button class="btn btn-default dropdown-toggle" type="button"
-                                                        id="dropdown-edit"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                    <span class="btn-label">Manage</span><span
-                                                            class="caret-holder"><span
-                                                                class="caret"></span></span>
+                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                                 </button>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                    aria-labelledby="dropdown-edit">
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
@@ -224,13 +230,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                                data-name="WO-00433"><span
                                                                     class="fa fa-money icon"></span> Create Invoice</a>
                                                     </li>
-                                                    <li role="presentation"><a role="menuitem"
-                                                                               tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>"
-                                                                               onclick="return confirm('Do you really want to delete this item ?')"
-                                                                               data-delete-modal="open" data-id="161983"
-                                                                               data-name="WO-00433"><span
-                                                                    class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
+                                                    <li><div class="dropdown-divider"></div></li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -250,6 +256,31 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
+
+     <!-- Modal Send Email  -->
+        <div class="modal fade bd-example-modal-md" id="modalSendEmail" tabindex="-1" role="dialog" aria-labelledby="modalSendEmailTitle" aria-hidden="true">
+          <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-envelope-open-o"></i> Send to Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <?php echo form_open_multipart('estimate/_send_customer', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
+              <div class="modal-body">        
+                  <p>Are you sure you want to send the selected estimate to customer?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-info">Yes</button>
+              </div>
+              <?php echo form_close(); ?>
+            </div>
+          </div>
+        </div>
+
     <!-- end container-fluid -->
 </div>
 
@@ -364,6 +395,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 
     $(document).ready(function () {
+
+        $(".btn-send-customer").click(function(e){
+            var eid = $(this).attr("data-id");
+            $("#eid").val(eid);
+            $("#modalSendEmail").modal('show');
+        });
 
         // open service address form
         $('#modalConvertEstimate').on('shown.bs.modal', function (e) {

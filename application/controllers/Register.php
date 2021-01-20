@@ -6,7 +6,6 @@ class Register extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 
-        $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('Clients_model');
         $this->load->model('Users_model');

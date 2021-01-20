@@ -1105,9 +1105,6 @@ $(document).ready(function () {
         });
     });
 
-             
-             
-        
 
 // Expense Modal
     $(document).on('click','#addExpense',function () {
@@ -1462,7 +1459,6 @@ $(document).ready(function () {
     });
     });
 
-    
     //Expense modal Dropzone
     $(document).ready(function () {
         var fname = [];
@@ -2554,22 +2550,3 @@ $(document).on('click','#closeSalesTimeActivityModal',function () {
             }
         });
     });
-
-//expense model
-$(".expenseAmount").focusout(function() { 
-    var amount = $(this).val(); 
-    //console.log(amount);
-    var expense_total = $('#expense_total').val();
-    var total = parseFloat(amount) + parseFloat(expense_total);
-    $('#expense_total').val(total);
-
-    /*var total = 0;
-    $( ".expenseAmount" ).each(function( i ) {
-            total = parseFloat(total) + parseFloat($(this).val());
-    });
-    console.log(total);
-
-    $(".expenseAmount").each(function() {
-    alert($(this).val());
-    });*/
-});

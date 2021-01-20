@@ -248,50 +248,12 @@ class Timesheet_model extends MY_Model {
         }
 
     }
-    public function gtMyIpGlobal(){
-        $ipaddress = '';
-        if (isset($_SERVER['HTTP_CLIENT_IP'])){
-            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-        }
-        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-        else if(isset($_SERVER['HTTP_X_FORWARDED'])){
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-        }
-        else if(isset($_SERVER['HTTP_FORWARDED_FOR'])){
-            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-        }
-        else if(isset($_SERVER['HTTP_FORWARDED'])){
-            $ipaddress = $_SERVER['HTTP_FORWARDED'];
-        }
-        else if(isset($_SERVER['REMOTE_ADDR'])){
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
-        }
-        else{
-            $ipaddress = 'UNKNOWN';
-        }
-
-        $whitelist = array(
-            '127.0.0.1', // IPv4 address
-            '::1' // IPv6 address 
-        );
-        if (in_array($ipaddress, $whitelist)) {
-            return "";
-        }else
-        {
-            return $ipaddress;
-        }
-        
-    }
     public function employeeCoordinates(){
-        $ipaddress = $this->gtMyIpGlobal();
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
         return $get_location->lat.",".$get_location->lon; //to get coordinates
     }
     private function employeeAddress(){
-        $ipaddress = $this->gtMyIpGlobal();
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
         $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');

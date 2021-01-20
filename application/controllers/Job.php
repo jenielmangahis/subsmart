@@ -16,7 +16,6 @@ class Job extends MY_Controller
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('Roles_model', 'roles_model');
 
-
         add_css(array( 
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
@@ -93,8 +92,8 @@ class Job extends MY_Controller
             if (!empty($get['job_num'])) {
                 $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
                 $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
-                $this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
-                $this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
+                //$this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
+                //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
                 $this->page_data['assignEmployees'] = $this->jobs_model->getAssignEmp($job_id);
             }
             
@@ -133,8 +132,8 @@ class Job extends MY_Controller
             if (!empty($get['job_num'])) {
                 $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
                 $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
-                $this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
-                $this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
+                //$this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
+                //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
                 $this->page_data['assignEmployees'] = $this->jobs_model->getAssignEmp($job_id);
             }
             
@@ -556,8 +555,25 @@ class Job extends MY_Controller
         echo json_encode($data);
     }
 
-    function details(){
-    	$this->load->view('job/details', $this->page_data);
+    function details($id){
+        $this->load->model('Estimate_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Customer_model');
+
+        $estimate = $this->Estimate_model->getEstimate($id);
+
+        if( $estimate ){
+            $customer      = $this->Customer_model->getCustomer($estimate->customer_id);
+            $estimateItems = $this->EstimateItem_model->getAllByEstimateId($estimate->id);
+
+            $this->page_data['estimate'] = $estimate;
+            $this->page_data['customer'] = $customer;
+            $this->page_data['estimateItems'] = $estimateItems;
+            $this->load->view('job/details', $this->page_data);
+
+        }else{
+           redirect('dashboard'); 
+        }
     }
 }
 
