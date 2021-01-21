@@ -365,7 +365,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                                 <div class="form-group" id="customer_type_group">
                                                                                     <label for=""></label><br/>
                                                                                     <select id="credit_report" name="credit_report"  class="input_select" >
-                                                                                        <option value="TrunsUnion">TrunsUnion</option>
+                                                                                        <option value="TrunsUnion">TransUnion</option>
                                                                                         <option value="Experian">Experian </option>
                                                                                         <option value="Equifax ">Equifax  </option>
                                                                                     </select>

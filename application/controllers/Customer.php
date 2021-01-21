@@ -1793,7 +1793,7 @@ class Customer extends MY_Controller
         }
         // pass the $this so that we can use it to load view, model, library or helper classes
        // $customerGroup = new CustomerGroup($this);
-        $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups1');
+        $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
         $this->load->view('customer/group/list', $this->page_data);
     }
 
