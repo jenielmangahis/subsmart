@@ -16,6 +16,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
     /* margin-bottom: 20px; */
     /* border-radius: 8px; */
 }
+.form-control-block {
+    display: block;
+    width: 100%;
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    height: 27px;
+    padding: 3px 0 0 0;
+    text-align: center;
+}
+.item-link-sm {
+    font-style: italic;
+    font-size: 12px;
+    color: #8f8f8f;
+    display: none;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/estimate'); ?>
@@ -138,8 +154,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <td><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                            <td>
+                                                <a href="javascript:void(0);" class="btn-set-discount" data-id="0">
+                                                    <span class="form-control-block">
+                                                        <span class="discount-0">0.00</span>                                                        
+                                                    </span>    
+                                                    <input type="hidden" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" value="0"readonly>                             
+                                                    <i class="item-link-sm">set discount</i>                   
+                                                </a>
+                                                
+                                            </td>
                                             <td><span id="span_tax_0">0.00 (7.5%)</span></td>
                                             <td><span id="span_total_0">0.00</span></td>
                                         </tr>
@@ -221,21 +245,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <!-- Modal Additional Contact -->
-            <div class="modal fade" id="modalAdditionalContacts" tabindex="-1" role="dialog"
+            <!-- Modal Add Discount -->
+            <div class="modal fade" id="modalAddDiscount" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Set Discount</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body"></div>
+                        <div class="modal-body">
+                            <p class="margin-bottom">Set fixed or percent discount. Input 0 to remove the discount.</p>
+                            <form name="discount-modal-form" class="discount-form">
+                                <input type="hidden" id="row-id" value="0">
+                                <input type="hidden" id="discount-type" value=""> 
+                                <div class="form-inline">
+                                    <div class="btn-group margin-right-sec" role="group">
+                                        <button class="btn btn-primary" type="button" name="discount_type_percent">%</button>
+                                        <button class="btn btn-default" type="button" name="discount_type_amount">$</button>
+                                    </div>
+                                    <input class="form-control" name="discount_value" id="discount_value" value="0" type="text" style="width: 260px;">
+                                </div>
+                            </form>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary btn-apply-discount">Set Discount</button>
                         </div>
                     </div>
                 </div>
@@ -297,6 +334,59 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
     $(document).ready(function () {
+        $('button[name="discount_type_percent"]').click(function(){
+            $("#discount-type").val("percent");
+
+            $(this).addClass('btn-primary');
+            $(this).removeClass('btn-default');
+
+            $('button[name="discount_type_amount"]').removeClass('btn-primary');
+            $('button[name="discount_type_amount"]').addClass('btn-default');            
+        });
+
+        $('button[name="discount_type_amount"]').click(function(){
+            $("#discount-type").val("amount");
+
+            $(this).addClass('btn-primary');
+            $(this).removeClass('btn-default');
+
+            $('button[name="discount_type_percent"]').removeClass('btn-primary');
+            $('button[name="discount_type_percent"]').addClass('btn-default');          
+        });
+
+        $(".btn-set-discount").click(function(){
+            var row_id = $(this).attr("data-id");
+
+            $("#row-id").val(row_id);            
+            $("#modalAddDiscount").modal('show');
+        });
+
+        $(".btn-apply-discount").click(function(){
+            var row_id = $("#row-id").val();
+            var price  = $("#price_"+row_id).val();
+            var qty    = $("#quantity_"+row_id).val();
+            var d_type = $("#discount-type").val();
+            var discount_amount = $("#discount_value").val();
+
+            if( discount_amount > 0 ){
+                if( d_type == 'percent' ){
+                    var total_discount = parseFloat(price) * (parseFloat(discount_amount) / 100);
+                }else{
+                    var total_discount = parseFloat(discount_amount);
+                }
+            }else{
+                var total_discount = 0;
+            }
+            
+            $("#discount_"+row_id).val(total_discount);
+
+            calculation(row_id);
+
+            $("#discount_value").val(0);
+            $(".discount-"+row_id).html(total_discount.toFixed(2));
+            $("#modalAddDiscount").modal('hide');
+        });
+
         $("#sel-customer").select2({
             placeholder: "Select Customer"
         });
@@ -326,11 +416,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             '" min="0" value="0">\n' +
             "</td>\n" +
             "<td>\n" +
-            '<input type="number" class="form-control discount" name="discount[]" data-counter="' +
-            count +
-            '" id="discount_' +
-            count +
-            '" min="0" value="0" readonly>\n' +
+            '<a href="javascript:void(0);" class="btn-set-discount" data-id="' + count + '"><span class="form-control-block"><span class="discount-' + count + '">0.00</span></span><i class="item-link-sm">set discount</i></a><input type="hidden" class="form-control discount" name="discount[]" data-counter="0" id="discount_'+count+'" value="0"readonly>' +
             "</td>\n" +
             "<td>\n" +
             '<span id="span_tax_' +
@@ -348,6 +434,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
             "</tr> ";
 
             $(html).hide().appendTo("#table_body").fadeIn(500);
+
+            $(".btn-set-discount").click(function(){
+                var row_id = $(this).attr("data-id");
+
+                $("#row-id").val(row_id);            
+                $("#modalAddDiscount").modal('show');
+            });
         });
     });
 </script>
