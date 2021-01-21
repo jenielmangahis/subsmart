@@ -14,6 +14,7 @@ application/config/routes.php
 application/config/smileys.php
 application/config/user_agents.php
 
+
 application/config/database.php
 application/cache/*
 *application/config/database.php
@@ -29,3 +30,8 @@ api/
 .idea
 *app/
 *ios-app/workspace/Pods/GoogleMaps/Maps/Frameworks/
+/nbproject/private/
+application/cache/*
+.idea/*
+
+

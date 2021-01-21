@@ -25,7 +25,7 @@
                </div>
                <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <form action="<?php echo site_url()?>accounting/addreceivepay" method="post">
+            <form action="<?php echo site_url()?>accounting/addReceivePayment" method="post">
                 <div class="modal-body" style="height:1000px;">
                     <div class="row">
                         <div class="col-md-6">
@@ -58,9 +58,9 @@
                                     <select class="form-control" name="payment_method" id="rp_payment_method">
                                         <option></option>
                                         <option value="0">Add New</option>
-                                        <option value="1">Cash</option>
-                                        <option value="2">Check</option>
-                                        <option value="3">Credit Card</option>
+                                        <?php foreach($paymethods as $paymethod) { ?>
+                                            <option value="<?php echo $paymethod->payment_method_id ; ?>"> <?php echo $paymethod->quick_name; ?></option>
+                                            <?php } ?>
                                     </select>
                                 </div>
                                 <div class="col-md-3">

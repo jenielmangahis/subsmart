@@ -9,7 +9,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
+        <form action="<?php echo site_url()?>accounting/savepaymethod" method="post">
           Name <br>
           <input type="text" name="new_pay_method" class="form-control"><br>
           <input type="submit" value="Save" class="btn btn-success">

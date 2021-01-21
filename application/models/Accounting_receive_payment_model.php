@@ -41,5 +41,16 @@ class Accounting_receive_payment_model extends MY_Model {
 	public function getReceivePaymentDetails($id){
 	    $vendor = $this->db->get_where('accounting_receive_payment', array('id' => $id));
 	    return $vendor->result();
-    }
+	}
+	
+	public function savepaymentmethod($data){
+		$vendor = $this->db->insert('payment_method', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+	}
+
+	public function getpaymethod(){
+		$vendor = $this->db->get('payment_method');
+	    return $vendor->result();
+	}
 }
