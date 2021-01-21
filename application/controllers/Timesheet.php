@@ -1870,7 +1870,8 @@ class Timesheet extends MY_Controller {
     }
 
     private function employeeAddress(){
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'));
+         $ipaddress = $this->gtMyIpGlobal();
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
         $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');

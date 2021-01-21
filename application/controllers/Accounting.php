@@ -89,6 +89,7 @@ class Accounting extends MY_Controller {
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['terms'] = $this->accounting_invoices_model->getPayTerms();
+        $this->page_data['paymethods'] = $this->accounting_receive_payment_model->getpaymethod();
         $this->load->view('accounting/dashboard', $this->page_data);
     }
 
@@ -2033,6 +2034,9 @@ class Accounting extends MY_Controller {
     }
 	public function addReceivePayment()
     {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'payment_date' => $this->input->post('payment_date'),
@@ -2041,8 +2045,11 @@ class Accounting extends MY_Controller {
             'deposit_to' => $this->input->post('deposit_to'),
             'amount_received' => $this->input->post('amount_received'),
             'memo' => $this->input->post('memo'),
-            'attachments' => $this->input->post('file_name'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'testing',
             'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
             'created_by' => logged('id'),
             'date_created' => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s")
@@ -2051,12 +2058,36 @@ class Accounting extends MY_Controller {
         $addQuery = $this->accounting_receive_payment_model->createReceivePayment($new_data);
 
         if($addQuery > 0){
-            echo json_encode($addQuery);
+            // echo json_encode($addQuery);
+            redirect('accounting/banking');
         }
         else{
             echo json_encode(0);
         }
     }
+
+    public function savepaymethod(){
+
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        $new_data = array(
+            'payment_method' => $this->input->post('new_pay_method'),
+            'quick_name' => $this->input->post('new_pay_method'),
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+        );
+
+        $addQuery = $this->accounting_receive_payment_model->savepaymentmethod($new_data);
+
+        if($addQuery > 0){
+            echo json_encode($addQuery);
+            //$this->session->set_flashdata('Method added');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
 	public function updateReceivePayment()
     {
         $new_data = array(
@@ -2089,6 +2120,46 @@ class Accounting extends MY_Controller {
 
         if($query){
             echo json_encode(1);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    //add estimate
+
+    public function saveEstimate()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'email' => $this->input->post('email'),
+            'billing_address' => $this->input->post('billing_address'),
+            'est_date' => $this->input->post('est_date'),
+            'ex_date' => $this->input->post('ex_date'),
+            'ship_via' => $this->input->post('ship_via'),
+            'ship_date' => $this->input->post('ship_date'),
+            'tracking_no' => $this->input->post('tracking_no'),
+            'ship_to' => $this->input->post('ship_to'),
+            'tags' => $this->input->post('tags'),
+            'attachments' => 'testing',
+            'message_invoice' => $this->input->post('message_invoice'),
+            'message_statement' => $this->input->post('message_statement'),
+            'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        if($addQuery > 0){
+            // echo json_encode($addQuery);
+            redirect('accounting/banking');
         }
         else{
             echo json_encode(0);

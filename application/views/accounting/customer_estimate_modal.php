@@ -11,14 +11,14 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <form action="<?php echo site_url()?>accounting/addaccestimate" method="post">
+            <form action="<?php echo site_url()?>accounting/saveEstimate" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control">
+                                    <select class="form-control" name="customer_id">
                                         <option></option>
                                         <?php foreach($customers as $customer) : ?>
                                             <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
@@ -35,24 +35,24 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Billing address
-                                    <textarea style="height:100px;width:100%;"></textarea>
+                                    <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
                                 </div>
                                 <div class="col-md-3">
                                     Estimate date<br>
-                                    <input type="text" class="form-control" id="datepickerinv4"><br>
+                                    <input type="text" class="form-control" id="datepickerinv4" name="est_date"><br>
                                     Ship via<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="ship_via">
                                 </div>
                                 <div class="col-md-3">
                                     Expiration date<br>
-                                    <input type="text" class="form-control" id="datepickerinv5"><br>
+                                    <input type="text" class="form-control" id="datepickerinv5" name="ex_date"><br>
                                     Shipping date<br>
-                                    <input type="text" class="form-control" id="datepickerinv6">
+                                    <input type="text" class="form-control" id="datepickerinv6" name="ship_date">
                                 </div>
                                 <div class="col-md-3">
                                     <br><br>
                                     Tracking no.<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="tracking_no">
                                 </div>
                                 
                             </div>
@@ -60,14 +60,14 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Shipping to
-                                    <textarea style="height:100px;width:100%;"></textarea>
+                                    <textarea style="height:100px;width:100%;"name="ship_to"></textarea>
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
                                     Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
                             
@@ -144,9 +144,9 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="message_invoice"></textarea><br>
                             Message on statement<br>
-                            <textarea style="height:100px;width:100%;"></textarea>
+                            <textarea style="height:100px;width:100%;"  name="message_statement"></textarea>
                         </div>
                         <div class="col-md-8">
                         </div>

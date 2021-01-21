@@ -29,18 +29,16 @@ class Dashboard extends MY_Controller {
         add_footer_js(array(
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'assets/frontend/js/dashboard/main.js',
-            "assets/css/dashboard/dasboard_box.js",
-            "assets/css/dashboard/dasboard.chunk.js",
-            "assets/css/dashboard/dasboard_client.js",
-            "assets/css/dashboard/hcui.chunk.js",
+            //"assets/css/dashboard/dasboard_box.js",
+            //"assets/css/dashboard/dasboard.chunk.js",
+            //"assets/css/dashboard/dasboard_client.js",
+            //"assets/css/dashboard/hcui.chunk.js",
         ));
     }
 
 	public function index()
 	{  
         $user_id = logged('id');
-        // temporary comment out not yet verify the error
-
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6,0], 0);
         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
         if($this->page_data['activity_list_count'] > 5 ){
@@ -55,7 +53,8 @@ class Dashboard extends MY_Controller {
         if(!$check_if_exist){
             $input = array();
             $input['fk_user_id'] = $user_id ;
-            $input['ds_values'] = "earning,analytics,report,activity,report2,newsletter,spotlight,bulletin,job,estimate,invoice,stats,installs" ;
+            $input['ds_values'] = "bulletin,open_estimates,upcoming_job,jobs,sales_leaderbord,tech_leaderbord,tags,lead_source,activities,history,today_stats,taskhub_stats,tasks,income,
+                                   expenses,bank_accounts,sales,messages,paid_invoices,lead_stats,overdue_invoices,invoicing,task_stats,plan_setup,discover_more" ;
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
         $this->page_data['feeds'] = $this->feeds_model->getByCompanyId();
@@ -69,7 +68,7 @@ class Dashboard extends MY_Controller {
         $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
         $this->page_data['in_now'] = $this->timesheet_model->getInNow();
         $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
-        $this->page_data['dashboard_sort'] = "report2,newsletter,bulletin";
+        $this->page_data['dashboard_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_dashboard_sort");
 
         $this->page_data['all_leads']           = $this->crud->total_record("ac_leads","leads_id!=0");
         $this->page_data['assigned_leads']      = $this->crud->total_record("ac_leads","fk_assign_id!=0");

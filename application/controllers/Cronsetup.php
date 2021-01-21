@@ -18,34 +18,7 @@ class Cronsetup extends MY_Controller {
 		$this->page_data['page']->menu = 'users';
 
 	}
-    public function checkLocation(){
-        echo "My Ip : ";
-        echo $myip = $this->gtMyIpGlobal();
-        echo '<br>-----<br>';
-        echo "My Ip : ";
-        echo $ipaddress = $this->timesheet_model->gtMyIpGlobal();
-       
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
-        $lat = $get_location->lat;
-        $lng = $get_location->lon;
-        echo '<br>-----<br>';
-        echo "My Timezone : ";
-        echo $utimezone = $get_location->timezone;
-        echo '<br>-----<br>';
-        echo "Time : ".date("d-m-Y H:i:s A");
-
-        if (date_default_timezone_get()) {
-            echo '<br>-----<br>';
-            echo 'date_default_timezone_set: ' . date_default_timezone_get() . '<br />';
-        }
-
-        if (ini_get('date.timezone')) {
-            echo '<br>-----<br>';
-            echo 'date.timezone: ' . ini_get('date.timezone');
-        }
-
-
-    }
+   
     public function cronSetForOvertime(){
         $check_attn = $this->db->get_where('timesheet_attendance',array('status' => 1 ))->result_array();
         

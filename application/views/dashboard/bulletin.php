@@ -272,7 +272,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         background: grey;
     }
 </style>
-<div class="col-sm-4" id="bulletin">
+<div class="col-sm-4 module ui-state-default" id="bulletin">
     <div class="expenses tile-container">
         <div class="inner-container">
             <div class="tileContent">
