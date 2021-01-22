@@ -20,7 +20,12 @@ class Items extends MY_Controller
         $company_id = logged('company_id');
         $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
         foreach ($res as $row) {
-            $gh = "'" . $row->title . "'," . $row->price . "," . $row->discount;
+            if( $row->discount == '' ){
+                $discount = 0;
+            }else{
+                $discount = $row->discount;
+            }
+            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
 
             echo '<li onClick="setitem(this,' . $gh . ')">' . $row->title . '</li>';
         }

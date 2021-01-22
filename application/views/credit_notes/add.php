@@ -63,10 +63,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('estimate/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
-            <style>
+            <?php echo form_open_multipart('credit_notes/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <input type="hidden" id="inst_cost" value="0">
+            <input type="hidden" id="one_time" value="0">
+            <input type="hidden" id="m_monitoring" value="0">
 
-            </style>
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
@@ -94,14 +95,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Credit Note#</label>
-                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date"
+                                    <input type="text" class="form-control" name="credit_note_number" id="estimate_date"
                                            required placeholder="" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Date Issued</label>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="estimate_date" id="estimate_date"
+                                        <input type="text" class="form-control" name="date_issued" id="estimate_date"
                                                placeholder="">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
@@ -150,8 +151,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                        onKeyup="creditNoteGetItems(this)" name="item[]">
                                                 <ul class="suggestions"></ul>
                                             </td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
+                                            <td>
+                                                <input type="hidden" class="form-control itemid" name="itemIds[]" id="itemid_0" value="0">
+                                                <input type="text" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1">
+                                            </td>
                                             <td><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
                                             <td>
@@ -164,8 +167,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </a>
                                                 
                                             </td>
-                                            <td><span id="span_tax_0">0.00 (7.5%)</span></td>
-                                            <td><span id="span_total_0">0.00</span></td>
+                                            <td>
+                                                <input type="hidden" name="tax[]" id="tax_0" value="">
+                                                <span id="span_tax_0">0.00 (7.5%)</span>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="itemTotal[]" id="item_total_0" value="">
+                                                <span id="span_total_0">0.00</span>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -177,18 +186,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12">
                                     <table class="table table-bordered">
                                         <tr>
-                                            <td>Subtotal</td>
-                                            <td class="d-flex align-items-center">$<span id="total_due">0.00</span>
+                                            <td>Equipment Cost</td>
+                                            <td class="d-flex align-items-center">
+                                                <input type="text" value="0.00" name="eqpt_cost" id="eqpt_cost" readonly class="form-control">
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td>Sales Tax</td>
+                                            <td class="d-flex align-items-center">
+                                                <input type="text" value="0.00" name="sales_tax" id="sales_tax" readonly class="form-control">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Discount</td>
+                                            <td class="d-flex align-items-center">
+                                                <input type="text" value="0.00" name="total_discount" id="total_discount" readonly class="form-control">
+                                            </td>
+                                        </tr>                                        
+                                        <tr>
                                             <td>Adjustment</td>
-                                            <td class="d-flex align-items-center">$<span id="total_due">0.00</span>
+                                            <td class="d-flex align-items-center">$<span id="adjustment">0.00</span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Grand Total</td>
-                                            <td class="d-flex align-items-center">$<span id="total_due">0.00</span>
+                                            <td class="d-flex align-items-center">
+                                                <input type="text" value="0.00" name="total_due" id="g_total_due" readonly class="form-control">
                                             </td>
                                         </tr>
                                     </table>
@@ -402,7 +425,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
             "</td>\n" +    
             "<td>\n" +
-            '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
+            '<input type="hidden" class="form-control itemid" name="itemIds[]" id="itemid_' + count +'" value="0"><input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
             count +
             '" id="quantity_' +
             count +
@@ -422,12 +445,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             '<span id="span_tax_' +
             count +
             '">0.00 (7.5%)</span>\n' +
-            "</td>\n" +
+            "<input type='hidden' name='tax[]'' id='tax_" + count + "' value=''></td>\n" +
             "<td>\n" +
             '<span id="span_total_' +
             count +
             '">0.00</span>\n' +
-            "</td>\n" +
+            "<input type='hidden' name='itemTotal[]'' id='item_total_" + count + "' value=''></td>\n" +
             "<td>\n" +
             '<a href="#" class="remove btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>\n' +
             "</td>\n" +
