@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/business_tools'); ?>
+    <?php $this->load->view('includes/sidebars/api_connectors', $sidebars)?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">

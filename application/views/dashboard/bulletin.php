@@ -291,8 +291,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <th rowspan="2">In</th>
                                                 <th rowspan="2">Out</th>
                                                 <th colspan="2">Lunch</th>
-                                                <th rowspan="2">Action</th>
-                                                <th rowspan="2">Comments/Location</th>
+                                                <!-- <th rowspan="2">Action</th>
+                                                <th rowspan="2">Comments/Location</th> -->
                                             </tr>
                                             <tr>
                                                 <th>In</th>
@@ -418,12 +418,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td class="tbl-chk-out" data-count="<?php echo $time_out?>"><div class="red-indicator" style="<?php echo $indicator_out?>"></div> <span class="clock-out-time"><?php echo $time_out?></span></td>
                                                     <td class="tbl-lunch-in"><div class="red-indicator" style="<?php echo $indicator_in_break?>"></div> <span class="break-in-time"><?php echo $break_in;?></span></td>
                                                     <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span class="break-out-time"><?php echo $break_out;?></span></td>
-                                                    <td class="tbl-emp-action">
+                                                    <!-- <td class="tbl-emp-action">
                                                         <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>" data-photo="<?php echo $user_photo;?>" data-company="<?php echo $company_id?>"><i class="fa fa-coffee fa-lg"></i></a>
                                                         <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>" data-photo="<?php echo $user_photo;?>" data-company="<?php echo $company_id?>"><i class="fa fa-user-clock fa-lg"></i></a>
                                                         <i class="fa <?php echo $status;?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
                                                     </td>
-                                                    <td></td>
+                                                    <td></td> -->
                                                 </tr>
                                                 <?php
                                                 $u_role = null;

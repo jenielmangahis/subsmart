@@ -14,10 +14,9 @@ application/config/routes.php
 application/config/smileys.php
 application/config/user_agents.php
 
-
-application/config/database.php
-application/cache/*
 *application/config/database.php
+*application/cache/
+*assets/img/customer/qr/
 *application/libraries/
 .idea
 

@@ -17,7 +17,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control">
+                                    <select class="form-control" name="customer_id">
                                         <option></option>
                                         <?php foreach($customers as $customer) : ?>
                                             <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     Email
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="email">
                                     <i style="text-align:right;"> Cc/Bcc </i>
                                 </div>
                             </div>
@@ -34,24 +34,24 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Billing address
-                                    <textarea style="height:100px;width:100%;"></textarea>
+                                    <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
                                 </div>
                                 <div class="col-md-3">
                                     Refund Receipt date<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="receipt_date">
                                 </div>                                
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
                                     Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment method
-                                    <select class="form-control">
+                                    <select class="form-control" name="payment_method">
                                         <option></option>
                                         <option>Cash</option>
                                         <option>Check</option>
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     Refund From
-                                    <select class="form-control">
+                                    <select class="form-control" name="refund_form">
                                         <option></option>
                                         <option>A</option>
                                         <option>B</option>
@@ -142,9 +142,9 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="mess_invoice"></textarea><br>
                             Message on statement<br>
-                            <textarea style="height:100px;width:100%;"></textarea>
+                            <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
                         </div>
                         <div class="col-md-8">
                         </div>

@@ -52,7 +52,7 @@ class FB_elements_model extends MY_Model {
 				}
 			}
 			
-			if($data['choices_and_prices']) {
+			if(isset($data['choices_and_prices'])) {
 				foreach ($data['choices_and_prices'] as $i => $row) {
 					$items_data = $row;
 					$items_data['id'] = null;
@@ -61,7 +61,7 @@ class FB_elements_model extends MY_Model {
 				}
 			}
 
-			if($data['matrix_rows']) {
+			if(isset($data['matrix_rows'])) {
 				foreach ($data['matrix_rows'] as $i => $matrixRow) {
 					$matrixRowData = [
 						'id' 	=> null,
@@ -80,7 +80,7 @@ class FB_elements_model extends MY_Model {
 				}	
 			}		
 
-			if($data['element_rules']) {
+			if(isset($data['element_rules'])) {
 				$elementRules = json_decode($data['element_rules']);
 	
 				foreach($elementRules as $elementRule) {

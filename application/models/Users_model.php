@@ -126,6 +126,17 @@ class Users_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getActiveCompanyUsers($company_id) {
+		$this->db->select('*');
+		$this->db->from($this->table);
+		$this->db->where('company_id', $company_id);
+		$this->db->where('status', 1);
+		$this->db->order_by('LName', 'asc');
+		$this->db->order_by('FName', 'asc');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function getTotalUsers(){
         $this->db->where('id', getLoggedUserID());
 	    $this->db->or_where('company_id',logged('company_id'));

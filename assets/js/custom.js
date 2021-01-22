@@ -401,7 +401,6 @@ $(document).on("click", ".remove", function (e) {
 });
 
 function cal_total_due() {
-  alert(4);
   var eqpt_cost = parseFloat($("#eqpt_cost").val());
   var sales_tax = parseFloat($("#sales_tax").val());
   var inst_cost = parseFloat($("#inst_cost").val());
