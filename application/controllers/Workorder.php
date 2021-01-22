@@ -19,7 +19,7 @@ class Workorder extends MY_Controller
         $this->page_data['page']->title = 'Workorder Management';
 
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
-        // $this->load->model('Workorder_model', 'workorder_model');
+        $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Jobs_model', 'jobs_model');
 
         $user_id = getLoggedUserID();

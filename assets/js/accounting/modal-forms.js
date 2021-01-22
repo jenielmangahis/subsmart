@@ -51,7 +51,30 @@ $(function() {
         computeTotalHours();
     });
 
-    $(document).on('change', 'div#statementModal table#statements-table thead th input[name="select_all"], div#statementModal table#missing-email-table thead th input[name="select_all"]', function() {
+    $(document).on('change', '#payDownCreditModal input#amount', function() {
+        var amount = $(this).val();
+
+        if(amount !== "") {
+            $('#payDownCreditModal #total-amount-paid').html(`$${amount}.00`);
+        } else {
+            $('#payDownCreditModal #total-amount-paid').html('$0.00');
+        }
+    });
+
+    $(document).on('change', 'table#payroll-table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"], table#payroll-table tbody tr td:nth-child(5) input', function(){
+        payrollRowTotal($(this));
+        payrollTotal();
+    });
+
+    $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
+        $.get('/accounting/generate-payroll', function(res) {
+            $('div#payrollModal div.modal-body').html(res);
+        });
+
+        $(this).html('Submit Payroll');
+    });
+
+    $(document).on('change', 'div#statementModal table thead th input[name="select_all"], div#statementModal table thead th input[name="select_all"], div#payrollModal table thead th input[name="select_all"]', function() {
         var table = $(this).parent().parent().parent().parent().parent();
         var rows = table.children('tbody').children('tr');
 
@@ -66,7 +89,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', 'div#statementModal table tbody tr td:first-child() input', function() {
+    $(document).on('change', 'div#statementModal table tbody tr td:first-child() input, div#payrollModal table tbody tr td:first-child() input', function() {
         var table = $(this).parent().parent().parent().parent().parent();
         var checkbox = table.children('thead').children('tr').children('th:first-child()').children('div').children('input');
         var rows = table.children('tbody').children('tr');
@@ -106,8 +129,8 @@ $(function() {
                 rowInputs = $('div#modal-container table tbody tr:first-child()').html();
                 blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
 
-                $('div#modal-container table:not(#timesheet-table,#statements-table,#missing-email-table) tbody tr:first-child()').html(blankRow);
-                $('div#modal-container table:not(#timesheet-table,#statements-table,#missing-email-table) tbody tr:first-child() td:nth-child(2)').html(1);
+                $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);
+                $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
             }
 
             if(view === "bank_deposit_modal") {
@@ -171,7 +194,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', `div#modal-container .full-screen-modal table:not(#timesheet-table,#statements-table,#missing-email-table) tbody tr`, function() {
+    $(document).on('click', `div#modal-container .full-screen-modal table.clickable tbody tr`, function() {
         if($(this).children('td:nth-child(3)').children('select').length < 1) {
             var rowNum = $(this).children().next().html();
 
@@ -180,7 +203,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container table:not(#timesheet-table,#statements-table,#missing-email-table) tbody tr td a.deleteRow', function() {
+    $(document).on('click', 'div#modal-container table.clickable tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
         if($('div#modal-container table tbody tr').length < rowCount) {
             $('div#modal-container table tbody').append(`<tr>${blankRow}</tr>`)
@@ -253,6 +276,90 @@ $(function() {
         computeTotalHours();
     });
 });
+
+const payrollRowTotal = (el) => {
+    var val = parseFloat($(el).val()).toFixed(2).toString();
+    var split = val.includes('.') ? val.split('.') : val;
+    var string = "0.00";
+    var totalPay = 0.00;
+    var rowIndex = $(el).parent().parent().index();
+    var payRate = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(2) p span.pay-rate`).html();
+    var regPayHours = "0.00";
+    var commission = "0.00";
+
+    if(typeof split === "object") {
+        if(split[0].length === 0) {
+            split[0] = "0";
+        }
+
+        if(split[1].length === 1) {
+            split[1] = split[1]+"0";
+        }
+
+        string = split[0]+'.'+split[1];
+    } else {
+        if(split !== "NaN") {
+            string = split+'.00';
+        }
+    }
+
+    $(el).val(string);
+
+    if(el.hasClass('employee-commission')) {
+        commission = parseFloat(string);
+
+        regPayHours = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(4) input`).val();
+        if(regPayHours === "") {
+            regPayHours = 0.00;
+        } else {
+            regPayHours = parseFloat(regPayHours);
+        }
+    } else {
+        regPayHours = parseFloat(string);
+
+        commission = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(5) input`).val();
+        if(commission === "") {
+            commission = 0.00;
+        } else {
+            commission = parseFloat(commission);
+        }
+
+        $(el).parent().parent().children('td:nth-child(7)').children().html(string);
+    }
+
+    totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate)) + commission).toFixed(2);
+
+    $(el).parent().parent().children('td:last-child()').children('p').children('span.total-pay').html(totalPay);
+}
+
+const payrollTotal = () => {
+    var hours = 0.00;
+    var totalPay = 0.00;
+    var commission = 0.00;
+
+    $('table#payroll-table tbody tr').each(function() {
+        var empTotalHours = $(this).children('td:nth-child(4)').children('input[name="reg_pay_hours[]"]').val();
+        if(empTotalHours !== "") {
+            hours = parseFloat(parseFloat(hours) + parseFloat(empTotalHours)).toFixed(2);
+        }
+
+        var empCommission = $(this).children('td:nth-child(5)').children('input').val();
+        if(empCommission !== "") {
+            commission = parseFloat(parseFloat(commission) + parseFloat(empCommission)).toFixed(2);
+        }
+
+        var empTotalPay = $(this).children('td:last-child()').children('p').children('span').html();
+        totalPay = parseFloat(parseFloat(totalPay) + parseFloat(empTotalPay)).toFixed(2);
+    });
+
+    $('table#payroll-table tfoot tr td:nth-child(4)').html(hours);
+    $('table#payroll-table tfoot tr td:nth-child(7)').html(hours);
+
+    $('table#payroll-table tfoot tr td:nth-child(5)').html('$'+commission);
+
+    $('div#payrollModal h2.total-pay').html('$'+totalPay);
+    $('table#payroll-table tfoot tr td:last-child() p').html('$'+totalPay);
+}
 
 const tableWeekDate = () => {
     var value = $('#weeklyTimesheetModal select#weekDates').val();

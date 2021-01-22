@@ -10,8 +10,6 @@ class FB_style_model extends MY_Model {
 		parent::__construct();
     }
 
-<<<<<<< HEAD
-=======
 	function create($data)
 	{
 		try {
@@ -34,5 +32,4 @@ class FB_style_model extends MY_Model {
 	    return $response;
 	}
 
->>>>>>> staging
 }

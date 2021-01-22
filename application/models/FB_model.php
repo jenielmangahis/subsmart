@@ -16,8 +16,6 @@ class FB_model extends MY_Model {
 		$this->load->model('FB_element_matrix_columns_model', 'form_element_matrix_columns');
 		$this->load->model('FB_style_model', 'form_style');
 		$this->load->model('Items_model', 'products');
-<<<<<<< HEAD
-=======
 		$this->load->model('FB_templates_model', 'form_templates');
 		$this->load->model('FB_template_elements_model', 'form_template_elements');
 		$this->load->model('FB_template_element_choices_model', 'form_template_element_choices');
@@ -25,7 +23,6 @@ class FB_model extends MY_Model {
 		$this->load->model('FB_template_element_matrix_columns_model', 'form_template_element_matrix_columns');
 		$this->load->model('FB_template_style_model', 'form_template_style');
 		$this->load->model('FB_template_element_items_model', 'form_template_element_items');
->>>>>>> staging
     }
     
 	function create($data, $from_template = false){
@@ -116,13 +113,10 @@ class FB_model extends MY_Model {
 			$this->db->where('form_id', $id);
 			$formStyle = $this->db->get($this->form_style->table);
 
-<<<<<<< HEAD
 			$this->db->select("*");
 			$this->db->where('form_id', $id);
 			$formStyle = $this->db->get($this->form_style->table);
 
-=======
->>>>>>> staging
 			$this->db->select("*");
 			$this->db->where('form_id', $id); 
 			$this->db->order_by('element_order', 'ASC');

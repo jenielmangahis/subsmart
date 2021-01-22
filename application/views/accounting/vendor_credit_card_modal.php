@@ -16,7 +16,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Payee
-                                    <select class="form-control">
+                                    <select class="form-control" name="payee">
                                         <option></option>
                                         <option>Add New</option>
                                         <option>John Doe</option>
@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     Bank/Credit account
-                                    <select class="form-control">
+                                    <select class="form-control" name="credit_acc">
                                         <option></option>
                                         <option>A</option>
                                         <option>B</option>
@@ -37,15 +37,15 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment date<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="payment_date">
                                 </div>
                                 <div class="col-md-3">
                                 </div>
                                 <div class="col-md-3">
                                     Ref no.<br>
-                                    <input type="text" class="form-control"><br>
+                                    <input type="text" class="form-control" name="ref_no"><br>
                                     Permit no.<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="permit_no">
                                 </div>
                                 
                             </div>
@@ -53,7 +53,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
                             
@@ -147,7 +147,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             Memo<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="memo"></textarea><br>
                         </div>
                         <div class="col-md-8">
                         </div>

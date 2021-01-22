@@ -16,7 +16,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control">
+                                    <select class="form-control" name="customer_id">
                                         <option></option>
                                         <?php foreach($customers as $customer) : ?>
                                             <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     Email
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="email">
                                     <input type="checkbox"> Send later
                                 </div>
                             </div>
@@ -33,36 +33,36 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Billing address
-                                    <textarea style="height:100px;width:100%;"></textarea>
+                                    <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
                                 </div>
                                 <div class="col-md-3">
                                     Sales Receipt date<br>
-                                    <input type="text" class="form-control"><br>
+                                    <input type="text" class="form-control" name="receipt_date"><br>
                                     Ship via<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="ship_via">
                                 </div>
                                 <div class="col-md-3">
                                     <br>
                                     <input type="text" class="form-control"><br>
                                     Shipping date<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="shipping_date">
                                 </div>
                                 <div class="col-md-3">
                                     Tracking no.<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="tracking_no">
                                 </div>
                                 
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     Shipping to
-                                    <textarea style="height:100px;width:100%;"></textarea>
+                                    <textarea style="height:100px;width:100%;" name="shipping_to"></textarea>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
                             
@@ -70,7 +70,7 @@
                         <div class="col-md-6" align="right">
                             AMOUNT<h2>$0.00</h2><br>
                             Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;">
+                            <input type="text" class="form-control" style="width:200px;" name="location">
                         </div>
                     </div>
                     <hr>
@@ -139,9 +139,9 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="mess_invoice"></textarea><br>
                             Message on statement<br>
-                            <textarea style="height:100px;width:100%;"></textarea>
+                            <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
                         </div>
                         <div class="col-md-8">
                         </div>

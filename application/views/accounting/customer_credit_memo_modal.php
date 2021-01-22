@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     Email
-                                    <input type="email" class="form-control">
+                                    <input type="email" class="form-control" name="email">
                                     <input type="checkbox"> Send later
                                 </div>
                             </div>
@@ -35,11 +35,11 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Billing address
-                                    <textarea style="height:100px;width:100%;"></textarea>
+                                    <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
                                 </div>
                                 <div class="col-md-3">
                                     Credit Memo Date<br>
-                                    <input type="text" class="form-control" id="datepickerinv7">
+                                    <input type="text" class="form-control" id="datepickerinv7" name="credit_memo">
                                 </div>
                                 
                             </div>
@@ -48,7 +48,7 @@
                         <div class="col-md-6" align="right">
                             AMOUNT<h2>$0.00</h2><br>
                             Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;">
+                            <input type="text" class="form-control" style="width:200px;" name="amount">
                         </div>
                     </div>
                     <hr>
@@ -117,9 +117,9 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="mess_invoice"></textarea><br>
                             Message on statement<br>
-                            <textarea style="height:100px;width:100%;"></textarea>
+                            <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
                         </div>
                         <div class="col-md-8">
                         </div>

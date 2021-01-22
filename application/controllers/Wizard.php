@@ -2,21 +2,15 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
-
 class Wizard extends MY_Controller {
 
+    public function __construct() {
 
+        parent::__construct();
+        $this->load->model('Wizard_model', 'wizard_model');
+        $user_id = getLoggedUserID();
 
-	public function __construct()
-
-	{
-
-		parent::__construct();
-		$this->load->model('Wizard_model', 'wizard_model');
-		$user_id = getLoggedUserID();
-
-		add_css(array(
+        add_css(array(
             'assets/wizard/css/style.css',
             'assets/wizard/css/responsive.css',
             'assets/wizard/css/slick-theme.min.css',
@@ -32,341 +26,305 @@ class Wizard extends MY_Controller {
             'assets/frontend/js/invoice/add.js',
             'assets/js/invoice.js'
         ));
-		
-	}
+    }
 
-	public function index()
+    public function index() {
+        $this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
+        //$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
+        //$this->load->view('wizard/list', $this->page_data);
+        $this->load->view('wizard/index', $this->page_data);
+    }
 
-	{			
-		$this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
-		//$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
-		//$this->load->view('wizard/list', $this->page_data);
-		$this->load->view('wizard/index', $this->page_data);
+    public function fetchAppFunc() {
+        $fnId = $this->input->post('fn_id');
+        $func = $this->wizard_model->fetchAppFunc($fnId);
 
-	}
+        foreach ($func as $fn):
+            ?>
+            <tr>
+                <td></td>
+                <td><?= $fn->wiz_app_nice_name ?></td>
+                <td><?= $fn->wiz_app_function ?></td>
+                <td><?= $fn->wiz_func_desc ?></td>
+            </tr>
+            <?php
 
-	public function add()
-	{
-		$this->load->view('wizard/add', $this->page_data);
-	}
+        endforeach;
+    }
 
-	public function save($id = '')
-	{
-		if( $id != '' && $id > 0 ) {
-			$this->db->where('id', $id);
+    public function addAppFunc() {
+        $fn_nice = $this->input->post('fn_nice');
+        $fn_name = $this->input->post('fn_name');
+        $fn_desc = $this->input->post('fn_desc');
+        $fn_id = $this->input->post('fn_id');
+
+        $result = $this->wizard_model->addAppFunc($fn_nice, $fn_name, $fn_desc, $fn_id);
+        if ($result == 1):
+            echo 'Successfully Added';
+        elseif ($result == 2):
+            echo 'App Already Exist';
+        else:
+            echo 'Something went wrong, Please try again later';
+        endif;
+    }
+
+    public function addApp() {
+        $app_name = $this->input->post('app_name');
+        $app_icon = $this->input->post('app_icon');
+        $result = $this->wizard_model->addApp($app_name, $app_icon);
+        if ($result == 1):
+            echo 'Successfully Added';
+        elseif ($result == 2):
+            echo 'App Already Exist';
+        else:
+            echo 'Something went wrong, Please try again later';
+        endif;
+    }
+
+    public function addWizardApp() {
+        $apps = $this->wizard_model->getWizApps();
+        $this->page_data['wiz_apps'] = $apps;
+
+        $this->load->view('wizard/add_wizard_app_function', $this->page_data);
+    }
+
+    public function add() {
+        $this->load->view('wizard/add', $this->page_data);
+    }
+
+    public function save($id = '') {
+        if ($id != '' && $id > 0) {
+            $this->db->where('id', $id);
             $this->db->update($this->wizard_model->table, ['title' => $this->input->post('title'),
-											 'description' => $this->input->post('description')]);
-		} else {
-			$this->db->insert($this->wizard_model->table, ['title' => $this->input->post('title'),
-										 'description' => $this->input->post('description')]);
-		}
+                'description' => $this->input->post('description')]);
+        } else {
+            $this->db->insert($this->wizard_model->table, ['title' => $this->input->post('title'),
+                'description' => $this->input->post('description')]);
+        }
 
-		redirect('wizard');
-	}
+        redirect('wizard');
+    }
 
+    public function view($id) {
 
+        $this->page_data['User'] = $this->company_model->getById($id);
 
-	public function view($id)
+        $this->page_data['User']->role = $this->roles_model->getByWhere([
+                    'id' => $this->page_data['User']->role
+                ])[0];
 
-	{
+        $this->page_data['User']->activity = $this->activity_model->getByWhere([
+            'user' => $id
+                ], ['order' => ['id', 'desc']]);
 
-		$this->page_data['User'] = $this->company_model->getById($id);
+        $this->load->view('company/view', $this->page_data);
+    }
 
-		$this->page_data['User']->role = $this->roles_model->getByWhere([
+    public function edit($id) {
 
-			'id'=> $this->page_data['User']->role
 
-		])[0];
 
-		$this->page_data['User']->activity = $this->activity_model->getByWhere([
+        $this->page_data['User'] = $this->company_model->getById($id);
 
-			'user'=> $id
+        $this->load->view('company/edit', $this->page_data);
+    }
 
-		], [ 'order' => ['id', 'desc'] ]);
+    public function update($id) {
 
-		$this->load->view('company/view', $this->page_data);
+        postAllowed();
 
 
+        $data = [
+            'role' => post('role'),
+            'name' => post('name'),
+            'username' => post('username'),
+            'email' => post('email'),
+            'phone' => post('phone'),
+            'address' => post('address'),
+        ];
 
-	}
 
 
+        $password = post('password');
 
-	public function edit($id)
 
-	{	
 
+        if (logged('id') != $id)
+            $data['status'] = post('status') == 1;
 
 
-		$this->page_data['User'] = $this->company_model->getById($id);
 
-		$this->load->view('company/edit', $this->page_data);
+        if (!empty($password))
+            $data['password'] = hash("sha256", $password);
 
 
 
-	}
+        $id = $this->company_model->update($id, $data);
 
 
 
+        if (!empty($_FILES['image']['name'])) {
 
 
-	public function update($id)
 
-	{		
+            $path = $_FILES['image']['name'];
 
-		postAllowed();
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
 
+            $this->uploadlib->initialize([
+                'file_name' => $id . '.' . $ext
+            ]);
 
-		$data = [
+            $image = $this->uploadlib->uploadImage('image', '/users');
 
-			'role' => post('role'),
 
-			'name' => post('name'),
 
-			'username' => post('username'),
+            if ($image['status']) {
 
-			'email' => post('email'),
+                $this->company_model->update($id, ['img_type' => $ext]);
+            }
+        }
 
-			'phone' => post('phone'),
 
-			'address' => post('address'),
 
-		];
+        $this->activity_model->add("User #$id Updated by User:" . logged('name'));
 
 
 
-		$password = post('password');
+        $this->session->set_flashdata('alert-type', 'success');
 
+        $this->session->set_flashdata('alert', 'Client Profile has been Updated Successfully');
 
 
-		if(logged('id')!=$id)
 
-			$data['status'] = post('status')==1;
+        redirect('company');
+    }
 
+    public function check() {
 
+        $email = !empty(get('email')) ? get('email') : false;
 
-		if(!empty($password))
+        $username = !empty(get('username')) ? get('username') : false;
 
-			$data['password'] = hash( "sha256", $password );
+        $notId = !empty($this->input->get('notId')) ? $this->input->get('notId') : 0;
 
 
 
-		$id = $this->company_model->update($id, $data);
+        if ($email)
+            $exists = count($this->company_model->getByWhere([
+                                'email' => $email,
+                                'id !=' => $notId,
+                    ])) > 0 ? true : false;
 
 
 
-		if (!empty($_FILES['image']['name'])) {
+        if ($username)
+            $exists = count($this->company_model->getByWhere([
+                                'username' => $username,
+                                'id !=' => $notId,
+                    ])) > 0 ? true : false;
 
 
 
-			$path = $_FILES['image']['name'];
+        echo $exists ? 'false' : 'true';
+    }
 
-			$ext = pathinfo($path, PATHINFO_EXTENSION);
+    public function delete($id) {
 
-			$this->uploadlib->initialize([
+        if ($id !== 1 && $id != logged($id)) {
+            
+        } else {
 
-				'file_name' => $id.'.'.$ext
+            redirect('/', 'refresh');
 
-			]);
+            return;
+        }
 
-			$image = $this->uploadlib->uploadImage('image', '/users');
 
 
+        $id = $this->company_model->delete($id);
 
-			if($image['status']){
 
-				$this->company_model->update($id, ['img_type' => $ext]);
 
-			}
+        $this->activity_model->add("User #$id Deleted by User:" . logged('name'));
 
 
 
-		}
+        $this->session->set_flashdata('alert-type', 'success');
 
+        $this->session->set_flashdata('alert', 'User has been Deleted Successfully');
 
 
-		$this->activity_model->add("User #$id Updated by User:".logged('name'));
 
+        redirect('company');
+    }
 
+    public function change_status($id) {
 
-		$this->session->set_flashdata('alert-type', 'success');
+        $this->company_model->update($id, ['status' => get('status') == 'true' ? 1 : 0]);
 
-		$this->session->set_flashdata('alert', 'Client Profile has been Updated Successfully');
+        echo 'done';
+    }
 
-		
+    public function add_wizard() {
+        $this->load->view('wizard/add_wizard', $this->page_data);
+    }
 
-		redirect('company');
+    public function listing_wizard() {
+        $this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
+        $this->load->view('wizard/listing', $this->page_data);
+    }
 
-
-
-	}
-
-
-
-	public function check()
-
-	{
-
-		$email = !empty(get('email')) ? get('email') : false;
-
-		$username = !empty(get('username')) ? get('username') : false;
-
-		$notId = !empty($this->input->get('notId')) ? $this->input->get('notId') : 0;
-
-
-
-		if($email)
-
-			$exists = count($this->company_model->getByWhere([
-
-					'email' => $email,
-
-					'id !=' => $notId,
-
-				])) > 0 ? true : false;
-
-
-
-		if($username)
-
-			$exists = count($this->company_model->getByWhere([
-
-					'username' => $username,
-
-					'id !=' => $notId,
-
-				])) > 0 ? true : false;
-
-
-
-		echo $exists ? 'false' : 'true';
-
-	}
-
-
-
-	public function delete($id)
-
-	{
-
-		if($id!==1 && $id!=logged($id)){ }else{
-
-			redirect('/','refresh');
-
-			return;
-
-		}
-
-
-
-		$id = $this->company_model->delete($id);
-
-
-
-		$this->activity_model->add("User #$id Deleted by User:".logged('name'));
-
-
-
-		$this->session->set_flashdata('alert-type', 'success');
-
-		$this->session->set_flashdata('alert', 'User has been Deleted Successfully');
-
-		
-
-		redirect('company');
-
-
-
-	}
-
-
-
-	public function change_status($id)
-
-	{
-
-		$this->company_model->update($id, ['status' => get('status') == 'true' ? 1 : 0 ]);
-
-		echo 'done';
-
-	}
-
-	public function add_wizard()
-	{
-		$this->load->view('wizard/add_wizard', $this->page_data);
-	}
-
-	public function listing_wizard()
-	{
-		$this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
-		$this->load->view('wizard/listing', $this->page_data);
-	}
-
-	public function save_listing_wizard($id = '')
-	{
-		if( $this->input->post('id') != '' && $this->input->post('id') > 0 ) {
-			$this->db->where('id', $this->input->post('id'));
+    public function save_listing_wizard($id = '') {
+        if ($this->input->post('id') != '' && $this->input->post('id') > 0) {
+            $this->db->where('id', $this->input->post('id'));
             $this->db->update($this->wizard_model->tableWorkspaces, ['name' => $this->input->post('name')]);
-		} else {
-			$this->db->insert($this->wizard_model->tableWorkspaces, ['name' => $this->input->post('name')]);
-		}
+        } else {
+            $this->db->insert($this->wizard_model->tableWorkspaces, ['name' => $this->input->post('name')]);
+        }
 
-		redirect('wizard/listing_wizard');
-	}
+        redirect('wizard/listing_wizard');
+    }
 
-	public function delete_listing_wizard($id)
-
-	{
-
-
-		
-		$this->db->where('id', $id);
-		$this->db->delete($this->wizard_model->tableWorkspaces);
-
-		redirect('wizard/listing_wizard');
+    public function delete_listing_wizard($id) {
 
 
 
-	}
+        $this->db->where('id', $id);
+        $this->db->delete($this->wizard_model->tableWorkspaces);
 
+        redirect('wizard/listing_wizard');
+    }
 
-	public function build_wizard()
-	{
-		$this->load->view('wizard/build_wizard', $this->page_data);
-	}
+    public function build_wizard() {
+        $this->load->view('wizard/build_wizard', $this->page_data);
+    }
 
-	public function mailchimp()
-	{
-		$this->load->view('wizard/mailchimp', $this->page_data);
-	}
+    public function mailchimp() {
+        $this->load->view('wizard/mailchimp', $this->page_data);
+    }
 
-	public function fetch()
-	 {
-	  $this->load->model('wizard_apps_model');
-	  echo $this->wizard_apps_model->fetch_data($this->uri->segment(3));
-	 }
+    public function fetch() {
+        $this->load->model('wizard_apps_model');
+        echo $this->wizard_apps_model->fetch_data($this->uri->segment(3));
+    }
 
-	 public function show_app()
-	 {
-	 	$id = $this->input->post('app_id');
-	 	$this->wizard_apps_model->show_app($id);
-	 }
+    public function show_app() {
+        $id = $this->input->post('app_id');
+        $this->wizard_apps_model->show_app($id);
+    }
 
-	 public function del_app()
-	 {
-	 	$id = $this->input->post('app_id');
-	 	$this->wizard_apps_model->del_app($id);
-	 }
+    public function del_app() {
+        $id = $this->input->post('app_id');
+        $this->wizard_apps_model->del_app($id);
+    }
 
-	 public function getSubOptions()
-	 {
-	 	$id =$this->input->post('id');
-	 	echo $this->wizard_suboptions_model->getSubOptions($id);
-	 }
+    public function getSubOptions() {
+        $id = $this->input->post('id');
+        echo $this->wizard_suboptions_model->getSubOptions($id);
+    }
 
 }
-
-
 
 /* End of file Comapny.php */
 

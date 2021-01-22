@@ -70,6 +70,44 @@ class Accounting_modals extends MY_Controller {
 
                     $this->page_data['withoutEmail'] = $withoutEmail;
                 break;
+                case 'payroll_modal':
+                    $this->page_data['employees'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
+
+                    $currentDay = date('m/d/Y');
+                    $startDay = date('m/d/Y', strtotime($date . ' -6 months'));
+
+                    $startDateTime = new DateTime($startDay);
+                    $startWeekNo = $startDateTime->format('W');
+                    $newDateTime = new DateTime();
+                    $firstDate = $newDateTime->setISODate($startDateTime->format("Y"), $startWeekNo, 1);
+                    $firstDateString = $firstDate->format('m/d/Y');
+                    $lastDate = $newDateTime->setISODate($startDateTime->format("Y"), $startWeekNo, 7);
+                    $lastDateString = $lastDate->format('m/d/Y');
+
+                    $payPeriod = [
+                        [
+                            'first_day' => $firstDateString,
+                            'last_day' => $lastDateString,
+                            'selected' => (strtotime($currentDay) >= strtotime($firstDateString) && strtotime($currentDay) <= strtotime($lastDateString)) ? true : false
+                        ]
+                    ];
+
+                    for($i = 0; count($payPeriod) < 30; $i++ ) {
+                        $firstDate = $lastDate->add(new DateInterval('P1D'));
+                        $firstDateString = $firstDate->format('m/d/Y');
+                        $lastDate = $firstDate->add(new DateInterval('P6D'));
+                        $lastDateString = $lastDate->format('m/d/Y');
+
+                        $payPeriod[] = [
+                            'first_day' => $firstDateString,
+                            'last_day' => $lastDateString,
+                            'selected' => (strtotime($currentDay) >= strtotime($firstDateString) && strtotime($currentDay) <= strtotime($lastDateString)) ? true : false
+                        ];
+                    }
+
+                    krsort($payPeriod);
+                    $this->page_data['payPeriods'] = $payPeriod;
+                break;
                 case 'weekly_timesheet_modal':
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
@@ -200,6 +238,10 @@ class Accounting_modals extends MY_Controller {
         }
 
         echo json_encode($return);
+    }
+
+    public function generate_payroll() {
+        $this->load->view("accounting/payroll_summary");
     }
 
     public function action() {

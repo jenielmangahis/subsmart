@@ -17,7 +17,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control">
+                                    <select class="form-control" name="customer_id">
                                         <option></option>
                                         <?php foreach($customers as $customer) : ?>
                                             <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
@@ -29,14 +29,14 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Delayed Credit date<br>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="credit_date">
                                 </div>                                
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
                                     Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
                             

@@ -117,6 +117,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     (<?php echo $statusFilter->total ?>)</a>
                             </li>
                         <?php } ?>
+                        <li class="active">
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">All
+                                (0)</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">New
+                                (0)</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">Scheduled
+                                (0)</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">Started
+                                (0)</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">Paused
+                                (0)</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">Invoiced
+                                (0)</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">Withdrawn
+                                (0)</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active"
+                                href="<?php echo base_url('workorder') ?>"
+                                aria-controls="tab1" aria-selected="true">Closed
+                                (0)</a>
+                        </li>
                     </ul>
                 </div>
 

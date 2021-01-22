@@ -135,3 +135,16 @@ div#tags-modal.modal.right.fade.in .modal-dialog {
 div#tags-modal button.btn-outline-secondary {
     border-color: #6c757d !important;
 }
+
+/* Payroll Modal */
+div#payrollModal .divider {
+    height: 100%;
+    width: 1px;
+    border-left: 1px solid #dee2e6 !important;
+}
+
+div#payrollModal .graph-color {
+    height: 45px;
+    width: 1px;
+    border: 2px solid black;
+}
