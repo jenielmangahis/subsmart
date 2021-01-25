@@ -6,6 +6,26 @@ class Wizard_model extends MY_Model {
 	public $table = 'wizard';
 	public $tableWorkspaces = 'wizard_workspace';
         
+        function deleteApp($id)
+        {
+            $this->db->where('id', $id);
+            if($this->db->delete('wizard_apps')):
+                return TRUE;
+            else:
+                return FALSE;
+            endif;
+        }
+        
+        function deleteAppFunc($id)
+        {
+            $this->db->where('wiz_app_func_id', $id);
+            if($this->db->delete('wizard_app_function')):
+                return TRUE;
+            else:
+                return FALSE;
+            endif;
+        }
+        
         function fetchAppFunc($fnId)
         {
             return $this->db->where('wiz_app_id', $fnId)->get('wizard_app_function')->result();

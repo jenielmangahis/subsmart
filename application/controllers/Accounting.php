@@ -24,6 +24,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_sales_time_activity_model');
         $this->load->model('accounting_customers_model');
+        $this->load->model('estimate_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -2168,6 +2169,20 @@ class Accounting extends MY_Controller {
 	
 	public function addSalesReceipt()
     {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $product = json_encode($this->input->post('phone'));
+
+        $product['id'] = "1";
+        $product['prod'] = $this->input->post('prod');
+        $product['desc'] = $this->input->post('desc');
+        $product['qty'] = $this->input->post('qty');
+        $product['rate'] = $this->input->post('rate');
+        $product['amount'] = $this->input->post('amount');
+        $product['tax'] = $this->input->post('tax');
+        $prod[] = $product;
+
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'email' => $this->input->post('email'),
@@ -2177,16 +2192,15 @@ class Accounting extends MY_Controller {
             'payment_method' => $this->input->post('payment_method'),
             'ref_number' => $this->input->post('ref_number'),
             'deposit_to' => $this->input->post('deposit_to'),
-            'products' => $this->input->post('products'),
-            'description' => $this->input->post('description'),
-            'qty' => $this->input->post('qty'),
-            'rate' => $this->input->post('rate'),
-            'amount' => $this->input->post('amount'),
-            'tax' => $this->input->post('tax'),
+            // 'products' => $prod,
+            'products' => 'testing',
             'message_displayed_on_sales_receipt' => $this->input->post('message_displayed_on_sales_receipt'),
             'message_on_statement' => $this->input->post('message_on_statement'),
-            'attachments' => $this->input->post('file_name'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'testing 2',
             'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
             'created_by' => logged('id'),
             'date_created' => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s")
@@ -2249,24 +2263,39 @@ class Accounting extends MY_Controller {
 	
 	public function addCreditMemo()
     {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $product = json_encode($this->input->post('phone'));
+
+        $product['id'] = "1";
+        $product['prod'] = $this->input->post('prod');
+        $product['desc'] = $this->input->post('desc');
+        $product['qty'] = $this->input->post('qty');
+        $product['rate'] = $this->input->post('rate');
+        $product['amount'] = $this->input->post('amount');
+        $product['tax'] = $this->input->post('tax');
+        $prod[] = $product;
+
+        // $profile = json_encode($people);
+
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'email' => $this->input->post('email'),
             'credit_memo_date' => $this->input->post('credit_memo_date'),
             'billing_address' => $this->input->post('billing_address'),
             'location_scale' => $this->input->post('location_scale'),
-            'products' => $this->input->post('products'),
-            'description' => $this->input->post('description'),
-            'qty' => $this->input->post('qty'),
-            'rate' => $this->input->post('rate'),
-            'amount' => $this->input->post('amount'),
-            'tax' => $this->input->post('tax'),
-            'message_displayed_on_credit_memo' => $this->input->post('message_displayed_on_credit_memo'),
+            // 'products' => $product,
+            'products' => 'testing',
+            'message_credit_memo' => $this->input->post('message_displayed_on_credit_memo'),
             'message_on_statement' => $this->input->post('message_on_statement'),
             'tax_rate' => $this->input->post('tax_rate'),
             'see_the_math' => $this->input->post('see_the_math'),
-            'attachments' => $this->input->post('file_name'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'testing',
             'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
             'created_by' => logged('id'),
             'date_created' => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s")

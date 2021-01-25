@@ -1,0 +1,607 @@
+[24-Apr-2020 00:18:53 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home4/admintommy/public_html/system/libraries/Session/drivers/Session_files_driver.php on line 267
+[24-Apr-2020 01:05:20 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home4/admintommy/public_html/system/libraries/Session/drivers/Session_files_driver.php on line 267
+[24-Apr-2020 01:05:52 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home4/admintommy/public_html/system/libraries/Session/drivers/Session_files_driver.php on line 267
+[24-Apr-2020 21:45:23 America/Chicago] PHP Fatal error:  Cannot redeclare Invoice::save_recurring() in /home4/admintommy/public_html/application/controllers/Invoice.php on line 366
+[24-Apr-2020 21:45:38 America/Chicago] PHP Fatal error:  Cannot redeclare Invoice::save_recurring() in /home4/admintommy/public_html/application/controllers/Invoice.php on line 366
+[25-Apr-2020 04:39:00 America/Chicago] PHP Fatal error:  Cannot redeclare Invoice::save_recurring() in /home4/admintommy/public_html/application/controllers/Invoice.php on line 366
+[25-Apr-2020 04:51:30 America/Chicago] PHP Fatal error:  Cannot redeclare Invoice::save_recurring() in /home4/admintommy/public_html/application/controllers/Invoice.php on line 366
+[27-Apr-2020 06:12:14 America/Chicago] PHP Fatal error:  Cannot redeclare Invoice::save_recurring() in /home4/admintommy/public_html/application/controllers/Invoice.php on line 366
+[01-May-2020 20:04:54 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home4/admintommy/public_html/system/libraries/Session/drivers/Session_files_driver.php on line 267
+[02-Jun-2020 17:46:40 UTC] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[02-Jun-2020 17:46:55 UTC] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[02-Jun-2020 17:47:02 UTC] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[02-Jun-2020 17:47:15 UTC] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[02-Jun-2020 17:48:35 UTC] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[02-Jun-2020 12:49:47 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 191
+[02-Jun-2020 12:55:20 America/Chicago] PHP Warning:  Version warning: Imagick was compiled against Image Magick version 1650 but version 1654 is loaded. Imagick will run but may behave surprisingly in Unknown on line 0
+[03-Jun-2020 00:47:28 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 00:48:36 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 00:50:43 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 00:51:04 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Login.php on line 172
+[03-Jun-2020 00:52:15 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Login.php on line 172
+[03-Jun-2020 00:52:21 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 01:00:27 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 01:01:37 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 03:10:55 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 03:11:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 03:46:39 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 05:41:33 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 07:32:51 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 08:09:37 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 11:34:19 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 13:12:17 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 13:30:34 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 14:38:54 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 14:39:17 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 14:39:17 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home4/admintommy/public_html/application/helpers/basic_helper.php on line 150
+[03-Jun-2020 14:39:18 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 14:43:26 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 15:03:21 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home4/admintommy/public_html/application/helpers/basic_helper.php on line 150
+[03-Jun-2020 15:03:50 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 15:34:56 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 16:06:01 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 16:06:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 16:06:03 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 16:44:16 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 16:44:59 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 18:12:22 America/Chicago] PH[03-Jun-2020 19:41:53 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 21:34:37 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 21:34:40 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[03-Jun-2020 22:52:01 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 00:37:56 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 01:27:09 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 01:48:24 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 02:56:56 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 03:04:36 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 04:10:55 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 06:30:48 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 07:35:33 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 09:13:52 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 09:54:04 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 09:58:31 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 10:54:06 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 12:35:32 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 14:15:00 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 14:37:15 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 14:37:31 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home4/admintommy/public_html/application/helpers/basic_helper.php on line 150
+[04-Jun-2020 14:37:33 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 14:37:37 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 14:37:37 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home4/admintommy/public_html/application/helpers/basic_helper.php on line 150
+[04-Jun-2020 14:37:37 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 18:41:58 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 19:35:11 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:01:11 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:23:43 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:31:04 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:31:09 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:31:20 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:32:21 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:33:46 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:37:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 20:54:13 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 21:49:48 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 21:49:56 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 21:50:36 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 21:51:03 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 21:52:39 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 21:53:14 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 22:51:58 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 22:54:53 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[04-Jun-2020 23:54:10 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 01:26:23 America/Chicago] PHP Fatal error:  Can't use function return value in [05-Jun-2020 01:34:31 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 01:34:40 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 01:45:53 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 02:31:34 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 02:38:25 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home4/admintommy/public_html/application/helpers/basic_helper.php on line 150
+[05-Jun-2020 03:02:58 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:03:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:03:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:03:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:03:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:07:43 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:07:47 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:07:59 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home4/admintommy/public_html/application/helpers/basic_helper.php on line 150
+[05-Jun-2020 03:08:18 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:08:48 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:10:40 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:15:43 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:17:47 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:18:45 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:18:49 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home4/admintommy/public_html/application/helpers/basic_helper.php on line 150
+[05-Jun-2020 03:19:01 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 03:22:07 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Workcalender.php on line 373
+[05-Jun-2020 03:29:05 America/Chic[05-Jun-2020 04:03:57 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 04:53:20 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 04:53:25 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 05:17:19 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 188
+[05-Jun-2020 05:20:36 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 185
+[05-Jun-2020 05:20:59 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 185
+[05-Jun-2020 05:52:18 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 185
+[05-Jun-2020 05:52:20 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 185
+[05-Jun-2020 05:52:36 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 185
+[05-Jun-2020 05:52:47 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 185
+[05-Jun-2020 05:53:02 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 183
+[05-Jun-2020 05:53:34 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 183
+[05-Jun-2020 05:53:52 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 183
+[05-Jun-2020 05:54:29 America/Chicago] PHP Fatal error:  Can't use function return value in write context in /home4/admintommy/public_html/application/controllers/Home.php on line 183
+[05-Jul-2020 18:16:42 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:16:57 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:17:10 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:22:17 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:22:18 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:22:19 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:22:20 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:23:06 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:28:31 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 18:28:32 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:32:11 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:32:12 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:32:17 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:32:30 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:32:31 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:32:31 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:35:45 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:35:46 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:36:00 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:37:17 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:40:07 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:40:07 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Jul-2020 19:40:09 UTC] PHP Warning:  PHP Startup: SourceGuardian: Unable to initialize module
+Module compiled with module API=20160303
+PHP    compiled with module API=20151012
+These options need to match
+ in Unknown on line 0
+[05-Aug-2020 04:58:00 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '/home4/admintommy/public_html/sparks/sk-hashids/1.0.5/vendor/Hashids.php' (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home4/admintommy/public_html/application/helpers/hashids_helper.php on line 20
+[05-Aug-2020 05:09:56 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '/home4/admintommy/public_html/sparks/sk-hashids/1.0.5/vendor/Hashids.php' (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home4/admintommy/public_html/application/helpers/hashids_helper.php on line 20
+[05-Aug-2020 05:20:43 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '/home4/admintommy/public_html/sparks/sk-hashids/1.0.5/vendor/Hashids.php' (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home4/admintommy/public_html/application/helpers/hashids_helper.php on line 20
+[05-Aug-2020 05:20:46 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '/home4/admintommy/public_html/sparks/sk-hashids/1.0.5/vendor/Hashids.php' (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home4/admintommy/public_html/application/helpers/hashids_helper.php on line 20
+[05-Aug-2020 05:20:55 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '/home4/admintommy/public_html/sparks/sk-hashids/1.0.5/vendor/Hashids.php' (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home4/admintommy/public_html/application/helpers/hashids_helper.php on line 20
+[05-Aug-2020 05:22:29 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '/home4/admintommy/public_html/sparks/sk-hashids/1.0.5/vendor/Hashids.php' (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home4/admintommy/public_html/application/helpers/hashids_helper.php on line 20
+[05-Aug-2020 05:22:31 America/Chicago] PHP Fatal error:  require_once(): Failed opening required '/home4/admintommy/public_html/sparks/sk-hashids/1.0.5/vendor/Hashids.php' (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home4/admintommy/public_html/application/helpers/hashids_helper.php on line 20
+[27-Sep-2020 00:13:59 America/Chicago] {
+  "access_token": "ya29.a0AfH6SMDAPZU103z9XyOxN9uZuqEYxUyrFvtfOXZThXZbG0jS-wCyI12kF2r7Z95r1RmViBZDVimnqjFbWU1_WvV9CmCNFdj1b88xHfRQs7xbPeRbvA1WOEpmrgvjumO4esgdUPKVAQKtAVE3ZDuYTpSWpWEV78qktVw",
+  "expires_in": 3596,
+  "refresh_token": "1//01vpiFfsGWkfeCgYIARAAGAESNwF-L9IrDdhYHNZUAUmZ1-oAk1YgQqBdQbfm3-Tma_JmnSGAXEpwggN51knMu4pH_8HBQVXBiSA",
+  "scope": "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.events openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjJjNmZhNmY1OTUwYTdjZTQ2NWZjZjI0N2FhMGIwOTQ4MjhhYzk1MmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA4Mzc0NzQ0NjIxMzIyNTcyNzgxIiwiZW1haWwiOiJtb3Jlc2VjdXJlYWRpQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiM3N4V2QxZXktTGtubzlGNXd1TTZTZyIsImlhdCI6MTYwMTE4MzYzOSwiZXhwIjoxNjAxMTg3MjM5fQ.BK2cUz4K9vUjpu9xLmzMQWakowGmGVbI69LKr5q-5vJARiy2FYvHS2V1-82oAA5AlinpYCR-TBPOqTVZ7yn_vOA2RJODzDYIAw3lRHGFixWOPOBH4zQHINFAasRf9GJaW6ACFAmwCGx4ToI76epOy6oDaqc2kxX7GC5Ly26KX5cJo0AWYEAw9i8HCxNUi517dR3W4vqYjrZZBvWfZszgheHGi65l-sVtVmDxiSAK_b2tLUVCHHkAQrL18LYOhAupy7EFBiqLpSQeyOk-h5q2PMkcsJuLJQJQ7st7De6iNIicjUEV79UvHveZv4BQ8TAxlEWiPGu-kGsuHlaKiRLVuA"
+}
+[27-Sep-2020 00:13:59 America/Chicago] {
+  "id": "108374744621322572781",
+  "email": "moresecureadi@gmail.com",
+  "verified_email": true,
+  "name": "Tommy Nguyen",
+  "given_name": "Tommy",
+  "family_name": "Nguyen",
+  "picture": "https://lh3.googleusercontent.com/-MkJ-MS1IFrk/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclNWNg3WTeeAtNIH3eA0DcifUfzMQ/photo.jpg",
+  "locale": "en"
+}
+
+[01-Oct-2020 21:39:09 America/Chicago] {
+  "access_token": "ya29.a0AfH6SMC5Diixc45DaEJQuoYeK3z63vg_-T8A1U41GeGqt2IRuBhH34bJaDiTZK5BGNTAerzz6suvLdG_2v-ANFvP9tp25NN510oGjD-yfGYXRNfU38cJ_SZ8vrco3k3hPupXYqD8FCSvI6IwZIsCT0nwUiXo0aHheDw",
+  "expires_in": 3597,
+  "refresh_token": "1//01DJtq43qdhaUCgYIARAAGAESNwF-L9Ir_rQ8Tld_MR5vwi4Kbdy765vTjt0YAYrdSH3afjFVmaLNv2paVAHfwJYKfa3AbnRJzGE",
+  "scope": "https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjJjNmZhNmY1OTUwYTdjZTQ2NWZjZjI0N2FhMGIwOTQ4MjhhYzk1MmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA4ODgwNzY1OTc0MjIwMzUxMzMyIiwiZW1haWwiOiJkZWJyYWJhY29uMTk1NUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6InBBVk8xR3h2MHN5Vm04QkhaNUlBU2ciLCJpYXQiOjE2MDE2MDYzNDksImV4cCI6MTYwMTYwOTk0OX0.Hf90uW9juNe_j13Jlu8lo-WSMyX0xVPTwAlgpfeda4Mvzz74XSKib5f7vYQXXr3UQ7-ZjcVpYiAYX0YeVSxIEaP4fe0_O-ecWmCcHECcml9-jOqjG0UXbpIFlBAGoXj6-gy-wfb2FYAZCQ9BY-Sbvw8XBBTC5f8knwUKyGVB93ZOxBH5T6L7-WYmMAmssko0hFHDxfMwI5Rd0tmYFFrzhm-zUU9f6us41ppCaQd52rH_kCZndYdiccjZN0zpfpi8rq6bYs_IY6ifVi1RG0h_BS_4i5tY7k4l_B7jRBRXqW6_nwGTAmHZrOdgawPiUGzn1uZDE3g7OEbk1uSzARimBA"
+}
+[01-Oct-2020 21:39:10 America/Chicago] {
+  "id": "108880765974220351332",
+  "email": "debrabacon1955@gmail.com",
+  "verified_email": true,
+  "name": "Lauren Calendar",
+  "given_name": "Lauren",
+  "family_name": "Calendar",
+  "picture": "https://lh4.googleusercontent.com/-j3saaBwfiBU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnV7GkJEidUj__Oh6bC5Q-Yvxv7GA/photo.jpg",
+  "locale": "en"
+}
+
+[07-Oct-2020 21:14:57 America/Chicago] {
+  "access_token": "ya29.a0AfH6SMDSxY_wlYpNQm6OO-GJHOlUBaUFyzOAJAYdZOcvMj49nunwc_eObRYw2Am-BFc2y8g2tqnJd9tPB0rYzvGOAchUoyNc-UjdQv5sxKyICKCMk-n-AOlTyfh6GkqQL-nLa2KReDzMG0jeSOQ5gdNS1KrL4trSfxk",
+  "expires_in": 3594,
+  "refresh_token": "1//0e9-MfRyUaABcCgYIARAAGA4SNwF-L9IrqrH10X2AQNR2R_Ri4r1C1PMkL1e5dvHbvjozOl7fIPe8R76QHVIQ126GDXl2tBygmI8",
+  "scope": "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjVlZmZhNzZlZjMzZWNiNWUzNDZiZDUxMmQ3ZDg5YjMwZTQ3ZDhlOTgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTEzMjEwODUzMDQwMTAzNjUwMzg4IiwiZW1haWwiOiJicnlhbm4ucmV2aW5hMDNAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ5V1RTck9WV0d4WVFHREdPZzJyOTdnIiwiaWF0IjoxNjAyMTIzMjk3LCJleHAiOjE2MDIxMjY4OTd9.XBoBD7rnqFH4lN8sdjlYJzBc1ct2tLsjKSKSfDhh9iKUCBBWCzRJziXk-DTgMZqapLV_6ruk9UandG0m1TSbJas0CH7mrKuaVXKKKejUvqd72IFBGVex8zDTRmJwGxJhMd3pGN_2PZitcK2qPz-6T2dTICIFhrrDXI08V4l5FG7-1_sZhReL7CKT34OP3ABJNEd2NBzRXYSIU5CyreS0LNqcoR2Yg2z30CCaw7sDZL3LtNJuo_NmT5je_s8N_eCbxlfjEU9K9uwzjTCbuJldtmz6oA_kmIwr8WBboZdnHxj_2pil9D47Xd7OKx2McX3b__Nn9EKjPg1NkOyjPUF7Hw"
+}
+[07-Oct-2020 21:14:57 America/Chicago] {
+  "id": "113210853040103650388",
+  "email": "bryann.revina03@gmail.com",
+  "verified_email": true,
+  "name": "Bryann Revina",
+  "given_name": "Bryann",
+  "family_name": "Revina",
+  "picture": "https://lh4.googleusercontent.com/-Ez3fVwayTyQ/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclXm0iEKGUDPAN2Wt9G0N_kA31l2A/photo.jpg",
+  "locale": "en"
+}
+
+[11-Oct-2020 22:17:56 America/Chicago] {
+  "access_token": "ya29.a0AfH6SMBnJqmkj_oZsR-RG6mlMff0AyiXocNZ66g0667ZZfTwuEgOgOTQZ6kH-ea0BYP1CnLH9juxa_NtdmL8B0zWfYebZlcKW1gLYrEdiH3bkxO-BT_a1fAzQYF8we6erNmV55J8ohrhOyd813b5Iyptbnar2idKq9s",
+  "expires_in": 3597,
+  "refresh_token": "1//014NzANlY_sCACgYIARAAGAESNwF-L9Irupa6fTssNN-sQJIHczBpTHE0HP1Emv1R32dqqX7W7ZfbfOn_dLiH9KxwPBERas2Y5k0",
+  "scope": "https://www.googleapis.com/auth/userinfo.email openid https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.profile",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYTc4NjNlODYzN2Q2NjliYzJhMTI2MjJjZWRlMmE4ODEzZDExYjEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA4ODgwNzY1OTc0MjIwMzUxMzMyIiwiZW1haWwiOiJkZWJyYWJhY29uMTk1NUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6IkpvMlZHLUVVS2Z4dmNIZDQyam5jeXciLCJpYXQiOjE2MDI0NzI2NzYsImV4cCI6MTYwMjQ3NjI3Nn0.ZN8pW3NdO77G4UEzYM_pxbWeTLZB_z0_iICKp63LUfxPGF6gLO-hEEenZsjea3eoXZesQl07e-4Ht6d4NIPdcEev0HCrbyZPaIKCwTnNlx3JKxfYOCryVXYH95H5OPxL6o2-WwqIf52q72dDTUVV3ptT8bfuc5YyJZUqfKbGwTysKS2VffMB4BjNy4RMPBSsCDN1lcqmLDSyXmpOI50ZL2C2CQVFIlz7T3JHT9LQCa5AUyXKulM2_ntJIa4VgbQ7BkQb-5xtC2z2ArhyVmOvYJU3tAlllV4Qmq7c_348Ozb08d-TQUMNF9smWv7xiQbGJV7mlMMV59sXk16MIMgh9Q"
+}
+[11-Oct-2020 22:17:56 America/Chicago] {
+  "id": "108880765974220351332",
+  "email": "debrabacon1955@gmail.com",
+  "verified_email": true,
+  "name": "Lauren Calendar",
+  "given_name": "Lauren",
+  "family_name": "Calendar",
+  "picture": "https://lh4.googleusercontent.com/-j3saaBwfiBU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnV7GkJEidUj__Oh6bC5Q-Yvxv7GA/photo.jpg",
+  "locale": "en"
+}
+
+[09-Nov-2020 19:45:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 19:45:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 19:45:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 19:45:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 19:45:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 19:50:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 19:50:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 19:50:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 19:50:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 19:50:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 19:55:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 19:55:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 19:55:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 19:55:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 19:55:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:00:09 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:00:09 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:00:09 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:00:09 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:00:09 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:05:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:05:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:05:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:05:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:05:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:10:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:10:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:10:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:10:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:10:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:15:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:15:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:15:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:15:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:15:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:20:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:20:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:20:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:20:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:20:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:22:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:22:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:22:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:22:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:22:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:23:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:23:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:23:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:23:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:23:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:24:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:24:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:24:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:24:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:24:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:25:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:25:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:25:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:25:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:25:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:26:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:26:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:26:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:26:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:26:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:27:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:27:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:27:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:27:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:27:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:28:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:28:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:28:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:28:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:28:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:29:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:29:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:29:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:29:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:29:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:30:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:30:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:30:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:30:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:30:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:31:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:31:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:31:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:31:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:31:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:32:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:32:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:32:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:32:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:32:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:33:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:33:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:33:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:33:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:33:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:34:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:34:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:34:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:34:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:34:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:35:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:35:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:35:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:35:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:35:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:36:03 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:36:03 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:36:03 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:36:03 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:36:03 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:37:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:37:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:37:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:37:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:37:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:38:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:38:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:38:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:38:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:38:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:39:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:39:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:39:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:39:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:39:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:40:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:40:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:40:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:40:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:40:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:41:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:41:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:41:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:41:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:41:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:42:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:42:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:42:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:42:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:42:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:43:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:43:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:43:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:43:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:43:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:44:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:44:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:44:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:44:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:44:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:45:03 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:45:03 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:45:03 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:45:03 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:45:03 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:46:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:46:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:46:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:46:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:46:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:47:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:47:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:47:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:47:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:47:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:48:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:48:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:48:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:48:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:48:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:49:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:49:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:49:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:49:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:49:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:50:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:50:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:50:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:50:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:50:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:51:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:51:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:51:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:51:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:51:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:52:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:52:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:52:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:52:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:52:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:53:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:53:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:53:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:53:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:53:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:54:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:54:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:54:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:54:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:54:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:55:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:55:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:55:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:55:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:55:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:56:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:56:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:56:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:56:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:56:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 20:57:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:57:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 20:57:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 20:57:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 20:57:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 21:13:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:13:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:13:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 21:13:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 21:13:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 21:14:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:14:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:14:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 21:14:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 21:14:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 21:15:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:15:02 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:15:02 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 21:15:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 21:15:02 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 21:16:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:16:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:16:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 21:16:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 21:16:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[09-Nov-2020 21:17:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:17:01 America/Chicago] PHP Notice:  Undefined index: log_path in /home4/admintommy/public_html/system/core/Log.php on line 127
+[09-Nov-2020 21:17:01 America/Chicago] PHP Warning:  mkdir(): Invalid path in /home4/admintommy/public_html/system/core/Log.php on line 131
+[09-Nov-2020 21:17:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 138
+[09-Nov-2020 21:17:01 America/Chicago] PHP Notice:  Undefined index: log_threshold in /home4/admintommy/public_html/system/core/Log.php on line 142
+[10-Nov-2020 03:38:15 America/Chicago] {
+  "access_token": "ya29.A0AfH6SMDcCmyHVm2MxMMTolhBZHgV10dfbTbB6K80TLNqqDIYbmUU9j2V1C95tzO6k-StcXum9W4kBHuiNkHbI9YZeZ3Oj_AlZBSmnN7Z5k61o3VhjX-lDRCevhmGMg1P8qA9tFPsVZb7QnRWK-4yxaqGWrOCuvJqZ2o0dibhh_w",
+  "expires_in": 3597,
+  "refresh_token": "1//0eEflXpK9yZ0kCgYIARAAGA4SNwF-L9Irpf_3ZxsI4KGtWjyVX8BPaBc7WMzO84J87HSzQYiv4jnpWOhD51KLogsHL1WKa1PkBew",
+  "scope": "https://www.googleapis.com/auth/calendar openid https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImYwOTJiNjEyZTliNjQ0N2RlYjEwNjg1YmI4ZmZhOGFlNjJmNmFhOTEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTEzMjEwODUzMDQwMTAzNjUwMzg4IiwiZW1haWwiOiJicnlhbm4ucmV2aW5hMDNAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiIzQnRhOTlzbG1hX2NzRUlpQ2d3cGhnIiwiaWF0IjoxNjA1MDAxMDk1LCJleHAiOjE2MDUwMDQ2OTV9.dUbA1qf6A0mvdz_s070IuuGk3tZpqezsxzoRDyMouVyFwaztM3BqdWYzlDxi8lvfUJxGdypxO5Bl88EVJ9hbHpBre_JnCZ_UuzRB85v_BA5SoSF90SKHRVi3Un7BlM2KqmljGKmuTaswGx-tV6_yPn8sInGXn8NkiWxXCkL7YmXTDjrCKnrfJeMDSOGcsjZhJSNOgMUnwPiQErVCvoAsFjYbuMifhlG_USWUQtHvKqtYt5OuDHy6S36UXscbT90-1d5w3ubFTuXooBkbHvNDwOwg-e8q-JXs1GezQkSs_I9n7kUD_XkRI1Ti1LJpAE1Pymd1DHRRYEMep2PBOHfFKw"
+}
+[10-Nov-2020 03:38:15 America/Chicago] {
+  "id": "113210853040103650388",
+  "email": "bryann.revina03@gmail.com",
+  "verified_email": true,
+  "name": "Bryann Revina",
+  "given_name": "Bryann",
+  "family_name": "Revina",
+  "picture": "https://lh4.googleusercontent.com/-Ez3fVwayTyQ/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclXm0iEKGUDPAN2Wt9G0N_kA31l2A/s96-c/photo.jpg",
+  "locale": "en"
+}
+
+[10-Nov-2020 11:00:23 America/Chicago] {
+  "access_token": "ya29.A0AfH6SMDj5Ss1OqSEYstCl268NrdoC91ZG9hOjrD9umQniHX9Iq5pbSFgruxuXsiAVi2Hi5V7ZEZbrPrW2jfs3psK6q8xZsH9-cep11RwogxrxVpVdiEO5N-Y0K4AokaxJIwiZE-BAbnJrfIFLpw0RvCcyUDxbEYvJgvhjuLOuz0",
+  "expires_in": 3597,
+  "refresh_token": "1//0fF4lpiBtAXajCgYIARAAGA8SNwF-L9Iru_0jXqnheoXrzx02U_98IprvuUJ8SCbU4fVVyBSrMvLHXJjAH3aXaAn7GsOxGc0KkvE",
+  "scope": "openid https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImYwOTJiNjEyZTliNjQ0N2RlYjEwNjg1YmI4ZmZhOGFlNjJmNmFhOTEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNjQ2ODU5MTk4NjIwLWxsOXRybTdvYmsyb2xnYW9pZ2FlNHMyaHNocGYzc2xlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA4ODgwNzY1OTc0MjIwMzUxMzMyIiwiZW1haWwiOiJkZWJyYWJhY29uMTk1NUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6IlBpOFAwZUV5NUw5Zk9KSzNYamJrWkEiLCJpYXQiOjE2MDUwMjc2MjMsImV4cCI6MTYwNTAzMTIyM30.gNJoj7yzWuu-XYZ_gPiCObb0NDs9kgqmZ208HRj3eCJbr731pYWeu3XJJrMqR3qMOYQvcBfEgYY_F3h4dbWNaKCRV-OvOl0DNLZQxbnqCtzbzOXxptmnq7ze8KJv9JK8TJT5qNtGx9bb9O7PTn77_r6gjSZae36YyFcMPzk03_HfoC0lnkmexzizbkNKn-8Bkrf9vtMbQDWx0gujJFBIxHM8sgpzYNXXQ9KVwchwYCe30urM7Z7w_Ur8ptbkGd5XLVQiUmiDKLg7AMID8DQkCOhlIu6OISskODFLT1qtcLx2VlWsVfxTIeQ1a2AJaDmo_LWsypp9RnFCGzLt5r8HDQ"
+}
+[10-Nov-2020 11:00:24 America/Chicago] {
+  "id": "108880765974220351332",
+  "email": "debrabacon1955@gmail.com",
+  "verified_email": true,
+  "name": "Lauren Calendar",
+  "given_name": "Lauren",
+  "family_name": "Calendar",
+  "picture": "https://lh4.googleusercontent.com/-j3saaBwfiBU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnV7GkJEidUj__Oh6bC5Q-Yvxv7GA/s96-c/photo.jpg",
+  "locale": "en"
+}
+

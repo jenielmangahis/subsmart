@@ -40,11 +40,14 @@ class Dashboard extends MY_Controller {
 	{  
         $user_id = logged('id');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6,0], 0);
+        // echo $this->db->last_query(); 
+        // echo "<br>";
         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
         if($this->page_data['activity_list_count'] > 5 ){
             array_pop($this->page_data['activity_list']);
         }
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        // echo $this->db->last_query();
         $this->page_data['history_activity_list_count'] = sizeof($this->page_data['history_activity_list']);
         if($this->page_data['history_activity_list_count'] > 5 ){
             array_pop($this->page_data['history_activity_list']);
@@ -57,6 +60,10 @@ class Dashboard extends MY_Controller {
                                    expenses,bank_accounts,sales,messages,paid_invoices,lead_stats,overdue_invoices,invoicing,task_stats,plan_setup,discover_more" ;
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
+        // echo "<pre>";
+        // print_r($this->page_data);
+        // exit;
+
         $this->page_data['feeds'] = $this->feeds_model->getByCompanyId();
         $this->page_data['employees'] = $this->user_model->getAllUsersByCompany(logged('company_id'));
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);

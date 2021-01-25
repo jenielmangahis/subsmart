@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     Sales Receipt date<br>
-                                    <input type="text" class="form-control" name="receipt_date"><br>
+                                    <input type="text" class="form-control" name="receipt_date" id="datepickerinv8"><br>
                                     Ship via<br>
                                     <input type="text" class="form-control" name="ship_via">
                                 </div>
@@ -45,7 +45,7 @@
                                     <br>
                                     <input type="text" class="form-control"><br>
                                     Shipping date<br>
-                                    <input type="text" class="form-control" name="shipping_date">
+                                    <input type="text" class="form-control" name="shipping_date" id="datepickerinv9">
                                 </div>
                                 <div class="col-md-3">
                                     Tracking no.<br>
@@ -91,23 +91,23 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                             </table>
@@ -149,7 +149,11 @@
                             Taxable subtotal <b>$0.00</b><br>
                             <table class="table table-borderless">
                                 <tr>
-                                    <td></td>
+                                    <td>
+                                        <select class="form-control" name="tax_rate">
+                                            <option value="1">Based on location</option>
+                                        </select>
+                                        </td>
                                     <td><b>$0.00</b><br><a href="">See the math</a></td>
                                 </tr>
                                 <tr>

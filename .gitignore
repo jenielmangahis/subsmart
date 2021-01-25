@@ -17,7 +17,7 @@ application/config/user_agents.php
 *application/config/database.php
 *application/cache/
 *assets/img/customer/qr/
-*application/libraries/
+
 .idea
 
 app/
@@ -29,7 +29,7 @@ api/
 .idea
 *app/
 *ios-app/workspace/Pods/GoogleMaps/Maps/Frameworks/
-/nbproject/private/
+nbproject/*
 application/cache/*
 .idea/*
 

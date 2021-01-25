@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     Email
-                                    <input type="email" class="form-control">
+                                    <input type="email" class="form-control" name="email">
                                     <input type="checkbox"> Send later
                                 </div>
                             </div>

@@ -2,7 +2,7 @@
 <div class="row py-3">
     <div class="col-md-3 d-flex align-items-center">
         <div class="payroll-total">
-            <h1 class="m-0">$41.14</h1>
+            <h1 class="m-0">$<span id="total-payroll-cost"><?php echo $total['total_payroll_cost']?></span></h1>
             <p class="m-0">TOTAL PAYROLL COST</p>
         </div>
     </div>
@@ -10,21 +10,21 @@
         <div class="d-flex align-items-center mb-3">
             <div class="net-pay-color graph-color"></div>
             <div class="net-pay ml-2">
-                <h4 class="m-0">$34.24</h4>
+                <h4 class="m-0">$<span id="total-net-pay"><?php echo $total['total_net_pay']?></span></h4>
                 <p class="m-0">NET PAY</p>
             </div>
         </div>
         <div class="d-flex align-items-center mb-3">
             <div class="employee-color graph-color"></div>
             <div class="employee ml-2">
-                <h4 class="m-0">$2.84</h4>
+                <h4 class="m-0">$<span id="total-employee-tax"><?php echo $total['total_taxes']?></span></h4>
                 <p class="m-0">EMPLOYEE</p>
             </div>
         </div>
         <div class="d-flex align-items-center">
             <div class="employer-color graph-color"></div>
             <div class="employer ml-2">
-                <h4 class="m-0">$4.06</h4>
+                <h4 class="m-0">$<span id="total-employer-tax"><?php echo $total['total_employer_tax']?></span></h4>
                 <p class="m-0">EMPLOYER</p>
             </div>
         </div>
@@ -51,8 +51,8 @@
 
 <div class="row bg-white" style="margin: 0 -30px; padding: 30px">
     <div class="col-12 p-0 w-100 pay-date-period mb-3">
-        <span class="float-right"><b>Pay date:</b> Monday, Jan 11</span>
-        <span class="float-right mr-5"><b>Pay period:</b> 01/05/2021 to 01/11/2021</span>
+        <span class="float-right"><b>Pay date:</b> <?php echo $payDate?></span>
+        <span class="float-right mr-5"><b>Pay period:</b> <?php echo $payPeriod?></span>
     </div>
     <div class="col-12 p-0">
         <div class="payroll-summary-table">
@@ -66,7 +66,17 @@
                     <th>NET PAY</th>
                 </thead>
                 <tbody>
-                    <tr>
+                    <?php foreach($employees as $employee) :?>
+                        <tr>
+                            <td><?php echo $employee['name']?></td>
+                            <td><?php echo $employee['pay_method']?></td>
+                            <td><?php echo $employee['employee_hours']?></td>
+                            <td><?php echo $employee['total_pay']?></td>
+                            <td><?php echo $employee['employee_tax']?></td>
+                            <td><?php echo $employee['net_pay']?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <!-- <tr>
                         <td>Nguyen, Tom T</td>
                         <td>Paper check</td>
                         <td>2.00</td>
@@ -81,16 +91,16 @@
                         <td>$10.00</td>
                         <td>$0.77</td>
                         <td>$9.23</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
                 <tfoot>
                     <tr>
                         <td>TOTAL</td>
                         <td></td>
-                        <td>2.00</td>
-                        <td>$37.08</td>
-                        <td>$2.84</td>
-                        <td>$34.24</td>
+                        <td><?php echo $total['total_hours']?></td>
+                        <td>$<?php echo $total['total_pay']?></td>
+                        <td>$<?php echo $total['total_taxes']?></td>
+                        <td>$<?php echo $total['total_net_pay']?></td>
                     </tr>
                 </tfoot>
             </table>
