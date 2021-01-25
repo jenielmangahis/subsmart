@@ -334,7 +334,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <button type="submit" class="btn btn-flat btn-primary">Save</button>
-                                    <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
+                                    <a href="<?php echo url('estimate') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
                         </div>

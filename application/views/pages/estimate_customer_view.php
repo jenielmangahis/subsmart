@@ -368,17 +368,17 @@ span.sc-item {
                                 <span class="sp-left fa fa-bars gray-color fa-margin-right"></span>
                               </div>
                               <div class="cs-4 pl-0 ml-0 mr-2 pr-0 left">
-                                <input placeholder="Item name" type="text" value="<?= $item->title; ?>" readonly="" disabled="" name="description" value="" class="form-control" autocomplete="off">
+                                <input placeholder="Item name" type="text" value="<?= $item['title']; ?>" readonly="" disabled="" name="description" value="" class="form-control" autocomplete="off">
                               </div>
                               <div class="cs-12 pl-0 ml-0 mr-2 pr-0 left">
-                                <input placeholder="Qty" type="text" name="description" value="<?= $item->qty; ?>" readonly="" disabled="" class="form-control" autocomplete="off">
+                                <input placeholder="Qty" type="text" name="description" value="<?= $item['quantity']; ?>" readonly="" disabled="" class="form-control" autocomplete="off">
                               </div>
                               <div class="cs-2 pl-0 ml-0 mr-2 pr-0 left">
-                                <input placeholder="Unit Price" type="text" name="description" value="<?= $item->price; ?>" readonly="" disabled="" class="form-control" autocomplete="off">
+                                <input placeholder="Unit Price" type="text" name="description" value="<?= $item['price']; ?>" readonly="" disabled="" class="form-control" autocomplete="off">
                               </div>
                               <div class="cs-2 pl-0 ml-0 mr-0 pr-0 desktop-only left">
                                 <?php 
-                                  $total_price = $item->qty * $item->price;
+                                  $total_price = $item['quantity'] * $item['price'];
                                   $total_amount += $total_price;
                                 ?>
                                 <span class="sc-price">$<?= number_format($total_price, 2); ?></span>
@@ -387,9 +387,7 @@ span.sc-item {
                           </div>
 
                           <div class="item-form pl-c6">
-                            <div class="cs-42 pl-0 ml-0 mr-2 pr-0 left">
-                              <input placeholder="Description" type="text" name="description" value="<?= $item->description; ?>" readonly="" disabled="" class="form-control" autocomplete="off">
-                            </div>                            
+                                                  
                             <div class="cs-100 pl-0 ml-0 mr-0 pr-0 mobile-only left">
                               <span class="sc-price">$0.00 <span class="sc-price-icon fa fa-times fa-margin-right"></span></span>
                             </div>

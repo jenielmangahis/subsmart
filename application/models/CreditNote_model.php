@@ -123,6 +123,11 @@ class CreditNote_model extends MY_Model
 
         return  $insert_id;
     }
+
+    public function deleteCreditNote($id){
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('id' => $id));
+    } 
 }
 
 /* End of file CreditNote_model.php */

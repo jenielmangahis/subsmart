@@ -19,12 +19,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/estimate'); ?>
     <?php include viewPath('includes/notifications'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="card">
-            <div class="container-fluid" style="font-size:14px;">                <
+            <div class="container-fluid" style="font-size:14px;">
                 <div class="row">
                     <div class="col">
                         <h2 class="m-0" style="font-size:30px;">Credit Notes</h2>
@@ -67,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th>Job & Customer</th>
                                     <th>Status</th>
                                     <th>Amount</th>
-                                    <th></th>
+                                    <th style="width: 5%;"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -81,7 +80,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </td>
                                             <td><?= $status[$c->status]; ?></td>
                                             <td><?= number_format($c->grand_total, 2); ?></td>
-                                            <td></td>
+                                            <td class="text-right">
+                                            <div class="dropdown dropdown-btn">
+                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/view/' . $c->id) ?>"><span
+                                                                    class="fa fa-file-text-o icon"></span> View</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('credit_notes/edit/' . $c->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" class="delete-credit-note" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -101,24 +118,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
 
-     <!-- Modal Send Email  -->
-        <div class="modal fade bd-example-modal-md" id="modalSendEmail" tabindex="-1" role="dialog" aria-labelledby="modalSendEmailTitle" aria-hidden="true">
+     <!-- Modal Delete Credit Note  -->
+        <div class="modal fade bd-example-modal-md" id="modelDeleteCreditNote" tabindex="-1" role="dialog" aria-labelledby="modelDeleteCreditNoteTitle" aria-hidden="true">
           <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-envelope-open-o"></i> Send to Customer</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <?php echo form_open_multipart('estimate/_send_customer', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_open_multipart('credit_notes/delete', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
               <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
               <div class="modal-body">        
-                  <p>Are you sure you want to send the selected estimate to customer?</p>
+                  <p>Are you sure you want to delete selected item?</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-info">Yes</button>
+                <button type="submit" class="btn btn-danger">Yes</button>
               </div>
               <?php echo form_close(); ?>
             </div>
@@ -126,73 +143,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
 
     <!-- end container-fluid -->
-</div>
-
-<!-- CONVERT ESTIMATE MODAL -->
-<div class="modal fade" id="modalConvertEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Convert Estimate To Work Order</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form name="convert-to-work-order-modal-form">
-                    <p>
-                        You are going create a new work order based on <b>Estimate# <span
-                                    id="estimateCustomNumber"></span></b>.<br>
-                        The estimate items (e.g. materials, labour) will be copied to this work order.<br>
-                        You can always edit/delete work order items as you need.
-                    </p>
-                    <!-- <div class="checkbox checkbox-sec">
-                      <input type="checkbox" name="copy_attachment" value="1" checked="checked" id="ctwo_copy_attachment">
-                      <label for="ctwo_copy_attachment"><span>Copy estimate attachments to work order</span></label>
-                    </div> -->
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" data-link="<?php echo base_url('workorder/add/?estimate_id=' . $estimate->id) ?>"
-                        class="btn btn-primary" id="button_convert_estimate">Convert To Work Order
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="newJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New Estimate</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body text-center">
-        <p class="text-lg margin-bottom">
-            What type of estimate you want to create
-        </p>
-        <div class="margin-bottom">
-            <div class="help help-sm">Create a regular estimate with items</div>
-            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
-        </div>
-        <div class="margin-bottom">
-            <div class="help help-sm">Customers can select all or only certain options</div>
-            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
-        </div>
-        <div>
-            <div class="help help-sm">Customers can select only one package</div>
-            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add?type=3') ?>"><span class="fa fa-cubes"></span> Packages Estimate</a>
-        </div>
-      </div>
-      <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-    </div>
-  </div>
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <style>
     .hid-deskx {
@@ -211,57 +162,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 </style>
 <!-- page wrapper end -->
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
 <script>
     $('#dataTable1').DataTable({
 
         "ordering": false
     });
 
-    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-
-    elems.forEach(function (html) {
-        var switchery = new Switchery(html, {
-            size: 'small'
-        });
-    });
-
-    window.updateUserStatus = (id, status) => {
-        $.get('<?php echo url('company/change_status') ?>/' + id, {
-            status: status
-        }, (data, status) => {
-            if (data == 'done') {
-                // code
-            } else {
-                alert('Unable to change Status ! Try Again');
-            }
-        })
-    }
-
     $(document).ready(function () {
 
-        $(".btn-send-customer").click(function(e){
+        $(".delete-credit-note").click(function(e){
             var eid = $(this).attr("data-id");
             $("#eid").val(eid);
-            $("#modalSendEmail").modal('show');
-        });
-
-        // open service address form
-        $('#modalConvertEstimate').on('shown.bs.modal', function (e) {
-
-            var element = $(this);
-
-            var estimate_id = $(e.relatedTarget).attr('data-estimate-id');
-
-            $(this).find('#estimateCustomNumber').html(estimate_id);
-
-        });
-
-        $(document).on('click', '#button_convert_estimate', function (e) {
-
-            e.preventDefault();
-
-            location.href = $(this).attr('data-link');
+            $("#modelDeleteCreditNote").modal('show');
         });
     });
 </script>
