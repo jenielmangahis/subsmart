@@ -154,6 +154,12 @@ $(document).ready(function () {
 	$('#datepickerinv7').datepicker({
       uiLibrary: 'bootstrap'
     });
+	$('#datepickerinv8').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv9').datepicker({
+      uiLibrary: 'bootstrap'
+    });
 
 	document.getElementById("addNewTerms").onchange = function() {
     if (this.value == '0') {

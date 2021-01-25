@@ -59,7 +59,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         height: 60px;
         font-size: 16px;
         line-height: 32px;
-        content: 'Upload Estimate';
+        content: 'Import Existing Estimate';
         display: inline-block;
         background: #45a73c;
         padding: 5px 10px;
@@ -68,10 +68,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         border-radius: 0px;
     }
     .upload.workorder input[type=file]:before {
-        content: 'Workorder';
+        content: 'Import Workorder';
     }
     .upload.invoice input[type=file]:before {
-        content: 'Invoice';
+        content: 'Import Invoice';
     }
     .upload input[type=file] {
         cursor: pointer;
@@ -185,6 +185,131 @@ defined('BASEPATH') or exit('No direct script access allowed');
 .left-sidebar-main .card.table-custom .modal {
     padding-right: 0px !important;
 }
+.block-btn-main .btn-full {
+    padding: 12px 8px;
+}
+.block-btn-main .btn-full .btn {
+    width: 100%;
+}
+
+.file-upload-drag {
+    display: block;
+    position: relative;
+    width: 60%;
+}
+.file-upload-drag .drop {
+    width: 100%;
+    height: 100%;
+    border: 4px dashed #45a73c;
+    border-spacing: 25px;
+    overflow: hidden;
+    text-align: center;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+    -ms-transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    margin: auto;
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: table;
+    text-align: center;
+    border-radius: 24px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
+    -ms-border-radius: 24px;
+    -o-border-radius: 24px;
+    color: #000;
+}
+.file-upload-drag .drop .cont {
+    width: 100%;
+    height: 100px;
+    color: #fff;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+    margin: auto;
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.file-upload-drag .drop .cont p {
+    font-size: 20px;
+    line-height: 20px;
+    margin: 15px 0px;
+    color: #000;
+    font-weight: bold;
+}
+.file-upload-drag .drop input[type=file] {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background: transparent;
+    opacity: 0;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.file-upload-drag .drop .cont p.or-text {
+    color: #e0e0e0;
+    font-size: 16px;
+}
+.color-box-custom {
+    padding: 20px 0px;
+}
+.color-box-custom ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+.color-box-custom ul li {
+    display: inline-block;
+}
+.color-box-custom ul li span {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #000;
+    display: block;
+}
+.color-box-custom ul li span.bg-1 {
+    background-color: #4baf51;
+}
+.color-box-custom ul li span.bg-2 {
+    background-color: #d86566;
+}
+.color-box-custom ul li span.bg-3 {
+    background-color: #e57399;
+}
+.color-box-custom ul li span.bg-4 {
+    background-color: #b273b3;
+}
+.color-box-custom ul li span.bg-5 {
+    background-color: #8b63d7;
+}
+.color-box-custom ul li span.bg-6 {
+    background-color: #678cda;
+}
+.color-box-custom ul li span.bg-7 {
+    background-color: #59bdb3;
+}
+.color-box-custom ul li span.bg-8 {
+    background-color: #64ae89;
+}
+.color-box-custom ul li span.bg-9 {
+    background-color: #f1a740;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
@@ -209,7 +334,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>  &nbsp; &nbsp;Schedule</h6>
+                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>  &nbsp; &nbsp;Schedule Job</h6>
                             <div class="edit-icon">
                             <button class="MuiButtonBase-root MuiIconButton-root" tabindex="0" type="button"><span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg></span><span class="MuiTouchRipple-root"></span></button>
                             </div>
@@ -217,17 +342,69 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="form-group label-width d-flex align-items-center">
                                <label>From</label>
                                <input type="date" class="form-control mr-2">
-                               <input type="date" class="form-control">
+                               <select id="inputState" class="form-control">
+                                <option selected="">Start time</option>
+                                <option>...</option>
+                              </select>
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
                                <label >To</label>
                                <input type="date" class="form-control mr-2">
-                               <input type="date" class="form-control">
+                               <select id="inputState" class="form-control">
+                                <option selected="">End time</option>
+                                <option>...</option>
+</select>
                             </div>
-                            <button type="button" class="btn btn-primary pull-right text-link">+ Assign to</button>
-                            
+                            <select id="inputState" class="form-control">
+                                <option selected="">Assign Employee</option>
+                                <option>...</option>
+                              </select>
 
+                              <div class="color-box-custom">
+                                  <h4>Event Color on Calendar</h4>
+                                  <ul>
+                                      <li>
+                                        <span class="color-scheme bg-1"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-2"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-3"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-4"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-5"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-6"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-7"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-8"></span>
+                                      </li>
+                                      <li>
+                                        <span class="color-scheme bg-9"></span>
+                                      </li>
+                                  </ul>
+                               </div>
+                               <h4>Customer Reminder Notification</h4>
+                               <select id="inputState" class="form-control">
+                                <option selected="">1 day free</option>
+                                <option>...</option>
+                              </select>
+                              <h4>Timezon</h4>
+                               <select id="inputState" class="form-control">
+                                <option selected="">Central Time (UTC -5)</option>
+                                <option>...</option>
+                              </select>
+                            <button type="button" class="btn btn-primary pull-right text-link">+ Assign to</button>
                         </div>
+                        
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -354,6 +531,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                         </div>
                     </div>
+
+                    <!-- <div class="prev-btn float-right">
+                       <button type="button" class="btn btn-primary">Preview</button>
+                    </div> -->
+
                 </div>
                 <div class="col-md-7">
                     <div class="card table-custom">
@@ -391,7 +573,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <td class="upload invoice" colspan="5">
                                          <input id="files" type="file">
                                         </td>
-                                    </tr>   
+                                    </tr> 
                                     <tr>
                                         <td colspan="5">
                                            <button type="button" class="btn btn-primary">Import +</button>
@@ -399,7 +581,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </tr>
                                     
                                  </tbody>
-                                 
+                             </table>
+                             <div class="file-upload-drag">
+                               <div class="drop">
+                                    <div class="cont">
+                                        <div class="tit">
+                                            <p>Thumbnail</p>
+                                            <p class="or-text">Or</p>
+                                            <p>PDF</p>
+                                            <p class="or-text">Or</p>
+                                            <p>URL Link</p>
+                                            <p>To see import source</p>
+                                            <!-- <p class="or-text">Or</p>
+                                            <label>Choose File</label> -->
+                                        </div>
+                                    </div>
+                                    <input id="filetoupload" name="filetoupload" type="file" />
+                                    <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
+                                </div>
+                             </div>
+                            <div class="prev-btn mt-4">
+                                <button type="button" class="btn btn-primary">Preview</button>
+                            </div>
                         </div>
                     </div>
                 </div>

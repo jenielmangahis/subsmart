@@ -225,8 +225,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td>Total Discount</td>
+                                            <td class="d-flex align-items-center">
+                                                <input type="text" value="0.00" name="total_discount" id="total_discount" readonly class="form-control">
+                                            </td>
+                                        </tr>    
+                                        <tr>
                                             <td>Total Due</td>
-                                            <td class="d-flex align-items-center">$ &nbsp;&nbsp; <span id="total_due">0.00</span>
+                                            <td class="d-flex align-items-center">
+                                                $ &nbsp;&nbsp; <span id="total_due">0.00</span>
+                                                <input type="hidden" value="0.00" name="total_due" id="g_total_due" readonly class="form-control">
                                             </td>
                                         </tr>
                                     </table>

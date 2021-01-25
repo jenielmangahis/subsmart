@@ -240,7 +240,7 @@ class Esign extends MY_Controller {
 			$result['status'] = false;
 		}
 		$activity['activityName'] = "Template Deleted";
-		$activity['activity'] = "Tenplate ID : ".$id." Deleted By User ".logged('username');
+		$activity['activity'] = "Template ID : ".$id." Deleted By User ".logged('username');
 		$activity['user_id'] = logged('id');
 		$this->activity->addEsignActivity($activity);
 	 	echo json_encode($result);

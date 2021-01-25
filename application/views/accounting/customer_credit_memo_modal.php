@@ -11,7 +11,7 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <form>
+            <form action="<?php echo site_url()?>accounting/addCreditMemo" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -69,23 +69,23 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                             </table>
@@ -127,7 +127,11 @@
                             Taxable subtotal <b>$0.00</b><br>
                             <table class="table table-borderless">
                                 <tr>
-                                    <td></td>
+                                    <td>
+                                        <select class="form-control" name="tax_rate">
+                                            <option value="1">Based on location</option>
+                                        </select>
+                                    </td>
                                     <td><b>$0.00</b><br><a href="">See the math</a></td>
                                 </tr>
                                 <tr>

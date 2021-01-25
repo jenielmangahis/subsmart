@@ -5,6 +5,7 @@ var blankRow = '';
 var modalName = '';
 var tagsListModal = '';
 var timesheetInputs = 'input.day-input';
+var payrollFormData = [];
 
 $(function() {
     $(document).on('keyup', timesheetInputs, function(e) {
@@ -67,8 +68,41 @@ $(function() {
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
-        $.get('/accounting/generate-payroll', function(res) {
-            $('div#payrollModal div.modal-body').html(res);
+        payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
+
+        $.ajax({
+            url: '/accounting/generate-payroll',
+            data: payrollFormData,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                $('div#payrollModal div.modal-body').html(res);
+
+                var payrollCost = $('div#payrollModal div.modal-body h1 span#total-payroll-cost').html();
+                var totalNetPay = $('div#payrollModal div.modal-body h4 span#total-net-pay').html();
+                var employeeTax = $('div#payrollModal div.modal-body h4 span#total-employee-tax').html();
+                var employerTax = $('div#payrollModal div.modal-body h4 span#total-employer-tax').html();
+
+                var netPayPercent = parseFloat((parseFloat(totalNetPay) / parseFloat(payrollCost)) * 100).toFixed(2);
+                var employeeTaxPercent = parseFloat((parseFloat(employeeTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+                var employerTaxPercent = parseFloat((parseFloat(employerTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+
+                var Data = [
+                    {label:"Net Pay",value:netPayPercent},
+                    {label:"Employee",value:employeeTaxPercent},
+                    {label:"Employer",value:employerTaxPercent}
+                ];
+                var total = 100;
+                var donut_chart = Morris.Donut({
+                    element: 'payrollChart',
+                    data:Data,
+                    resize:true,
+                    formatter: function (value, data) {
+                    return Math.floor(value/total*100) + '%';
+                    }
+                });
+            }
         });
 
         $(this).html('Submit Payroll');
@@ -81,10 +115,36 @@ $(function() {
         if($(this).prop('checked')) {
             rows.each(function(){
                 $(this).children('td:first-child()').children('div').children('input').prop('checked', true);
+
+                if(table.attr('id') === 'payroll-table') {
+                    $(this).children('td').each(function(index, value) {
+                        if(index === 2) {
+                            $(this).html('<a href="#" class="text-info">Paper check</a>');
+                        } else if(index === 3) {
+                            $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">');
+                        } else if(index === 4) {
+                            $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">');
+                        } else if(index === 5) {
+                            $(this).html('<input type="text" name="memo[]" class="form-control">');
+                        } else if(index === 6) {
+                            $(this).html('<p class="text-right m-0">0.00</p>');
+                        } else if(index === 7) {
+                            $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+                        }
+                    });
+                }
             });
         } else {
             rows.each(function(){
                 $(this).children('td:first-child()').children('div').children('input').prop('checked', false);
+
+                if(table.attr('id') === 'payroll-table') {
+                    $(this).children('td').each(function(index, value) {
+                        if(index > 1) {
+                            $(this).html('');
+                        }
+                    });
+                }
             });
         }
     });
@@ -94,6 +154,32 @@ $(function() {
         var checkbox = table.children('thead').children('tr').children('th:first-child()').children('div').children('input');
         var rows = table.children('tbody').children('tr');
         var flag = true;
+
+        if(table.attr('id') === 'payroll-table') {
+            if($(this).prop('checked') === false) {
+                $(this).parent().parent().parent().children('td').each(function(index, value) {
+                    if(index > 1) {
+                        $(this).html('');
+                    }
+                });
+            } else {
+                $(this).parent().parent().parent().children('td').each(function(index, value) {
+                    if(index === 2) {
+                        $(this).html('<a href="#" class="text-info">Paper check</a>');
+                    } else if(index === 3) {
+                        $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">');
+                    } else if(index === 4) {
+                        $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">');
+                    } else if(index === 5) {
+                        $(this).html('<input type="text" name="memo[]" class="form-control">');
+                    } else if(index === 6) {
+                        $(this).html('<p class="text-right m-0">0.00</p>');
+                    } else if(index === 7) {
+                        $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+                    }
+                });
+            }
+        }
 
         rows.each(function() {
             if($(this).children('td:first-child()').children('div').children('input').prop('checked') === false) {
@@ -339,17 +425,32 @@ const payrollTotal = () => {
 
     $('table#payroll-table tbody tr').each(function() {
         var empTotalHours = $(this).children('td:nth-child(4)').children('input[name="reg_pay_hours[]"]').val();
-        if(empTotalHours !== "") {
-            hours = parseFloat(parseFloat(hours) + parseFloat(empTotalHours)).toFixed(2);
+        if(empTotalHours !== "" && empTotalHours !== undefined) {
+            empTotalHours = parseFloat(empTotalHours);
+        } else {
+            empTotalHours = 0.00;
         }
+
+        hours = parseFloat(parseFloat(hours) + empTotalHours).toFixed(2);;
 
         var empCommission = $(this).children('td:nth-child(5)').children('input').val();
-        if(empCommission !== "") {
-            commission = parseFloat(parseFloat(commission) + parseFloat(empCommission)).toFixed(2);
+        if(empCommission !== "" && empCommission !== undefined) {
+            empCommission = parseFloat(empCommission);
+        } else {
+            empCommission = 0.00;
         }
 
+        commission = parseFloat(parseFloat(commission) + empCommission).toFixed(2);
+
         var empTotalPay = $(this).children('td:last-child()').children('p').children('span').html();
-        totalPay = parseFloat(parseFloat(totalPay) + parseFloat(empTotalPay)).toFixed(2);
+
+        if(empTotalPay !== "" && empTotalPay !== undefined) {
+            empTotalPay = parseFloat(empTotalPay);
+        } else {
+            empTotalPay = 0.00;
+        }
+
+        totalPay = parseFloat(parseFloat(totalPay) + empTotalPay).toFixed(2);
     });
 
     $('table#payroll-table tfoot tr td:nth-child(4)').html(hours);

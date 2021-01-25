@@ -249,7 +249,7 @@ $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
 $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 $route['accounting/get-job-tags'] = 'accounting_modals/get_job_tags';
-$route['accounting/generate-payroll'] = 'accounting_modals/generate_payroll';
+$route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -531,6 +531,7 @@ $route['customer_disapprove_estimate'] = 'Pages/customer_update_estimate/2';
 $route['estimate/_load_scheduled_estimates'] = 'Estimate/ajax_load_scheduled_estimates';
 
 //Credit Notes
-$route['credit_notes'] = 'Credit_Notes/index';
+$route['credit_notes/'] = 'Credit_Notes/index';
+$route['credit_notes/tab/(:any)'] = 'Credit_Notes/index/$1';
 $route['credit_notes/add_new'] = 'Credit_Notes/add_new';
-
+$route['credit_notes/save'] = 'Credit_Notes/save';

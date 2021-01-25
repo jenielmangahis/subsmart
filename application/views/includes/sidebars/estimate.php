@@ -25,6 +25,8 @@
         <li class="nav-header">Estimates</li>
         <li class="submenus <?php if($this->uri->uri_string() == 'estimate') { echo 'active'; }?>"><a href="<?php echo base_url('estimate') ?>" title="My Estimates"><span
                         class="fa fa-file"></span>My Estimates</a></li>
+        <li class="submenus <?php if($this->uri->uri_string() == 'credit_notes') { echo 'active'; }?>"><a href="<?php echo base_url('credit_notes') ?>" title="Credit Notes"><span
+                        class="fa fa-file"></span>Credit Notes</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'items') { echo 'active'; }?>"><a href="<?php echo base_url('items') ?>" title="Services"><span class="fa fa-list"></span>Items</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'dashboard/blank') { echo 'active'; }?>"><a href="<?php echo base_url('dashboard/blank/?page=Item Vendors') ?>" title="Item Vendors"><span class="fa fa-cube"></span>Item Vendors</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'plans') { echo 'active'; }?>"><a href="<?php echo base_url('plans') ?>" title="Plans"><span class="fa fa-cubes"></span>Plans</a></li>

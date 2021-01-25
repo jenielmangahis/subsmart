@@ -69,7 +69,7 @@
                                                 <tr>
                                                     <td>
                                                         <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                            <input class="m-auto" type="checkbox" name="select[]" value="1" checked>
+                                                            <input class="m-auto" type="checkbox" name="select[]" value="<?php echo $employee->id; ?>" checked>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -81,7 +81,7 @@
                                                         <input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="commission[]" class="form-control w-75 float-right text-right employee-commission">
+                                                        <input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">
                                                     </td>
                                                     <td>
                                                         <input type="text" name="memo[]" class="form-control">

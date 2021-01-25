@@ -8,6 +8,11 @@ button#dropdown-edit {
     top: 54% !important;
     right: 9px !important;
 }
+.customer-name{
+    display: block;
+    font-size: 13px;
+    color: #2ab363;
+}
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
@@ -27,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">                             
-                            <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('credit_notes/add_new') ?>">
+                            <a class="btn btn-primary btn-md" href="<?php echo url('credit_notes/add_new') ?>">
                                 <span class="fa fa-plus"></span> New Credit Note
                             </a>
                         </div>
@@ -36,12 +41,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                 <div class="tabs">
                     <ul class="clearfix work__order ul-mobile" id="myTab" role="tablist">
-                            <li class="active">
-                                <a class="nav-link" id="profile-tab" href="<?php echo base_url('estimate/'); ?>" role="tab" aria-controls="profile" aria-selected="false">All(0)</a>
+                            <li class="<?= $tab == '' ? 'active' : ''; ?>">
+                                <a class="nav-link" id="profile-tab" href="<?php echo base_url('credit_notes/'); ?>" role="tab" aria-controls="profile" aria-selected="false">All(<?= $total_all; ?>)</a>
                             </li>
                         <?php foreach($status as $key => $value){ ?>
-                            <li <?php echo ((!empty($tab)) && strtolower($value) === $tab) ? "class='active'" : "" ?>>
-                                <a class="nav-link" id="profile-tab" data-toggle="tab<?php echo $key ?>" href="<?php echo base_url('estimate/tab/' . strtolower($value)) ?>" role="tab" aria-controls="profile" aria-selected="false"><?php echo $value ?>(0)</a>
+                            <?php 
+                                $total = $statusSummary[$key];
+                            ?>
+                            <li class="<?= $tab == $key ? 'active' : ''; ?>">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab<?php echo $key ?>" href="<?php echo base_url('credit_notes/tab/' . strtolower($key)) ?>" role="tab" aria-controls="profile" aria-selected="false"><?php echo $value ?>(<?= $total; ?>)</a>
                             </li>
                         <?php } ?>
                     </ul>
@@ -50,7 +58,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
 
-                        <?php if (!empty($estimates)) { ?>
+                        <?php if (!empty($creditNotes)) { ?>
                             <table class="table table-hover table-to-list" data-id="work_orders">
                                 <thead>
                                 <tr>
@@ -62,14 +70,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <?php foreach($creditNotes as $c){ ?>
+                                        <tr>
+                                            <td><?= $c->credit_note_number; ?></td>
+                                            <td><?= $c->date_issued; ?></td>
+                                            <td>
+                                                <span class="job-name"><?= $c->job_name ?></span>
+                                                <span class="customer-name">Customer : <?= $c->first_name . ' ' . $c->last_name; ?></span>
+                                            </td>
+                                            <td><?= $status[$c->status]; ?></td>
+                                            <td><?= number_format($c->grand_total, 2); ?></td>
+                                            <td></td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
                             </table>
                         <?php } else { ?>
+                        <?php if( $total_all <= 0 ){ ?>                            
                             <div class="page-empty-container" style="text-align: center;">
                                 <h5 class="page-empty-header">You haven't yet added your credit notes</h5>
                                 <p class="text-ter margin-bottom">Manage your credit notes.</p>
                                 <a class="btn btn-primary" href="<?php echo base_url('credit_notes/add_new') ?>"><span class="fa fa-plus fa-margin-right"></span> New Credit Note</a>
                             </div>
+                        <?php } ?>
                         <?php } ?>
                     </div>
                 </div>

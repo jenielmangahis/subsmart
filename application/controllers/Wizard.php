@@ -1,5 +1,4 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Wizard extends MY_Controller {
@@ -28,11 +27,51 @@ class Wizard extends MY_Controller {
         ));
     }
 
-    public function index() {
+    public function index(){
         $this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
         //$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
         //$this->load->view('wizard/list', $this->page_data);
         $this->load->view('wizard/index', $this->page_data);
+    }
+    
+    public function deleteApp()
+    {
+        $id = $this->input->post('app_id');
+        if($this->wizard_model->deleteApp($id)):
+            echo json_encode(array('success' => TRUE, 'msg' => 'Successfully Deleted'));
+        else:
+            echo json_encode(array('success' => FALSE, 'msg' => 'Sorry something went wrong'));
+        endif;
+    }
+    
+    public function deleteAppFunc()
+    {
+        $id = $this->input->post('fn_id');
+        if($this->wizard_model->deleteAppFunc($id)):
+            echo json_encode(array('success' => TRUE, 'msg' => 'Successfully Deleted'));
+        else:
+            echo json_encode(array('success' => FALSE, 'msg' => 'Sorry something went wrong'));
+        endif;
+    }
+
+    public function getAppFuncById($fnId) {
+        $func = $this->wizard_model->fetchAppFunc($fnId);
+
+        foreach ($func as $fn):
+            ?>
+        <a onclick="$('#trig_id').val('<?= $fn->wiz_app_func_id ?>'),$('#trig_name').val('<?= $fn->wiz_app_nice_name ?>'), $('.trigFunc').removeClass('active'), $(this).addClass('active'), $('#triggerNext').removeClass('disabled')" href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><?= $fn->wiz_app_nice_name ?></h5>
+                </div>
+                <p class="mb-1"><?= $fn->wiz_func_desc ?></p>
+            </a>
+            <?php
+        endforeach;
+    }
+
+    public function fetchTriggerApp($details) {
+        $this->load->model('wizard_apps_model');
+        echo $this->wizard_apps_model->fetch_data($details);
     }
 
     public function fetchAppFunc() {
@@ -41,14 +80,14 @@ class Wizard extends MY_Controller {
 
         foreach ($func as $fn):
             ?>
-            <tr>
+            <tr id="appList_<?= $fn->wiz_app_func_id ?>">
                 <td></td>
                 <td><?= $fn->wiz_app_nice_name ?></td>
                 <td><?= $fn->wiz_app_function ?></td>
                 <td><?= $fn->wiz_func_desc ?></td>
+                <td title="Delete" class="text-center"><a onmouseover="$('#deleteAppFuncID').val('<?= $fn->wiz_app_func_id ?>')" href="#deleteAppFunc" data-toggle="modal" class="text-danger"><i class="fa fa-trash-o"></i></a></td>
             </tr>
             <?php
-
         endforeach;
     }
 

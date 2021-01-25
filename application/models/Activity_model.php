@@ -29,9 +29,12 @@ class Activity_model extends MY_Model {
         $this->db->where('user_id', $userId);
         if($isHistoryActivity){
             $this->db->where_in('activityName', $loginActivities);
-        }else {
+		}else {
+            $this->db->where_not_in('activityName', $loginActivities);
+		}
+		if(sizeof($limit) > 1) {
             $this->db->limit($limit[0] , $limit[1]);
-         }
+		}
 		$this->db->order_by("createdAt", "desc");
 		return $this->db->get($this->esign_table)->result_array();
 		$result = $this->db->get($this->esign_table);

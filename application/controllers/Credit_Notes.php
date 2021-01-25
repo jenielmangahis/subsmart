@@ -13,6 +13,7 @@ class Credit_Notes extends MY_Controller
         $this->page_data['page']->title = 'Credit Notes';
         $this->page_data['page']->menu = 'credit_notes';
         $this->load->model('CreditNote_model');
+        $this->load->model('CreditNoteItem_model');
 
         $this->checkLogin();
 
@@ -39,6 +40,42 @@ class Credit_Notes extends MY_Controller
         
         $status = $this->CreditNote_model->optionStatus();
 
+        $statusSummary = array();
+        $company_id    = logged('company_id');
+        $role = logged('role');
+        $total_all = 0;
+
+        if( $role == 1 || $role == 2 ){  
+            foreach($status as $key => $value){
+                $total = $this->CreditNote_model->countAllByStatus($key);
+                $total_all+= $total;
+                $statusSummary[$key] = $total;
+            }
+            $this->page_data['total_all'] = $total_all;
+            $this->page_data['statusSummary'] = $statusSummary;
+            if( $tab > 0 ){
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyIdAndStatus($company_id,$tab);
+            }else{
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyId($company_id);    
+            }
+            
+        }else{
+            foreach($status as $key => $value){
+                $total = $this->CreditNote_model->countAllByStatusAndCompanyId($key,$company_id);
+                $total_all+= $total;
+                $statusSummary[$key] = $this->CreditNote_model->countAllByStatusAndCompanyId($key,$company_id);
+            }
+
+            $this->page_data['total_all'] = $total_all;
+            $this->page_data['statusSummary'] = $statusSummary;
+            if( $tab > 0 ){
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByStatus($tab);    
+            }else{
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAll();    
+            }
+        }
+
+        $this->page_data['tab'] = $tab;
         $this->page_data['status'] = $status;
         $this->load->view('credit_notes/list', $this->page_data);
     }
@@ -56,5 +93,59 @@ class Credit_Notes extends MY_Controller
         }
         
         $this->load->view('credit_notes/add', $this->page_data);
+    }
+
+    public function save()
+    {
+        postAllowed();
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if( $post['customer_id'] > 0 && $post['job_name'] != '' ){
+            $data = [
+                'user_id' => $user_id,
+                'customer_id' => $post['customer_id'],
+                'job_name' => $post['job_name'],
+                'credit_note_number' => $post['credit_note_number'],
+                'date_issued' => date("Y-m-d",strtotime($post['date_issued'])),
+                'expiry_date' => date("Y-m-d",strtotime($post['expiry_date'])),
+                'adjustment_name' => '',
+                'adjustment_amount' => 0,
+                'total_discount' => $post['total_discount'],
+                'grand_total' => $post['total_due'],
+                'note_customer' => $post['customer_message'],
+                'terms_condition' => $post['terms_conditions'],
+                'status' => $this->CreditNote_model->isDraft(),
+                'created' => date("Y-m-d H:i:s"),
+                'modified' => date("Y-m-d H:i:s")
+            ];
+
+            $credit_note_id = $this->CreditNote_model->saveCreditNote($data);
+            if( $credit_note_id > 0 ){
+                foreach($post['itemIds'] as $key => $value){
+                    $data = [
+                        'credit_note_id' => $credit_note_id,
+                        'item_id' => $value,
+                        'qty' => $post['quantity'][$key],
+                        'price' => $post['price'][$key],
+                        'discount' => $post['discount'][$key],
+                        'tax' => $post['tax'][$key],
+                        'total' => $post['itemTotal'][$key]
+                    ];
+
+                    $this->CreditNoteItem_model->create($data);
+                }
+            }else{
+                $this->session->set_flashdata('message', 'Cannot save data. Please check your entries.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot save data. Please check your entries.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('credit_notes');
     }
 }

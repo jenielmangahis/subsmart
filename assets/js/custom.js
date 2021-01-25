@@ -81,10 +81,11 @@ function getItems(obj) {
     },
   });
 }
-function setitem(obj, title, price, discount) {
+function setitem(obj, title, price, discount, itemid) {
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().parent().find(".price").val(price);
   jQuery(obj).parent().parent().parent().find(".discount").val(discount);
+  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
   var counter = jQuery(obj)
     .parent()
     .parent()
@@ -148,6 +149,14 @@ function calculation(counter) {
   $("#total_" + counter).val(total);
   $("#span_tax_" + counter).text(tax1);
   $("#tax_" + counter).val(tax1);
+
+  if( $('#tax_'+ counter).length ){
+    $('#tax_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_'+ counter).length ){
+    $('#item_total_'+counter).val(total);
+  }
 
   var eqpt_cost = 0;
   var subtotal = 0;
@@ -218,10 +227,11 @@ function getItems(obj) {
     },
   });
 }
-function setitem(obj, title, price, discount) {
+function setitem(obj, title, price, discount, itemid) {
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().parent().find(".price").val(price);
   jQuery(obj).parent().parent().parent().find(".discount").val(discount);
+  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
   var counter = jQuery(obj)
     .parent()
     .parent()
@@ -287,19 +297,32 @@ function calculation(counter) {
   $("#span_tax_" + counter).text(tax1);
   $("#discount_" + counter).val(discount);
 
+  if( $('#tax_'+ counter).length ){
+    $('#tax_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_'+ counter).length ){
+    $('#item_total_'+counter).val(total);
+  }
+
   var eqpt_cost = 0;
   var cnt = $("#count").val();
-
+  var total_discount = 0;
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price_" + p).val();
     var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
   }
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+
   $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -406,11 +429,11 @@ function cal_total_due() {
   var inst_cost = parseFloat($("#inst_cost").val());
   var one_time = parseFloat($("#one_time").val());
   var m_monitoring = parseFloat($("#m_monitoring").val());
-
-  var total_due = parseFloat(
-    eqpt_cost + sales_tax + inst_cost + one_time + m_monitoring
-  ).toFixed(2);
+  var total_discount = parseFloat($("#total_discount").val());
+  var total_due = parseFloat((eqpt_cost + sales_tax + inst_cost + one_time + m_monitoring) - total_discount).toFixed(2);
+  
   $("#total_due").text(total_due);
+  $("#g_total_due").val(total_due);
 }
 
 $(document).ready(function () {

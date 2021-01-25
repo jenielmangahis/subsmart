@@ -442,7 +442,8 @@ a.top-1 {
                                       <div class="margin-bottom">
                                           <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
                                           <div id="upcoming-events-container"></div>
-                                          
+                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
+                                          <div id="scheduled-estimates-container"></div>
                                       </div>
                                   </div>
                               </div>                                
@@ -1401,6 +1402,7 @@ a.top-1 {
     });
 
     load_upcoming_events();
+    load_scheduled_estimates();
 
     function load_upcoming_events(){
       var url = base_url + 'calendar/_load_upcoming_events';
@@ -1413,6 +1415,21 @@ a.top-1 {
          success: function(o)
          {
             $("#upcoming-events-container").html(o);      
+         }
+      });
+    }
+
+    function load_scheduled_estimates(){
+      var url = base_url + 'estimate/_load_scheduled_estimates';
+       $("#scheduled-estimates-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Estimates...</div>');
+
+      $.ajax({
+         type: "POST",
+         url: url,
+         data: {},
+         success: function(o)
+         {
+            $("#scheduled-estimates-container").html(o);      
          }
       });
     }
