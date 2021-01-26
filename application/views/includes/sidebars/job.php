@@ -24,6 +24,13 @@
         border: solid 2px #adff2f !important;
         color:#adff2f;
     }
+    #sidebar ul li.active > a {
+        background: #45a73c !important;
+        color: #fff !important;
+    }
+    #sidebar ul li:active{
+        background: #45a73c;
+    }
     .dropdown-toggle::after {
         top: 25px !important;
     }
@@ -44,16 +51,16 @@
             </svg>
         </span>
         <li class="nav-header desktop-only">
-			<a href="<?php echo url('/job/new_job')?>" class="btn btn-tranparent acct-btn-add text-center" style="border: 2px solid white;"><i class="fa fa-plus" style="margin-right: 20px;"></i> New</a>
+			<a href="<?php echo url('/job/new_job1')?>" class="btn btn-tranparent acct-btn-add text-center" style="border: 2px solid white;"><i class="fa fa-plus" style="margin-right: 20px;"></i> New</a>
         </li>
-        <li class="submenus dropright">
-            <a href="#submenuJob" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-briefcase" style="margin-right: 20px"></i>Job</a>
+        <li class="submenus dropright <?= ($this->uri->segment(1) == 'job') ? "active" : "";  ?>">
+            <a href="#submenuJob" onclick="dropdownAccounting(this)" class="dropdown-toggle "><i class="fa fa-briefcase" style="margin-right: 20px"></i>Job</a>
             <ul class="collapse list-unstyled" id="submenuJob">
-				<li>
+				<li class="<?= ($this->uri->segment(1) == 'job' && ($this->uri->segment(2) == 'job' || $this->uri->segment(2) == '')) ? "active" : "";  ?>">
 					<a href="<?php echo url('/job')?>">Job List</a>
                 </li>
-                <li>
-                    <a href="<?php echo url('/job/new_job')?>">New Job</a>
+                <li class="<?= ($this->uri->segment(1) == 'job' && $this->uri->segment(2) == 'new_job1') ? "active" : "";  ?>">
+                    <a href="<?php echo url('/job/new_job1')?>">New Job</a>
                 </li>
             </ul>
         </li>

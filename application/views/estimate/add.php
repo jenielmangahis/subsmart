@@ -334,7 +334,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <button type="submit" class="btn btn-flat btn-primary">Save</button>
-                                    <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
+                                    <a href="<?php echo url('estimate') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
                         </div>
@@ -443,7 +443,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             .empty() //empty select
             .append($("<option/>") //add option tag in select
                 .val(customer_id) //set value for option to post it
-                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+                .text("")) //set a text for show in select
             .val(customer_id) //select option of select2
             .trigger("change"); //apply to select2*/
     });

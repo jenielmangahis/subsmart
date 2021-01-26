@@ -34,8 +34,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 }
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/estimate'); ?>
-   
 
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -332,11 +330,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <!-- end container-fluid -->
     </div>
+    
+        <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper end -->
 </div>
 
 <?php echo $file_selection; ?>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
     function creditNoteGetItems(obj) {

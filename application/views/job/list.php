@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </form>
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <a class="btn btn-primary btn-md" id="newJobBtn" href="<?php echo url('job/new_job') ?>">
+                                            <a class="btn btn-primary btn-md" id="newJobBtn" href="<?php echo url('job/new_job1') ?>">
                                             <span class="fa fa-plus"></span> New</a>
                                         </div>
                                     </div>

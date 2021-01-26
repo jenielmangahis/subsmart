@@ -9,7 +9,7 @@ class EstimateItem_model extends MY_Model
     public function getAllByEstimateId($estimate_id)
     {
 
-        $this->db->select('*');
+        $this->db->select('estimates_items.*,items.title,items.id,items.description');
         $this->db->from($this->table);
         $this->db->join('items', 'estimates_items.items_id = items.id');
         $this->db->where('estimates_id', $estimate_id);

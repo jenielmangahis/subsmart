@@ -72,16 +72,12 @@ class Users extends MY_Controller {
 	}
 	public function businessdetail(){	
 		//ifPermissions('businessdetail');
-		
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('id');
 		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));	
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-		
-		/* echo "<pre>"; print_r($this->page_data); die;  */
-		
 		$this->load->view('business_profile/businessdetail', $this->page_data);
 	}
 

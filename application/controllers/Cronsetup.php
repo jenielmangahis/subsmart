@@ -18,7 +18,131 @@ class Cronsetup extends MY_Controller {
 		$this->page_data['page']->menu = 'users';
 
 	}
-   
+    public function checklocation(){
+
+        $utimezone = '';
+         
+        if($utimezone == ""){
+
+           echo  $ipaddress = $this->timesheet_model->gtMyIpGlobal();
+            $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
+            print_r($get_location);
+            $lat = $get_location->lat;
+            $lng = $get_location->lon;
+            $utimezone = $get_location->timezone;
+        }
+         
+        echo "->".$utimezone ;exit;
+        date_default_timezone_set($utimezone);
+    }
+    public function checkClockoutDaily(){
+        $check_attn = $this->db->get_where('timesheet_attendance',array('status' => 1 ))->result_array();
+        
+        foreach ($check_attn as $key => $value) 
+        { 
+            echo '<pre>';
+
+            $table = $this->users_model->table;
+            $this->db->where('id', $value['user_id']); 
+            $userData = $this->db->get($table)->row();
+
+            if($userData->user_time_zone != ""){
+                date_default_timezone_set($userData->user_time_zone);
+            }
+
+            echo date("Y-m-d H:i:s");
+            echo '<br>-------<br>';
+            $userNow = strtotime(date("Y-m-d H:i:s")); 
+
+            $userDayEnd =  strtotime(date("Y-m-d")."23:59:59"); 
+
+            $diff = ($userDayEnd - $userNow)/3600;
+
+            echo  $diff ;
+
+            if($diff <= 0.250 ){
+                // Send email to user admin
+                //
+            }
+            echo '<br>----------------------------------------------<br>';
+
+            $users = $this->db->query("SELECT * FROM timesheet_extra_reminder WHERE user_id='".$user_id."' AND date='".$date."' ");
+                //if(false ){
+                if($users->num_rows() ){
+                   
+                }else
+                {
+                    $users = $this->db->query("INSERT INTO timesheet_extra_reminder SET user_id='".$user_id."', date='".$date."' ");
+                    //echo $diff;
+                    $user_data = $this->users_model->getById($user_id );
+                   
+                    $this->sendUserEmailreminder($user_data->email,$user_data->FName." ".$user_data->LName);
+
+                    // init array
+                    $iOSRegIds = array();
+                    $androidRegIds = array();
+ 
+                    $rows = $this->db->query("select tm.*, u.device_token, u.device_type from timesheet_team_members tm, users u where  tm.role = 'Admin' and u.id = tm.user_id and u.id != $user_id")->result_array();
+          
+                    foreach ($rows as $row) {
+                        // get token
+                        $token = $row['device_token'];
+                        $this->sendAdminEmailreminder($row['email'],$user_data->FName." ".$user_data->LName);
+                        // check device_type
+                        if ($row['device_type'] == 'iOS') {
+                            // add device_token
+                            array_push($iOSRegIds, $token);
+                        } else {
+                            // add device_token
+                            array_push($androidRegIds, $token);
+                        }
+                    }
+                    
+                    $message = $user_data->FName.' '.$user_data->LName.' Have not clock out yes.';
+                    if(!empty($iOSRegIds))
+                    {
+                        echo '<pre>';
+                        print_r($iOSRegIds);
+                        echo $message;
+                        $ios = $this->send_ios_push($iOSRegIds,  $message, "Time Clock Alert");
+                    }
+
+                    if(!empty($androidRegIds))
+                    {
+                        $android = $this->send_android_push($androidRegIds,  $message,"Time Clock Alert");
+                    }
+                }
+            /*
+
+            $qry = $this->db->get_where("timesheet_logs",array('attendance_id' => $value['id']))->result();
+
+            $start_time = 0;
+            $end_time = 0;
+
+            $break_in = 0;
+            $break_out = 0;
+
+            $end_time = strtotime(date("Y-m-d H:i:s")); 
+            foreach ($qry as $time){
+                $user_id =  $time->user_id;
+                if ($time->action == 'Check in'){
+                    $start_time = strtotime($time->date_created);
+                }
+            }
+
+            $break_diff = ($break_out - $break_in)/3600;
+
+            $diff = ($end_time - $start_time)/3600;
+
+            //echo '<br>----------<br>';
+            $diff = $diff - $break_diff;
+
+            $diff = round($diff,2); 
+
+            //$qry = $this->db->get_where("timesheet_logs",array('attendance_id' => $value['id']))->result();
+            */
+        }
+    }
     public function cronSetForOvertime(){
         $check_attn = $this->db->get_where('timesheet_attendance',array('status' => 1 ))->result_array();
         

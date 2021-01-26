@@ -15,7 +15,7 @@
                             <div class="form-group">
                                 <label for="payFrom">Pay from</label>
                                 <select name="pay_from" id="payFrom" class="form-control">
-                                    <option value="">Corporate Account(XXXXXX 5850)</option>
+                                    <option value="1">Corporate Account(XXXXXX 5850)</option>
                                 </select>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                 <div class="modal-footer bg-secondary">
                     <div class="row w-100">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" id="close-payroll-modal">Close</button>
                         </div>
                         <div class="col-md-4">
                             

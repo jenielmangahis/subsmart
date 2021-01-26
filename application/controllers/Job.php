@@ -15,6 +15,7 @@ class Job extends MY_Controller
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('Roles_model', 'roles_model');
+        $this->load->model('General_model', 'general');
 
         add_css(array( 
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -141,7 +142,29 @@ class Job extends MY_Controller
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
         }
-        
+        $get_customer = array(
+            'where' => array(
+                //'fk_user_id' => $id,
+            ),
+            'table' => 'acs_profile',
+            'select' => 'prof_id,first_name,last_name,middle_name',
+        );
+
+        $get_employee = array(
+            'where' => array(
+                //'fk_user_id' => $id,
+            ),
+            'table' => 'employees',
+            'select' => 'employees_id,FName,LName',
+            'join' => array(
+                'table' => 'users',
+                'statement' => 'employees.user_id=users.id',
+                'join_as' => 'left',
+            ),
+        );
+        //echo logged('company_id');
+        $this->page_data['customers'] = $this->general->get_data_with_param($get_customer);
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
         $this->load->view('job/job_new', $this->page_data);
     }
 

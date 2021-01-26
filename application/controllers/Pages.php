@@ -201,7 +201,7 @@ class Pages extends MY_Controller {
         $estimate = $this->estimate_model->getEstimate($estimate_id);
         if( $estimate ){            
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-            $estimateItems = $this->EstimateItem_model->getAllByEstimateId($estimate->id);
+            $estimateItems = unserialize($estimate->estimate_items);
 
             $this->page_data['estimate'] = $estimate;
             $this->page_data['customer'] = $customer;

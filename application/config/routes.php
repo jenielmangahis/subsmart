@@ -535,3 +535,5 @@ $route['credit_notes/'] = 'Credit_Notes/index';
 $route['credit_notes/tab/(:any)'] = 'Credit_Notes/index/$1';
 $route['credit_notes/add_new'] = 'Credit_Notes/add_new';
 $route['credit_notes/save'] = 'Credit_Notes/save';
+$route['credit_notes/delete'] = 'Credit_Notes/delete_credit_note';
+$route['credit_notes/edit/(:num)'] = 'Credit_Notes/edit/$1';

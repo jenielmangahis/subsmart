@@ -10,8 +10,9 @@ class CreditNoteItem_model extends MY_Model
     public function getAllByCreditNoteId($credit_note_id)
     {
 
-        $this->db->select('*');
+        $this->db->select($this->table . '.*,items.id,items.title,items.description');
         $this->db->from($this->table);
+        $this->db->join('items', $this->table . '.item_id = items.id', 'LEFT');
         $this->db->where('credit_note_id', $credit_note_id);
 
         $query = $this->db->get();

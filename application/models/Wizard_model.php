@@ -28,6 +28,7 @@ class Wizard_model extends MY_Model {
         
         function fetchAppFunc($fnId)
         {
+            $this->db->join('wizard_apps','wizard_app_function.wiz_app_id = wizard_apps.id', 'left');
             return $this->db->where('wiz_app_id', $fnId)->get('wizard_app_function')->result();
         }
 

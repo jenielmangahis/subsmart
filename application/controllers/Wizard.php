@@ -34,6 +34,12 @@ class Wizard extends MY_Controller {
         $this->load->view('wizard/index', $this->page_data);
     }
     
+    public function setupGmailSend()
+    {
+        $this->page_data['img'] = $this->input->post('img');
+        $this->load->view('wizard/app_config/wiz_gmail', $this->page_data);
+    }
+    
     public function deleteApp()
     {
         $id = $this->input->post('app_id');
@@ -54,7 +60,32 @@ class Wizard extends MY_Controller {
         endif;
     }
 
-    public function getAppFuncById($fnId) {
+    public function getActionAppFuncById($fnId) {
+        $func = $this->wizard_model->fetchAppFunc($fnId);
+
+        foreach ($func as $fn):
+            $appConfig = $fn->config_fn;
+            ?>
+        <a onclick="$('#action_id').val('<?= $fn->wiz_app_func_id ?>'),
+                    $('#action_name').val('<?= $fn->wiz_app_nice_name ?>'), 
+                    $('.trigFunc').removeClass('active'), 
+                    $('#has_config').val('<?= $fn->has_config ?>'),
+                    $('#action_config').val('<?= $appConfig ?>'),
+                    $('#img_config').val('<?= $fn->app_img ?>'),
+                    $(this).addClass('active'), $('#actionNext').removeClass('disabled')" 
+                            
+                    href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
+            
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><?= $fn->wiz_app_nice_name ?></h5>
+                </div>
+                <p class="mb-1"><?= $fn->wiz_func_desc ?></p>
+            </a>
+            <?php
+        endforeach;
+    }
+
+    public function getTrigAppFuncById($fnId) {
         $func = $this->wizard_model->fetchAppFunc($fnId);
 
         foreach ($func as $fn):

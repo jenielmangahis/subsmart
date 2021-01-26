@@ -217,11 +217,11 @@ error_reporting(0);
 											</div>
 											<?php if( $profiledata->year_est > 0 ){ ?>
 												<div class="credential-cnt">
-													<span>Business since: <?= $profiledata->year_est; ?></span>
+													<span>Business since:<b> <?= $profiledata->year_est; ?></b></span>
 														<?php 
 															$total_years = date("Y") - $profiledata->year_est;
 														?>
-													<span>(<?= $total_years . " years"; ?>)</span>
+                                                    <span></span>
 												</div>
 											<?php } ?>
 											

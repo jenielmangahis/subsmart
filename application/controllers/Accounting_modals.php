@@ -28,6 +28,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_inventory_qty_adjustments_model');
         $this->load->model('accounting_bank_deposit_model');
         $this->load->model('accounting_weekly_timesheet_model');
+        $this->load->model('accounting_payroll_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
@@ -340,6 +341,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'weeklyTimesheetModal':
                     $this->result = $this->weekly_timesheet($data);
+                break;
+                case 'payrollModal':
+                    $this->result = $this->payroll($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -786,6 +790,73 @@ class Accounting_modals extends MY_Controller {
                 $return['data'] = $timesheetRecordId;
                 $return['success'] = $timesheetRecordId ? true : false;
                 $return['message'] = $timesheetRecordId ? 'Entry Successful!' : 'An unexpected error occured!';
+            } else {
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Nothing inserted.';
+            }
+        }
+
+        return $return;
+    }
+
+    private function payroll($data) {
+        $this->form_validation->set_rules('pay_from', 'Pay from account', 'required');
+        $this->form_validation->set_rules('pay_period', 'Pay Period', 'required');
+        $this->form_validation->set_rules('pay_date', 'Pay Date', 'required');
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $insertData = [];
+
+            $payPeriod = explode('-', $data['pay_period']);
+            $payPeriodStart = date('Y-m-d', strtotime($payPeriod[0]));
+            $payPeriodEnd = date('Y-m-d', strtotime($payPeriod[1]));
+
+            $company_id = logged('company_id');
+            $payrollNo = $this->accounting_payroll_model->getCompanyLastPayrollNo($company_id);
+
+            foreach($data['select'] as $key => $value) {
+                $emp = $this->users_model->getUser($value);
+                $empTotalPay = ($emp->pay_rate * (float)$data['reg_pay_hours'][$key]) + (float)$data['commission'][$key];
+                $empTotalPay = number_format($empTotalPay, 2, '.', ',');
+
+                $empSocial = ($empTotalPay / 100) * 6.2;
+                $empSocial = number_format($empSocial, 2, '.', ',');
+                $empMedicare = ($empTotalPay / 100) * 1.45;
+                $empMedicare = number_format($empMedicare, 2, '.', ',');
+                $empTax = number_format($empSocial + $empMedicare, 2, '.', ',');
+
+                $insertData[] = [
+                    'payroll_no' => is_null($payrollNo) ? 1 : $payrollNo,
+                    'pay_period_start' => $payPeriodStart,
+                    'pay_period_end' => $payPeriodEnd,
+                    'pay_date' => $data['pay_date'],
+                    'company_id' => $company_id,
+                    'employee_id' => $value,
+                    'emp_hours' => $data['reg_pay_hours'][$key],
+                    'emp_commission' => $data['commission'][$key],
+                    'emp_total_pay' => $empTotalPay,
+                    'emp_taxes' => $empTax,
+                    'emp_net_pay' => $empTotalPay - $empTax,
+                    'emp_memo' => ($data['memo'][$key] === '') ? null : $data['memo'][$key],
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ];
+            }
+
+            if(count($insertData) > 0) {
+                $payrollId = $this->accounting_payroll_model->insertBatch($insertData);
+
+                $return['data'] = $payrollId;
+                $return['success'] = $payrollId ? true : false;
+                $return['message'] = $payrollId ? 'Entry Successful!' : 'An unexpected error occured!';
             } else {
                 $return['data'] = null;
                 $return['success'] = false;
