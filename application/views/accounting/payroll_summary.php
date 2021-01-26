@@ -30,19 +30,19 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div id="payrollChart" style="width: 302px;height: 185px;"></div>
+        <div id="payrollChart"></div>
     </div>
     <div class="col-md-4 d-flex align-items-center pr-0">
         <div class="divider mr-3"></div>
 
         <div class="row w-100">
             <div class="col-2 p-0">
-                <h2 class="text-center">2</h2>
+                <h2 class="text-center"><?php echo count($employees); ?></h2>
             </div>
             <div class="col-10 p-0 d-flex align-items-center">
                 <div class="message">
-                    <p class="m-0">Paper checks for $34.24</p>
-                    <p class="m-0">Deliver these paychecks by Monday, Jan 11</p>
+                    <p class="m-0">Paper checks for $<?php echo $total['total_net_pay']?></p>
+                    <p class="m-0">Deliver these paychecks by <?php echo $payDate?></p>
                 </div>
             </div>
         </div>

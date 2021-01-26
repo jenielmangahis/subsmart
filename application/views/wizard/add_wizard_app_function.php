@@ -36,8 +36,13 @@ crossorigin="anonymous"></script>
                             <h2>APP LIST</h2>
                         </div>
                         <ul class="list-group">
+                            <a onmouseover="$(this).attr('style','cursor:pointer;background:#007bff;')" onmouseout="$(this).attr('style','cursor:pointer')" class="list-group-item" href="#addApp" data-toggle="modal">
+                                <li style="vertical-align: middle">
+                                    <i class="fa fa-2x fa-plus-circle fa-fw"></i> <span  style="vertical-align: middle; padding-bottom: 10px;">ADD an App</span>
+                                </li>
+                            </a>
                             <?php foreach ($wiz_apps as $wa): ?>
-                            <li onclick="$(this).addClass('active'),checkApp(this), $('#deleteAppID').val('<?= $wa->id ?>')" class="list-group-item" id="li_<?= $wa->id ?>" style="cursor: pointer" onmouseover="$(this).attr('style','cursor:pointer;background:#007bff;'),$('#delete_<?= $wa->id ?>').show() "  onmouseout="$('#delete_<?= $wa->id ?>').hide(),$(this).attr('style','cursor:pointer')">
+                            <li onclick="$(this).addClass('active'),checkApp(this), $('#deleteAppID').val('<?= $wa->id ?>'), setApp('<?= $wa->id ?>','<?= $wa->app_name ?>','<?= $wa->app_img ?>')" class="list-group-item" id="li_<?= $wa->id ?>" style="cursor: pointer" onmouseover="$(this).attr('style','cursor:pointer;background:#007bff;'),$('#delete_<?= $wa->id ?>').show() "  onmouseout="$('#delete_<?= $wa->id ?>').hide(),$(this).attr('style','cursor:pointer')">
                                 <img  class="float-left" src="<?php echo $url->assets.$wa->app_img ?>" class="img-thumbnail" width="24" height="24" />&nbsp;&nbsp;<?= $wa->app_name ?> <a  id="delete_<?= $wa->id ?>" href="#deleteAppList" data-toggle="modal" class="text-danger"  style="position: absolute; right: -5px; top: -5px; display: none;"><i class="fa fa-minus-circle"></i></a>
                             </li>
                             <?php endforeach; ?>
@@ -49,7 +54,7 @@ crossorigin="anonymous"></script>
                     <div class="wizard-app-block col-lg-12">
                         <div class="wizard-apps">
                             <div class="app-search-block">
-                                <h6 id="app_title">Search for your App <a href="#addApp" data-toggle="modal" class="float-right" ><i class="fa fa-plus-square fa-fw" > </i>ADD an APP</a></h6>
+                                <h6 id="app_title">Search for your App </h6>
                                 <input type="hidden" id="app_name" />
                                 <input type="hidden" id="app_id" />
                                 <div id="searchWizApp" class="form-group div_margin">
@@ -80,7 +85,7 @@ crossorigin="anonymous"></script>
                                             </div>
                                         </div>
                                         <h6 style="margin-bottom: 10px !important;">List of Functions</h6>
-                                        <table class="table table-stripped">
+                                        <table id="tableFunc" app_id="" class="table table-stripped">
                                             <tr>
                                                 <th>#</th>
                                                 <th>Title of Function</th>
@@ -216,6 +221,11 @@ crossorigin="anonymous"></script>
 
     function setApp(app_id, app_name, app_img)
     {
+        var tableAppID = $('#tableFunc').attr('app_id');
+        if(tableAppID!=app_id)
+        {
+            $('#fList-body').html('');
+        }
         var app_title = '<div class="col-md-6 float-left" style="padding-right:5px; padding-left:5px;"><img class="float-left" src="<?php echo $url->assets ?>' + app_img + '" class="img-thumbnail" width="48" /> <h5 class="text-left">' + app_name + '</h5></div>'
         $('#app_title').html(app_title);
         $('#app_id').val(app_id);
@@ -228,6 +238,7 @@ crossorigin="anonymous"></script>
             method: 'post',
             data: {fn_id: $('#app_id').val()},
             success: function (response) {
+                $('#tableFunc').attr('app_id', app_id);
                 $('#fList-body').append(response);
             }
         });

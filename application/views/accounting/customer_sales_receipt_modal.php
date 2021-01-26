@@ -10,6 +10,7 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
+                <form action="<?php echo site_url()?>accounting/addSalesReceipt" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -37,7 +38,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     Sales Receipt date<br>
-                                    <input type="text" class="form-control" name="receipt_date" id="datepickerinv8"><br>
+                                    <input type="text" class="form-control" name="sales_receipt_date" id="datepickerinv8"><br>
                                     Ship via<br>
                                     <input type="text" class="form-control" name="ship_via">
                                 </div>
@@ -60,9 +61,29 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
-                                    Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control" name="tags">
+                                <div class="col-md-3">
+                                    Payment method<br>
+                                    <select class="form-control" name="payment_method" id="payment_method">
+                                        <option></option>
+                                        <option value="0">Add New</option>
+                                        <?php foreach($paymethods as $paymethod) { ?>
+                                            <option value="<?php echo $paymethod->payment_method_id ; ?>"> <?php echo $paymethod->quick_name; ?></option>
+                                            <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    Reference no.
+                                    <input type="text" class="form-control" name="ref_number">
+                                </div>
+                                <div class="col-md-3">
+                                    Deposit to
+                                    <select class="form-control" name="deposit_to">
+                                        <option></option>
+                                        <option value="1">Cash on hand</option>
+                                        <option value="2">A</option>
+                                        <option value="3">B</option>
+                                        <option value="4">C</option>
+                                    </select>
                                 </div>
                             </div>
                             
@@ -70,7 +91,7 @@
                         <div class="col-md-6" align="right">
                             AMOUNT<h2>$0.00</h2><br>
                             Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;" name="location">
+                            <input type="text" class="form-control" style="width:200px;" name="location_scale">
                         </div>
                     </div>
                     <hr>
@@ -139,9 +160,9 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;" name="mess_invoice"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="message_displayed_on_sales_receipt"></textarea><br>
                             Message on statement<br>
-                            <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
+                            <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
                         </div>
                         <div class="col-md-8">
                         </div>
@@ -202,9 +223,9 @@
                     
 
 
-                </div>
+                    </div>
                 
-                <hr>
+                    <hr>
                         <div class="modal-footer-check">
                             <div class="row">
                                 <div class="col-md-4">
@@ -232,7 +253,7 @@
                                 </div>
                             </div>
                         </div>
-                
+                </form>
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
                 </div>

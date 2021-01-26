@@ -59,7 +59,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         height: 60px;
         font-size: 16px;
         line-height: 32px;
-        content: 'Import Existing Estimate';
+        content: 'Upload Existing Estimate';
         display: inline-block;
         background: #45a73c;
         padding: 5px 10px;
@@ -68,10 +68,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         border-radius: 0px;
     }
     .upload.workorder input[type=file]:before {
-        content: 'Import Workorder';
+        content: 'Upload Workorder';
     }
     .upload.invoice input[type=file]:before {
-        content: 'Import Invoice';
+        content: 'Upload Invoice';
     }
     .upload input[type=file] {
         cursor: pointer;
@@ -310,6 +310,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 .color-box-custom ul li span.bg-9 {
     background-color: #f1a740;
 }
+
+    #customer_info td, #customer_info th{
+        border-top: 0 !important;
+    }
+    #customer_info>tbody>tr>td{
+        padding: 3px 8px !important;
+    }
+    .card-body {
+        padding: 1.25rem 1.25rem 0 1.25rem !important;
+    }
+    .customer_right_icon{
+        float: right;
+        font-size: 22px;
+    }
+    .add_new_customer{
+        color :#32243d;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
@@ -318,18 +335,61 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="row custom__border left-sidebar-main">
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
-                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;position: relative; top: 1.4px;"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path></svg> &nbsp;Customer</h6>
+                            <h6 class="page-title">
+                                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;position: relative; top: 1.4px;">
+                                    <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path>
+                                </svg> &nbsp;Customer
+                            </h6>
                             <hr>
-                            <div class="form-group form-group-icon">
-                               <input type="text" name="search" id="search" class="form-control" placeholder="Name, email, phone, or address">
-                               <i class="fa fa-search"></i>
+                            <small>Select Existing Customer</small>
+                            <select id="inputState" class="form-control">
+                                <option value="">None</option>
+                                <?php if(!empty($customers)): ?>
+                                    <?php foreach ($customers as $customer): ?>
+                                        <option value="<?= $customer->prof_id; ?>"><?= $customer->last_name.','.$customer->first_name.' ' .$customer->middle_name; ?></option>
+                                     <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                            <table id="customer_info" class="table">
+                                <thead>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Welyelf Hisula</td>
+                                        <td><a href=""><span class="fa fa-user customer_right_icon"></span></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4668 Windstarr Drive <p> Destin, FL 32541</p></td>
+                                        <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>(970) 691-9018</td>
+                                        <td><a href=""><span class="fa fa-phone customer_right_icon"></span></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>welyelfhisula@gmail.com</td>
+                                        <td><a href=""><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="modal-footer">
+                                <a class="pt-1 pl-2 text-right add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
+                                    <span class="fa fa-plus-square fa-margin-right"></span>Add New Customer
+                                </a>
                             </div>
-
-                            <button type="button" class="btn btn-primary pull-right text-link" data-toggle="modal" data-target="#new_customer">+ New Customer</button>
-                            
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="page-title">
+                                Map
+                            </h6>
                         </div>
                     </div>
                     <div class="card">
@@ -353,13 +413,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                <select id="inputState" class="form-control">
                                 <option selected="">End time</option>
                                 <option>...</option>
-</select>
+                               </select>
                             </div>
                             <select id="inputState" class="form-control">
-                                <option selected="">Assign Employee</option>
+                                <option selected="">Select Employee</option>
                                 <option>...</option>
+                                <?php if(!empty($employees)): ?>
+                                    <?php foreach ($employees as $employee): ?>
+                                        <option value="<?= $employee->employees_id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                               </select>
-
                               <div class="color-box-custom">
                                   <h4>Event Color on Calendar</h4>
                                   <ul>
@@ -397,7 +461,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <option selected="">1 day free</option>
                                 <option>...</option>
                               </select>
-                              <h4>Timezon</h4>
+                              <h4>Timezone</h4>
                                <select id="inputState" class="form-control">
                                 <option selected="">Central Time (UTC -5)</option>
                                 <option>...</option>
@@ -490,7 +554,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <input type="text" class="form-control">
+                                            <small>Select Tag</small>
+                                            <select id="inputState" class="form-control">
+                                                <option >Tags1</option>
+                                                <option selected="">Tags2</option>
+                                                <option selected="">Tags3</option>
+                                                <option selected="">Tags4</option>
+                                            </select>
                                         </div>
                                     </div>
                                     </div>
@@ -522,9 +592,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                     <div class="card-body">
-                                    <div class="form-group">
-                                                            <input type="text" class="form-control">
-                                                            </div>
+                                        <div class="form-group">
+                                            <div class="form-group col-md-12">
+                                                <label for="attachment">Attachments</label>
+                                                <p>Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p>
+                                                <input type="file" class="form-control" name="attachment" id="attachment">
+                                            </div>
+
+                                        </div>
                                     </div>
                                     </div>
                                 </div>
@@ -535,31 +610,50 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <!-- <div class="prev-btn float-right">
                        <button type="button" class="btn btn-primary">Preview</button>
                     </div> -->
-
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-9">
+                    <div class="stepwizard">
+                        <div class="stepwizard-row setup-panel">
+                            <div class="stepwizard-step col-xs-3">
+                                <a href="#step-1" type="button" class="btn btn-success btn-circle"><span class="fa fa-calendar-check-o"></span></a>
+                                <p class=""><small>Schedule</small></p>
+                            </div>
+                            <div class="stepwizard-step col-xs-3">
+                                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span class="fa fa-ship"></span></a>
+                                <p><small>OMW</small></p>
+                            </div>
+                            <div class="stepwizard-step col-xs-3">
+                                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span class="fa fa-hourglass-start"></span></a>
+                                <p><small>Start</small></p>
+                            </div>
+                            <div class="stepwizard-step col-xs-3">
+                                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span class="fa fa-stop"></span></a>
+                                <p><small>Finish</small></p>
+                            </div>
+                            <div class="stepwizard-step col-xs-3">
+                                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span class="fa fa-paper-plane"></span></a>
+                                <p><small>Invoice</small></p>
+                            </div>
+                            <div class="stepwizard-step col-xs-3">
+                                <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">
+                                    <span class="fa fa-credit-card"></span></a>
+                                <p><small>Pay</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
                     <div class="card table-custom">
                         <div class="card-body">
-                            <h6 class="page-title">&nbsp;Add line items</h6>
-                            <hr>
+                            <h6 class="page-title">&nbsp; Import Existing Estimate,Workorder or Invoice</h6>
+                            <hr/>
                             <table class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
                                  <thead>
                                     <tr>
-                                       <th>Services</th>
+
                                     </tr>
                                  </thead>
                                  <tbody>
                                     <tr>
-                                       <td><svg class="MuiSvgIcon-root jss72" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"></path></svg></td>
-                                       <td>
-                                          <input type="text" name="check_description[]" class="form-control checkDescription" placeholder="Item name">
-                                       </td>
-                                       <td><input type="text" name="check_description[]" class="form-control checkDescription" placeholder="Qty"></td>
-                                       <td><input type="text" name="check_amount[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price"></td>
-                                       <td style="text-align: center" class="d-flex">$00<a href="#" class="remove-check-row"><i class="fa fa-times-circle" aria-hidden="true"></i></a></td>
-                                    </tr>
-                                    </tr>
-                                        <tr>
                                         <td class="upload" colspan="5">
                                          <input id="files" type="file">
                                         </td>
@@ -576,32 +670,212 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </tr> 
                                     <tr>
                                         <td colspan="5">
-                                           <button type="button" class="btn btn-primary">Import +</button>
+                                           <button type="button" class="btn btn-primary"><span class="fa fa-download"></span> Import</button>
+
                                         </td>
                                     </tr>
-                                    
                                  </tbody>
                              </table>
-                             <div class="file-upload-drag">
-                               <div class="drop">
-                                    <div class="cont">
-                                        <div class="tit">
-                                            <p>Thumbnail</p>
-                                            <p class="or-text">Or</p>
-                                            <p>PDF</p>
-                                            <p class="or-text">Or</p>
-                                            <p>URL Link</p>
-                                            <p>To see import source</p>
-                                            <!-- <p class="or-text">Or</p>
-                                            <label>Choose File</label> -->
+                            <div class="col-sm-12">
+                                <hr>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6>Job Items Listing</h6>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <small>tag3</small>
+                                    </div>
+                                    <div class="col-sm-3" style="font-size: 20px;">
+                                        <span class="fa fa-paper-plane-o"  style="color:#59bdb3;"></span>
+                                        <span class="fa fa-file"  style="color:#e57399;"></span>
+                                        <span class="fa fa-print" style="color:#8b63d7;"></span>
+                                        <span class="fa fa-plus"  style="color:#64ae89;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td width="35%">
+                                           <small>Item name</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription" >
+                                        </td>
+                                        <td>
+                                            <small>Qty</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                        </td>
+                                        <td>
+                                            <small>Unit Price</small>
+                                            <input type="text" name="check_amount[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <small>Unit Cost</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                        </td>
+                                        <td>
+                                            <small>Inventory Location</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                        </td>
+                                        <td style="text-align: center" class="d-flex">$00<a href="#" class="remove-check-row"><i class="fa fa-times-circle" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
+                                                <span class="fa fa-plus-square fa-margin-right"></span>Add Items
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="col-sm-12">
+                                <p>Description of Job (optional)</p>
+                                <textarea name="description" class="form-control" ></textarea>
+                                <hr/>
+                            </div>
+
+                            <div class="col-md-12 table-responsive">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        &nbsp;<div class="file-upload-drag">
+                                            <div class="drop">
+                                                <div class="cont">
+                                                    <div class="tit">
+                                                        <p>Thumbnail</p>
+                                                        <p class="or-text">Or</p>
+                                                        <p>PDF</p>
+                                                        <p class="or-text">Or</p>
+                                                        <p>URL Link</p>
+                                                        <p>To see import source</p>
+                                                        <!-- <p class="or-text">Or</p>
+                                                        <label>Choose File</label> -->
+                                                    </div>
+                                                </div>
+                                                <input id="filetoupload" name="filetoupload" type="file" />
+                                                <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
+                                            </div>
                                         </div>
                                     </div>
-                                    <input id="filetoupload" name="filetoupload" type="file" />
-                                    <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
+                                    <div class="col-md-6 row pr-0">
+                                        <div class="col-sm-6">
+                                            <label style="padding: 0 .75rem;">Subtotal</label>
+                                        </div>
+                                        <div class="col-sm-6 text-right pr-3">
+                                            <label id="invoice_sub_total">$1,695.00</label>
+                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <hr>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <small>Tax Rate</small>
+                                            <select id="inputState" class="form-control">
+                                                <option >None</option>
+                                                <option selected="">FL Tax(7.5%)</option>
+                                            </select>
+                                         </div>
+                                        <div class="col-sm-6 text-right pr-3">
+                                            <label id="invoice_sub_total">$0.00</label>
+                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <hr>
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                        </div>
+                                        <div class="col-sm-6 text-right pr-3">
+                                            <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
+                                                <span class="fa fa-plus-square fa-margin-right"></span>Discount
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <hr>
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                        </div>
+                                        <div class="col-sm-6 text-right pr-3">
+                                            <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
+                                                <span class="fa fa-plus-square fa-margin-right"></span>Deposit
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <hr>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label style="padding: 0 .75rem;">Total</label>
+                                        </div>
+                                        <div class="col-sm-6 text-right pr-3">
+                                            <label id="invoice_sub_total">$1,695.00</label>
+                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <small>Thank you for your business, Please call Nsmartrac at xxx-xxx-xxxx for quality customer service.</small>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <hr>
+                                    </div>
                                 </div>
+                                <br>
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
+                                        <button type="button" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="card-header">
+                              <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
+                            </div>
+                            <div class="card-body">
+                                <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
                              </div>
-                            <div class="prev-btn mt-4">
-                                <button type="button" class="btn btn-primary">Preview</button>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="card-header">
+                                    <h5 style="padding-left: 20px;">Tags</h5>
+
+                                </div>
+                                <div class="card-body">
+                                    <span class="help help-sm help-block">#sample </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="card-header">
+                                    <h5 style="padding-left: 20px;">Photos/Attachments</h5>
+
+                                </div>
+                                <div class="card-body">
+                                    <span class="help help-sm help-block">download.pdf</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -616,7 +890,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <!-- Modal -->
 <div class="modal fade" id="new_customer" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="newcustomerLabel">Add new customer</h5>
@@ -626,50 +900,67 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </div>
       <div class="modal-body">
         <div class="contact-info">
-            <h3 class="c13 c20"><svg class="MuiSvgIcon-root-362 jss355" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path></svg>Contact info</h3>
             <div class="row">
                 <form>
-                    <div class="col-md-9">
+                    <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                 
-                                    <input type="text" class="form-control"  placeholder="First Name">
+                                    <label>First Name</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Last Name">
+                                    <label>Middle Initial</label>
+                                    <input type="text" class="form-control" placeholder="optional" >
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-7">
                                 <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Mobile Phone">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Display name(shown on invices)">
+                                    <label>Phone</label>
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Home Phone">
+                                    <label>Address</label>
+                                    <input type="email" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <input type="email" class="form-control"  placeholder="Email">
+                                    <label>City</label>
+                                    <input type="email" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Work Phone">
+                                    <label>State</label>
+                                    <input type="email" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Zip Code</label>
+                                    <input type="email" class="form-control">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <div class="form-group">
                             <input type="text" class="form-control"  placeholder="Company">
                         </div>
@@ -688,12 +979,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             Business
                           </label>
                         </div>
-                    </div>
+                    </div>-->
                     <hr>
                 </form>
             </div>
         </div>
-        <div class="contact-info">
+        <!--<div class="contact-info">
             <h3 class="c13 c20"><svg class="MuiSvgIcon-root-362 jss355" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>Address</h3>
             <div class="row">
                 <form>
@@ -738,7 +1029,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                     </div>
                     <div class="col-md-3">
-
                         <div class="address-proof">
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d389100.8208036594!2d-73.13514834535813!3d40.3678466330292!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1611070455636!5m2!1sen!2sin" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
                         </div>
@@ -746,8 +1036,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <hr>
                 </form>
             </div>
-        </div>
-        <div class="contact-info">
+        </div> -->
+        <!--<div class="contact-info">
             <h3 class="c13 c20"><svg class="MuiSvgIcon-root-362 jss355" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>Notes</h3>
             <div class="row">
                 <form>
@@ -778,7 +1068,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <hr>
                 </form>
             </div>
-        </div>
+        </div> -->
       </div>
       <div class="modal-footer modal-footer-detail">
         <div class="checkbox-modal">

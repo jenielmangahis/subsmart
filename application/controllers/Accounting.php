@@ -2166,7 +2166,7 @@ class Accounting extends MY_Controller {
         }
     }
 	
-	public function addSalesReceipt()
+    public function addSalesReceipt()
     {
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -2246,9 +2246,63 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
+
+    public function addRefundReceipt()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $product = json_encode($this->input->post('phone'));
+
+        // $product['id'] = "1";
+        // $product['prod'] = $this->input->post('prod');
+        // $product['desc'] = $this->input->post('desc');
+        // $product['qty'] = $this->input->post('qty');
+        // $product['rate'] = $this->input->post('rate');
+        // $product['amount'] = $this->input->post('amount');
+        // $product['tax'] = $this->input->post('tax');
+        // $prod[] = $product;
+
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'email' => $this->input->post('email'),
+            'receipt_date' => $this->input->post('receipt_date'),
+            'billing_address' => $this->input->post('billing_address'),
+            'location_scale' => $this->input->post('location_scale'),
+            'payment_method' => $this->input->post('payment_method'),
+            'refund_form' => $this->input->post('refund_form'),
+            // 'products' => $prod,
+            'products' => 'testing',
+            'message' => $this->input->post('message'),
+            'mess_statement' => $this->input->post('mess_statement'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'testing 2',
+            'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_refund_receipt_model->createRefundReceipts($new_data);
+
+        if($addQuery > 0){
+            redirect('accounting/banking');
+            // echo json_encode($addQuery);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
 	
 	public function addCreditMemo()
     {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $product = json_encode($this->input->post('phone'));
+
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'email' => $this->input->post('email'),
@@ -2275,9 +2329,9 @@ class Accounting extends MY_Controller {
         $addQuery = $this->accounting_credit_memo_model->createCreditMemo($new_data);
 
         if($addQuery > 0){
-            echo json_encode($addQuery);
-        }
-        else{
+            redirect('accounting/banking');
+            // echo json_encode($addQuery);
+        }else{
             echo json_encode(0);
         }
     }

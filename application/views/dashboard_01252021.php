@@ -454,7 +454,7 @@
                                         <span class="MuiButton-label">
                                             <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
                                                 <?php $jobCounter=0;?>
-                                                <?php if($job){ foreach($job as $jb) : ?>
+                                                <?php foreach($job as $jb) : ?>
                                                 <?php if(check_upcoming_date($jb->created_date)): ?>
                                                 <?php $jobCounter++;?>
                                                 <h6 class="MuiTypography-root jss111 MuiTypography-subtitle1 MuiTypography-noWrap" style="margin-bottom: 5px;"><?php echo get_format_date_with_day($jb->created_date); ?></h6>
@@ -485,7 +485,7 @@
                                                     </div>
                                                 </div>
                                                 <?php endif; ?>
-                                                <?php endforeach; } ?>
+                                                <?php endforeach; ?>
                                                 <?php if($jobCounter == 0) : ?>
                                                 <h6 class="MuiTypography-root jss111 MuiTypography-subtitle1 MuiTypography-noWrap" style="font-weight: 700; margin: auto; padding-top: 100px;">NO JOBS YET</h6>
                                                 <?php endif; ?>
@@ -550,7 +550,7 @@
                                 <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
                                     <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 0px; margin: -8px;">
                                         <?php $estCounter=0;?>
-                                        <?php if($estimate){ foreach($estimate as $est) : ?>
+                                        <?php foreach($estimate as $est) : ?>
                                         <?php if ($estCounter < 2) : ?>
                                         <?php $estCounter++;?>
                                         <a class="MuiButtonBase-root MuiButton-root jss107 MuiButton-text MuiButton-textPrimary" tabindex="0" aria-disabled="false" href="/pro/estimates/new/60749141">
@@ -588,7 +588,7 @@
                                             <span class="MuiTouchRipple-root"></span>
                                         </a>
                                         <?php endif; ?>
-                                        <?php endforeach; }?>
+                                        <?php endforeach; ?>
                                         <?php if($estCounter == 0) : ?>
                                         <h6 class="MuiTypography-root jss111 MuiTypography-subtitle1 MuiTypography-noWrap" style="font-weight: 700; margin: auto; padding-top: 100px;">NO ESTIMATES YET</h6>
                                         <?php endif; ?>
@@ -1385,8 +1385,7 @@
                                         <div class="message-widget contact-widget position-relative">
 
                                             <a href="#" class="pb-3 px-2 border-bottom d-flex align-items-center text-decoration-none">
-                                                <div class="user-img position-relative d-inline-block mr-2">
-                                                    <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">S</span>
+                                                <div class="user-img position-relative d-inline-block mr-2"> <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">S</span>
                                                 </div>
                                                 <div class="w-75 d-inline-block v-middle pl-2">
                                                     <h5 class="text-truncate mb-0">Send Invoice</h5>
@@ -1769,6 +1768,16 @@
                     </div>
                 </div>
             </div>
+            <!-- Earnings Display -->
+            <div class="row d-none d-lg-flex sortable2 MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2" id="sortable">
+            <?php
+            $modules = explode(",", $dashboard_sort->ds_values);
+            for($x=0;$x<count($modules);$x++){
+                if(!empty($modules[$x])){
+                  include viewPath('dashboard/'.$modules[$x]);
+                }
+            }
+            ?>
 
             <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-2 short_id" id="item_5">
                 <div class="c65 c61">
@@ -3192,7 +3201,7 @@
     /* Important stuff */
     .mdc-bottom-navigation {
     height: 56px;
-    background-color: var(--mdc-theme-background, #fff);
+    /* background-color: var(--mdc-theme-background, #fff); */
     width: 100%;
     box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
     overflow: hidden;
@@ -3281,7 +3290,7 @@
            $.ajax({
                type: "POST",
                url: "/dashboard/ac_dashboard_sort",
-               data: {ds_values : new_module_sort,acds_id : <?php echo $dashboard_sort->acds_id; ?>}, // serializes the form's elements.
+               data: {ds_values : new_module_sort,acds_id :  //echo $dashboard_sort->acds_id; ?>}, // serializes the form's elements.
                success: function(data)
                {
                    console.log(data);
@@ -3289,7 +3298,7 @@
            });
        }
     });
-    $( ".sortable2" ).sortable( "disable" );*/
+    $( ".sortable2" ).sortable( "disable" ); */
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>

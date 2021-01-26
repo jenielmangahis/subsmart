@@ -88,6 +88,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .required{
         color : red!important;
     }
+    .msg-count-cus {
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -404,28 +411,47 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                 <div class="tab-pane <?php if($minitab=='mt10'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="activity">
                                                     <div class="card">
-                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                            <div class="col-lg-12">
+                                                        <div class="card-body hid-desk">
+
+                                                            <div class="col-lg-8">
                                                                 <!-- <h6>Activity</h6> -->
-                                                                <div class="MuiCardContent-root jss60" style="height: 309px; overflow-x:scroll">
+                                                                <div class="MuiCardContent-root">
                                                                     <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
-                                                                        <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 30px;">
-                                                                            <ul class="timeline">
-                                                                                <?php 
-                                                                                if(!empty($activity_list))
-                                                                                {
-                                                                                foreach($activity_list as $al) { ?>
-                                                                                    <li class="timeline-item">
-                                                                                        <p class="timeline-content"><?=$al['activity']?></p>
-                                                                                        <p class="event-time"><?=$al['createdAt']?></p>
-                                                                                    </li>
-                                                                                <?php } 
-                                                                                }?>
-                                                                            </ul>
-                                                                        </div>    
+                                                                        <table id="customer_info" class="table">
+                                                                            <thead>
+                                                                            <tr>
+
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <div class="user-img position-relative d-inline-block mr-2">
+                                                                                            <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">WH</span>
+                                                                                        </div>
+                                                                                        Welyelf Hisula
+                                                                                    </td>
+                                                                                    <td>Job scheduled SMS sent to (970) 691-9018</td>
+                                                                                    <td>Thu 1/21/21
+                                                                                        6:20pm</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <div class="user-img position-relative d-inline-block mr-2">
+                                                                                            <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">WH</span>
+                                                                                        </div>
+                                                                                        Welyelf Hisula
+                                                                                    </td>
+                                                                                    <td>Job scheduled SMS sent to (970) 691-9018</td>
+                                                                                    <td>Thu 1/21/21
+                                                                                        6:20pm</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-lg-4"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -745,6 +771,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             });
         });
+
+
 
 
     });

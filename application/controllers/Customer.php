@@ -23,6 +23,7 @@ class Customer extends MY_Controller
         $this->load->model('CustomerAddress_model', 'customeraddress_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Esign_model', 'Esign_model');
+        $this->load->model('Activity_model','activity');
         $this->checkLogin();
         $this->load->library('session');
         $this->load->library('form_validation');
@@ -1067,6 +1068,8 @@ class Customer extends MY_Controller
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
         $this->load->model('Activity_model','activity');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+
         $this->load->view('customer/list', $this->page_data);
     }
     public function view($id)

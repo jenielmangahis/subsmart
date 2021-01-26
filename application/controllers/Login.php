@@ -118,6 +118,22 @@ class Login extends CI_Controller {
             return;
 
         }
+
+        /*$ipaddress = $this->timesheet_model->gtMyIpGlobal();
+	   
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
+        $lat = $get_location->lat;
+        $lng = $get_location->lon;
+
+        $utimezone = $get_location->timezone;
+         
+        date_default_timezone_set($utimezone); 
+        
+        $this->users_model->update($user->id, [
+			'user_time_zone'	=>	$utimezone,
+			'time_zone_update'	=>	date('Y-m-d H:m:i'),
+		]);*/
+
 		$this->load->model('Activity_model', 'activity');
 		$activity['activityName'] = "User Login";
 		$activity['activity'] = " User ".logged('username')." is loggedin";

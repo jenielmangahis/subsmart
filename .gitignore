@@ -32,5 +32,6 @@ api/
 nbproject/*
 application/cache/*
 .idea/*
+.htaccess
 
-
+application/config/database.php

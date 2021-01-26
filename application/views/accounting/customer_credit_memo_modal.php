@@ -18,7 +18,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control">
+                                    <select class="form-control" name="customer_id">
                                         <option></option>
                                         <?php foreach($customers as $customer) : ?>
                                             <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     Credit Memo Date<br>
-                                    <input type="text" class="form-control" id="datepickerinv7" name="credit_memo">
+                                    <input type="text" class="form-control" id="datepickerinv7" name="credit_memo_date">
                                 </div>
                                 
                             </div>
@@ -48,7 +48,7 @@
                         <div class="col-md-6" align="right">
                             AMOUNT<h2>$0.00</h2><br>
                             Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;" name="amount">
+                            <input type="text" class="form-control" style="width:200px;" name="location_scale">
                         </div>
                     </div>
                     <hr>
@@ -117,9 +117,9 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;" name="mess_invoice"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="message_displayed_on_credit_memo"></textarea><br>
                             Message on statement<br>
-                            <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
+                            <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
                         </div>
                         <div class="col-md-8">
                         </div>

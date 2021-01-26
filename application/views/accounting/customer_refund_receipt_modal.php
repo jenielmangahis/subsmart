@@ -11,6 +11,7 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
+                <form action="<?php echo site_url()?>accounting/addRefundReceipt" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -26,7 +27,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     Email
-                                    <input type="text" class="form-control" name="email">
+                                    <input type="email" class="form-control" name="email">
                                     <i style="text-align:right;"> Cc/Bcc </i>
                                 </div>
                             </div>
@@ -51,11 +52,12 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment method
-                                    <select class="form-control" name="payment_method">
+                                    <select class="form-control" name="payment_method" id="payment_method">
                                         <option></option>
-                                        <option>Cash</option>
-                                        <option>Check</option>
-                                        <option>Credit Card</option>
+                                        <option value="0">Add New</option>
+                                        <?php foreach($paymethods as $paymethod) { ?>
+                                            <option value="<?php echo $paymethod->payment_method_id ; ?>"> <?php echo $paymethod->quick_name; ?></option>
+                                            <?php } ?>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -73,7 +75,7 @@
                         <div class="col-md-6" align="right">
                             AMOUNT<h2>$0.00</h2><br>
                             Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;">
+                            <input type="text" class="form-control" style="width:200px;" name="location_scale">
                         </div>
                     </div>
                     <hr>
@@ -94,23 +96,23 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                             </table>
@@ -142,7 +144,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;" name="mess_invoice"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="message"></textarea><br>
                             Message on statement<br>
                             <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
                         </div>
@@ -230,7 +232,7 @@
                                 </div>
                             </div>
                         </div>
-
+                </form>
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
                 </div>

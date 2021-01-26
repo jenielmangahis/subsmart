@@ -25,6 +25,27 @@ class General_model extends MY_Model {
         }
     }
 
+    public function get_data_with_param($params = array()){
+        if(array_key_exists("table",$params) && $params['table'] != NULL ){
+            $this->db->from($params['table']);
+        }else{
+            return FALSE;
+        }
+
+        if(array_key_exists("select",$params) && $params['select'] != NULL ){
+            $this->db->select($params['select']);
+        }else{
+            $this->db->select('*');
+        }
+
+        if(array_key_exists("join",$params) && $params['join'] != NULL ){
+            $this->db->join($params['join']['table'], $params['join']['statement'],$params['join']['join_as']);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function update_with_key($input, $id,$table)
     {
         //$input['date_modified'] = date('Y-m-d H:i:s');;

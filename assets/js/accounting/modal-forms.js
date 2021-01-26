@@ -5,6 +5,7 @@ var blankRow = '';
 var modalName = '';
 var tagsListModal = '';
 var timesheetInputs = 'input.day-input';
+var payrollForm = '';
 var payrollFormData = [];
 
 $(function() {
@@ -68,6 +69,7 @@ $(function() {
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
+        payrollForm = $('div#payrollModal div.modal-body').html();
         payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
 
         $.ajax({
@@ -78,6 +80,12 @@ $(function() {
             contentType: false,
             success: function(res) {
                 $('div#payrollModal div.modal-body').html(res);
+
+                var chartHeight = $('div#payrollModal div.modal-body div#payrollChart').parent().prev().height();
+                var chartWidth = $('div#payrollModal div.modal-body div#payrollChart').parent().width();
+
+                $('div#payrollModal div#payrollChart').height(chartHeight);
+                $('div#payrollModal div#payrollChart').width(chartWidth);
 
                 var payrollCost = $('div#payrollModal div.modal-body h1 span#total-payroll-cost').html();
                 var totalNetPay = $('div#payrollModal div.modal-body h4 span#total-net-pay').html();
@@ -105,7 +113,40 @@ $(function() {
             }
         });
 
-        $(this).html('Submit Payroll');
+        $(this).parent().prepend('<button type="submit" class="btn btn-success">Submit Payroll</button>');
+        $(this).remove();
+        $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="back-payroll-form">Back</button>');
+    });
+
+    $(document).on('click', 'div#payrollModal div.modal-footer button#back-payroll-form', function() {
+        $('div#payrollModal div.modal-body').html(payrollForm);
+
+        $('div#payrollModal div.modal-body select#payFrom').val(payrollFormData.get('pay_from'));
+        $('div#payrollModal div.modal-body select#payPeriod').val(payrollFormData.get('pay_period'));
+        $('div#payrollModal div.modal-body input#payDate').val(payrollFormData.get('pay_date'));
+
+        $('div#payrollModal div.modal-body table tbody tr').each(function() {
+            if($(this).children('td:nth-child(4)').children('input').length === 0) {
+                $(this).children('td:first-child()').children('div').children('input').prop('checked', false)
+            }
+        });
+
+        $('div#payrollModal div.modal-body table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"]').each(function(index,value) {
+            $(this).val(payrollFormData.getAll('reg_pay_hours[]')[index]);
+        });
+
+        $('div#payrollModal div.modal-body table tbody tr td:nth-child(5) input[name="commission[]"]').each(function(index,value) {
+            $(this).val(payrollFormData.getAll('commission[]')[index]);
+        });
+
+        $('div#payrollModal div.modal-body table tbody tr td:nth-child(6) input[name="memo[]"]').each(function(index,value) {
+            $(this).val(payrollFormData.getAll('memo[]')[index]);
+        });
+
+        $(this).parent().html('<button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" id="close-payroll-modal">Close</button>');
+        $('div#payrollModal div.modal-footer button[type="submit"]').html('Preview Payroll');
+        $('div#payrollModal div.modal-footer button[type="submit"]').attr('id', 'preview-payroll');
+        $('div#payrollModal div.modal-footer button[type="submit"]').prop('type', 'button');
     });
 
     $(document).on('change', 'div#statementModal table thead th input[name="select_all"], div#statementModal table thead th input[name="select_all"], div#payrollModal table thead th input[name="select_all"]', function() {
@@ -721,7 +762,10 @@ const submitModalForm = (event, el) => {
     event.preventDefault();
 
     var data = new FormData(document.getElementById($(el).attr('id')));
-    data.append('modal_name', $(el).parent().parent().attr('id'));
+    if($(el).children().attr('id') === 'payrollModal') {
+        data = payrollFormData;
+    }
+    data.append('modal_name', $(el).children().attr('id'));
 
     $.ajax({
         url: '/accounting/submit-modal-form',

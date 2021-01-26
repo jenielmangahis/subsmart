@@ -13,7 +13,7 @@
                             <ul id="wizName" class="wizDetails"></ul>
                             <a class="nav-link Bold" id="trigger-tab" data-toggle="pill" href="#trigger" role="tab" aria-selected="false"><i id="triggerCheck" style="display: none;" class="fa fa-check text-green mr-2"></i> Choose a Trigger</a>
                             <ul id="triggerDetails" class="wizDetails"></ul>
-                            <a class="nav-link Bold" id="action-tab" data-toggle="pill" href="#action" role="tab"  aria-selected="false">Choose an Action</a>
+                            <a class="nav-link Bold" id="action-tab" data-toggle="pill" href="#action" role="tab"  aria-selected="false"><i id="actionCheck" style="display: none;" class="fa fa-check text-green mr-2"></i> Choose an Action</a>
                             <ul id="actionDetails" class="wizDetails"></ul>
                             <a class="nav-link Bold" id="final-tab" data-toggle="pill" href="#final" role="tab" aria-selected="false">Finalize It!</a>
                         </div>
@@ -56,22 +56,30 @@
 
                                 <div class="app-search-block">
                                     <div class="search-compair-bx">
-                                        <div class="form-group">
+                                        <div id="fetchAction" class="form-group">
                                             <label>Please Select an Action App</label>
-                                            <input type="text" name="" placeholder="Search for an action app" class="form-control">
+                                            <input type="text" name="" placeholder="Search for an action app" class="form-control typeahead">
                                             <i class="fa fa-search"></i>
+                                        </div>
+                                        <div id="actionDetailsWrapper" class="col-lg-12" style="display: none; text-align: center">
+                                            <img id="actionImg" src="<?php echo $url->assets ?>wizard/img/wizard-ic.png" alt="" style="width:70px; margin: 0 auto;">
+                                            <h4 id="actionTitle"></h4>
+                                            <div id="actions" class="list-group col-lg-10">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-8 form-group float-right">
                                     <a prev="trigger" next="action" onclick="setPreviousTrigger()" class="btn btn-warning btnPrevious" >Previous</a>
-                                    <a prev="action" next="final" class="btn btn-success btnNext" >Next</a>
+                                    <a prev="action" next="final" class="btn btn-success btnNext disabled" onclick="setActionName()" id="actionNext" >Next</a>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="final" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-
+                                <div class="col-lg-12" id='configSetUp'>
+                                    
+                                </div>
                                 <div class="mt-8 form-group float-right">
-                                    <a prev="action" next="final" class="btn btn-warning btnPrevious" >Previous</a>
+                                    <a prev="action" next="final" onclick="setPreviousAction()" class="btn btn-warning btnPrevious" >Previous</a>
                                     <a class="btn btn-success" >Save</a>
                                 </div>
                             </div>
@@ -85,6 +93,10 @@
     <input type="hidden" name="trig_id" id="trig_id" />
     <input type="hidden" name="trig_name" id="trig_name" />
     <input type="hidden" name="action_id" id="action_id" />
+    <input type="hidden" name="action_name" id="action_name" />
+    <input type="hidden" name="has_config" id="has_config" />
+    <input type="hidden" name="action_config" id="action_config" />
+    <input type="hidden" name="img_config" id="img_config" />
 </div>
 
 <script type="text/javascript">
@@ -108,6 +120,52 @@
                 suggestion: Handlebars.compile(`<div class="row" onClick="fetchAppFunction('{{app_id}}','{{app_name}}','{{app_img}}')"><div class="col-md-2" style="padding-right:5px; padding-left:5px;"><img src="<?php echo $url->assets ?>{{app_img}}" class="img-thumbnail" width="48" /></div><div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{app_name}}</div></div>`)
             }
         });
+        
+        $('#fetchAction .typeahead').typeahead(null, {
+            name: 'app_name',
+            display: 'app_name',
+            source: trigger_app,
+            limit: 15,
+            templates: {
+                suggestion: Handlebars.compile(`<div class="row" onClick="fetchAppAction('{{app_id}}','{{app_name}}','{{app_img}}')"><div class="col-md-2" style="padding-right:5px; padding-left:5px;"><img src="<?php echo $url->assets ?>{{app_img}}" class="img-thumbnail" width="48" /></div><div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{app_name}}</div></div>`)
+            }
+        });
+
+        showConfigSetUp = function (app, app_img, has_config)
+        {
+            if(has_config==1)
+            {
+                $.ajax({
+                    url: '<?php echo base_url(); ?>wizard/'+app,
+                    method: 'post',
+                    data: {img:app_img},
+                    success: function (response) {
+                        $('#actionCheck').hide(500);
+                        $('#actionDetails').append('<li style="list-style:disclosure-closed; margin-left: 35px;" class="hasTrigger">Setup Config</li>');
+                        $('#configSetUp').html(response);
+                    }
+                });
+                
+            }
+        };
+
+        fetchAppAction = function (app_id, app_name, app_img)
+        {
+            $('#fetchAction').hide();
+            $('#actionDetails').append('<li>' + app_name + '</li>')
+            $('#actionTitle').html('Select a ' + app_name + ' Trigger');
+            $('#actionDetailsWrapper').show();
+            $('#actionImg').attr('src', "<?php echo $url->assets ?>" + app_img);
+
+            $.ajax({
+                url: '<?php echo base_url(); ?>wizard/getActionAppFuncById/'+app_id,
+                method: 'get',
+                data: {},
+                success: function (response) {
+                    $('#actions').html(response)
+                }
+            });
+        };
 
         fetchAppFunction = function (app_id, app_name, app_img)
         {
@@ -118,7 +176,7 @@
             $('#trigImg').attr('src', "<?php echo $url->assets ?>" + app_img);
 
             $.ajax({
-                url: '<?php echo base_url(); ?>wizard/getAppFuncById/'+app_id,
+                url: '<?php echo base_url(); ?>wizard/getTrigAppFuncById/'+app_id,
                 method: 'get',
                 data: {},
                 success: function (response) {
@@ -139,9 +197,37 @@
             }
         };
         
+        setActionName = function()
+        {
+            
+            var hasConfig = $('#has_config').val();
+            
+            if($('#actionDetails li').hasClass('hasTrigger'))
+            {
+                $('#actionDetails li.hasTrigger').html($('#action_name').val());
+                $('#actionCheck').show(500);
+            }else{
+                $('#actionDetails').append('<li style="list-style:disclosure-closed; margin-left: 35px;" class="hasTrigger">' + $('#action_name').val() + '</li>');
+                $('#actionCheck').show(500);
+            }
+            
+            var img = $('#img_config').val();
+            var action_config = $('#action_config').val();
+            
+            showConfigSetUp(action_config, img, hasConfig);
+        };
+        
+        
+        
+        
         setPreviousTrigger = function()
         {
             $('#triggerCheck').hide(500);
+        };
+        
+        setPreviousAction = function()
+        {
+            $('#actionCheck').hide(500);
         };
 
         $('.btnNext').click(function () {
