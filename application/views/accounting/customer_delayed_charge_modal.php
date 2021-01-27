@@ -11,6 +11,7 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
+                <form action="<?php echo site_url()?>accounting/addDelayedCharge" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -29,7 +30,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Delayed Credit date<br>
-                                    <input type="text" class="form-control" name="credit_date">
+                                    <input type="text" class="form-control" name="charge_date" id="datepickerinv12">
                                 </div>                                
                             </div>
                             <hr>
@@ -63,23 +64,23 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                             </table>
@@ -110,7 +111,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             Memo<br>
-                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="memo"></textarea><br>
                         </div>
                     </div>
                     <hr>
@@ -168,6 +169,7 @@
                                 </div>
                             </div>
                         </div>
+            </form>
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
                 </div>

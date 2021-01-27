@@ -106,6 +106,18 @@ class Job extends MY_Controller
         $this->load->view('job/job', $this->page_data);
     }
 
+    public function get_customer_selected(){
+        $id = $_POST['prof_id'];
+        $get_customer = array(
+            'where' => array(
+                'prof_id' => $id,
+            ),
+            'table' => 'acs_profile',
+            'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,zip_code',
+        );
+        echo json_encode($this->general->get_data_with_param($get_customer),TRUE);
+    }
+
     public function new_job1() {
         $get = $this->input->get();
         $comp_id = logged('company_id');
@@ -142,6 +154,8 @@ class Job extends MY_Controller
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
         }
+
+        // get all customers
         $get_customer = array(
             'where' => array(
                 //'fk_user_id' => $id,
@@ -149,21 +163,33 @@ class Job extends MY_Controller
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name',
         );
+        $this->page_data['customers'] = $this->general->get_data_with_param($get_customer);
 
+        // get all employees
         $get_employee = array(
             'where' => array(
                 //'fk_user_id' => $id,
             ),
             'table' => 'employees',
-            'select' => 'employees_id,FName,LName',
+            'select' => 'employees.id,FName,LName',
             'join' => array(
                 'table' => 'users',
                 'statement' => 'employees.user_id=users.id',
                 'join_as' => 'left',
             ),
         );
+
+        // get all job tags
+        $get_job_tags = array(
+            'where' => array(
+                //'fk_user_id' => $id,
+            ),
+            'table' => 'job_tags',
+            'select' => 'id,name',
+        );
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
         //echo logged('company_id');
-        $this->page_data['customers'] = $this->general->get_data_with_param($get_customer);
+
         $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
         $this->load->view('job/job_new', $this->page_data);
     }

@@ -29,6 +29,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_bank_deposit_model');
         $this->load->model('accounting_weekly_timesheet_model');
         $this->load->model('accounting_payroll_model');
+        $this->load->model('invoice_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
@@ -60,16 +61,6 @@ class Accounting_modals extends MY_Controller {
                 case 'inventory_qty_modal':
                     $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
                     $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
-                break;
-                case 'statement_modal':
-                    $customers = $this->accounting_customers_model->getCompanyCustomersWithBalance();
-                    $this->page_data['customers'] = $customers;
-
-                    $withoutEmail = array_filter($customers, function($value, $key) {
-                        return $value->email === '';
-                    }, ARRAY_FILTER_USE_BOTH);
-
-                    $this->page_data['withoutEmail'] = $withoutEmail;
                 break;
                 case 'payroll_modal':
                     $this->page_data['employees'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
@@ -369,10 +360,15 @@ class Accounting_modals extends MY_Controller {
         } else {
             $filenames = $this->move_files($files, 'transfer');
 
+            $transferFrom = explode('-', $data['transfer_from']);
+            $transferTo = explode('-', $data['transfer_to']);
+
             $insertData = [
                 'company_id' => logged('company_id'),
-                'transfer_from_account' => $data['transfer_from'],
-                'transfer_to_account' => $data['transfer_to'],
+                'transfer_from_account_key' => $transferFrom[0],
+                'transfer_from_account_id' => $transferFrom[1],
+                'transfer_to_account_key' => $transferTo[0],
+                'transfer_to_account_id' => $transferTo[1],
                 'transfer_amount' => $data['transfer_amount'],
                 'transfer_date' => $data['date'],
                 'transfer_memo' => $data['memo'],
@@ -586,6 +582,8 @@ class Accounting_modals extends MY_Controller {
         } else {
             $filenames = $this->move_files($files, 'bank_deposit');
 
+            $cashBackTarget = explode('-', $data['cash_back_target']);
+
             $insertData = [];
             foreach($data['account'] as $key => $value) {
                 if(strpos($data['received_from'][$key], 'customer-') === 0) {
@@ -614,7 +612,8 @@ class Accounting_modals extends MY_Controller {
                     'payment_method' => $data['payment_method'][$key],
                     'ref_no' => $data['reference_no'][$key],
                     'amount' => $data['amount'][$key],
-                    'cash_back_account' => $data['cash_back_target'],
+                    'cash_back_account_key' => $cashBackTarget[0],
+                    'cash_back_account_id' => $cashBackTarget[1],
                     'cash_back_memo' => $data['cash_back_memo'],
                     'cash_back_amount' => $data['cash_back_amount'],
                     'memo' => $data['memo'],
@@ -658,45 +657,15 @@ class Accounting_modals extends MY_Controller {
             $return['message'] = 'Please enter at least one inventory item.';
         } else {
             $insertData = [];
-            if(strpos($data['inventory_adj_acc'], 'cogs-') === 0) {
-                $accountType = 'Cost of Goods Sold';
-                $accountId = str_replace('cogs-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'expenses-') === 0) {
-                $accountType = 'Expenses';
-                $accountId = str_replace('expenses-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'oexpense-') === 0) {
-                $accountType = 'Other Expense';
-                $accountId = str_replace('oexpense-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'income-') === 0) {
-                $accountType = 'Income';
-                $accountId = str_replace('income-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'oincome-') === 0) {
-                $accountType = 'Other Income';
-                $accountId = str_replace('oincome-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'equity-') === 0) {
-                $accountType = 'Equity';
-                $accountId = str_replace('equity-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'ocassets-') === 0) {
-                $accountType = 'Other Current Assets';
-                $accountId = str_replace('ocassets-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'oassets-') === 0) {
-                $accountType = 'Other Assets';
-                $accountId = str_replace('oassets-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'bank-') === 0) {
-                $accountType = 'Bank';
-                $accountId = str_replace('bank-', '', $data['inventory_adj_acc']);
-            } else if(strpos($data['inventory_adj_acc'], 'ocliab-') === 0) {
-                $accountType = 'Other Current Liabilities';
-                $accountId = str_replace('ocliab-', '', $data['inventory_adj_acc']);
-            }
+            $adjustmentAcc = explode('-', $data['inventory_adj_acc']);
 
             foreach($data['product'] as $key => $value) {
                 $insertData[] = [
                     'adjustment_no' => $data['reference_no'],
                     'company_id' => logged('company_id'),
                     'adjustment_date' => $data['adjustment_date'],
-                    'inventory_adjustment_account' => $accountId,
-                    'inventory_adjustment_account_type' => $accountType,
+                    'inventory_adjustment_account' => $adjustmentAcc[1],
+                    'inventory_adjustment_account_type' => $adjustmentAcc[0],
                     'product_id' => $value,
                     'new_quantity' => $data['new_qty'][$key],
                     'change_in_quantity' => $data['change_in_qty'][$key],
@@ -734,16 +703,7 @@ class Accounting_modals extends MY_Controller {
         } else {
             $insertData = [];
 
-            if(strpos($data['person_tracking'], 'employee-') === 0) {
-                $nameKey = 'employee';
-                $nameId = str_replace('employee-', '', $data['person_tracking']);
-            } else if(strpos($data['person_tracking'], 'vendor-') === 0){
-                $nameKey = 'vendor';
-                $nameId = str_replace('vendor-', '', $data['person_tracking']);
-            } else {
-                $nameKey = null;
-                $nameId = null;
-            }
+            $personTracking = explode('-', $data['person_tracking']);
 
             $weekDate = explode('-', $data['week_dates']);
             $weekStartDate = strtotime($weekDate[0]);
@@ -766,8 +726,8 @@ class Accounting_modals extends MY_Controller {
                     ];
 
                     $insertData[] = [
-                        'name_key' => $nameKey,
-                        'name_id' => $nameId,
+                        'name_key' => $personTracking[0],
+                        'name_id' => $personTracking[1],
                         'week_start_date' => date('Y-m-d', $weekStartDate),
                         'week_end_date' => date('Y-m-d', $weekEndDate),
                         'customer_id' => $value,
@@ -833,7 +793,7 @@ class Accounting_modals extends MY_Controller {
                 $empTax = number_format($empSocial + $empMedicare, 2, '.', ',');
 
                 $insertData[] = [
-                    'payroll_no' => is_null($payrollNo) ? 1 : $payrollNo,
+                    'payroll_no' => is_null($payrollNo) ? 1 : $payrollNo+1,
                     'pay_period_start' => $payPeriodStart,
                     'pay_period_end' => $payPeriodEnd,
                     'pay_date' => $data['pay_date'],

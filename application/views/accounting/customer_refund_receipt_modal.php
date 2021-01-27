@@ -28,7 +28,7 @@
                                 <div class="col-md-6">
                                     Email
                                     <input type="email" class="form-control" name="email">
-                                    <i style="text-align:right;"> Cc/Bcc </i>
+                                    <a href="#" style="text-align:right;color:blue;"><i> Cc/Bcc </i></a>
                                 </div>
                             </div>
                             <hr>
@@ -39,20 +39,20 @@
                                 </div>
                                 <div class="col-md-3">
                                     Refund Receipt date<br>
-                                    <input type="text" class="form-control" name="receipt_date">
+                                    <input type="text" class="form-control" name="receipt_date" id="datepickerinv10">
                                 </div>                                
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
-                                    Tags <a href="#" style="float:right">Manage tags</a>
+                                    Tags <a href="#" style="float:right;color:blue;">Manage tags</a>
                                     <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment method
-                                    <select class="form-control" name="payment_method" id="payment_method">
+                                    <select class="form-control" name="payment_method"  id="rr_payment_method">
                                         <option></option>
                                         <option value="0">Add New</option>
                                         <?php foreach($paymethods as $paymethod) { ?>
@@ -64,9 +64,9 @@
                                     Refund From
                                     <select class="form-control" name="refund_form">
                                         <option></option>
-                                        <option>A</option>
-                                        <option>B</option>
-                                        <option>C</option>
+                                        <option value="1">A</option>
+                                        <option value="2">B</option>
+                                        <option value="3">C</option>
                                     </select>
                                 </div>
                             </div>
@@ -153,6 +153,15 @@
                         <div class="col-md-2">
                             Taxable subtotal <b>$0.00</b><br>
                             <table class="table table-borderless">
+                                <tr>
+                                    <td colspan="2">
+                                        <select class="form-control" name="tax_rate">
+                                            <option value="1">Based on location</option>
+                                            <option readonly>CUSTOME RATES</option>
+                                            <option value="2">+ Add rate</option>
+                                        </select>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td></td>
                                     <td><b>$0.00</b><br><a href="">See the math</a></td>
@@ -245,3 +254,4 @@
     </div>
     <!--end of modal-->
 </div>
+<?php include viewPath('accounting/add_new_payment_method'); ?>

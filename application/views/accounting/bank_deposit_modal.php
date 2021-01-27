@@ -111,7 +111,7 @@
                                                     </select>
                                                 </td>
                                                 <td><input type="text" name="reference_no[]" class="form-control"></td>
-                                                <td><input type="number" name="amount[]" class="form-control text-right" step=".01" onkeyup="updateBankDepositTotal()" required></td>
+                                                <td><input type="number" name="amount[]" class="form-control text-right" step=".01" onchange="updateBankDepositTotal(this)" required></td>
                                                 <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                             </tr>
                                             <tr>
@@ -157,7 +157,21 @@
                                     <div class="form-group">
                                         <label for="cashBackTarget">Cash back goes to</label>
                                         <select name="cash_back_target" id="cashBackTarget" class="form-control" required>
-                                            <option value="1">Cash on hand</option>
+                                            <optgroup label="Bank">
+                                                <option value="bank-1">Cash on hand</option>
+                                            </optgroup>
+                                            <optgroup label="Other Current Assets">
+                                                <option value="oca-1">Inventory Asset</option>
+                                            </optgroup>
+                                            <optgroup label="Credit Card">
+                                                <option value="ccard-1">Credit Card</option>
+                                            </optgroup>
+                                            <optgroup label="Other Current Liabilities">
+                                                <option value="ocl-1">Loan Payable</option>
+                                            </optgroup>
+                                            <optgroup label="Equity">
+                                                <option value="equity-1">Loan Payable</option>
+                                            </optgroup>
                                         </select>
                                     </div>
                                 </div>
@@ -170,7 +184,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="cashBackAmount">Cash back amount</label>
-                                        <input type="number" name="cash_back_amount" id="cashBackAmount" step=".01" onkeyup="updateBankDepositTotal()" class="form-control text-right">
+                                        <input type="number" name="cash_back_amount" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control text-right">
                                     </div>
                                 </div>
                             </div>
