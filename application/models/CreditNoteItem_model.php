@@ -29,6 +29,11 @@ class CreditNoteItem_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function deleteAllByCreditNoteId($credit_note_id)
+    {
+        $this->db->delete($this->table, array('credit_note_id' => $credit_note_id));
+    }
 }
 
 /* End of file CreditNoteItem_model.php */

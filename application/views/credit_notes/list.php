@@ -87,12 +87,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/view/' . $c->id) ?>"><span
+                                                                               href="<?php echo base_url('credit_notes/view/' . $c->id) ?>"><span
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('credit_notes/edit/' . $c->id) ?>"><span
                                                                     class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $c->id; ?>">
+                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" class="delete-credit-note" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
                                                     </li>
@@ -118,29 +121,53 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
 
-     <!-- Modal Delete Credit Note  -->
-        <div class="modal fade bd-example-modal-md" id="modelDeleteCreditNote" tabindex="-1" role="dialog" aria-labelledby="modelDeleteCreditNoteTitle" aria-hidden="true">
-          <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <?php echo form_open_multipart('credit_notes/delete', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-              <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
-              <div class="modal-body">        
-                  <p>Are you sure you want to delete selected item?</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-danger">Yes</button>
-              </div>
-              <?php echo form_close(); ?>
-            </div>
+     <!-- Modal Send Email  -->
+    <div class="modal fade bd-example-modal-md" id="modalSendEmail" tabindex="-1" role="dialog" aria-labelledby="modalSendEmailTitle" aria-hidden="true">
+      <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-envelope-open-o"></i> Send to Customer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
+          <?php echo form_open_multipart('estimate/_send_customer', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+          <?php echo form_input(array('name' => 'cnid', 'type' => 'hidden', 'value' => '', 'id' => 'cnid'));?>
+          <div class="modal-body">        
+              <p>Are you sure you want to send the selected credit note to customer?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-info">Yes</button>
+          </div>
+          <?php echo form_close(); ?>
         </div>
+      </div>
+    </div>
+
+    <!-- Modal Delete Credit Note  -->
+    <div class="modal fade bd-example-modal-md" id="modelDeleteCreditNote" tabindex="-1" role="dialog" aria-labelledby="modelDeleteCreditNoteTitle" aria-hidden="true">
+      <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <?php echo form_open_multipart('credit_notes/delete', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+          <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
+          <div class="modal-body">        
+              <p>Are you sure you want to delete selected item?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-danger">Yes</button>
+          </div>
+          <?php echo form_close(); ?>
+        </div>
+      </div>
+    </div>
 
     <!-- end container-fluid -->
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
@@ -170,6 +197,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     });
 
     $(document).ready(function () {
+        $(".btn-send-customer").click(function(e){
+            var cnid = $(this).attr("data-id");
+            $("#cnid").val(cnid);
+            $("#modalSendEmail").modal('show');
+        });
 
         $(".delete-credit-note").click(function(e){
             var eid = $(this).attr("data-id");

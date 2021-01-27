@@ -41,10 +41,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">New Credit Note</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Add a new credit note.</li>
-                        </ol>
+                        <h1 class="page-title">Edit Credit Note</h1>                        
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
@@ -62,6 +59,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <!-- end row -->
             <?php echo form_open_multipart('credit_notes/update', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <input type="hidden" name="cid" value="<?= $creditNote->id; ?>">
             <input type="hidden" id="inst_cost" value="0">
             <input type="hidden" id="one_time" value="0">
             <input type="hidden" id="m_monitoring" value="0">
@@ -76,7 +74,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option></option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <option <?= $c->id == $creditNote->customer_id ? '' : 'selected="selected"'; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -85,23 +83,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-6 form-group">
                                     <label for="job_name">Job Name</label>
                                     <span class="help help-sm">(optional)</span>
-                                    <input type="text" class="form-control" name="job_name" id="job_name"
-                                           placeholder="" required/>
+                                    <input type="text" class="form-control" name="job_name" id="job_name" value="<?= $creditNote->job_name; ?>" placeholder="" required/>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Credit Note#</label>
-                                    <input type="text" class="form-control" name="credit_note_number" id="estimate_date"
-                                           required placeholder="" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
-                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                    <input type="text" class="form-control" name="credit_note_number" id="estimate_date" required placeholder="" autofocus value="<?= $creditNote->credit_note_number; ?>" onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Date Issued</label>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="date_issued" id="estimate_date"
-                                               placeholder="">
+                                        <input type="text" class="form-control" name="date_issued" id="estimate_date" placeholder="" value="<?= date("m/d/Y",strtotime($creditNote->date_issued)); ?>">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -110,8 +104,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-4 form-group">
                                     <label for="expiry_date">Expiry Date</label>
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="expiry_date" id="expiry_date"
-                                               placeholder="">
+                                        <input type="text" class="form-control" name="expiry_date" id="expiry_date" placeholder="" value="<?= date("m/d/Y",strtotime($creditNote->expiry_date)); ?>">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -122,7 +115,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" id="plansItemDiv">
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover table-items">
-                                        <input type="hidden" name="count" value="0" id="count">
+                                        <?php $total_items = count($creditNoteItems) - 1; ?>
+                                        <input type="hidden" name="count" value="<?= $total_items; ?>" id="count">
                                         <thead>
                                         <tr style="background-color: #b8b8b8;">
                                             <th colspan="8"><b>Manage items</b></th>
@@ -139,6 +133,49 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                         </thead>
                                         <tbody id="table_body">
+                                        <?php if($creditNoteItems){ ?>
+                                        <?php $row_counter = 0; foreach($creditNoteItems as $ci){ ?>
+                                            <tr>
+                                                <td><select name="item_type[]" class="form-control">
+                                                        <option <?= $ci->item_type == 'product' ? 'selected="selected"' : ''; ?> value="product">Product</option>
+                                                        <option <?= $ci->item_type == 'material' ? 'selected="selected"' : ''; ?> value="material">Material</option>
+                                                        <option <?= $ci->item_type == 'service' ? 'selected="selected"' : ''; ?> value="service">Service</option>
+                                                    </select></td>
+                                                <td>
+                                                    <input type="text" class="form-control getItems" value="<?= $ci->title; ?>" onKeyup="creditNoteGetItems(this)" name="item[]">
+                                                    <ul class="suggestions"></ul>
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" class="form-control itemid" name="itemIds[]" id="itemid_<?= $row_counter; ?>" value="<?= $ci->item_id; ?>">
+                                                    <input type="text" class="form-control quantity" name="quantity[]" data-counter="<?= $row_counter; ?>" id="quantity_<?= $row_counter; ?>" value="<?= $ci->qty; ?>">
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control price" name="price[]" data-counter="<?= $row_counter; ?>" id="price_<?= $row_counter; ?>" min="0" value="<?= number_format($ci->price,2); ?>">
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" class="btn-set-discount" data-id="<?= $row_counter; ?>">
+                                                        <span class="form-control-block">
+                                                            <span class="discount-<?= $row_counter; ?>"><?= number_format($ci->discount,2); ?></span>                                                        
+                                                        </span>    
+                                                        <input type="hidden" class="form-control discount" name="discount[]" data-counter="<?= $row_counter; ?>" id="discount_<?= $row_counter; ?>" value="<?= $ci->discount; ?>" readonly>                             
+                                                        <i class="item-link-sm">set discount</i>                   
+                                                    </a>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" name="tax[]" id="tax_<?= $row_counter; ?>" value="<?= $ci->tax; ?>">
+                                                    <span id="span_tax_<?= $row_counter; ?>"><?= number_format($ci->tax,2); ?> (7.5%)</span>
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" name="itemTotal[]" id="item_total_<?= $row_counter; ?>" value="<?= $ci->total; ?>">
+                                                    <span id="span_total_<?= $row_counter; ?>"><?= number_format($ci->total,2); ?></span>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="remove btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        <?php $row_counter++;} ?>
+                                    <?php }else{ ?>
                                         <tr>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
@@ -174,6 +211,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <span id="span_total_0">0.00</span>
                                             </td>
                                         </tr>
+                                    <?php } ?>
                                         </tbody>
                                     </table>
                                     <a href="javascript:void(0);" class="btn btn-primary" id="credit-note-add-item">Add Item</a>
@@ -220,14 +258,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label>Message to Customer</label> <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
+                                        <textarea name="customer_message" cols="40" rows="2" class="form-control"><?= $creditNote->note_customer; ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label>Terms &amp; Conditions</label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
-                                        <textarea name="terms_conditions" cols="40" rows="2"
-                                                  class="form-control"></textarea>
+                                        <textarea name="terms_conditions" cols="40" rows="2" class="form-control"><?= $creditNote->terms_condition; ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -357,6 +394,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
     $(document).ready(function () {
+        <?php if($total_items > 0){ ?>
+            calculation("<?= $total_items; ?>");
+        <?php } ?>
         $('button[name="discount_type_percent"]').click(function(){
             $("#discount-type").val("percent");
 
