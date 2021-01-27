@@ -3,6 +3,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <style type="text/css">
+    .wrapper *{
+        font-size: 14px;
+    }
+    #map {
+        height: 200px;
+        width: 100%;
+        padding: 0;
+    }
+
     .left-sidebar-main .card {
         padding: 0px;
     }
@@ -11,7 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         align-items: center;    
     }
     .left-sidebar-main .card .page-title svg {
-        margin-right: 0px !;
+        margin-right: 0;
     }
     .form-group-icon {
         position: relative;
@@ -328,6 +337,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         color :#32243d;
     }
 </style>
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
@@ -335,7 +345,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="row custom__border left-sidebar-main">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <h6 class="page-title">
@@ -343,9 +353,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path>
                                 </svg> &nbsp;Customer
                             </h6>
+                            <div class="edit-icon">
+                                <button class="MuiButtonBase-root MuiIconButton-root" tabindex="0" type="button">
+                                <span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;">
+                                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg></span>
+                                    <span class="MuiTouchRipple-root"></span></button>
+                            </div>
                             <hr>
                             <small>Select Existing Customer</small>
-                            <select id="inputState" class="form-control">
+                            <select id="customers" class="form-control">
                                 <option value="">None</option>
                                 <?php if(!empty($customers)): ?>
                                     <?php foreach ($customers as $customer): ?>
@@ -361,19 +377,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Welyelf Hisula</td>
+                                        <td id="cust_fullname">xxxxx xxxxx</td>
                                         <td><a href=""><span class="fa fa-user customer_right_icon"></span></a></td>
                                     </tr>
                                     <tr>
-                                        <td>4668 Windstarr Drive <p> Destin, FL 32541</p></td>
+                                        <td id="cust_address">-------------</td>
                                         <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
                                     </tr>
                                     <tr>
-                                        <td>(970) 691-9018</td>
+                                        <td id="cust_number">(xxx) xxx-xxxx</td>
                                         <td><a href=""><span class="fa fa-phone customer_right_icon"></span></a></td>
                                     </tr>
                                     <tr>
-                                        <td>welyelfhisula@gmail.com</td>
+                                        <td id="cust_email">xxxxx@xxxxx.xxx</td>
                                         <td><a href=""><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
                                     </tr>
                                 </tbody>
@@ -390,21 +406,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h6 class="page-title">
                                 Map
                             </h6>
+                            <div class="col-md-12">
+                                <div id="map"></div>
+                            </div>
+                            <br>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-body">
                             <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>  &nbsp; &nbsp;Schedule Job</h6>
-                            <div class="edit-icon">
-                            <button class="MuiButtonBase-root MuiIconButton-root" tabindex="0" type="button"><span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg></span><span class="MuiTouchRipple-root"></span></button>
-                            </div>
+
                             <hr>
                             <div class="form-group label-width d-flex align-items-center">
                                <label>From</label>
-                               <input type="date" class="form-control mr-2">
+                               <input type="date" class="form-control">
                                <select id="inputState" class="form-control">
                                 <option selected="">Start time</option>
-                                <option>...</option>
+                                <option value="5:00 AM">5:00 AM</option>
+                                <option value="5:30 AM">5:30 AM</option>
+                                <option value="6:00 AM">6:00 AM</option>
+                                <option value="6:30 AM">6:30 AM</option>
+                                <option value="7:00 AM">7:00 AM</option>
+                                <option value="7:30 AM">7:30 AM</option>
+                                <option value="">8:00 AM</option>
+                                <option value="">8:30 AM</option>
+                                <option value="">9:00 AM</option>
+                                <option value="">9:30 AM</option>
+                                <option value="">10:00 AM</option>
+                                <option value="">10:30 AM</option>
+                                <option value="">11:00 AM</option>
+                                <option value="">11:30 AM</option>
+                                <option value="">12:00 AM</option>
+                                <option value="">12:30 AM</option>
+                                <option value="">1:00 PM</option>
+                                <option value="">1:30 PM</option>
+                                <option value="">2:00 PM</option>
+                                <option value="">2:30 PM</option>
+                                <option value="">3:00 PM</option>
+                                <option value="">3:30 PM</option>
+                                <option value="">4:00 PM</option>
+                                <option value="">4:30 PM</option>
                               </select>
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
@@ -412,20 +453,42 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                <input type="date" class="form-control mr-2">
                                <select id="inputState" class="form-control">
                                 <option selected="">End time</option>
-                                <option>...</option>
+                                   <option value="5:00 AM">5:00 AM</option>
+                                   <option value="5:30 AM">5:30 AM</option>
+                                   <option value="6:00 AM">6:00 AM</option>
+                                   <option value="6:30 AM">6:30 AM</option>
+                                   <option value="7:00 AM">7:00 AM</option>
+                                   <option value="7:30 AM">7:30 AM</option>
+                                   <option value="">8:00 AM</option>
+                                   <option value="">8:30 AM</option>
+                                   <option value="">9:00 AM</option>
+                                   <option value="">9:30 AM</option>
+                                   <option value="">10:00 AM</option>
+                                   <option value="">10:30 AM</option>
+                                   <option value="">11:00 AM</option>
+                                   <option value="">11:30 AM</option>
+                                   <option value="">12:00 AM</option>
+                                   <option value="">12:30 AM</option>
+                                   <option value="">1:00 PM</option>
+                                   <option value="">1:30 PM</option>
+                                   <option value="">2:00 PM</option>
+                                   <option value="">2:30 PM</option>
+                                   <option value="">3:00 PM</option>
+                                   <option value="">3:30 PM</option>
+                                   <option value="">4:00 PM</option>
+                                   <option value="">4:30 PM</option>
                                </select>
                             </div>
                             <select id="inputState" class="form-control">
                                 <option selected="">Select Employee</option>
-                                <option>...</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
-                                        <option value="<?= $employee->employees_id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                        <option value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                               </select>
                               <div class="color-box-custom">
-                                  <h4>Event Color on Calendar</h4>
+                                  <h6>Event Color on Calendar</h6>
                                   <ul>
                                       <li>
                                         <span class="color-scheme bg-1"></span>
@@ -456,19 +519,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                       </li>
                                   </ul>
                                </div>
-                               <h4>Customer Reminder Notification</h4>
-                               <select id="inputState" class="form-control">
-                                <option selected="">1 day free</option>
-                                <option>...</option>
-                              </select>
-                              <h4>Timezone</h4>
+                               <h6>Customer Reminder Notification</h6>
+                                <select name="event_notify_at" class="form-control">
+                                    <option value="0">None</option>
+                                    <option value="PT5M">5 minutes before</option>
+                                    <option value="PT15M">15 minutes before</option>
+                                    <option value="PT30M">30 minutes before</option>
+                                    <option value="PT1H">1 hour before</option>
+                                    <option value="PT2H">2 hours before</option>
+                                    <option value="PT4H">4 hours before</option>
+                                    <option value="PT6H">6 hours before</option>
+                                    <option value="PT8H">8 hours before</option>
+                                    <option value="PT12H">12 hours before</option>
+                                    <option value="PT16H">16 hours before</option>
+                                    <option value="P1D" selected="selected">1 day before</option>
+                                    <option value="P2D">2 days before</option>
+                                    <option value="PT0M">On date of event</option>
+                                </select>
+                              <h6>Time Zone</h6>
                                <select id="inputState" class="form-control">
                                 <option selected="">Central Time (UTC -5)</option>
                                 <option>...</option>
                               </select>
-                            <button type="button" class="btn btn-primary pull-right text-link">+ Assign to</button>
+                            <hr>
+                            <button type="button" class="btn btn-primary pull-right text-link"> <span class="fa fa-plus"></span> Share Job</button>
+
                         </div>
-                        
+                        <br>
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -495,9 +572,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                         <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
                                         <div class="card-body">
-                                            <div class="form-group">
-                                                <input type="text" class="form-control">
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -517,15 +592,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="card-header" id="headingOne">
                                         <h2 class="mb-0">
                                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Private notes</h6>
+                                                <h6 class="page-title"> <span style="font-size: 20px;"  class="fa fa-book"></span> Private notes </h6>
                                             </button>
                                         </h2>
+
                                         </div>
 
                                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <input type="text" class="form-control">
+                                            </div>
+                                            <br><br>
+                                            <div style="float: right;">
+                                                <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
+                                                <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                                <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
                                             </div>
                                         </div>
                                     </div>
@@ -556,10 +638,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="form-group">
                                             <small>Select Tag</small>
                                             <select id="inputState" class="form-control">
-                                                <option >Tags1</option>
-                                                <option selected="">Tags2</option>
-                                                <option selected="">Tags3</option>
-                                                <option selected="">Tags4</option>
+                                                <?php if(!empty($tags)): ?>
+                                                    <?php foreach ($tags as $tag): ?>
+                                                        <option value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
                                             </select>
                                         </div>
                                     </div>
@@ -606,12 +689,50 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header" id="headingOne">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
+                                        <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>Fill & eSign</h6>
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
 
+                                    <div style="float: right;">
+                                        <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                        <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
+                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header" id="headingOne">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
+                                        <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- <div class="prev-btn float-right">
                        <button type="button" class="btn btn-primary">Preview</button>
                     </div> -->
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-8">
+
                     <div class="stepwizard">
                         <div class="stepwizard-row setup-panel">
                             <div class="stepwizard-step col-xs-3">
@@ -679,27 +800,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-sm-12">
                                 <hr>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h6>Job Items Listing</h6>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <small>tag3</small>
-                                    </div>
-                                    <div class="col-sm-3" style="font-size: 20px;">
-                                        <span class="fa fa-paper-plane-o"  style="color:#59bdb3;"></span>
-                                        <span class="fa fa-file"  style="color:#e57399;"></span>
-                                        <span class="fa fa-print" style="color:#8b63d7;"></span>
-                                        <span class="fa fa-plus"  style="color:#64ae89;"></span>
-                                    </div>
-                                </div>
-                            </div>
+
                             <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr></tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td>
+                                            <h6>Job Items Listing</h6>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <small>Job Tags</small>
+                                            <input type="text" class="form-control" value="Residential" readonly="readonly">
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
+
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td width="35%">
                                            <small>Item name</small>
@@ -819,66 +945,213 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <hr>
                                     </div>
                                     <div class="col-sm-12">
-                                        <small>Thank you for your business, Please call Nsmartrac at xxx-xxx-xxxx for quality customer service.</small>
+                                        <div style="float: right;">
+                                            <img width="100" id="customer-signature" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
+                                            <center><span><b>John Doe</b></span></center><br>
+                                            <span>------------------------</span><br>
+                                            <center><span>Approved By</span></center><br>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="col-sm-12">
+                                    <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                                        <div class="row">
+                                            <div class="col-md-12 ">
+                                                <div class="card-header">
+                                                    <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                    <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <span class="help help-sm help-block">State a note for more information.</span>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <div style="float: right;">
+                                                        <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                                        <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
+                                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                    <div class="card" style="border-color: #e0e0e0;border: 1px solid;">
+                                        <div class="row">
+                                            <div class="col-md-12 ">
+                                                <div class="card-header">
+                                                    <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                    <h5 style="padding-left: 20px;">Url Link</h5>
+
+                                                </div>
+                                                <div class="card-body">
+                                                    <span class="help help-sm help-block">Upload url link or a pdf link </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                    <div class="card" style="border-color: #e0e0e0;border: 1px solid;">
+                                        <div class="row">
+                                            <div class="col-md-12 ">
+                                                <div class="card-header">
+                                                    <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                    <h5 style="padding-left: 20px;">Photos/Attachments</h5>
+
+                                                </div>
+                                                <div class="card-body">
+                                                    <span class="help help-sm help-block">download pdf,jpg,png</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" value="Thank you for your business, Please call Nsmartrac at xxx-xxx-xxxx for quality customer service.">
                                     </div>
                                     <div class="col-sm-12">
                                         <hr>
                                     </div>
                                 </div>
                                 <br>
-                                <div class="row">
 
-                                    <div class="col-sm-12">
-                                        <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
-                                        <button type="button" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
+                                    <button type="button" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card table-custom">
+                        <div class="card-body">
+
+                            <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="card-header">
+                                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                            <h5 style="padding-left: 20px;" class="mb-0">Payment Details</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <span class="help help-sm help-block">Record and process invoice</span>
+                                        </div>
                                     </div>
                                 </div>
-
-
-
                             </div>
+
+                            <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="card-header">
+                                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                            <h5 style="padding-left: 20px;" class="mb-0">Devices Audit</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <span class="help help-sm help-block">Record all items used on jobs</span>
+                                            <br>
+                                            <div style="margin-right:15px; padding-top:1px;font-size: 10px !important;" align="left" class="normaltext1">
+                                                <a href="javascript:void(0);" id="moreFields" class="more_fields" style="color:#58bc4f;"><span class="fa fa-plus"></span> Add Device </a>&nbsp;&nbsp;
+                                                <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+                                            </div>
+                                            <table cellpadding="0" cellspacing="3" class="table table-striped table-bordered"">
+                                                <thead>
+                                                <tr>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Name</b>
+                                                    </td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Sold By</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Points</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Retail Cost</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Purchase Price</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Qty</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Tot Points</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Tot Cost</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Tot Purchase Price</b></td>
+                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                        <b>Net</b></td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php if (isset($device_info)) : ?>
+                                                    <?php foreach ($device_info as $device) { ?>
+                                                        <tr>
+                                                            <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                <?= $device->device_name; ?>
+                                                            </td>
+                                                            <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                <?= $device->sold_by; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                <?= $device->device_points; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
+                                                                <?= '$'.$device->retail_cost; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
+                                                                <?= '$'.$device->purch_price; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                <?= $device->device_qty; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                <?= $device->total_points; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
+                                                                <?= '$'.$device->total_cost; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
+                                                                <?= '$'.$device->total_purch_price; ?>
+                                                            </td>
+                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
+                                                                <?= '$'.$device->device_net; ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                <?php endif ?>
+                                                </tbody>
+                                            </table>
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="card-header">
+                                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                            <h5 style="padding-left: 20px;" class="mb-0">Activity Feeds</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <span class="help help-sm help-block">History log of customer</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="row">
-                        <div class="col-md-12 ">
-                            <div class="card-header">
-                              <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
-                            </div>
-                            <div class="card-body">
-                                <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
-                             </div>
-                        </div>
-                        </div>
-                    </div>
 
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-md-12 ">
-                                <div class="card-header">
-                                    <h5 style="padding-left: 20px;">Tags</h5>
-
-                                </div>
-                                <div class="card-body">
-                                    <span class="help help-sm help-block">#sample </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-md-12 ">
-                                <div class="card-header">
-                                    <h5 style="padding-left: 20px;">Photos/Attachments</h5>
-
-                                </div>
-                                <div class="card-body">
-                                    <span class="help help-sm help-block">download.pdf</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -898,64 +1171,65 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+        <form id="new_customer_form">
       <div class="modal-body">
         <div class="contact-info">
             <div class="row">
-                <form>
+
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text" name="first_name" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text" name="last_name" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label>Middle Initial</label>
-                                    <input type="text" class="form-control" placeholder="optional" >
+                                    <input type="text" name="middle_name" class="form-control" placeholder="optional" >
                                 </div>
                             </div>
                             <div class="col-md-7">
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" class="form-control" required>
+                                    <input type="email" name="email" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Phone</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" name="phone_h" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Address</label>
-                                    <input type="email" class="form-control">
+                                    <input type="email" name="mail_add" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="email" class="form-control">
+                                    <input type="email" name="city" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>State</label>
-                                    <input type="email" class="form-control">
+                                    <input type="email" name="state" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Zip Code</label>
-                                    <input type="email" class="form-control">
+                                    <input type="email" name="zip_code" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -981,7 +1255,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                     </div>-->
                     <hr>
-                </form>
+
             </div>
         </div>
         <!--<div class="contact-info">
@@ -1071,16 +1345,93 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div> -->
       </div>
       <div class="modal-footer modal-footer-detail">
-        <div class="checkbox-modal">
+        <!--<div class="checkbox-modal">
             <input type="checkbox" id="receive" name="receive" value="receive">
             <label for="receive"> Receive notifications</label><br>
-        </div>
+        </div>-->
         <div class="button-modal-list">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+            <button type="button" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
         </div>
       </div>
+        </form>
     </div>
   </div>
 </div>
+
+
 <?php include viewPath('includes/footer'); ?>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=initMap&libraries=&v=weekly"></script>
+<script>
+
+    $(document).ready(function() {
+        $("#customers").on( 'change', function () {
+            var customer_selected = this.value;
+            //var firstDropVal = $('#pick').val();
+            // $('.btn_redeem').data('request-data',end);
+            console.log(customer_selected);
+            if(customer_selected !== ""){
+                $.ajax({
+                    type: "POST",
+                    url: "/job/get_customer_selected",
+                    data: {id : customer_selected}, // serializes the form's elements.
+                    success: function(data)
+                    {
+                        var customer_data = JSON.parse(data);
+                        console.log(customer_data);
+                        console.log(customer_data[0].first_name);
+                        $('#cust_fullname').text(customer_data[0].first_name + ' ' + customer_data[0].last_name);
+                        $('#cust_address').text(customer_data[0].mail_add + ' ' + customer_data[0].city + ',' + ' ' + customer_data[0].state + ' ' + customer_data[0].zip_code);
+                        $('#cust_number').text(customer_data[0].phone_h);
+                        $('#cust_email').text(customer_data[0].email);
+                        initMap(customer_data[0].mail_add + ' ' + customer_data[0].city + ' ' + ' ' + customer_data[0].state + ' ' + customer_data[0].zip_code);
+                    }
+                });
+            }else{
+                $('#cust_fullname').text('xxxxx xxxxx');
+                $('#cust_address').text('-------------');
+                $('#cust_number').text('(xxx) xxx-xxxx');
+                $('#cust_email').text('xxxxx@xxxxx.xxx');
+                initMap();
+            }
+        });
+
+    });
+
+</script>
+<script>
+    var geocoder;
+    function initMap(address=null) {
+        if(address == null){
+            address = '6866 Pine Forest Rd Pensacola FL 32526';
+        }
+        const myLatLng = { lat: -25.363, lng: 131.044 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: myLatLng,
+        });
+        new google.maps.Marker({
+            position: myLatLng,
+            map,
+            title: "Hello World!",
+        });
+        geocoder = new google.maps.Geocoder();
+        codeAddress(geocoder, map,address);
+    }
+    function codeAddress(geocoder, map,address) {
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                console.log(status);
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
+

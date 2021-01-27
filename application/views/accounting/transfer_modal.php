@@ -16,7 +16,27 @@
                             <div class="form-group w-50">
                                 <label for="transferFrom">Transfer Funds From</label>
                                 <select name="transfer_from" id="transferFrom" class="form-control" required>
-                                    <option value="1">Cash on hand</option>
+                                    <optgroup label="Bank">
+                                        <option value="bank-1">Cash on hand</option>
+                                    </optgroup>
+                                    <optgroup label="Other Current Assets">
+                                        <option value="ocassets-1">Inventory Asset</option>
+                                    </optgroup>
+                                    <optgroup label="Other Assets">
+                                        <option value="oassets-1">Shareholder Investment</option>
+                                    </optgroup>
+                                    <optgroup label="Credit Card">
+                                        <option value="ccard-1">Credit Card</option>
+                                    </optgroup>
+                                    <optgroup label="Other Current Liabilities">
+                                        <option value="ocliab-1">Alabama Department of Revenue Payable</option>
+                                    </optgroup>
+                                    <optgroup label="Long Term Liabilities">
+                                        <option value="ltliab-1">Notes Payable</option>
+                                    </optgroup>
+                                    <optgroup label="Equity">
+                                        <option value="equity-1">Additional Paid In Capital</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -34,7 +54,27 @@
                             <div class="form-group w-50">
                                 <label for="transferTo">Transfer Funds To</label>
                                 <select name="transfer_to" id="transferTo" class="form-control" required>
-                                    <option value="1">Cash on hand</option>
+                                    <optgroup label="Bank">
+                                        <option value="bank-1">Cash on hand</option>
+                                    </optgroup>
+                                    <optgroup label="Other Current Assets">
+                                        <option value="ocassets-1">Inventory Asset</option>
+                                    </optgroup>
+                                    <optgroup label="Other Assets">
+                                        <option value="oassets-1">Shareholder Investment</option>
+                                    </optgroup>
+                                    <optgroup label="Credit Card">
+                                        <option value="ccard-1">Credit Card</option>
+                                    </optgroup>
+                                    <optgroup label="Other Current Liabilities">
+                                        <option value="ocliab-1">Alabama Department of Revenue Payable</option>
+                                    </optgroup>
+                                    <optgroup label="Long Term Liabilities">
+                                        <option value="ltliab-1">Notes Payable</option>
+                                    </optgroup>
+                                    <optgroup label="Equity">
+                                        <option value="equity-1">Additional Paid In Capital</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -51,7 +91,7 @@
                         <div class="col-md-6">
                             <div class="form-group w-50">
                                 <label for="transferAmount">Transfer Amount</label>
-                                <input type="number" name="transfer_amount" id="transferAmount" class="form-control" required>
+                                <input type="number" name="transfer_amount" step="0.01" id="transferAmount" class="form-control text-right" required>
                             </div>
                         </div>
 

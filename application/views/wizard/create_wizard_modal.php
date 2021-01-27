@@ -78,9 +78,20 @@
                                 <div class="col-lg-12" id='configSetUp'>
                                     
                                 </div>
+                                <div style="display: none;" class="addon__switch justify-content-center" id="wizEnabled">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-addon-delete-modal="open" data-id="WiZ" data-name="WiZ" id="onoff-WiZ">
+                                        <label class="onoffswitch-label" for="onoff-WiZ">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                    <div class="addon__switch__label--on">enabled</div>
+
+                                </div>
                                 <div class="mt-8 form-group float-right">
                                     <a prev="action" next="final" onclick="setPreviousAction()" class="btn btn-warning btnPrevious" >Previous</a>
-                                    <a class="btn btn-success" >Save</a>
+                                    <a onclick="saveWiz()" class="btn btn-success" id="saveWizBtn" style="display: none;" >Save</a>
                                 </div>
                             </div>
                         </div>
@@ -97,10 +108,41 @@
     <input type="hidden" name="has_config" id="has_config" />
     <input type="hidden" name="action_config" id="action_config" />
     <input type="hidden" name="img_config" id="img_config" />
+    <input type="hidden" value="0" name="config_data" id="config_data" />
+    <input type="hidden" value="" name="config_name" id="config_name" />
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
+        
+        saveWiz = function(){
+            var wizIsEnabled = 0;
+            
+            if($('#onoff-WiZ').is(":checked"))
+            {
+                wizIsEnabled = 1;
+            }
+            
+            $.ajax({
+                url: '<?php echo base_url(); ?>wizard/saveCreatedWiz',
+                method: 'post',
+                data: {
+                    wizName     :   $('#wizAppName').val(),
+                    wizTrigger  :   $('#trig_id').val(),
+                    wizAction   :   $('#action_id').val(),
+                    wizConfig   :   $('#config_data').val(),
+                    wizEnabled  :   wizIsEnabled,
+                    configName  :   $('#config_name').val()
+                },
+                dataType: 'json',
+                success: function (response) {
+                    alert(response.msg);
+                    location.reload();
+                }
+            });
+            
+        };
+        
         var trigger_app = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -255,5 +297,5 @@
             $('#' + next).removeClass('show');
             $('#' + next).removeClass('active');
         });
-    })
+    });
 </script>    

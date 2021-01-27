@@ -6,6 +6,23 @@ class Wizard_model extends MY_Model {
 	public $table = 'wizard';
 	public $tableWorkspaces = 'wizard_workspace';
         
+        function saveCreatedWiz($details,$user_id,$wizTrigger,$wizAction)
+        {
+            $this->db->where('wa_user_id', $user_id);
+            $this->db->where('wa_trigger_app_id', $wizTrigger);
+            $this->db->where('wa_action_app_id', $wizAction);
+            $qCheck = $this->db->get('wizard_automate');
+            if($qCheck->num_rows()==0):
+                if($this->db->insert('wizard_automate', $details)):
+                    return json_encode(array('status' => true, 'msg' => 'WiZ Successfully Created', 'id' => $this->db->insert_id()));
+                else:
+                    return json_encode(array('status' => false, 'msg' => 'Sorry Something went wrong'));
+                endif;
+            else:
+                return json_encode(array('status' => false, 'msg' => 'Sorry, this WiZ sequence is already created'));
+            endif;
+        }
+        
         function deleteApp($id)
         {
             $this->db->where('id', $id);

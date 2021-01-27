@@ -160,6 +160,15 @@ $(document).ready(function () {
 	$('#datepickerinv9').datepicker({
       uiLibrary: 'bootstrap'
     });
+	$('#datepickerinv10').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv11').datepicker({
+      uiLibrary: 'bootstrap'
+    });
+	$('#datepickerinv12').datepicker({
+      uiLibrary: 'bootstrap'
+    });
 
 	document.getElementById("addNewTerms").onchange = function() {
     if (this.value == '0') {
@@ -169,6 +178,12 @@ $(document).ready(function () {
 	}
 
 	document.getElementById("rp_payment_method").onchange = function() {
+    if (this.value == '0') {
+        // alert('yeah');
+		$('#add_new_payment_method').modal('toggle');
+    	}
+	}
+	document.getElementById("rr_payment_method").onchange = function() {
     if (this.value == '0') {
         // alert('yeah');
 		$('#add_new_payment_method').modal('toggle');

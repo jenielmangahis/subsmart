@@ -174,7 +174,7 @@
                                         <select class="form-control" name="tax_rate">
                                             <option value="1">Based on location</option>
                                         </select>
-                                        </td>
+                                    </td>
                                     <td><b>$0.00</b><br><a href="">See the math</a></td>
                                 </tr>
                                 <tr>

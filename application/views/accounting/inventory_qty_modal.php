@@ -29,8 +29,36 @@
                             <div class="form-group">
                                 <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
                                 <select name="inventory_adj_acc" id="inventoryAdjAccount" class="form-control" required>
-                                    <option value="cogs-1">Cost of Goods Sold</option>
-                                    <option value="cogs-2">Inventory Shrinkage</option>
+                                    <optgroup label="Cost of Goods Sold">
+                                        <option value="cogs-1">Cost of Goods Sold</option>
+                                    </optgroup>
+                                    <optgroup label="Expenses">
+                                        <option value="expenses-1">Advertising</option>
+                                    </optgroup>
+                                    <optgroup label="Other Expense">
+                                        <option value="oexpense-1">Miscellaneous</option>
+                                    </optgroup>
+                                    <optgroup label="Income">
+                                        <option value="income-1">Billable Expense Income</option>
+                                    </optgroup>
+                                    <optgroup label="Other Income">
+                                        <option value="oincome-1">Interest Earned</option>
+                                    </optgroup>
+                                    <optgroup label="Equity">
+                                        <option value="equity-1">Additional Paid In Capital</option>
+                                    </optgroup>
+                                    <optgroup label="Other Current Assets">
+                                        <option value="ocassets-1">Inventory Asset</option>
+                                    </optgroup>
+                                    <optgroup label="Other Assets">
+                                        <option value="oassets-1">Shareholder Investment</option>
+                                    </optgroup>
+                                    <optgroup label="Bank">
+                                        <option value="bank-1">Cash on hand</option>
+                                    </optgroup>
+                                    <optgroup label="Other Current Liabilities">
+                                        <option value="ocliab-1">Alabama Department of Revenue Payable</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
