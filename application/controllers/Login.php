@@ -138,6 +138,7 @@ class Login extends CI_Controller {
 		$activity['activityName'] = "User Login";
 		$activity['activity'] = " User ".logged('username')." is loggedin";
 		$activity['user_id'] = logged('id');
+		
 		$isUserInserted = $this->activity->addEsignActivity($activity);
         if( $is_startup == 1 ){
         	redirect('onboarding/business_info');
