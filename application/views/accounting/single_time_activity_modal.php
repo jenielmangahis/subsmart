@@ -27,6 +27,7 @@
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <select name="name" id="name" class="form-control" required>
+                                    <option value="" disabled selected>Whose time are you tracking?</option>
                                     <optgroup label="Employees">
                                         <?php foreach($dropdown['employees'] as $employee):?>
                                             <option value="employee-<?php echo $employee->id;?>"><?php echo $employee->FName . ' ' . $employee->LName;?></option>
@@ -42,6 +43,7 @@
                             <div class="form-group">
                                 <label for="customer">Customer</label>
                                 <select name="customer" id="customer" class="form-control" required>
+                                    <option value="" disabled selected>Choose a customer</option>
                                     <option value="1">Betty Fuller</option>
                                     <?php foreach($dropdown['customers'] as $customer) :?>
                                         <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
@@ -51,6 +53,7 @@
                             <div class="form-group">
                                 <label for="service">Service</label>
                                 <select name="service" id="service" class="form-control" required>
+                                    <option value="" disabled selected>Choose the service worked on</option>
                                     <option value="1">Credit</option>
                                 </select>
                             </div>

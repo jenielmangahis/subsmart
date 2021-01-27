@@ -1,5 +1,6 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
+<form onsubmit="submitModalForm(event, this)" id="modal-form">
     <div id="statementModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -68,10 +69,10 @@
                         <div class="col-md-12">
                             <ul class="nav nav-tabs" id="recipientsTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link" id="missing-email-tab" data-toggle="tab" href="#missing-email" role="tab" aria-controls="missing-email" aria-selected="true">Missing email address (<?php echo count($withoutEmail); ?>)</a>
+                                    <a class="nav-link" id="missing-email-tab" data-toggle="tab" href="#missing-email" role="tab" aria-controls="missing-email" aria-selected="true">Missing email address (0)</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="statements-avail-tab" data-toggle="tab" href="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="true">Statements available (<?php echo count($customers); ?>)</a>
+                                    <a class="nav-link active" id="statements-avail-tab" data-toggle="tab" href="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="true">Statements available (0)</a>
                                 </li>
                             </ul>
 
@@ -86,28 +87,10 @@
                                             </th>
                                             <th>RECIPIENTS</th>
                                             <th>EMAIL ADDRESS</th>
-                                            <th>BALANCE</th>
+                                            <th class="text-right">BALANCE</th>
                                         </thead>
                                         <tbody>
-                                            <?php foreach($withoutEmail as $cust) :
-                                                $displayName = "";
-                                                $displayName .= ($cust->last_name !== "") ? $cust->last_name . ', ': '' ;
-                                                $displayName .= ($cust->first_name !== "") ? $cust->first_name : '' ;
-                                            ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                            <input class="m-auto" type="checkbox" name="select[]" value="1" checked>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $displayName; ?>
-                                                        <input type="hidden" name="customer_id[]" value="<?php echo $cust->prof_id; ?>">
-                                                    </td>
-                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $cust->email; ?>"></td>
-                                                    <td><p class="m-0 text-right">$0.00</p></td>
-                                                </tr>
-                                            <?php endforeach; ?>
+
                                         </tbody>
                                     </table>
                                     
@@ -128,27 +111,13 @@
                                             <th class="text-right">BALANCE</th>
                                         </thead>
                                         <tbody>
-                                            <?php foreach($customers as $customer) :
-                                                $displayName = "";
-                                                $displayName .= ($customer->last_name !== "") ? $customer->last_name . ', ': '' ;
-                                                $displayName .= ($customer->first_name !== "") ? $customer->first_name : '' ;
-                                            ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                            <input class="m-auto" type="checkbox" name="select[]" value="1" checked>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $displayName; ?>
-                                                        <input type="hidden" name="customer_id[]" value="<?php echo $customer->prof_id; ?>">
-                                                    </td>
-                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $customer->email; ?>"></td>
-                                                    <td><p class="m-0 text-right">$0.00</p></td>
-                                                </tr>
-                                            <?php endforeach; ?>
+                                            
                                         </tbody>
                                     </table>
+
+                                    <div class="no-results text-center p-4">
+                                        No customers found for the applied filters.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -183,4 +152,5 @@
         </div>
     </div>
     <!--end of modal-->
+</form>
 </div>

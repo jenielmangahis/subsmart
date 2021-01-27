@@ -6,7 +6,8 @@ class Wizard extends MY_Controller {
     public function __construct() {
 
         parent::__construct();
-        $this->load->model('Wizard_model', 'wizard_model');
+        $this->load->model('wizard_model');
+        $this->load->model('wizard_apps_model');
         $user_id = getLoggedUserID();
 
         add_css(array(
@@ -32,6 +33,31 @@ class Wizard extends MY_Controller {
         //$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
         //$this->load->view('wizard/list', $this->page_data);
         $this->load->view('wizard/index', $this->page_data);
+    }
+    
+    public function saveCreatedWiz()
+    {
+        $user_id = getLoggedUserID();
+        $details = array(
+            'wa_user_id'        => $user_id,
+            'wa_name'           => post('wizName'),
+            'wa_trigger_app_id' => post('wizTrigger'),
+            'wa_action_app_id'  => post('wizAction'),
+            'wa_is_enabled'     => post('wizEnabled'),
+            'wa_date_created'   => date('Y-m-d g:i:s'),
+            'wa_date_enabled'   => (post('wizEnabled')==1?date('Y-m-d g:i:s'):'0000-00-00 00:00:00'),
+            'wa_config_data'    => post('wizConfig')
+        );
+        
+        $result = $this->wizard_model->saveCreatedWiz($details,$user_id, post('wizTrigger'),post('wizAction'));
+        if(json_decode($result)->status):
+            if(post('wizConfig')!=0):
+                $configName = post('configName');
+                $this->wizard_apps_model->updateConfigData(post('wizConfig'), json_decode($result)->id, $configName);
+            endif;
+        endif;
+        
+        echo $result;
     }
     
     public function setupGmailSend()

@@ -402,6 +402,30 @@ $(function() {
 
         computeTotalHours();
     });
+
+    $(document).on('change', 'div#transferModal div.modal-body input#transferAmount', function() {
+        var val = parseFloat($(this).val()).toFixed(2).toString();
+        var split = val.includes('.') ? val.split('.') : val;
+        var string = "0.00";
+
+        if(typeof split === "object") {
+            if(split[0].length === 0) {
+                split[0] = "0";
+            }
+    
+            if(split[1].length === 1) {
+                split[1] = split[1]+"0";
+            }
+    
+            string = split[0]+'.'+split[1];
+        } else {
+            if(split !== "NaN") {
+                string = split+'.00';
+            }
+        }
+    
+        $(this).val(string);
+    });
 });
 
 const payrollRowTotal = (el) => {
@@ -705,7 +729,33 @@ const submitTagsForm = (el, method = "", e) => {
     });
 }
 
-const updateBankDepositTotal = () => {
+const updateBankDepositTotal = (el) => {
+    var val = parseFloat($(el).val()).toFixed(2).toString();
+    var split = val.includes('.') ? val.split('.') : val;
+    var string = "0.00";
+
+    if(typeof split === "object") {
+        if(split[0].length === 0) {
+            split[0] = "0";
+        }
+
+        if(split[1].length === 1) {
+            split[1] = split[1]+"0";
+        }
+
+        string = split[0]+'.'+split[1];
+    } else {
+        if(split !== "NaN") {
+            string = split+'.00';
+        }
+    }
+
+    $(el).val(string);
+
+    computeBankDepositeTotal();
+}
+
+const computeBankDepositeTotal = () => {
     var otherFundsTotal = 0;
 
     $('div#depositModal input[name="amount[]"]').each(function() {
