@@ -103,6 +103,7 @@ $route['terms-and-conditions/add'] = 'TermsAndConditionsController/add';
 //gene fb
 $route['fb'] = 'FB';
 $route['fb/add'] = 'FB/add';
+$route['fb/thank-you'] = 'FB/thankYou';
 $route['fb/edit/(:num)'] = 'FB/edit/$1';
 $route['fb/rules/(:num)'] = 'FB/rules/$1';
 $route['fb/settings/(:num)'] = 'FB/settings/$1';
@@ -112,6 +113,8 @@ $route['fb/get-by-active-user'] = 'FB/getByActiveUser';
 $route['fb/get-form-by-id/(:num)'] = 'FB/getByFormID/$1';
 $route['fb/create']['post'] = 'FB/create';
 $route['fb/update/(:num)']['post'] = 'FB/update/$1';
+$route['fb/generate-from-template/(:num)']['post'] = 'FB/generateFormFromTemplate/$1';
+$route['fb/generate-template-from-form/(:num)'] = 'FB/generateTemplateFromForm/$1';
 
 //fb elements
 $route['fb/elements/create']['post'] = 'FB/createFormElement';
@@ -119,8 +122,6 @@ $route['fb/elements/update-order']['post'] = 'FB/updateOrder';
 $route['fb/elements/update/(:num)']['post'] = 'FB/updateElement/$1';
 $route['fb/elements/destroy/(:num)']['post'] = 'FB/destroyElement/$1';
 
-//fb templates
-$route['fb/templates/get-by-active-user'] = 'FB/getTemplatesByActiveUser';
 
 //fb folders
 $route['fb/folders/get-by-active-user'] = 'FB/getFoldersByActiveUser';
@@ -129,6 +130,14 @@ $route['fb/folders'] = 'FB/foldersIndex';
 $route['fb/folders/update/(:num)']['post'] = 'FB/updateFolder/$1';
 $route['fb/folders/create']['post'] = 'FB/createFolder';
 $route['fb/folders/destroy/(:num)']['post'] = 'FB/destroyFolder/$1';
+
+
+//fb templates
+$route['fb/templates/get-all'] = 'FB/getAllTemplates';
+$route['fb/templates/get-by-form-template-id/(:num)'] = 'FB/getByFormTemplateID/$1';
+
+//fb template folders
+$route['fb/template-folders/get-all'] = 'FB/getAllTemplateFolders';
 
 // api
 $route['terms-and-conditions/get-all'] = 'TermsAndConditionsController/getAll';

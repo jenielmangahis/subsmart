@@ -12,15 +12,15 @@
                 <div class="modal-body pb-0">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group w-25">
+                            <div class="form-group w-50">
                                 <label for="journalDate">Journal Date</label>
-                                <input type="date" name="journal_date" id="journalDate" class="form-control">
+                                <input type="date" name="journal_date" id="journalDate" value="<?php echo date('Y-m-d'); ?>" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="journalNo">Journal No</label>
-                                <input type="number" name="journal_no" id="journalNo" class="form-control" value="<?php echo $journal_no; ?>">
+                                <input type="number" name="journal_no" id="journalNo" class="form-control" min="<?php echo $journal_no; ?>" value="<?php echo $journal_no; ?>" required>
                             </div>
                         </div>
                     </div>
@@ -34,8 +34,8 @@
                                             <th></th>
                                             <th>#</th>
                                             <th width="20%">ACCOUNT</th>
-                                            <th>DEBITS</th>
-                                            <th>CREDITS</th>
+                                            <th width="15%">DEBITS</th>
+                                            <th width="15%">CREDITS</th>
                                             <th>DESCRIPTION</th>
                                             <th width="20%">NAME</th>
                                             <th width="3%"></th>
@@ -46,7 +46,49 @@
                                                 <td>1</td>
                                                 <td>
                                                     <select name="accounts[]" class="form-control">
-                                                        <option value="1">Cash on hand</option>
+                                                        <option value=""></option>
+                                                        <optgroup label="Bank">
+                                                            <option value="bank-1">Cash on hand</option>
+                                                        </optgroup>
+                                                        <optgroup label="Accounts Receivable (A/R)">
+                                                            <option value="ar-1">Accounts Receivable (A/R)</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Current Assets">
+                                                            <option value="ocassets-1">Inventory Asset</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Assets">
+                                                            <option value="oassets-1">Shareholder Investment</option>
+                                                        </optgroup>
+                                                        <optgroup label="Accounts Payable (A/P)">
+                                                            <option value="ap-1">Accounts Payable (A/P)</option>
+                                                        </optgroup>
+                                                        <optgroup label="Credit Card">
+                                                            <option value="ccard-1">Credit card</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Current Liabilities">
+                                                            <option value="ocliab-1">Loan Payable</option>
+                                                        </optgroup>
+                                                        <optgroup label="Long Term Liabilities">
+                                                            <option value="ltliab-1">Notes Payable</option>
+                                                        </optgroup>
+                                                        <optgroup label="Equity">
+                                                            <option value="equity-1">Additional Paid In Capital</option>
+                                                        </optgroup>
+                                                        <optgroup label="Income">
+                                                            <option value="income-1">Billable Expense Income</option>
+                                                        </optgroup>
+                                                        <optgroup label="Cost of Goods Sold">
+                                                            <option value="cogs-1">Cost of Goods Sold</option>
+                                                        </optgroup>
+                                                        <optgroup label="Expenses">
+                                                            <option value="expenses-1">Advertising</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Income">
+                                                            <option value="oincome-1">Interest Earned</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Expense">
+                                                            <option value="oexpense-1">Miscellaneous</option>
+                                                        </optgroup>
                                                     </select>
                                                 </td>
                                                 <td><input type="number" name="debits[]" class="form-control text-right"></td>
@@ -145,6 +187,18 @@
                                                 <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td class="text-right">Total</td>
+                                                <td class="text-right">0.00</td>
+                                                <td class="text-right">0.00</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <div class="journal-table-footer">

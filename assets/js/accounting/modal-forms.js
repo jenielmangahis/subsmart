@@ -403,40 +403,79 @@ $(function() {
         computeTotalHours();
     });
 
-    $(document).on('change', 'div#transferModal div.modal-body input#transferAmount', function() {
-        var val = parseFloat($(this).val()).toFixed(2).toString();
-        var split = val.includes('.') ? val.split('.') : val;
-        var string = "0.00";
+    $(document).on('change', 'div#journalEntryModal table#journal-table input[name="debits[]"], div#journalEntryModal table#journal-table input[name="credits[]"]', function() {
+        convertToDecimal($(this));
 
-        if(typeof split === "object") {
-            if(split[0].length === 0) {
-                split[0] = "0";
-            }
-    
-            if(split[1].length === 1) {
-                split[1] = split[1]+"0";
-            }
-    
-            string = split[0]+'.'+split[1];
+        if($(this).attr('name') === 'debits[]') {
+            $(this).parent().parent().children('td:nth-child(5)').children('input').val('');
         } else {
-            if(split !== "NaN") {
-                string = split+'.00';
+            $(this).parent().parent().children('td:nth-child(4)').children('input').val('');
+        }
+
+        var debit = 0.00;
+        var credit = 0.00;
+
+        $('div#journalEntryModal table#journal-table input[name="debits[]"]').each(function() {
+            var rowDebit = $(this).val();
+            if(rowDebit !== "" && rowDebit !== undefined) {
+                rowDebit = parseFloat(rowDebit);
+            } else {
+                rowDebit = 0.00;
+            }
+
+            debit = parseFloat(parseFloat(debit) + rowDebit).toFixed(2);
+        });
+
+        $('div#journalEntryModal table#journal-table input[name="credits[]"]').each(function() {
+            var rowCredit = $(this).val();
+            if(rowCredit !== "" && rowCredit !== undefined) {
+                rowCredit = parseFloat(rowCredit);
+            } else {
+                rowCredit = 0.00;
+            }
+
+            credit = parseFloat(parseFloat(credit) + rowCredit).toFixed(2);
+        });
+
+        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(4)').html(debit);
+        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(5)').html(credit);
+    });
+
+    $(document).on('change', 'div#statementModal div.modal-body select#statementType', function() {
+        if($(this).val() === '2') {
+            $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').remove();
+            $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').remove();
+        } else {
+            var today = new Date();
+            var todayDate = String(today.getDate()).padStart(2, '0');
+            var todayMonth = String(today.getMonth() + 1).padStart(2, '0');
+            today = today.getFullYear()+'-'+todayMonth+'-'+todayDate;
+
+            var startDate = new Date();
+            startDate.setMonth(startDate.getMonth() - 1);
+            var startDateDay = String(startDate.getDate()).padStart(2, '0');
+            var startDateMonth = String(startDate.getMonth() + 1).padStart(2, '0');
+            startDate = startDate.getFullYear()+'-'+startDateMonth+'-'+startDateDay;
+
+            if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').length === 0) {
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2)').html('<div class="form-group"></div>');
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append('<label for="startDate">Start Date</label>');
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append(`<input type="date" name="start_date" id="startDate" class="form-control" value="${startDate}">`);
+            }
+
+            if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').length === 0) {
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3)').html('<div class="form-group"></div>');
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append('<label for="endDate">End Date</label>');
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append(`<input type="date" name="end_date" id="endDate" class="form-control" value="${today}">`);
             }
         }
-    
-        $(this).val(string);
     });
 });
 
-const payrollRowTotal = (el) => {
+const convertToDecimal = (el) => {
     var val = parseFloat($(el).val()).toFixed(2).toString();
     var split = val.includes('.') ? val.split('.') : val;
     var string = "0.00";
-    var totalPay = 0.00;
-    var rowIndex = $(el).parent().parent().index();
-    var payRate = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(2) p span.pay-rate`).html();
-    var regPayHours = "0.00";
-    var commission = "0.00";
 
     if(typeof split === "object") {
         if(split[0].length === 0) {
@@ -455,6 +494,15 @@ const payrollRowTotal = (el) => {
     }
 
     $(el).val(string);
+}
+
+const payrollRowTotal = (el) => {
+    convertToDecimal(el);
+    var totalPay = 0.00;
+    var rowIndex = $(el).parent().parent().index();
+    var payRate = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(2) p span.pay-rate`).html();
+    var regPayHours = "0.00";
+    var commission = "0.00";
 
     if(el.hasClass('employee-commission')) {
         commission = parseFloat(string);
@@ -496,7 +544,7 @@ const payrollTotal = () => {
             empTotalHours = 0.00;
         }
 
-        hours = parseFloat(parseFloat(hours) + empTotalHours).toFixed(2);;
+        hours = parseFloat(parseFloat(hours) + empTotalHours).toFixed(2);
 
         var empCommission = $(this).children('td:nth-child(5)').children('input').val();
         if(empCommission !== "" && empCommission !== undefined) {
@@ -865,12 +913,12 @@ const showHiddenFields = (el) => {
 
     if($(el).attr('id') === 'startEndTime') {
         if($(el).prop('checked') === true) {
-            $('input#startTime, input#endTime').parent().removeClass('hide');
-            $('input#startTime, input#endTime').attr('required', 'required');
+            $('select#startTime, select#endTime').parent().removeClass('hide');
+            $('select#startTime, select#endTime').prop('required', true);
             $('label[for="time"]').html('Break');
         } else {
-            $('input#startTime, input#endTime').parent().addClass('hide')
-            $('input#startTime, input#endTime').removeAttr('required', 'required');
+            $('select#startTime, select#endTime').parent().addClass('hide')
+            $('select#startTime, select#endTime').removeAttr('required', 'required');
             $('label[for="time"]').html('Time');
         }
     }

@@ -186,32 +186,40 @@ class Expenses_model extends MY_Model
         $qry = $this->db->get('accounting_bill');
         return $qry->result();
     }
-    public function addBill($new_data){
-        $type = "Bill";
-        $qry = $this->db->get_where('accounting_bill',array(
-            'bill_number' => $new_data['bill_number']
-        ));
-        if ($qry->num_rows() == 0){
-            $trans_id = $this->transaction($type,false,null,$new_data['total']);
-            $data = array(
-                'transaction_id' => $trans_id,
-                'vendor_id' => $new_data['vendor_id'],
-                'mailing_address' => $new_data['mailing_address'],
-                'terms' => $new_data['terms'],
-                'bill_date' => $new_data['bill_date'],
-                'due_date' => $new_data['due_date'],
-                'bill_number' => $new_data['bill_number'],
-                'permit_number' => $new_data['permit_number'],
-                'memo' => $new_data['memo']
-            );
-            $this->db->insert('accounting_bill',$data);
-            $bill_id = $this->db->insert_id();
-            $this->expenseCategory($trans_id,$bill_id,false,$new_data);
-            $this->expensesAttachment($trans_id,$bill_id,$type,$new_data);
-            return true;
-        }else{
-            return false;
-        }
+
+    // public function addBill($new_data){
+    //     $type = "Bill";
+    //     $qry = $this->db->get_where('accounting_bill',array(
+    //         'bill_number' => $new_data['bill_number']
+    //     ));
+    //     if ($qry->num_rows() == 0){
+    //         $trans_id = $this->transaction($type,false,null,$new_data['total']);
+    //         $data = array(
+    //             'transaction_id' => $trans_id,
+    //             'vendor_id' => $new_data['vendor_id'],
+    //             'mailing_address' => $new_data['mailing_address'],
+    //             'terms' => $new_data['terms'],
+    //             'bill_date' => $new_data['bill_date'],
+    //             'due_date' => $new_data['due_date'],
+    //             'bill_number' => $new_data['bill_number'],
+    //             'permit_number' => $new_data['permit_number'],
+    //             'memo' => $new_data['memo']
+    //         );
+    //         $this->db->insert('accounting_bill',$data);
+    //         $bill_id = $this->db->insert_id();
+    //         $this->expenseCategory($trans_id,$bill_id,false,$new_data);
+    //         $this->expensesAttachment($trans_id,$bill_id,$type,$new_data);
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
+
+    public function addBill($data){
+	    $vendor = $this->db->insert('accounting_bill', $data);
+	    $insert_id = $this->db->insert_id();
+
+		return  $insert_id;
     }
 
     public function editBillData($data){

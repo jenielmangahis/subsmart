@@ -93,6 +93,18 @@ class Accounting extends MY_Controller {
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['terms'] = $this->accounting_invoices_model->getPayTerms();
         $this->page_data['paymethods'] = $this->accounting_receive_payment_model->getpaymethod();
+
+        //additional
+            $this->page_data['vendors'] = $this->vendors_model->getVendors();
+        	$this->page_data['checks'] = $this->expenses_model->getCheck();
+        	$this->page_data['transactions'] = $this->expenses_model->getTransaction();
+        	$this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
+        	$this->page_data['bills'] = $this->expenses_model->getBill();
+        	$this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
+        	$this->page_data['expenses'] = $this->expenses_model->getExpense();
+        	$this->page_data['list_categories'] = $this->categories_model->getCategories();
+            $this->page_data['attachments'] = $this->expenses_model->getAttachment();
+            
         $this->load->view('accounting/dashboard', $this->page_data);
     }
 
@@ -587,6 +599,21 @@ class Accounting extends MY_Controller {
     }
 
     public function addBill(){
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $product = json_encode($this->input->post('phone'));
+
+        // $product['id'] = "1";
+        // $product['prod'] = $this->input->post('prod');
+        // $product['desc'] = $this->input->post('desc');
+        // $product['qty'] = $this->input->post('qty');
+        // $product['rate'] = $this->input->post('rate');
+        // $product['amount'] = $this->input->post('amount');
+        // $product['tax'] = $this->input->post('tax');
+        // $prod[] = $product;
+
+
         $new_data = array(
             'vendor_id' => $this->input->post('vendor_id'),
             'mailing_address' => $this->input->post('mailing_address'),
@@ -596,12 +623,18 @@ class Accounting extends MY_Controller {
             'bill_number' => $this->input->post('bill_number'),
             'permit_number' => $this->input->post('permit_number'),
             'memo' => $this->input->post('memo'),
-            'category' => $this->input->post('category'),
-            'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount'),
+            'bal_due' => $this->input->post('bal_due'),
             'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
-            'original_fname' => $this->input->post('original_fname')
+            'original_fname' => $this->input->post('original_fname'),
+
+            'attachments' => 'testing 2',
+            'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
         );
        $query = $this->expenses_model->addBill($new_data);
        if ($query == true){

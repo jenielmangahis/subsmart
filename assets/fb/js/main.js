@@ -114,8 +114,6 @@ const getFormByID = (form_id) => {
     })
 }
 
-<<<<<<< HEAD
-=======
 const getTemplateFormByID = (form_id) => {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -146,7 +144,6 @@ const getFormTemplateByID = (form_id) => {
     })
 }
 
->>>>>>> staging
 const renderFormStyle = () => {
     for (const key in form_style) {
         if (form_style.hasOwnProperty(key)) {
@@ -157,8 +154,6 @@ const renderFormStyle = () => {
     }
 }
 
-<<<<<<< HEAD
-=======
 const renderFormTemplateStyle = () => {
     for (const key in template_form_style) {
         if (template_form_style.hasOwnProperty(key)) {
@@ -169,7 +164,6 @@ const renderFormTemplateStyle = () => {
     }
 }
 
->>>>>>> staging
 const saveElement = (data, save_method = 'create') => {
     let url = '/fb/elements/create'
     if(save_method === 'update') {

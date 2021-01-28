@@ -343,6 +343,14 @@
                                             <i class="fa fa-star template-icon"></i> Zone List
                                         </div>
                                     </div>
+                                    <div class="col-12 element-group-label my-2">
+                                        <p class="sidebar-title"><span>Company Items</span></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-elements-template in-parent" element_type="CustomerSelect">
+                                            <i class="fa fa-dot-circle-o template-icon"></i> Customer Select
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

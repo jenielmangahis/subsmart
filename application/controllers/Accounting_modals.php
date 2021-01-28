@@ -45,6 +45,27 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+
+                    $time = '00:00';
+                    $endTime = '23:45';
+                    
+                    $times = [
+                        [
+                            'value' => $time,
+                            'display' => date('h:i A', strtotime($time))
+                        ]
+                    ];
+
+                    for($i = 0; $time != $endTime; $i++) {
+                        $time = date('H:i', strtotime($time . '+ 15 minutes'));
+
+                        $times[] = [
+                            'value' => $time,
+                            'display' => date('h:i A', strtotime($time))
+                        ];
+                    }
+
+                    $this->page_data['dropdown']['times'] = $times;
                 break;
                 case 'journal_entry_modal':
                     $lastJournalNo = (int)$this->accounting_journal_entries_model->getLastJournalNo();
@@ -518,30 +539,20 @@ class Accounting_modals extends MY_Controller {
 
             $insertData = [];
             foreach ($data['accounts'] as $key => $value) {
-                if(strpos($data['names'][$key], 'customer-') === 0) {
-                    $nameKey = 'customer';
-                    $nameId = str_replace('customer-', '', $data['names'][$key]);
-                } else if(strpos($data['names'][$key], 'vendor-') === 0) {
-                    $nameKey = 'vendor';
-                    $nameId = str_replace('vendor-', '', $data['names'][$key]);
-                } else if(strpos($data['names'][$key], 'employee-') === 0) {
-                    $nameKey = 'employee';
-                    $nameId = str_replace('employee-', '', $data['names'][$key]);
-                } else {
-                    $nameKey = null;
-                    $nameId = null;
-                }
+                $name = explode('-', $data['names'][$key]);
+                $account = explode('-', $value);
 
                 $insertData[] = [
                     'company_id' => logged('company_id'),
                     'journal_no' => $data['journal_no'],
                     'journal_date' => $data['journal_date'],
-                    'account_no' => $value,
+                    'account_key' => $account[0],
+                    'account_id' => $account[1],
                     'debits' => $data['debits'][$key],
                     'credits' => $data['credits'][$key],
                     'description' => $data['description'][$key],
-                    'name_key' => $nameKey,
-                    'name_id' => $nameId,
+                    'name_key' => $name[0],
+                    'name_id' => $name[1],
                     'memo' => $data['memo'],
                     'attachments' => json_encode($filenames),
                     'status' => 1,

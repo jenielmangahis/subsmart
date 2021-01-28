@@ -93,15 +93,16 @@
                                                     <div class="row m-0">
                                                         <div class="col-md-6 p-0">
                                                             <select name="customer[]" class="form-control">
-                                                                <option value=""></option>
+                                                                <option value="" disabled selected>Choose a customer</option>
                                                                 <?php foreach($dropdown['customers'] as $customer):?>
                                                                     <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
                                                                 <?php endforeach; ?>
                                                             </select>
                                                             <select name="service[]" class="form-control">
+                                                                <option value="" disabled selected>Choose the service worked on</option>
                                                                 <option value="">Credit</option>
                                                             </select>
-                                                            <textarea name="description[]" class="form-control"></textarea>
+                                                            <textarea name="description[]" class="form-control" placeholder="Description"></textarea>
                                                         </div>
                                                         <div class="col-md-6 d-flex align-items-end pr-0">
                                                             <div class="form-check form-check-inline">
@@ -127,15 +128,16 @@
                                                     <div class="row m-0">
                                                         <div class="col-md-6 p-0">
                                                             <select name="customer[]" class="form-control">
-                                                                <option value=""></option>
+                                                                <option value="" disabled selected>Choose a customer</option>
                                                                 <?php foreach($dropdown['customers'] as $customer):?>
                                                                     <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
                                                                 <?php endforeach; ?>
                                                             </select>
                                                             <select name="service[]" class="form-control">
+                                                                <option value="" disabled selected>Choose the service worked on</option>
                                                                 <option value="">Credit</option>
                                                             </select>
-                                                            <textarea name="description[]" class="form-control"></textarea>
+                                                            <textarea name="description[]" class="form-control" placeholder="Description"></textarea>
                                                         </div>
                                                         <div class="col-md-6 d-flex align-items-end pr-0">
                                                             <div class="form-check form-check-inline">
@@ -161,15 +163,16 @@
                                                     <div class="row m-0">
                                                         <div class="col-md-6 p-0">
                                                             <select name="customer[]" class="form-control">
-                                                                <option value=""></option>
+                                                                <option value="" disabled selected>Choose a customer</option>
                                                                 <?php foreach($dropdown['customers'] as $customer):?>
                                                                     <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
                                                                 <?php endforeach; ?>
                                                             </select>
                                                             <select name="service[]" class="form-control">
+                                                                <option value="" disabled selected>Choose the service worked on</option>
                                                                 <option value="">Credit</option>
                                                             </select>
-                                                            <textarea name="description[]" class="form-control"></textarea>
+                                                            <textarea name="description[]" class="form-control" placeholder="Description"></textarea>
                                                         </div>
                                                         <div class="col-md-6 d-flex align-items-end pr-0">
                                                             <div class="form-check form-check-inline">

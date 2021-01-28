@@ -22,7 +22,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="date">Date</label>
-                                <input type="date" name="date" id="date" class="form-control w-50" required>
+                                <input type="date" name="date" id="date" class="form-control w-50" value="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="name">Name</label>
@@ -44,7 +44,6 @@
                                 <label for="customer">Customer</label>
                                 <select name="customer" id="customer" class="form-control" required>
                                     <option value="" disabled selected>Choose a customer</option>
-                                    <option value="1">Betty Fuller</option>
                                     <?php foreach($dropdown['customers'] as $customer) :?>
                                         <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
                                     <?php endforeach; ?>
@@ -71,11 +70,19 @@
                         <div class="col-md-5">
                             <div class="form-group w-50 hide">
                                 <label for="startTime">Start time</label>
-                                <input type="time" name="start_time" id="startTime" class="form-control">
+                                <select name="start_time" id="startTime" class="form-control">
+                                    <?php foreach($dropdown['times'] as $time) :?>
+                                        <option value="<?php echo $time['value']; ?>"><?php echo $time['display']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="form-group w-50 hide">
                                 <label for="endTime">End Time</label>
-                                <input type="time" name="end_time" id="endTime" class="form-control">
+                                <select name="end_time" id="endTime" class="form-control">
+                                    <?php foreach($dropdown['times'] as $time) :?>
+                                        <option value="<?php echo $time['value']; ?>"><?php echo $time['display']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="form-group w-50">
                                 <label for="time">Time</label>
@@ -110,7 +117,7 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-secondary btn-rounded border float-right">Save</button>
+                            <button type="submit" class="btn btn-secondary btn-rounded border float-right">Save</button>
                         </div>
                     </div>
                 </div>

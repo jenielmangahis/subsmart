@@ -14,7 +14,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="adjustmentDate">Adjustment Date</label>
-                                <input type="date" name="adjustment_date" id="adjustmentDate" class="form-control" required>
+                                <input type="date" name="adjustment_date" id="adjustmentDate" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                         </div>
 
