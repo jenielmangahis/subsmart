@@ -94,7 +94,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     </li>
                                                     <li role="presentation">
-                                                        <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $c->id; ?>">
+                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/send_customer/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" class="delete-credit-note" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
@@ -197,11 +197,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     });
 
     $(document).ready(function () {
-        $(".btn-send-customer").click(function(e){
+        /*$(".btn-send-customer").click(function(e){
             var cnid = $(this).attr("data-id");
             $("#cnid").val(cnid);
             $("#modalSendEmail").modal('show');
-        });
+        });*/
 
         $(".delete-credit-note").click(function(e){
             var eid = $(this).attr("data-id");

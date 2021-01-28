@@ -779,8 +779,24 @@ class Users extends MY_Controller {
             'payscale_id' => $payscale_id,
             'employee_number' => $emp_number
         );
-        $query = $this->users_model->addNewEmployee($add);
-        if ($query == true){
+        $last_id = $this->users_model->addNewEmployee($add);
+
+        //Create timesheet record
+		$this->load->model('TimesheetTeamMember_model');
+		$this->TimesheetTeamMember_model->create([
+			'user_id' => $last_id,
+			'name' => $fname . ' ' . $lname,
+			'email' => $username,
+			'role' => 'Employee',
+			'department_id' => 0,
+			'department_role' => 'Member',
+			'will_track_location' => 1,
+			'status' => 1,
+			'company_id' => $cid
+		]);
+		//End Timesheet
+
+        if ($last_id > 0 ){
             echo json_encode(1);
         }else{
             echo json_encode(0);
@@ -898,9 +914,7 @@ class Users extends MY_Controller {
 			'password' => hash( "sha256", post('password') ),			
 			//'parent_id' => $user->id
 		]);
-
-
-
+		
 		if (!empty($_FILES['image']['name'])) {
 
 			$path = $_FILES['image']['name'];

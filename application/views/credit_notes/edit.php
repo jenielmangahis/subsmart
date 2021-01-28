@@ -240,8 +240,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </td>
                                         </tr>                                        
                                         <tr>
-                                            <td>Adjustment</td>
-                                            <td class="d-flex align-items-center">$<span id="adjustment">0.00</span>
+                                            <td><input type="text" class="form-control" value="<?= $creditNote->adjustment_name; ?>" name="adjustment_name" placeholder="Adjustment"></td>
+                                            <td class="d-flex align-items-center">
+                                                <input type="text" name="adjustment_total" value="<?= number_format($creditNote->adjustment_amount,2); ?>" id="adjustment-total" class="form-control" style="margin-right: 11px; width: 16%;">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -393,7 +395,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
       });
     }
 
+    function addAdjustment(){
+        var adjustment_amount = $("#adjustment-total").val();
+        var total_due         = $("#g_total_due").val();
+
+        var new_total_due = parseFloat(total_due) + parseFloat(adjustment_amount);
+        $("#g_total_due").val(new_total_due.toFixed(2));
+    }
+
     $(document).ready(function () {
+        $("#adjustment-total").focusout(function(){
+          var count = $("#count").val();
+          calculation(count);
+          addAdjustment();
+        });
+        
         <?php if($total_items > 0){ ?>
             calculation("<?= $total_items; ?>");
         <?php } ?>
