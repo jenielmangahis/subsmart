@@ -27,7 +27,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="date">Date</label>
-                                        <input type="date" name="date" id="date" class="form-control" required>
+                                        <input type="date" name="date" id="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
                                     </div>
                                 </div>
                             </div>

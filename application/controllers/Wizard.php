@@ -28,58 +28,113 @@ class Wizard extends MY_Controller {
         ));
     }
 
-    public function index(){
+    public function index() {
         $this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
         //$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
         //$this->load->view('wizard/list', $this->page_data);
         $this->load->view('wizard/index', $this->page_data);
     }
     
-    public function saveCreatedWiz()
+    
+    public function savepaymethod(){
+        
+        
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        $new_data = array(
+            'payment_method' => 'CASH',
+            'quick_name' => 'CASH',
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+        );
+
+        $this->db->insert('payment_method', $new_data);
+        
+        
+        //fetch latest update
+
+        $this->load->library('wizardlib');
+        $details = $this->paymethodDetails($company_id);
+        $this->wizardlib->trigWiz('savepaymethod', $company_id, $details);
+        
+    }
+    
+    private function paymethodDetails($company_id)
     {
-        $user_id = getLoggedUserID();
-        $details = array(
-            'wa_user_id'        => $user_id,
-            'wa_name'           => post('wizName'),
-            'wa_trigger_app_id' => post('wizTrigger'),
-            'wa_action_app_id'  => post('wizAction'),
-            'wa_is_enabled'     => post('wizEnabled'),
-            'wa_date_created'   => date('Y-m-d g:i:s'),
-            'wa_date_enabled'   => (post('wizEnabled')==1?date('Y-m-d g:i:s'):'0000-00-00 00:00:00'),
-            'wa_config_data'    => post('wizConfig')
+        $this->db->where('company_id', $company_id);
+        $q = $this->db->get('payment_method')->result();
+        
+        $details = '<table><tr><th>#</th><th>Payment Method</th></tr>';
+        $i = 0;
+        foreach ($q as $result):
+            $i++;
+            $details .= "<tr><td>$i</td><td>$result->quick_name</td></tr>";
+        endforeach;
+        $details .= '</table>';
+        
+        return $details;
+    }
+    
+    public function sendEmail() {
+        $this->load->library('wizardlib');
+        
+        $this->db->where('id', 3);
+        $q = $this->db->get('wizard_gmail_config')->row();
+        
+        $userId = getLoggedUserID();
+        $template = $q->wgc_body;
+        $map = array(
+            'username' => getLoggedFullName($userId),
+            'details'  => 'Added Cash as new method'
         );
         
-        $result = $this->wizard_model->saveCreatedWiz($details,$user_id, post('wizTrigger'),post('wizAction'));
-        if(json_decode($result)->status):
-            if(post('wizConfig')!=0):
+        echo $this->wizardlib->replace_tags($template, $map);
+        
+    }
+
+    public function saveCreatedWiz() {
+        $user_id = getLoggedUserID();
+        $company_id = getLoggedCompanyID();
+        $details = array(
+            'wa_user_id' => $user_id,
+            'wa_company_id' => $company_id,
+            'wa_name' => post('wizName'),
+            'wa_trigger_app_id' => post('wizTrigger'),
+            'wa_action_app_id' => post('wizAction'),
+            'wa_is_enabled' => post('wizEnabled'),
+            'wa_date_created' => date('Y-m-d g:i:s'),
+            'wa_date_enabled' => (post('wizEnabled') == 1 ? date('Y-m-d g:i:s') : '0000-00-00 00:00:00'),
+            'wa_config_data' => post('wizConfig')
+        );
+
+        $result = $this->wizard_model->saveCreatedWiz($details, $company_id, post('wizTrigger'), post('wizAction'));
+        if (json_decode($result)->status):
+            if (post('wizConfig') != 0):
                 $configName = post('configName');
                 $this->wizard_apps_model->updateConfigData(post('wizConfig'), json_decode($result)->id, $configName);
             endif;
         endif;
-        
+
         echo $result;
     }
-    
-    public function setupGmailSend()
-    {
+
+    public function setupGmailSend() {
         $this->page_data['img'] = $this->input->post('img');
         $this->load->view('wizard/app_config/wiz_gmail', $this->page_data);
     }
-    
-    public function deleteApp()
-    {
+
+    public function deleteApp() {
         $id = $this->input->post('app_id');
-        if($this->wizard_model->deleteApp($id)):
+        if ($this->wizard_model->deleteApp($id)):
             echo json_encode(array('success' => TRUE, 'msg' => 'Successfully Deleted'));
         else:
             echo json_encode(array('success' => FALSE, 'msg' => 'Sorry something went wrong'));
         endif;
     }
-    
-    public function deleteAppFunc()
-    {
+
+    public function deleteAppFunc() {
         $id = $this->input->post('fn_id');
-        if($this->wizard_model->deleteAppFunc($id)):
+        if ($this->wizard_model->deleteAppFunc($id)):
             echo json_encode(array('success' => TRUE, 'msg' => 'Successfully Deleted'));
         else:
             echo json_encode(array('success' => FALSE, 'msg' => 'Sorry something went wrong'));
@@ -92,16 +147,16 @@ class Wizard extends MY_Controller {
         foreach ($func as $fn):
             $appConfig = $fn->config_fn;
             ?>
-        <a onclick="$('#action_id').val('<?= $fn->wiz_app_func_id ?>'),
-                    $('#action_name').val('<?= $fn->wiz_app_nice_name ?>'), 
-                    $('.trigFunc').removeClass('active'), 
-                    $('#has_config').val('<?= $fn->has_config ?>'),
-                    $('#action_config').val('<?= $appConfig ?>'),
-                    $('#img_config').val('<?= $fn->app_img ?>'),
-                    $(this).addClass('active'), $('#actionNext').removeClass('disabled')" 
-                            
-                    href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
-            
+            <a onclick="$('#action_id').val('<?= $fn->wiz_app_func_id ?>'),
+                            $('#action_name').val('<?= $fn->wiz_app_nice_name ?>'),
+                            $('.trigFunc').removeClass('active'),
+                            $('#has_config').val('<?= $fn->has_config ?>'),
+                            $('#action_config').val('<?= $appConfig ?>'),
+                            $('#img_config').val('<?= $fn->app_img ?>'),
+                            $(this).addClass('active'), $('#actionNext').removeClass('disabled')" 
+
+               href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
+
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1"><?= $fn->wiz_app_nice_name ?></h5>
                 </div>
@@ -116,7 +171,7 @@ class Wizard extends MY_Controller {
 
         foreach ($func as $fn):
             ?>
-        <a onclick="$('#trig_id').val('<?= $fn->wiz_app_func_id ?>'),$('#trig_name').val('<?= $fn->wiz_app_nice_name ?>'), $('.trigFunc').removeClass('active'), $(this).addClass('active'), $('#triggerNext').removeClass('disabled')" href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
+            <a onclick="$('#trig_id').val('<?= $fn->wiz_app_func_id ?>'), $('#trig_name').val('<?= $fn->wiz_app_nice_name ?>'), $('.trigFunc').removeClass('active'), $(this).addClass('active'), $('#triggerNext').removeClass('disabled')" href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1"><?= $fn->wiz_app_nice_name ?></h5>
                 </div>

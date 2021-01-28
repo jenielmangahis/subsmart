@@ -42,6 +42,15 @@ class General_model extends MY_Model {
             $this->db->join($params['join']['table'], $params['join']['statement'],$params['join']['join_as']);
         }
 
+        if(array_key_exists("order",$params)){
+            if(isset($params['order']['ordering'])){
+                $this->db->order_by($params['order']['order_by'], $params['order']['ordering']);
+            }else{
+                $this->db->order_by($params['order']['order_by'], "DESC");
+            }
+        }
+
+
         $query = $this->db->get();
         return $query->result();
     }

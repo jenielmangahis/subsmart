@@ -182,6 +182,10 @@ class Credit_Notes extends MY_Controller
 
                     $this->CreditNoteItem_model->create($data);
                 }
+
+                $this->session->set_flashdata('message', 'Credit Note was successful saved');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+
             }else{
                 $this->session->set_flashdata('message', 'Cannot save data. Please check your entries.');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -215,7 +219,6 @@ class Credit_Notes extends MY_Controller
 
         if( $creditNote ){
             $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
-
             if( $role == 1 || $role == 2 ){
                 $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             }else{
@@ -232,5 +235,138 @@ class Credit_Notes extends MY_Controller
             $this->session->set_flashdata('alert_class', 'alert-danger');
             redirect('credit_notes');
         }
+    }
+
+    public function update()
+    {
+        postAllowed();
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        $creditNote = $this->CreditNote_model->getById($post['cid']);
+        if( $creditNote ){
+            $data = [
+                'customer_id' => $post['customer_id'],
+                'job_name' => $post['job_name'],
+                'credit_note_number' => $post['credit_note_number'],
+                'date_issued' => date("Y-m-d",strtotime($post['date_issued'])),
+                'expiry_date' => date("Y-m-d",strtotime($post['expiry_date'])),
+                'adjustment_name' => '',
+                'adjustment_amount' => 0,
+                'total_discount' => $post['total_discount'],
+                'grand_total' => $post['total_due'],
+                'note_customer' => $post['customer_message'],
+                'terms_condition' => $post['terms_conditions'],
+                'modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CreditNote_model->update($creditNote->id, $data);
+            $this->CreditNoteItem_model->deleteAllByCreditNoteId($creditNote->id);
+
+            foreach($post['itemIds'] as $key => $value){
+                $data = [
+                    'credit_note_id' => $creditNote->id,
+                    'item_id' => $value,
+                    'item_type' => $post['item_type'][$key],
+                    'qty' => $post['quantity'][$key],
+                    'price' => $post['price'][$key],
+                    'discount' => $post['discount'][$key],
+                    'tax' => $post['tax'][$key],
+                    'total' => $post['itemTotal'][$key]
+                ];
+
+                $this->CreditNoteItem_model->create($data);
+            }
+
+            $this->session->set_flashdata('message', 'Credit Note was successful saved');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('credit_notes');
+    }
+
+    public function view($id)
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('CreditNoteItem_model');
+        $this->load->model('Clients_model');
+
+        $creditNote = $this->CreditNote_model->getById($id);
+        $company_id = logged('company_id');
+
+        if( $creditNote ){
+            $customer = $this->AcsProfile_model->getByProfId($creditNote->customer_id);
+            $client   = $this->Clients_model->getById($company_id);
+            $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
+
+            $this->page_data['status'] = $this->CreditNote_model->optionStatus();   
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['creditNote'] = $creditNote;
+            $this->page_data['creditNoteItems'] = $creditNoteItems;
+
+            $this->load->view('credit_notes/view', $this->page_data);
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('credit_notes');
+        }
+    }
+
+    public function send_mail_credit_note_customer()
+    {
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+
+        $this->load->helper(array('url', 'hashids_helper'));
+
+        $this->load->model('AcsProfile_model');
+
+        $post     = $this->input->post();
+        $creditNote = $this->CreditNote_model->getById($post['cnid']);
+
+        if( $creditNote ){
+            $eid = hashids_encrypt($estimate->id, '', 15);
+            $url = base_url('/estimate_customer_view/' . $eid);
+            $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+
+            $subject = "NsmarTrac : Estimate"; 
+            $msg = "<p>Hi " . $customer->first_name . ",</p>";
+            $msg .= "<p>Please check the estimate for your approval.</p>";
+            $msg .= "<p>Click <a href='".$url."'>Your Estimate</a> to view and approve estimate.</p><br />";
+            $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
+
+            //Email Sending                 
+            $from      = 'webmaster@ficoheroes.com';            
+            $recipient = $customer->email;
+            $mail = new PHPMailer;
+            $mail->SMTPDebug = 4;                         
+            //$mail->isSMTP();       
+            $mail->From = $from; 
+            $mail->FromName = 'NsmarTrac';
+            $mail->addAddress($recipient, $recipient);  
+            $mail->isHTML(true);                          
+            $mail->Subject = $subject;
+            $mail->Body    = $msg;
+            if(!$mail->Send()) {
+                $this->session->set_flashdata('alert-type', 'danger');
+                $this->session->set_flashdata('alert', 'Cannot send email.');
+            }else {
+                $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
+
+                $this->session->set_flashdata('alert-type', 'success');
+                $this->session->set_flashdata('alert', 'Your credit note was successfully sent');
+            }
+        }else{
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Cannot find credit note');
+        }
+
+        redirect('credit_notes');
     }
 }

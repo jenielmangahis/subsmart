@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Register extends MY_Controller {
 
-	public function __construct(){
-		parent::__construct();
+    public function __construct(){
+        parent::__construct();
 
         $this->load->model('NsmartPlan_model');
         $this->load->model('Clients_model');
@@ -12,6 +12,7 @@ class Register extends MY_Controller {
         $this->load->model('IndustryType_model');
         $this->load->model('OfferCodes_model');
         $this->load->helper(array('paypal_helper'));
+        $this->load->model('Customer_advance_model');
 
         // Load Paypal SDK
         include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
@@ -19,10 +20,10 @@ class Register extends MY_Controller {
         // Stripe SDK
         include APPPATH . 'libraries/stripe/init.php';   
 
-		$this->page_data['page']->title = 'nSmart - Registration';
-	}
+        $this->page_data['page']->title = 'nSmart - Registration';
+    }
 
-	public function index(){
+    public function index(){
 
         $get_data = $this->input->get();  
 
@@ -58,8 +59,8 @@ class Register extends MY_Controller {
                     $payment_status = $get_data['status'];
                     $is_success = true;
                 } catch (Exception $ex) {
-                	$is_success = false;
-                	$payment_message = 'Cannot process payment';
+                    $is_success = false;
+                    $payment_message = 'Cannot process payment';
                     /*
                     var_dump($ex);
                     exit();*/
@@ -73,18 +74,18 @@ class Register extends MY_Controller {
                 $payment = $plan->getPaymentDefinitions()[0];
 
                 if( $is_success ){
-                	$cid = $this->session->userdata('regiserClientId');
-                	$uid = $this->session->userdata('regiserUserId');
+                    $cid = $this->session->userdata('regiserClientId');
+                    $uid = $this->session->userdata('regiserUserId');
 
-                	$this->Clients_model->update($cid, array(
-		        		'is_plan_active' => 1,
+                    $this->Clients_model->update($cid, array(
+                        'is_plan_active' => 1,
                         'is_startup' => 1,
                         'plan_date_registered' => date("Y-m-d H:i:s")
-		    		));
+                    ));
 
-		    		$this->users_model->update($uid,[
-			            'status' => 1
-			        ]);
+                    $this->users_model->update($uid,[
+                        'status' => 1
+                    ]);
 
                     $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
                     if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
@@ -92,13 +93,13 @@ class Register extends MY_Controller {
                         $leads_input['tablename']   = "ac_leads";
                         $leads_input['field_name']  = "leads_id";
                         $leads_input['id']          = $reg_temp_user_id;
-                        $this->customer_ad_model->delete($leads_input);
+                        $this->Customer_advance_model->delete($leads_input);
 
                         $this->session->unset_userdata('reg_temp_user_id');
                     }
 
-                	$payment_complete = true;
-                	$payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
+                    $payment_complete = true;
+                    $payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
 
                     $this->session->set_flashdata('alert-type', 'success');
                     $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
@@ -122,7 +123,7 @@ class Register extends MY_Controller {
         }
         //Paypal subscription process after success - End
 
-		$ns_plans = $this->NsmartPlan_model->getAll();      
+        $ns_plans = $this->NsmartPlan_model->getAll();      
 
 
         $ip_address = getValidIpAddress();
@@ -145,14 +146,14 @@ class Register extends MY_Controller {
 
         $this->page_data['industryTypes'] = $industryTypes; 
         $this->page_data['ip_exist'] = $ip_exist; 
-		$this->page_data['payment_complete'] = $payment_complete; 
-		$this->page_data['payment_message']  = $payment_message;
+        $this->page_data['payment_complete'] = $payment_complete; 
+        $this->page_data['payment_message']  = $payment_message;
         $this->page_data['payment_status']   = $payment_status;
-		$this->page_data['ns_plans'] = $ns_plans;
-		$this->page_data['business'] = getIndustryBusiness();
-		$this->page_data['roles']    = getRegistrationRoles();
-		$this->load->view('registration', $this->page_data);
-	}
+        $this->page_data['ns_plans'] = $ns_plans;
+        $this->page_data['business'] = getIndustryBusiness();
+        $this->page_data['roles']    = getRegistrationRoles();
+        $this->load->view('registration', $this->page_data);
+    }
 
     
     public function authenticating_registrationBackup()
@@ -272,11 +273,11 @@ class Register extends MY_Controller {
         if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
         {
             $leads_input['leads_id'] = $reg_temp_user_id;
-            $this->customer_ad_model->update_data($leads_input, "ac_leads", "leads_id");
+            $this->Customer_advance_model->update_data($leads_input, "ac_leads", "leads_id");
         }
         else
         {
-            $reg_temp_user_id = $this->customer_ad_model->add($leads_input, "ac_leads");
+            $reg_temp_user_id = $this->Customer_advance_model->add($leads_input, "ac_leads");
 
             $this->session->set_userdata('reg_temp_user_id', $reg_temp_user_id);
         }
@@ -444,7 +445,7 @@ class Register extends MY_Controller {
                 $leads_input['tablename'] = "ac_leads";
                 $leads_input['field_name'] = "leads_id";
                 $leads_input['id'] = $reg_temp_user_id;
-                $this->customer_ad_model->delete($leads_input);
+                $this->Customer_advance_model->delete($leads_input);
 
                 $this->session->unset_userdata('reg_temp_user_id');
             }
@@ -677,7 +678,7 @@ class Register extends MY_Controller {
                 $leads_input['tablename'] = "ac_leads";
                 $leads_input['field_name'] = "leads_id";
                 $leads_input['id'] = $reg_temp_user_id;
-                $this->customer_ad_model->delete($leads_input);
+                $this->Customer_advance_model->delete($leads_input);
 
                 $this->session->unset_userdata('reg_temp_user_id');
             }

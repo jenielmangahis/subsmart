@@ -41,6 +41,10 @@ class FB extends MY_Controller {
 		$this->load->view('fb/form_delete_modal.php', $this->page_data);
 		$this->load->view('fb/index.php', $this->page_data);
 	}
+
+	public function thankYou(){
+		$this->load->view('fb/thank_you.php', $this->page_data);
+	}
 	
 	public function getByActiveUser() {
 		$user = (object)$this->session->userdata('logged');

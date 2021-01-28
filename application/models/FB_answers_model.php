@@ -34,4 +34,27 @@ class FB_answers_model extends MY_Model {
 
 	    return $response;
 	}
+
+	function saveAnswer($data) {
+		try {
+			$this->db->insert($this->table, $data);
+			$newID = $this->db->insert_id();
+			$response = [
+				'code' 		=> 200,
+				'message' 	=> 'created',
+				'data'		=> [
+					'id'	=> $newID
+				]
+			];
+		} catch(\Exception $e) {
+			$response = [
+				'code' 		=> 500,
+				'message' 	=> $e->getMessage(),
+				'data'		=> []
+			];
+		}
+
+	    return $response;
+	}
+
 }

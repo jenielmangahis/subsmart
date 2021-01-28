@@ -546,6 +546,21 @@ class Customer extends MY_Controller
         }
     }
 
+    public function add_new_customer_from_jobs(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if($input){
+            $input['company_id'] = logged('company_id'); ;
+            if ($this->customer_ad_model->add($input, "acs_profile")) {
+                echo "Success";
+            } else {
+                echo "Error";
+            }
+        }
+    }
+
+
+
     public function add_furnisher_ajax(){
         $input = $this->input->post();
         // customer_ad_model

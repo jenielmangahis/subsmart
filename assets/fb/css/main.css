@@ -225,7 +225,7 @@ div#blankFormPlaceHolder {
  }
 
  .sidebar-container {
-     max-height: 85vh !important;
+     max-height: 50vh !important;
      overflow-y: scroll;
  }
 
@@ -326,8 +326,6 @@ div#blankFormPlaceHolder {
     display: block;
     overflow: hidden;
     text-align: center;
-<<<<<<< HEAD
-=======
 }
 
 #formTemplatePreviewPage {
@@ -338,5 +336,4 @@ div#blankFormPlaceHolder {
 #formTemplatePreview {
     overflow-y: scroll;
     height: 325px;
->>>>>>> staging
 }

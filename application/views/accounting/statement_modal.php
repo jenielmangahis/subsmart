@@ -31,7 +31,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="statementDate">Statement Date</label>
-                                <input type="date" name="statement_date" id="statementDate" class="form-control">
+                                <input type="date" name="statement_date" id="statementDate" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                         </div>
                     </div>
@@ -50,13 +50,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="startDate">Start Date</label>
-                                <input type="date" name="start_date" id="startDate" class="form-control">
+                                <input type="date" name="start_date" id="startDate" class="form-control" value="<?php echo date('Y-m-d', strtotime('-1 months')); ?>">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="endDate">End Date</label>
-                                <input type="date" name="end_date" id="endDate" class="form-control">
+                                <input type="date" name="end_date" id="endDate" class="form-control" value="<?php echo date('Y-m-d'); ?>">
                             </div>
                         </div>
                     </div>

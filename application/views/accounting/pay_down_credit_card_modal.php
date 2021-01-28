@@ -40,7 +40,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="paymentDate">Date of payment</label>
-                                        <input type="date" name="payment_date" id="paymentDate" class="form-control" required>
+                                        <input type="date" name="payment_date" id="paymentDate" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
                                     </div>
                                 </div>
                             </div>

@@ -91,14 +91,14 @@
                         <div class="col-md-6">
                             <div class="form-group w-50">
                                 <label for="transferAmount">Transfer Amount</label>
-                                <input type="number" name="transfer_amount" step="0.01" id="transferAmount" class="form-control text-right" required>
+                                <input type="number" name="transfer_amount" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control text-right" required>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group w-50">
                                 <label for="date">Date</label>
-                                <input type="date" name="date" id="date" class="form-control" required>
+                                <input type="date" name="date" id="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                         </div>
                     </div>

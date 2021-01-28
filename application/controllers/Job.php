@@ -162,9 +162,12 @@ class Job extends MY_Controller
             ),
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name',
+            'order' => array(
+                'order_by' => 'prof_id',
+                'ordering' => 'DESC',
+            ),
         );
         $this->page_data['customers'] = $this->general->get_data_with_param($get_customer);
-
         // get all employees
         $get_employee = array(
             'where' => array(
