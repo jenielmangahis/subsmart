@@ -75,7 +75,7 @@
                                         <a class="nav-link" data-toggle="tab" href="#tb1">Wizard Builder</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tb2">My Wiz</a>
+                                        <a class="nav-link"  href="<?php echo base_url('wizard/myWiz') ?>">My Wiz</a>
                                     </li>
                                 </ul>
                             </div>

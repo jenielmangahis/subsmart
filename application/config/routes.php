@@ -259,6 +259,7 @@ $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
 $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 $route['accounting/get-job-tags'] = 'accounting_modals/get_job_tags';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
+$route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';

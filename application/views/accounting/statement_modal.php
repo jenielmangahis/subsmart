@@ -14,7 +14,7 @@
                         <div class="col-md-8">
                             <div class="form-group w-25">
                                 <label for="statementType">Statement Type</label>
-                                <select name="statement_type" id="statementType" class="form-control">
+                                <select name="statement_type" id="statementType" class="form-control" onchange="showApplyButton()">
                                     <option value="1">Balance Forward</option>
                                     <option value="2">Open Item (Last 365 days)</option>
                                     <option value="3">Transaction Statement</option>
@@ -40,7 +40,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="customerBalanceStatus">Customer Balance Status</label>
-                                <select name="customer_balance_status" id="customerBalanceStatus" class="form-control">
+                                <select name="customer_balance_status" id="customerBalanceStatus" class="form-control" onchange="showApplyButton()">
                                     <option value="all">All</option>
                                     <option value="open" selected>Open</option>
                                     <option value="overdue">Overdue</option>
@@ -50,14 +50,17 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="startDate">Start Date</label>
-                                <input type="date" name="start_date" id="startDate" class="form-control" value="<?php echo date('Y-m-d', strtotime('-1 months')); ?>">
+                                <input onchange="showApplyButton()" type="date" name="start_date" id="startDate" class="form-control" value="<?php echo date('Y-m-d', strtotime('-1 months')); ?>">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="endDate">End Date</label>
-                                <input type="date" name="end_date" id="endDate" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                <input onchange="showApplyButton()" type="date" name="end_date" id="endDate" class="form-control" value="<?php echo date('Y-m-d'); ?>">
                             </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-rounded apply-button hide">Apply</button>
                         </div>
                     </div>
 
