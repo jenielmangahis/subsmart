@@ -549,3 +549,4 @@ $route['credit_notes/edit/(:num)'] = 'Credit_Notes/edit/$1';
 $route['credit_notes/update'] = 'Credit_Notes/update';
 $route['credit_notes/view/(:num)'] = 'Credit_Notes/view/$1';
 $route['credit_notes/_send_customer'] = 'Credit_Notes/send_mail_credit_note_customer';
+$route['credit_notes/send/(:num)'] = 'Credit_Notes/send_customer/$1';
