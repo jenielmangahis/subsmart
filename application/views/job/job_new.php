@@ -591,11 +591,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="card" id="notes_left_card">
                         <div class="card-body">
-                            <!-- <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Private notes</h6>
-                            <hr>
-                            <div class="form-group">
-                               <input type="text" class="form-control">
-                            </div> -->
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
                                     <div class="card-header" id="headingOne">
@@ -605,7 +600,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </button>
                                             <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                         </h2>
-                                        </div>
+                                    </div>
 
                                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                                         <div class="card-body">
@@ -649,6 +644,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                         <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Job Tags</h6>
                                         </button>
+                                        <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                     </h2>
                                     </div>
 
@@ -667,93 +663,211 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                     </div>
                                     <br>
-                                    <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;font-size: 20px;"></span></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card" id="attach_left_card">
                         <div class="card-body">
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
                                 <div class="card-header" id="headingTwo">
                                     <h2 class="mb-0">
-                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;">
-                                                    <circle cx="12" cy="12" r="3.2"></circle>
-                                                    <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"></path></svg>
-                                                &nbsp; &nbsp;Photos / attachments</h6>
+                                        <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#photos_attachment" aria-expanded="true" aria-controls="collapseTwo">
+                                            <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-image"></span>&nbsp; &nbsp;Photos / Attachments</h6>
                                         </button>
+                                        <a href="javascript:void(0);" id="attach_left_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                     </h2>
                                 </div>
 
-                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div id="photos_attachment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                     <div class="card-body">
+                                        <div class="form-group">
+                                            <div class="form-group col-md-12">
+                                                <label for="attachment">Attachments</label>
+                                                <p>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</p>
+                                                <input type="file" class="form-control" name="attachment" id="attachment">
+                                            </div>
 
+                                        </div>
                                     </div>
                                 </div>
-                                <br>
-                                <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;font-size: 20px;"></span></a>
+                                    <br>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card" id="url_left_card">
                         <div class="card-body">
-                            <!-- <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Url link</h6>
-                            <hr>
-                            <div class="form-group">
-                               <input type="text" class="form-control">
-                            </div> -->
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
                                     <div class="card-header" id="headingThree">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                                        <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Url link</h6>
-                                        </button>
-                                    </h2>
+                                        <h2 class="mb-0">
+                                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#url_link_form" aria-expanded="true" aria-controls="url_link_form">
+                                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
+                                            </button>
+                                        </h2>
+                                        <a href="javascript:void(0);" id="url_left_btn_column">
+                                            <span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span>
+                                        </a>
                                     </div>
 
-                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                    <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
-                                            <div class="form-group">
-                                                <div class="form-group col-md-12">
-                                                    <label for="attachment">Attachments</label>
-                                                    <p>Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p>
-                                                    <input type="file" class="form-control" name="attachment" id="attachment">
-                                                </div>
-
-                                            </div>
+                                            <label>Enter Url</label>
+                                            <input type="url" name="check_description[]" class="form-control checkDescription" >
                                         </div>
+                                        <br>
                                     </div>
-                                    <br>
-                                    <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;font-size: 20px;"></span></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <div class="card-header" id="headingOne">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
-                                        <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>Fill & eSign</h6>
-                                    </button>
-                                </h2>
-                            </div>
-                            <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                <div class="card-body">
-
-                                    <div style="float: right;">
-                                        <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
-                                        <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
-                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                            <div class="accordion" id="accordionExample">
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
+                                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
+                                            </button>
+                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
+                                        </h2>
+                                    </div>
+                                    <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <center><img width="100" id="customer-signature" alt="Customer Signature" src="/assets/img/jobs/add_file.png"></center>
+                                         </div>
+                                        <div style="float: right;">
+                                            <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                            <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <br>
-                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;font-size: 20px;"></span></a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="accordion" id="accordionExample">
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
+                                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-money"></span>&nbsp;&nbsp;Payment Details</h6>
+                                            </button>
+                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
+                                        </h2>
+                                    </div>
+                                    <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="col-sm-12">
+                                                <div class="col-md-12">
+                                                    <label for="">Method</label>
+                                                    <select id="pay_method" class="form-control">
+                                                        <option value="CC">Credit Card</option>
+                                                        <option value="CHECK">Check</option>
+                                                        <option value="CASH">Cash</option>
+                                                        <option value="ACH">ACH</option>
+                                                        <option value="OTHER">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label for="">Amount</label>
+                                                    <input class="form-control" type="number" placeholder="$0.00">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <h6>Payment Details</h6>
+                                                    <form role="form">
+                                                        <div class="row">
+                                                            <div id="credit_card_form">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control" id="cardNumber" placeholder="Account Holder Name" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="1234 1234 1234 1234" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                    <input type="text" class="form-control" id="expityMonth" placeholder="MM/YY" required />
+                                                                            </div>
+                                                                       </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input type="number" class="form-control" id="cvCode" placeholder="CVC" required />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-sm-12">
+                                                                            <label >Save card to file</label>
+                                                                            <div class="onoffswitch grid-onoffswitch" style="float: right;">
+                                                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
+                                                                                <label class="onoffswitch-label" for="onoff-customize">
+                                                                                    <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div id="check_ach_form">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing Number" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Number" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12" style="text-align: center !important;">
+                                                                            <br>
+
+                                                                            <button type="button" class="btn btn-sm btn-primary">
+                                                                                <span class="fa fa-search-plus"></span> Scan Payment
+                                                                            </button>
+                                                                            <br>
+                                                                            <div class="form-group" style="text-align: center;">
+                                                                                <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
+                                                                                <label for="notify_by_email">Payment has been collected.</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div id="check_form">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card">
@@ -765,12 +879,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
                                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
                                             </button>
+                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                         </h2>
                                     </div>
                                     <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
+                                            <div class="col-sm-12">
+                                                <div style="text-align: center;">
+                                                    <center>
+                                                        <img width="100" id="customer-signature" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
+                                                    </center>
+                                                    <span><b>John Doe</b></span><br>
+                                                    <span>------------------------</span><br>
+                                                    <span>Approved By</span><br><br>
 
-
+                                                    <small>Jan. 28,2021 2:30PM</small>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div style="float: right;">
                                             <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
@@ -779,8 +904,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                 </div>
                             </div>
-                            <br>
-                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;font-size: 20px;"></span></a>
                         </div>
                     </div>
                     <!-- <div class="prev-btn float-right">
@@ -852,7 +975,63 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-sm-12">
                                 <hr>
                             </div>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr></tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <h6>Job Items Listing</h6>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <small>Job Tags</small>
+                                        <input type="text" class="form-control" value="Residential" readonly="readonly">
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
+                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
+                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
 
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="35%">
+                                        <small>Item name</small>
+                                        <input type="text" name="check_description[]" class="form-control checkDescription" >
+                                    </td>
+                                    <td>
+                                        <small>Qty</small>
+                                        <input type="text" name="check_description[]" class="form-control checkDescription">
+                                    </td>
+                                    <td>
+                                        <small>Unit Price</small>
+                                        <input type="text" name="check_amount[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
+                                    </td>
+                                    <td>
+                                        <small>Unit Cost</small>
+                                        <input type="text" name="check_description[]" class="form-control checkDescription">
+                                    </td>
+                                    <td>
+                                        <small>Inventory Location</small>
+                                        <input type="text" name="check_description[]" class="form-control checkDescription">
+                                    </td>
+                                    <td style="text-align: center" class="d-flex">$00<a href="#" class="remove-check-row"><i class="fa fa-times-circle" aria-hidden="true"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
+                                            <span class="fa fa-plus-square fa-margin-right"></span>Add Items
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                            <div class="col-sm-12">
                                 <p>Description of Job (optional)</p>
                                 <textarea name="description" class="form-control" ></textarea>
@@ -949,52 +1128,51 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                     <br>
                                     <div class="col-sm-12">
-                                    <div class="card" id="notes_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
-                                        <div class="row">
-                                            <div class="col-md-12 ">
-                                                <div class="card-header">
-                                                    <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                    <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
+                                        <div class="card" id="notes_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
+                                            <div class="row">
+                                                <div class="col-md-12 ">
+                                                    <div class="card-header">
+                                                        <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                        <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <span class="help help-sm help-block">State a note for more information.</span>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <div style="float: right;">
+                                                            <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                                            <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
+                                                            <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                                        </div>
+                                                    </div>
+
                                                 </div>
-                                                <div class="card-body">
-                                                    <span class="help help-sm help-block">State a note for more information.</span>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <div style="float: right;">
-                                                        <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
-                                                        <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
-                                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="card" id="url_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
+                                            <div class="row">
+                                                <div class="col-md-12 ">
+                                                    <div class="card-header">
+                                                        <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                        <h5 style="padding-left: 20px;">Url Link</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <span class="help help-sm help-block">Upload url link or a pdf link </span>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
-                                    </div>
 
                                     <div class="col-sm-12">
-                                    <div class="card" style="border-color: #e0e0e0;border: 1px solid;">
+                                    <div class="card" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
-                                                    <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                    <h5 style="padding-left: 20px;">Url Link</h5>
-
-                                                </div>
-                                                <div class="card-body">
-                                                    <span class="help help-sm help-block">Upload url link or a pdf link </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-
-                                    <div class="col-sm-12">
-                                    <div class="card" style="border-color: #e0e0e0;border: 1px solid;">
-                                        <div class="row">
-                                            <div class="col-md-12 ">
-                                                <div class="card-header">
-                                                    <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                    <a href="javascript:void(0);" id="attach_right_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                                     <h5 style="padding-left: 20px;">Photos/Attachments</h5>
 
                                                 </div>
@@ -1017,7 +1195,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             </div>
                             <div class="row">
-
                                 <div class="col-sm-12">
                                     <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
                                     <button type="button" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
@@ -1029,7 +1206,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                     <div class="card table-custom">
                         <div class="card-body">
-
                             <div class="card" style="border-color: #363636 !important;border: 1px solid;">
                                 <div class="row">
                                     <div class="col-md-12 ">
@@ -1048,7 +1224,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="row">
                                     <div class="col-md-12 ">
                                         <div class="card-header">
-                                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                             <h5 style="padding-left: 20px;" class="mb-0">Devices Audit</h5>
                                         </div>
                                         <div class="card-body">
@@ -1133,7 +1308,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="row">
                                     <div class="col-md-12 ">
                                         <div class="card-header">
-                                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+
                                             <h5 style="padding-left: 20px;" class="mb-0">Activity Feeds</h5>
                                         </div>
                                         <div class="card-body">
@@ -1362,6 +1537,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script>
 
     $(document).ready(function() {
+        $('#check_ach_form').hide();
+        $('#check_form').hide();
+        $("#pay_method").on( 'change', function () {
+            var method = this.value;
+            if(method === 'ACH' || method === 'CHECK' || method === 'CASH'){
+                $('#check_ach_form').show();
+                $('#credit_card_form').hide();
+                $('#check_form').show();
+            }else if(method === 'CC'){
+                $('#check_ach_form').hide();
+                $('#credit_card_form').show();
+                $('#check_form').hide();
+            }
+        });
+
 
         $("#notes_edit_btn").on( "click", function( event ) {
             document.getElementById('notes_input_div').style.display = "block";
@@ -1382,6 +1572,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
         $("#notes_right").on( "click", function( event ) {
             document.getElementById('notes_right_card').style.display = "none";
             document.getElementById('notes_left_card').style.display = "block";
+        });
+
+        $("#url_left_btn_column").on( "click", function( event ) {
+            document.getElementById('url_left_card').style.display = "none";
+            document.getElementById('url_right_card').style.display = "block";
+        });
+
+        $("#url_right_btn_column").on( "click", function( event ) {
+            document.getElementById('url_right_card').style.display = "none";
+            document.getElementById('url_left_card').style.display = "block";
+        });
+
+        $("#attach_right_btn_column").on( "click", function( event ) {
+            document.getElementById('attach_right_card').style.display = "none";
+            document.getElementById('attach_left_card').style.display = "block";
+        });
+
+        $("#attach_left_btn_column").on( "click", function( event ) {
+            document.getElementById('attach_left_card').style.display = "none";
+            document.getElementById('attach_right_card').style.display = "block";
         });
 
         $("#save_memo").on( "click", function( event ) {
@@ -1459,9 +1669,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         }
         $("#customers").on( 'change', function () {
             var customer_selected = this.value;
-            //var firstDropVal = $('#pick').val();
-            // $('.btn_redeem').data('request-data',end);
-            console.log(customer_selected);
+            //console.log(customer_selected);
             if(customer_selected !== ""){
                 $.ajax({
                     type: "POST",
@@ -1470,13 +1678,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     success: function(data)
                     {
                         var customer_data = JSON.parse(data);
-                        console.log(customer_data);
-                        console.log(customer_data[0].first_name);
-                        $('#cust_fullname').text(customer_data[0].first_name + ' ' + customer_data[0].last_name);
-                        $('#cust_address').text(customer_data[0].mail_add + ' ' + customer_data[0].city + ',' + ' ' + customer_data[0].state + ' ' + customer_data[0].zip_code);
-                        $('#cust_number').text(customer_data[0].phone_h);
-                        $('#cust_email').text(customer_data[0].email);
-                        initMap(customer_data[0].mail_add + ' ' + customer_data[0].city + ' ' + ' ' + customer_data[0].state + ' ' + customer_data[0].zip_code);
+                        //console.log(customer_data);
+                        $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
+                        $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+                        $('#cust_number').text(customer_data.phone_h);
+                        $('#cust_email').text(customer_data.email);
+                        initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
                     }
                 });
             }else{

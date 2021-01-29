@@ -470,7 +470,44 @@ $(function() {
             }
         }
     });
+
+    $(document).on('click', 'div#statementModal div.modal-body button.apply-button', function(e) {
+        e.preventDefault();
+
+        var statementType = $('div#statementModal select#statementType').val();
+        var custBalStatus = $('div#statementModal select#customerBalanceStatus').val();
+
+        var data = new FormData();
+        data.append('statement_type', statementType);
+        data.append('cust_bal_status', custBalStatus);
+        
+        if(
+            $('div#statementModal input#startDate').length !== 0 &&
+            $('div#statementModal input#endDate').length !== 0
+        ) {
+            var startDate = $('div#statementModal input#startDate').val();
+            var endDate = $('div#statementModal input#endDate').val();
+            data.append('start_date', startDate);
+            data.append('end_date', endDate);
+        }
+
+        $.ajax({
+            url: '/accounting/get-customers',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                
+            }
+        });
+    });
 });
+
+const showApplyButton = () => {
+    $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
+    $('div#statementModal div.modal-body div.row:last-child()').addClass('hide');
+}
 
 const convertToDecimal = (el) => {
     var val = parseFloat($(el).val()).toFixed(2).toString();

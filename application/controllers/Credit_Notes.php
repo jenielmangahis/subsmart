@@ -14,6 +14,7 @@ class Credit_Notes extends MY_Controller
         $this->page_data['page']->menu = 'credit_notes';
         $this->load->model('CreditNote_model');
         $this->load->model('CreditNoteItem_model');
+        $this->load->model('Clients_model');
 
         $this->checkLogin();
 
@@ -155,8 +156,8 @@ class Credit_Notes extends MY_Controller
                 'credit_note_number' => $post['credit_note_number'],
                 'date_issued' => date("Y-m-d",strtotime($post['date_issued'])),
                 'expiry_date' => date("Y-m-d",strtotime($post['expiry_date'])),
-                'adjustment_name' => '',
-                'adjustment_amount' => 0,
+                'adjustment_name' => $post['adjustment_name'],
+                'adjustment_amount' => $post['adjustment_total'],
                 'total_discount' => $post['total_discount'],
                 'grand_total' => $post['total_due'],
                 'note_customer' => $post['customer_message'],
@@ -252,8 +253,8 @@ class Credit_Notes extends MY_Controller
                 'credit_note_number' => $post['credit_note_number'],
                 'date_issued' => date("Y-m-d",strtotime($post['date_issued'])),
                 'expiry_date' => date("Y-m-d",strtotime($post['expiry_date'])),
-                'adjustment_name' => '',
-                'adjustment_amount' => 0,
+                'adjustment_name' => $post['adjustment_name'],
+                'adjustment_amount' => $post['adjustment_total'],
                 'total_discount' => $post['total_discount'],
                 'grand_total' => $post['total_due'],
                 'note_customer' => $post['customer_message'],
@@ -293,8 +294,6 @@ class Credit_Notes extends MY_Controller
     public function view($id)
     {
         $this->load->model('AcsProfile_model');
-        $this->load->model('CreditNoteItem_model');
-        $this->load->model('Clients_model');
 
         $creditNote = $this->CreditNote_model->getById($id);
         $company_id = logged('company_id');
@@ -368,5 +367,31 @@ class Credit_Notes extends MY_Controller
         }
 
         redirect('credit_notes');
+    }
+
+    public function send_customer($id)
+    {
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+
+        $creditNote = $this->CreditNote_model->getById($id);
+        $client     = $this->Clients_model->getById($company_id);
+
+        if( $creditNote ){
+            if( $role == 1 || $role == 2 ){
+                $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+            }else{
+                $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            }
+            $this->page_data['client'] = $client;
+            $this->page_data['creditNote'] = $creditNote;
+            $this->load->view('credit_notes/send_customer', $this->page_data);
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('credit_notes');
+        }
     }
 }

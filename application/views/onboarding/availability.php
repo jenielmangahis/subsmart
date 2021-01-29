@@ -284,6 +284,22 @@ $(function(){
         autoclose: true
     });
 
+    $('#mondayHoursFromAvail').timepicker();
+    $('#tuesdayHoursFromAvail').timepicker();
+    $('#wednesdayHoursFromAvail').timepicker();
+    $('#thursdayHoursFromAvail').timepicker();
+    $('#fridayHoursFromAvail').timepicker();
+    $('#saturdayHoursFromAvail').timepicker();
+    $('#sundayHoursFromAvail').timepicker();
+
+    $('#mondayHoursToAvail').timepicker();
+    $('#tuesdayHoursToAvail').timepicker();
+    $('#wednesdayHoursToAvail').timepicker();
+    $('#thursdayHoursToAvail').timepicker();
+    $('#fridayHoursToAvail').timepicker();
+    $('#saturdayHoursToAvail').timepicker();
+    $('#sundayHoursToAvail').timepicker();
+
     $("#form-business-availability").submit(function(e){
       e.preventDefault();
 

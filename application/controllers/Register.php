@@ -223,6 +223,7 @@ class Register extends MY_Controller {
             $client_ip_address = getValidIpAddress();
 
             $edata = $this->Clients_model->getByEmail($aemail); 
+            $udata = $this->Users_model->getUserByUsernname($aemail);
             $edata_business = $this->Clients_model->getByBusinessName($abname); 
             $edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
 
@@ -233,7 +234,12 @@ class Register extends MY_Controller {
                     $count_exist_email++;
                 }
             }
+
             if($count_exist_email > 0) {
+                $is_authentic = 0;
+            }
+
+            if( $udata ){
                 $is_authentic = 0;
             }
 
@@ -282,7 +288,7 @@ class Register extends MY_Controller {
             $this->session->set_userdata('reg_temp_user_id', $reg_temp_user_id);
         }
 
-        $is_authentic = 1;
+        //$is_authentic = 1;
         $json_data = array('is_authentic' => $is_authentic);
         echo json_encode($json_data);        
     }
@@ -343,7 +349,8 @@ class Register extends MY_Controller {
             'ip_address' => getValidIpAddress(),
             'date_created'  => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s"),
-            'is_trial' => 0
+            'is_trial' => 0,
+            'is_startup' => 1
         ]);
 
         $uid = $this->users_model->create([

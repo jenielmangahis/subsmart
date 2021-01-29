@@ -562,6 +562,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
         function clockOut(emp_name,user_id,attn_id,approved_by,photo) {
             let entry = 'Manual';
+            
             Swal.fire({
                 title: 'Clock out?',
                 html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",

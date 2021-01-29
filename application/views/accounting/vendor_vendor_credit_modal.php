@@ -107,21 +107,23 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <td><input type="text" class="form-control" name="desc[]"></td>
+                                    <td><input type="text" class="form-control" name="qty[]"></td>
+                                    <td><input type="text" class="form-control" name="rate[]"></td>
+                                    <td><input type="text" class="form-control" name="amount[]"></td>
+                                    <td><input type="text" class="form-control" name="tax[]"></td>
                                     <td></td>
                                 </tr>
                             </table>

@@ -415,7 +415,7 @@ class Users_model extends MY_Model {
 	    $query = $this->db->get_where('users',array('email'=>$add['email'],'username'=>$add['username']))->num_rows();
 	    if ($query == 0){
 	        $this->db->insert('users',$add);
-	        return true;
+	        return $this->db->insert_id();
         }else{
 	        return false;
         }

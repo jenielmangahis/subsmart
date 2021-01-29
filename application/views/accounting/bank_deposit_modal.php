@@ -17,7 +17,12 @@
                                     <div class="form-group">
                                         <label for="bankAccount">Account</label>
                                         <select name="bank_account" id="bankAccount" class="form-control" required>
-                                            <option value="1">Cash on hand</option>
+                                            <optgroup label="Bank">
+                                                <option value="bank-1">Cash on hand</option>
+                                            </optgroup>
+                                            <optgroup label="Other Current Assets">
+                                                <option value="ocassets-1">Payroll Refunds</option>
+                                            </optgroup>
                                         </select>
                                     </div>
                                 </div>
@@ -77,27 +82,73 @@
                                                 <td>
                                                     <select name="received_from[]" class="form-control">
                                                         <option value=""></option>
+                                                        <?php if(count($dropdown['customers']) !== 0) : ?>
                                                         <optgroup label="Customers">
                                                             <?php foreach($dropdown['customers'] as $customer) :?>
                                                                 <option value="customer-<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
                                                             <?php endforeach; ?>
                                                         </optgroup>
+                                                        <?php endif; ?>
+                                                        <?php if(count($dropdown['vendors']) !== 0) : ?>
                                                         <optgroup label="Vendors">
                                                             <?php foreach($dropdown['vendors'] as $vendor):?>
                                                                 <option value="vendor-<?php echo $vendor->id;?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name;?></option>
                                                             <?php endforeach; ?> 
                                                         </optgroup>
+                                                        <?php endif; ?>
+                                                        <?php if(count($dropdown['employees']) !== 0) : ?>
                                                         <optgroup label="Employees">
                                                             <?php foreach($dropdown['employees'] as $employee):?>
                                                                 <option value="employee-<?php echo $employee->id;?>"><?php echo $employee->FName . ' ' . $employee->LName;?></option>
                                                             <?php endforeach; ?> 
                                                         </optgroup>
+                                                        <?php endif; ?>
                                                     </select>
                                                 </td>
                                                 <td>
                                                     <select name="account[]" class="form-control" required>
+                                                        <option value=""></option>
                                                         <optgroup label="Income">
-                                                            <option value="1">Billable Expense Income</option>
+                                                            <option value="income-1">Billable Expense Income</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Income">
+                                                            <option value="oincome-1">Interest Earned</option>
+                                                        </optgroup>
+                                                        <optgroup label="Bank">
+                                                            <option value="bank-1">Cash on hand</option>
+                                                        </optgroup>
+                                                        <optgroup label="Accounts Receivable (A/R)">
+                                                            <option value="ar-1">Accounts Receivable (A/R)</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Current Assets">
+                                                            <option value="ocassets-1">Inventory Asset</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Assets">
+                                                            <option value="oassets-1">Shareholder Investment</option>
+                                                        </optgroup>
+                                                        <optgroup label="Accounts Payable (A/P)">
+                                                            <option value="ap-1">Accounts Payable (A/P)</option>
+                                                        </optgroup>
+                                                        <optgroup label="Credit Card">
+                                                            <option value="cc-1">Credit card</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Current Liabilities">
+                                                            <option value="ocliab-1">Payroll Liabilities</option>
+                                                        </optgroup>
+                                                        <optgroup label="Long Term Liabilities">
+                                                            <option value="ltliab-1">Notes Payable</option>
+                                                        </optgroup>
+                                                        <optgroup label="Equity">
+                                                            <option value="equity-1">Additional Paid In Capital</option>
+                                                        </optgroup>
+                                                        <optgroup label="Cost of Goods Sold">
+                                                            <option value="cogs-1">Cost of Goods Sold</option>
+                                                        </optgroup>
+                                                        <optgroup label="Expenses">
+                                                            <option value="expenses-1">Advertising</option>
+                                                        </optgroup>
+                                                        <optgroup label="Other Expense">
+                                                            <option value="oexpense-1">Miscellaneous</option>
                                                         </optgroup>
                                                     </select>
                                                 </td>
