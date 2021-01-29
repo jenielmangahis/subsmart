@@ -394,4 +394,12 @@ class Credit_Notes extends MY_Controller
             redirect('credit_notes');
         }
     }
+
+    public function send_mail()
+    {
+        $post     = $this->input->post();
+        echo "<pre>";
+        print_r($post);
+        exit;
+    }
 }

@@ -227,6 +227,7 @@ a.card.border-gr.btn-addon {
   </div>
 
 </div>
+<script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <?php include viewPath('includes/footer'); ?>
 
 <script>
