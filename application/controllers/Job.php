@@ -107,15 +107,15 @@ class Job extends MY_Controller
     }
 
     public function get_customer_selected(){
-        $id = $_POST['prof_id'];
+        $id = $_POST['id'];
         $get_customer = array(
             'where' => array(
-                'prof_id' => $id,
+                'prof_id' => $id
             ),
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,zip_code',
         );
-        echo json_encode($this->general->get_data_with_param($get_customer),TRUE);
+        echo json_encode($this->general->get_data_with_param($get_customer,FALSE),TRUE);
     }
 
     public function new_job1() {
@@ -157,9 +157,6 @@ class Job extends MY_Controller
 
         // get all customers
         $get_customer = array(
-            'where' => array(
-                //'fk_user_id' => $id,
-            ),
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name',
             'order' => array(
@@ -171,22 +168,19 @@ class Job extends MY_Controller
         // get all employees
         $get_employee = array(
             'where' => array(
-                //'fk_user_id' => $id,
+                'company_id' => logged('company_id')
             ),
-            'table' => 'employees',
-            'select' => 'employees.id,FName,LName',
-            'join' => array(
-                'table' => 'users',
-                'statement' => 'employees.user_id=users.id',
-                'join_as' => 'left',
-            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+//            'join' => array(
+//                'table' => 'users',
+//                'statement' => 'employees.user_id=users.id',
+//                'join_as' => 'left',
+//            ),
         );
 
         // get all job tags
         $get_job_tags = array(
-            'where' => array(
-                //'fk_user_id' => $id,
-            ),
             'table' => 'job_tags',
             'select' => 'id,name',
         );

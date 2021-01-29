@@ -75,6 +75,14 @@ class Wizard extends MY_Controller {
         return $details;
     }
     
+    
+    public function myWiz() {
+        $this->load->library('wizardlib');
+        $company_id  = getLoggedCompanyID();
+        $this->page_data['wiz'] = $this->wizard_apps_model->getAppsByCompanyId($company_id);
+        $this->load->view('wizard/myWiz', $this->page_data);
+    }
+    
     public function sendEmail() {
         $this->load->library('wizardlib');
         

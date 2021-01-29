@@ -29,7 +29,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_bank_deposit_model');
         $this->load->model('accounting_weekly_timesheet_model');
         $this->load->model('accounting_payroll_model');
-        $this->load->model('invoice_model');
+        $this->load->model('accounting_invoices_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
@@ -323,6 +323,23 @@ class Accounting_modals extends MY_Controller {
         $this->load->view("accounting/payroll_summary", $this->page_data);
     }
 
+    public function get_statement_customers() {
+        $input = $this->input->post();
+        $company_id = logged('company_id');
+
+        $data = [
+            'statement_type' => $input['statement_type'],
+            'cust_bal_status' => $input['cust_bal_status'],
+            'company_id' => $company_id
+        ];
+
+        if(isset($input['start_date']) && isset($input['end_date'])) {
+            $data['start_date'] = date('Y-m-d', strtotime($input['start_date']));
+            $data['end_date'] = date('Y-m-d', strtotime($input['end_date']));
+        }
+        dd($data);
+    }
+
     public function action() {
         $data = $this->input->post();
         $modalName = $data['modal_name'];
@@ -593,32 +610,24 @@ class Accounting_modals extends MY_Controller {
         } else {
             $filenames = $this->move_files($files, 'bank_deposit');
 
+            $bankAccount = explode('-', $data['bank_account']);
             $cashBackTarget = explode('-', $data['cash_back_target']);
 
             $insertData = [];
             foreach($data['account'] as $key => $value) {
-                if(strpos($data['received_from'][$key], 'customer-') === 0) {
-                    $nameKey = 'customer';
-                    $nameId = str_replace('customer-', '', $data['received_from'][$key]);
-                } else if(strpos($data['received_from'][$key], 'vendor-') === 0) {
-                    $nameKey = 'vendor';
-                    $nameId = str_replace('vendor-', '', $data['received_from'][$key]);
-                } else if(strpos($data['received_from'][$key], 'employee-') === 0) {
-                    $nameKey = 'employee';
-                    $nameId = str_replace('employee-', '', $data['received_from'][$key]);
-                } else {
-                    $nameKey = null;
-                    $nameId = null;
-                }
+                $account = explode('-', $value);
+                $receivedFrom = explode('-', $data['received_from'][$key]);
 
                 $insertData[] =[
-                    'account_no' => $data['bank_account'],
+                    'account_key' => $bankAccount[0],
+                    'account_id' => $bankAccount[1],
                     'company_id' => logged('company_id'),
                     'date' => $data['date'],
                     'tags' => json_encode($data['tags']),
-                    'received_from_key' => $nameKey,
-                    'received_from_id' => $nameId,
-                    'received_from_account' => $value,
+                    'received_from_key' => $receivedFrom[0],
+                    'received_from_id' => $receivedFrom[1],
+                    'received_from_account_key' => $account[0],
+                    'received_from_account_id' => $account[1],
                     'description' => $data['description'][$key],
                     'payment_method' => $data['payment_method'][$key],
                     'ref_no' => $data['reference_no'][$key],
@@ -675,8 +684,8 @@ class Accounting_modals extends MY_Controller {
                     'adjustment_no' => $data['reference_no'],
                     'company_id' => logged('company_id'),
                     'adjustment_date' => $data['adjustment_date'],
-                    'inventory_adjustment_account' => $adjustmentAcc[1],
-                    'inventory_adjustment_account_type' => $adjustmentAcc[0],
+                    'inventory_adjustment_account_id' => $adjustmentAcc[1],
+                    'inventory_adjustment_account_key' => $adjustmentAcc[0],
                     'product_id' => $value,
                     'new_quantity' => $data['new_qty'][$key],
                     'change_in_quantity' => $data['change_in_qty'][$key],

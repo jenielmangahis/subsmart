@@ -636,7 +636,102 @@ class Accounting extends MY_Controller {
             'date_created' => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s")
         );
+
+
        $query = $this->expenses_model->addBill($new_data);
+
+       $new_data2[] = array(
+           'category' => 'testing 2',
+           'description' => 1,
+           'amount' => $user_id,
+       );
+
+       foreach($new_data2 as $datas=>$data){
+
+            $category = $data['username'];
+            $description = $data['description'];
+            $amount = $data['amount'];
+            $status = '1';
+            $bill_id = $query;
+            $date_created = date("Y-m-d H:i:s");
+            $date_modified = date("Y-m-d H:i:s");
+        
+            $query = $this->expenses_model->addBillcategory($new_data);
+     
+        }
+       
+
+       if ($query == true){
+           echo json_encode(1);
+       }else{
+           echo json_encode(0);
+       }
+
+    }
+
+    public function addBillpay(){
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $product = json_encode($this->input->post('phone'));
+
+        // $product['id'] = "1";
+        // $product['prod'] = $this->input->post('prod');
+        // $product['desc'] = $this->input->post('desc');
+        // $product['qty'] = $this->input->post('qty');
+        // $product['rate'] = $this->input->post('rate');
+        // $product['amount'] = $this->input->post('amount');
+        // $product['tax'] = $this->input->post('tax');
+        // $prod[] = $product;
+
+
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'terms' => $this->input->post('terms'),
+            'bill_date' => $this->input->post('bill_date'),
+            'due_date' => $this->input->post('due_date'),
+            'bill_number' => $this->input->post('bill_number'),
+            'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
+            'bal_due' => $this->input->post('bal_due'),
+            'total' => $this->input->post('total'),
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname'),
+
+            'attachments' => 'testing 2',
+            'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+
+       $query = $this->expenses_model->addBill($new_data);
+
+       $new_data2[] = array(
+           'category' => 'testing 2',
+           'description' => 1,
+           'amount' => $user_id,
+       );
+
+       foreach($new_data2 as $datas=>$data){
+
+            $category = $data['username'];
+            $description = $data['description'];
+            $amount = $data['amount'];
+            $status = '1';
+            $bill_id = $query;
+            $date_created = date("Y-m-d H:i:s");
+            $date_modified = date("Y-m-d H:i:s");
+        
+            $query = $this->expenses_model->addBillcategory($new_data);
+     
+        }
+       
+
        if ($query == true){
            echo json_encode(1);
        }else{

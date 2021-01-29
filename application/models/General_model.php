@@ -25,7 +25,8 @@ class General_model extends MY_Model {
         }
     }
 
-    public function get_data_with_param($params = array()){
+    public function get_data_with_param($params = array(),$result=TRUE){
+
         if(array_key_exists("table",$params) && $params['table'] != NULL ){
             $this->db->from($params['table']);
         }else{
@@ -36,6 +37,12 @@ class General_model extends MY_Model {
             $this->db->select($params['select']);
         }else{
             $this->db->select('*');
+        }
+
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
         }
 
         if(array_key_exists("join",$params) && $params['join'] != NULL ){
@@ -50,9 +57,16 @@ class General_model extends MY_Model {
             }
         }
 
+       // $this->db->where('prof_id', $params['where']['prof_id']);
+
+
 
         $query = $this->db->get();
-        return $query->result();
+        if($result){
+            return $query->result();
+        }else{
+            return $query->row();
+        }
     }
 
     public function update_with_key($input, $id,$table)
