@@ -264,4 +264,38 @@ class Pages extends MY_Controller {
     	redirect('estimate_customer_view/' . $post['eid']);
     }
 
+    public function credit_note_customer_view( $eid )
+    {
+    	$this->load->model('CreditNote_model');
+    	$this->load->model('CreditNoteItem_model');
+    	$this->load->model('AcsProfile_model');
+    	$this->load->model('Clients_model');
+    	$this->load->model('Users_model');
+        
+        $this->load->helper(array('hashids_helper'));
+
+        $credit_note_id = hashids_decrypt($eid, '', 15);
+        $creditNote = $this->CreditNote_model->getById($credit_note_id);
+        if( $creditNote ){            
+        	$user     = $this->Users_model->getUser($creditNote->user_id);
+            $customer = $this->AcsProfile_model->getByProfId($creditNote->customer_id);
+            $client   = $this->Clients_model->getById($user->company_id);
+            $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
+
+            $this->page_data['status'] = $this->CreditNote_model->optionStatus();   
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['creditNote'] = $creditNote;
+            $this->page_data['creditNoteItems'] = $creditNoteItems;
+
+            $is_valid = true;
+        }else{
+            $is_valid = false;
+        }
+
+        $this->page_data['eid'] = $eid;
+        $this->page_data['is_valid'] = $is_valid;
+        $this->load->view('pages/credit_note_customer_view', $this->page_data);
+    }
+
 }

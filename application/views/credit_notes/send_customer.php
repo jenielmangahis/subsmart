@@ -71,10 +71,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="form-group">
                             <label>To</label> <span class="help help-sm">(select or input email address)</span>
-                            <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                <option></option>
+                            <select id="sel-customer" name="customer_id[]" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                <option value=""></option>
                                 <?php foreach($customers as $c){ ?>
-                                    <option <?= $c->id == $creditNote->customer_id ? '' : 'selected="selected"'; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                    <option <?= $c->id == $creditNote->customer_id ? '' : 'selected="selected"'; ?> value="<?= $c->email; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                 <?php } ?>
                             </select>
                             <!-- <select name="to[]" id="to" class="form-control" multiple="multiple"></select> -->
@@ -82,13 +82,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="form-group">
                             <div class="cc-label">
                                 <label>Cc</label>
-                                <select id="sel-cc-customer" name="email_cc" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                    <option></option>
+                                <select id="sel-cc-customer" name="email_cc[]" class="form-control" multiple="multiple">
+                                    <option value=""></option>
                                     <?php foreach($customers as $c){ ?>
-                                        <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                        <option value="<?= $c->email; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                     <?php } ?>
                                 </select>
-                                <!-- <a class="bcc-toggle" id="bcc-toggle" href="#">+ Bcc</a> -->
                             </div>
                             <!-- <select name="cc[]" id="cc" class="form-control" multiple="multiple"></select> -->
                         </div>
@@ -96,10 +95,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div>
                                 <label>Bcc</label>
                             </div>
-                            <select id="sel-bcc-customer" name="email_bcc" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                <option></option>
+                            <select id="sel-bcc-customer" name="email_bcc[]" class="form-control" multiple="multiple">
+                                <option value=""></option>
                                 <?php foreach($customers as $c){ ?>
-                                    <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                    <option value="<?= $c->email; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -113,7 +112,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <h1>Credit Note from <?= $client->business_name; ?> (Credit Note #<?= $creditNote->credit_note_number; ?>)</h1>
                                 <p>Dear Bryann Revina, <br /><br />Thank you for your business! <br />Please find the attached Credit Note #<?= $creditNote->credit_note_number; ?> with this email.<br />We will apply the credit amount shown on this notice to the invoice on our next service. <br /><br /><strong>Credits: $<?= number_format($creditNote->grand_total,2); ?></strong> <br /><br />You can click the button below to view this credit note online.</p>
                                 <p>&nbsp;</p>
-                                <a style="background-color:#2ab363;font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; padding: 12px 34px; display: inline-block;" href="#" target="_blank" rel="noopener"> View Credit Note Online </a>
+                                <a style="background-color:#2ab363;font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; padding: 12px 34px; display: inline-block;" href="<?= $customer_url; ?>" target="_blank" rel="noopener"> View Credit Note Online </a>
                                 <p>&nbsp;</p>
                                 <p>If you have any questions, please call us at <strong><?= $client->phone_number; ?></strong> <br /><br />Thanks,<br /><?= $client->business_name; ?></p>
 
