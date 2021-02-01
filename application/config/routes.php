@@ -553,3 +553,11 @@ $route['credit_notes/_send_customer'] = 'Credit_Notes/send_mail_credit_note_cust
 $route['credit_notes/send/(:num)'] = 'Credit_Notes/send_customer/$1';
 $route['credit_notes/_send'] = 'Credit_Notes/send_mail';
 $route['credit_note_customer_view/(:any)'] = 'Pages/credit_note_customer_view/$1';
+
+//Event Types
+$route['event_types'] = 'Event_Types/index';
+$route['event_types/add_new'] = 'Event_Types/add_new_event_type';
+$route['event_types/save'] = 'Event_Types/create_event_type';
+$route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
+$route['event_types/update'] = 'Event_Types/update_event_type';
+$route['event_types/delete'] = 'Event_Types/delete_event_type';
