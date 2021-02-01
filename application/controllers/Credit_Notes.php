@@ -294,7 +294,7 @@ class Credit_Notes extends MY_Controller
     public function view($id)
     {
         $this->load->model('AcsProfile_model');
-
+        
         $creditNote = $this->CreditNote_model->getById($id);
         $company_id = logged('company_id');
 
@@ -371,6 +371,8 @@ class Credit_Notes extends MY_Controller
 
     public function send_customer($id)
     {
+        $this->load->helper(array('url', 'hashids_helper'));
+
         $this->load->model('AcsProfile_model');
 
         $company_id = logged('company_id');
@@ -384,6 +386,11 @@ class Credit_Notes extends MY_Controller
             }else{
                 $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
             }
+
+            $eid = hashids_encrypt($creditNote->id, '', 15);
+            $url = base_url('/credit_note_customer_view/' . $eid);
+
+            $this->page_data['customer_url'] = $url;
             $this->page_data['client'] = $client;
             $this->page_data['creditNote'] = $creditNote;
             $this->load->view('credit_notes/send_customer', $this->page_data);
@@ -393,5 +400,66 @@ class Credit_Notes extends MY_Controller
             $this->session->set_flashdata('alert_class', 'alert-danger');
             redirect('credit_notes');
         }
+    }
+
+    public function send_mail()
+    {
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+
+        $this->load->helper(array('url', 'hashids_helper'));
+        $this->load->model('AcsProfile_model');
+
+        $post = $this->input->post();
+
+        if( count($post['customer_id']) > 0 && $post['mail_subject'] != '' && $post['mail_body'] != '' ){
+
+            $subject = $post['mail_subject']; 
+            $msg     = $post['mail_body'];
+
+            //Email Sending                 
+            $from      = 'webmaster@ficoheroes.com';            
+            $recipient = $post['customer_id'];
+            $mail = new PHPMailer;
+            $mail->SMTPDebug = 4;                         
+            //$mail->isSMTP();       
+            $mail->From = $from; 
+            $mail->FromName = 'NsmarTrac';
+
+            $mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');  
+            /*foreach( $post['customer_id'] as $value ){
+                $mail->addAddress($value, $value);  
+            }*/
+
+            if( count($post['email_bcc']) > 0 ){
+                $bcc = implode(",", $post['email_bcc']);
+                $mail->addBcc($bcc);
+            }
+
+            if( count($post['email_cc']) > 0 ){
+                $cc = implode(",", $post['email_cc']);
+                $mail->addCC($cc);
+            }
+
+            $mail->isHTML(true);                          
+            $mail->Subject = $subject;
+            $mail->Body    = $msg;
+
+            echo $msg;exit;
+
+            if(!$mail->Send()) {
+                $this->session->set_flashdata('alert-type', 'danger');
+                $this->session->set_flashdata('alert', 'Cannot send email.');
+            }else {
+                $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
+
+                $this->session->set_flashdata('alert-type', 'success');
+                $this->session->set_flashdata('alert', 'Your estimate was successfully sent');
+            }
+        }else{
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Cannot send email');
+        }
+
+        redirect('credit_notes');
     }
 }

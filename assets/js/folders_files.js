@@ -97,7 +97,7 @@ $(document).ready(function(){
 
       if(current_process != ''){
         showFolderManagerNotif('Confirm Delete',
-                               'Trash' + confirm_text + '?<br>' + confirm_path, 'confirm');
+                                'Trash' + confirm_text + '?<br>' + confirm_path, 'confirm');
       }
     } else {
       showFolderManagerNotif('Error','Please select a file or a folder to trash','error');
@@ -267,7 +267,7 @@ $(document).ready(function(){
         confirm_text = ' File ' + div.attr('fnm');
 
         showFolderManagerNotif('Confirm Remove',
-                               'Remove' + confirm_text + '?<br>' + confirm_path + '<br>Note: The file or folder will be removed permanently','confirm');
+                                'Remove' + confirm_text + '?<br>' + confirm_path + '<br>Note: The file or folder will be removed permanently','confirm');
       }
     } else {
       showFolderManagerNotif('Information','Please select a folder or file from the recycle bin','info');
@@ -279,8 +279,8 @@ $(document).ready(function(){
     current_process = 'empty_trash';
 
     showFolderManagerNotif('Confirm Empty Recycle Bin',
-                           'Are you sure you want to empty recycle bin?<br>Please note that only files and folders that you have created will be removed.',
-                           'confirm');  
+                            'Are you sure you want to empty recycle bin?<br>Please note that only files and folders that you have created will be removed.',
+                            'confirm');  
   });
 
 // open general permissions form entry
@@ -1173,7 +1173,7 @@ $(document).ready(function(){
         },
         error: function(jqXHR, textStatus, errorThrown){   
           hideUploading();
-                   
+                    
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         }
       });
@@ -1235,7 +1235,7 @@ $(document).ready(function(){
         },
         error: function(jqXHR, textStatus, errorThrown){   
           hideUploading();
-                   
+                    
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         }
       });  
@@ -1316,7 +1316,7 @@ function getFoldersAndFiles(parent_id = 0){
 }
 
 //setFoldersAndFiles - Shared Library
-function setFoldersAndFiles(folders, files){
+function setFoldersAndFiles_old(folders, files){
   $('#folders_and_files').empty();
 
   selected = 0;
@@ -1338,7 +1338,7 @@ function setFoldersAndFiles(folders, files){
         append += '<div class="row row-' + row_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1349,7 +1349,7 @@ function setFoldersAndFiles(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1378,7 +1378,7 @@ function setFoldersAndFiles(folders, files){
         append += '<div class="row row-' + row_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
           append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
           append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -1388,7 +1388,7 @@ function setFoldersAndFiles(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
         append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
         append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -1473,7 +1473,7 @@ function setFoldersAndFiles(folders, files){
 }
 
 //setFoldersAndFiles - My Library
-function setFoldersAndFiles_MyLibrary(folders, files){
+function setFoldersAndFiles_MyLibrary_old(folders, files){
   $('#folders_and_files').empty();
 
   selected = 0;
@@ -1611,24 +1611,24 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         card_append = '<div class="card" id="bft_' + category + '">';
 
         card_append += '<div class="card-header">'+
-                       '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                       '<i class="fa fa-plus mr-2"></i>'+ folder.category_name +
-                       '</a><br>';
+                        '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
+                        '<i class="fa fa-plus mr-2"></i>'+ folder.category_name +
+                        '</a><br>';
 
         if((folder.category_desc != "") && (folder.category_desc != null)){
           card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ folder.category_desc +
-                         '</small></a>';
+                          '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ folder.category_desc +
+                          '</small></a>';
         }
         
         card_append += '</div>';
 
         card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
-                       '<div class="card-body" id="'+ cur_body_id +'">'+
-                       '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
-                       '</div>'+ 
-                       '</div>'+
-                       '</div>';
+                        '<div class="card-body" id="'+ cur_body_id +'">'+
+                        '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                        '</div>'+ 
+                        '</div>'+
+                        '</div>';
 
         card_append += '</div>';
 
@@ -1642,7 +1642,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
       if(folders.length >= cur_count){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1664,7 +1664,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1709,24 +1709,24 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         card_append = '<div class="card" id="bft_' + category + '">';
 
         card_append += '<div class="card-header">'+
-                       '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'">'+
-                       '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
-                       '</a><br>';
+                        '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                        '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
+                        '</a><br>';
 
         if((file.category_desc != "") && (file.category_desc != null)){
           card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ file.category_desc +
-                         '</small></a>';
+                          '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ file.category_desc +
+                          '</small></a>';
         }
         
         card_append += '</div>';
 
         card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
-                       '<div class="card-body" id="'+ cur_body_id +'">'+
-                       '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
-                       '</div>'+ 
-                       '</div>'+
-                       '</div>';
+                        '<div class="card-body" id="'+ cur_body_id +'">'+
+                        '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                        '</div>'+ 
+                        '</div>'+
+                        '</div>';
 
         card_append += '</div>';
 
@@ -1740,7 +1740,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
       if(files.length >= cur_count){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                       '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                        '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
           append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
           append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -1761,7 +1761,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
         append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
         append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -2028,7 +2028,7 @@ function get_most_previewd_files(){
   });
 }
 
-function get_recently_uploaded_files(){
+function get_recently_uploaded_files_old(){
   $.ajax({
     type: 'GET',
     url: base_url + 'vault/recently_uploaded_files',
@@ -2476,7 +2476,7 @@ function setTrashRecords(folders, files){
         append += '<div class="row row-' + row_trash_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
           append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 85%" class="pl-2">' + folder.folder_name + '</td>';
@@ -2486,7 +2486,7 @@ function setTrashRecords(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
         append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 85%" class="pl-2">' + folder.folder_name + '</td>';
@@ -2514,7 +2514,7 @@ function setTrashRecords(folders, files){
         append += '<div class="row row-' + row_trash_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
           append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="0" fid="'+ file.file_id +'">';
           append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
           append += '<td class="pl-2">' + file.title + '</td>';
@@ -2524,7 +2524,7 @@ function setTrashRecords(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
         append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="0" fid="'+ file.file_id +'">';
         append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
         append += '<td class="pl-2">' + file.title + '</td>';
@@ -2852,4 +2852,236 @@ function fileSelectedIsNotEmpty() {
 
 function modalIsOpen(modal_id){
   return ($(modal_id).data('bs.modal') || {})._isShown;
+}
+
+
+// herbert's code
+function setFoldersAndFiles(folders, files) {
+  const currPath = $('#folders_path').text();
+  const currPathWithoutSlash = currPath.replace(/^\/|\/$/g, '');
+  const $quickAccess = $("#quick_access");
+
+  if (currPathWithoutSlash !== 'root') {
+    $quickAccess.hide();
+  } else {
+    $quickAccess.show();
+  }
+
+  $('#folders_and_files').empty();
+  $('#folders_and_files').append(`
+    <div class="row vault">
+      <div class="vault__folders">
+          <h6 class="vault__title">Folders</h6>
+          <div class="vault__spacer"></div>
+          <div class="vault__foldersGrid"></div>
+      </div>
+      <div class="vault__spacer vault__spacer--isLarge"></div>
+      <div class="vault__files">
+          <h6 class="vault__title">Files</h6>
+          <div class="vault__spacer"></div>
+          <div class="vault__filesGrid"></div>
+      </div>
+    </div>
+  `);
+
+  const folderElements = folders.map(createFolder);
+  $('#folders_and_files .vault__foldersGrid').append(
+    folderElements.length > 0 ? folderElements : emptyMessage()
+  );
+
+  const fileElements = files.map(createFile);
+  $('#folders_and_files .vault__filesGrid').append(
+    fileElements.length > 0 ? fileElements : emptyMessage()
+  );
+}
+
+function setFoldersAndFiles_MyLibrary(folders, files) {
+  setFoldersAndFiles(folders, files);
+}
+
+function emptyMessage() {
+  return `<div class="vault__emptyMessage">🤷‍♀️ Nothing to display here</div>`;
+}
+
+function get_recently_uploaded_files() {
+  $('#quick_access').empty();
+  $('#quick_access').append(`
+    <div class="row vault" id="recentlyUploaded">
+      <div class="vault__files">
+          <h6 class="vault__title">Recently Uploaded</h6>
+          <div class="vault__spacer"></div>
+          <div class="vault__filesGrid"></div>
+      </div>
+    </div>
+    <div class="vault__spacer vault__spacer--isLarge"></div>
+  `);
+
+  $grid = $('#recentlyUploaded .vault__filesGrid');
+  $grid.append(fileLoader(7));
+
+  $.ajax({
+    type: 'GET',
+    url: base_url + 'vault/recently_uploaded_files',
+    success: function(data){
+      const result = jQuery.parseJSON(data);
+      const fileElements = result.map((file) => createFile(file, { showCreatedDate: true }));
+      $grid.empty();
+      $grid.append(fileElements.length > 0 ? fileElements : emptyMessage());
+    },
+    error: function(_, textStatus, errorThrown){
+      $('span[target="recent_uploads"]').removeClass('fa-spin');
+      showFolderManagerNotif(textStatus, errorThrown, 'error');
+    }   
+  });
+}
+
+function fileLoader(count = 3) {
+  return [...Array(count)].map(() => (
+    '<div class="vault__fileLoader"><span></span></div>'
+  ));
+}
+
+function createFile(file, options = {}) {
+  const { title, FCreatedBy, LCreatedBy, folder_name, file_path, file_id, created } = file;
+  const { showCreatedDate = false } = options;
+  const { icon, color: iconColor, isImage } = getfileExInfos(title);
+  const createdString = moment(created).format("MMMM DD, YYYY");
+  const previewUrl = isImage ? `${base_url}uploads/${folder_name}${file_path}` : null;
+
+  const html = `
+  <div class="col-md-2 vault__file" title="${title}">
+    <div
+      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node vault__fileInner"
+      isfolder="0"
+      fid="${file_id}" 
+      created_date="${created}"
+      created_by="${FCreatedBy} ${LCreatedBy}"
+      fnm="${title}"
+      path="${folder_name}${file_path}"
+      path_temp="${file_path}"
+    >
+        <table class="border border-0 mb-0 h-100" style="width: 95%">
+          <tbody>
+              <tr class="node" isfolder="0" fid="${file_id}">
+                <td
+                  style="--bg-image: url(${previewUrl})"
+                  isfolder="0"
+                  fid="${file_id}" 
+                  created_date="${created}"
+                  created_by="${FCreatedBy} ${LCreatedBy}"
+                  fnm="${title}"
+                  path="${folder_name}${file_path}"
+                  path_temp="${file_path}"
+                >
+                  ${isImage ? '' : `<i class="${icon} fa-2x ${iconColor}"></i>`}
+                </td>
+                <td style="width: 85%" class="pl-2">
+                  <div>
+                    <i class="${icon} fa-2x align-middle ${iconColor} ml-2"></i>
+                    <span class="vault__fileName">${title}</span>
+                  </div>
+                  ${showCreatedDate ? `<span class="vault__fileDate">${createdString}</span>` : ''}
+                </td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+  `;
+
+  const element = createElementFromHTML(html);
+  const $element = $(element);
+  const $elementInner = $element.find('.vault__fileInner');
+
+  $element.click(function () {
+    selected = file_id;
+    selected_isFolder = 0;
+
+    removeCurrentHighlighted();
+    $elementInner.addClass('bg-info');
+    $elementInner.addClass('text-white');
+    $('#folders_name').html(title);
+  });
+
+  $element.dblclick(function() {
+    if (!$('#fs_selected_file').length) {
+      showFileDetail(file_id, 0, false, false);
+      return;
+    }
+
+    const folderPath = $('#folders_path').text().trim() + title;
+    $('#fs_selected_file_text').val(folderPath);
+    $('#fs_selected_file').val(file_id);
+    $('#modal-folder-manager').modal('hide');
+  });
+
+  return element;
+}
+
+function createFolder(folder) {
+  const { folder_id, create_date, FCreatedBy, LCreatedBy, folder_name, c_folder, path, total_contents } = folder;
+
+  const html = `
+  <div class="col-md-2 vault__folder" title="${folder_name}">
+    <div
+      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node vault__folderInner"
+      isfolder="1"
+      fid="${folder_id}"
+      created_date="${create_date}"
+      created_by="${FCreatedBy} ${LCreatedBy}"
+      fnm="${folder_name}"
+      path="${c_folder}${path}"
+      path_temp="${path}"
+    >
+        <table class="border border-0 mb-0 h-100" style="width: 95%">
+          <tbody>
+              <tr class="node" isfolder="1" fid="21">
+                <td style="width: 15%"><i class="fa fa-folder fa-2x align-middle text-primary ml-2"></i></td>
+                <td style="width: 65%" class="pl-2">${folder_name}</td>
+                <td style="width: 20%" class="text-right" id="td_total_contents">(${total_contents})</td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+  `;
+
+  const element = createElementFromHTML(html);
+  const $element = $(element);
+  const $elementInner = $element.find('.vault__folderInner');
+
+  $element.click(function () {
+    selected = folder_id;
+    selected_isFolder = 1;
+
+    removeCurrentHighlighted();
+    $elementInner.addClass('bg-info');
+    $elementInner.addClass('text-white');
+    $('#folders_name').html(folder_name);
+  });
+
+  $element.dblclick(function() {
+    current_selected_folder = folder_id;
+    getFoldersAndFiles(folder_id);
+  });
+
+  return element;
+}
+
+// https://stackoverflow.com/a/494348/8062659
+function createElementFromHTML(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+  return div.firstChild; 
+}
+
+
+function removeCurrentHighlighted() {
+  $folderActive = $('.vault__folderInner.bg-info.text-white');
+  $folderActive.removeClass('bg-info');
+  $folderActive.removeClass('text-white');
+
+  $fileActive = $('.vault__fileInner.bg-info.text-white');
+  $fileActive.removeClass('bg-info');
+  $fileActive.removeClass('text-white');
 }

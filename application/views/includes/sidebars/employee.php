@@ -34,6 +34,6 @@
         <?php endif; ?>
         <li class="submenus <?php if( strpos($uri,'timelog') ){ echo 'active';}?>"><a href="<?php echo base_url('users/timelog') ?>" title="Time Log"><span class="fa fa-clock-o"></span>Time Log</a></li>
         <li class="submenus <?php if( strpos($uri,'tracklocation') ){ echo 'active';}?>"><a href="<?php echo base_url('users/tracklocation') ?>" title="Track Location"><span class="fa fa-map-pin"></span>Track Location</a></li>
-        <!-- <li class="submenus <?php if( strpos($uri,'settings') ){ echo 'active';}?>"><a href="<?php //echo base_url('users/settings') ?>" title="Settings"><span class="fa fa-map-pin"></span>Settings</a></li> -->
+        <li class="submenus <?php if( strpos($uri,'pay_scale') ){ echo 'active';}?>"><a href="<?php echo base_url('users/pay_scale') ?>" title="Track Location"><span class="fa fa-money"></span>Pay Scale</a></li>        
     </ul>
 </nav>

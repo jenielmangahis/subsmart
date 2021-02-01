@@ -3,15 +3,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Accounting_invoices_model extends MY_Model {
 
-	public $table = 'accounting_invoices';
+	public $table = 'accounting_invoice';
 	
 	public function __construct()
 	{
 		parent::__construct();
 	}
 
+	public function getOpenInvoices($data){
+		$this->db->select('accounting_invoice.*, acs_profile.first_name, acs_profile.last_name, acs_profile.middle_name, acs_profile.email');
+		$this->db->join('acs_profile', 'accounting_invoice.customer_id = acs_profile.prof_id', 'left');
+		$this->db->where('acs_profile.company_id', $data['company_id']);
+
+		$this->db->where_in('accounting_invoice.status', 1);
+		$this->db->where('accounting_invoice.invoice_date >=', $data['start_date']);
+		$this->db->where('accounting_invoice.invoice_date <=', $data['end_date']);
+
+		$this->db->or_where('accounting_invoice.status', 1);
+		$this->db->where('accounting_invoice.due_date <=', $data['end_date']);
+
+		$query = $this->db->get($this->table);
+
+		return $query->result();
+	}
+	public function getOverdueInvoices($data){
+		$this->db->select('accounting_invoice.*, acs_profile.first_name, acs_profile.last_name, acs_profile.middle_name, acs_profile.email');
+		$this->db->join('acs_profile', 'accounting_invoice.customer_id = acs_profile.prof_id', 'left');
+		$this->db->where('acs_profile.company_id', $data['company_id']);
+
+		$this->db->where('accounting_invoice.status', 1);
+		$this->db->where('accounting_invoice.due_date <=', $data['end_date']);
+
+		$query = $this->db->get($this->table);
+
+		return $query->result();
+	}
 	public function getInvoices(){
-	    $vendor = $this->db->get('accounting_invoices');
+	    $vendor = $this->db->get('accounting_invoice');
 	    return $vendor->result();
     }
 	public function createInvoice($data){
@@ -21,13 +49,13 @@ class Accounting_invoices_model extends MY_Model {
 		return  $insert_id;
 	}
 	public function createInvoiceProd($data){
-	    $vendor = $this->db->insert('accounting_invoice_prods', $data);
+	    $vendor = $this->db->insert('product_details', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
 	public function updateInvoice($id, $data){
 	    $this->db->where('id', $id);
-		$vendor = $this->db->update('accounting_invoices', $data);
+		$vendor = $this->db->update('accounting_invoice', $data);
 		if($vendor){
 			return true;
 		}else{
@@ -36,7 +64,7 @@ class Accounting_invoices_model extends MY_Model {
     }
 	public function deleteInvoice($id){
 		$this->db->where('id',$id);
-        $query = $this->db->delete('accounting_invoices');
+        $query = $this->db->delete('accounting_invoice');
         if ($query){
             return true;
         }else{
@@ -44,7 +72,7 @@ class Accounting_invoices_model extends MY_Model {
         }
     }
 	public function getInvoiceDetails($id){
-	    $vendor = $this->db->get_where('accounting_invoices', array('id' => $id));
+	    $vendor = $this->db->get_where('accounting_invoice', array('id' => $id));
 	    return $vendor->result();
 	}
 	

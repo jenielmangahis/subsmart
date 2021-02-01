@@ -56,11 +56,7 @@ class General_model extends MY_Model {
                 $this->db->order_by($params['order']['order_by'], "DESC");
             }
         }
-
        // $this->db->where('prof_id', $params['where']['prof_id']);
-
-
-
         $query = $this->db->get();
         if($result){
             return $query->result();

@@ -75,6 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
+<script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <?php include viewPath('includes/plan_builder_modals'); ?> 
 <?php include viewPath('includes/footer_plan_builder'); ?>
 

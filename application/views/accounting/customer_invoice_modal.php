@@ -4,7 +4,7 @@
   top: 50px;
   right: 100px;
   bottom: 0;
-  left: 30%;
+  left: 10%;
   z-index: 10040;
   overflow: auto;
   overflow-y: auto;
@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         Terms
-                                        <select class="form-control" name="terms" id="addNewTerms">
+                                        <select class="form-control" name="terms" id="addNewTerms1">
                                             <option></option>
                                             <!-- <option>Add New</option>
                                             <option>John Doe</option>-->
@@ -126,23 +126,23 @@
                                     <tr>
                                         <td></td>
                                         <td>1</td>
-                                        <td><input type="text" name="products"></td>
-                                        <td><input type="text" name="description"></td>
-                                        <td><input type="text" name="qty"></td>
-                                        <td><input type="text" name="rate"></td>
-                                        <td><input type="text" name="amount"></td>
-                                        <td><input type="text" name="tax"></td>
+                                        <td><input type="text" class="form-control" name="prod[]"></td>
+                                        <td><input type="text" class="form-control" name="desc[]"></td>
+                                        <td><input type="text" class="form-control" name="qty[]"></td>
+                                        <td><input type="text" class="form-control" name="rate[]"></td>
+                                        <td><input type="text" class="form-control" name="amount[]"></td>
+                                        <td><input type="text" class="form-control" name="tax[]"></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td>2</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td><input type="text" class="form-control" name="prod[]"></td>
+                                        <td><input type="text" class="form-control" name="desc[]"></td>
+                                        <td><input type="text" class="form-control" name="qty[]"></td>
+                                        <td><input type="text" class="form-control" name="rate[]"></td>
+                                        <td><input type="text" class="form-control" name="amount[]"></td>
+                                        <td><input type="text" class="form-control" name="tax[]"></td>
                                         <td></td>
                                     </tr>
                                 </table>

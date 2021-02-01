@@ -2089,23 +2089,50 @@ class Accounting extends MY_Controller {
         );
 
         $addQuery = $this->accounting_invoices_model->createInvoice($new_data);
-
         if($addQuery > 0){
             //echo json_encode($addQuery);
             $new_data2 = array(
-                'invoice_id' => $addQuery,
-                'products' => $this->input->post('products'),
-                'description' => $this->input->post('description'),
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
                 'qty' => $this->input->post('qty'),
                 'rate' => $this->input->post('rate'),
                 'amount' => $this->input->post('amount'),
                 'tax' => $this->input->post('tax'),
-                'created_by' => logged('id'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             );
-            $addQuery = $this->accounting_invoices_model->createInvoiceProd($new_data2);
-            redirect('accounting/banking');
+            // $a['aa'] = $this->input->post('prod');
+            // $b['bb'] = $this->input->post('desc');
+            // $c['cc'] = $this->input->post('qty');
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+           
+        $i = 0;
+        foreach($a as $row){
+            $data['product_services'] = $a[$i];
+            $data['description'] = $b[$i];
+            $data['qty'] = $c[$i];
+            $data['rate'] = $d[$i];
+            $data['amount'] = $e[$i];
+            $data['tax'] = $f[$i];
+            $data['type'] = '1';
+            $data['type_id'] = $addQuery;
+            $data['status'] = '1';
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+            $i++;
+        }
+
+        redirect('accounting/banking');
+            
         }
         else{
             echo json_encode(0);
@@ -2288,8 +2315,49 @@ class Accounting extends MY_Controller {
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
 
+        // if($addQuery > 0){
+        //     // echo json_encode($addQuery);
+        //     redirect('accounting/banking');
+        // }
         if($addQuery > 0){
-            // echo json_encode($addQuery);
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['product_services'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['rate'] = $d[$i];
+                $data['amount'] = $e[$i];
+                $data['tax'] = $f[$i];
+                $data['type'] = '2';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+    
             redirect('accounting/banking');
         }
         else{
@@ -2308,12 +2376,12 @@ class Accounting extends MY_Controller {
             'payment_method' => $this->input->post('payment_method'),
             'ref_number' => $this->input->post('ref_number'),
             'deposit_to' => $this->input->post('deposit_to'),
-            'products' => $this->input->post('products'),
-            'description' => $this->input->post('description'),
-            'qty' => $this->input->post('qty'),
-            'rate' => $this->input->post('rate'),
-            'amount' => $this->input->post('amount'),
-            'tax' => $this->input->post('tax'),
+            // 'products' => $this->input->post('products'),
+            // 'description' => $this->input->post('description'),
+            // 'qty' => $this->input->post('qty'),
+            // 'rate' => $this->input->post('rate'),
+            // 'amount' => $this->input->post('amount'),
+            // 'tax' => $this->input->post('tax'),
             'message_displayed_on_sales_receipt' => $this->input->post('message_displayed_on_sales_receipt'),
             'message_on_statement' => $this->input->post('message_on_statement'),
             'attachments' => $this->input->post('file_name'),
@@ -2325,8 +2393,49 @@ class Accounting extends MY_Controller {
 
         $addQuery = $this->accounting_sales_receipt_model->createSalesReceipt($new_data);
 
+        // if($addQuery > 0){
+        //     echo json_encode($addQuery);
+        // }
         if($addQuery > 0){
-            echo json_encode($addQuery);
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+            
+            $i = 0;
+            foreach($a as $row){
+                $data['product_services'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['rate'] = $d[$i];
+                $data['amount'] = $e[$i];
+                $data['tax'] = $f[$i];
+                $data['type'] = '4';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+        
+            redirect('accounting/banking');
         }
         else{
             echo json_encode(0);
@@ -2385,15 +2494,6 @@ class Accounting extends MY_Controller {
 
         $product = json_encode($this->input->post('phone'));
 
-        // $product['id'] = "1";
-        // $product['prod'] = $this->input->post('prod');
-        // $product['desc'] = $this->input->post('desc');
-        // $product['qty'] = $this->input->post('qty');
-        // $product['rate'] = $this->input->post('rate');
-        // $product['amount'] = $this->input->post('amount');
-        // $product['tax'] = $this->input->post('tax');
-        // $prod[] = $product;
-
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'email' => $this->input->post('email'),
@@ -2420,8 +2520,45 @@ class Accounting extends MY_Controller {
         $addQuery = $this->accounting_refund_receipt_model->createRefundReceipts($new_data);
 
         if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+            
+            $i = 0;
+            foreach($a as $row){
+                $data['product_services'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['rate'] = $d[$i];
+                $data['amount'] = $e[$i];
+                $data['tax'] = $f[$i];
+                $data['type'] = '5';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+        
             redirect('accounting/banking');
-            // echo json_encode($addQuery);
         }
         else{
             echo json_encode(0);
@@ -2434,14 +2571,6 @@ class Accounting extends MY_Controller {
 
         $product = json_encode($this->input->post('product'));
 
-        // $product['id'] = "1";
-        // $product['prod'] = $this->input->post('prod');
-        // $product['desc'] = $this->input->post('desc');
-        // $product['qty'] = $this->input->post('qty');
-        // $product['rate'] = $this->input->post('rate');
-        // $product['amount'] = $this->input->post('amount');
-        // $product['tax'] = $this->input->post('tax');
-        // $prod[] = $product;
 
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -2460,9 +2589,50 @@ class Accounting extends MY_Controller {
 
         $addQuery = $this->accounting_delayed_credit_model->createDelayedCredit($new_data);
 
+        // if($addQuery > 0){
+        //     redirect('accounting/banking');
+        //     // echo json_encode($addQuery);
+        // }
         if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+            
+            $i = 0;
+            foreach($a as $row){
+                $data['product_services'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['rate'] = $d[$i];
+                $data['amount'] = $e[$i];
+                $data['tax'] = $f[$i];
+                $data['type'] = '6';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+        
             redirect('accounting/banking');
-            // echo json_encode($addQuery);
         }
         else{
             echo json_encode(0);
@@ -2476,15 +2646,6 @@ class Accounting extends MY_Controller {
 
         $product = json_encode($this->input->post('phone'));
 
-        // $product['id'] = "1";
-        // $product['prod'] = $this->input->post('prod');
-        // $product['desc'] = $this->input->post('desc');
-        // $product['qty'] = $this->input->post('qty');
-        // $product['rate'] = $this->input->post('rate');
-        // $product['amount'] = $this->input->post('amount');
-        // $product['tax'] = $this->input->post('tax');
-        // $prod[] = $product;
-
         // $profile = json_encode($people);
 
         $new_data = array(
@@ -2497,9 +2658,6 @@ class Accounting extends MY_Controller {
             'products' => 'testing',
             'message_credit_memo' => $this->input->post('message_displayed_on_credit_memo'),
             'message_on_statement' => $this->input->post('message_on_statement'),
-            // 'tax_rate' => $this->input->post('tax_rate'),
-            // 'see_the_math' => $this->input->post('see_the_math'),
-            // 'attachments' => $this->input->post('file_name'),
             'attachments' => 'testing',
             'status' => 1,
             'user_id' => $user_id,
@@ -2511,9 +2669,53 @@ class Accounting extends MY_Controller {
 
         $addQuery = $this->accounting_credit_memo_model->createCreditMemo($new_data);
 
+        // if($addQuery > 0){
+        //     redirect('accounting/banking');
+        //     // echo json_encode($addQuery);
+        // }
         if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '3',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            // $a['aa'] = $this->input->post('prod');
+            // $b['bb'] = $this->input->post('desc');
+            // $c['cc'] = $this->input->post('qty');
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+            
+            $i = 0;
+            foreach($a as $row){
+                $data['product_services'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['rate'] = $d[$i];
+                $data['amount'] = $e[$i];
+                $data['tax'] = $f[$i];
+                $data['type'] = '3';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+        
             redirect('accounting/banking');
-            // echo json_encode($addQuery);
         }
         else{
             echo json_encode(0);
@@ -2571,15 +2773,6 @@ class Accounting extends MY_Controller {
 
         $product = json_encode($this->input->post('phone'));
 
-        // $product['id'] = "1";
-        // $product['prod'] = $this->input->post('prod');
-        // $product['desc'] = $this->input->post('desc');
-        // $product['qty'] = $this->input->post('qty');
-        // $product['rate'] = $this->input->post('rate');
-        // $product['amount'] = $this->input->post('amount');
-        // $product['tax'] = $this->input->post('tax');
-        // $prod[] = $product;
-
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'charge_date' => $this->input->post('charge_date'),
@@ -2598,9 +2791,50 @@ class Accounting extends MY_Controller {
 
         $addQuery = $this->accounting_delayed_charge_model->createDelayedCharge($new_data);
 
+        // if($addQuery > 0){
+        //     redirect('accounting/banking');
+        //     // echo json_encode($addQuery);
+        // }
         if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+            
+            $i = 0;
+            foreach($a as $row){
+                $data['product_services'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['rate'] = $d[$i];
+                $data['amount'] = $e[$i];
+                $data['tax'] = $f[$i];
+                $data['type'] = '7';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+        
             redirect('accounting/banking');
-            // echo json_encode($addQuery);
         }
         else{
             echo json_encode(0);

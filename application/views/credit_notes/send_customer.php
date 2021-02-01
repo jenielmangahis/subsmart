@@ -62,7 +62,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('credit_notes/update', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('credit_notes/_send', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <div class="card">
                     <div class="row">
                     <div class="col-lg-18 col-xl-12">
@@ -71,10 +71,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="form-group">
                             <label>To</label> <span class="help help-sm">(select or input email address)</span>
-                            <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                <option></option>
+                            <select id="sel-customer" name="customer_id[]" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                <option value=""></option>
                                 <?php foreach($customers as $c){ ?>
-                                    <option <?= $c->id == $creditNote->customer_id ? '' : 'selected="selected"'; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                    <option <?= $c->id == $creditNote->customer_id ? '' : 'selected="selected"'; ?> value="<?= $c->email; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                 <?php } ?>
                             </select>
                             <!-- <select name="to[]" id="to" class="form-control" multiple="multiple"></select> -->
@@ -82,13 +82,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="form-group">
                             <div class="cc-label">
                                 <label>Cc</label>
-                                <select id="sel-cc-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                    <option></option>
+                                <select id="sel-cc-customer" name="email_cc[]" class="form-control" multiple="multiple">
+                                    <option value=""></option>
                                     <?php foreach($customers as $c){ ?>
-                                        <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                        <option value="<?= $c->email; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                     <?php } ?>
                                 </select>
-                                <!-- <a class="bcc-toggle" id="bcc-toggle" href="#">+ Bcc</a> -->
                             </div>
                             <!-- <select name="cc[]" id="cc" class="form-control" multiple="multiple"></select> -->
                         </div>
@@ -96,10 +95,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div>
                                 <label>Bcc</label>
                             </div>
-                            <select id="sel-bcc-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                <option></option>
+                            <select id="sel-bcc-customer" name="email_bcc[]" class="form-control" multiple="multiple">
+                                <option value=""></option>
                                 <?php foreach($customers as $c){ ?>
-                                    <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                    <option value="<?= $c->email; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -109,25 +108,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div>
                             <label>Email Body</label>
-                            <textarea name="mail_body" cols="40" rows="20"  class="form-control" id="mail_body" autocomplete="off">
-                                <p style="font-size: 28px;">Credit Note from <?= $client->business_name; ?> (Credit Note #<?= $creditNote->credit_note_number; ?>)</p>
+                            <textarea name="mail_body" cols="40" rows="50"  class="form-control" id="mail_body" autocomplete="off">
+                                <h1>Credit Note from <?= $client->business_name; ?> (Credit Note #<?= $creditNote->credit_note_number; ?>)</h1>
                                 <p>Dear Bryann Revina, <br /><br />Thank you for your business! <br />Please find the attached Credit Note #<?= $creditNote->credit_note_number; ?> with this email.<br />We will apply the credit amount shown on this notice to the invoice on our next service. <br /><br /><strong>Credits: $<?= number_format($creditNote->grand_total,2); ?></strong> <br /><br />You can click the button below to view this credit note online.</p>
                                 <p>&nbsp;</p>
-                                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                                <tbody>
-                                <tr>
-                                <td align="center">
-                                <table border="0" cellspacing="0" cellpadding="0" align="center">
-                                <tbody>
-                                <tr>
-                                <td style="-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;" align="center" bgcolor="#2ab363"><a style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; padding: 12px 34px; display: inline-block;" href="https://www.markate.com/public/pros/credit_note/view/685d63370ac83dc5e834ed559bfe33f9:67:735b90" target="_blank" rel="noopener"> View Credit Note Online </a></td>
-                                </tr>
-                                </tbody>
-                                </table>
-                                </td>
-                                </tr>
-                                </tbody>
-                                </table>
+                                <a style="background-color:#2ab363;font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; padding: 12px 34px; display: inline-block;" href="<?= $customer_url; ?>" target="_blank" rel="noopener"> View Credit Note Online </a>
                                 <p>&nbsp;</p>
                                 <p>If you have any questions, please call us at <strong><?= $client->phone_number; ?></strong> <br /><br />Thanks,<br /><?= $client->business_name; ?></p>
 
@@ -143,9 +128,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <a href="<?php echo url('credit_notes') ?>" class="btn btn-danger">Cancel this</a>
                     </div>
                 </div>
-            <?php echo form_close(); ?>
             <!-- end row -->
             </div>
+            <?php echo form_close(); ?>
         </div>
         <!-- end container-fluid -->
     </div>
@@ -175,8 +160,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
         // Replace the <textarea id="editor1"> with a CKEditor
         // instance, using default configuration.
         CKEDITOR.replace('mail_body', {
+            height: '600'
             //removePlugins: 'toolbar',
             //allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height] alignment;'
         });
+
+        CKEDITOR.config.allowedContent = true;
     });
 </script>

@@ -1,0 +1,13 @@
+@mixin grid() {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
+  column-gap: 30px;
+  row-gap: 15px;
+}
+
+@mixin ellipsis($width) {
+  width: $width !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

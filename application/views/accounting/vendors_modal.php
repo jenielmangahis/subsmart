@@ -1378,3 +1378,5 @@
    </div>
 </div>
     <!-- End New Popup -->`
+
+    <?php include viewPath('accounting/add_new_term'); ?>
