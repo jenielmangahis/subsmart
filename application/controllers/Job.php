@@ -23,6 +23,7 @@ class Job extends MY_Controller
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
 			"assets/css/accounting/sidebar.css",
+            'assets/textEditor/summernote-bs4.css',
         ));
 
         // JS to add only Job module
@@ -32,7 +33,8 @@ class Job extends MY_Controller
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
             'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-            'assets/frontend/js/job_creation/main.js'
+            'assets/frontend/js/job_creation/main.js',
+            'assets/textEditor/summernote-bs4.js'
         ));
     }
 
@@ -118,6 +120,18 @@ class Job extends MY_Controller
         echo json_encode($this->general->get_data_with_param($get_customer,FALSE),TRUE);
     }
 
+    public function get_esign_selected(){
+        $id = $_POST['id'];
+        $get_template = array(
+            'where' => array(
+                'esignLibraryTemplateId' => $id
+            ),
+            'table' => 'esign_library_template',
+            'select' => 'content',
+        );
+        echo json_encode($this->general->get_data_with_param($get_template,FALSE),TRUE);
+    }
+
     public function new_job1() {
         $get = $this->input->get();
         $comp_id = logged('company_id');
@@ -178,6 +192,7 @@ class Job extends MY_Controller
 //                'join_as' => 'left',
 //            ),
         );
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
 
         // get all job tags
         $get_job_tags = array(
@@ -187,10 +202,23 @@ class Job extends MY_Controller
         $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
         //echo logged('company_id');
 
-        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+        $get_esign_template = array(
+            'where' => array(
+                'category_id' => 26, // 26 = category id of Jobs template in esign_library_category table
+                'isActive' => 1
+            ),
+            'table' => 'esign_library_template',
+            'select' => 'esignLibraryTemplateId,title,content',
+        );
+        $this->page_data['esign_templates'] = $this->general->get_data_with_param($get_esign_template);
+
         $this->load->view('job/job_new', $this->page_data);
     }
 
+    public function save_esign() {
+       // echo json_encode($_POST);
+        echo date("d-m-Y h:i A");
+    }
     public function settings() {
         $get = $this->input->get();
 

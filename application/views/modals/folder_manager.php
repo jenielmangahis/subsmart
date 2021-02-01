@@ -33,7 +33,7 @@
           <input type="hidden" id="vault_type" value="sharedlibrary" />
         <?php } ?>
 
-        <div class="card">
+        <div class="card vaultContainer">
           <div class="card-header pb-0">        
             <div class="row">
                 <div class="col-md-6">
@@ -83,11 +83,10 @@
             </div>
           </div>
           <div class="card-body" style="<?php if(!$isMain){ echo 'height: 64vh !important; overflow: auto'; } ?>">
-            <div id="folders_and_files">
-                
-            </div>
+            <div id="quick_access"></div>
+            <div id="folders_and_files"></div>
             <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))){ ?>
-              <div class="mt-5">
+              <!-- <div class="mt-5">
                 <div class="row">
                   <div class="col-md-4 border">
                     <h6>Top 10 Most Downloads<span class="fa fa-refresh ml-2" control="refresh_tops" target="most_downloads" title="Reload Top 10 Most Downloads"></span><span class="float-right">Count</span></h6>
@@ -105,7 +104,7 @@
                     </ul>
                   </div>
                 </div>
-              </div>
+              </div> -->
             <?php } ?>
           </div>
         </div>

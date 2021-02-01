@@ -7,6 +7,7 @@ var tagsListModal = '';
 var timesheetInputs = 'input.day-input';
 var payrollForm = '';
 var payrollFormData = [];
+const noRecordMessage = '<div class="no-results text-center p-4">No customers found for the applied filters.</div>'
 
 $(function() {
     $(document).on('keyup', timesheetInputs, function(e) {
@@ -498,7 +499,57 @@ $(function() {
             processData: false,
             contentType: false,
             success: function(result) {
-                
+                var res = JSON.parse(result);
+                var customers = res.customers;
+                var withoutEmail = res.withoutEmail;
+
+                $('div#statementModal span#total-customers').html(customers.length);
+                $('div#statementModal span#total-amount').html(`$${res.total}.00`);
+                $('div#statementModal span#without-email-count').html(withoutEmail.length);
+                $('div#statementModal span#statements-count').html(customers.length);
+                $('div#statementModal table#statements-table tbody').html('');
+                $('div#statementModal table#missing-email-table tbody').html('');
+
+                if(withoutEmail.length > 0) {
+                    for(i in withoutEmail) {
+                        $('div#statementModal table#missing-email-table tbody').append(`<tr>
+                            <td>
+                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                    <input class="m-auto" type="checkbox" name="select_all" value="${withoutEmail[i]['id']}" checked>
+                                </div>
+                            </td>
+                            <td>${withoutEmail[i]['name']}</td>
+                            <td><input type="email" name="email[]" class="form-control" value="${withoutEmail[i]['email']}"></td>
+                            <td class="text-right">$${withoutEmail[i]['balance']}.00</td>
+                        </tr>`);
+                    }
+                }
+
+                if(customers.length > 0) {
+                    for(i in customers) {
+                        $('div#statementModal table#statements-table tbody').append(`<tr>
+                            <td>
+                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                    <input class="m-auto" type="checkbox" name="select_all" value="${customers[i]['id']}" checked>
+                                </div>
+                            </td>
+                            <td>${customers[i]['name']}</td>
+                            <td><input type="email" name="email[]" class="form-control" value="${customers[i]['email']}"></td>
+                            <td class="text-right">$${customers[i]['balance']}.00</td>
+                        </tr>`);
+                    }
+                }
+
+                if(withoutEmail.length === 0 && $('div#statementModal div#missing-email div.no-results').length === 0) {
+                    $('div#statementModal table#missing-email-table').parent().append(noRecordMessage);
+                }
+
+                if(customers.length === 0 && $('div#statementModal div#statements-avail div.no-results').length === 0) {
+                    $('div#statementModal table#statements-table').parent().append(noRecordMessage);
+                }
+
+                $('div#statementModal div.modal-body button.apply-button').addClass('hide');
+                $('div#statementModal div.modal-body div.row:last-child()').removeClass('hide');
             }
         });
     });

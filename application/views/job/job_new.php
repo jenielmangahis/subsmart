@@ -139,7 +139,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 .card-header .btn:after {
     content: '-';
     font-size: 50px;
-    color: green;
     position: absolute;
     top: -5px;
     right: 18px;
@@ -148,7 +147,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 .card-header .btn.collapsed:after {
     content: '+';
     font-size: 34px;
-    color: green;
     position: absolute;
     top: 7px;
     /* left: 0px; */
@@ -159,8 +157,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
     text-decoration: none;
     border-bottom: 1px solid #e5e5e5;
     box-shadow: none;
-    padding: 0px;
+    padding: 0;
     width: 100%;
+}
+.card-header .btn:hover{
+
 }
 .card-header {
     border: none;
@@ -558,11 +559,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <!-- <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Private notes</h6>
-                            <hr>
-                            <div class="form-group">
-                               <input type="text" class="form-control">
-                            </div> -->
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
                                     <div class="card-header" id="headingFour">
@@ -601,8 +597,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                         </h2>
                                     </div>
-
-                                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div id="notes_edit_btn" class="pencil" style=" width:100%; height:100px;">
@@ -621,10 +616,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
                                             </div>
                                         </div>
-
                                         </div>
                                     <br>
-
                                 </div>
                             </div>
 
@@ -632,35 +625,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <!-- <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Job Tags</h6>
-                            <hr>
-                            <div class="form-group">
-                               <input type="text" class="form-control">
-                            </div> -->
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
                                     <div class="card-header" id="headingTwo">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                        <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Job Tags</h6>
-                                        </button>
-                                        <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
-                                    </h2>
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Job Tags</h6>
+                                            </button>
+                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
+                                        </h2>
                                     </div>
-
                                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <small>Select Tag</small>
-                                            <select id="inputState" class="form-control">
-                                                <?php if(!empty($tags)): ?>
-                                                    <?php foreach ($tags as $tag): ?>
-                                                        <option value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </select>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <small>Select Tag</small>
+                                                <select id="inputState" class="form-control">
+                                                    <?php if(!empty($tags)): ?>
+                                                        <?php foreach ($tags as $tag): ?>
+                                                            <option value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <br>
                                 </div>
@@ -736,11 +723,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </h2>
                                     </div>
                                     <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <center><img width="100" id="customer-signature" alt="Customer Signature" src="/assets/img/jobs/add_file.png"></center>
+                                       <div class="card-body">
+                                            <a style="cursor: pointer;" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
+                                                <center>
+                                                    <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
+                                                </center>
+                                            </a>
                                          </div>
                                         <div style="float: right;">
-                                            <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                            <a ><span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;</a>
                                             <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
                                         </div>
                                     </div>
@@ -754,13 +745,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="card">
                                     <div class="card-header" id="headingOne">
                                         <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
+                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="collapseOne">
                                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-money"></span>&nbsp;&nbsp;Payment Details</h6>
                                             </button>
                                             <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                         </h2>
                                     </div>
-                                    <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                    <div id="payment" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="col-sm-12">
                                                 <div class="col-md-12">
@@ -770,7 +761,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <option value="CHECK">Check</option>
                                                         <option value="CASH">Cash</option>
                                                         <option value="ACH">ACH</option>
-                                                        <option value="OTHER">Other</option>
+                                                        <option value="VENMO">Venmo</option>
+                                                        <option value="PP">Paypal</option>
+                                                        <option value="SQ">Square</option>
+                                                        <option value="WW">Warranty Work</option>
+                                                        <option value="HOF">Home Owner Financing</option>
+                                                        <option value="eT">e-Transfer</option>
+                                                        <option value="OCCP">Other Credit Card Processor</option>
+                                                        <option value="OPT">Other Payment Type</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12">
@@ -817,26 +815,85 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                                     <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
                                                                             </div>
                                                                         </div>
+                                                                        <div class="col-md-12" style="text-align: center !important;">
+                                                                            <br>
+                                                                            <button type="button" class="btn btn-sm btn-primary">
+                                                                                <span class="fa fa-search-plus"></span> Scan Payment
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="check_ach_form">
+                                                            <div id="check_form">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing Number" required />
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing #" required />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Number" required />
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account #" required />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+                                                                        <div class="col-md-12" style="text-align: center !important;">
+                                                                            <br>
+                                                                            <button type="button" class="btn btn-sm btn-primary">
+                                                                                <span class="fa fa-search-plus"></span> Scan Payment
+                                                                            </button>
+                                                                            <br>
+                                                                            <div class="form-group" style="text-align: center;">
+                                                                                <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
+                                                                                <label for="notify_by_email">Payment has been collected.</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div id="ach_form">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing #" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account #" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <select id="day_of_month_ach" class="form-control">
+                                                                                    <option value="">Select Day of Month</option>
+                                                                                    <?php for($x=1;$x<=31;$x++){ ?>
+                                                                                        <option value="<?= $x; ?>"><?= $x; ?></option>
+                                                                                    <?php } ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12" style="text-align: center !important;">
+                                                                            <br>
+                                                                            <button type="button" class="btn btn-sm btn-primary">
+                                                                                <span class="fa fa-search-plus"></span> Scan Payment
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div id="cash_form">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
                                                                         <div class="col-md-12" style="text-align: center !important;">
                                                                             <br>
 
@@ -852,10 +909,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="check_form">
+                                                            <div id="others_warranty_form">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
-
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <textarea  class="form-control" id="cardNumber" placeholder="Account Note"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group" style="text-align: center;">
+                                                                                <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
+                                                                                <label for="notify_by_email">Document Signed</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div id="svp_form">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential" required />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <textarea  class="form-control" id="cardNumber" placeholder="Account Note"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <textarea  class="form-control" id="cardNumber" placeholder="Confirmation"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -889,16 +992,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <center>
                                                         <img width="100" id="customer-signature" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
                                                     </center>
-                                                    <span><b>John Doe</b></span><br>
+                                                    <span id="authorizer">John Doe</span><br>
                                                     <span>------------------------</span><br>
                                                     <span>Approved By</span><br><br>
 
-                                                    <small>Jan. 28,2021 2:30PM</small>
+                                                    <small id="date_signed">Jan. 28,2021 2:30PM</small>
                                                 </div>
                                             </div>
                                         </div>
                                         <div style="float: right;">
-                                            <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                            <a data-toggle="modal" data-target="#updateSignature" data-backdrop="static" data-keyboard="false">
+                                                <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                            </a>
                                             <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
                                         </div>
                                     </div>
@@ -921,7 +1026,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="stepwizard-step col-xs-3">
                                 <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
                                 <p><small>OMW</small></p>
-                            </div>
+                            </div> &nbsp;&nbsp;
                             <div class="stepwizard-step col-xs-3">
                                 <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
                                 <p><small>Start</small></p>
@@ -934,7 +1039,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
                                 <p><small>Finish</small></p>
                             </div>
-
                             <div class="stepwizard-step col-xs-3">
                                 <a href="#step-6" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-paper-plane"></span></a>
                                 <p><small>Invoice</small></p>
@@ -980,56 +1084,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <tr></tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <h6>Job Items Listing</h6>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <small>Job Tags</small>
-                                        <input type="text" class="form-control" value="Residential" readonly="readonly">
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
-                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
-                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
+                                    <tr>
+                                        <td>
+                                            <h6>Job Items Listing</h6>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <small>Job Tags</small>
+                                            <input type="text" class="form-control" value="Residential" readonly="readonly">
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
 
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width="35%">
-                                        <small>Item name</small>
-                                        <input type="text" name="check_description[]" class="form-control checkDescription" >
-                                    </td>
-                                    <td>
-                                        <small>Qty</small>
-                                        <input type="text" name="check_description[]" class="form-control checkDescription">
-                                    </td>
-                                    <td>
-                                        <small>Unit Price</small>
-                                        <input type="text" name="check_amount[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
-                                    </td>
-                                    <td>
-                                        <small>Unit Cost</small>
-                                        <input type="text" name="check_description[]" class="form-control checkDescription">
-                                    </td>
-                                    <td>
-                                        <small>Inventory Location</small>
-                                        <input type="text" name="check_description[]" class="form-control checkDescription">
-                                    </td>
-                                    <td style="text-align: center" class="d-flex">$00<a href="#" class="remove-check-row"><i class="fa fa-times-circle" aria-hidden="true"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                            <span class="fa fa-plus-square fa-margin-right"></span>Add Items
-                                        </a>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="35%">
+                                            <small>Item name</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription" >
+                                        </td>
+                                        <td>
+                                            <small>Qty</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                        </td>
+                                        <td>
+                                            <small>Unit Price</small>
+                                            <input type="text" name="check_amount[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <small>Unit Cost</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                        </td>
+                                        <td>
+                                            <small>Inventory Location</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                        </td>
+                                        <td style="text-align: center" class="d-flex">$00<a href="#" class="remove-check-row"><i class="fa fa-times-circle" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
+                                                <span class="fa fa-plus-square fa-margin-right"></span>Add Items
+                                            </a>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                            <div class="col-sm-12">
@@ -1037,7 +1141,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <textarea name="description" class="form-control" ></textarea>
                                 <hr/>
                             </div>
-
                             <div class="col-md-12 table-responsive">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -1120,8 +1223,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                     <div class="col-sm-12">
                                         <div style="float: right;">
-                                            <img width="100" id="customer-signature" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
-                                            <center><span><b>John Doe</b></span></center><br>
+                                            <img width="100" id="customer_signature_right" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
+                                            <center><span id="appoval_name_right">John Doe</span></center><br>
                                             <span>------------------------</span><br>
                                             <center><span>Approved By</span></center><br>
                                         </div>
@@ -1529,26 +1632,160 @@ defined('BASEPATH') or exit('No direct script access allowed');
   </div>
 </div>
 
+<!-- Signature Modal -->
+<div class="modal fade" id="updateSignature" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Approval</h4>
+            </div>
+            <div class="modal-body">
+                <label>Authorizer Name</label>
+                <input type="text" name="authorizer_name" id="authorizer_name" class="form-control" >
+                <br>
+                <small>Signature Below</small>
+                <hr>
+                <div id="signature" style='border:none;'>
+                    <canvas id="signature-pad" class="signature-pad" width="430px" height="230px"></canvas>
+                </div>
+                <textarea style="display: none;" name="data[output]" id='output'></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="click" class="btn btn-primary save-signature">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- eSgin Modal -->
+<div class="modal fade" id="fill_esign" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Fill & eSign</h4>
+            </div>
+            <div class="modal-body">
+                <a href="<?= base_url('esign/createTemplate'); ?>" style="float: right;" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span> Add New</a>
+                <select name="library_template" id="library_template" class="select2LibrarySelection dropdown form-control">
+                    <option>Select Library Template</option>
+                    <?php if(isset($esign_templates)) : ?>
+                        <?php foreach($esign_templates as $esign_template){ ?>
+                            <option value="<?= $esign_template->esignLibraryTemplateId; ?>"><?= $esign_template->title; ?></option>
+                        <?php } ?>
+                    <?php endif; ?>
+                </select>
+                <br>
+                <small>Template</small>
+                <hr>
+                <textarea id="summernote" name="template"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span> Close</button>
+                <button type="button" id="click" class="btn btn-primary save-signature"><span class="fa fa-paper-plane-o"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php include viewPath('includes/footer'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=initMap&libraries=&v=weekly"></script>
 <script>
-
     $(document).ready(function() {
-        $('#check_ach_form').hide();
+        $("#library_template").on( 'change', function () {
+            var lib_id = this.value;
+            $.ajax({
+                type: "POST",
+                url: "/job/get_esign_selected",
+                data: {id : lib_id}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var template_data = JSON.parse(data);
+                    $('#summernote').summernote('code', template_data.content);
+                    console.log(data);
+                }
+            });
+        });
+        //$('#summernote').summernote('code', '');
+        $('#summernote').summernote({
+            placeholder: 'Type Here ... ',
+            tabsize: 2,
+            height: 250,
+        });
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        $('#click').click(function(){
+            var data = signaturePad.toDataURL('image/png');
+            $('#output').val(data);
+            var url = '/job/save_esign';
+            $.ajax({
+                url: url,
+                type: "POST",
+                data:{base64: data}
+            }).done(function(e){
+                $('#authorizer').html($('#authorizer_name').val());
+                $('#appoval_name_right').html($('#authorizer_name').val());
+                $('#date_signed').html(e);
+                $("#customer-signature").attr("src",data);
+                $("#customer_signature_right").attr("src",data);
+                //location.reload();
+            });
+        });
+
         $('#check_form').hide();
+        $('#cash_form').hide();
+        $('#ach_form').hide();
+        $('#others_warranty_form').hide();
+        $('#svp_form').hide();
         $("#pay_method").on( 'change', function () {
             var method = this.value;
-            if(method === 'ACH' || method === 'CHECK' || method === 'CASH'){
-                $('#check_ach_form').show();
-                $('#credit_card_form').hide();
+            if(method === 'CHECK'){
                 $('#check_form').show();
-            }else if(method === 'CC'){
-                $('#check_ach_form').hide();
-                $('#credit_card_form').show();
+                $('#credit_card_form').hide();
+                $('#cash_form').hide();
+                $('#ach_form').hide();
+                $('#others_warranty_form').hide();
+                $('#svp_form').hide();
+            }else if(method === 'CC'|| method === 'OCCP'){
                 $('#check_form').hide();
+                $('#credit_card_form').show();
+                $('#cash_form').hide();
+                $('#ach_form').hide();
+                $('#others_warranty_form').hide();
+                $('#svp_form').hide();
+            }else if(method === 'CASH'){
+                $('#cash_form').show();
+                $('#check_form').hide();
+                $('#ach_form').hide();
+                $('#credit_card_form').hide();
+                $('#others_warranty_form').hide();
+                $('#svp_form').hide();
+            }
+            else if(method === 'ACH'){
+                $('#ach_form').show();
+                $('#check_form').hide();
+                $('#credit_card_form').hide();
+                $('#cash_form').hide();
+                $('#others_warranty_form').hide();
+                $('#svp_form').hide();
+            }else if(method === 'OPT' || method === 'WW'){
+                $('#ach_form').hide();
+                $('#check_form').hide();
+                $('#credit_card_form').hide();
+                $('#cash_form').hide();
+                $('#others_warranty_form').show();
+                $('#svp_form').hide();
+            }
+            else if(method === 'SQ' || method === 'PP' || method === 'VENMO'){
+                $('#ach_form').hide();
+                $('#check_form').hide();
+                $('#credit_card_form').hide();
+                $('#cash_form').hide();
+                $('#others_warranty_form').hide();
+                $('#svp_form').show();
             }
         });
 

@@ -22,8 +22,8 @@
                             </div>
                         </div>
                         <div class="col-md-4 text-right">
-                            <p class="m-0">TOTAL BALANCE FOR 2 CUSTOMERS</p>
-                            <h2 class="m-0">$4.00</h2>
+                            <p class="m-0">TOTAL BALANCE FOR <span id="total-customers"><?php echo count($customers); ?></span> CUSTOMERS</p>
+                            <h2 class="m-0"><span id="total-amount">$<?php echo $total; ?>.00</span></h2>
                         </div>
                     </div>
 
@@ -72,10 +72,10 @@
                         <div class="col-md-12">
                             <ul class="nav nav-tabs" id="recipientsTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link" id="missing-email-tab" data-toggle="tab" href="#missing-email" role="tab" aria-controls="missing-email" aria-selected="true">Missing email address (0)</a>
+                                    <a class="nav-link" id="missing-email-tab" data-toggle="tab" href="#missing-email" role="tab" aria-controls="missing-email" aria-selected="true">Missing email address (<span id="without-email-count"><?php echo count($withoutEmail); ?></span>)</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="statements-avail-tab" data-toggle="tab" href="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="true">Statements available (0)</a>
+                                    <a class="nav-link active" id="statements-avail-tab" data-toggle="tab" href="#statements-avail" role="tab" aria-controls="statements-avail" aria-selected="true">Statements available (<span id="statements-count"><?php echo count($customers); ?></span>)</a>
                                 </li>
                             </ul>
 
@@ -93,13 +93,28 @@
                                             <th class="text-right">BALANCE</th>
                                         </thead>
                                         <tbody>
-
+                                            <?php if(count($withoutEmail) > 0) :
+                                            foreach($withoutEmail as $cust) : ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                                            <input class="m-auto" type="checkbox" name="select_all" value="<?php echo $cust['id']; ?>" checked>
+                                                        </div>
+                                                    </td>
+                                                    <td><?php echo $cust['name']; ?></td>
+                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $cust['email']; ?>"></td>
+                                                    <td class="text-right">$<?php echo $cust['balance']; ?>.00</td>
+                                                </tr>
+                                            <?php endforeach;
+                                            endif; ?>
                                         </tbody>
                                     </table>
                                     
+                                    <?php if(count($withoutEmail) === 0) : ?>
                                     <div class="no-results text-center p-4">
                                         No customers found for the applied filters.
                                     </div>
+                                    <?php endif?>
                                 </div>
                                 <div class="tab-pane fade show active" id="statements-avail" role="tabpanel" aria-labelledby="statements-avail-tab">
                                     <table class="table table-bordered table-hover" id="statements-table">
@@ -114,13 +129,28 @@
                                             <th class="text-right">BALANCE</th>
                                         </thead>
                                         <tbody>
-                                            
+                                            <?php if(count($customers) > 0) :
+                                            foreach($customers as $customer) : ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
+                                                            <input class="m-auto" type="checkbox" name="select_all" value="<?php echo $customer['id']; ?>" checked>
+                                                        </div>
+                                                    </td>
+                                                    <td><?php echo $customer['name']; ?></td>
+                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $customer['email']; ?>"></td>
+                                                    <td class="text-right">$<?php echo $customer['balance']; ?>.00</td>
+                                                </tr>
+                                            <?php endforeach;
+                                            endif; ?>
                                         </tbody>
                                     </table>
 
+                                    <?php if(count($customers) === 0) : ?>
                                     <div class="no-results text-center p-4">
                                         No customers found for the applied filters.
                                     </div>
+                                    <?php endif?>
                                 </div>
                             </div>
                         </div>

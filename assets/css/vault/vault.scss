@@ -1,0 +1,227 @@
+@import "./mixins";
+
+$colorPrimary: #797979;
+$colorBorder: #e4e4e4;
+$colorBackgroundActive: #e8f0fe;
+$colorForegroundActive: #1967d2;
+
+.vault {
+  display: block !important;
+
+  &Container {
+    width: 100% !important;
+
+    .card-body {
+      width: 100% !important;
+    }
+  }
+
+  &__spacer {
+    height: 20px;
+  }
+
+  &__spacer--isLarge {
+    height: 30px;
+  }
+
+  &__title {
+    color: $colorPrimary;
+    font-size: 15px;
+    margin: 0;
+    font-family: inherit;
+  }
+
+  &__folders {
+    &Grid {
+      @include grid();
+
+      .vault {
+        &__folder {
+          height: 45px;
+          max-width: unset !important;
+          padding: 0 !important;
+          color: $colorPrimary;
+          cursor: default;
+        }
+
+        &__folderInner {
+          padding: 0 !important;
+          border-color: $colorBorder !important;
+          box-shadow: none !important;
+
+          table {
+            width: 100% !important;
+          }
+
+          tr {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 15px;
+
+            td {
+              width: auto !important;
+              padding: 0 !important;
+
+              &:nth-child(1) {
+                margin-right: 15px;
+                i {
+                  color: inherit !important;
+                }
+              }
+
+              &:nth-child(2) {
+                @include ellipsis(100px);
+                user-select: none;
+                font-weight: 600;
+              }
+            }
+          }
+
+          #td_total_contents {
+            display: none;
+          }
+
+          &.bg-info {
+            background-color: $colorBackgroundActive !important;
+          }
+
+          &.text-white {
+            color: $colorForegroundActive !important;
+          }
+        }
+      }
+    }
+  }
+
+  &__files {
+    &Grid {
+      @include grid();
+
+      .vault {
+        &__file {
+          max-width: unset !important;
+          padding: 0 !important;
+          color: $colorPrimary;
+          cursor: default;
+        }
+
+        &__fileInner {
+          padding: 0 !important;
+          border-color: $colorBorder !important;
+          box-shadow: none !important;
+          overflow: hidden;
+
+          table {
+            width: 100% !important;
+          }
+
+          tr {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+
+            td {
+              &:nth-child(1) {
+                width: 100% !important;
+                height: 150px;
+                border-top-left-radius: 0.25rem;
+                border-top-right-radius: 0.25rem;
+                background-image: var(--bg-image);
+                background-size: cover;
+                background-position: center;
+                background-color: #f7f7f7;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                  font-size: 70px;
+                }
+              }
+
+              &:nth-child(2) {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                width: 100% !important;
+                padding: 10px 20px !important;
+
+                & > div {
+                  display: flex;
+                }
+
+                .vault__fileName {
+                  @include ellipsis(125px);
+                  display: block;
+                  user-select: none;
+                  font-weight: 600;
+                }
+
+                i {
+                  margin-right: 15px !important;
+                  margin-left: 0 !important;
+                  font-size: 20px;
+                }
+
+                .vault__fileDate {
+                  font-size: 12px;
+                  margin-top: 5px;
+                  color: $colorPrimary !important;
+                  user-select: none;
+                }
+              }
+            }
+          }
+
+          &.bg-info {
+            background-color: $colorBackgroundActive !important;
+          }
+
+          &.text-white {
+            color: $colorForegroundActive !important;
+          }
+        }
+      }
+    }
+  }
+
+  &__emptyMessage {
+    font-family: inherit;
+    color: $colorPrimary;
+  }
+
+  &__fileLoader {
+    position: relative;
+    height: 215px;
+    background-color: #f7f7f7;
+    border: 1px solid $colorBorder;
+    border-radius: 0.25rem;
+
+    span {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #fff;
+      padding: 10px 20px;
+
+      &::after,
+      &::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 15px;
+        border-radius: 15px;
+        background: #f7f7f7;
+      }
+
+      &::after {
+        height: 10px;
+        width: 80px;
+        margin-top: 8px;
+      }
+    }
+  }
+}

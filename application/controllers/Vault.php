@@ -248,7 +248,7 @@ class Vault extends MY_Controller {
         echo json_encode($return);	
 	}
 
-	public function recently_uploaded_files(){
+	public function recently_uploaded_files_old(){
 		$company_id = logged('company_id');
 
 		$sql = 'select ' . 
@@ -269,6 +269,29 @@ class Vault extends MY_Controller {
         $return = $this->db->query($sql)->result_array();
 
         echo json_encode($return);		
+	}
+
+	public function recently_uploaded_files()
+	{
+		// herbert's code
+		$companyId = logged('company_id');
+		$limit = 7;
+
+		$sql = 'select ' . 
+               'a.*, '.
+               'DATEDIFF(NOW(), a.created) as `days`, '.
+               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+               'c.folder_name '.
+
+               'from filevault a '.
+               'left join users b on b.id = a.user_id '.
+               'left join business_profile c on c.id = a.company_id '.
+
+               'where a.company_id = ' . $companyId . ' and a.category_id is null ' . 
+			   'order by created DESC limit ' . $limit;
+
+		$results = $this->db->query($sql)->result_array();
+        echo json_encode($results);
 	}
 
 	public function download_file($file_id){

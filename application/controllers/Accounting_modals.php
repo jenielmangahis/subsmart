@@ -160,6 +160,41 @@ class Accounting_modals extends MY_Controller {
 
                     $this->page_data['dropdown']['weeks'] = $weeks;
                 break;
+                case 'statement_modal' :
+                    $data = [
+                        'company_id' => logged('company_id'),
+                        'start_date' => date('Y-m-d', strtotime('-1 months')),
+                        'end_date' => date('Y-m-d')
+                    ];
+                    $customers = $this->accounting_invoices_model->getOpenInvoices($data);
+
+                    $display = [];
+                    foreach($customers as $customer) {
+                        $index = array_search($customer->customer_id, array_column($display, 'id'));
+                        if($index === false) {
+                            $display[] = [
+                                'id' => $customer->customer_id,
+                                'name' => $customer->first_name . ' ' . $customer->last_name,
+                                'email' => $customer->email,
+                                'balance' => (int)$customer->amount
+                            ];
+                        } else {
+                            $display[$index]['balance'] = $display[$index]['balance'] + (int)$customer->amount;
+                        }
+                    }
+
+                    $totalBalance = array_sum(array_map(function($item) { 
+                        return $item['balance']; 
+                    }, $display));
+
+                    $withoutEmail = array_filter($display, function($value, $key) {
+                        return $value['email'] === '';
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['withoutEmail'] = $withoutEmail;
+                    $this->page_data['total'] = $totalBalance;
+                    $this->page_data['customers'] = $display;
+                break;
             }
 
             $this->load->view("accounting/". $view, $this->page_data);
@@ -328,8 +363,6 @@ class Accounting_modals extends MY_Controller {
         $company_id = logged('company_id');
 
         $data = [
-            'statement_type' => $input['statement_type'],
-            'cust_bal_status' => $input['cust_bal_status'],
             'company_id' => $company_id
         ];
 
@@ -337,7 +370,43 @@ class Accounting_modals extends MY_Controller {
             $data['start_date'] = date('Y-m-d', strtotime($input['start_date']));
             $data['end_date'] = date('Y-m-d', strtotime($input['end_date']));
         }
-        dd($data);
+
+        if($input['cust_bal_status'] === 'overdue') {
+            $customers = $this->accounting_invoices_model->getOverdueInvoices($data);
+        } else {
+            $customers = $this->accounting_invoices_model->getOpenInvoices($data);
+        }
+
+        $display = [];
+        foreach($customers as $customer) {
+            $index = array_search($customer->customer_id, array_column($display, 'id'));
+            if($index === false) {
+                $display[] = [
+                    'id' => $customer->customer_id,
+                    'name' => $customer->first_name . ' ' . $customer->last_name,
+                    'email' => $customer->email,
+                    'balance' => $customer->amount
+                ];
+            } else {
+                $display[$index]['balance'] = (int)$display[$index]['balance'] + (int)$customer->amount;
+            }
+        }
+
+        $totalBalance = array_sum(array_map(function($item) { 
+            return $item['balance']; 
+        }, $display));
+
+        $withoutEmail = array_filter($display, function($value, $key) {
+            return $value['email'] === '';
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $result = [
+            'customers' => $display,
+            'total' => $totalBalance,
+            'withoutEmail' => $withoutEmail
+        ];
+
+        echo json_encode($result);
     }
 
     public function action() {
