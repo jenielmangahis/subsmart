@@ -162,11 +162,12 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'statement_modal' :
                     $data = [
+                        'cust_bal_status' => 'open',
                         'company_id' => logged('company_id'),
                         'start_date' => date('Y-m-d', strtotime('-1 months')),
                         'end_date' => date('Y-m-d')
                     ];
-                    $customers = $this->accounting_invoices_model->getOpenInvoices($data);
+                    $customers = $this->accounting_invoices_model->getStatementInvoices($data);
 
                     $display = [];
                     foreach($customers as $customer) {
@@ -176,10 +177,12 @@ class Accounting_modals extends MY_Controller {
                                 'id' => $customer->customer_id,
                                 'name' => $customer->first_name . ' ' . $customer->last_name,
                                 'email' => $customer->email,
-                                'balance' => (int)$customer->amount
+                                'balance' => ($customer->status === '1') ? $customer->amount : 0
                             ];
                         } else {
-                            $display[$index]['balance'] = $display[$index]['balance'] + (int)$customer->amount;
+                            if($customer->status === '1') {
+                                $display[$index]['balance'] = (int)$display[$index]['balance'] + (int)$customer->amount;
+                            }
                         }
                     }
 
@@ -363,18 +366,17 @@ class Accounting_modals extends MY_Controller {
         $company_id = logged('company_id');
 
         $data = [
+            'cust_bal_status' => $input['cust_bal_status'],
             'company_id' => $company_id
         ];
 
-        if(isset($input['start_date']) && isset($input['end_date'])) {
-            $data['start_date'] = date('Y-m-d', strtotime($input['start_date']));
-            $data['end_date'] = date('Y-m-d', strtotime($input['end_date']));
-        }
+        $data['start_date'] = ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['start_date']));
+        $data['end_date'] = ($input['statement_type'] === '2') ? date('Y-m-d') : date('Y-m-d', strtotime($input['end_date']));
 
-        if($input['cust_bal_status'] === 'overdue') {
-            $customers = $this->accounting_invoices_model->getOverdueInvoices($data);
+        if($input['statement_type'] === '1' || $input['statement_type'] === '2') {
+            $customers = $this->accounting_invoices_model->getStatementInvoices($data);
         } else {
-            $customers = $this->accounting_invoices_model->getOpenInvoices($data);
+            $customers = $this->accounting_invoices_model->getTransactionInvoices($data);
         }
 
         $display = [];
@@ -385,10 +387,12 @@ class Accounting_modals extends MY_Controller {
                     'id' => $customer->customer_id,
                     'name' => $customer->first_name . ' ' . $customer->last_name,
                     'email' => $customer->email,
-                    'balance' => $customer->amount
+                    'balance' => ($customer->status === '1') ? $customer->amount : 0
                 ];
             } else {
-                $display[$index]['balance'] = (int)$display[$index]['balance'] + (int)$customer->amount;
+                if($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
+                    $display[$index]['balance'] = (int)$display[$index]['balance'] + (int)$customer->amount;
+                }
             }
         }
 

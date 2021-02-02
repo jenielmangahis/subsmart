@@ -10,17 +10,19 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
+                <form action="<?php echo site_url()?>accounting/addvendorcredit" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-3">
                                     Vendor
-                                    <select class="form-control" name="vendor_id">
-                                        <option></option>
-                                        <option>Add New</option>
-                                        <option>John Doe</option>
-                                        <option>Alpha</option>
+                                    <select name="vendor_id" id="expenseVendorId" class="form-control select2-payee" required>
+                                        <option value=""></option>
+                                        <option disabled>&plus;&nbsp;Add new</option>
+                                        <?php foreach ($vendors as $vendor):?>
+                                        <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
@@ -72,19 +74,40 @@
                                 </thead>
                                 <tr>
                                     <td></td>
-                                    <td>1</td>
+                                    <tr id="tableLine-expense">
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><span id="line-counter-expense">1</span></td>
+                                    <td>
+                                        <div id="" style="display:;">
+                                            <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
+                                            <option></option>
+                                            <?php foreach ($list_categories as $list): ?>
+                                            <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                            <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
                                 </tr>
-                                <tr>
+                                </tr>
+                                <tr id="tableLine-expense">
                                     <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><span id="line-counter-expense">2</span></td>
+                                    <td>
+                                        <div id="" style="display:;">
+                                            <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
+                                            <option></option>
+                                            <?php foreach ($list_categories as $list): ?>
+                                            <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                            <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                             </table>
                         <div>
@@ -179,6 +202,7 @@
 
 
                 </div>
+                </form>
                 
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>

@@ -202,9 +202,9 @@ class Folders extends MY_Controller {
 				$description = '';
 				$path = '';
 
-				$record = $this->db->query('select count(*) as `existing`, category_id, softdelete from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and company_id = ' . $company_id)->row();
+				$record = $this->db->query('select count(folder_id) as `existing`, category_id, softdelete from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and company_id = ' . $company_id . ' GROUP BY folder_id')->row();
 
-				if($record->existing > 0){
+				if($record && $record->existing > 0){
 					$return['error'] = 'Folder already exists';
 					if($record->softdelete > 0){
 						$return['error'] .= ' in recycle bin.';
@@ -330,10 +330,17 @@ class Folders extends MY_Controller {
 			'error' => ""
 		);
 
-		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id)->row();
-		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id)->row();
+		$files = $this->db->query('select count(file_id) as `filescount` from filevault where folder_id = ' . $folder_id . ' GROUP BY file_id')->row();
+		$folders = $this->db->query('select count(folder_id) as `folderscount` from file_folders where parent_id = ' . $folder_id . ' GROUP BY folder_id')->row();
 
-		$return['total'] = $files->filescount + $folders->folderscount;
+		
+		if ($files) {
+			$return['total'] += $files->filescount;
+		}
+
+		if ($folders) {
+			$return['total'] += $folders->folderscount;
+		}
 
 		if($internal){
 			return $return;
@@ -547,10 +554,10 @@ class Folders extends MY_Controller {
 		    } else {
 				$folder = $this->folders_model->getById($folder_id);
 				$exists_count = $this->db->query(
-					'select count(*) as `exists` from file_folders where parent_id = ' . $to_folder . ' and lower(folder_name) = "' . strtolower($folder->folder_name) . '" and company_id = ' . $company_id
+					'select count(folder_id) as `exists` from file_folders where parent_id = ' . $to_folder . ' and lower(folder_name) = "' . strtolower($folder->folder_name) . '" and company_id = ' . $company_id . ' GROUP BY folder_id'
 				)->row();
 
-				if($exists_count->exists > 0){
+				if($exists_count && $exists_count->exists > 0){
 					$return['error'] = 'Cannot move. Folder name already exists in the destination folder';
 				} else {
 				//create top folder initially ---------------------------------------------------------------------------------
@@ -714,9 +721,9 @@ class Folders extends MY_Controller {
 				$description = '';
 				$path = '';
 
-				$record = $this->db->query('select count(*) as `existing`, category_id from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and folder_id <> '. $folder_id .' and company_id = ' . $company_id)->row();
+				$record = $this->db->query('select count(folder_id) as `existing`, category_id from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and folder_id <> '. $folder_id .' and company_id = ' . $company_id . ' GROUP BY folder_id')->row();
 
-				if($record->existing > 0){
+				if($record && $record->existing > 0){
 					$return['error'] = 'Folder already exists';
 					if(!empty($record->category_id)){
 						$return['error'] .= ' in <strong>Business Form Templates</strong> section';

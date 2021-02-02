@@ -701,6 +701,11 @@ $(document).ready(function(){
             } else {
               getFoldersAndFiles(current_selected_folder);
 
+              const isUpdateOnRecentlyUploaded = $('.vault__item--isActive').closest('#recentlyUploaded').length >= 1;
+              if (isUpdateOnRecentlyUploaded) {
+                get_recently_uploaded_files();
+              }
+
               closeEntry();
             }
           },
@@ -2633,7 +2638,7 @@ function showFolderManagerRecycleBin(){
 // 2 - Uploaded
 // 3 - Upload Invalid
 
-function displayDroppedFiles(e){
+function displayDroppedFiles_old(e){
   e.preventDefault();
 
   $('#mfm-dtu-file-list > tbody').empty();
@@ -2964,7 +2969,7 @@ function createFile(file, options = {}) {
           <tbody>
               <tr class="node" isfolder="0" fid="${file_id}">
                 <td
-                  style="--bg-image: url(${previewUrl})"
+                  style="--bg-image: url('${previewUrl}')"
                   isfolder="0"
                   fid="${file_id}" 
                   created_date="${created}"
@@ -2998,6 +3003,7 @@ function createFile(file, options = {}) {
     selected_isFolder = 0;
 
     removeCurrentHighlighted();
+    $element.addClass('vault__item--isActive');
     $elementInner.addClass('bg-info');
     $elementInner.addClass('text-white');
     $('#folders_name').html(title);
@@ -3036,7 +3042,16 @@ function createFolder(folder) {
         <table class="border border-0 mb-0 h-100" style="width: 95%">
           <tbody>
               <tr class="node" isfolder="1" fid="21">
-                <td style="width: 15%"><i class="fa fa-folder fa-2x align-middle text-primary ml-2"></i></td>
+                <td 
+                isfolder="1"
+                fid="${folder_id}"
+                created_date="${create_date}"
+                created_by="${FCreatedBy} ${LCreatedBy}"
+                fnm="${folder_name}"
+                path="${c_folder}${path}"
+                path_temp="${path}"
+                style="width: 15%"
+              ><i class="fa fa-folder fa-2x align-middle text-primary ml-2"></i></td>
                 <td style="width: 65%" class="pl-2">${folder_name}</td>
                 <td style="width: 20%" class="text-right" id="td_total_contents">(${total_contents})</td>
               </tr>
@@ -3055,6 +3070,7 @@ function createFolder(folder) {
     selected_isFolder = 1;
 
     removeCurrentHighlighted();
+    $element.addClass('vault__item--isActive');
     $elementInner.addClass('bg-info');
     $elementInner.addClass('text-white');
     $('#folders_name').html(folder_name);
@@ -3077,6 +3093,8 @@ function createElementFromHTML(htmlString) {
 
 
 function removeCurrentHighlighted() {
+  $('.vault__item--isActive').removeClass('vault__item--isActive');
+
   $folderActive = $('.vault__folderInner.bg-info.text-white');
   $folderActive.removeClass('bg-info');
   $folderActive.removeClass('text-white');
@@ -3084,4 +3102,78 @@ function removeCurrentHighlighted() {
   $fileActive = $('.vault__fileInner.bg-info.text-white');
   $fileActive.removeClass('bg-info');
   $fileActive.removeClass('text-white');
+}
+
+function displayDroppedFiles(event) {
+  event.preventDefault();
+  $('#mfm-dtu-file-list > tbody').empty();
+
+  // these are from Uploadlib.php
+  let validExtensions = 'gif|jpg|png|jpeg|doc|pdf|rtf|docx|xls|xlsx';
+  validExtensions = validExtensions.split('|');
+
+  const { files: fileList } = event.dataTransfer;
+  const files = [...fileList];
+
+  const validFiles = files.filter(({ name }) => {
+    const fileExtension = name.split('.').pop();
+    return validExtensions.includes(fileExtension);
+  });
+
+  if (validFiles.length === 0) {
+    return;
+  }
+
+  dtu_files = files;
+  var append = '';
+  $.each(validFiles, function(index,  file){
+    append += '<tr>';
+    append += '<td class="d-none upstat" uploadstatus="1"></td>';
+    append += '<td class="d-none"></td>'
+    append += '<td>' + file.name + '</td>';
+    append += '<td></td>';
+    append += '<td class="text-center"><button type="button" class="btn btn-sm btn-default fs_dtu" title="Exclude"><i class="fa fa-times"></i></button></td>';
+    append += '</tr>';
+  });
+
+  $('#mfm-dtu-file-list > tbody').append(append);
+  $('#mfm-dtu-drop-area').addClass('d-none');
+  $('#mfm-dtu-file-list-area').removeClass('d-none');
+
+  $('button.fs_dtu').click(function(){
+    var tr = $(this).parent('td').parent('tr')
+    var td = tr.children('td:eq(0)');
+    if(td.attr('uploadstatus') <= 1){
+      var td_status_original = tr.children('td:eq(1)');
+      var td_status = tr.children('td:eq(3)');
+
+      if($(this).attr('title') == 'Exclude'){
+        $(this).attr('title', 'Include');
+        $(this).removeClass('btn-default');
+        $(this).addClass('btn-danger');
+
+        var status_new = 'Will not be uploaded';
+        var status_original = td_status.text();
+
+        status_original = status_original.trim();
+
+        td.attr('uploadstatus', "0");
+        td_status_original.text(status_original);
+        td_status.text(status_new);
+
+      } else {
+        $(this).attr('title', 'Exclude');
+        $(this).removeClass('btn-danger');
+        $(this).addClass('btn-default');
+
+        var status_original = td_status_original.text();
+
+        status_original = status_original.trim();
+
+        td.attr('uploadstatus', "1");
+        td_status_original.text("");
+        td_status.text(status_original);
+      }
+    }
+  });
 }

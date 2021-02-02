@@ -80,10 +80,10 @@ class Vault extends MY_Controller {
 					$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
 					$record = $this->db->query(
-						'select count(*) as `existing`, category_id, softdelete from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id
+						'select count(file_id) as `existing`, category_id, softdelete from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' GROUP BY file_id'
 					)->row();
 
-					if($record->existing > 0){
+					if($record && $record->existing > 0){
 						$return['error'] = 'File already exists';
 						if($record->softdelete > 0){
 							$return['error'] .= ' in recycle bin.';
@@ -416,10 +416,10 @@ class Vault extends MY_Controller {
 			}
 
 			$record = $this->db->query(
-				'select count(*) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' and file_id <> ' . $file_id
+				'select count(file_id) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' and file_id <> ' . $file_id . ' GROUP BY file_id'
 			)->row();
 
-			if($record->existing > 0){
+			if($record && $record->existing > 0){
 				$return['error'] = 'File already exists';
 				if(!empty($record->category_id)){
 					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
