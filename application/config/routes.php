@@ -539,6 +539,7 @@ $route['estimate_customer_view/(:any)'] = 'Pages/estimate_customer_view/$1';
 $route['customer_approve_estimate'] = 'Pages/customer_update_estimate/1';
 $route['customer_disapprove_estimate'] = 'Pages/customer_update_estimate/2';
 $route['estimate/_load_scheduled_estimates'] = 'Estimate/ajax_load_scheduled_estimates';
+$route['estimate/view/(:any)'] = 'Estimate/view/$1';
 
 //Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';

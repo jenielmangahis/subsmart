@@ -475,4 +475,32 @@ class Estimate extends MY_Controller
         $this->load->view('estimate/ajax_load_scheduled_estimates', $this->page_data);
 
     }
+
+    public function view($id)
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Clients_model');
+        
+        $estimate = $this->estimate_model->getById($id);
+        $company_id = logged('company_id');
+
+        if( $estimate ){
+            $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            $client   = $this->Clients_model->getById($company_id);
+            $estimateItems = $this->EstimateItem_model->getAllByEstimateId($estimate->id);
+
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['estimate'] = $estimate;
+            $this->page_data['estimateItems'] = $estimateItems;
+
+            $this->load->view('estimate/view', $this->page_data);
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('estimate');
+        }
+    }
 }

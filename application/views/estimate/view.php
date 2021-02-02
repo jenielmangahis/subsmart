@@ -317,6 +317,7 @@ span.sc-item {
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
   <?php include viewPath('includes/notifications'); ?>
+  <?php include viewPath('includes/sidebars/estimate'); ?>
     <!-- page wrapper start -->
     <?php 
     $total_amount = 0;
@@ -329,13 +330,13 @@ span.sc-item {
                 <div class="col-xl-12">
                   <?php include viewPath('flash'); ?>
                     <div class="card">
-                      <?php if($creditNote){ ?>
+                      <?php if($estimate){ ?>
                       <div class="d-block">
                         <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
-                          <a class="btn btn-success" href="<?php echo base_url('credit_notes/send_customer/' . $creditNote->id) ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
-                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/edit/' . $creditNote->id) ?>"><span class="fa fa-pencil icon"></span> EDIT</a>
-                          <a class="btn btn-info" target="_new" href="<?php echo base_url('credit_notes/view_pdf/' . $creditNote->id) ?>"><span class="fa fa-file-pdf-o icon"></span> PDF</a>
-                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/') ?>">BACK TO CREDIT NOTE LIST</a>
+                          <a class="btn btn-success" href="<?php echo base_url('estimate/send_customer/' . $estimate->id) ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
+                          <a class="btn btn-info" href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span class="fa fa-pencil icon"></span> EDIT</a>
+                          <a class="btn btn-info" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"><span class="fa fa-file-pdf-o icon"></span> PDF</a>
+                          <a class="btn btn-info" href="<?php echo base_url('estimate/') ?>">BACK TO ESTIMATE LIST</a>
                         </div>
                         <div class="col-xl-5 left" style="margin-bottom: 33px;">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
@@ -347,26 +348,18 @@ span.sc-item {
                         </div>
                         <div class="col-xl-5 right" style="float: right">
                           <div style="text-align: right;">
-                            <h5 style="font-size:30px;margin:0px;">CREDIT NOTE</h5>
-                            <small style="font-size: 14px;">#<?= $creditNote->credit_note_number; ?></small>
+                            <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
+                            <small style="font-size: 14px;">#<?= $estimate->credit_note_number; ?></small>
                           </div>
                           <div class="" style="text-align: right;margin-top: 20px;">
                             <table style="width: 100%;text-align: right;">
                               <tr>
-                                <td style="text-align: right;width: 70%;">Job Name :</td>
-                                <td><?= $creditNote->job_name; ?></td>
+                                <td style="text-align: right;width: 70%;">Estimate Date :</td>
+                                <td><?= date("Y-m-d",strtotime($estimate->estimate_date)); ?></td>
                               </tr>
                               <tr>
-                                <td style="text-align: right;width: 70%;">Date Issued :</td>
-                                <td><?= date("Y-m-d",strtotime($creditNote->date_issued)); ?></td>
-                              </tr>
-                              <tr>
-                                <td style="text-align: right;width: 70%;">Status :</td>
-                                <td><span class="badge badge-primary"><?= $status[$creditNote->status]; ?></span></td>
-                              </tr>
-                              <tr>
-                                <td><b>Credits Remaining :</b></td>
-                                <td><b><?= number_format($creditNote->grand_total,2) ?></b></td>
+                                <td style="text-align: right;width: 70%;">Expiry Date :</td>
+                                <td><?= date("Y-m-d",strtotime($estimate->expiry_date)); ?></td>
                               </tr>
                             </table>
                           </div>
@@ -393,7 +386,7 @@ span.sc-item {
                             </tr>
                         </thead>
                         <tbody>
-                        <?php $row = 1; foreach($creditNoteItems as $item){ ?>
+                        <?php $row = 1; foreach($estimateItems as $item){ ?>
                           <tr class="table-items__tr">
                             <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
                             <td valign="top" style="width:45%;"><?= $item->title; ?></td>
@@ -406,15 +399,15 @@ span.sc-item {
                         <tr><td colspan="6"><hr/></td></tr>
                         <tr>
                           <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                          <td style="text-align: right;"><b>$<?= number_format($creditNote->grand_total, 2); ?></b></td>
+                          <td style="text-align: right;"><b>$<?= number_format($estimate->grand_total, 2); ?></b></td>
                         </tr>
                       </tbody>
                       </table>
                       </div>
 
                       <hr />
-                      <p><b>Message</b><br /><br /><?= $creditNote->note_customer; ?></p>
-                      <p><b>Terms</b><br /><Br /><?= $creditNote->terms_condition; ?></p>
+                      <p><b>Message</b><br /><br /><?= $estimate->note_customer; ?></p>
+                      <p><b>Terms</b><br /><Br /><?= $estimate->terms_condition; ?></p>
 
                       <?php }else{ ?>
                         <div class="alert alert-primary" role="alert">
@@ -424,8 +417,8 @@ span.sc-item {
 
                       <div class="row" style="margin-top: 30px;">
                           <div class="col-md-4 form-group">
-                              <a href="<?php echo base_url('credit_notes') ?>" class="btn btn-primary" aria-expanded="false">
-                                <i class="mdi mdi-settings mr-2"></i> Go Back to Credit Note List
+                              <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary" aria-expanded="false">
+                                <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate List
                               </a>
                           </div>
                       </div>
@@ -437,11 +430,10 @@ span.sc-item {
       </div>
     </div>
         <!-- end container-fluid -->
-        <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
   </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
   $(".btn-approve-estimate").click(function(){
