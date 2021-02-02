@@ -73,7 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <?php foreach($creditNotes as $c){ ?>
                                         <tr>
                                             <td><?= $c->credit_note_number; ?></td>
-                                            <td><?= $c->date_issued; ?></td>
+                                            <td><?= date("m/d/Y",strtotime($c->date_issued)); ?></td>
                                             <td>
                                                 <span class="job-name"><?= $c->job_name ?></span>
                                                 <span class="customer-name">Customer : <?= $c->first_name . ' ' . $c->last_name; ?></span>

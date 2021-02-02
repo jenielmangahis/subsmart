@@ -166,8 +166,8 @@
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
-                            <div class="btn-group dropup float-right">
-                                <button type="button" class="btn btn-success">
+                            <div class="btn-group dropup float-right ml-2">
+                                <button type="submit" class="btn btn-success">
                                     Save and new
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -177,6 +177,8 @@
                                     <a class="dropdown-item" href="#">Save and close</a>
                                 </div>
                             </div>
+
+                            <button type="submit" class="btn btn-secondary btn-rounded border float-right">Save</button>
                         </div>
                     </div>
                 </div>

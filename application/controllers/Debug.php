@@ -123,6 +123,17 @@ class Debug extends MY_Controller {
 
         exit;
         }
+
+    public function pdf_maker()
+    {
+        $this->load->helper('pdf_helper');
+        /*
+            ---- ---- ---- ----
+            your code here
+            ---- ---- ---- ----
+        */
+        $this->load->view('debug/pdf_sample', $data);
+    }
 }
 
 

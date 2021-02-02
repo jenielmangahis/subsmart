@@ -14,7 +14,7 @@
         <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
         <!-- DataTables -->
-        <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+        <!--<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />-->
         <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
         <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
         <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />

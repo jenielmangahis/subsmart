@@ -548,8 +548,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </select>
                               <h6>Time Zone</h6>
                                <select id="inputState" class="form-control">
-                                <option selected="">Central Time (UTC -5)</option>
-                                <option>...</option>
+                                <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
+                                    <option value="<?php echo $key ?>">
+                                        <?php echo $zone ?>
+                                    </option>
+                                <?php } ?>
                               </select>
                             <hr>
                             <button type="button" class="btn btn-primary pull-right text-link"> <span class="fa fa-plus"></span> Share Job</button>

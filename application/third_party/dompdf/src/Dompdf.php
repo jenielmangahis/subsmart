@@ -351,7 +351,7 @@ class Dompdf
     public function loadHtmlFile($file, $encoding = null)
     {
         $this->saveLocale();
-
+        echo 5;exit;
         if (!$this->protocol && !$this->baseHost && !$this->basePath) {
             [$this->protocol, $this->baseHost, $this->basePath] = Helpers::explode_url($file);
         }

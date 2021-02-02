@@ -1,4 +1,3 @@
-
 <style>
     .qUickStart{
         /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fcfcfc+0,eaeaea+100 */
@@ -9,7 +8,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
         display: flex;
         align-items: center;
-        padding: 16px;
+        padding: 10px;
         border-radius: 4px;
         border: 1px solid #ddd;
         margin-bottom:15px;
@@ -31,6 +30,7 @@
     }
     .qUickStart .qUickStartde h4{
         font-size: 16px;
+        font-family: Sarabun, sans-serif !important;
         text-transform: uppercase;
         font-weight: 700;
         margin: 0;
@@ -41,7 +41,7 @@
         opacity: 0.6;
     }
 </style>
-<div class="col-md-5">
+<div class="col-md-4">
     <div class="card">
         <div class="card-body">
             <h4 class="mt-0 header-title mb-4">Quick Start</h4>

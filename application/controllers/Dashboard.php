@@ -20,18 +20,14 @@ class Dashboard extends Widgets {
         $this->load->model('Activity_model', 'activity');
 
         add_css(array(
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            "assets/css/accounting/accounting.css",
+           // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+//            "assets/css/accounting/accounting.css",
             'assets/css/dashboard.css'
         ));
 
         add_footer_js(array(
-            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            //'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'assets/frontend/js/dashboard/main.js',
-                //"assets/css/dashboard/dasboard_box.js",
-                //"assets/css/dashboard/dasboard.chunk.js",
-                //"assets/css/dashboard/dasboard_client.js",
-                //"assets/css/dashboard/hcui.chunk.js",
         ));
     }
 
