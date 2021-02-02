@@ -330,8 +330,12 @@ span.sc-item {
                   <?php include viewPath('flash'); ?>
                     <div class="card">
                       <?php if($creditNote){ ?>
-
                       <div class="d-block">
+                        <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
+                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/send_customer/' . $creditNote->id) ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
+                          <a class="btn btn-info" target="_new" href="<?php echo base_url('credit_notes/view_pdf/' . $creditNote->id) ?>"><span class="fa fa-file-o icon"></span> TO PDF</a>
+                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/') ?>">BACK TO CREDIT NOTE LIST</a>
+                        </div>
                         <div class="col-xl-5 left" style="margin-bottom: 33px;">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
                           <div class="col-xl-5 ml-0 pl-0">

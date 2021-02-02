@@ -58,7 +58,7 @@
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
                 <span class="fa fa-gear"></span>
-                Settings
+                Calendar Settings
             </a>
         </li>        
     </ul>

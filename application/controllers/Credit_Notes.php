@@ -462,4 +462,136 @@ class Credit_Notes extends MY_Controller
 
         redirect('credit_notes');
     }
+
+    public function pdf_credit_note($id)
+    {        
+
+        $creditNote = $this->CreditNote_model->getById($id);
+        $company_id = logged('company_id');
+
+        if( $creditNote ){
+            
+            $this->load->helper('pdf_helper');
+            $this->load->model('AcsProfile_model');
+
+            $customer = $this->AcsProfile_model->getByProfId($creditNote->customer_id);
+            $client   = $this->Clients_model->getById($company_id);
+            $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
+
+            $html = '
+            <table>
+                <tr>
+                    <td>
+                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$client->business_name.'</span></h5>
+                        <br />
+                        <span class="">'.$client->business_address.'</span><br />
+                        <span class="">EMAIL: '.$client->email_address.'</span><br />
+                        <span class="">PHONE: '.$client->phone_number.'</span>
+                        <br/><br /><br />
+                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$customer->first_name . ' ' .$customer->last_name.'</span></h5>
+                        <br />
+                        <span class="">'.$customer->mail_add. " " .$customer->city.'</span><br />
+                        <span class="">EMAIL: '.$customer->email.'</span><br />
+                        <span class="">PHONE: '.$customer->phone_w.'</span>
+                    </td>
+                    <td colspan=1></td>
+                    <td style="text-align:right;">
+                        <h5 style="font-size:20px;margin:0px;">CREDIT NOTE <br /><small style="font-size: 10px;">#'.$creditNote->credit_note_number.'</small></h5>
+                        <br />
+                        <table>
+                          <tr>
+                            <td>Date Issued :</td>
+                            <td>'.date("Y-m-d",strtotime($creditNote->date_issued)).'</td>
+                          </tr>
+                          <tr>
+                            <td>Expire Due :</td>
+                            <td>'.date("Y-m-d",strtotime($creditNote->expiry_date)).'</td>
+                          </tr>                              
+                          <tr>
+                            <td><b>Credits Remaining :</b></td>
+                            <td><b>'.$creditNote->grand_total.'</b></td>
+                          </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <br /><br /><br />
+
+            <table style="width="100%;>
+            <thead>
+                <tr>
+                    <th style="width:5%;"><b>#</b></th>
+                    <th><b>Items</b></th>
+                    <th style="text-align: right;"><b>Qty</b></th>
+                    <th style="text-align: right;"><b>Discount</b></th>
+                    <th style="text-align: right;"><b>Tax</b></th>
+                    <th style="text-align: right;"><b>Total</b></th>
+                </tr>
+            </thead>
+            <tbody>';
+            $total_tax = 0;
+            $row = 1; 
+            foreach($creditNoteItems as $item){
+                $html .= '<tr>
+                    <td valign="top" style="width:5%;">'.$row.'</td>
+                    <td valign="top" style="">'.$item->title.'</td>
+                    <td valign="top" style="text-align: right;">'.$item->qty.'</td>
+                    <td valign="top" style="text-align: right;">'.number_format($item->discount,2).'</td>
+                    <td valign="top" style="text-align: right;">'.number_format($item->tax,2).'</td>
+                    <td valign="top" style="text-align: right;">'.number_format($item->total,2).'</td>
+                  </tr>
+                ';
+                $total_tax += $item->tax;
+                $row++;
+            }
+            
+            $html .= '<tr><td colspan="6"><hr/></td></tr>
+            <tr>
+              <td colspan="5" style="text-align: right;">Taxes</td>
+              <td style="text-align: right;">$'.number_format($total_tax, 2).'</td>
+            </tr>';
+
+            if( $creditNote->adjustment_amount > 0 ){
+                $html .= '
+                <tr>
+                  <td colspan="5" style="text-align: right;">'.$creditNote->adjustment_name.'</td>
+                  <td style="text-align: right;">$'.number_format($creditNote->adjustment_amount, 2).'</td>
+                </tr>';
+            }
+
+            $html .= '<tr>
+              <td colspan="5" style="text-align: right;"><b>Grand Total</b></td>
+              <td style="text-align: right;"><b>$'.number_format($creditNote->grand_total, 2).'</b></td>
+            </tr>
+          </tbody>
+          </table>
+          <br /><br /><br />
+          <p><b>Message</b><br /><br />'.$creditNote->note_customer.'</p>
+          <p><b>Terms</b><br /><Br />'.$creditNote->terms_condition.'</p>
+            ';
+
+            tcpdf();
+            $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $title = "Credit Note";
+            $obj_pdf->SetTitle($title);
+            $obj_pdf->setPrintHeader(false);
+            $obj_pdf->setPrintFooter(false);
+            $obj_pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            $obj_pdf->SetDefaultMonospacedFont('helvetica');
+            $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+            $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+            $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+            $obj_pdf->SetFont('helvetica', '', 9);
+            $obj_pdf->setFontSubsetting(false);
+            $obj_pdf->AddPage();
+            ob_end_clean();
+            $obj_pdf->writeHTML($html, true, false, true, false, '');
+            $obj_pdf->Output('credit_note.pdf', 'I');
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('credit_notes');
+        }
+    }
 }

@@ -97,6 +97,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <a role="menuitem" href="<?php echo base_url('credit_notes/send_customer/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li role="presentation">
+                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/view_pdf/' . $c->id) ?>" class="btn-send-customer">
+                                                        <span class="fa fa-envelope-open-o icon"></span>  View PDF</a></li>
+                                                    <li role="presentation">
                                                         <a role="menuitem" class="delete-credit-note" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
                                                     </li>
                                                 </ul>
