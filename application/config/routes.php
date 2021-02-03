@@ -563,3 +563,6 @@ $route['event_types/save'] = 'Event_Types/create_event_type';
 $route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
 $route['event_types/update'] = 'Event_Types/update_event_type';
 $route['event_types/delete'] = 'Event_Types/delete_event_type';
+
+//Esign
+$route['esignmain'] = 'Esign_Main/index';
