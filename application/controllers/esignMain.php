@@ -11,6 +11,7 @@ class esignMain extends MY_Controller {
 
 	public function index()
 	{
+		echo 4;exit;
 		$is_allowed = $this->isAllowedModuleAccess(49);
         if( !$is_allowed ){
             $this->page_data['module'] = 'eSign_main';

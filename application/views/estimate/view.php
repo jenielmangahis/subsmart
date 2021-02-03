@@ -349,17 +349,17 @@ span.sc-item {
                         <div class="col-xl-5 right" style="float: right">
                           <div style="text-align: right;">
                             <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
-                            <small style="font-size: 14px;">#<?= $estimate->credit_note_number; ?></small>
+                            <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
                           </div>
                           <div class="" style="text-align: right;margin-top: 20px;">
                             <table style="width: 100%;text-align: right;">
                               <tr>
                                 <td style="text-align: right;width: 70%;">Estimate Date :</td>
-                                <td><?= date("Y-m-d",strtotime($estimate->estimate_date)); ?></td>
+                                <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
                               </tr>
                               <tr>
                                 <td style="text-align: right;width: 70%;">Expiry Date :</td>
-                                <td><?= date("Y-m-d",strtotime($estimate->expiry_date)); ?></td>
+                                <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
                               </tr>
                             </table>
                           </div>
@@ -379,35 +379,41 @@ span.sc-item {
                             <tr>
                                 <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
+                                <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
-                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Tax</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php $row = 1; foreach($estimateItems as $item){ ?>
+                        <?php $estimateItems = unserialize($estimate->estimate_items); ?>
+                        <?php $total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
                           <tr class="table-items__tr">
                             <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
-                            <td valign="top" style="width:45%;"><?= $item->title; ?></td>
-                            <td valign="top" style="width: 50px; text-align: right;"><?= $item->qty; ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->discount,2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->tax,2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->total,2); ?></td>
+                            <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
+                            <td valign="top" style="width:20%;"><?= ucwords($item['item_type']); ?></td>
+                            <td valign="top" style="width: 50px; text-align: right;"><?= $item['quantity']; ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['discount'],2); ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
                           </tr>
-                        <?php $row++;} ?>
+                        <?php 
+                          $total_amount += $item['price'];
+                          $row++;
+                        ?>
+                        <?php } ?>
                         <tr><td colspan="6"><hr/></td></tr>
                         <tr>
                           <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                          <td style="text-align: right;"><b>$<?= number_format($estimate->grand_total, 2); ?></b></td>
+                          <td style="text-align: right;"><b>$<?= number_format($total_amount, 2); ?></b></td>
                         </tr>
                       </tbody>
                       </table>
                       </div>
 
                       <hr />
-                      <p><b>Message</b><br /><br /><?= $estimate->note_customer; ?></p>
-                      <p><b>Terms</b><br /><Br /><?= $estimate->terms_condition; ?></p>
+                      <p><b>Instructions</b><br /><br /><?= $estimate->instructions; ?></p>
+                      <p><b>Message</b><br /><br /><?= $estimate->customer_message; ?></p>
+                      <p><b>Terms</b><br /><Br /><?= $estimate->terms_conditions; ?></p>
 
                       <?php }else{ ?>
                         <div class="alert alert-primary" role="alert">

@@ -556,6 +556,8 @@ $route['credit_notes/send/(:num)'] = 'Credit_Notes/send_customer/$1';
 $route['credit_notes/_send'] = 'Credit_Notes/send_mail';
 $route['credit_note_customer_view/(:any)'] = 'Pages/credit_note_customer_view/$1';
 $route['credit_notes/view_pdf/(:num)'] = 'credit_notes/pdf_credit_note/$1';
+$route['credit_notes/close'] = 'Credit_Notes/close_credit_note';
+$route['credit_notes/print/(:num)'] = 'Credit_Notes/print_credit_note/$1';
 
 //Event Types
 $route['event_types'] = 'Event_Types/index';
