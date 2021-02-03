@@ -132,6 +132,7 @@ class Debug extends MY_Controller {
             your code here
             ---- ---- ---- ----
         */
+            
         $this->load->view('debug/pdf_sample', $data);
     }
 }

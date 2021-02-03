@@ -1,5 +1,12 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+    defined('BASEPATH') or exit('No direct script access allowed');
+    add_css(array(
+        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+        //"assets/css/accounting/sidebar.css",
+        'assets/textEditor/summernote-bs4.css',
+    ));
 ?>
 <?php include viewPath('includes/header'); ?>
 <style type="text/css">
@@ -346,6 +353,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
         line-height: 1.428571429;
         border-radius: 20px;
     }
+    .calendar_button{
+        color: #ffffff;
+        font-size: 20px;
+        padding-top: 3px;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -496,97 +508,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <option value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
-                              </select>
-                              <div class="color-box-custom">
+                            </select>
+                            <div class="color-box-custom">
                                   <h6>Event Color on Calendar</h6>
                                   <ul>
-                                      <li>
-                                        <span class="color-scheme bg-1"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-2"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-3"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-4"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-5"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-6"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-7"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-8"></span>
-                                      </li>
-                                      <li>
-                                        <span class="color-scheme bg-9"></span>
-                                      </li>
+                                      <?php if(isset($color_settings)): ?>
+                                          <?php foreach ($color_settings as $color): ?>
+                                              <li>
+                                                  <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1">
+
+                                                  </a>
+                                              </li>
+                                          <?php endforeach; ?>
+                                      <?php endif; ?>
                                   </ul>
-                               </div>
-                               <h6>Customer Reminder Notification</h6>
-                                <select name="event_notify_at" class="form-control">
-                                    <option value="0">None</option>
-                                    <option value="PT5M">5 minutes before</option>
-                                    <option value="PT15M">15 minutes before</option>
-                                    <option value="PT30M">30 minutes before</option>
-                                    <option value="PT1H">1 hour before</option>
-                                    <option value="PT2H">2 hours before</option>
-                                    <option value="PT4H">4 hours before</option>
-                                    <option value="PT6H">6 hours before</option>
-                                    <option value="PT8H">8 hours before</option>
-                                    <option value="PT12H">12 hours before</option>
-                                    <option value="PT16H">16 hours before</option>
-                                    <option value="P1D" selected="selected">1 day before</option>
-                                    <option value="P2D">2 days before</option>
-                                    <option value="PT0M">On date of event</option>
-                                </select>
-                              <h6>Time Zone</h6>
-                               <select id="inputState" class="form-control">
-                                <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
-                                    <option value="<?php echo $key ?>">
-                                        <?php echo $zone ?>
-                                    </option>
-                                <?php } ?>
-                              </select>
+                                  <input value="" id="job_color_id" name="job_color_id" type="hidden" />
+                            </div>
+                            <h6>Customer Reminder Notification</h6>
+                            <select name="event_notify_at" class="form-control">
+                                <option value="0">None</option>
+                                <option value="PT5M">5 minutes before</option>
+                                <option value="PT15M">15 minutes before</option>
+                                <option value="PT30M">30 minutes before</option>
+                                <option value="PT1H">1 hour before</option>
+                                <option value="PT2H">2 hours before</option>
+                                <option value="PT4H">4 hours before</option>
+                                <option value="PT6H">6 hours before</option>
+                                <option value="PT8H">8 hours before</option>
+                                <option value="PT12H">12 hours before</option>
+                                <option value="PT16H">16 hours before</option>
+                                <option value="P1D" selected="selected">1 day before</option>
+                                <option value="P2D">2 days before</option>
+                                <option value="PT0M">On date of event</option>
+                            </select>
+                            <h6>Time Zone</h6>
+                            <select id="inputState" class="form-control">
+                                <option selected="">Central Time (UTC -5)</option>
+                                <option>...</option>
+                            </select>
+                            <h6>Select Job Tag</h6>
+                            <select id="inputState" class="form-control">
+                                <?php if(!empty($tags)): ?>
+                                    <?php foreach ($tags as $tag): ?>
+                                        <option value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
                             <hr>
                             <button type="button" class="btn btn-primary pull-right text-link"> <span class="fa fa-plus"></span> Share Job</button>
-
                         </div>
                         <br>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="headingFour">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;">
-                                                <g>
-                                                    <path d="M6.535,10.29l6.585,6.683c0.289,0.294,0.723,0.294,1.013,0l1.663-1.689c0.362-0.294,0.362-0.806,0.072-1.028l-6.584-6.68 c0.651-1.689,0.29-3.671-1.085-5.066C6.752,1.042,4.582,0.748,2.844,1.555l3.112,3.157l-2.17,2.203L0.601,3.758 c-0.868,1.762-0.507,3.963,0.94,5.432C2.917,10.584,4.87,10.953,6.535,10.29z"></path>
-                                                    <path d="M21.708,12.354c-0.926-3.883-4.409-6.774-8.576-6.774c-0.538,0-1.06,0.062-1.571,0.154l0.518,2.057 c0.344-0.055,0.693-0.093,1.053-0.093c2.988,0,5.519,1.956,6.386,4.655H17.12l3.404,3.724l3.404-3.724H21.708z"></path>
-                                                    <path d="M13.132,21.115c-3.126,0-5.746-2.144-6.49-5.038h2.232L5.47,12.354l-3.404,3.723h2.403 c0.782,4.075,4.361,7.156,8.664,7.156c2.982,0,5.615-1.482,7.212-3.749l-1.784-1.177C17.345,20.001,15.375,21.115,13.132,21.115z"></path>
-                                                </g>
-                                            </svg>  &nbsp; &nbsp;Services Box</h6>
-                                            </button>
-                                        </h2>
-                                        </div>
-
-                                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
-                                        <div class="card-body">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
                     <div class="card" id="notes_left_card">
                         <div class="card-body">
@@ -624,37 +595,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
 
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="headingTwo">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>  &nbsp; &nbsp;Job Tags</h6>
-                                            </button>
-                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
-                                        </h2>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <small>Select Tag</small>
-                                                <select id="inputState" class="form-control">
-                                                    <?php if(!empty($tags)): ?>
-                                                        <?php foreach ($tags as $tag): ?>
-                                                            <option value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card" id="attach_left_card">
@@ -742,20 +682,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card" id="pd_left_card">
                         <div class="card-body">
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
                                     <div class="card-header" id="headingOne">
                                         <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="collapseOne">
+                                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="payment">
                                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-money"></span>&nbsp;&nbsp;Payment Details</h6>
                                             </button>
-                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                         </h2>
+                                        <a href="javascript:void(0);" id="pd_left">
+                                            <span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span>
+                                        </a>
                                     </div>
                                     <div id="payment" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
+                                            <form role="form">
                                             <div class="col-sm-12">
                                                 <div class="col-md-12">
                                                     <label for="">Method</label>
@@ -776,11 +719,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Amount</label>
-                                                    <input class="form-control" type="number" placeholder="$0.00">
+                                                    <input class="form-control" id="pay_amount" type="number" placeholder="$0.00">
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h6>Payment Details</h6>
-                                                    <form role="form">
                                                         <div class="row">
                                                             <div id="credit_card_form">
                                                                 <div class="col-md-12">
@@ -966,27 +908,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </form>
-
+                                                </div>
+                                                <div class="col-md-12" style="text-align: center !important;">
+                                                    <br>
+                                                    <button type="button" id="save_payment" class="btn btn-sm btn-primary">
+                                                        <span class="fa fa-paper-plane-o"></span> Save Payment
+                                                    </button>
                                                 </div>
                                             </div>
+                                            </form>
                                         </div>
                                     </div>
+                                    <br>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card" id="approval_card_left">
                         <div class="card-body">
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
                                     <div class="card-header" id="headingOne">
                                         <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
+                                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
                                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
                                             </button>
-                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                         </h2>
+                                        <a href="javascript:void(0);" id="approval_btn_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                     </div>
                                     <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
@@ -1007,8 +955,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <a data-toggle="modal" data-target="#updateSignature" data-backdrop="static" data-keyboard="false">
                                                 <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
                                             </a>
-                                            <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                            <!--<span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp; -->
                                         </div>
+                                        <br>
                                     </div>
                                 </div>
                             </div>
@@ -1084,66 +1033,73 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <table class="table table-striped table-bordered">
                                 <thead>
-                                <tr></tr>
+                                <tr>
+                                    <td>
+                                        <h6>Job Items Listing</h6>
+                                    </td>
+                                </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="jobs_items_table_body">
                                     <tr>
                                         <td>
-                                            <h6>Job Items Listing</h6>
+                                            <small>Job Title</small>
+                                            <input type="text" name="check_description[]" class="form-control checkDescription" >
                                         </td>
-                                        <td></td>
+                                        <td>
+                                        </td>
                                         <td>
                                             <small>Job Tags</small>
                                             <input type="text" class="form-control" value="Residential" readonly="readonly">
                                         </td>
-                                        <td></td>
+                                        <td>
+                                        </td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
                                             <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
                                             <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
-
+                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td width="35%">
                                             <small>Item name</small>
-                                            <input type="text" name="check_description[]" class="form-control checkDescription" >
+                                            <input type="text" name="item_name[]" class="form-control checkDescription" >
                                         </td>
-                                        <td>
+                                        <td width="10%">
                                             <small>Qty</small>
-                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                            <input type="text" name="item_qty[]" class="form-control checkDescription">
                                         </td>
-                                        <td>
+                                        <td width="10%">
                                             <small>Unit Price</small>
-                                            <input type="text" name="check_amount[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
+                                            <input type="text" name="item_price[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
                                         </td>
-                                        <td>
+                                        <td width="10%">
                                             <small>Unit Cost</small>
-                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                            <input type="text" name="item_cost[]" class="form-control checkDescription">
                                         </td>
-                                        <td>
+                                        <td width="25%">
                                             <small>Inventory Location</small>
-                                            <input type="text" name="check_description[]" class="form-control checkDescription">
+                                            <input type="text" name="item_loc[]" class="form-control checkDescription">
                                         </td>
-                                        <td style="text-align: center" class="d-flex">$00<a href="#" class="remove-check-row"><i class="fa fa-times-circle" aria-hidden="true"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                                <span class="fa fa-plus-square fa-margin-right"></span>Add Items
-                                            </a>
+                                        <td style="text-align: center" class="d-flex" width="15%">
+                                            $00<a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <div class="col-sm-12">
+                                <a class="link-modal-open" href="javascript:void(0)" id="add_another_item">
+                                    <span class="fa fa-plus-square fa-margin-right"></span>Add Items
+                                </a>
+                            </div>
+                            <br>
                            <div class="col-sm-12">
                                 <p>Description of Job (optional)</p>
                                 <textarea name="description" class="form-control" ></textarea>
                                 <hr/>
-                            </div>
+                           </div>
                             <div class="col-md-12 table-responsive">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -1224,8 +1180,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="col-sm-12">
                                         <hr>
                                     </div>
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-12" id="approval_card_right" style="display: none;">
                                         <div style="float: right;">
+                                            <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                             <img width="100" id="customer_signature_right" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
                                             <center><span id="appoval_name_right">John Doe</span></center><br>
                                             <span>------------------------</span><br>
@@ -1310,17 +1267,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                     </div>
 
-                    <div class="card table-custom">
+                    <div class="card table-custom" >
                         <div class="card-body">
-                            <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                            <div class="card" id="pd_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
                                 <div class="row">
                                     <div class="col-md-12 ">
                                         <div class="card-header">
-                                            <a href=""><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                            <a href="javascript:void(0);" id="pd_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                             <h5 style="padding-left: 20px;" class="mb-0">Payment Details</h5>
                                         </div>
                                         <div class="card-body">
-                                            <span class="help help-sm help-block">Record and process invoice</span>
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <b>Method</b><br>
+                                                        <span class="help help-sm help-block" id="pay_method_right">Credit Card</span>
+                                                    </td>
+                                                    <td>
+                                                        <b>Amount</b><br>
+                                                        <span class="help help-sm help-block" id="pay_amount_right">0.00</span>
+                                                    </td>
+                                                    <td>
+                                                        <b>Payment Details</b><br>
+                                                        <span class="help help-sm help-block">xx</span>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1655,8 +1630,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <textarea style="display: none;" name="data[output]" id='output'></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="click" class="btn btn-primary save-signature">Save</button>
+                <button type="button" id="click" class="btn btn-primary save-signature" data-dismiss="modal">
+                    <span class="fa fa-paper-plane-o"></span>Save
+                </button>
             </div>
         </div>
     </div>
@@ -1693,12 +1669,60 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 </div>
 
-<?php include viewPath('includes/footer'); ?>
+<?php
+add_footer_js(array(
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+    'assets/textEditor/summernote-bs4.js',
+));
+include viewPath('includes/footer');
+?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=initMap&libraries=&v=weekly"></script>
 <script>
     $(document).ready(function() {
+
+        // add more item script
+        $("#add_another_item").click(function () {
+            // var newFields = document.getElementById('custom_form').cloneNode(true);
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><small>Item name</small><input type=\"text\" name=\"item_name[]\" class=\"form-control checkDescription\" ></td>\n" +
+                "<td width=\"10%\"><small>Qty</small><input type=\"text\" name=\"item_qty[]\" class=\"form-control checkDescription\"></td>\n" +
+                "<td width=\"10%\"><small>Unit Price</small><input type=\"text\" name=\"item_price[]\" class=\"form-control checkModelAmount\" value=\"0\" placeholder=\"Unit Price\"></td>\n" +
+                "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control checkDescription\"></td>\n" +
+                "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control checkDescription\"></td>\n" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\">$00<a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
+               "</tr>";
+            tableBody = $("#jobs_items_table_body");
+            tableBody.append(markup);
+        });
+
+        //$(".color-scheme").on( 'click', function () {});
+
+        $("body").delegate(".remove_item_row", "click", function(){
+            $(this).parent().parent().remove();
+        });
+
+        $("body").delegate(".color-scheme", "click", function(){
+            var id = this.id;
+            $('[id="job_color_id"]').val(id);
+            console.log(id);
+            $( "#"+id ).append( "<i class=\"fa fa-check calendar_button\" aria-hidden=\"true\"></i>" );
+            remove_others(id);
+        });
+
+        function remove_others (color_id){
+            $('.color-scheme').each(function(index) {
+                var idd = this.id;
+                if(idd !== color_id){
+                    $( "#"+idd ).empty();
+                }
+            });
+        }
+
         $("#library_template").on( 'change', function () {
             var lib_id = this.value;
             $.ajax({
@@ -1720,7 +1744,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
             height: 250,
         });
         var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
-        $('#click').click(function(){
+        $('#click').click(function(e){
+            e.preventDefault();
             var data = signaturePad.toDataURL('image/png');
             $('#output').val(data);
             var url = '/job/save_esign';
@@ -1729,6 +1754,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 type: "POST",
                 data:{base64: data}
             }).done(function(e){
+                //$('#updateSignature').modal('hide');
                 $('#authorizer').html($('#authorizer_name').val());
                 $('#appoval_name_right').html($('#authorizer_name').val());
                 $('#date_signed').html(e);
@@ -1792,6 +1818,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
             }
         });
 
+        $("#save_payment").on( "click", function( event ) {
+            $('#pay_method_right').html($('#pay_method').val());
+            $('#pay_amount_right').html($('#pay_amount').val());
+        });
+        $("#approval_btn_left").on( "click", function( event ) {
+            document.getElementById('approval_card_right').style.display = "block";
+            document.getElementById('approval_card_left').style.display = "none";
+        });
+
+        $("#approval_btn_right").on( "click", function( event ) {
+            document.getElementById('approval_card_left').style.display = "block";
+            document.getElementById('approval_card_right').style.display = "none";
+        });
+
+        $("#pd_left").on( "click", function( event ) {
+            document.getElementById('pd_right_card').style.display = "block";
+            document.getElementById('pd_left_card').style.display = "none";
+        });
+
+        $("#pd_right").on( "click", function( event ) {
+            document.getElementById('pd_left_card').style.display = "block";
+            document.getElementById('pd_right_card').style.display = "none";
+        });
 
         $("#notes_edit_btn").on( "click", function( event ) {
             document.getElementById('notes_input_div').style.display = "block";

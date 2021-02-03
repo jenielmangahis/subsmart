@@ -1506,7 +1506,7 @@ function setFoldersAndFiles_MyLibrary_old(folders, files){
       } 
 
       append += '<td class="fname">' + folder.folder_name + '</td>';
-      append += '<td class="fpath">/root' + folder.path + '</td>';
+      append += '<td class="fpath">/home' + folder.path + '</td>';
 
     append += '</tr>';
   });
@@ -1527,7 +1527,7 @@ function setFoldersAndFiles_MyLibrary_old(folders, files){
       } 
 
       append += '<td class="fname">' + file.title + '</td>';
-      append += '<td class="fpath">/root' + file.file_path + '</td>';
+      append += '<td class="fpath">/home' + file.file_path + '</td>';
 
     append += '</tr>';
   });
@@ -2261,8 +2261,9 @@ function showFileDetail(vS, vSiF, vIsTrash, vIsMyLibrary){
 
     fpath = div.attr('path');
     fpath = base_url + 'uploads/' + fpath;
+    const createdAt = moment(div.attr('created_date')).format("MM/DD/YYYY");
 
-    $('#view-image-date-created').text(div.attr('created_date'));
+    $('#view-image-date-created').text(createdAt);
     $('#view-image-created-by').text(div.attr('created_by'));
 
     $('#modal-folder-manager-view-image-file').attr('src', fpath);
@@ -2292,11 +2293,13 @@ function showFolderDetails(vS, vSiF, vIsTrash, vIsMyLibrary, vDiv = ""){
     var fpath = $('#folders_path').text();
     fpath = fpath.trim() + div.attr('fnm');
   } else {
-    var fpath = '/root' + div.attr('path_temp');
+    var fpath = '/home' + div.attr('path_temp');
   }
 
+  const createdAt = moment(div.attr('created_date')).format("MM/DD/YYYY");
+
   $('#view-folder-path').text(fpath);
-  $('#view-folder-date-uploaded').text(div.attr('created_date'));
+  $('#view-folder-date-uploaded').text(createdAt);
   $('#view-folder-uploaded-by').text(div.attr('created_by'));
 
   $('#modal-folder-manager-view-folder-title').text(div.attr('fnm'));
@@ -2459,7 +2462,7 @@ function getTrashRecords(vShowRecycleBin = true, vUpdateMain = false, vFolder_id
   });
 }
 
-function setTrashRecords(folders, files){
+function setTrashRecords_old(folders, files){
   $('#recycle_bin').empty();
 
   selected_trash = 0;
@@ -2577,7 +2580,7 @@ function setTrashRecords(folders, files){
     selected_trash_isFolder = isFolder;
 
     $('#recycle_bin_selected_name').text(div.attr('fnm'));
-    $('#recycle_bin_selected_path').text('/root' + div.attr('path_temp'));
+    $('#recycle_bin_selected_path').text('/home' + div.attr('path_temp'));
   });
 
 // On double click trash folder or file
@@ -2861,12 +2864,41 @@ function modalIsOpen(modal_id){
 
 
 // herbert's code
+function onClickFolder({ folder_id, folder_name }) {
+  selected = folder_id;
+  selected_isFolder = 1;
+  $('#folders_name').html(folder_name)
+}
+
+function onDoubleClickFolder({ folder_id }) {
+  current_selected_folder = folder_id;
+  getFoldersAndFiles(folder_id);
+}
+
+function onClickFile({ file_id, title }) {
+  selected = file_id;
+  selected_isFolder = 0;
+  $('#folders_name').html(title);
+}
+
+function onDoubleClickFile({ file_id, title }) {
+  if (!$('#fs_selected_file').length) {
+    showFileDetail(file_id, 0, false, false);
+    return;
+  }
+
+  const folderPath = $('#folders_path').text().trim() + title;
+  $('#fs_selected_file_text').val(folderPath);
+  $('#fs_selected_file').val(file_id);
+  $('#modal-folder-manager').modal('hide');
+}
+
 function setFoldersAndFiles(folders, files) {
   const currPath = $('#folders_path').text();
   const currPathWithoutSlash = currPath.replace(/^\/|\/$/g, '');
   const $quickAccess = $("#quick_access");
 
-  if (currPathWithoutSlash !== 'root') {
+  if (currPathWithoutSlash !== 'home') {
     $quickAccess.hide();
   } else {
     $quickAccess.show();
@@ -2889,12 +2921,24 @@ function setFoldersAndFiles(folders, files) {
     </div>
   `);
 
-  const folderElements = folders.map(createFolder);
+  const folderElements = folders.map((folder) => (
+    createFolder(folder, { 
+      onClick: onClickFolder, 
+      onDoubleClick: onDoubleClickFolder
+    })
+  ));
+
+  const fileElements = files.map((file) => (
+    createFile(file, {
+      onClick: onClickFile,
+      onDoubleClick: onDoubleClickFile
+    })
+  ));
+
   $('#folders_and_files .vault__foldersGrid').append(
     folderElements.length > 0 ? folderElements : emptyMessage()
   );
 
-  const fileElements = files.map(createFile);
   $('#folders_and_files .vault__filesGrid').append(
     fileElements.length > 0 ? fileElements : emptyMessage()
   );
@@ -2929,7 +2973,14 @@ function get_recently_uploaded_files() {
     url: base_url + 'vault/recently_uploaded_files',
     success: function(data){
       const result = jQuery.parseJSON(data);
-      const fileElements = result.map((file) => createFile(file, { showCreatedDate: true }));
+      const fileElements = result.map((file) => (
+        createFile(file, {
+          showCreatedDate: true,
+          onClick: onClickFile,
+          onDoubleClick: onDoubleClickFile,
+        })
+      ));
+
       $grid.empty();
       $grid.append(fileElements.length > 0 ? fileElements : emptyMessage());
     },
@@ -2948,7 +2999,8 @@ function fileLoader(count = 3) {
 
 function createFile(file, options = {}) {
   const { title, FCreatedBy, LCreatedBy, folder_name, file_path, file_id, created } = file;
-  const { showCreatedDate = false } = options;
+  const { isTrash = false, showCreatedDate = false, onClick = null, onDoubleClick = null } = options;
+
   const { icon, color: iconColor, isImage } = getfileExInfos(title);
   const createdString = moment(created).format("MMMM DD, YYYY");
   const previewUrl = isImage ? `${base_url}uploads/${folder_name}${file_path}` : null;
@@ -2956,7 +3008,7 @@ function createFile(file, options = {}) {
   const html = `
   <div class="col-md-2 vault__file" title="${title}">
     <div
-      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node vault__fileInner"
+      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 ${isTrash ? "node_trash " : "node"} vault__fileInner"
       isfolder="0"
       fid="${file_id}" 
       created_date="${created}"
@@ -2999,38 +3051,29 @@ function createFile(file, options = {}) {
   const $elementInner = $element.find('.vault__fileInner');
 
   $element.click(function () {
-    selected = file_id;
-    selected_isFolder = 0;
-
     removeCurrentHighlighted();
     $element.addClass('vault__item--isActive');
     $elementInner.addClass('bg-info');
     $elementInner.addClass('text-white');
-    $('#folders_name').html(title);
+
+    if (onClick) onClick(file);
   });
 
   $element.dblclick(function() {
-    if (!$('#fs_selected_file').length) {
-      showFileDetail(file_id, 0, false, false);
-      return;
-    }
-
-    const folderPath = $('#folders_path').text().trim() + title;
-    $('#fs_selected_file_text').val(folderPath);
-    $('#fs_selected_file').val(file_id);
-    $('#modal-folder-manager').modal('hide');
+    if (onDoubleClick) onDoubleClick(file);
   });
 
   return element;
 }
 
-function createFolder(folder) {
+function createFolder(folder, options = {}) {
   const { folder_id, create_date, FCreatedBy, LCreatedBy, folder_name, c_folder, path, total_contents } = folder;
+  const { isTrash = false, onClick = null, onDoubleClick = null } = options;
 
   const html = `
   <div class="col-md-2 vault__folder" title="${folder_name}">
     <div
-      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node vault__folderInner"
+      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 ${isTrash ? "node_trash " : "node"} vault__folderInner"
       isfolder="1"
       fid="${folder_id}"
       created_date="${create_date}"
@@ -3066,19 +3109,16 @@ function createFolder(folder) {
   const $elementInner = $element.find('.vault__folderInner');
 
   $element.click(function () {
-    selected = folder_id;
-    selected_isFolder = 1;
-
     removeCurrentHighlighted();
     $element.addClass('vault__item--isActive');
     $elementInner.addClass('bg-info');
     $elementInner.addClass('text-white');
-    $('#folders_name').html(folder_name);
+
+    if (onClick) onClick(folder);
   });
 
   $element.dblclick(function() {
-    current_selected_folder = folder_id;
-    getFoldersAndFiles(folder_id);
+    if (onDoubleClick) onDoubleClick(folder);
   });
 
   return element;
@@ -3090,7 +3130,6 @@ function createElementFromHTML(htmlString) {
   div.innerHTML = htmlString.trim();
   return div.firstChild; 
 }
-
 
 function removeCurrentHighlighted() {
   $('.vault__item--isActive').removeClass('vault__item--isActive');
@@ -3176,4 +3215,73 @@ function displayDroppedFiles(event) {
       }
     }
   });
+}
+
+function setTrashRecords(folders, files) {
+  $('#recycle_bin').empty();
+  $('#recycle_bin').append(`
+    <div class="row vault">
+      <div class="vault__folders">
+          <h6 class="vault__title">Folders</h6>
+          <div class="vault__spacer"></div>
+          <div class="vault__foldersGrid"></div>
+      </div>
+      <div class="vault__spacer vault__spacer--isLarge"></div>
+      <div class="vault__files">
+          <h6 class="vault__title">Files</h6>
+          <div class="vault__spacer"></div>
+          <div class="vault__filesGrid"></div>
+      </div>
+    </div>
+  `);
+
+  const onClickFolder = ({ folder_id, folder_name, path }) => {
+    selected_trash = folder_id;
+    selected_trash_isFolder = 1;
+    $('#recycle_bin_selected_name').text(folder_name);
+    $('#recycle_bin_selected_path').text('/home' + path);
+  };
+
+  const onDoubleClickFolder = ({ folder_id }) => {
+    selected_trash = folder_id;
+    selected_trash_isFolder = 1;
+    showFolderDetails(selected_trash, selected_trash_isFolder, true, false);
+  }
+
+  const onClickFile = ({ file_id, title, file_path }) => {
+    selected_trash = file_id;
+    selected_trash_isFolder = 0;
+    $('#recycle_bin_selected_name').text(title);
+    $('#recycle_bin_selected_path').text('/home' + file_path);
+  };
+
+  const onDoubleClickFile = ({ file_id }) => {
+    selected_trash = file_id;
+    selected_trash_isFolder = 0;
+    showFileDetail(selected_trash, selected_trash_isFolder, true, false);
+  }
+
+  const folderElements = folders.map((folder) => (
+    createFolder(folder, {
+      isTrash: true, 
+      onClick: onClickFolder, 
+      onDoubleClick: onDoubleClickFolder
+    })
+  ));
+
+  const fileElements = files.map((file) => (
+    createFile(file, {
+      isTrash: true,
+      onClick: onClickFile,
+      onDoubleClick: onDoubleClickFile
+    })
+  ));
+
+  $('#recycle_bin .vault__foldersGrid').append(
+    folderElements.length > 0 ? folderElements : emptyMessage()
+  );
+
+  $('#recycle_bin .vault__filesGrid').append(
+    fileElements.length > 0 ? fileElements : emptyMessage()
+  );
 }

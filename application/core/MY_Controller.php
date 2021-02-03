@@ -53,7 +53,7 @@ class MY_Controller extends CI_Controller {
 	
 	public function setNewtimezone() {
 
-		$user_id =  logged('id');
+		/*$user_id =  logged('id');
 
 		$table = $this->users_model->table;
 		$this->db->where('id', $user_id); 
@@ -74,7 +74,7 @@ class MY_Controller extends CI_Controller {
 		}
 		 
         //echo "->".$utimezone ;exit;
-        date_default_timezone_set($utimezone);
+        date_default_timezone_set($utimezone);*/
 		
     }
 

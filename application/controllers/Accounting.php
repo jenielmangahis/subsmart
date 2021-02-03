@@ -26,7 +26,8 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_refund_receipt_model');
         $this->load->model('accounting_delayed_credit_model');
-        $this->load->model('Accounting_purchase_order_model');
+        $this->load->model('accounting_purchase_order_model');
+        $this->load->model('accounting_credit_card_model');
         $this->load->model('estimate_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
@@ -1245,30 +1246,30 @@ class Accounting extends MY_Controller {
         echo json_encode($std);
 
     }
-    public function addCheck(){
-        $new_data = array(
-            'vendor_id' => $this->input->post('vendor_id'),
-            'mailing_address' => $this->input->post('mailing_address'),
-            'bank_id' => $this->input->post('bank_account'),
-            'payment_date' => $this->input->post('payment_date'),
-            'check_num' => $this->input->post('check_number'),
-            'print_later' => $this->input->post('print_later'),
-            'permit_number' => $this->input->post('permit_number'),
-            'memo' => $this->input->post('memo'),
-            'category' => $this->input->post('category'),
-            'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount'),
-			'total' => $this->input->post('total'),
-            'file_name' => $this->input->post('filename'),
-            'original_fname' => $this->input->post('original_fname')
-        );
-        $query = $this->expenses_model->addCheck($new_data);
-        if ($query == true){
-            echo json_encode(1);
-        }else{
-            echo json_encode(0);
-        }
-    }
+    // public function addCheck(){
+    //     $new_data = array(
+    //         'vendor_id' => $this->input->post('vendor_id'),
+    //         'mailing_address' => $this->input->post('mailing_address'),
+    //         'bank_id' => $this->input->post('bank_account'),
+    //         'payment_date' => $this->input->post('payment_date'),
+    //         'check_num' => $this->input->post('check_number'),
+    //         'print_later' => $this->input->post('print_later'),
+    //         'permit_number' => $this->input->post('permit_number'),
+    //         'memo' => $this->input->post('memo'),
+    //         'category' => $this->input->post('category'),
+    //         'description' => $this->input->post('description'),
+    //         'amount' => $this->input->post('amount'),
+	// 		'total' => $this->input->post('total'),
+    //         'file_name' => $this->input->post('filename'),
+    //         'original_fname' => $this->input->post('original_fname')
+    //     );
+    //     $query = $this->expenses_model->addCheck($new_data);
+    //     if ($query == true){
+    //         echo json_encode(1);
+    //     }else{
+    //         echo json_encode(0);
+    //     }
+    // }
 
     public function editCheckData(){
         $update = array(
@@ -3174,6 +3175,171 @@ class Accounting extends MY_Controller {
             $data['created_at'] = date("Y-m-d H:i:s");
             $data['updated_at'] = date("Y-m-d H:i:s");
             $addQuery2 = $this->accounting_purchase_order_model->createVendorDetails($data);
+            $i++;
+        }
+
+        $aa = $this->input->post('prod');
+                $bb = $this->input->post('desc');
+                $cc = $this->input->post('qty');
+                $dd = $this->input->post('rate');
+                $ee = $this->input->post('amount');
+                $ff = $this->input->post('tax');
+            
+            $f = 0;
+            foreach($aa as $row2){
+                $data2['product_services'] = $aa[$i];
+                $data2['description'] = $bb[$i];
+                $data2['qty'] = $cc[$i];
+                $data2['rate'] = $dd[$i];
+                $data2['amount'] = $ee[$i];
+                $data2['tax'] = $ff[$i];
+                $data2['type'] = '1';
+                $data2['type_id'] = $addQuery;
+                $data2['status'] = '1';
+                $data2['created_at'] = date("Y-m-d H:i:s");
+                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->accounting_invoices_model->createInvoiceProd($data2);
+                $f++;
+            }
+
+        redirect('accounting/banking');
+            
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function addvendorcreditcard(){
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mail_address' => $this->input->post('mail_address'),
+            'payment_date' => $this->input->post('payment_date'),
+            'ref_no' => $this->input->post('ref_no'),
+            'permit_no' => $this->input->post('permit_no'),
+            'tags' => $this->input->post('tags'),
+            'amount' => $this->input->post('amount'),
+            'memo' => $this->input->post('memo'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'test',
+            'status' => 1,
+            'created_by' => logged('id'),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_purchase_order_model->createPurchase($new_data);
+        if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'category' => $this->input->post('category'),
+                'description' => $this->input->post('description'),
+                'amount' => $this->input->post('amount'),
+                'ven_type' => '1',
+                'ven_type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('category');
+            $b = $this->input->post('description');
+            $c = $this->input->post('amount');
+           
+        $i = 0;
+        foreach($a as $row){
+            $data['category'] = $a[$i];
+            $data['description'] = $b[$i];
+            $data['amount'] = $e[$i];
+            $data['ven_type'] = '1';
+            $data['ven_type_id'] = $addQuery;
+            $data['status'] = '1';
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            $addQuery2 = $this->accounting_credit_card_model->createCreditCardDetails($data);
+            $i++;
+        }
+
+        $aa = $this->input->post('prod');
+                $bb = $this->input->post('desc');
+                $cc = $this->input->post('qty');
+                $dd = $this->input->post('rate');
+                $ee = $this->input->post('amount');
+                $ff = $this->input->post('tax');
+            
+            $f = 0;
+            foreach($aa as $row2){
+                $data2['product_services'] = $aa[$i];
+                $data2['description'] = $bb[$i];
+                $data2['qty'] = $cc[$i];
+                $data2['rate'] = $dd[$i];
+                $data2['amount'] = $ee[$i];
+                $data2['tax'] = $ff[$i];
+                $data2['type'] = '1';
+                $data2['type_id'] = $addQuery;
+                $data2['status'] = '1';
+                $data2['created_at'] = date("Y-m-d H:i:s");
+                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->accounting_invoices_model->createInvoiceProd($data2);
+                $f++;
+            }
+
+        redirect('accounting/banking');
+            
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function addcheck()
+    {
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'bank_id' => $this->input->post('bank_account'),
+            'payment_date' => $this->input->post('payment_date'),
+            'check_num' => $this->input->post('check_number'),
+            'print_later' => $this->input->post('print_later'),
+            'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'test',
+            'status' => 1,
+            'created_by' => logged('id'),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+            
+        );
+
+        $addQuery = $this->expenses_model->addCheck($new_data);
+        
+        if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'category' => $this->input->post('category'),
+                'description' => $this->input->post('description'),
+                'amount' => $this->input->post('amount'),
+                'ven_type' => '1',
+                'ven_type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('category');
+            $b = $this->input->post('description');
+            $c = $this->input->post('amount');
+           
+        $i = 0;
+        foreach($a as $row){
+            $data['category'] = $a[$i];
+            $data['description'] = $b[$i];
+            $data['amount'] = $e[$i];
+            $data['ven_type'] = '1';
+            $data['ven_type_id'] = $addQuery;
+            $data['status'] = '1';
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            $addQuery2 = $this->accounting_credit_card_model->createCreditCardDetails($data);
             $i++;
         }
 

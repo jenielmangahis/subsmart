@@ -65,6 +65,19 @@ class General_model extends MY_Model {
         }
     }
 
+    public function delete_($params = array()) {
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        // Execute delete.
+        if ($this->db->delete($params['table']))
+            return true;
+        else
+            return false;
+    }
+
     public function update_with_key($input, $id,$table)
     {
         //$input['date_modified'] = date('Y-m-d H:i:s');;

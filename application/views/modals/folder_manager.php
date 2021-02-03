@@ -52,13 +52,15 @@
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['trash_folder_file'] == 1) ? '' : 'd-none'); ?>" control="delete" title="Trash Folder/File"><i class="fa fa-trash"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['move_folder_file'] == 1) ? '' : 'd-none'); ?>" control="move" title="Move Folder/File"><i class="fa fa-scissors"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['edit_folder_file'] == 1) ? '' : 'd-none'); ?>" control="edit" title="Edit Folder/File"><i class="fa fa-pencil-square-o"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['add_file'] == 1) ? '' : 'd-none'); ?>" control="add_file" title="Add File"><i class="fa fa-file"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['create_folder'] == 1) ? '' : 'd-none'); ?>" control="create_folder" title="Create Folder"><i class="fa fa-plus"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['add_file'] == 1) ? '' : 'd-none'); ?>"" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['add_file'] == 1) ? '' : 'd-none'); ?>" control="add_file" title="Add File">
+                             <img width="17px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAgklEQVRIieWU0QqAIAxFj9HHVV/VY9+p/Uc9BQbTnEOwurCXMe+ZGwpf1AIE4HiItRZQYm6ClJpfsbUGqCE1ABWkFiBCXAJg0c1zqDgsNZWUFqBWc8BYUCONJM5ld9bFDeIOnZDL6h9LjqV+hO8fkQTYDX6hpGgGPPqf1AOToblOdQKtNGIZcCZ1AQAAAABJRU5ErkJggg=="/>
+                            </a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['create_folder'] == 1) ? '' : 'd-none'); ?>" control="create_folder" title="Create Folder"><i class="fa fa-folder"></i></a>
                           </td>
                         </tr>
                         <tr>
                           <td class="p-0 pb-1">
-                          <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['add_file'] == 1) ? '' : 'd-none'); ?>"" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
                           <?php if($isBusinessFormTemplates){ ?>  
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a> 
                           <?php } ?> 

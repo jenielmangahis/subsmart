@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                     <?php $group=array();?>
                                      <?php foreach($photos as $photo) : ?>
-                                        <?php if(!in_array($photo->group_number, $group)) : ?>
+                                        <?php //if(!in_array($photo->group_number, $group)) : ?>
                                         <?php array_push($group, $photo->group_number);?>
                                         <tr>
                                             <td class="pl-3">
@@ -60,21 +60,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </td>
                                             <td class="pl-3"><?php echo date_format(date_create($photo->created_at),"d-M-Y H:m"); ?></td>
-                                            <td class="pl-3"><?php echo getLoggedFullName($photo->customer_id); ?></td>
+                                            <td class="pl-3"><?php echo $photo->first_name . ' ' . $photo->last_name; ?></td>
                                             <td class="pl-3">
                                                 <div class="dropdown dropdown-btn text-center">
                                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
                                                         <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/edit/'. $photo->group_number); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/edit/'. $photo->id); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
                                                         <li role="separator" class="divider"></li>
                                                         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/delete/'. $photo->group_number); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-trash-o icon"></span> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <?php endif;?>
+                                        <?php //endif;?>
                                     <?php endforeach; ?>
                                     </tbody>
                                 </table>  

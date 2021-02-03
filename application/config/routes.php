@@ -539,6 +539,7 @@ $route['estimate_customer_view/(:any)'] = 'Pages/estimate_customer_view/$1';
 $route['customer_approve_estimate'] = 'Pages/customer_update_estimate/1';
 $route['customer_disapprove_estimate'] = 'Pages/customer_update_estimate/2';
 $route['estimate/_load_scheduled_estimates'] = 'Estimate/ajax_load_scheduled_estimates';
+$route['estimate/view/(:any)'] = 'Estimate/view/$1';
 
 //Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
@@ -553,6 +554,7 @@ $route['credit_notes/_send_customer'] = 'Credit_Notes/send_mail_credit_note_cust
 $route['credit_notes/send/(:num)'] = 'Credit_Notes/send_customer/$1';
 $route['credit_notes/_send'] = 'Credit_Notes/send_mail';
 $route['credit_note_customer_view/(:any)'] = 'Pages/credit_note_customer_view/$1';
+$route['credit_notes/view_pdf/(:num)'] = 'credit_notes/pdf_credit_note/$1';
 
 //Event Types
 $route['event_types'] = 'Event_Types/index';
@@ -561,3 +563,6 @@ $route['event_types/save'] = 'Event_Types/create_event_type';
 $route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
 $route['event_types/update'] = 'Event_Types/update_event_type';
 $route['event_types/delete'] = 'Event_Types/delete_event_type';
+
+//Esign
+$route['esignmain'] = 'Esign_Main/index';

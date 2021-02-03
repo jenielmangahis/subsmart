@@ -504,7 +504,7 @@ $(function() {
                 var withoutEmail = res.withoutEmail;
 
                 $('div#statementModal span#total-customers').html(customers.length);
-                $('div#statementModal span#total-amount').html(`$${res.total}.00`);
+                $('div#statementModal span#total-amount').html(`$${res.total}`);
                 $('div#statementModal span#without-email-count').html(withoutEmail.length);
                 $('div#statementModal span#statements-count').html(customers.length);
                 $('div#statementModal table#statements-table tbody').html('');
@@ -515,12 +515,12 @@ $(function() {
                         $('div#statementModal table#missing-email-table tbody').append(`<tr>
                             <td>
                                 <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                    <input class="m-auto" type="checkbox" name="select_all" value="${withoutEmail[i]['id']}" checked>
+                                    <input class="m-auto" type="checkbox" name="missing_email_customer[]" value="${withoutEmail[i]['id']}" checked>
                                 </div>
                             </td>
                             <td>${withoutEmail[i]['name']}</td>
-                            <td><input type="email" name="email[]" class="form-control" value="${withoutEmail[i]['email']}"></td>
-                            <td class="text-right">$${withoutEmail[i]['balance']}.00</td>
+                            <td><input type="email" name="no_email[${withoutEmail[i]['id']}]" class="form-control customer-email" value="${withoutEmail[i]['email']}"></td>
+                            <td class="text-right">$${withoutEmail[i]['balance']}</td>
                         </tr>`);
                     }
 
@@ -536,12 +536,12 @@ $(function() {
                         $('div#statementModal table#statements-table tbody').append(`<tr>
                             <td>
                                 <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                    <input class="m-auto" type="checkbox" name="select_all" value="${customers[i]['id']}" checked>
+                                    <input class="m-auto" type="checkbox" name="customer[]" value="${customers[i]['id']}" checked>
                                 </div>
                             </td>
                             <td>${customers[i]['name']}</td>
-                            <td><input type="email" name="email[]" class="form-control" value="${customers[i]['email']}"></td>
-                            <td class="text-right">$${customers[i]['balance']}.00</td>
+                            <td><input type="email" name="email[${customers[i]['id']}]" class="form-control customer-email" value="${customers[i]['email']}"></td>
+                            <td class="text-right">$${customers[i]['balance']}</td>
                         </tr>`);
                     }
 
@@ -564,6 +564,44 @@ $(function() {
                 $('div#statementModal div.modal-body div.row:last-child()').removeClass('hide');
             }
         });
+    });
+
+    $(document).on('change', 'div#statementModal table tbody input.customer-email', function(){
+        var name = $(this).prop('name');
+        var value = $(this).val();
+
+        if(name.includes('no_email')) {
+            name = name.replace('no_', '');
+        } else {
+            name = "no_" + name;
+        }
+
+        $(`div#statementModal table tbody input[name="${name}"]`).each(function(){
+            $(this).val(value);
+        });
+    });
+
+    $(document).on('change', 'div#statementModal table tbody input.select-customer', function(){
+        var name = $(this).prop('name');
+        var value = $(this).val();
+        var checked = $(this).prop('checked');
+        var tableName = 'missing-email-table';
+        var flag = true;
+
+        if(name.includes('missing_email')) {
+            tableName = 'statements-table';
+        }
+
+        var rows = $(`div#statementModal table#${tableName} tbody tr`);
+        var checkbox = $(`div#statementModal table#${tableName} thead tr th:first-child() div input`);
+        $(`div#statementModal table#${tableName} tbody tr td:first-child() div input[value="${value}"]`).prop('checked', checked);
+        rows.each(function() {
+            if($(this).children('td:first-child()').children('div').children('input').prop('checked') === false) {
+                flag = false;
+            }
+        });
+
+        checkbox.prop('checked', flag);
     });
 });
 

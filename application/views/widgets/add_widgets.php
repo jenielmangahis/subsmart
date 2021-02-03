@@ -14,15 +14,15 @@
             </div>
             <hr />
             <div class="justify-content-center text-center">
-            <span>Track stats important to your business</span><br />
-                <button onclick="document.location='<?= base_url('nsmart_plans') ?>'" class="btn btn-primary mt-2">Upgrade to Plan</button>
+                <span>Track stats important to your business</span><br />
+                <button onclick="document.location = '<?= base_url('nsmart_plans/index') ?>'" class="btn btn-primary mt-2">Upgrade to Plan</button>
             </div>
         </div>
     </div>
 </div>
 
 
-<div class="modal fade" id="addWidgets" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addWidgets" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -33,24 +33,10 @@
             </div>
             <div class="modal-body" style="padding-top: 3px;">
                 <span style="color:red;">Select the widgets you would like to display in your dashboard</span><br />
-                <div class="col-lg-12 mt-3">
-                    <div id="triggers" class="list-group col-lg-6 float-left">
-                        <a onclick="$(this).addClass('active')" href="javascript:void(0);" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
+                <div class="col-lg-12 mt-3" id="widgetTable">
+                    <div class="progress" style="height:20px;">
+                        <div class="progress-bar progress-bar-striped bg-info  progress-bar-animated" role="progressbar" style="width: 100%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Please wait while System is fetching data</div>
                             
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Timesheet</h5>
-                            </div>
-                            <p class="mb-1">View Login and Logout of your Employee</p>
-                        </a>             
-                    </div>
-                    <div id="triggers" class="list-group col-lg-6 float-right">          
-                        <a onclick="$(this).addClass('active')" href="javascript:void(0);" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
-                            
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Upcoming Jobs</h5>
-                            </div>
-                            <p class="mb-1">Check Jobs Coming</p>
-                        </a>             
                     </div>
                 </div>
             </div>
@@ -60,3 +46,16 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('#addWidgets').on('show.bs.modal', function () {
+        $.ajax({
+            url: '<?php echo base_url(); ?>dashboard/getWidgetList',
+            method: 'get',
+            data: {},
+            success: function (response) {
+                $('#widgetTable').html(response);
+            }
+        });
+    });
+</script>
