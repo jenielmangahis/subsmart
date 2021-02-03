@@ -458,7 +458,8 @@
                </div>
                <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <form action="" method="post" id="addEditCheckmodal">
+            <!-- <form action="" method="post" id="addEditCheckmodal"> -->
+            <form action="<?php echo site_url()?>accounting/addcheck" method="post" id="billForm">
                <div class="modal-body" style="margin-bottom: 100px">
                   <div class="row">
                      <div class="col-md-3">
@@ -547,7 +548,7 @@
                               <td></td>
                               <td><span id="line-counter">1</span></td>
                               <td>
-                                 <div id="" style="display:none;">
+                                 <div id="" style="display:;">
                                     <input type="hidden" id="prevent_process" value="true">
                                     <select name="category[]" id="" class="form-control checkCategory select2-check-category">
                                        <option></option>
@@ -557,15 +558,15 @@
                                     </select>
                                  </div>
                               </td>
-                              <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: none;"></td>
-                              <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: none;"></td>
+                              <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: ;"></td>
+                              <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: ;"></td>
                               <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
                            </tr>
                            <tr id="tableLine">
                               <td></td>
                               <td><span id="line-counter">2</span></td>
                               <td>
-                                 <div id="" style="display:none;">
+                                 <div id="" style="display:;">
                                     <input type="hidden" id="prevent_process" value="true">
                                     <select name="category[]" id="" class="form-control checkCategory select2-check-category">
                                        <option></option>
@@ -575,8 +576,8 @@
                                     </select>
                                  </div>
                               </td>
-                              <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: none;"></td>
-                              <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: none;"></td>
+                              <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: ;"></td>
+                              <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: ;"></td>
                               <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
                            </tr>
                         </tbody>

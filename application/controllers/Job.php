@@ -17,25 +17,6 @@ class Job extends MY_Controller
         $this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
 
-        add_css(array( 
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-			"assets/css/accounting/sidebar.css",
-            'assets/textEditor/summernote-bs4.css',
-        ));
-
-        // JS to add only Job module
-        add_footer_js(array(
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-            'assets/frontend/js/job_creation/main.js',
-            'assets/textEditor/summernote-bs4.js'
-        ));
     }
 
     public function index() {
@@ -136,38 +117,38 @@ class Job extends MY_Controller
         $get = $this->input->get();
         $comp_id = logged('company_id');
 
-        $this->page_data['items'] = $this->items_model->get();
-        $this->page_data['emp_roles'] = $this->roles_model->getRoles();
-        $this->page_data['employees'] = $this->db->get_where($this->jobs_model->table_employees, array('company_id' => $comp_id))->result();
-        $this->page_data['customers'] = $this->db->get_where($this->jobs_model->table_customers, array('company_id' => $comp_id))->result();
-        if (empty($get['job_num'])) {
-            $comp = array(
-                'company_id' => $comp_id
-            );
-        } else { 
-            $comp = array(
-                'company_id' => $comp_id,
-                'job_number' => $get['job_num']
-            );
-        }
-        $this->page_data['job_settings'] = $this->db->get_where($this->jobs_model->table_job_settings, array('company_id' => $comp_id))->result();
-        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, array('company_id' => $comp_id))->result();
-        $job_num_query = $this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row();
-        if ($job_num_query && empty($get['job_num'])) {
-            $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
-        } else {
-            if (!empty($get['job_num'])) {
-                $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
-                $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
-                //$this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
-                //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
-                $this->page_data['assignEmployees'] = $this->jobs_model->getAssignEmp($job_id);
-            }
-            
-           $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
-           $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
-           $this->page_data['job_data'] = $job_num_query;
-        }
+//        $this->page_data['items'] = $this->items_model->get();
+//        $this->page_data['emp_roles'] = $this->roles_model->getRoles();
+//        $this->page_data['employees'] = $this->db->get_where($this->jobs_model->table_employees, array('company_id' => $comp_id))->result();
+//        $this->page_data['customers'] = $this->db->get_where($this->jobs_model->table_customers, array('company_id' => $comp_id))->result();
+//        if (empty($get['job_num'])) {
+//            $comp = array(
+//                'company_id' => $comp_id
+//            );
+//        } else {
+//            $comp = array(
+//                'company_id' => $comp_id,
+//                'job_number' => $get['job_num']
+//            );
+//        }
+//        $this->page_data['job_settings'] = $this->db->get_where($this->jobs_model->table_job_settings, array('company_id' => $comp_id))->result();
+//        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, array('company_id' => $comp_id))->result();
+//        $job_num_query = $this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row();
+//        if ($job_num_query && empty($get['job_num'])) {
+//            $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
+//        } else {
+//            if (!empty($get['job_num'])) {
+//                $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
+//                $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
+//                //$this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
+//                //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
+//                $this->page_data['assignEmployees'] = $this->jobs_model->getAssignEmp($job_id);
+//            }
+//
+//           $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
+//           $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
+//           $this->page_data['job_data'] = $job_num_query;
+//        }
 
         // get all customers
         $get_customer = array(
@@ -179,6 +160,7 @@ class Job extends MY_Controller
             ),
         );
         $this->page_data['customers'] = $this->general->get_data_with_param($get_customer);
+
         // get all employees
         $get_employee = array(
             'where' => array(
@@ -212,6 +194,15 @@ class Job extends MY_Controller
         );
         $this->page_data['esign_templates'] = $this->general->get_data_with_param($get_esign_template);
 
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
         $this->load->view('job/job_new', $this->page_data);
     }
 
@@ -219,9 +210,43 @@ class Job extends MY_Controller
        // echo json_encode($_POST);
         echo date("d-m-Y h:i A");
     }
+
+    public function job_tags() {
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_tags',
+            'select' => '*',
+        );
+        $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_settings);
+        $this->load->view('job/job_settings/job_tags', $this->page_data);
+    }
+
+    public function delete_tag() {
+        $remove_tag = array(
+            'where' => array(
+                'id' => $_POST['tag_id']
+            ),
+            'table' => 'job_tags'
+        );
+        if($this->general->delete_($remove_tag)){
+            echo '1';
+        }
+    }
+
+    public function add_tag() {
+        $input = $this->input->post();
+        $input['company_id'] =  logged('company_id');
+        if($this->general->add_($input,"job_tags")){
+            echo "1";
+        }else{
+            echo "0";
+        }
+    }
+
     public function settings() {
         $get = $this->input->get();
-
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         $this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
@@ -246,12 +271,18 @@ class Job extends MY_Controller
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
         }
-
         $this->load->view('job/job_settings/prefix', $this->page_data);
     }
 
     public function job_types() {
-        $this->page_data['jobtypes'] = $this->jobs_model->getJobType();
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_settings',
+            'select' => '*',
+        );
+        $this->page_data['jobtypes'] = $this->general->get_data_with_param($get_job_settings);
         $this->load->view('job/job_settings/job_type', $this->page_data);
     }
 

@@ -50,19 +50,9 @@
                 <path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path>
             </svg>
         </span>
-        <li class="nav-header desktop-only">
-			<a href="<?php echo url('/job/new_job1')?>" class="btn btn-tranparent acct-btn-add text-center" style="border: 2px solid white;"><i class="fa fa-plus" style="margin-right: 20px;"></i> New</a>
-        </li>
-        <li class="submenus dropright <?= ($this->uri->segment(1) == 'job') ? "active" : "";  ?>">
-            <a href="#submenuJob" onclick="dropdownAccounting(this)" class="dropdown-toggle "><i class="fa fa-briefcase" style="margin-right: 20px"></i>Job</a>
-            <ul class="collapse list-unstyled" id="submenuJob">
-				<li class="<?= ($this->uri->segment(1) == 'job' && ($this->uri->segment(2) == 'job' || $this->uri->segment(2) == '')) ? "active" : "";  ?>">
-					<a href="<?php echo url('/job')?>">Job List</a>
-                </li>
-                <li class="<?= ($this->uri->segment(1) == 'job' && $this->uri->segment(2) == 'new_job1') ? "active" : "";  ?>">
-                    <a href="<?php echo url('/job/new_job1')?>">New Job</a>
-                </li>
-            </ul>
+        <br><br>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job' || $this->uri->uri_string() == 'job/new_job1') ? "active" : "";  ?>">
+            <a href="<?= base_url('job') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Jobs</a>
         </li>
         <li class="submenus dropright">
             <a href="#submenuForm" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-credit-card" style="margin-right: 20px"></i>Forms</a>
@@ -78,22 +68,19 @@
                 </li>
              </ul>
         </li>
-        <li class="submenus dropright">
-            <a href="#submenuSetting" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-cogs" style="margin-right: 20px"></i>Settings</a>
-                <ul class="collapse list-unstyled" id="submenuSetting">
-                    <li>
-                        <a href="<?php echo base_url();?>job/job_types">Job Type</a>
-                    </li>
-                    <li>
-                        <a href="#">Priority</a>
-                    </li>
-                    <li>
-                        <a href="#">Status</a>
-                    </li>
-                    <li>
-                        <a href="#">Custom Form</a>
-                    </li>
-                </ul>
+
+        <li class="nav-header header-left">Settings</li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
+            <a href="<?= base_url('job/job_tags') ?>" title="Profile Settings"><span class="fa fa-tags"></span>Job Tags</a>
+        </li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
+            <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Priority</a>
+        </li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
+            <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Status</a>
+        </li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
+            <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Custom Form</a>
         </li>
     </ul>
 </nav>

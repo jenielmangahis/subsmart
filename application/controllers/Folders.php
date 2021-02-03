@@ -262,7 +262,7 @@ class Folders extends MY_Controller {
 					}
 				}
 			} else {
-				$return['error'] = 'Error in initializing root folder';
+				$return['error'] = 'Error in initializing home folder';
 			}
 		} else {
 			$return['error'] = 'You dont have permission to create a folder';
@@ -403,8 +403,8 @@ class Folders extends MY_Controller {
 
 	public function getFoldersFiles($parent_id = 0, $getByCurrentUser = 0, $getByWithCategory = 0, $internal = false){
 		if($parent_id == 0){
-			$folders_path = '/<a control="gotofolder" href="0">root</a>/';
-			$folders_name = 'Root';
+			$folders_path = '/<a control="gotofolder" href="0">home</a>/';
+			$folders_name = 'Home';
 		} else {
 			$folders_path = '';
 			$folders_name = '';
@@ -436,7 +436,7 @@ class Folders extends MY_Controller {
 				$folder = $this->db->query($cSql);
 			}
 
-			$folders_path = '/<a control="gotofolder" href="0">root</a>/' . $folders_path;
+			$folders_path = '/<a control="gotofolder" href="0">home</a>/' . $folders_path;
 		}
 
 		$ofUser = ($getByCurrentUser == 1);
@@ -768,7 +768,7 @@ class Folders extends MY_Controller {
 					}
 				}
 			} else {
-				$return['error'] = 'Error in initializing root folder';
+				$return['error'] = 'Error in initializing home folder';
 			}
 		} else {
 			$return['error'] = 'You dont have permission to update a folder';

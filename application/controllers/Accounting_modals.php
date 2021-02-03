@@ -30,6 +30,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_weekly_timesheet_model');
         $this->load->model('accounting_payroll_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('accounting_statements_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
@@ -177,11 +178,12 @@ class Accounting_modals extends MY_Controller {
                                 'id' => $customer->customer_id,
                                 'name' => $customer->first_name . ' ' . $customer->last_name,
                                 'email' => $customer->email,
-                                'balance' => ($customer->status === '1') ? $customer->amount : 0
+                                'balance' => ($customer->status === '1') ? number_format($customer->amount, 2, '.', ',') : 0.00
                             ];
                         } else {
-                            if($customer->status === '1') {
-                                $display[$index]['balance'] = (int)$display[$index]['balance'] + (int)$customer->amount;
+                            if($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
+                                $balance = (int)$display[$index]['balance'] + $customer->amount;
+                                $display[$index]['balance'] = number_format($balance, 2, '.', ',');
                             }
                         }
                     }
@@ -195,7 +197,7 @@ class Accounting_modals extends MY_Controller {
                     }, ARRAY_FILTER_USE_BOTH);
 
                     $this->page_data['withoutEmail'] = $withoutEmail;
-                    $this->page_data['total'] = $totalBalance;
+                    $this->page_data['total'] = number_format($totalBalance, 2, '.', ',');
                     $this->page_data['customers'] = $display;
                 break;
             }
@@ -367,11 +369,10 @@ class Accounting_modals extends MY_Controller {
 
         $data = [
             'cust_bal_status' => $input['cust_bal_status'],
-            'company_id' => $company_id
+            'company_id' => $company_id,
+            'start_date' => ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['start_date'])),
+            'end_date' => ($input['statement_type'] === '2') ? date('Y-m-d') : date('Y-m-d', strtotime($input['end_date']))
         ];
-
-        $data['start_date'] = ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['start_date']));
-        $data['end_date'] = ($input['statement_type'] === '2') ? date('Y-m-d') : date('Y-m-d', strtotime($input['end_date']));
 
         if($input['statement_type'] === '1' || $input['statement_type'] === '2') {
             $customers = $this->accounting_invoices_model->getStatementInvoices($data);
@@ -383,15 +384,17 @@ class Accounting_modals extends MY_Controller {
         foreach($customers as $customer) {
             $index = array_search($customer->customer_id, array_column($display, 'id'));
             if($index === false) {
+                $balance = ($customer->status === '1') ? $customer->amount : 0.00;
                 $display[] = [
                     'id' => $customer->customer_id,
                     'name' => $customer->first_name . ' ' . $customer->last_name,
                     'email' => $customer->email,
-                    'balance' => ($customer->status === '1') ? $customer->amount : 0
+                    'balance' => number_format($balance, 2, '.', ',')
                 ];
             } else {
                 if($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
-                    $display[$index]['balance'] = (int)$display[$index]['balance'] + (int)$customer->amount;
+                    $balance = (int)$display[$index]['balance'] + $customer->amount;
+                    $display[$index]['balance'] = number_format($balance, 2, '.', ',');
                 }
             }
         }
@@ -400,13 +403,16 @@ class Accounting_modals extends MY_Controller {
             return $item['balance']; 
         }, $display));
 
-        $withoutEmail = array_filter($display, function($value, $key) {
-            return $value['email'] === '';
-        }, ARRAY_FILTER_USE_BOTH);
+        $withoutEmail = [];
+        foreach($display as $cust) {
+            if($cust['email'] === '') {
+                $withoutEmail[] = $cust;
+            }
+        }
 
         $result = [
             'customers' => $display,
-            'total' => $totalBalance,
+            'total' => number_format($totalBalance, 2, '.', ','),
             'withoutEmail' => $withoutEmail
         ];
 
@@ -446,6 +452,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'payrollModal':
                     $this->result = $this->payroll($data);
+                break;
+                case 'statementModal':
+                    $this->result = $this->statement($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -914,6 +923,97 @@ class Accounting_modals extends MY_Controller {
                 $return['data'] = null;
                 $return['success'] = false;
                 $return['message'] = 'Nothing inserted.';
+            }
+        }
+
+        return $return;
+    }
+
+    private function statement($data) {
+        $flag = true;
+
+        $this->form_validation->set_rules('statement_type', 'Statement Type', 'required');
+        $this->form_validation->set_rules('statement_date', 'Statement Date', 'required');
+        $this->form_validation->set_rules('customer_balance_status', 'Customer Balance Status', 'required');
+
+        if(isset($data['start_date']) && isset($data['end_date'])) {
+            $this->form_validation->set_rules('start_date', 'Start Date', 'required');
+            $this->form_validation->set_rules('end_date', 'End Date', 'required');
+        }
+
+        if(isset($data['select_all'])) {
+            $this->form_validation->set_rules('email[]', 'Email', 'required');
+        } else {
+            foreach($data['customer'] as $cust) {
+                if($data['email'][$cust] === '') {
+                    $flag = false;
+                    break;
+                }
+            }
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false || $flag === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $insertData = [
+                'statement_type' => $data['statement_type'],
+                'statement_date' => date('Y-m-d', strtotime($data['statement_date'])),
+                'customer_balance_status' => $data['customer_balance_status'],
+                'start_date' => (isset($data['start_date'])) ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                'end_date' => (isset($data['end_date'])) ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                'company_id' => logged('company_id'),
+                'created_by' => logged('id'),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
+
+            $statementId = $this->accounting_statements_model->create($insertData);
+
+            if($statementId > 0) {
+                $queryData = [
+                    'cust_bal_status' => $data['customer_balance_status'],
+                    'company_id' => logged('company_id'),
+                    'start_date' => ($data['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($data['start_date'])),
+                    'end_date' => ($data['statement_type'] === '2') ? date('Y-m-d') : date('Y-m-d', strtotime($data['end_date']))
+                ];
+
+                if($data['statement_type'] === '1' || $data['statement_type'] === '2') {
+                    $invoices = $this->accounting_invoices_model->getStatementInvoices($queryData);
+                } else {
+                    $invoices = $this->accounting_invoices_model->getTransactionInvoices($queryData);
+                }
+
+                $statementCustomers = [];
+                foreach($data['customer'] as $customer) {
+                    $customerInvoices = array_filter($invoices, function($value, $key) use ($customer){
+                        return $value->customer_id === $customer;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $balance = 0.00;
+                    foreach($customerInvoices as $invoice) {
+                        if($invoice->status === '1' || $invoice->status === '2' && $data['statement_type'] === '3' && $data['customer_balance_status'] === 'overdue') {
+                            $balance += number_format($invoice->amount, 2, '.', ',');
+                        }
+                    }
+
+                    $statementCustomers[] = [
+                        'statement_id' => $statementId,
+                        'customer_id' => $customer,
+                        'email' => $data['email'][$customer],
+                        'balance' => number_format($balance, 2, '.', ',')
+                    ];
+                }
+
+                $statementCustomers = $this->accounting_statements_model->insertCustomers($statementCustomers);
+
+                $return['data'] = $statementId;
+                $return['success'] = $statementId ? true : false;
+                $return['message'] = $statementId ? 'Entry Successful!' : 'An unexpected error occured!';
             }
         }
 

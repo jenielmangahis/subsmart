@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-md-4 text-right">
                             <p class="m-0">TOTAL BALANCE FOR <span id="total-customers"><?php echo count($customers); ?></span> CUSTOMERS</p>
-                            <h2 class="m-0"><span id="total-amount">$<?php echo $total; ?>.00</span></h2>
+                            <h2 class="m-0"><span id="total-amount">$<?php echo $total; ?></span></h2>
                         </div>
                     </div>
 
@@ -85,7 +85,7 @@
                                         <thead>
                                             <th>
                                                 <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                    <input class="m-auto" type="checkbox" name="select_all" value="1" checked>
+                                                    <input class="m-auto" type="checkbox" name="select_all_missing" value="1" checked>
                                                 </div>
                                             </th>
                                             <th>RECIPIENTS</th>
@@ -98,12 +98,12 @@
                                                 <tr>
                                                     <td>
                                                         <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                            <input class="m-auto" type="checkbox" name="select_all" value="<?php echo $cust['id']; ?>" checked>
+                                                            <input class="m-auto select-customer" type="checkbox" name="missing_email_customer[]" value="<?php echo $cust['id']; ?>" checked>
                                                         </div>
                                                     </td>
                                                     <td><?php echo $cust['name']; ?></td>
-                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $cust['email']; ?>"></td>
-                                                    <td class="text-right">$<?php echo $cust['balance']; ?>.00</td>
+                                                    <td><input type="email" name="no_email[<?php echo $cust["id"]; ?>]" class="form-control customer-email" value="<?php echo $cust['email']; ?>"></td>
+                                                    <td class="text-right">$<?php echo $cust['balance']; ?></td>
                                                 </tr>
                                             <?php endforeach;
                                             endif; ?>
@@ -134,12 +134,12 @@
                                                 <tr>
                                                     <td>
                                                         <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                            <input class="m-auto" type="checkbox" name="select_all" value="<?php echo $customer['id']; ?>" checked>
+                                                            <input class="m-auto select-customer" type="checkbox" name="customer[]" value="<?php echo $customer['id']; ?>" checked>
                                                         </div>
                                                     </td>
                                                     <td><?php echo $customer['name']; ?></td>
-                                                    <td><input type="email" name="email[]" class="form-control" value="<?php echo $customer['email']; ?>"></td>
-                                                    <td class="text-right">$<?php echo $customer['balance']; ?>.00</td>
+                                                    <td><input type="email" name="email[<?php echo $customer["id"]; ?>]" class="form-control customer-email" value="<?php echo $customer['email']; ?>"></td>
+                                                    <td class="text-right">$<?php echo $customer['balance']; ?></td>
                                                 </tr>
                                             <?php endforeach;
                                             endif; ?>

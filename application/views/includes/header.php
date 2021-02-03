@@ -39,7 +39,6 @@
         <!--    ICONS CSS-->
         <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css" rel="stylesheet" type="text/css">
 
-        <link href="<?php echo $url->assets ?>css/vault/vault.css" rel="stylesheet" type="text/css">
 
         <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
         <!-- dynamic assets goes  -->
