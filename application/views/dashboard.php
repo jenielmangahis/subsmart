@@ -19,7 +19,7 @@
                 <?php include viewPath('flash'); ?>
                 <style>
                     .dynamic-widget .card{
-                        height: 350px !important
+                        height: 400px !important
                     }
                     .card-header{
                         border-bottom: 1px solid gray !important;
@@ -82,20 +82,6 @@
                             ?>
                             <h5 style="margin: 13px 0 0px 10px;"><?php echo getLoggedName(); ?></h5>
                         </ol>
-                        <!--
-                            <div class="dropdown"><button
-                                    class="btn btn-primary dropdown-toggle arrow-none waves-effect waves-light"
-                                    type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
-                                        class="mdi mdi-settings mr-2"></i> Settings</button>
-                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                        href="index.html#">Action</a> <a class="dropdown-item"
-                                        href="index.html#">Another action</a> <a class="dropdown-item"
-                                        href="index.html#">Something else here</a>
-                                    <div class="dropdown-divider"></div><a class="dropdown-item"
-                                        href="index.html#">Separated link</a>
-                                </div>
-                            </div>
-                        -->
                     </div>
                 </div>
             </div>
@@ -118,7 +104,9 @@
             </div>
             <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget">
                 <?php
-                    $this->load->view('dashboard/bulletin');
+                    foreach($widgets as $wids):
+                        $this->load->view($wids->w_view_link);
+                    endforeach;
                     $this->load->view('widgets/add_widgets');
                 ?>
             </div>

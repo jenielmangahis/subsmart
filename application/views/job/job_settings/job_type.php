@@ -14,15 +14,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="card-body hid-desk" style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
                             <div class="row margin-bottom-ter align-items-center" style="background-color:white; padding:0px;">
                                 <div class="col-auto">
-                                    <h2 class="page-title">Job Type</h2>
-                                    <span>Define the different job types</span>
+                                    <h5 class="page-title">Job Tags</h5>
+                                    <span>Define the different job tags</span>
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <a class="btn btn-primary btn-md" data-toggle="modal" id="newJobTypeBtn" data-target="#newJobTypeModal"
-                                                href="<?php echo url('job/new_job') ?>"><span
-                                                        class="fa fa-plus"></span> New</a>
+                                            <a class="btn btn-primary btn-sm" data-toggle="modal" id="newJobTypeBtn" data-target="#newJobTypeModal" href="<?php echo url('job/new_job') ?>">
+                                                <span class="fa fa-plus"></span> Add New Job
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="float-right d-md-block">
@@ -45,8 +45,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <tr>
                                                 <td class="pl-3"><?php echo $jobtype->value?></td>
                                                 <td class="pl-3">
-                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#newJobTypeModal" data-id="<?php echo $jobtype->job_settings_id; ?>" data-jobtype="<?php echo $jobtype->value; ?>" class="editJobTypeBtn btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                    <a href="<?php echo base_url() .'job/deleteJobType?id=' . $jobtype->job_settings_id ?>" data-id="<?php echo $jobtype->job_settings_id; ?>" data-jobtype="<?php echo $jobtype->value; ?>" class="deleteJobTypeBtn btn btn-danger btn-sm"><span class="fa fa-trash"></span> Delete</a>
+                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#newJobTypeModal" data-id="<?php echo $jobtype->id; ?>" data-jobtype="<?php echo $jobtype->value; ?>" class="editJobTypeBtn btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                    <a href="<?php echo base_url() .'job/deleteJobType?id=' . $jobtype->id ?>" data-id="<?php echo $jobtype->id; ?>" data-jobtype="<?php echo $jobtype->value; ?>" class="deleteJobTypeBtn btn btn-danger btn-sm"><span class="fa fa-trash"></span> Delete</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

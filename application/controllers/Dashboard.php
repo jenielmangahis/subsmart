@@ -30,8 +30,16 @@ class Dashboard extends Widgets {
             'assets/frontend/js/dashboard/main.js',
         ));
     }
+    
+    public function getWidgetList(){
+        $this->load->model('widgets_model');
+        $this->page_data['widgets'] = $this->widgets_model->getWidgetsList();
+        $this->load->view('widgets/add_widgets_details', $this->page_data);
+    }
 
     public function index() {
+        
+        $this->load->model('widgets_model');
         $user_id = logged('id');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
         // echo $this->db->last_query(); 
@@ -61,6 +69,9 @@ class Dashboard extends Widgets {
             $task_status = $this->crud->total_record("tasks", "status_id='" . $status_selec->status_id . "'");
             $status_arr[] = $status_selec->status_text . "@#@" . $task_status;
         }
+        
+        $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
+        $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['status_arr'] = $status_arr;
         $this->load->view('dashboard', $this->page_data);
     }
