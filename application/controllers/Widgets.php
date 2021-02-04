@@ -16,6 +16,28 @@ class Widgets extends MY_Controller {
 
     //put your code here
 
+    public function addWidgets()
+    {
+        $this->load->model('widgets_model');
+        
+        $ids = explode(',', post('ids'));
+        $user_id = logged('id');
+        
+        $idCount = count($this->widgets_model->getWidgetListPerUser($user_id));
+        
+        foreach($ids as $id):
+            $idCount++;
+            $details[] = array(
+                'wu_user_id'    => $user_id,
+                'wu_widget_id'  => $id,
+                'wu_order'      => $idCount
+            );
+        endforeach;
+        
+        if($this->widgets_model->addWidgets($details)):
+            echo 'Widgets Successfully Added';
+        endif;
+    }
 
     public function loadTimesheet() {
         $this->load->model('Users_model', 'user_model');

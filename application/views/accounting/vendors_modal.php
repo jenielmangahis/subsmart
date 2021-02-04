@@ -12,7 +12,8 @@
                </div>
                <button type="button" class="close" id="closeModalExpense"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <form action="" method="post" id="expenseForm">
+            <!-- <form action="" method="post" id="expenseForm"> -->
+            <form action="<?php echo site_url()?>accounting/addExpense" method="post">
                <div class="modal-body" style="margin-bottom: 100px">
                   <div class="row">
                      <div class="col-md-3">

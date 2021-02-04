@@ -6,7 +6,8 @@ class Esign_Main extends MY_Controller {
 	public function __construct()
     {
         parent::__construct();
-        $this->checkLogin();
+		$this->checkLogin();
+		add_css('assets/css/esign/esign.css');
     }
 
 	public function index()

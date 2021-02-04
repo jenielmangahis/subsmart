@@ -348,7 +348,17 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="form-elements-template in-parent" element_type="CustomerSelect">
-                                            <i class="fa fa-dot-circle-o template-icon"></i> Customer Select
+                                            <i class="fa fa-users template-icon"></i> Customer Select
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-elements-template in-parent" element_type="CustomerSelect">
+                                            <i class="fa fa-map-marker template-icon"></i> Job Location
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-elements-template in-parent" element_type="PaymentMethods">
+                                            <i class="fa fa-map-marker template-icon"></i> Payment Methods
                                         </div>
                                     </div>
                                 </div>

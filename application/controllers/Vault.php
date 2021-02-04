@@ -13,6 +13,7 @@ class Vault extends MY_Controller {
 		$this->page_data['page']->menu = 'vault';
 
 		$this->company_folder = getCompanyFolder();
+		add_css('assets/css/vault/vault.css');
 	}
 
 	public function index()

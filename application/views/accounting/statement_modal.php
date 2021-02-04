@@ -31,7 +31,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="statementDate">Statement Date</label>
-                                <input type="date" name="statement_date" id="statementDate" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                <input type="text" class="form-control date" name="statement_date" id="statementDate" value="<?php echo date('m/d/Y') ?>"/>
                             </div>
                         </div>
                     </div>
@@ -50,13 +50,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="startDate">Start Date</label>
-                                <input onchange="showApplyButton()" type="date" name="start_date" id="startDate" class="form-control" value="<?php echo date('Y-m-d', strtotime('-1 months')); ?>">
+                                <input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="endDate">End Date</label>
-                                <input onchange="showApplyButton()" type="date" name="end_date" id="endDate" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                <input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
                             </div>
                         </div>
                         <div class="col-md-12">

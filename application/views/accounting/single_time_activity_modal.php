@@ -22,7 +22,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="date">Date</label>
-                                <input type="date" name="date" id="date" class="form-control w-50" value="<?php echo date('Y-m-d'); ?>" required>
+                                <input type="text" class="form-control w-50 date" name="date" id="date" value="<?php echo date('m/d/Y') ?>"/>
                             </div>
                             <div class="form-group">
                                 <label for="name">Name</label>
@@ -86,7 +86,7 @@
                             </div>
                             <div class="form-group w-50">
                                 <label for="time">Time</label>
-                                <input type="time" name="time" id="time" class="form-control" required>
+                                <input type="text" name="time" id="time" class="form-control" placeholder="hh:mm" required>
                             </div>
                             <div class="form-group">
                                 <label for="description">Description</label>

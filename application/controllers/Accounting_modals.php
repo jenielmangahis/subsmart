@@ -327,7 +327,7 @@ class Accounting_modals extends MY_Controller {
                 'employee_hours' => $postData['reg_pay_hours'][$key],
                 'total_pay' => $empTotalPay,
                 'employee_tax' => $empTax,
-                'net_pay' => $netPay,
+                'net_pay' => number_format($netPay, 2, '.', ','),
                 'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
                 'employee_sui' => $employeeSUI
             ];
@@ -490,9 +490,10 @@ class Accounting_modals extends MY_Controller {
                 'transfer_to_account_key' => $transferTo[0],
                 'transfer_to_account_id' => $transferTo[1],
                 'transfer_amount' => $data['transfer_amount'],
-                'transfer_date' => $data['date'],
+                'transfer_date' => date('Y-m-d', strtotime($data['date'])),
                 'transfer_memo' => $data['memo'],
                 'transfer_attachments' => json_encode($filenames),
+                'created_by' => logged('id'),
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s'),
                 'updated_at' => date('Y-m-d h:i:s')
@@ -538,16 +539,19 @@ class Accounting_modals extends MY_Controller {
             $return['message'] = 'Error';
         } else {
             $filenames = $this->move_files($files, 'pay_down_credit_card');
+            $bankAccount = explode('-', $data['bank_account']);
 
             $insertData = [
                 'company_id' => logged('company_id'),
                 'credit_card_id' => $data['credit_card'],
                 'payee_id' => $data['payee'],
                 'amount' => $data['amount'],
-                'date' => $data['payment_date'],
-                'bank_account_id' => $data['bank_account'],
+                'date' => date('Y-m-d', strtotime($data['payment_date'])),
+                'bank_account_key' => $bankAccount[0],
+                'bank_account_id' => $bankAccount[1],
                 'memo' => $data['memo'],
                 'attachments' => json_encode($filenames),
+                'created_by' => logged('id'),
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s'),
                 'updated_at' => date('Y-m-d h:i:s')
@@ -568,7 +572,6 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('name', 'Name', 'required');
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('service', 'Service', 'required');
-        $this->form_validation->set_rules('time', 'Time', 'required');
         if($data['billable'] === 1 || $data['billable'] === "1") {
             $this->form_validation->set_rules('hourly_rate', 'Hourly Rate', 'required');
         }
@@ -576,6 +579,8 @@ class Accounting_modals extends MY_Controller {
         if($data['start_end_time'] === 1 || $data['start_end_time'] === "1") {
             $this->form_validation->set_rules('start_time', 'Start Time', 'required');
             $this->form_validation->set_rules('end_time', 'End Time', 'required');
+        } else {
+            $this->form_validation->set_rules('time', 'Time', 'required');
         }
 
         $return = [];
@@ -585,16 +590,12 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
-            if(strpos($data['name'], 'employee-') === 0) {
-                $nameKey = 'employee';
-            } else {
-                $nameKey = 'vendor';
-            }
+            $name = explode('-', $data['name']);
             $insertData = [
                 'company_id' => logged('company_id'),
-                'date' => $data['date'],
-                'name_key' => $nameKey,
-                'name_id' => ($nameKey === 'employee') ? str_replace('employee-', '', $data['name']) : str_replace('vendor-', '', $data['name']),
+                'date' => date('Y-m-d', strtotime($data['date'])),
+                'name_key' => $name[0],
+                'name_id' => $name[1],
                 'customer_id' => $data['customer'],
                 'service_id' => $data['service'],
                 'billable' => (isset($data['billable'])) ? 1 : 0,
@@ -604,6 +605,7 @@ class Accounting_modals extends MY_Controller {
                 'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
                 'time' => $data['time'],
                 'description' => $data['description'],
+                'created_by' => logged('id'),
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s'),
                 'updated_at' => date('Y-m-d h:i:s')
@@ -636,35 +638,44 @@ class Accounting_modals extends MY_Controller {
         } else {
             $filenames = $this->move_files($files, 'journal_entry');
 
-            $insertData = [];
-            foreach ($data['accounts'] as $key => $value) {
-                $name = explode('-', $data['names'][$key]);
-                $account = explode('-', $value);
+            $insertData = [
+                'company_id' => logged('company_id'),
+                'journal_no' => $data['journal_no'],
+                'journal_date' => date('Y-m-d', strtotime($data['journal_date'])),
+                'memo' => $data['memo'],
+                'attachments' => json_encode($filenames),
+                'created_by' => logged('id'),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
 
-                $insertData[] = [
-                    'company_id' => logged('company_id'),
-                    'journal_no' => $data['journal_no'],
-                    'journal_date' => $data['journal_date'],
-                    'account_key' => $account[0],
-                    'account_id' => $account[1],
-                    'debits' => $data['debits'][$key],
-                    'credits' => $data['credits'][$key],
-                    'description' => $data['description'][$key],
-                    'name_key' => $name[0],
-                    'name_id' => $name[1],
-                    'memo' => $data['memo'],
-                    'attachments' => json_encode($filenames),
-                    'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
-                ];
+            $entryId = $this->accounting_journal_entries_model->create($insertData);
+
+            if($entryId > 0) {
+                $entryItems = [];
+                foreach ($data['accounts'] as $key => $value) {
+                    $name = explode('-', $data['names'][$key]);
+                    $account = explode('-', $value);
+    
+                    $entryItems[] = [
+                        'journal_entry_id' => $entryId,
+                        'account_key' => $account[0],
+                        'account_id' => $account[1],
+                        'debit' => $data['debits'][$key],
+                        'credit' => $data['credits'][$key],
+                        'description' => $data['description'][$key],
+                        'name_key' => $name[0],
+                        'name_id' => $name[1]
+                    ];
+                }
+
+                $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
             }
 
-            $entryId = $this->accounting_journal_entries_model->insertBatch($insertData);
-
             $return['data'] = $entryId;
-            $return['success'] = $entryId ? true : false;
-            $return['message'] = $entryId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['success'] = $entryId && $entryItemsId ? true : false;
+            $return['message'] = $entryId && $entryItemsId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -695,42 +706,51 @@ class Accounting_modals extends MY_Controller {
             $bankAccount = explode('-', $data['bank_account']);
             $cashBackTarget = explode('-', $data['cash_back_target']);
 
-            $insertData = [];
-            foreach($data['account'] as $key => $value) {
-                $account = explode('-', $value);
-                $receivedFrom = explode('-', $data['received_from'][$key]);
+            $insertData = [
+                'company_id' => logged('company_id'),
+                'account_key' => $bankAccount[0],
+                'account_id' => $bankAccount[1],
+                'date' => date('Y-m-d', strtotime($data['date'])),
+                'tags' => json_encode($data['tags']),
+                'cash_back_account_key' => $cashBackTarget[0],
+                'cash_back_account_id' => $cashBackTarget[1],
+                'cash_back_memo' => $data['cash_back_memo'],
+                'cash_back_amount' => $data['cash_back_amount'],
+                'memo' => $data['memo'],
+                'attachments' => json_encode($filenames),
+                'created_by' => logged('id'),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
 
-                $insertData[] =[
-                    'account_key' => $bankAccount[0],
-                    'account_id' => $bankAccount[1],
-                    'company_id' => logged('company_id'),
-                    'date' => $data['date'],
-                    'tags' => json_encode($data['tags']),
-                    'received_from_key' => $receivedFrom[0],
-                    'received_from_id' => $receivedFrom[1],
-                    'received_from_account_key' => $account[0],
-                    'received_from_account_id' => $account[1],
-                    'description' => $data['description'][$key],
-                    'payment_method' => $data['payment_method'][$key],
-                    'ref_no' => $data['reference_no'][$key],
-                    'amount' => $data['amount'][$key],
-                    'cash_back_account_key' => $cashBackTarget[0],
-                    'cash_back_account_id' => $cashBackTarget[1],
-                    'cash_back_memo' => $data['cash_back_memo'],
-                    'cash_back_amount' => $data['cash_back_amount'],
-                    'memo' => $data['memo'],
-                    'attachments' => json_encode($filenames),
-                    'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
-                ];
+            $depositId = $this->accounting_bank_deposit_model->create($insertData);
+
+            if($depositId > 0) {
+                $fundsData = [];
+                foreach($data['account'] as $key => $value) {
+                    $account = explode('-', $value);
+                    $receivedFrom = explode('-', $data['received_from'][$key]);
+
+                    $fundsData[] =[
+                        'bank_deposit_id' => $depositId,
+                        'received_from_key' => $receivedFrom[0],
+                        'received_from_id' => $receivedFrom[1],
+                        'received_from_account_key' => $account[0],
+                        'received_from_account_id' => $account[1],
+                        'description' => $data['description'][$key],
+                        'payment_method' => $data['payment_method'][$key],
+                        'ref_no' => $data['reference_no'][$key],
+                        'amount' => $data['amount'][$key],
+                    ];
+                }
+
+                $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
             }
 
-            $depositId = $this->accounting_bank_deposit_model->insertBatch($insertData);
-
             $return['data'] = $depositId;
-            $return['success'] = $depositId ? true : false;
-            $return['message'] = $depositId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['success'] = $depositId && $fundsId ? true : false;
+            $return['message'] = $depositId && $fundsId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -758,31 +778,39 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Please enter at least one inventory item.';
         } else {
-            $insertData = [];
             $adjustmentAcc = explode('-', $data['inventory_adj_acc']);
+            $insertData = [
+                'adjustment_no' => $data['reference_no'],
+                'company_id' => logged('company_id'),
+                'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                'inventory_adjustment_account_id' => $adjustmentAcc[1],
+                'inventory_adjustment_account_key' => $adjustmentAcc[0],
+                'memo' => $data['memo'],
+                'created_by' => logged('id'),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
 
-            foreach($data['product'] as $key => $value) {
-                $insertData[] = [
-                    'adjustment_no' => $data['reference_no'],
-                    'company_id' => logged('company_id'),
-                    'adjustment_date' => $data['adjustment_date'],
-                    'inventory_adjustment_account_id' => $adjustmentAcc[1],
-                    'inventory_adjustment_account_key' => $adjustmentAcc[0],
-                    'product_id' => $value,
-                    'new_quantity' => $data['new_qty'][$key],
-                    'change_in_quantity' => $data['change_in_qty'][$key],
-                    'memo' => $data['memo'],
-                    'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
-                ];
+            $adjustmentId = $this->accounting_inventory_qty_adjustments_model->create($insertData);
+
+            if($adjustmentId > 0) {
+                $adjustmentProducts = [];
+                foreach($data['product'] as $key => $value) {
+                    $adjustmentProducts[] = [
+                        'adjustment_id' => $adjustmentId,
+                        'product_id' => $value,
+                        'new_quantity' => $data['new_qty'][$key],
+                        'change_in_quantity' => $data['change_in_qty'][$key],
+                    ];
+                }
+
+                $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
             }
 
-            $adjustmentId = $this->accounting_inventory_qty_adjustments_model->insertBatch($insertData);
-
             $return['data'] = $adjustmentId;
-            $return['success'] = $adjustmentId ? true : false;
-            $return['message'] = $adjustmentId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['success'] = $adjustmentId && $adjustmentProdId ? true : false;
+            $return['message'] = $adjustmentId && $adjustmentProdId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -874,51 +902,58 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
-            $insertData = [];
-
             $payPeriod = explode('-', $data['pay_period']);
-            $payPeriodStart = date('Y-m-d', strtotime($payPeriod[0]));
-            $payPeriodEnd = date('Y-m-d', strtotime($payPeriod[1]));
 
             $company_id = logged('company_id');
             $payrollNo = $this->accounting_payroll_model->getCompanyLastPayrollNo($company_id);
 
-            foreach($data['select'] as $key => $value) {
-                $emp = $this->users_model->getUser($value);
-                $empTotalPay = ($emp->pay_rate * (float)$data['reg_pay_hours'][$key]) + (float)$data['commission'][$key];
-                $empTotalPay = number_format($empTotalPay, 2, '.', ',');
+            $insertData = [
+                'payroll_no' => is_null($payrollNo) ? 1 : $payrollNo+1,
+                'pay_period_start' => date('Y-m-d', strtotime($payPeriod[0])),
+                'pay_period_end' => date('Y-m-d', strtotime($payPeriod[1])),
+                'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
+                'company_id' => $company_id,
+                'created_by' => logged('id'),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
 
-                $empSocial = ($empTotalPay / 100) * 6.2;
-                $empSocial = number_format($empSocial, 2, '.', ',');
-                $empMedicare = ($empTotalPay / 100) * 1.45;
-                $empMedicare = number_format($empMedicare, 2, '.', ',');
-                $empTax = number_format($empSocial + $empMedicare, 2, '.', ',');
+            $payrollId = $this->accounting_payroll_model->create($insertData);
 
-                $insertData[] = [
-                    'payroll_no' => is_null($payrollNo) ? 1 : $payrollNo+1,
-                    'pay_period_start' => $payPeriodStart,
-                    'pay_period_end' => $payPeriodEnd,
-                    'pay_date' => $data['pay_date'],
-                    'company_id' => $company_id,
-                    'employee_id' => $value,
-                    'emp_hours' => $data['reg_pay_hours'][$key],
-                    'emp_commission' => $data['commission'][$key],
-                    'emp_total_pay' => $empTotalPay,
-                    'emp_taxes' => $empTax,
-                    'emp_net_pay' => $empTotalPay - $empTax,
-                    'emp_memo' => ($data['memo'][$key] === '') ? null : $data['memo'][$key],
-                    'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
-                ];
+            $employees = [];
+
+            if($payrollId > 0) {
+                foreach($data['select'] as $key => $value) {
+                    $emp = $this->users_model->getUser($value);
+                    $empTotalPay = ($emp->pay_rate * (float)$data['reg_pay_hours'][$key]) + (float)$data['commission'][$key];
+                    $empTotalPay = number_format($empTotalPay, 2, '.', ',');
+    
+                    $empSocial = ($empTotalPay / 100) * 6.2;
+                    $empSocial = number_format($empSocial, 2, '.', ',');
+                    $empMedicare = ($empTotalPay / 100) * 1.45;
+                    $empMedicare = number_format($empMedicare, 2, '.', ',');
+                    $empTax = number_format($empSocial + $empMedicare, 2, '.', ',');
+    
+                    $employees[] = [
+                        'payroll_id' => $payrollId,
+                        'employee_id' => $value,
+                        'employee_hours' => $data['reg_pay_hours'][$key],
+                        'employee_commission' => $data['commission'][$key],
+                        'employee_total_pay' => $empTotalPay,
+                        'employee_taxes' => $empTax,
+                        'employee_net_pay' => $empTotalPay - $empTax,
+                        'employee_memo' => ($data['memo'][$key] === '') ? null : $data['memo'][$key],
+                    ];
+                }
             }
 
-            if(count($insertData) > 0) {
-                $payrollId = $this->accounting_payroll_model->insertBatch($insertData);
+            if(count($employees) > 0) {
+                $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployees($employees);
 
                 $return['data'] = $payrollId;
-                $return['success'] = $payrollId ? true : false;
-                $return['message'] = $payrollId ? 'Entry Successful!' : 'An unexpected error occured!';
+                $return['success'] = $payrollId && $payrollEmpId ? true : false;
+                $return['message'] = $payrollId && $payrollEmpId ? 'Entry Successful!' : 'An unexpected error occured!';
             } else {
                 $return['data'] = null;
                 $return['success'] = false;
@@ -1010,11 +1045,11 @@ class Accounting_modals extends MY_Controller {
                 }
 
                 $statementCustomers = $this->accounting_statements_model->insertCustomers($statementCustomers);
-
-                $return['data'] = $statementId;
-                $return['success'] = $statementId ? true : false;
-                $return['message'] = $statementId ? 'Entry Successful!' : 'An unexpected error occured!';
             }
+
+            $return['data'] = $statementId;
+            $return['success'] = $statementId && $statementCustomers ? true : false;
+            $return['message'] = $statementId && $statementCustomers ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;

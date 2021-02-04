@@ -10,7 +10,7 @@ var payrollFormData = [];
 const noRecordMessage = '<div class="no-results text-center p-4">No customers found for the applied filters.</div>'
 
 $(function() {
-    $(document).on('keyup', timesheetInputs, function(e) {
+    $(document).on('keyup', timesheetInputs + ', div#singleTimeModal input#time', function(e) {
         var el = $(this);
         var charLimit = el.val().length;
         var regex = el.val().match("^([0-1][0-9]|[2][0-3])(:|)([0-5][0-9])$");
@@ -23,7 +23,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', timesheetInputs, function(e) {
+    $(document).on('change', timesheetInputs + ', div#singleTimeModal input#time', function(e) {
         var elVal = $(this).val().trim();
         var split = elVal.search(':') >= 0 ? elVal.split(':') : (elVal.includes('.') && !elVal.includes(':') ? elVal.split('.') : elVal);
         var split1 = "00";
@@ -50,15 +50,16 @@ $(function() {
             $(this).val(split1+":"+split2);
         }
 
-        
-        computeTotalHours();
+        if($(this).attr('id') !== 'time') {
+            computeTotalHours();
+        }
     });
 
     $(document).on('change', '#payDownCreditModal input#amount', function() {
         var amount = $(this).val();
 
         if(amount !== "") {
-            $('#payDownCreditModal #total-amount-paid').html(`$${amount}.00`);
+            $('#payDownCreditModal #total-amount-paid').html(`$${amount}`);
         } else {
             $('#payDownCreditModal #total-amount-paid').html('$0.00');
         }
@@ -273,6 +274,10 @@ $(function() {
             } else if(view === "weekly_timesheet_modal") {
                 tableWeekDate();
             }
+
+            $(`${modal_element} .date`).datepicker({
+                uiLibrary: 'bootstrap'
+            });
         });
     });
 
@@ -651,7 +656,7 @@ const payrollRowTotal = (el) => {
     var commission = "0.00";
 
     if(el.hasClass('employee-commission')) {
-        commission = parseFloat(string);
+        commission = parseFloat(el.val());
 
         regPayHours = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(4) input`).val();
         if(regPayHours === "") {
@@ -660,7 +665,7 @@ const payrollRowTotal = (el) => {
             regPayHours = parseFloat(regPayHours);
         }
     } else {
-        regPayHours = parseFloat(string);
+        regPayHours = parseFloat(el.val()).toFixed(2);
 
         commission = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(5) input`).val();
         if(commission === "") {
@@ -669,7 +674,7 @@ const payrollRowTotal = (el) => {
             commission = parseFloat(commission);
         }
 
-        $(el).parent().parent().children('td:nth-child(7)').children().html(string);
+        $(el).parent().parent().children('td:nth-child(7)').children().html(regPayHours);
     }
 
     totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate)) + commission).toFixed(2);
@@ -1062,10 +1067,12 @@ const showHiddenFields = (el) => {
             $('select#startTime, select#endTime').parent().removeClass('hide');
             $('select#startTime, select#endTime').prop('required', true);
             $('label[for="time"]').html('Break');
+            $('input#time').removeAttr('required');
         } else {
             $('select#startTime, select#endTime').parent().addClass('hide')
             $('select#startTime, select#endTime').removeAttr('required', 'required');
             $('label[for="time"]').html('Time');
+            $('input#time').prop('required', true);
         }
     }
 

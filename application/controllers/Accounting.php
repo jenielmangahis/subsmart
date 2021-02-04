@@ -625,10 +625,7 @@ class Accounting extends MY_Controller {
             'bill_number' => $this->input->post('bill_number'),
             'permit_number' => $this->input->post('permit_number'),
             'memo' => $this->input->post('memo'),
-            'bal_due' => $this->input->post('bal_due'),
-            'total' => $this->input->post('total'),
-            'file_name' => $this->input->post('filename'),
-            'original_fname' => $this->input->post('original_fname'),
+            'amount' => $this->input->post('amount'),
 
             'attachments' => 'testing 2',
             'status' => 1,
@@ -642,32 +639,93 @@ class Accounting extends MY_Controller {
 
        $query = $this->expenses_model->addBill($new_data);
 
-       $new_data2[] = array(
-           'category' => 'testing 2',
-           'description' => 1,
-           'amount' => $user_id,
-       );
+    //    $new_data2[] = array(
+    //        'category' => 'testing 2',
+    //        'description' => 1,
+    //        'amount' => $user_id,
+    //    );
 
-       foreach($new_data2 as $datas=>$data){
+    //    foreach($new_data2 as $datas=>$data){
 
-            $category = $data['username'];
-            $description = $data['description'];
-            $amount = $data['amount'];
-            $status = '1';
-            $bill_id = $query;
-            $date_created = date("Y-m-d H:i:s");
-            $date_modified = date("Y-m-d H:i:s");
+    //         $category = $data['username'];
+    //         $description = $data['description'];
+    //         $amount = $data['amount'];
+    //         $status = '1';
+    //         $bill_id = $query;
+    //         $date_created = date("Y-m-d H:i:s");
+    //         $date_modified = date("Y-m-d H:i:s");
         
-            $query = $this->expenses_model->addBillcategory($new_data);
+    //         $query = $this->expenses_model->addBillcategory($new_data);
      
-        }
+    //     }
        
 
-       if ($query == true){
-           echo json_encode(1);
-       }else{
-           echo json_encode(0);
-       }
+    //    if ($query == true){
+    //        echo json_encode(1);
+    //    }else{
+    //        echo json_encode(0);
+    //    }
+
+        if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'category' => $this->input->post('category'),
+                'description' => $this->input->post('description'),
+                'amount' => $this->input->post('amount'),
+                'ven_type' => '1',
+                'ven_type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('category');
+            $b = $this->input->post('description');
+            $c = $this->input->post('amount');
+        
+        $i = 0;
+        foreach($a as $row){
+            $data['category'] = $a[$i];
+            $data['description'] = $b[$i];
+            $data['amount'] = $e[$i];
+            $data['ven_type'] = '3';
+            $data['ven_type_id'] = $addQuery;
+            $data['status'] = '1';
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            $addQuery2 = $this->accounting_credit_card_model->createCreditCardDetails($data);
+            $i++;
+        }
+
+        $aa = $this->input->post('prod');
+                $bb = $this->input->post('desc');
+                $cc = $this->input->post('qty');
+                $dd = $this->input->post('rate');
+                $ee = $this->input->post('amount');
+                $ff = $this->input->post('tax');
+            
+            $f = 0;
+            foreach($aa as $row2){
+                $data2['product_services'] = $aa[$i];
+                $data2['description'] = $bb[$i];
+                $data2['qty'] = $cc[$i];
+                $data2['rate'] = $dd[$i];
+                $data2['amount'] = $ee[$i];
+                $data2['tax'] = $ff[$i];
+                $data2['type'] = '3';
+                $data2['type_id'] = $addQuery;
+                $data2['status'] = '1';
+                $data2['created_at'] = date("Y-m-d H:i:s");
+                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->accounting_invoices_model->createInvoiceProd($data2);
+                $f++;
+            }
+
+        redirect('accounting/banking');
+            
+        }
+        else{
+            echo json_encode(0);
+        } 
 
     }
 
@@ -1304,29 +1362,29 @@ class Accounting extends MY_Controller {
         $this->expenses_model->deleteCheckData($id);
     }
 
-    public function addExpense(){
-        $new_data = array(
-            'vendor_id' => $this->input->post('vendor_id'),
-            'payment_account' => $this->input->post('payment_account'),
-            'payment_date' => $this->input->post('payment_date'),
-            'payment_method' => $this->input->post('payment_method'),
-            'ref_number' => $this->input->post('ref_number'),
-            'permit_number' => $this->input->post('permit_number'),
-            'memo' => $this->input->post('memo'),
-            'category' => $this->input->post('category'),
-            'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount'),
-            'total' => $this->input->post('total'),
-            'file_name' => $this->input->post('filename'),
-            'original_fname' => $this->input->post('original_fname')
-        );
-        $query = $this->expenses_model->addExpense($new_data);
-        if ($query == true){
-            echo json_encode(1);
-        }else{
-            echo json_encode(0);
-        }
-    }
+    // public function addExpense(){
+    //     $new_data = array(
+    //         'vendor_id' => $this->input->post('vendor_id'),
+    //         'payment_account' => $this->input->post('payment_account'),
+    //         'payment_date' => $this->input->post('payment_date'),
+    //         'payment_method' => $this->input->post('payment_method'),
+    //         'ref_number' => $this->input->post('ref_number'),
+    //         'permit_number' => $this->input->post('permit_number'),
+    //         'memo' => $this->input->post('memo'),
+    //         'category' => $this->input->post('category'),
+    //         'description' => $this->input->post('description'),
+    //         'amount' => $this->input->post('amount'),
+    //         'total' => $this->input->post('total'),
+    //         'file_name' => $this->input->post('filename'),
+    //         'original_fname' => $this->input->post('original_fname')
+    //     );
+    //     $query = $this->expenses_model->addExpense($new_data);
+    //     if ($query == true){
+    //         echo json_encode(1);
+    //     }else{
+    //         echo json_encode(0);
+    //     }
+    // }
     public function getExpenseData(){
         $id = $this->input->get('id');
         $transaction_id = $this->input->get('transaction_id');
@@ -3059,6 +3117,7 @@ class Accounting extends MY_Controller {
             'message' => $this->input->post('message'),
             'memo' => $this->input->post('memo'),
             // 'attachments' => $this->input->post('file_name'),
+            'amount' => $this->input->post('amount'),
             'attachments' => 'test',
             'status' => 1,
             'created_by' => logged('id'),
@@ -3073,7 +3132,7 @@ class Accounting extends MY_Controller {
                 'category' => $this->input->post('category'),
                 'description' => $this->input->post('description'),
                 'amount' => $this->input->post('amount'),
-                'ven_type' => '1',
+                'ven_type' => '5',
                 'ven_type_id' => $addQuery,
                 'status' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
@@ -3088,7 +3147,7 @@ class Accounting extends MY_Controller {
             $data['category'] = $a[$i];
             $data['description'] = $b[$i];
             $data['amount'] = $e[$i];
-            $data['ven_type'] = '1';
+            $data['ven_type'] = '5';
             $data['ven_type_id'] = $addQuery;
             $data['status'] = '1';
             $data['created_at'] = date("Y-m-d H:i:s");
@@ -3140,6 +3199,7 @@ class Accounting extends MY_Controller {
             'amount' => $this->input->post('amount'),
             'memo' => $this->input->post('memo'),
             // 'attachments' => $this->input->post('file_name'),
+            'amount' => $this->input->post('amount'),
             'attachments' => 'test',
             'status' => 1,
             'created_by' => logged('id'),
@@ -3154,7 +3214,7 @@ class Accounting extends MY_Controller {
                 'category' => $this->input->post('category'),
                 'description' => $this->input->post('description'),
                 'amount' => $this->input->post('amount'),
-                'ven_type' => '1',
+                'ven_type' => '6',
                 'ven_type_id' => $addQuery,
                 'status' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
@@ -3169,7 +3229,7 @@ class Accounting extends MY_Controller {
             $data['category'] = $a[$i];
             $data['description'] = $b[$i];
             $data['amount'] = $e[$i];
-            $data['ven_type'] = '1';
+            $data['ven_type'] = '6';
             $data['ven_type_id'] = $addQuery;
             $data['status'] = '1';
             $data['created_at'] = date("Y-m-d H:i:s");
@@ -3221,6 +3281,7 @@ class Accounting extends MY_Controller {
             'amount' => $this->input->post('amount'),
             'memo' => $this->input->post('memo'),
             // 'attachments' => $this->input->post('file_name'),
+            'amount' => $this->input->post('amount'),
             'attachments' => 'test',
             'status' => 1,
             'created_by' => logged('id'),
@@ -3235,7 +3296,7 @@ class Accounting extends MY_Controller {
                 'category' => $this->input->post('category'),
                 'description' => $this->input->post('description'),
                 'amount' => $this->input->post('amount'),
-                'ven_type' => '1',
+                'ven_type' => '7',
                 'ven_type_id' => $addQuery,
                 'status' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
@@ -3250,7 +3311,7 @@ class Accounting extends MY_Controller {
             $data['category'] = $a[$i];
             $data['description'] = $b[$i];
             $data['amount'] = $e[$i];
-            $data['ven_type'] = '1';
+            $data['ven_type'] = '7';
             $data['ven_type_id'] = $addQuery;
             $data['status'] = '1';
             $data['created_at'] = date("Y-m-d H:i:s");
@@ -3303,6 +3364,7 @@ class Accounting extends MY_Controller {
             'permit_number' => $this->input->post('permit_number'),
             'memo' => $this->input->post('memo'),
             // 'attachments' => $this->input->post('file_name'),
+            'amount' => $this->input->post('amount'),
             'attachments' => 'test',
             'status' => 1,
             'created_by' => logged('id'),
@@ -3313,6 +3375,85 @@ class Accounting extends MY_Controller {
 
         $addQuery = $this->expenses_model->addCheck($new_data);
         
+        if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'category' => $this->input->post('category'),
+                'description' => $this->input->post('description'),
+                'amount' => $this->input->post('amount'),
+                'ven_type' => '2',
+                'ven_type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('category');
+            $b = $this->input->post('description');
+            $c = $this->input->post('amount');
+           
+        $i = 0;
+        foreach($a as $row){
+            $data['category'] = $a[$i];
+            $data['description'] = $b[$i];
+            $data['amount'] = $e[$i];
+            $data['ven_type'] = '2';
+            $data['ven_type_id'] = $addQuery;
+            $data['status'] = '1';
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            $addQuery2 = $this->accounting_credit_card_model->createCreditCardDetails($data);
+            $i++;
+        }
+
+        $aa = $this->input->post('prod');
+                $bb = $this->input->post('desc');
+                $cc = $this->input->post('qty');
+                $dd = $this->input->post('rate');
+                $ee = $this->input->post('amount');
+                $ff = $this->input->post('tax');
+            
+            $f = 0;
+            foreach($aa as $row2){
+                $data2['product_services'] = $aa[$i];
+                $data2['description'] = $bb[$i];
+                $data2['qty'] = $cc[$i];
+                $data2['rate'] = $dd[$i];
+                $data2['amount'] = $ee[$i];
+                $data2['tax'] = $ff[$i];
+                $data2['type'] = '1';
+                $data2['type_id'] = $addQuery;
+                $data2['status'] = '1';
+                $data2['created_at'] = date("Y-m-d H:i:s");
+                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->accounting_invoices_model->createInvoiceProd($data2);
+                $f++;
+            }
+
+        redirect('accounting/banking');
+            
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function addExpense(){
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'payment_account' => $this->input->post('payment_account'),
+            'payment_date' => $this->input->post('payment_date'),
+            'payment_method' => $this->input->post('payment_method'),
+            'ref_number' => $this->input->post('ref_number'),
+            'permit_number' => $this->input->post('permit_number'),
+            'amount' => $this->input->post('amount'),
+            'memo' => $this->input->post('memo'),
+            'attachments' => 'test',
+            'status' => 1,
+            'created_by' => logged('id'),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+        $query = $this->expenses_model->addExpense($new_data);
         if($addQuery > 0){
             //echo json_encode($addQuery);
             $new_data2 = array(
@@ -3372,6 +3513,6 @@ class Accounting extends MY_Controller {
         }
         else{
             echo json_encode(0);
-        }
+        } 
     }
 }
