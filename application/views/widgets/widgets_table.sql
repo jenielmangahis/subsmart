@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 02, 2021 at 05:43 AM
+-- Generation Time: Feb 03, 2021 at 06:32 AM
 -- Server version: 5.6.38
 -- PHP Version: 5.6.32
 
@@ -44,7 +44,8 @@ CREATE TABLE `widgets` (
 INSERT INTO `widgets` (`w_id`, `w_name`, `w_description`, `w_view_link`, `w_icon`, `w_more_options`, `w_has_sublink`) VALUES
 (1, 'Shortcuts', 'List of quick access icon', 'widgets/shortcuts', NULL, '', 0),
 (2, 'Timesheet', 'View Login and Logout logs for Employees', 'dashboard/bulletin', NULL, '', 0),
-(3, 'Upcoming Jobs', 'Check for upcoming jobs available', 'widgets/upcoming_jobs', NULL, '', 0);
+(3, 'Upcoming Jobs', 'Check for upcoming jobs available', 'widgets/upcoming_jobs', NULL, '', 0),
+(4, 'Jobs', 'Current Jobs Listed', 'widgets/jobs', NULL, '', 0);
 
 -- --------------------------------------------------------
 
@@ -104,7 +105,7 @@ ALTER TABLE `widgets_users`
 -- AUTO_INCREMENT for table `widgets`
 --
 ALTER TABLE `widgets`
-  MODIFY `w_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `w_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `widgets_group`

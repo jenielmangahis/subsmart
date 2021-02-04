@@ -113,6 +113,18 @@ class Job extends MY_Controller
         echo json_encode($this->general->get_data_with_param($get_template,FALSE),TRUE);
     }
 
+    public function get_tag_selected(){
+        $id = $_POST['id'];
+        $get_template = array(
+            'where' => array(
+                'id' => $id
+            ),
+            'table' => 'job_tags',
+            'select' => 'name',
+        );
+        echo json_encode($this->general->get_data_with_param($get_template,FALSE),TRUE);
+    }
+
     public function new_job1() {
         $get = $this->input->get();
         $comp_id = logged('company_id');
@@ -231,6 +243,18 @@ class Job extends MY_Controller
             'table' => 'job_tags'
         );
         if($this->general->delete_($remove_tag)){
+            echo '1';
+        }
+    }
+
+    public function delete_job() {
+        $remove_job = array(
+            'where' => array(
+                'id' => $_POST['job_id']
+            ),
+            'table' => 'jobs'
+        );
+        if($this->general->delete_($remove_job)){
             echo '1';
         }
     }

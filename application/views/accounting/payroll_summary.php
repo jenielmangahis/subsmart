@@ -8,21 +8,21 @@
     </div>
     <div class="col-md-2">
         <div class="d-flex align-items-center mb-3">
-            <div class="net-pay-color graph-color"></div>
+            <div class="net-pay-color graph-color" style="border-color: #0b62a4; background: #0b62a4"></div>
             <div class="net-pay ml-2">
                 <h4 class="m-0">$<span id="total-net-pay"><?php echo $total['total_net_pay']?></span></h4>
                 <p class="m-0">NET PAY</p>
             </div>
         </div>
         <div class="d-flex align-items-center mb-3">
-            <div class="employee-color graph-color"></div>
+            <div class="employee-color graph-color" style="border-color: #3980b5; background: #3980b5"></div>
             <div class="employee ml-2">
                 <h4 class="m-0">$<span id="total-employee-tax"><?php echo $total['total_taxes']?></span></h4>
                 <p class="m-0">EMPLOYEE</p>
             </div>
         </div>
         <div class="d-flex align-items-center">
-            <div class="employer-color graph-color"></div>
+            <div class="employer-color graph-color" style="border-color: #679dc6; background: #679dc6"></div>
             <div class="employer ml-2">
                 <h4 class="m-0">$<span id="total-employer-tax"><?php echo $total['total_employer_tax']?></span></h4>
                 <p class="m-0">EMPLOYER</p>

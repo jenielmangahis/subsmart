@@ -35,7 +35,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="payDate">Pay date</label>
-                                <input type="date" name="pay_date" id="payDate" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                <input type="text" class="form-control date" name="pay_date" id="payDate" value="<?php echo date('m/d/Y') ?>"/>
                             </div>
                         </div>
                         <div class="col text-right">

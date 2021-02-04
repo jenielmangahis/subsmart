@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fb/css/custom-themes/styles.css" type="text/css" />
 </head>
 <body>
-    <div class="page-element p-4">
+    <div class="page-element p-1">
         <form action="" method="post" id="formElementsContainer">
             <div id="formContainer" class="row form-container-element"></div>
             <div class="w-100 text-center">

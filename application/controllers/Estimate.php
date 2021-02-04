@@ -150,10 +150,11 @@ class Estimate extends MY_Controller
         }else{
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
         }
-        
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
-        $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/add', $this->page_data);
     }
 

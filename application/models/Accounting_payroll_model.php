@@ -18,9 +18,15 @@ class Accounting_payroll_model extends MY_Model {
 		return $query->row()->payroll_no;
 	}
 
-	function insertBatch($data)
+	function create($data)
 	{
-        $this->db->insert_batch($this->table, $data);
+        $this->db->insert($this->table, $data);
 	    return $this->db->insert_id();
+	}
+
+	function insertPayrollEmployees($data)
+	{
+		$this->db->insert_batch('accounting_payroll_employees', $data);
+		return $this->db->insert_id();
 	}
 }

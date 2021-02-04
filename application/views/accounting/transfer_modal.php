@@ -98,7 +98,7 @@
                         <div class="col-md-6">
                             <div class="form-group w-50">
                                 <label for="date">Date</label>
-                                <input type="date" name="date" id="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                <input type="text" class="form-control date" name="date" id="date" value="<?php echo date('m/d/Y') ?>"/>
                             </div>
                         </div>
                     </div>

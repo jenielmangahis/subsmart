@@ -23,7 +23,7 @@
 
 
 <div class="modal fade" id="addWidgets" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLabel">Add Widgets</h6>
@@ -31,17 +31,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" style="padding-top: 3px;">
+            <div class="modal-body no-padding text-center">
                 <span style="color:red;">Select the widgets you would like to display in your dashboard</span><br />
-                <div class="col-lg-12 mt-3" id="widgetTable">
+                <div class="col-lg-12 mt-3" id="widgetTable" style="max-height: 300px; overflow-y: scroll">
                     <div class="progress" style="height:20px;">
                         <div class="progress-bar progress-bar-striped bg-info  progress-bar-animated" role="progressbar" style="width: 100%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Please wait while System is fetching data</div>
-                            
+
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="float-right btn btn-success btn-small">Add Widget</button>
+                <input type="hidden" id="widgetIDs" />
             </div>
         </div>
     </div>
@@ -58,4 +56,20 @@
             }
         });
     });
+
+
+    function addWidgets(dis)
+    {
+        if ($('#widgetIDs').val() != "")
+        {
+            $.ajax({
+                url: '<?php echo base_url(); ?>widgets/addWidgets',
+                method: 'POST',
+                data: {ids: $('#widgetIDs').val()},
+                success: function (response) {
+                    alert(response)
+                }
+            });
+        }else{ alert('Please select at least one widget');}
+    }
 </script>

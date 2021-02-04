@@ -10,9 +10,15 @@ class Accounting_bank_deposit_model extends MY_Model {
 		parent::__construct();
     }
 
-	function insertBatch($data)
+	function create($data)
 	{
-        $this->db->insert_batch($this->table, $data);
+        $this->db->insert($this->table, $data);
 	    return $this->db->insert_id();
+	}
+
+	function insertFunds($data)
+	{
+		$this->db->insert_batch('accounting_bank_deposit_funds', $data);
+		return $this->db->insert_id();
 	}
 }

@@ -24,6 +24,32 @@
                     .card-header{
                         border-bottom: 1px solid gray !important;
                     }
+
+                    .card-body h6{
+                        font-size: 16px;
+                        font-family: Open sans, Lato, Arial, sans-serif;
+                        font-weight: 400;
+                        line-height: 1.5;
+                    }
+
+                    .card-body .job-status{
+                        width:100%;
+                        background:#a5d8ff;
+                        color: rgb(33, 150, 243);
+                        text-align: center;
+                        font-size: 12px;
+                        line-height: 1.5;
+                        margin-top:10px;
+                    }
+
+                    .card-body .job-caption{
+                        color: #616161;
+                        font-size: 10px;
+                        font-family: Roboto, Lato, Arial, sans-serif;
+                        font-weight: 800;
+                        line-height: 1.3;
+                        text-transform: uppercase;
+                    }
                     .smart__grid{
                         background: #fff;
                         display: grid;
@@ -92,22 +118,22 @@
                 <?php $this->load->view('widgets/quick_start', $quick_start_data); ?>
                 <div class="col-md-8">
                     <div class="row cus-dashboard-div">
-                        <?php 
-                            $this->load->view('widgets/earned_today');
-                            $this->load->view('widgets/total_jobs'); 
-                            $this->load->view('widgets/total_invoice_due'); 
-                            $this->load->view('widgets/total_estimate_pending'); 
-                            $this->load->view('widgets/hr_widgets'); 
+                        <?php
+                        $this->load->view('widgets/earned_today');
+                        $this->load->view('widgets/total_jobs');
+                        $this->load->view('widgets/total_invoice_due');
+                        $this->load->view('widgets/total_estimate_pending');
+                        $this->load->view('widgets/hr_widgets');
                         ?>
                     </div>
                 </div>
             </div>
             <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget">
                 <?php
-                    foreach($widgets as $wids):
-                        $this->load->view($wids->w_view_link);
-                    endforeach;
-                    $this->load->view('widgets/add_widgets');
+                foreach ($widgets as $wids):
+                    $this->load->view($wids->w_view_link);
+                endforeach;
+                $this->load->view('widgets/add_widgets');
                 ?>
             </div>
 
@@ -333,7 +359,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-<?php echo form_open('dashboard/saveTags', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
+                    <?php echo form_open('dashboard/saveTags', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group">
@@ -346,7 +372,7 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
-<?php echo form_close(); ?>
+            <?php echo form_close(); ?>
         </div>
     </div>
 </div>
@@ -685,8 +711,7 @@
     $("#sortable").sortable("disable");
     //$( "#sortable" ).disableSelection();
     }
-    });
-</script>
+    });</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>

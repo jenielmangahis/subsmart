@@ -1,26 +1,10 @@
-<div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-2 short_id" id="item_7">
-    <div class="c65 c61">
-        <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: pointer; width: 100%; position: relative;">
-            <div class="MuiCardHeader-root" style="padding: 8px 16px; height: 48px; box-sizing: border-box;">
-                <div class="MuiCardHeader-avatar">
-                    <svg class="c154" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: -8px; position: relative; top: 1.4px;">
-                    <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path>
-                    </svg>
-                </div>
-                <div class="MuiCardHeader-content">
-                    <span class="">
-                        <h6 class="MuiTypography-root MuiTypography-subtitle1">
-                            <span class="jss55 jss92">Jobs</span>
-                        </h6>
-                    </span>
-                </div>
-                <div class="MuiCardHeader-action">
-                    <span title="View &amp; configure report" class="jss57"></span>
-                </div>
-            </div>
-            <p class="MuiTypography-root jss58 MuiTypography-body1"></p>
-            <div class="MuiCardContent-root jss60" style="height: 309px;">
-                <div>
+<div class="col-lg-3 col-md-6 col-sm-12">
+    <div class="card" style="margin-top:0;">
+        <div class="card-header">
+            <i class="fa fa-wrench" aria-hidden="true"></i> Jobs
+        </div>
+        <div class="card-body" style="padding:5px 10px;">
+            <div>
                     <div class="c65 c83" style="text-align: center;">
                         <div class="c66 c92">
                             <p class="c162 c171 c187">$0</p>
@@ -222,7 +206,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+           
         </div>
+
     </div>
 </div>
+

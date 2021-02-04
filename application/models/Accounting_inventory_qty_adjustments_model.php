@@ -19,9 +19,15 @@ class Accounting_inventory_qty_adjustments_model extends MY_Model {
 		return $query->row()->adjustment_no;
 	}
 
-	function insertBatch($data)
+	function create($data)
 	{
-        $this->db->insert_batch($this->table, $data);
+        $this->db->insert($this->table, $data);
 	    return $this->db->insert_id();
+	}
+
+	function insertAdjProduct($data)
+	{
+		$this->db->insert_batch('accounting_inventory_qty_adjustment_items', $data);
+		return $this->db->insert_id();
 	}
 }

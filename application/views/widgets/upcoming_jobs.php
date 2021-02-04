@@ -1,38 +1,10 @@
-<style>
-    .card-body h6{
-        font-size: 16px;
-        font-family: Open sans, Lato, Arial, sans-serif;
-        font-weight: 400;
-        line-height: 1.5;
-    }
-
-    .card-body .job-status{
-        width:100%;
-        background:#a5d8ff;
-        color: rgb(33, 150, 243);
-        text-align: center;
-        font-size: 12px;
-        line-height: 1.5;
-        margin-top:10px;
-    }
-
-    .card-body .job-caption{
-        color: #616161;
-        font-size: 10px;
-        font-family: Roboto, Lato, Arial, sans-serif;
-        font-weight: 800;
-        line-height: 1.3;
-        text-transform: uppercase;
-    }
-</style>
-
-
 <div class="col-lg-3 col-md-6 col-sm-12">
     <div class="card" style="margin-top:0;">
         <div class="card-header">
             <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming jobs
         </div>
         <div class="card-body" style="padding:5px 10px;">
+            <div style="height: 310px; overflow-y: scroll">
             <?php
             $jobCounter = 0;
             if ($job) {
@@ -43,8 +15,8 @@
                         <div class="col-lg-3 float-left no-padding" style="border-right:1px solid #ccc;">
                             <h6 style="font-weight:700; margin:0;"><?php echo strtoupper(get_format_time($jb->date_created)); ?></h6>
                             <div class="job-status"><?php echo strtoupper($jb->status); ?></div>
-                            <span class="job-caption">Arrival window:</span><br/>
-                            <span class="job-caption">
+                            <span class="job-caption text-center">Arrival window</span><br/>
+                            <span class="job-caption text-center">
                                 <?php echo get_format_time($jb->date_created); ?>-<?php echo get_format_time_plus_hours($jb->date_created); ?>
                             </span>
                         </div>
@@ -61,6 +33,7 @@
                 endforeach;
             }
             ?>
+            </div>
             <div class="text-center">
                 <a class="text-info" href="<?= base_url() ?>job">SEE ALL JOBS</a>
             </div>

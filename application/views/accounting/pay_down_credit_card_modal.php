@@ -9,7 +9,7 @@
                     <h4 class="modal-title">Pay down credit card</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <div class="modal-body pb-0">
+                <div class="modal-body py-0">
                     <div class="row bg-white" style="margin: 0 -30px; padding: 30px">
                         <div class="col-md-12">
                             <h6>Record payments made to your balance</h6>
@@ -34,20 +34,28 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="amount">How much did you pay?</label>
-                                        <input type="number" name="amount" id="amount" class="form-control" required>
+                                        <input type="number" name="amount" id="amount" class="form-control text-right" onchange="convertToDecimal(this)" step="0.01" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="paymentDate">Date of payment</label>
-                                        <input type="date" name="payment_date" id="paymentDate" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                        <input type="text" class="form-control date" name="payment_date" id="paymentDate" value="<?php echo date('m/d/Y') ?>"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="bankAccount">What did you use to make this payment?</label>
                                 <select name="bank_account" id="bankAccount" class="form-control" required>
-                                    <option value="1">Cash on hand</option>
+                                    <optgroup label="Cash On Hand">
+                                        <option value="coh-1">Cash on hand</option>
+                                    </optgroup>
+                                    <optgroup label="Checking">
+                                        <option value="checking-1">Corporate Account (XXXXXX 5850)</option>
+                                    </optgroup>
+                                    <optgroup label="Money Market">
+                                        <option value="mmarket-1">Money Market</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>

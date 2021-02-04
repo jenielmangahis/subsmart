@@ -27,10 +27,15 @@ class FB_model extends MY_Model {
     
 	function create($data, $from_template = false){
 		try {
+			$dt = date('Y-m-d');
 			if($from_template) {
 				$data->id = null;
+				$data->created_at = $dt;
+				$data->updated_at = $dt;
 			} else {
 				$data['id'] = null;
+				$data['created_at'] = $dt;
+				$data['updated_at'] = $dt;
 			}
 			$this->db->insert($this->table, $data);
 			$formID = $this->db->insert_id();
@@ -287,7 +292,7 @@ class FB_model extends MY_Model {
 					'container_ids' => $containerIDs,
 					'new_element' => $newelement,
 					'wait_list'	=> $waitList,
-					'template'	=> $fullTemplate
+					'template'	=> $fullTemplate,
 				],
 				// 'data'	=> $fullTemplate,
 				'code'	=> 200,

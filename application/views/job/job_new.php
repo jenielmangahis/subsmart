@@ -400,7 +400,7 @@
                                 <tbody>
                                     <tr>
                                         <td id="cust_fullname">xxxxx xxxxx</td>
-                                        <td><a href=""><span class="fa fa-user customer_right_icon"></span></a></td>
+                                        <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
                                     </tr>
                                     <tr>
                                         <td id="cust_address">-------------</td>
@@ -412,7 +412,7 @@
                                     </tr>
                                     <tr>
                                         <td id="cust_email">xxxxx@xxxxx.xxx</td>
-                                        <td><a href=""><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
+                                        <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -547,7 +547,8 @@
                                 <option>...</option>
                             </select>
                             <h6>Select Job Tag</h6>
-                            <select id="inputState" class="form-control">
+                            <select id="job_tags" class="form-control">
+                                <option value="">Select Tag</option>
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
                                         <option value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
@@ -662,7 +663,7 @@
                                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
                                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
                                             </button>
-                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
+                                            <!--<a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>-->
                                         </h2>
                                     </div>
                                     <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
@@ -1049,7 +1050,7 @@
                                         </td>
                                         <td>
                                             <small>Job Tags</small>
-                                            <input type="text" class="form-control" value="Residential" readonly="readonly">
+                                            <input type="text" class="form-control" id="job_tags_right" value="" readonly="readonly">
                                         </td>
                                         <td>
                                         </td>
@@ -1685,6 +1686,7 @@ include viewPath('includes/footer');
 <script>
     $(document).ready(function() {
 
+
         // add more item script
         $("#add_another_item").click(function () {
             // var newFields = document.getElementById('custom_form').cloneNode(true);
@@ -1737,6 +1739,21 @@ include viewPath('includes/footer');
                 }
             });
         });
+        $("#job_tags").on( 'change', function () {
+            var tag_id = this.value;
+            $.ajax({
+                type: "POST",
+                url: "/job/get_tag_selected",
+                data: {id : tag_id}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var template_data = JSON.parse(data);
+                    $('#job_tags_right').val(template_data.name);
+                    console.log(data);
+                }
+            });
+        });
+
         //$('#summernote').summernote('code', '');
         $('#summernote').summernote({
             placeholder: 'Type Here ... ',
@@ -1972,6 +1989,7 @@ include viewPath('includes/footer');
                         $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
                         $('#cust_number').text(customer_data.phone_h);
                         $('#cust_email').text(customer_data.email);
+                        $('#mail_to').attr("href","mailto:"+customer_data.email);
                         initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
                     }
                 });

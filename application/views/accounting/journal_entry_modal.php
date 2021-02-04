@@ -14,7 +14,7 @@
                         <div class="col-md-6">
                             <div class="form-group w-50">
                                 <label for="journalDate">Journal Date</label>
-                                <input type="date" name="journal_date" id="journalDate" value="<?php echo date('Y-m-d'); ?>" class="form-control" required>
+                                <input type="text" class="form-control date" name="journal_date" id="journalDate" value="<?php echo date('m/d/Y') ?>"/>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -91,8 +91,8 @@
                                                         </optgroup>
                                                     </select>
                                                 </td>
-                                                <td><input type="number" name="debits[]" class="form-control text-right"></td>
-                                                <td><input type="number" name="credits[]" class="form-control text-right"></td>
+                                                <td><input type="number" name="debits[]" class="form-control text-right" step="0.01"></td>
+                                                <td><input type="number" name="credits[]" class="form-control text-right" step="0.01"></td>
                                                 <td><input type="text" name="descriptions[]" class="form-control"></td>
                                                 <td>
                                                     <select name="names[]" class="form-control">
