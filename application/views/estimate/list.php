@@ -234,6 +234,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
                                                         <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
                                                     <li role="presentation">
+                                                        <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                        <span class="fa fa-print icon"></span>  Print</a></li>
+                                                    <li role="presentation">
                                                         <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li><div class="dropdown-divider"></div></li>

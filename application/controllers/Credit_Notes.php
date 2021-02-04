@@ -467,13 +467,14 @@ class Credit_Notes extends MY_Controller
     {        
 
         $creditNote = $this->CreditNote_model->getById($id);
-        $company_id = logged('company_id');
+        
 
         if( $creditNote ){
             
             $this->load->helper('pdf_helper');
             $this->load->model('AcsProfile_model');
 
+            $company_id = $creditNote->company_id;
             $customer = $this->AcsProfile_model->getByProfId($creditNote->customer_id);
             $client   = $this->Clients_model->getById($company_id);
             $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
@@ -587,6 +588,58 @@ class Credit_Notes extends MY_Controller
             ob_end_clean();
             $obj_pdf->writeHTML($html, true, false, true, false, '');
             $obj_pdf->Output('credit_note.pdf', 'I');
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('credit_notes');
+        }
+    }
+
+    public function close_credit_note()
+    {
+        $post = $this->input->post();
+        $id   = $post['ceid'];
+
+        $creditNote = $this->CreditNote_model->getById($id);
+        if( $creditNote ){
+            $data = [
+                'status' => $this->CreditNote_model->isClosed(),
+                'modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CreditNote_model->update($creditNote->id, $data);
+
+            $this->session->set_flashdata('message', 'Credit Note was successful updated');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('credit_notes');
+    }
+
+    public function print_credit_note($id)
+    {
+        $this->load->model('AcsProfile_model');
+        
+        $creditNote = $this->CreditNote_model->getById($id);
+        $company_id = logged('company_id');
+
+        if( $creditNote ){
+            $customer = $this->AcsProfile_model->getByProfId($creditNote->customer_id);
+            $client   = $this->Clients_model->getById($company_id);
+            $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
+
+            $this->page_data['status'] = $this->CreditNote_model->optionStatus();   
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['creditNote'] = $creditNote;
+            $this->page_data['creditNoteItems'] = $creditNoteItems;
+
+            $this->load->view('credit_notes/print_credit_note', $this->page_data);
 
         }else{
             $this->session->set_flashdata('message', 'Record not found.');

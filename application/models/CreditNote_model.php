@@ -91,9 +91,10 @@ class CreditNote_model extends MY_Model
     public function getById($id)
     {
 
-        $this->db->select('*');
+        $this->db->select('credit_notes.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
-        $this->db->where('id', $id);
+        $this->db->join('users', 'credit_notes.user_id = users.id', 'LEFT');
+        $this->db->where('credit_notes.id', $id);
 
         $query = $this->db->get();
         return $query->row();
@@ -122,6 +123,11 @@ class CreditNote_model extends MY_Model
         $insert_id = $this->db->insert_id();
 
         return  $insert_id;
+    }
+
+    public function isClosed()
+    {
+        return $this->status_closed;
     }
 
     public function deleteCreditNote($id){
