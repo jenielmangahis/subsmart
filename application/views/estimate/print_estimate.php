@@ -314,29 +314,23 @@ span.sc-item {
     background-color: #ec4561 !important;
   }
 </style>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_print'); ?>
 <div class="wrapper" role="wrapper">
-  <?php include viewPath('includes/notifications'); ?>
     <!-- page wrapper start -->
     <?php 
     $total_amount = 0;
     ?>
-    <div wrapper__section>
-      <?php include viewPath('includes/notifications'); ?>
-        <div class="card">
+   <div wrapper__section style="margin: 0px;">
+        <div class="card" style="margin: 0 auto; width:68%;">
+            <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
+              <a class="btn btn-success btn-print" href="javascript:void(0);"><span class="fa fa-print icon"></span> PRINT</a>
+            </div>
             <br class="clear"/>
-            <div class="row">                
+            <div class="row" id="printable-container">        
                 <div class="col-xl-12">
-                  <?php include viewPath('flash'); ?>
                     <div class="card">
-                      <?php if($creditNote){ ?>
+                      <?php if($estimate){ ?>
                       <div class="d-block">
-                        <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
-                          <a class="btn btn-success" href="<?php echo base_url('credit_notes/send_customer/' . $creditNote->id) ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
-                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/edit/' . $creditNote->id) ?>"><span class="fa fa-pencil icon"></span> EDIT</a>
-                          <a class="btn btn-info" target="_new" href="<?php echo base_url('credit_notes/view_pdf/' . $creditNote->id) ?>"><span class="fa fa-file-pdf-o icon"></span> PDF</a>
-                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/') ?>">BACK TO CREDIT NOTE LIST</a>
-                        </div>
                         <div class="col-xl-5 left" style="margin-bottom: 33px;">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
                           <div class="col-xl-5 ml-0 pl-0">
@@ -347,26 +341,18 @@ span.sc-item {
                         </div>
                         <div class="col-xl-5 right" style="float: right">
                           <div style="text-align: right;">
-                            <h5 style="font-size:30px;margin:0px;">CREDIT NOTE</h5>
-                            <small style="font-size: 14px;">#<?= $creditNote->credit_note_number; ?></small>
+                            <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
+                            <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
                           </div>
                           <div class="" style="text-align: right;margin-top: 20px;">
                             <table style="width: 100%;text-align: right;">
                               <tr>
-                                <td style="text-align: right;width: 70%;">Job Name :</td>
-                                <td><?= $creditNote->job_name; ?></td>
+                                <td style="text-align: right;width: 70%;">Estimate Date :</td>
+                                <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
                               </tr>
                               <tr>
-                                <td style="text-align: right;width: 70%;">Date Issued :</td>
-                                <td><?= date("F d, Y",strtotime($creditNote->date_issued)); ?></td>
-                              </tr>
-                              <tr>
-                                <td style="text-align: right;width: 70%;">Status :</td>
-                                <td><span class="badge badge-primary"><?= $status[$creditNote->status]; ?></span></td>
-                              </tr>
-                              <tr>
-                                <td><b>Credits Remaining :</b></td>
-                                <td><b><?= number_format($creditNote->grand_total,2) ?></b></td>
+                                <td style="text-align: right;width: 70%;">Expiry Date :</td>
+                                <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
                               </tr>
                             </table>
                           </div>
@@ -386,50 +372,47 @@ span.sc-item {
                             <tr>
                                 <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
+                                <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
-                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Tax</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php $row = 1; foreach($creditNoteItems as $item){ ?>
+                        <?php $estimateItems = unserialize($estimate->estimate_items); ?>
+                        <?php $total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
                           <tr class="table-items__tr">
                             <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
-                            <td valign="top" style="width:45%;"><?= $item->title; ?></td>
-                            <td valign="top" style="width: 50px; text-align: right;"><?= $item->qty; ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->discount,2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->tax,2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->total,2); ?></td>
+                            <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
+                            <td valign="top" style="width:20%;"><?= ucwords($item['item_type']); ?></td>
+                            <td valign="top" style="width: 50px; text-align: right;"><?= $item['quantity']; ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['discount'],2); ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
                           </tr>
-                        <?php $row++;} ?>
+                        <?php 
+                          $total_amount += $item['price'];
+                          $row++;
+                        ?>
+                        <?php } ?>
                         <tr><td colspan="6"><hr/></td></tr>
                         <tr>
                           <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                          <td style="text-align: right;"><b>$<?= number_format($creditNote->grand_total, 2); ?></b></td>
+                          <td style="text-align: right;"><b>$<?= number_format($total_amount, 2); ?></b></td>
                         </tr>
                       </tbody>
                       </table>
                       </div>
 
                       <hr />
-                      <p><b>Message</b><br /><br /><?= $creditNote->note_customer; ?></p>
-                      <p><b>Terms</b><br /><Br /><?= $creditNote->terms_condition; ?></p>
+                      <p><b>Instructions</b><br /><br /><?= $estimate->instructions; ?></p>
+                      <p><b>Message</b><br /><br /><?= $estimate->customer_message; ?></p>
+                      <p><b>Terms</b><br /><Br /><?= $estimate->terms_conditions; ?></p>
 
                       <?php }else{ ?>
                         <div class="alert alert-primary" role="alert">
                           Invalid record
                         </div>
                       <?php } ?>
-
-                      <div class="row" style="margin-top: 30px;">
-                          <div class="col-md-4 form-group">
-                              <a href="<?php echo base_url('credit_notes') ?>" class="btn btn-primary" aria-expanded="false">
-                                <i class="mdi mdi-settings mr-2"></i> Go Back to Credit Note List
-                              </a>
-                          </div>
-                      </div>
-
                   </div>
                 </div>
           </div>
@@ -437,18 +420,25 @@ span.sc-item {
       </div>
     </div>
         <!-- end container-fluid -->
-        <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
   </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer_print'); ?>
 <script>
 $(function(){
-  $(".btn-approve-estimate").click(function(){
-    $("#modalApproveConfirmation").modal('show');
+  $(".btn-print").click(function(e){
+    printdiv('printable-container');
   });
-  $(".btn-disapprove-estimate").click(function(){
-    $("#modalDisapproveConfirmation").modal('show');
-  });
+
+  function printdiv(printdivname) {
+    var headstr = "<html><head><title>Credit Note</title></head><body>";
+    var footstr = "</body>";
+    var newstr = document.getElementById(printdivname).innerHTML;
+    var oldstr = document.body.innerHTML;
+    document.body.innerHTML = headstr+newstr+footstr;
+    window.print();
+    document.body.innerHTML = oldstr;
+    return false;
+  }
 });
 </script>

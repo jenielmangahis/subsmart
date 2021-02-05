@@ -2451,7 +2451,7 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $addQuery = $this->accounting_sales_receipt_model->createSalesReceipt($new_data);
+        $addQuery = $this->accounting_sales_receipt_model->createSalesReceipts($new_data);
 
         // if($addQuery > 0){
         //     echo json_encode($addQuery);

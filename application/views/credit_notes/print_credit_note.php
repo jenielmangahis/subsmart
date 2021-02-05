@@ -313,30 +313,27 @@ span.sc-item {
 .badge-danger{
     background-color: #ec4561 !important;
   }
+body{
+  background-color: #ffffff !important;
+}
 </style>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_print'); ?>
 <div class="wrapper" role="wrapper">
-  <?php include viewPath('includes/notifications'); ?>
     <!-- page wrapper start -->
     <?php 
     $total_amount = 0;
     ?>
-    <div wrapper__section>
-      <?php include viewPath('includes/notifications'); ?>
-        <div class="card">
+    <div wrapper__section style="margin: 0px;">
+        <div class="card" style="margin: 0 auto; width:68%;">
+            <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
+              <a class="btn btn-success btn-print" href="javascript:void(0);"><span class="fa fa-print icon"></span> PRINT</a>
+            </div>
             <br class="clear"/>
-            <div class="row">                
+            <div class="row" id="printable-container">                
                 <div class="col-xl-12">
-                  <?php include viewPath('flash'); ?>
                     <div class="card">
                       <?php if($creditNote){ ?>
-                      <div class="d-block">
-                        <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
-                          <a class="btn btn-success" href="<?php echo base_url('credit_notes/send_customer/' . $creditNote->id) ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
-                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/edit/' . $creditNote->id) ?>"><span class="fa fa-pencil icon"></span> EDIT</a>
-                          <a class="btn btn-info" target="_new" href="<?php echo base_url('credit_notes/view_pdf/' . $creditNote->id) ?>"><span class="fa fa-file-pdf-o icon"></span> PDF</a>
-                          <a class="btn btn-info" href="<?php echo base_url('credit_notes/') ?>">BACK TO CREDIT NOTE LIST</a>
-                        </div>
+                      <div class="d-block">                        
                         <div class="col-xl-5 left" style="margin-bottom: 33px;">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
                           <div class="col-xl-5 ml-0 pl-0">
@@ -362,7 +359,7 @@ span.sc-item {
                               </tr>
                               <tr>
                                 <td style="text-align: right;width: 70%;">Status :</td>
-                                <td><span class="badge badge-primary"><?= $status[$creditNote->status]; ?></span></td>
+                                <td><span class=""><?= $status[$creditNote->status]; ?></span></td>
                               </tr>
                               <tr>
                                 <td><b>Credits Remaining :</b></td>
@@ -421,15 +418,6 @@ span.sc-item {
                           Invalid record
                         </div>
                       <?php } ?>
-
-                      <div class="row" style="margin-top: 30px;">
-                          <div class="col-md-4 form-group">
-                              <a href="<?php echo base_url('credit_notes') ?>" class="btn btn-primary" aria-expanded="false">
-                                <i class="mdi mdi-settings mr-2"></i> Go Back to Credit Note List
-                              </a>
-                          </div>
-                      </div>
-
                   </div>
                 </div>
           </div>
@@ -437,18 +425,25 @@ span.sc-item {
       </div>
     </div>
         <!-- end container-fluid -->
-        <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
   </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer_print'); ?>
 <script>
 $(function(){
-  $(".btn-approve-estimate").click(function(){
-    $("#modalApproveConfirmation").modal('show');
+  $(".btn-print").click(function(e){
+    printdiv('printable-container');
   });
-  $(".btn-disapprove-estimate").click(function(){
-    $("#modalDisapproveConfirmation").modal('show');
-  });
+
+  function printdiv(printdivname) {
+    var headstr = "<html><head><title>Credit Note</title></head><body>";
+    var footstr = "</body>";
+    var newstr = document.getElementById(printdivname).innerHTML;
+    var oldstr = document.body.innerHTML;
+    document.body.innerHTML = headstr+newstr+footstr;
+    window.print();
+    document.body.innerHTML = oldstr;
+    return false;
+  }
 });
 </script>

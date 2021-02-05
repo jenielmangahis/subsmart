@@ -223,8 +223,9 @@ class Event extends MY_Controller
 
 
     public function get_event_form()
-    {
+    {        
         $this->load->model('ColorSettings_model');
+        $this->load->model('EventType_model');
 
         $get = $this->input->get();
 
@@ -248,12 +249,15 @@ class Event extends MY_Controller
         $role_id = logged('role');
         if( $role_id == 1 || $role_id == 2 ){
             $args = array();
+            $eventTypes = $this->EventType_model->getAll();
         }else{
             $args = array('company_id' => logged('company_id'));
+            $eventTypes = $this->EventType_model->getAllByCompanyId(logged('company_id'));
         }
 
         $colorSettings = $this->ColorSettings_model->getByWhere($args);
 
+        $this->page_data['eventTypes'] = $eventTypes;
         $this->page_data['colorSettings'] = $colorSettings;
         
         die($this->load->view('event/event_form', $this->page_data, true));

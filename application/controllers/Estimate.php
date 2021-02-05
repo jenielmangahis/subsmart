@@ -617,4 +617,30 @@ class Estimate extends MY_Controller
             redirect('credit_notes');
         }
     }
+
+    public function print_estimate($id)
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Clients_model');
+        
+        $estimate = $this->estimate_model->getById($id);
+        $company_id = logged('company_id');
+
+        if( $estimate ){
+            $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            $client   = $this->Clients_model->getById($company_id);
+
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['estimate'] = $estimate;
+
+            $this->load->view('estimate/print_estimate', $this->page_data);
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('estimate');
+        }
+    }
 }

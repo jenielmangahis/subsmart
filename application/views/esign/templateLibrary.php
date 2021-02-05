@@ -17,13 +17,21 @@ ini_set('max_input_vars', 30000);
         color : black;
     }
 </style>
-<div class="wrapper" role="wrapper">
+<div class="wrapper library" role="wrapper">
 		<div>
 		<!-- wrapper__section -->
 			<div class="card">
-				<div class="container-fluid">
+				<div class="container">
                         <!-- Main Selection -->
-            <div class="row mb-5">
+
+                <h1 class="library__title">Library</h1>
+                <div class="alert alert-warning mt-2" role="alert">
+                    <span style="color:black;">
+                        Sign and send documents for signing from your automated workflows on any device. Quickly configure templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms.
+                    </span>
+                </div>
+
+            <div class="row mb-5 library__row">
                 <a href="<?=base_url('esign/createTemplate')?>" class="btn btn-info">Add New Letter</a>            
                 <div style="display: flex;">
                     <select class="librarySelect" name="" id="">

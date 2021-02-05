@@ -153,9 +153,9 @@ input#datepicker_startdate {
                 <label for="what_of_even" class="left">Type of Event</label>
                 <select name="what_of_even" id="what_of_even" class="form-control gray-first">
                     <option value="">Select type of event</option>
-                    <option value="Service">Service</option>
-                    <option value="Service">Reasign</option>
-                    <option value="Service">Install</option>
+                    <?php foreach($eventTypes as $e){ ?>
+                      <option value="<?= $e->event_type_name; ?>"><?= $e->event_type_name; ?></option>
+                    <?php } ?>
                 </select>
             </div>
         </div>

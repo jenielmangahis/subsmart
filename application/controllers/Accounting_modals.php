@@ -830,56 +830,69 @@ class Accounting_modals extends MY_Controller {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
+        } else if(isset($data['customer']) && count($data['customer']) < 1 || !isset($data['customer'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'You must fill out at least two detail lines.';
         } else {
-            $insertData = [];
-
             $personTracking = explode('-', $data['person_tracking']);
 
             $weekDate = explode('-', $data['week_dates']);
             $weekStartDate = strtotime($weekDate[0]);
             $weekEndDate = strtotime($weekDate[1]);
 
-            foreach($data['customer'] as $key => $value) {
-                if($value !== "") {
-                    $billable = isset($data['billable']) ? $data['billable'][$key] : null;
-                    $hourlyRate = isset($data['billable'][$key]) ? $data['hourly_rate'][$key] : null;
-                    $taxable = (isset($data['billable'][$key]) && isset($data['taxable'][$key])) ? $data['taxable'][$key] : null;
+            $insertData = [
+                'company_id' => logged('company_id'),
+                'name_key' => $personTracking[0],
+                'name_id' => $personTracking[1],
+                'week_start_date' => date('Y-m-d', $weekStartDate),
+                'week_end_date' => date('Y-m-d', $weekEndDate),
+                'created_by' => logged('id'),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
 
-                    $weekDailyHours = [
-                        'sunday' => $data['sunday_hours'][$key],
-                        'monday' => $data['monday_hours'][$key],
-                        'tuesday' => $data['tuesday_hours'][$key],
-                        'wednesday' => $data['wednesday_hours'][$key],
-                        'thursday' => $data['thursday_hours'][$key],
-                        'friday' => $data['friday_hours'][$key],
-                        'saturday' => $data['saturday_hours'][$key]
-                    ];
+            $timesheetRecordId = $this->accounting_weekly_timesheet_model->create($insertData);
 
-                    $insertData[] = [
-                        'name_key' => $personTracking[0],
-                        'name_id' => $personTracking[1],
-                        'week_start_date' => date('Y-m-d', $weekStartDate),
-                        'week_end_date' => date('Y-m-d', $weekEndDate),
-                        'customer_id' => $value,
-                        'service_id' => $data['service'][$key],
-                        'description' => $data['description'][$key],
-                        'billable' => $billable,
-                        'hourly_rate' => $hourlyRate,
-                        'taxable' => $taxable,
-                        'week_daily_hours' => json_encode($weekDailyHours),
-                        'status' => 1,
-                        'created_at' => date('Y-m-d h:i:s'),
-                        'updated_at' => date('Y-m-d h:i:s')
-                    ];
+            $employeeTimesheet = [];
+            if($timesheetRecordId > 0) {
+                foreach($data['customer'] as $key => $value) {
+                    if($value !== "") {
+                        $billable = isset($data['billable']) ? $data['billable'][$key] : null;
+                        $hourlyRate = isset($data['billable'][$key]) ? $data['hourly_rate'][$key] : null;
+                        $taxable = (isset($data['billable'][$key]) && isset($data['taxable'][$key])) ? $data['taxable'][$key] : null;
+    
+                        $weekDailyHours = [
+                            'sunday' => $data['sunday_hours'][$key],
+                            'monday' => $data['monday_hours'][$key],
+                            'tuesday' => $data['tuesday_hours'][$key],
+                            'wednesday' => $data['wednesday_hours'][$key],
+                            'thursday' => $data['thursday_hours'][$key],
+                            'friday' => $data['friday_hours'][$key],
+                            'saturday' => $data['saturday_hours'][$key]
+                        ];
+    
+                        $employeeTimesheet[] = [
+                            'weekly_timesheet_id' => $timesheetRecordId,
+                            'customer_id' => $value,
+                            'service_id' => $data['service'][$key],
+                            'description' => $data['description'][$key],
+                            'billable' => $billable,
+                            'hourly_rate' => $hourlyRate,
+                            'taxable' => $taxable,
+                            'week_daily_hours' => json_encode($weekDailyHours)
+                        ];
+                    }
                 }
             }
 
-            if(count($insertData) > 0) {
-                $timesheetRecordId = $this->accounting_weekly_timesheet_model->insertBatch($insertData);
+            if(count($employeeTimesheet) > 0) {
+                $timeSheetItemsId = $this->accounting_weekly_timesheet_model->insertEmployeeTimesheet($employeeTimesheet);
 
                 $return['data'] = $timesheetRecordId;
-                $return['success'] = $timesheetRecordId ? true : false;
-                $return['message'] = $timesheetRecordId ? 'Entry Successful!' : 'An unexpected error occured!';
+                $return['success'] = $timesheetRecordId && $timeSheetItemsId ? true : false;
+                $return['message'] = $timesheetRecordId && $timeSheetItemsId ? 'Entry Successful!' : 'An unexpected error occured!';
             } else {
                 $return['data'] = null;
                 $return['success'] = false;

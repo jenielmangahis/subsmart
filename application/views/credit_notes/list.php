@@ -97,8 +97,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <a role="menuitem" href="<?php echo base_url('credit_notes/send_customer/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li role="presentation">
-                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/view_pdf/' . $c->id) ?>" class="btn-send-customer">
-                                                        <span class="fa fa-envelope-open-o icon"></span>  View PDF</a></li>
+                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/view_pdf/' . $c->id) ?>" class="">
+                                                        <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" target="_new" href="<?php echo base_url('credit_notes/print/' . $c->id) ?>" class="">
+                                                        <span class="fa fa-print icon"></span>  Print</a></li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" class="close-credit-note" href="javascript:void(0);" data-name="<?= $c->credit_note_number; ?>" data-id="<?= $c->id; ?>"><span class="fa fa-files-o icon"></span> Close</a>
+                                                    </li>
                                                     <li role="presentation">
                                                         <a role="menuitem" class="delete-credit-note" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
                                                     </li>
@@ -149,7 +155,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
 
     <!-- Modal Delete Credit Note  -->
-    <div class="modal fade bd-example-modal-md" id="modelDeleteCreditNote" tabindex="-1" role="dialog" aria-labelledby="modelDeleteCreditNoteTitle" aria-hidden="true">
+    <div class="modal fade bd-example-modal-md" id="modalDeleteCreditNote" tabindex="-1" role="dialog" aria-labelledby="modalDeleteCreditNoteTitle" aria-hidden="true">
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -162,6 +168,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
           <div class="modal-body">        
               <p>Are you sure you want to delete selected item?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-danger">Yes</button>
+          </div>
+          <?php echo form_close(); ?>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Close Credit Note  -->
+    <div class="modal fade bd-example-modal-md" id="modalCloseCreditNote" tabindex="-1" role="dialog" aria-labelledby="modalCloseCreditNoteTitle" aria-hidden="true">
+      <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <?php echo form_open_multipart('credit_notes/close', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+          <?php echo form_input(array('name' => 'ceid', 'type' => 'hidden', 'value' => '', 'id' => 'ceid'));?>
+          <div class="modal-body">        
+              <p>Are you sure you want to close the <b>Credit Note# <span class="close-credit-note-number"></span></b>?</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
@@ -209,7 +239,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $(".delete-credit-note").click(function(e){
             var eid = $(this).attr("data-id");
             $("#eid").val(eid);
-            $("#modelDeleteCreditNote").modal('show');
+            $("#modalDeleteCreditNote").modal('show');
+        });
+
+        $(".close-credit-note").click(function(e){
+            var eid = $(this).attr("data-id");
+            var credit_note_number = $(this).attr("data-name");
+            $("#ceid").val(eid);
+            $(".close-credit-note-number").text(credit_note_number);
+            $("#modalCloseCreditNote").modal('show');
         });
     });
 </script>

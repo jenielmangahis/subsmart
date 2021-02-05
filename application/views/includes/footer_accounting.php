@@ -172,14 +172,14 @@ $(document).ready(function () {
 
 	document.getElementById("addNewTerms").onchange = function() {
     if (this.value == '0') {
-        alert('in');
+        // alert('in');
 		$('#exampleModal').modal('toggle');
     	}
 	}
 
 	document.getElementById("addNewTerms1").onchange = function() {
     if (this.value == '0') {
-        alert('in');
+        // alert('in');
 		$('#exampleModal').modal('toggle');
     	}
 	}
