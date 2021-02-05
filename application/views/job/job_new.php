@@ -9,356 +9,9 @@
     ));
 ?>
 <?php include viewPath('includes/header'); ?>
-<style type="text/css">
-    .wrapper *{
-        font-size: 14px;
-    }
-    #map {
-        height: 200px;
-        width: 100%;
-        padding: 0;
-    }
 
-    .left-sidebar-main .card {
-        padding: 0px;
-    }
-    .left-sidebar-main .card .page-title {
-        display: flex;
-        align-items: center;    
-    }
-    .left-sidebar-main .card .page-title svg {
-        margin-right: 0;
-    }
-    .form-group-icon {
-        position: relative;
-    }
-    .form-group-icon i {
-        position: absolute;
-        left: 10px;
-        top: 16px;
-        color: #222222;
-    }
-    .form-group-icon input {
-        padding: 15px 35px;
-    }
-    .btn-primary.text-link {
-        padding: 6px 8px;
-        background: none;
-        color: #45a73c; 
-    }
-    .btn-primary.text-link:hover {
-        background-color: #45a73c;
-        color: #fff;
-    }
-    .table-custom table th,
-    .table-custom table td {
-        border: none;
-    }
-    .table-custom table {
-        border: none;
-    }
-    .table-custom table td a i {
-        color: #45a73c;
-        padding-left: 0px;
-    }
-    .table-custom table td.d-flex {
-        padding-top: 23px;
-    }
-    .table-custom table td a {
-        padding-left: 11px;
-    }
-    .table-hover tbody tr:hover, .table-striped tbody tr:nth-of-type(odd), .thead-default th {
-        background-color: #fff;
-    }
-    .upload input[type=file]:before {
-        width: 100%;
-        height: 60px;
-        font-size: 16px;
-        line-height: 32px;
-        content: 'Upload Existing Estimate';
-        display: inline-block;
-        background: #45a73c;
-        padding: 5px 10px;
-        text-align: center;
-        color: #fff;
-        border-radius: 0px;
-    }
-    .upload.workorder input[type=file]:before {
-        content: 'Upload Workorder';
-    }
-    .upload.invoice input[type=file]:before {
-        content: 'Upload Invoice';
-    }
-    .upload input[type=file] {
-        cursor: pointer;
-        width: 100%;
-        height: 44px;
-        overflow: hidden;
-    }
-    .card-body .edit-icon {
-        position: absolute;
-        right: 20px;
-        top: 25px;
-    }
-    .card-body .edit-icon button{
-        padding: 0px;
-        border: none;
-        background: none;
-    }
-    .label-width label {
-        width: 125px;
-    }
-    #new_customer .modal-lg {
-        max-width: 100%;
-    }
-    .contact-info h3{
-        color: rgba(0, 0, 0, 0.87);
-        font-size: 16px;
-        font-weight: 500;
-        font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-        line-height: 1.5em;
-        display: flex;
-        align-items: center;
-    } 
-    .contact-info svg {
-        margin-right:15px;
-    }
-    .address-proof {
-        width: 100%;
-    }
-    .address-proof iframe {
-        width:100%;
-        max-height: 250px;
-    }
-    .modal-footer-detail {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    hr {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    display: block;
-    border: 0;
-    border-top: 1px solid rgba(0,0,0,.1);
-    width: 100%;
-}
-.card-header .btn:after {
-    content: '-';
-    font-size: 50px;
-    position: absolute;
-    top: -5px;
-    right: 18px;
-}
-
-.card-header .btn.collapsed:after {
-    content: '+';
-    font-size: 34px;
-    position: absolute;
-    top: 7px;
-    /* left: 0px; */
-    right: 20px;
-}
-.card-header .btn, .card-header .btn:hover, .card-header .btn:focus, .card-header .btn.focus {
-    color: #000;
-    text-decoration: none;
-    border-bottom: 1px solid #e5e5e5;
-    box-shadow: none;
-    padding: 0;
-    width: 100%;
-}
-.card-header .btn:hover{
-
-}
-.card-header {
-    border: none;
-    padding: 0px;
-    background: none;
-}
-.accordion .card-body {
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-}
-.accordion .card-body .form-group {
-    margin-bottom: 0px !important;
-}
-.accordion .card-body {
-    padding-bottom: 16px;
-}
-.left-sidebar-main .accordion .card {
-    border: none !important;
-}
-.left-sidebar-main .card .accordion .page-title {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #e9ecef !important;
-    margin: 0px;
-    padding: 10px 0px;
-}
-.label-width .form-control {
-    width: 42%;
-}
-.left-sidebar-main .card.table-custom .modal {
-    padding-right: 0px !important;
-}
-.block-btn-main .btn-full {
-    padding: 12px 8px;
-}
-.block-btn-main .btn-full .btn {
-    width: 100%;
-}
-
-.file-upload-drag {
-    display: block;
-    position: relative;
-    width: 60%;
-}
-.file-upload-drag .drop {
-    width: 100%;
-    height: 100%;
-    border: 4px dashed #45a73c;
-    border-spacing: 25px;
-    overflow: hidden;
-    text-align: center;
-    -webkit-transition: all 0.5s ease-out;
-    -moz-transition: all 0.5s ease-out;
-    transition: all 0.5s ease-out;
-    -ms-transition: all 0.5s ease-out;
-    -o-transition: all 0.5s ease-out;
-    margin: auto;
-    /* position: absolute; */
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    display: table;
-    text-align: center;
-    border-radius: 24px;
-    -webkit-border-radius: 24px;
-    -moz-border-radius: 24px;
-    -ms-border-radius: 24px;
-    -o-border-radius: 24px;
-    color: #000;
-}
-.file-upload-drag .drop .cont {
-    width: 100%;
-    height: 100px;
-    color: #fff;
-    -webkit-transition: all 0.5s ease-out;
-    -moz-transition: all 0.5s ease-out;
-    transition: all 0.5s ease-out;
-    margin: auto;
-    /* position: absolute; */
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-}
-.file-upload-drag .drop .cont p {
-    font-size: 20px;
-    line-height: 20px;
-    margin: 15px 0px;
-    color: #000;
-    font-weight: bold;
-}
-.file-upload-drag .drop input[type=file] {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    background: transparent;
-    opacity: 0;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
-.file-upload-drag .drop .cont p.or-text {
-    color: #e0e0e0;
-    font-size: 16px;
-}
-.color-box-custom {
-    padding: 20px 0px;
-}
-.color-box-custom ul {
-    margin: 0px;
-    padding: 0px;
-    list-style: none;
-}
-.color-box-custom ul li {
-    display: inline-block;
-}
-.color-box-custom ul li span {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #000;
-    display: block;
-}
-.color-box-custom ul li span.bg-1 {
-    background-color: #4baf51;
-}
-.color-box-custom ul li span.bg-2 {
-    background-color: #d86566;
-}
-.color-box-custom ul li span.bg-3 {
-    background-color: #e57399;
-}
-.color-box-custom ul li span.bg-4 {
-    background-color: #b273b3;
-}
-.color-box-custom ul li span.bg-5 {
-    background-color: #8b63d7;
-}
-.color-box-custom ul li span.bg-6 {
-    background-color: #678cda;
-}
-.color-box-custom ul li span.bg-7 {
-    background-color: #59bdb3;
-}
-.color-box-custom ul li span.bg-8 {
-    background-color: #64ae89;
-}
-.color-box-custom ul li span.bg-9 {
-    background-color: #f1a740;
-}
-
-    #customer_info td, #customer_info th{
-        border-top: 0 !important;
-    }
-    #customer_info>tbody>tr>td{
-        padding: 3px 8px !important;
-    }
-    .card-body {
-        padding: 1.25rem 1.25rem 0 1.25rem !important;
-    }
-    .customer_right_icon{
-        float: right;
-        font-size: 22px;
-    }
-    .add_new_customer{
-        color :#32243d;
-    }
-    .btn-circle {
-        width: 40px;
-        height: 40px;
-        text-align: center;
-        padding: 5px 7px 0 7px;
-        font-size: 16px;
-        line-height: 1.428571429;
-        border-radius: 20px;
-    }
-    .calendar_button{
-        color: #ffffff;
-        font-size: 20px;
-        padding-top: 3px;
-    }
-</style>
+<!-- add css for this page -->
+<?php include viewPath('job/css/job_new'); ?>
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
@@ -366,7 +19,9 @@
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
+            <form method="post" id="jobs_form">
             <div class="row custom__border left-sidebar-main">
+
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
@@ -383,13 +38,8 @@
                             </div>
                             <hr>
                             <small>Select Existing Customer</small>
-                            <select id="customers" class="form-control">
+                            <select id="customer_id" name="customer_id" class="form-control" required>
                                 <option value="">None</option>
-                                <?php if(!empty($customers)): ?>
-                                    <?php foreach ($customers as $customer): ?>
-                                        <option value="<?= $customer->prof_id; ?>"><?= $customer->last_name.','.$customer->first_name.' ' .$customer->middle_name; ?></option>
-                                     <?php endforeach; ?>
-                                <?php endif; ?>
                             </select>
                             <table id="customer_info" class="table">
                                 <thead>
@@ -441,8 +91,8 @@
                             <hr>
                             <div class="form-group label-width d-flex align-items-center">
                                <label>From</label>
-                               <input type="date" class="form-control">
-                               <select id="inputState" class="form-control">
+                               <input type="date" name="start_date" class="form-control" required>
+                               <select id="inputState" name="start_time" class="form-control" required>
                                 <option selected="">Start time</option>
                                 <option value="5:00 AM">5:00 AM</option>
                                 <option value="5:30 AM">5:30 AM</option>
@@ -472,8 +122,8 @@
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
                                <label >To</label>
-                               <input type="date" class="form-control mr-2">
-                               <select id="inputState" class="form-control">
+                               <input type="date" name="end_date" class="form-control mr-2" required>
+                               <select id="inputState" name="end_time" class="form-control" required>
                                 <option selected="">End time</option>
                                    <option value="5:00 AM">5:00 AM</option>
                                    <option value="5:30 AM">5:30 AM</option>
@@ -501,7 +151,7 @@
                                    <option value="">4:30 PM</option>
                                </select>
                             </div>
-                            <select id="inputState" class="form-control">
+                            <select id="employee_id" name="employee_id" class="form-control">
                                 <option selected="">Select Employee</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
@@ -516,16 +166,15 @@
                                           <?php foreach ($color_settings as $color): ?>
                                               <li>
                                                   <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1">
-
                                                   </a>
                                               </li>
                                           <?php endforeach; ?>
                                       <?php endif; ?>
                                   </ul>
-                                  <input value="" id="job_color_id" name="job_color_id" type="hidden" />
+                                  <input value="" id="job_color_id" name="event_color" type="hidden" />
                             </div>
                             <h6>Customer Reminder Notification</h6>
-                            <select name="event_notify_at" class="form-control">
+                            <select name="customer_reminder_notification" class="form-control">
                                 <option value="0">None</option>
                                 <option value="PT5M">5 minutes before</option>
                                 <option value="PT15M">15 minutes before</option>
@@ -542,12 +191,12 @@
                                 <option value="PT0M">On date of event</option>
                             </select>
                             <h6>Time Zone</h6>
-                            <select id="inputState" class="form-control">
+                            <select id="inputState" name="timezone" class="form-control">
                                 <option selected="">Central Time (UTC -5)</option>
                                 <option>...</option>
                             </select>
                             <h6>Select Job Tag</h6>
-                            <select id="job_tags" class="form-control">
+                            <select id="job_tags" name="tags" class="form-control">
                                 <option value="">Select Tag</option>
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
@@ -646,7 +295,7 @@
                                     <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <label>Enter Url</label>
-                                            <input type="url" name="check_description[]" class="form-control checkDescription" >
+                                            <input type="url" name="link" class="form-control checkDescription" >
                                         </div>
                                         <br>
                                     </div>
@@ -969,7 +618,6 @@
                     </div> -->
                 </div>
                 <div class="col-md-8">
-
                     <div class="stepwizard">
                         <div class="stepwizard-row setup-panel">
                             <div class="stepwizard-step col-xs-3">
@@ -1005,269 +653,268 @@
                     </div>
                     <hr/>
                     <div class="card table-custom">
-                        <div class="card-body">
-                            <h6 class="page-title">&nbsp; Import Existing Estimate,Workorder or Invoice</h6>
-                            <hr/>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="upload">
-                                        <input id="files" type="file">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="upload workorder">
-                                        <input id="files" type="file" value="Upload Workorder">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="upload invoice">
-                                        <input id="files" type="file">
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary"><span class="fa fa-download"></span> Import</button>
-
-                            <div class="col-sm-12">
-                                <hr>
-                            </div>
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                <tr>
-                                    <td>
-                                        <h6>Job Items Listing</h6>
-                                    </td>
-                                </tr>
-                                </thead>
-                                <tbody id="jobs_items_table_body">
-                                    <tr>
-                                        <td>
-                                            <small>Job Title</small>
-                                            <input type="text" name="check_description[]" class="form-control checkDescription" >
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td>
-                                            <small>Job Tags</small>
-                                            <input type="text" class="form-control" id="job_tags_right" value="" readonly="readonly">
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
-                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
-                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
-                                            <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
-                                        </td>
-                                        <td>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td width="35%">
-                                            <small>Item name</small>
-                                            <input type="text" name="item_name[]" class="form-control checkDescription" >
-                                        </td>
-                                        <td width="10%">
-                                            <small>Qty</small>
-                                            <input type="text" name="item_qty[]" class="form-control checkDescription">
-                                        </td>
-                                        <td width="10%">
-                                            <small>Unit Price</small>
-                                            <input type="text" name="item_price[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
-                                        </td>
-                                        <td width="10%">
-                                            <small>Unit Cost</small>
-                                            <input type="text" name="item_cost[]" class="form-control checkDescription">
-                                        </td>
-                                        <td width="25%">
-                                            <small>Inventory Location</small>
-                                            <input type="text" name="item_loc[]" class="form-control checkDescription">
-                                        </td>
-                                        <td style="text-align: center" class="d-flex" width="15%">
-                                            $00<a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="col-sm-12">
-                                <a class="link-modal-open" href="javascript:void(0)" id="add_another_item">
-                                    <span class="fa fa-plus-square fa-margin-right"></span>Add Items
-                                </a>
-                            </div>
-                            <br>
-                           <div class="col-sm-12">
-                                <p>Description of Job (optional)</p>
-                                <textarea name="description" class="form-control" ></textarea>
+                            <div class="card-body">
+                                <h6 class="page-title">&nbsp; Import Existing Estimate,Workorder or Invoice</h6>
                                 <hr/>
-                           </div>
-                            <div class="col-md-12 table-responsive">
+
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        &nbsp;<div class="file-upload-drag">
-                                            <div class="drop">
-                                                <div class="cont">
-                                                    <div class="tit">
-                                                        <p>Thumbnail</p>
-                                                        <p class="or-text">Or</p>
-                                                        <p>PDF</p>
-                                                        <p class="or-text">Or</p>
-                                                        <p>URL Link</p>
-                                                        <p>To see import source</p>
-                                                        <!-- <p class="or-text">Or</p>
-                                                        <label>Choose File</label> -->
+                                    <div class="col-md-4">
+                                        <div class="upload">
+                                            <input id="files" type="file">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="upload workorder">
+                                            <input id="files" type="file" value="Upload Workorder">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="upload invoice">
+                                            <input id="files" type="file">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary"><span class="fa fa-download"></span> Import</button>
+
+                                <div class="col-sm-12">
+                                    <hr>
+                                </div>
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <td>
+                                            <h6>Job Items Listing</h6>
+                                        </td>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="jobs_items_table_body">
+                                        <tr>
+                                            <td>
+                                                <small>Job Title</small>
+                                                <input type="text" name="check_description[]" class="form-control checkDescription" >
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <small>Job Tags</small>
+                                                <input type="text" class="form-control" id="job_tags_right" value="" readonly="readonly">
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
+                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
+                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
+                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%">
+                                                <small>Item name</small>
+                                                <input type="text" name="item_name[]" class="form-control checkDescription" >
+                                            </td>
+                                            <td width="10%">
+                                                <small>Qty</small>
+                                                <input type="text" name="item_qty[]" class="form-control checkDescription">
+                                            </td>
+                                            <td width="15%">
+                                                <small>Unit Price</small>
+                                                <input type="text" name="item_price[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
+                                            </td>
+                                            <td width="10%">
+                                                <small>Unit Cost</small>
+                                                <input type="text" name="item_cost[]" class="form-control checkDescription">
+                                            </td>
+                                            <td width="25%">
+                                                <small>Inventory Location</small>
+                                                <input type="text" name="item_loc[]" class="form-control checkDescription">
+                                            </td>
+                                            <td style="text-align: center" class="d-flex" width="15%">
+                                                $00<a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-sm-12">
+                                    <a class="link-modal-open" href="javascript:void(0)" id="add_another_item">
+                                        <span class="fa fa-plus-square fa-margin-right"></span>Add Items
+                                    </a>
+                                </div>
+                                <br>
+                               <div class="col-sm-12">
+                                    <p>Description of Job (optional)</p>
+                                    <textarea name="message" class="form-control" ></textarea>
+                                    <hr/>
+                               </div>
+                                <div class="col-md-12 table-responsive">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            &nbsp;<div class="file-upload-drag">
+                                                <div class="drop">
+                                                    <div class="cont">
+                                                        <div class="tit">
+                                                            <p>Thumbnail</p>
+                                                            <p class="or-text">Or</p>
+                                                            <p>PDF</p>
+                                                            <p class="or-text">Or</p>
+                                                            <p>URL Link</p>
+                                                            <p>To see import source</p>
+                                                            <!-- <p class="or-text">Or</p>
+                                                            <label>Choose File</label> -->
+                                                        </div>
                                                     </div>
+                                                    <input id="filetoupload" name="filetoupload" type="file" />
+                                                    <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
                                                 </div>
-                                                <input id="filetoupload" name="filetoupload" type="file" />
-                                                <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 row pr-0">
-                                        <div class="col-sm-6">
-                                            <label style="padding: 0 .75rem;">Subtotal</label>
-                                        </div>
-                                        <div class="col-sm-6 text-right pr-3">
-                                            <label id="invoice_sub_total">$1,695.00</label>
-                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <hr>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <small>Tax Rate</small>
-                                            <select id="inputState" class="form-control">
-                                                <option >None</option>
-                                                <option selected="">FL Tax(7.5%)</option>
-                                            </select>
-                                         </div>
-                                        <div class="col-sm-6 text-right pr-3">
-                                            <label id="invoice_sub_total">$0.00</label>
-                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <hr>
-                                        </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-md-6 row pr-0">
+                                            <div class="col-sm-6">
+                                                <label style="padding: 0 .75rem;">Subtotal</label>
+                                            </div>
+                                            <div class="col-sm-6 text-right pr-3">
+                                                <label id="invoice_sub_total">$1,695.00</label>
+                                                <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <hr>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <small>Tax Rate</small>
+                                                <select id="inputState" class="form-control">
+                                                    <option >None</option>
+                                                    <option selected="">FL Tax(7.5%)</option>
+                                                </select>
+                                             </div>
+                                            <div class="col-sm-6 text-right pr-3">
+                                                <label id="invoice_sub_total">$0.00</label>
+                                                <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <hr>
+                                            </div>
+                                            <div class="col-sm-6">
 
-                                        </div>
-                                        <div class="col-sm-6 text-right pr-3">
-                                            <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                                <span class="fa fa-plus-square fa-margin-right"></span>Discount
-                                            </a>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <hr>
-                                        </div>
-                                        <div class="col-sm-6">
+                                            </div>
+                                            <div class="col-sm-6 text-right pr-3">
+                                                <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
+                                                    <span class="fa fa-plus-square fa-margin-right"></span>Discount
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <hr>
+                                            </div>
+                                            <div class="col-sm-6">
 
-                                        </div>
-                                        <div class="col-sm-6 text-right pr-3">
-                                            <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                                <span class="fa fa-plus-square fa-margin-right"></span>Deposit
-                                            </a>
+                                            </div>
+                                            <div class="col-sm-6 text-right pr-3">
+                                                <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
+                                                    <span class="fa fa-plus-square fa-margin-right"></span>Deposit
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <hr>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label style="padding: 0 .75rem;">Total</label>
+                                            </div>
+                                            <div class="col-sm-6 text-right pr-3">
+                                                <label id="invoice_sub_total">$1,695.00</label>
+                                                <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                            </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <hr>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <label style="padding: 0 .75rem;">Total</label>
+                                        <div class="col-sm-12" id="approval_card_right" style="display: none;">
+                                            <div style="float: right;">
+                                                <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                <img width="100" id="customer_signature_right" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
+                                                <center><span id="appoval_name_right">John Doe</span></center><br>
+                                                <span>------------------------</span><br>
+                                                <center><span>Approved By</span></center><br>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6 text-right pr-3">
-                                            <label id="invoice_sub_total">$1,695.00</label>
-                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                        <br>
+                                        <div class="col-sm-12">
+                                            <div class="card" id="notes_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
+                                                <div class="row">
+                                                    <div class="col-md-12 ">
+                                                        <div class="card-header">
+                                                            <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                            <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <span class="help help-sm help-block">State a note for more information.</span>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <div style="float: right;">
+                                                                <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                                                <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
+                                                                <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <hr>
-                                    </div>
-                                    <div class="col-sm-12" id="approval_card_right" style="display: none;">
-                                        <div style="float: right;">
-                                            <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                            <img width="100" id="customer_signature_right" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
-                                            <center><span id="appoval_name_right">John Doe</span></center><br>
-                                            <span>------------------------</span><br>
-                                            <center><span>Approved By</span></center><br>
+
+                                        <div class="col-sm-12">
+                                            <div class="card" id="url_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
+                                                <div class="row">
+                                                    <div class="col-md-12 ">
+                                                        <div class="card-header">
+                                                            <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                            <h5 style="padding-left: 20px;">Url Link</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <span class="help help-sm help-block">Upload url link or a pdf link </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12">
+                                        <div class="card" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
+                                            <div class="row">
+                                                <div class="col-md-12 ">
+                                                    <div class="card-header">
+                                                        <a href="javascript:void(0);" id="attach_right_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                        <h5 style="padding-left: 20px;">Photos/Attachments</h5>
+
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <span class="help help-sm help-block">download pdf,jpg,png</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <input class="form-control" value="Thank you for your business, Please call Nsmartrac at xxx-xxx-xxxx for quality customer service.">
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <hr>
                                         </div>
                                     </div>
                                     <br>
+                                </div>
+                                <div class="row">
+                                    <!--<input id="customer_id" type="text" name="customer_id">-->
                                     <div class="col-sm-12">
-                                        <div class="card" id="notes_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
-                                            <div class="row">
-                                                <div class="col-md-12 ">
-                                                    <div class="card-header">
-                                                        <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                        <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <span class="help help-sm help-block">State a note for more information.</span>
-                                                    </div>
-                                                    <div class="card-footer">
-                                                        <div style="float: right;">
-                                                            <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
-                                                            <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
-                                                            <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-12">
-                                        <div class="card" id="url_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
-                                            <div class="row">
-                                                <div class="col-md-12 ">
-                                                    <div class="card-header">
-                                                        <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                        <h5 style="padding-left: 20px;">Url Link</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <span class="help help-sm help-block">Upload url link or a pdf link </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-12">
-                                    <div class="card" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
-                                        <div class="row">
-                                            <div class="col-md-12 ">
-                                                <div class="card-header">
-                                                    <a href="javascript:void(0);" id="attach_right_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                    <h5 style="padding-left: 20px;">Photos/Attachments</h5>
-
-                                                </div>
-                                                <div class="card-body">
-                                                    <span class="help help-sm help-block">download pdf,jpg,png</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <input class="form-control" value="Thank you for your business, Please call Nsmartrac at xxx-xxx-xxxx for quality customer service.">
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <hr>
+                                        <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
+                                        <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
                                     </div>
                                 </div>
-                                <br>
-
-
                             </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
-                                    <button type="button" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
-
                     <div class="card table-custom" >
                         <div class="card-body">
                             <div class="card" id="pd_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
@@ -1403,10 +1050,9 @@
 
                         </div>
                     </div>
-
                 </div>
             </div>
-
+            </form>
         </div>
         <!-- end container-fluid -->
     </div>
@@ -1683,328 +1329,9 @@ include viewPath('includes/footer');
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=initMap&libraries=&v=weekly"></script>
-<script>
-    $(document).ready(function() {
 
+<?php include viewPath('job/js/job_new_js'); ?>
 
-        // add more item script
-        $("#add_another_item").click(function () {
-            // var newFields = document.getElementById('custom_form').cloneNode(true);
-            markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input type=\"text\" name=\"item_name[]\" class=\"form-control checkDescription\" ></td>\n" +
-                "<td width=\"10%\"><small>Qty</small><input type=\"text\" name=\"item_qty[]\" class=\"form-control checkDescription\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Price</small><input type=\"text\" name=\"item_price[]\" class=\"form-control checkModelAmount\" value=\"0\" placeholder=\"Unit Price\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control checkDescription\"></td>\n" +
-                "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control checkDescription\"></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\">$00<a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
-               "</tr>";
-            tableBody = $("#jobs_items_table_body");
-            tableBody.append(markup);
-        });
-
-        //$(".color-scheme").on( 'click', function () {});
-
-        $("body").delegate(".remove_item_row", "click", function(){
-            $(this).parent().parent().remove();
-        });
-
-        $("body").delegate(".color-scheme", "click", function(){
-            var id = this.id;
-            $('[id="job_color_id"]').val(id);
-            console.log(id);
-            $( "#"+id ).append( "<i class=\"fa fa-check calendar_button\" aria-hidden=\"true\"></i>" );
-            remove_others(id);
-        });
-
-        function remove_others (color_id){
-            $('.color-scheme').each(function(index) {
-                var idd = this.id;
-                if(idd !== color_id){
-                    $( "#"+idd ).empty();
-                }
-            });
-        }
-
-        $("#library_template").on( 'change', function () {
-            var lib_id = this.value;
-            $.ajax({
-                type: "POST",
-                url: "/job/get_esign_selected",
-                data: {id : lib_id}, // serializes the form's elements.
-                success: function(data)
-                {
-                    var template_data = JSON.parse(data);
-                    $('#summernote').summernote('code', template_data.content);
-                    console.log(data);
-                }
-            });
-        });
-        $("#job_tags").on( 'change', function () {
-            var tag_id = this.value;
-            $.ajax({
-                type: "POST",
-                url: "/job/get_tag_selected",
-                data: {id : tag_id}, // serializes the form's elements.
-                success: function(data)
-                {
-                    var template_data = JSON.parse(data);
-                    $('#job_tags_right').val(template_data.name);
-                    console.log(data);
-                }
-            });
-        });
-
-        //$('#summernote').summernote('code', '');
-        $('#summernote').summernote({
-            placeholder: 'Type Here ... ',
-            tabsize: 2,
-            height: 250,
-        });
-        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
-        $('#click').click(function(e){
-            e.preventDefault();
-            var data = signaturePad.toDataURL('image/png');
-            $('#output').val(data);
-            var url = '/job/save_esign';
-            $.ajax({
-                url: url,
-                type: "POST",
-                data:{base64: data}
-            }).done(function(e){
-                //$('#updateSignature').modal('hide');
-                $('#authorizer').html($('#authorizer_name').val());
-                $('#appoval_name_right').html($('#authorizer_name').val());
-                $('#date_signed').html(e);
-                $("#customer-signature").attr("src",data);
-                $("#customer_signature_right").attr("src",data);
-                //location.reload();
-            });
-        });
-
-        $('#check_form').hide();
-        $('#cash_form').hide();
-        $('#ach_form').hide();
-        $('#others_warranty_form').hide();
-        $('#svp_form').hide();
-        $("#pay_method").on( 'change', function () {
-            var method = this.value;
-            if(method === 'CHECK'){
-                $('#check_form').show();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#ach_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
-            }else if(method === 'CC'|| method === 'OCCP'){
-                $('#check_form').hide();
-                $('#credit_card_form').show();
-                $('#cash_form').hide();
-                $('#ach_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
-            }else if(method === 'CASH'){
-                $('#cash_form').show();
-                $('#check_form').hide();
-                $('#ach_form').hide();
-                $('#credit_card_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
-            }
-            else if(method === 'ACH'){
-                $('#ach_form').show();
-                $('#check_form').hide();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
-            }else if(method === 'OPT' || method === 'WW'){
-                $('#ach_form').hide();
-                $('#check_form').hide();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#others_warranty_form').show();
-                $('#svp_form').hide();
-            }
-            else if(method === 'SQ' || method === 'PP' || method === 'VENMO'){
-                $('#ach_form').hide();
-                $('#check_form').hide();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').show();
-            }
-        });
-
-        $("#save_payment").on( "click", function( event ) {
-            $('#pay_method_right').html($('#pay_method').val());
-            $('#pay_amount_right').html($('#pay_amount').val());
-        });
-        $("#approval_btn_left").on( "click", function( event ) {
-            document.getElementById('approval_card_right').style.display = "block";
-            document.getElementById('approval_card_left').style.display = "none";
-        });
-
-        $("#approval_btn_right").on( "click", function( event ) {
-            document.getElementById('approval_card_left').style.display = "block";
-            document.getElementById('approval_card_right').style.display = "none";
-        });
-
-        $("#pd_left").on( "click", function( event ) {
-            document.getElementById('pd_right_card').style.display = "block";
-            document.getElementById('pd_left_card').style.display = "none";
-        });
-
-        $("#pd_right").on( "click", function( event ) {
-            document.getElementById('pd_left_card').style.display = "block";
-            document.getElementById('pd_right_card').style.display = "none";
-        });
-
-        $("#notes_edit_btn").on( "click", function( event ) {
-            document.getElementById('notes_input_div').style.display = "block";
-            document.getElementById('notes_edit_btn').style.display = "none";
-        });
-
-        $("#edit_note").on( "click", function( event ) {
-            console.log('asdsad');
-            document.getElementById('notes_edit_btn').style.display = "none";
-            document.getElementById('notes_input_div').style.display = "block";
-        });
-
-        $("#notes_left").on( "click", function( event ) {
-            document.getElementById('notes_left_card').style.display = "none";
-            document.getElementById('notes_right_card').style.display = "block";
-        });
-
-        $("#notes_right").on( "click", function( event ) {
-            document.getElementById('notes_right_card').style.display = "none";
-            document.getElementById('notes_left_card').style.display = "block";
-        });
-
-        $("#url_left_btn_column").on( "click", function( event ) {
-            document.getElementById('url_left_card').style.display = "none";
-            document.getElementById('url_right_card').style.display = "block";
-        });
-
-        $("#url_right_btn_column").on( "click", function( event ) {
-            document.getElementById('url_right_card').style.display = "none";
-            document.getElementById('url_left_card').style.display = "block";
-        });
-
-        $("#attach_right_btn_column").on( "click", function( event ) {
-            document.getElementById('attach_right_card').style.display = "none";
-            document.getElementById('attach_left_card').style.display = "block";
-        });
-
-        $("#attach_left_btn_column").on( "click", function( event ) {
-            document.getElementById('attach_left_card').style.display = "none";
-            document.getElementById('attach_right_card').style.display = "block";
-        });
-
-        $("#save_memo").on( "click", function( event ) {
-            var note = $('#note_txt').val();
-            $('#notes_edit_btn').text(note);
-            //$.ajax({
-            //    type: "POST",
-            //    url: "/customer/update_customer_profile",
-            //    data: { notes : note , id : <?//= isset($customer_profile_id) ? $customer_profile_id : 0; ?>// }, // serializes the form's elements.
-            //    success: function(data)
-            //    {
-            //        if(data === "Success"){
-            //            //$('#momo_edit_btn').text("");
-            //            $('#momo_edit_btn').text(note);
-            //            // $('#memo_txt').text(note);
-                        document.getElementById('notes_input_div').style.display = "none";
-                        document.getElementById('notes_edit_btn').style.display = "block";
-            //        }else {
-            //            console.log(data);
-            //        }
-            //    }
-            //});
-        });
-
-        $("#new_customer_form").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "/customer/add_new_customer_from_jobs",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Customer Added Successfully!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
-                    }
-                }
-            });
-        });
-        function sucess_add(information,is_reload){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if(is_reload === 1){
-                    if (result.value) {
-                        window.location.reload();
-                    }
-                }
-            });
-        }
-        function warning(information){
-            Swal.fire({
-                title: 'Warning!',
-                text: information,
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-
-            });
-        }
-        $("#customers").on( 'change', function () {
-            var customer_selected = this.value;
-            //console.log(customer_selected);
-            if(customer_selected !== ""){
-                $.ajax({
-                    type: "POST",
-                    url: "/job/get_customer_selected",
-                    data: {id : customer_selected}, // serializes the form's elements.
-                    success: function(data)
-                    {
-                        var customer_data = JSON.parse(data);
-                        //console.log(customer_data);
-                        $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-                        $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                        $('#cust_number').text(customer_data.phone_h);
-                        $('#cust_email').text(customer_data.email);
-                        $('#mail_to').attr("href","mailto:"+customer_data.email);
-                        initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                    }
-                });
-            }else{
-                $('#cust_fullname').text('xxxxx xxxxx');
-                $('#cust_address').text('-------------');
-                $('#cust_number').text('(xxx) xxx-xxxx');
-                $('#cust_email').text('xxxxx@xxxxx.xxx');
-                initMap();
-            }
-        });
-
-    });
-
-</script>
 <script>
     var geocoder;
     function initMap(address=null) {

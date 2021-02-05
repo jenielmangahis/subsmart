@@ -1,4 +1,4 @@
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header">
             <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming jobs

@@ -1,3 +1,17 @@
+<style>
+#modal-dialog2 {
+  position: absolute;
+  top: 50px;
+  right: 100px;
+  bottom: 0;
+  left: 10%;
+  z-index: 10040;
+  overflow: auto;
+  overflow-y: auto;
+}
+</style>
+
+<!-- Modal for add account-->
 <div class="full-screen-modal">
    <div id="addvendorcreditcardModal" class="modal fade modal-fluid" role="dialog">
       <div class="modal-dialog">
@@ -8,9 +22,9 @@
                   <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                   Vendor Credit
                </div>
-               <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+               <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-                <div class="modal-body">
+            <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">
@@ -218,3 +232,5 @@
     </div>
     <!--end of modal-->
 </div>
+
+<?php include viewPath('accounting/add_new_term'); ?>

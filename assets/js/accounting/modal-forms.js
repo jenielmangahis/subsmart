@@ -608,6 +608,64 @@ $(function() {
 
         checkbox.prop('checked', flag);
     });
+
+    $(document).on('change', 'div#singleTimeModal select#startTime, div#singleTimeModal select#endTime, div#singleTimeModal input#time', function() {
+        var date = $('div#singleTimeModal input#date').val();
+        var time = $('div#singleTimeModal input#time').val();
+        var timeSplit = time !== "" ? time.split(':') : "";
+        var hour = 0;
+        var minutes = 0;
+
+        if($('div#singleTimeModal input#startEndTime').prop('checked') === false && $(this).attr('id') === 'time') {
+            hour = parseInt(timeSplit[0]);
+            minutes = parseInt(timeSplit[1]);
+        } else if($('div#singleTimeModal input#startEndTime').prop('checked') === true) {
+            var startTime = $('div#singleTimeModal select#startTime').val();
+            var endTime = $('div#singleTimeModal select#endTime').val();
+
+            if(startTime !== "" && endTime !== "") {
+                var start = new Date(date + " " + startTime).getTime();
+                var end = new Date(date + " " + endTime).getTime();
+                var duration = end - start;
+                hour = Math.floor((duration / (1000 * 60 * 60)) % 24);
+                minutes = Math.floor((duration / (1000 * 60)) % 60);
+    
+                hour = hour < 0 ? hour + 24 : hour;
+                minutes = minutes < 0 ? minutes + 60 : minutes;
+
+                if(timeSplit !== "") {
+                    hour = hour - parseInt(timeSplit[0]);
+                    minutes = minutes - parseInt(timeSplit[1]);
+
+                    if(minutes < 0) {
+                        for(i = 1; minutes < 0; i++) {
+                            minutes = minutes + 60;
+                            hour = hour - 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        var hourText = hour > 1 ? 'hours' : hour !== 0 ? 'hour' : '';
+        var minuteText = minutes > 1 ? 'minutes' : minutes !== 0 ? 'minute' : '';
+        var summary = hour > 0 ? hour : '';
+        summary += ' ' + hourText + ' ';
+        summary += minutes > 0 ? minutes : '';
+        summary += ' ' + minuteText;
+
+        if(summary.trim() !== "") {
+            if($('div#singleTimeModal div.modal-body div.row:nth-child(2) div.col-md-5 div#summary').length === 0){
+                $('div#singleTimeModal div.modal-body div.row:nth-child(2) div.col-md-5').append(`
+                <div class="form-group" id="summary">
+                    <label for="summary">Summary</label>
+                    <p>${summary.trim()}</p>
+                </div>`);
+            } else {
+                $('div#singleTimeModal div.modal-body div.row:nth-child(2) div.col-md-5 div#summary p').html(summary.trim());
+            }
+        }
+    });
 });
 
 const showApplyButton = () => {
@@ -1064,10 +1122,12 @@ const showHiddenFields = (el) => {
 
     if($(el).attr('id') === 'startEndTime') {
         if($(el).prop('checked') === true) {
-            $('select#startTime, select#endTime').parent().removeClass('hide');
-            $('select#startTime, select#endTime').prop('required', true);
-            $('label[for="time"]').html('Break');
-            $('input#time').removeAttr('required');
+            $('div#singleTimeModal select#startTime, select#endTime').parent().removeClass('hide');
+            $('div#singleTimeModal select#startTime, select#endTime').prop('required', true);
+            $('div#singleTimeModal label[for="time"]').html('Break');
+            $('div#singleTimeModal input#time').removeAttr('required');
+            $('div#singleTimeModal input#time').val('');
+            $('div#singleTimeModal div#summary').remove();
         } else {
             $('select#startTime, select#endTime').parent().addClass('hide')
             $('select#startTime, select#endTime').removeAttr('required', 'required');

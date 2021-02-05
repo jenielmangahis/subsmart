@@ -19,6 +19,32 @@ class Wizardlib extends MY_Controller {
     public function __construct() {
         
     }
+    
+    function isWidgetGlobal($widget_id)
+    {
+        $company_id = getLoggedCompanyID();
+        $ci = &get_instance();
+        $ci->db->where('wu_widget_id', $widget_id);
+        $ci->db->where('wu_company_id', $company_id);
+        if($ci->db->get('widgets_users')->num_rows() > 0):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+    
+    function isWidgetUsed($widget_id)
+    {   
+        $user_id = logged('id');
+        $ci = &get_instance();
+        $ci->db->where('wu_user_id', $user_id);
+        $ci->db->where('wu_widget_id', $widget_id);
+        if($ci->db->get('widgets_users')->num_rows() > 0):
+            return true;
+        else:
+            return false;
+        endif;
+    }
 
     function replace_tags($string, $tags, $force_lower = false) {
         return preg_replace_callback('/\\{\\{([^{}]+)\}\\}/',

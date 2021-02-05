@@ -16,38 +16,56 @@ class Widgets extends MY_Controller {
 
     //put your code here
 
-    public function addWidgets()
+    public function removeWidget()
     {
         $this->load->model('widgets_model');
-        
-        $ids = explode(',', post('ids'));
+        $id = post('id');
         $user_id = logged('id');
+        if($this->widgets_model->removeWidget($id, $user_id)):
+            echo json_encode(array('success' => true));
+        else:
+            echo json_encode(array('success' => false));
+        endif;
         
+    }
+    public function addWidget() {
+        
+        $this->load->library('wizardlib');
+        $this->load->model('widgets_model');
+
+        $id = post('id');
+        $isGlobal = post('isGlobal');
+        $user_id = logged('id');
+
         $idCount = count($this->widgets_model->getWidgetListPerUser($user_id));
-        
-        foreach($ids as $id):
-            $idCount++;
-            $details[] = array(
-                'wu_user_id'    => $user_id,
-                'wu_widget_id'  => $id,
-                'wu_order'      => $idCount
-            );
-        endforeach;
-        
-        if($this->widgets_model->addWidgets($details)):
-            echo 'Widgets Successfully Added';
+
+
+        $details = array(
+            'wu_user_id' => $user_id,
+            'wu_widget_id' => $id,
+            'wu_company_id' => $isGlobal,
+            'wu_order' => $idCount + 1,
+        );
+        if (!$this->wizardlib->isWidgetUsed($id)):
+            if ($this->widgets_model->addWidgets($details, $user_id, $id)):
+                $widget = $this->widgets_model->getWidgetByID($id);
+                $data['id'] = $id;
+                $view = $this->load->view($widget->w_view_link,$data);
+                
+                return $view;
+            endif;
         endif;
     }
 
     public function loadTimesheet() {
         $this->load->model('Users_model', 'user_model');
         $this->load->model('timesheet_model');
-        
+
         $attendance = $this->timesheet_model->getEmployeeAttendance();
         $users = $this->users_model->getUsers();
         $user_roles = $this->users_model->getRoles();
         $logs = $this->timesheet_model->getTimesheetLogs();
-        
+
         $u_role = null;
         $status = 'fa-times-circle';
         $tooltip_status = 'Not logged in';
@@ -71,10 +89,10 @@ class Widgets extends MY_Controller {
         $out_count = 0;
         $in_count = 0;
         $company_id = 0;
-        $counter = 0; 
+        $counter = 0;
         foreach ($users as $cnt => $user):
             $counter += 1;
-        
+
             $user_photo = userProfileImage($user->id);
             $company_id = $user->company_id;
             foreach ($user_roles as $role) {
@@ -155,7 +173,6 @@ class Widgets extends MY_Controller {
             }
             ?>
             <tr>
-                <td class="tbl-id-number"><?php echo $user->id ?></td>
                 <td>
                     <span class="tbl-employee-name"><?php echo $user->FName; ?></span> <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
                     <span class="tbl-emp-role"><?php echo $u_role; ?></span>
@@ -192,7 +209,7 @@ class Widgets extends MY_Controller {
             $yesterday_in = null;
             $yesterday_out = null;
             ?>
-        <?php
+            <?php
         endforeach;
     }
 

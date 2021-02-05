@@ -71,6 +71,7 @@
                             <div class="form-group w-50 hide">
                                 <label for="startTime">Start time</label>
                                 <select name="start_time" id="startTime" class="form-control">
+                                    <option value=""></option>
                                     <?php foreach($dropdown['times'] as $time) :?>
                                         <option value="<?php echo $time['value']; ?>"><?php echo $time['display']; ?></option>
                                     <?php endforeach; ?>
@@ -79,6 +80,7 @@
                             <div class="form-group w-50 hide">
                                 <label for="endTime">End Time</label>
                                 <select name="end_time" id="endTime" class="form-control">
+                                    <option value=""></option>
                                     <?php foreach($dropdown['times'] as $time) :?>
                                         <option value="<?php echo $time['value']; ?>"><?php echo $time['display']; ?></option>
                                     <?php endforeach; ?>

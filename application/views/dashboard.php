@@ -128,10 +128,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget">
+            <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget" id="widgetWrapper">
                 <?php
+                
                 foreach ($widgets as $wids):
-                    $this->load->view($wids->w_view_link);
+                    $data['id'] = $wids->w_id;
+                    $this->load->view($wids->w_view_link, $data);
                 endforeach;
                 $this->load->view('widgets/add_widgets');
                 ?>

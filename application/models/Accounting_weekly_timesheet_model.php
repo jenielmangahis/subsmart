@@ -10,9 +10,15 @@ class Accounting_weekly_timesheet_model extends MY_Model {
 		parent::__construct();
     }
 
-	function insertBatch($data)
+	function create($data)
 	{
-        $this->db->insert_batch($this->table, $data);
+        $this->db->insert($this->table, $data);
 	    return $this->db->insert_id();
+	}
+
+	function insertEmployeeTimesheet($data)
+	{
+		$this->db->insert_batch('accounting_weekly_timesheet_items', $data);
+		return $this->db->insert_id();
 	}
 }

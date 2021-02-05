@@ -269,7 +269,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         background: grey;
     }
 </style>
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-12" id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header">
            <i class="fa fa-bullhorn" aria-hidden="true"></i> Timesheet
@@ -280,7 +280,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
                         <thead>
                             <tr>
-                                <th rowspan="2">ID</th>
                                 <th style="width:20%" rowspan="2">Employee Name</th>
                                 <th rowspan="2">In</th>
                                 <th rowspan="2">Out</th>

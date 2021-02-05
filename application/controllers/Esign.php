@@ -211,7 +211,15 @@ class Esign extends MY_Controller {
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
 		$this->page_data['recipients'] = $queryRecipients->result_array();
+
+		add_css('assets/css/esign/esign-builder/esign-builder.css');
 		$this->load->view('esign/files', $this->page_data);
+	}
+
+	public function apiGetDocumentRecipients($id)
+	{
+		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id', $id)->get();
+		echo json_encode($queryRecipients->result_array());
 	}
 	
 	public function changeFavoriteStatus($id,$isFavorite){
@@ -261,7 +269,9 @@ class Esign extends MY_Controller {
 		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
 		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);		
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);	
+		
+		add_css('assets/css/esign/esign-editor/esign-editor.css');
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
 	public function templateLibrary(){
@@ -271,6 +281,7 @@ class Esign extends MY_Controller {
 		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser); 
 		// echo $this->db->last_query();
 		// exit;
+		add_css('assets/css/esign/library/library.css');
 		$this->load->view('esign/templateLibrary', $this->page_data);
 	}
 	
@@ -595,7 +606,7 @@ class Esign extends MY_Controller {
 			{
 				$this->db->where('id', $_POST['file_id']);
 				$this->db->update($this->User_docflies_model->table, [
-					'docFile' => $name
+					'name' => $name
 				]);
 					
 				$id = $_POST['file_id'];
@@ -603,7 +614,7 @@ class Esign extends MY_Controller {
 				
 				$id = $this->User_docflies_model->create([
 					'user_id' => logged('id'),
-					'docFile' => $name
+					'name' => $name
 				]);
 			}
 

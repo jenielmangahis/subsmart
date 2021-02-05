@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>esign/css/responsive.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
-    <title>DocuSign</title>
+    <title>eSign</title>
     <style>
         .hideElement {
             display: none;
@@ -181,120 +181,15 @@
         }
         select { font-family: 'FontAwesome', Verdana }
     </style>
+    <?php echo put_header_assets(); ?>
 </head>
 
 <body style="background: white !important;">
-    <input type="hidden" id="siteurl" value="<?php echo url(); ?>">
-    <!-- Header -->
-    <header id="topnav">
-        <!-- for js programing -->
-        <div class="topbar-main">
-            <div class="container-fluid">
-                <div class="row">
-                    <!-- Logo container-->
-                    <div class="logo col-auto d-none d-lg-inline-flex"><a href="<?php echo url('dashboard'); ?>" class="logo">
-                            <img width="200" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""> </a>
-                    </div><!-- End Logo container-->
-                    <!-- MENU Start -->
-
-                    <?php include viewPath('includes/nav'); ?>
-                    <div class="menu-extras topbar-custom col-auto justify-content-end">
-                        <ul class="navbar-right list-inline float-right mb-0">
-                            <li class="menu-item list-inline-item">
-                                <a class="navbar-toggle nav-link">
-                                    <div class="lines"><span></span> <span></span> <span></span></div>
-                                </a>
-                            </li>
-                            <li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""> </a></li>
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="/users/timesheet_user" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-clock-o" aria-hidden="true"></i></a> </li>
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-
-                            </li>
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-commenting-o" aria-hidden="true"></i></a>
-
-                            </li>
-
-
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa fa-line-chart" aria-hidden="true"></i></a>
-
-                            </li>
-
-
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></a>
-
-                            </li>
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i> <span class="badge badge-pill badge-danger noti-icon-badge">3</span></a>
-                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-                                    <!-- item-->
-                                    <h6 class="dropdown-item-text">Notifications (258)</h6>
-                                    <div class="slimscroll notification-item-list">
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                                            <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
-                                            <p class="notify-details">Your order is placed<span class="text-muted">Dummytext of the printing and typesetting industry.</span></p>
-                                        </a>
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon bg-warning"><i class="mdi mdi-message-text-outline"></i></div>
-                                            <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
-                                        </a>
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon bg-info"><i class="mdi mdi-glass-cocktail"></i></div>
-                                            <p class="notify-details">Your item is shipped<span class="text-muted">It is a long established fact that a reader will</span></p>
-                                        </a> <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon bg-primary"><i class="mdi mdi-cart-outline"></i></div>
-                                            <p class="notify-details">Your order is placed<span class="text-muted">Dummy
-                                                    text of the printing and typesetting industry.</span></p>
-                                        </a> <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon bg-danger"><i class="mdi mdi-message-text-outline"></i>
-                                            </div>
-                                            <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
-                                        </a>
-                                    </div><!-- All--> <a href="javascript:void(0);" class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
-                                </div>
-                            </li>
-                            <li class="dropdown notification-list list-inline-item">
-                                <div class="dropdown notification-list nav-pro-img">
-                                    <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <?php /*<img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle">*/ ?>
-                                        <?php
-                                        /*$image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
-                                            if( !@getimagesize($image) ){
-                                                $image = base_url('uploads/users/default.png');
-                                            }*/
-                                        $image = base_url('uploads/users/default.png');
-                                        ?>
-                                        <img src="<?php echo $image; ?>" alt="user" class="rounded-circle">
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                                        <a class="dropdown-item" href="<?php echo url('dashboard') ?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>
-                                        <a class="dropdown-item" href="<?php echo url('profile') ?>"><i class="mdi mdi-account-circle m-r-5"></i>Public Profile</a>
-                                        <a class="dropdown-item" href="<?php echo url() ?>"><i class="mdi mdi-account-circle m-r-5"></i>nSmart Home</a>
-                                        <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5"></i>Join our community</a>
-                                        <?php //if (hasPermissions('activity_log_list')): 
-                                        ?>
-                                        <a href="<?php echo url('activity_logs') ?>">
-                                            <i class="mdi mdi-account-circle m-r-5"></i><span>Activity Logs</span>
-                                        </a>
-                                        <?php //endif 
-                                        ?>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item text-danger" href="<?php echo url('/logout') ?>"><i class="mdi mdi-power text-danger"></i> Logout</a>
-                                    </div>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </div><!-- end menu-extras -->
-                    <div class="clearfix"></div>
-                </div><!-- end container -->
-            </div><!-- end container -->
-        </div><!-- end topbar-main -->
-
-    </header><!-- End Navigation Bar-->
-
+    <?php include viewPath('includes/header'); ?>
 
     <?php if (isset($next_step) && $next_step == 0) { ?>
 
-        <?php echo form_open_multipart('esign/fileSave', ['id' => 'upload_file', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart('esign/fileSave', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off']); ?>
         <input type="hidden" value="0" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
         <header style="margin-top: 81px;">
@@ -330,7 +225,12 @@
         <!-- Main Wrapper -->
         <section class="main-wrapper" id="custome-fileup" style="background: white;padding-bottom: 15px;">
             <div class="container">
-                <h1>Add Documents to the Envelope</h1>
+                <h1 class="esignBuilder__title">Add Documents to the Envelope</h1>
+                <div class="alert alert-warning mt-2" role="alert">
+                    <span style="color:black;">
+                        Sign and send documents for signing from your automated workflows on any device. Quickly configure templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms.
+                    </span>
+                </div>
 
                 <div class="custome-fileup">
 
@@ -451,7 +351,7 @@
 
     <?php if (isset($next_step) && $next_step == 2) { ?>
 
-        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off']); ?>
         <input type="hidden" value="3" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
         <header style="margin-top: 81px; z-index : 1">
@@ -489,7 +389,12 @@
             <div class="container">
 
                 <div class="add-recipeit">
-                    <h1>Add Recipients to the Envelope</h1>
+                    <h1 class="esignBuilder__title">Add Recipients to the Envelope</h1>
+                    <div class="alert alert-warning mt-2" role="alert">
+                        <span style="color:black;">
+                            Sign and send documents for signing from your automated workflows on any device. Quickly configure templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms.
+                        </span>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
@@ -1176,8 +1081,69 @@
         return false;
     }
 
+    function createForm({ id, color, shouldHide, ...rest }) {
+        const { name, email } = rest;
+
+        return (`
+        <div id="mainDiv-${id}" class="form-box" style="border-left-width: 5px; border-left-color : ${color}">
+            <a  id="closeBox-${id}" onclick="removeRecipients(${id})" class="clos-bx ${shouldHide && "hideElement"}"><i class="fa fa-times-circle-o"></i></a>
+            <div class="row">
+                <div class="col-md-7 col-sm-7">
+                    <div class="leffm">
+                        <div class="form-group">
+                            <label>Name *</label>
+                            <input type="hidden" name="colors[]" value="${color}"> 
+                            <input type="text" placeholder="" value="${name}" name="recipients[]" class="form-control"> 
+                            <a href="#"><i class="fa fa-address-book"></i></a>
+                        </div>
+                        <div class="form-group"> 
+                            <label>Email *</label> 
+                            <input type="email" placeholder="" value="${email}" name="email[]" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 col-sm-5">
+                    <div class="action-envlo">
+                        <ul>
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-pencil"></i>Needs to Sign</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><i class="fa fa-pencil"></i> Needs to Sign</a></li>
+                                    <li><a href="#"><i class="fa fa-clone"></i> Receives a Copy</a></li>
+                                    <li><a href="#"><i class="fa fa-eye"></i> Needs to View</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">More</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><i class="fa fa-key"></i> Add access authentication</a></li>
+                                    <li><a href="#"><i class="fa fa-comment"></i> Add private message</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `);
+    }
+
     $(document).ready(function() {
-        addReceiption();
+        (async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            const response = await fetch(`/nsmartrac/esign/apiGetDocumentRecipients/${id}`);
+            const recipients  = await response.json();
+
+            if (recipients.length === 0) {
+                addReceiption();
+                return;
+            }
+
+            const forms = recipients.map(createForm);
+            $('#setup-recipient-list').append(forms);
+        })();
+
+        // addReceiption();
         // $('.js-example-basic-single').select2();
     });
 

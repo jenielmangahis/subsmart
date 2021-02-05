@@ -60,7 +60,7 @@ class General_model extends MY_Model {
         $query = $this->db->get();
         if($result){
             return $query->result();
-        }else{
+        } else{
             return $query->row();
         }
     }

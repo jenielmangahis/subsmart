@@ -180,11 +180,6 @@ class Job extends MY_Controller
             ),
             'table' => 'users',
             'select' => 'id,FName,LName',
-//            'join' => array(
-//                'table' => 'users',
-//                'statement' => 'employees.user_id=users.id',
-//                'join_as' => 'left',
-//            ),
         );
         $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
 
@@ -221,6 +216,18 @@ class Job extends MY_Controller
     public function save_esign() {
        // echo json_encode($_POST);
         echo date("d-m-Y h:i A");
+    }
+
+    public function get_customers(){
+        $get_customer = array(
+            'table' => 'acs_profile',
+            'select' => 'prof_id,first_name,last_name,middle_name',
+            'order' => array(
+                'order_by' => 'prof_id',
+                'ordering' => 'DESC',
+            ),
+        );
+        echo json_encode($this->general->get_data_with_param($get_customer),TRUE);
     }
 
     public function job_tags() {
