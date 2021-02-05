@@ -13,6 +13,12 @@ button#dropdown-edit {
     font-size: 13px;
     color: #2ab363;
 }
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+}
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
@@ -33,6 +39,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="h1-spacer">                             
                             <a class="btn btn-primary btn-md" href="<?php echo url('credit_notes/add_new') ?>">
                                 <span class="fa fa-plus"></span> New Credit Note
+                            </a>
+                            <a class="btn btn-primary btn-md" href="<?php echo url('credit_notes/settings') ?>">
+                                <span class="fa fa-gear"></span> Credit Note Settings
                             </a>
                         </div>
                     </div>
@@ -86,27 +95,33 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('credit_notes/view/' . $c->id) ?>"><span
-                                                                    class="fa fa-file-text-o icon"></span> View</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('credit_notes/edit/' . $c->id) ?>"><span
-                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
                                                     <li role="presentation">
                                                         <a role="menuitem" href="<?php echo base_url('credit_notes/send_customer/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('credit_notes/view/' . $c->id) ?>"><span
+                                                                    class="fa fa-file-text-o icon"></span> View</a></li>                                                   
+                                                    </li>
+                                                    <li role="separator" class="divider"></li>
+                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('credit_notes/edit/' . $c->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" class="clone-credit-note" href="javascript:void(0);" data-name="<?= $c->credit_note_number; ?>" data-id="<?= $c->id; ?>">
+                                                        <span class="fa fa-files-o icon"></span>  Clone</a></li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" class="close-credit-note" href="javascript:void(0);" data-name="<?= $c->credit_note_number; ?>" data-id="<?= $c->id; ?>"><span class="fa fa-files-o icon"></span> Close</a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" class="delete-credit-note" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                    <li role="separator" class="divider"></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" href="<?php echo base_url('credit_notes/view_pdf/' . $c->id) ?>" class="">
                                                         <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" target="_new" href="<?php echo base_url('credit_notes/print/' . $c->id) ?>" class="">
                                                         <span class="fa fa-print icon"></span>  Print</a></li>
-                                                    <li role="presentation">
-                                                        <a role="menuitem" class="close-credit-note" href="javascript:void(0);" data-name="<?= $c->credit_note_number; ?>" data-id="<?= $c->id; ?>"><span class="fa fa-files-o icon"></span> Close</a>
-                                                    </li>
-                                                    <li role="presentation">
-                                                        <a role="menuitem" class="delete-credit-note" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                    
                                                     </li>
                                                 </ul>
                                             </div>
@@ -183,7 +198,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-ban"></i> Close Credit Note</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -194,8 +209,32 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <p>Are you sure you want to close the <b>Credit Note# <span class="close-credit-note-number"></span></b>?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-            <button type="submit" class="btn btn-danger">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success">Close</button>
+          </div>
+          <?php echo form_close(); ?>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Close Credit Note  -->
+    <div class="modal fade bd-example-modal-md" id="modalCloneCreditNote" tabindex="-1" role="dialog" aria-labelledby="modalCloneCreditNoteTitle" aria-hidden="true">
+      <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-files-o"></i> Clone Credit Note</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <?php echo form_open_multipart('credit_notes/clone', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+          <?php echo form_input(array('name' => 'cloneid', 'type' => 'hidden', 'value' => '', 'id' => 'cloneid'));?>
+          <div class="modal-body">        
+              <p>You are going create a new credit note based on <b>Credit Note #<span class="clone-credit-note-number"></span></b>. Afterwards you can edit the newly created credit note.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success">Clone</button>
           </div>
           <?php echo form_close(); ?>
         </div>
@@ -248,6 +287,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $("#ceid").val(eid);
             $(".close-credit-note-number").text(credit_note_number);
             $("#modalCloseCreditNote").modal('show');
+        });
+
+        $(".clone-credit-note").click(function(e){
+            var eid = $(this).attr("data-id");
+            var credit_note_number = $(this).attr("data-name");
+            $("#cloneid").val(eid);
+            $(".clone-credit-note-number").text(credit_note_number);
+            $("#modalCloneCreditNote").modal('show');
         });
     });
 </script>

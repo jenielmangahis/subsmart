@@ -647,4 +647,74 @@ class Credit_Notes extends MY_Controller
             redirect('credit_notes');
         }
     }
+
+    public function clone_credit_note()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $post = $this->input->post();
+        $id   = $post['cloneid'];
+        $creditNote = $this->CreditNote_model->getById($id);
+
+        if( $creditNote ){
+            $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
+
+            //Duplicate
+            $data_credit_note = (array) $creditNote;
+            unset($data_credit_note['id']);
+            unset($data_credit_note['uid']);
+            unset($data_credit_note['company_id']);
+
+            $credit_note_id = $this->CreditNote_model->saveCreditNote($data_credit_note);
+            if( $credit_note_id > 0 ){                
+                foreach($creditNoteItems as $key => $values){
+                    $data_credit_note_items = (array) $values;
+                    $data_credit_note_items['credit_note_id'] = $credit_note_id;
+                    unset($data_credit_note_items['id']);                    
+                    unset($data_credit_note_items['title']);
+                    unset($data_credit_note_items['description']);
+
+                    $this->CreditNoteItem_model->create($data_credit_note_items);
+                }
+
+                $this->session->set_flashdata('message', 'Credit Note was successful clone');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+
+                redirect('credit_notes/edit/' . $credit_note_id);
+            }else{
+                redirect('credit_notes');    
+            }
+
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('credit_notes');
+        }
+    }
+
+    public function credit_note_settings()
+    {
+        $this->load->model('CreditNoteSettings_model');        
+
+        $company_id = logged('company_id');
+        $user_id    = getLoggedUserID();
+        $settings   = $this->CreditNoteSettings_model->getByCompanyId($company_id);
+
+        if( empty($settings) ){
+            $data_settings = [
+                'user_id' => $user_id,
+                'credit_note_number_prefix' => 'CN',
+                'credit_note_number_next_number' => 1,
+                'default_message' => '',
+                'default_terms_conditions' => '',
+                'modified' => date("Y-m-d H:i:s")
+            ];
+
+            $settings_id = $this->CreditNoteSettings_model->create($data_settings);
+            $settings    = $this->CreditNoteSettings_model->getById($settings_id);
+        }
+        
+        $this->page_data['settings'] = $settings;
+        $this->load->view('credit_notes/settings', $this->page_data);
+    }
 }
