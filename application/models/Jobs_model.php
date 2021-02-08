@@ -15,6 +15,23 @@ class Jobs_model extends MY_Model
     public $table_address = 'address';
 
 
+
+    /**
+     * @return mixed
+     */
+    public function get_all_jobs()
+    {
+        $cid=logged('company_id');
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
+        $this->db->join('users', 'users.id = jobs.id','left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
+        $this->db->where("jobs.company_id", $cid);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     /**
      * @return mixed
      */

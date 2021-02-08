@@ -349,9 +349,8 @@
 <?php echo form_close(); ?>
 <?php } */ ?>
 
-    <?php if (isset($next_step) && $next_step == 2) { ?>
-
-        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off']); ?>
+    <?php if (isset($next_step) && $next_step == 2): ?>
+        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off', 'data-form-step' => '2']); ?>
         <input type="hidden" value="3" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
         <header style="margin-top: 81px; z-index : 1">
@@ -425,7 +424,9 @@
 
                                     </div>
 
-                                    <a class="btn-main" onClick="addReceiption()"><i class="fa fa-user-plus"></i> Add Recipient</a>
+                                    <a class="btn-main esignBuilder__addForm" id="add-recipient-button">
+                                        <i class="fa fa-user-plus"></i>Add Recipient
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -436,15 +437,15 @@
         <!-- Footer --->
         <footer>
             <div class="container-fluid">
-                <ul>
+                <ul class="d-flex align-items-center justify-content-end">
                     <li><a onClick='onbackclick("<?php echo url('esign/Files?id=' . $file_id . '&next_step=0') ?>")'>Back</a></li>
-                    <li><a class="next-btn" onClick="uploadOrNext(true)">next</a></li>
+                    <li><button class="esignBuilder__submit" type="submit">next</button></li>
                 </ul>
             </div>
         </footer>
         <!-- End Footer --->
         <?php echo form_close(); ?>
-    <?php } ?>
+    <?php endif; ?>
 
 
     <?php if (isset($next_step) && $next_step == 3) { ?>
@@ -896,30 +897,30 @@
 <script>
     var current_target = 0;
 
-    $('.next-btn').click(function() {
-        current_target = current_target + 1;
-        if (current_target == 0) {
-            $('#custome-fileup').show();
-            $("#add-recipeit").hide();
-            $("#tagspreview").hide();
-            $('#all-recipients-wrp').hide();
-        } else if (current_target == 1) {
-            $('#custome-fileup').hide();
-            $("#add-recipeit").show();
-            $("#tagspreview").hide();
-            $('#all-recipients-wrp').hide();
-        } else if (current_target == 2) {
-            $('#custome-fileup').hide();
-            $("#add-recipeit").hide();
-            $("#tagspreview").show();
-            $('#all-recipients-wrp').hide();
-        } else if (current_target == 3) {
-            $('#custome-fileup').hide();
-            $("#add-recipeit").hide();
-            $("#tagspreview").hide();
-            $('#all-recipients-wrp').show();
-        }
-    });
+    // $('.next-btn').click(function() {
+    //     current_target = current_target + 1;
+    //     if (current_target == 0) {
+    //         $('#custome-fileup').show();
+    //         $("#add-recipeit").hide();
+    //         $("#tagspreview").hide();
+    //         $('#all-recipients-wrp').hide();
+    //     } else if (current_target == 1) {
+    //         $('#custome-fileup').hide();
+    //         $("#add-recipeit").show();
+    //         $("#tagspreview").hide();
+    //         $('#all-recipients-wrp').hide();
+    //     } else if (current_target == 2) {
+    //         $('#custome-fileup').hide();
+    //         $("#add-recipeit").hide();
+    //         $("#tagspreview").show();
+    //         $('#all-recipients-wrp').hide();
+    //     } else if (current_target == 3) {
+    //         $('#custome-fileup').hide();
+    //         $("#add-recipeit").hide();
+    //         $("#tagspreview").hide();
+    //         $('#all-recipients-wrp').show();
+    //     }
+    // });
 </script>
 <style>
     .main-wrapper {
@@ -1053,9 +1054,9 @@
     }
 
     function addReceiption() {
-        recCount++;
-        $('#setup-recipient-list').append(getReceiptionHtml());
-        return false;
+        // recCount++;
+        // $('#setup-recipient-list').append(getReceiptionHtml());
+        // return false;
     }
 
     // // Generate Random String
@@ -1081,67 +1082,22 @@
         return false;
     }
 
-    function createForm({ id, color, shouldHide, ...rest }) {
-        const { name, email } = rest;
-
-        return (`
-        <div id="mainDiv-${id}" class="form-box" style="border-left-width: 5px; border-left-color : ${color}">
-            <a  id="closeBox-${id}" onclick="removeRecipients(${id})" class="clos-bx ${shouldHide && "hideElement"}"><i class="fa fa-times-circle-o"></i></a>
-            <div class="row">
-                <div class="col-md-7 col-sm-7">
-                    <div class="leffm">
-                        <div class="form-group">
-                            <label>Name *</label>
-                            <input type="hidden" name="colors[]" value="${color}"> 
-                            <input type="text" placeholder="" value="${name}" name="recipients[]" class="form-control"> 
-                            <a href="#"><i class="fa fa-address-book"></i></a>
-                        </div>
-                        <div class="form-group"> 
-                            <label>Email *</label> 
-                            <input type="email" placeholder="" value="${email}" name="email[]" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-sm-5">
-                    <div class="action-envlo">
-                        <ul>
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-pencil"></i>Needs to Sign</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#"><i class="fa fa-pencil"></i> Needs to Sign</a></li>
-                                    <li><a href="#"><i class="fa fa-clone"></i> Receives a Copy</a></li>
-                                    <li><a href="#"><i class="fa fa-eye"></i> Needs to View</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">More</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#"><i class="fa fa-key"></i> Add access authentication</a></li>
-                                    <li><a href="#"><i class="fa fa-comment"></i> Add private message</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `);
-    }
-
     $(document).ready(function() {
-        (async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
+        // (async () => {
+        //     const urlParams = new URLSearchParams(window.location.search);
+        //     const id = urlParams.get('id');
 
-            const response = await fetch(`/nsmartrac/esign/apiGetDocumentRecipients/${id}`);
-            const recipients  = await response.json();
+        //     const response = await fetch(`/nsmartrac/esign/apiGetDocumentRecipients/${id}`);
+        //     const recipients  = await response.json();
 
-            if (recipients.length === 0) {
-                addReceiption();
-                return;
-            }
+        //     if (recipients.length === 0) {
+        //         addReceiption();
+        //         return;
+        //     }
 
-            const forms = recipients.map(createForm);
-            $('#setup-recipient-list').append(forms);
-        })();
+        //     const forms = recipients.map(createForm);
+        //     $('#setup-recipient-list').append(forms);
+        // })();
 
         // addReceiption();
         // $('.js-example-basic-single').select2();
@@ -1204,3 +1160,4 @@
         });
     })
 </script>
+<?php echo put_footer_assets(); ?>

@@ -43,12 +43,12 @@
                                     <input type="text" class="form-control" name="ship_via">
                                 </div>
                                 <div class="col-md-3">
-                                    <br>
-                                    <input type="text" class="form-control"><br>
+                                    <br><br><br><br>
                                     Shipping date<br>
                                     <input type="text" class="form-control" name="shipping_date" id="datepickerinv9">
                                 </div>
                                 <div class="col-md-3">
+                                    <br><br><br><br>
                                     Tracking no.<br>
                                     <input type="text" class="form-control" name="tracking_no">
                                 </div>
@@ -89,7 +89,7 @@
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2>$0.00</h2><br>
+                            AMOUNT<h2><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly></h2><br>
                             Location of sale<br>
                             <input type="text" class="form-control" style="width:200px;" name="location_scale">
                         </div>
@@ -159,16 +159,16 @@
 
                     <div class="row">
                         <div class="col-md-2">
-                            Message on invoice<br>
+                            Message displayed on sales receipt<br>
                             <textarea style="height:100px;width:100%;" name="message_displayed_on_sales_receipt"></textarea><br>
-                            Message on statement<br>
+                            Message displayed on statement<br>
                             <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             Taxable subtotal <b>$0.00</b><br>
-                            <table class="table table-borderless">
+                            <table class="table table-borderless" style="text-align:right;">
                                 <tr>
                                     <td>
                                         <select class="form-control" name="tax_rate">
@@ -179,7 +179,7 @@
                                 </tr>
                                 <tr>
                                     <td>Shipping</td>
-                                    <td><input type="text" class="form-control"></td>
+                                    <td align="right"><input type="text" class="form-control" style="width:100px!important;"></td>
                                 </tr>
                                 <tr>
                                     <td>Tax on shipping</td>

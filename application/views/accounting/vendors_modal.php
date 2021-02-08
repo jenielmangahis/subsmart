@@ -50,7 +50,8 @@
                         <div class="d-flex align-items-center mt-2 justify-content-end">
                            <div class="mr-4">AMOUNT</div>
                            <div>
-                              <h1 id="h1_amount-expense">$0.00</h1>
+                              <!-- <h1 id="h1_amount-expense">$0.00</h1> -->
+                              <input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly>
                            </div>
                         </div>
                      </div>
@@ -212,7 +213,8 @@
                            </ul>
                         </div>
                         <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                           <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button>
+                           <!-- <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button> -->
+                           <input type="submit" value="Save" class="btn btn-transparent">
                         </div>
                      </div>
                   </div>
@@ -258,7 +260,8 @@
                         <div class="d-flex align-items-center mt-2 justify-content-end">
                            <div class="mr-4">Balance Due</div>
                            <div>
-                              <h1 id="h1_amount-bill">$0.00</h1>
+                              <!-- <h1 id="h1_amount-bill">$0.00</h1> -->
+                              <input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly>
                            </div>
                         </div>
                      </div>
@@ -435,7 +438,8 @@
                            </ul>
                         </div>
                         <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                           <button class="btn btn-transparent" id="billSaved" data-dismiss="modal" type="button">Save</button>
+                           <!-- <button class="btn btn-transparent" id="billSaved" data-dismiss="modal" type="button">Save</button> -->
+                           <input type="submit" value="Save" class="btn btn-transparent">
                         </div>
                      </div>
                   </div>
@@ -460,7 +464,7 @@
                <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
             </div>
             <!-- <form action="" method="post" id="addEditCheckmodal"> -->
-            <form action="<?php echo site_url()?>accounting/addcheck" method="post" id="billForm">
+            <form action="<?php echo site_url()?>accounting/addcheck" method="post" >
                <div class="modal-body" style="margin-bottom: 100px">
                   <div class="row">
                      <div class="col-md-3">
@@ -492,7 +496,8 @@
                         <div class="d-flex align-items-center mt-2 justify-content-end">
                            <div class="mr-4">AMOUNT</div>
                            <div>
-                              <h1 id="h1_amount-check">$0.00</h1>
+                              <!-- <h1 id="h1_amount-check">$0.00</h1> -->
+                              <input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly>
                            </div>
                         </div>
                      </div>
@@ -662,6 +667,9 @@
                               <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
                            </ul>
                         </div>
+                        <div class="" style="display: inline-block;float: right;margin-right: 10px;">
+                           <input type="submit" value="Save" class="btn btn-transparent" id="billSaved">Save</button>
+                        </div>
                      </div>
                   </div>
                </div>
@@ -719,7 +727,8 @@
                         <div class="d-flex align-items-center mt-2 justify-content-end">
                            <div class="mr-4">TOTAL PAYMENT AMOUNT</div>
                            <div>
-                              <h1 id="h1_pay_amount-check">$0.00</h1>
+                              <!-- <h1 id="h1_pay_amount-check">$0.00</h1> -->
+                              <input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly>
                            </div>
                         </div>
                      </div>
@@ -842,7 +851,8 @@
                         <div class="d-flex align-items-center mt-2 justify-content-end">
                            <div class="mr-4">BALANCE DUE</div>
                            <div>
-                              <h1 id="h1_amount-expense">$0.00</h1>
+                              <!-- <h1 id="h1_amount-expense">$0.00</h1> -->
+                              <input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly>
                            </div>
                         </div>
                      </div>
@@ -1070,7 +1080,8 @@
                            </ul>
                         </div>
                         <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                           <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button>
+                           <!-- <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button> -->
+                           <input type="submit" value="Save" class="btn btn-transparent">
                         </div>
                      </div>
                   </div>
@@ -1139,7 +1150,8 @@
                         <div class="d-flex align-items-center mt-2 justify-content-end">
                            <div class="mr-4">BALANCE DUE</div>
                            <div>
-                              <h1 id="h1_amount-expense">$0.00</h1>
+                              <!-- <h1 id="h1_amount-expense">$0.00</h1> -->
+                              <input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly>
                            </div>
                         </div>
                      </div>
@@ -1151,7 +1163,7 @@
                      </div>
                      <div class="col-md-2">
                         <label for="">Ship to</label>
-                        <select name="vendor_id" id="expenseVendorId" class="form-control select2-payee" required>
+                        <select name="ship_to" id="expenseVendorId" class="form-control select2-payee" required>
                            <option value=""></option>
                            <option disabled>&plus;&nbsp;Add new</option>
                            <?php foreach ($vendors as $vendor):?>
@@ -1161,11 +1173,11 @@
                      </div>
                      <div class="col-md-2">
                         <label for="">Shipping address</label>
-                        <textarea name="mailing_address" id="billMailingAddress" cols="30" rows="4" placeholder="" style="resize: none;" style="width: 100%;"></textarea>
+                        <textarea name="shipping_address" id="billMailingAddress" cols="30" rows="4" placeholder="" style="resize: none;" style="width: 100%;"></textarea>
                      </div>
                      <div class="col-md-2">
                         <label for="">Purchase Order date</label>
-                        <input type="date" name="payment_date" id="expensePaymentDate" class="form-control" required>
+                        <input type="date" name="purchase_order_date" id="expensePaymentDate" class="form-control" required>
                      </div>
                      <div class="col-md-2">
                         <div class="form-group">
@@ -1367,7 +1379,7 @@
                            </ul>
                         </div>
                         <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                           <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button>
+                           <!-- <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button> --><input type="submit" value="Save" class="btn btn-transparent">
                         </div>
                      </div>
                   </div>
@@ -1377,348 +1389,7 @@
       </div>
    </div>
 </div>
-    <!-- End New Popup -->`
-
-    <style>
-#modal-dialog2 {
-  position: absolute;
-  top: 50px;
-  right: 100px;
-  bottom: 0;
-  left: 10%;
-  z-index: 10040;
-  overflow: auto;
-  overflow-y: auto;
-}
-</style>
-
-<!-- Modal for add account-->
-<div class="full-screen-modal">
-   <div id="addvendorcreditcardModal" class="modal fade modal-fluid" role="dialog">
-      <div class="modal-dialog">
-         <!-- Modal content-->
-         <div class="modal-content">
-            <div class="modal-header">
-               <div class="modal-title">
-                  <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                  Vendor Credit
-               </div>
-               <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
-            </div>
-            <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Payee
-                                    <!-- <select class="form-control" name="payee">
-                                        <option></option>
-                                        <option>Add New</option>
-                                        <option>John Doe</option>
-                                        <option>Alpha</option>
-                                    </select> -->
-                                    <select name="vendor_id" id="expenseVendorId" class="form-control select2-payee" required>
-                                       <option value=""></option>
-                                       <option disabled>&plus;&nbsp;Add new</option>
-                                       <?php foreach ($vendors as $vendor):?>
-                                       <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
-                                       <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    Bank/Credit account
-                                    <select class="form-control" name="credit_acc">
-                                        <option></option>
-                                        <option>A</option>
-                                        <option>B</option>
-                                        <option>C</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Payment date<br>
-                                    <input type="text" class="form-control" name="payment_date">
-                                </div>
-                                <div class="col-md-3">
-                                </div>
-                                <div class="col-md-3">
-                                    Ref no.<br>
-                                    <input type="text" class="form-control" name="ref_no"><br>
-                                    Permit no.<br>
-                                    <input type="text" class="form-control" name="permit_no">
-                                </div>
-                                
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control" name="tags">
-                                </div>
-                            </div>
-                            
-                        </div>
-                        <div class="col-md-6" align="right">
-                            AMOUNT<h2>$0.00</h2>
-                        </div>
-                    </div>
-                    <hr>
-                    <h3>Category details</h3><br>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>CATEGORY</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>AMOUNT</th>
-                                    <th></th>
-                                </thead>
-                                <tr>
-                                    <td></td>
-                                    <tr id="tableLine-expense">
-                                    <td></td>
-                                    <td><span id="line-counter-expense">1</span></td>
-                                    <td>
-                                        <div id="" style="display:;">
-                                            <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
-                                            <option></option>
-                                            <?php foreach ($list_categories as $list): ?>
-                                            <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                            <?php endforeach;?>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
-                                    <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                </tr>
-                                <tr id="tableLine-expense">
-                                    <td></td>
-                                    <td><span id="line-counter-expense">2</span></td>
-                                    <td>
-                                        <div id="" style="display:;">
-                                            <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
-                                            <option></option>
-                                            <?php foreach ($list_categories as $list): ?>
-                                            <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                            <?php endforeach;?>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
-                                    <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                            </table>
-                        <div>
-                    </div>
-                    <hr>
-                    <h3>Item details</h3><br>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>PRODUCT/SERVICE</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>QTY</th>
-                                    <th>RATE</th>
-                                    <th>AMOUNT</th>
-                                    <th></th>
-                                </thead>
-                                <tr>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                        <div>
-                    </div>
-                    <hr>
-                
-                    <div class="row">
-                        <div class="col-md-1">
-                           <button class="btn1">Add lines</button>
-                        </div>
-                        <div class="col-md-1">
-                           <button class="btn1">Clear all lines</button>
-                        </div>
-                    </div>
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-md-2">
-                            Memo<br>
-                            <textarea style="height:100px;width:100%;" name="memo"></textarea><br>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                        <div class="col-md-2">
-                            Total <b>$0.00</b>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="file-upload">
-                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
-
-                                <div class="image-upload-wrap">
-                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
-                                    <div class="drag-text">
-                                    <i>Drag and drop files here or click the icon</i>
-                                    </div>
-                                </div>
-                                <div class="file-upload-content">
-                                    <img class="file-upload-image" src="#" alt="your image" />
-                                    <div class="image-title-wrap">
-                                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                        </div>
-                    </div>
-                    <hr>
-
-
-                </div>
-                
-                <div style="margin: auto;">
-                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
-                </div>
-                <div style="margin: auto">
-                    <a href="" style="text-align: center">Privacy</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <!--end of modal-->
-</div>
-
-<div class="full-screen-modal">
-   <div id="addvendorprintchecksModal" class="modal fade modal-fluid" role="dialog">
-      <div class="modal-dialog">
-         <!-- Modal content-->
-         <div class="modal-content">
-            <div class="modal-header">
-               <div class="modal-title">
-                  <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                  Print Checks Setup
-               </div>
-               <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
-            </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="stepwizard">
-                                <div class="stepwizard-row">
-                                    <div class="stepwizard-step">
-                                        <button type="button" class="btn btn-success btn-circle">1</button>
-                                        <p>PRINT SAMPLE</p>
-                                    </div>
-                                    <div class="stepwizard-step">
-                                        <button type="button" class="btn btn-default btn-circle">2</button>
-                                        <p>SET UP PDF READER</p>
-                                    </div>
-                                    <div class="stepwizard-step">
-                                        <button type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
-                                        <p>ADJUST ALIGNMENT</p>
-                                    </div> 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h4>Select a check type and print a sample</h4>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p>Select the type of checks you use:</p>
-                                    <label class="layersMenu">
-                                        <div>Voucher</div>
-                                        <input type="radio" id="radioZoom14" name="zoomsMBtiles" value="14" checked />
-                                        <img src="<?php echo $url->assets ?>img/radio_image.jpg">
-                                    </label>
-
-                                    <label class="layersMenu">
-                                        <div>Standard</div>
-                                        <input type="radio" id="radioZoom18" name="zoomsMBtiles" value="18" />
-                                        <img src="<?php echo $url->assets ?>img/radio_image.jpg">
-                                    </label>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p>Load blank paper in your printer.</p>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button>View preview and print sample</button>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p>Place the sample on top of a blank check page. Hold them both up to the light.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6" align="right">
-                            <img src="<?php echo $url->assets ?>img/image_print_checks.jpg">
-                        </div>
-                    </div>
-                    
-
-                </div>
-                
-                <div style="margin: auto;">
-                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
-                </div>
-                <div style="margin: auto">
-                    <a href="" style="text-align: center">Privacy</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <!--end of modal-->
-</div>
+    <!-- End New Popup -->
 
 
     <?php include viewPath('accounting/add_new_term'); ?>

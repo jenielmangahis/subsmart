@@ -57,4 +57,23 @@ public function load_view($view, $data = array(), $filename, $orientation)
     // Output the generated PDF to Browser
     $dompdf->stream($filename);
 }
+
+public function save_pdf($view, $data = array(), $filename, $orientation)
+{
+    $dompdf = new Dompdf();
+    $html = $this->ci()->load->view($view, $data, true);
+
+    $dompdf->loadHtml($html);
+
+    // (Optional) Setup the paper size and orientation
+    $dompdf->setPaper('A4', $orientation);
+
+    // Render the HTML as PDF
+    $dompdf->render();
+    $content = $dompdf->output(array("Attachment" => 0));
+    
+    // Output the generated PDF to Browser
+    // $dompdf->stream($filename, array("Attachment" => false));
+    file_put_contents(FCPATH.'/assets/pdf/'.$filename, $content);
+}
 }

@@ -65,6 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th scope="col"><strong>Job Number</strong></th>
                                             <th scope="col"><strong>Date</strong></th>
                                             <th scope="col"><strong>Customer</strong></th>
+                                            <th scope="col"><strong>Employee</strong></th>
                                             <th scope="col"><strong>Status</strong></th>
                                             <th scope="col"><strong>Amount</strong></th>
                                             <th scope="col"><strong>Job Tags</strong></th>
@@ -76,15 +77,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                      <?php foreach($jobs as $job) : ?>
                                         <tr>
                                             <!--<td class="text-center"><input type="checkbox" class="jobCheckboxTd" data-id="<?php echo $job->id; ?>" value=""></td>-->
-                                            <td class="pl-3"><?php echo $job->job_number; ?></td>
+                                            <td class="pl-3"><?= $job->job_number; ?></td>
                                             <td class="pl-3"><?php echo date_format(date_create($job->date_created),"Y/m/d"); ?></td>
-                                            <td class="pl-3"><?php echo ucwords($job->job_name); ?>  <?php echo getCustomerFullName($job->customer_id); ?></td>
-                                            <td class="pl-3"><?php echo $job->status; ?></td>
+                                            <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
+                                            <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
+                                            <td class="pl-3"><?= $job->status; ?></td>
                                             <td class="pl-3">$0.00</td>
-                                            <td class="pl-3"><?php echo $job->status; ?></td>
-                                            <td class="pl-3"><?php echo ucfirst($job->priority); ?></td>
+                                            <td class="pl-3"><?php echo $job->name; ?></td>
+                                            <td class="pl-3"><?=$job->priority; ?></td>
                                             <td class="pl-3">
-                                                <a href="#" class="editJobTypeBtn btn btn-primary btn-sm">
+                                                <a href="<?= base_url('job/new_job1') ?>" class="editJobTypeBtn btn btn-primary btn-sm">
                                                     <span class="fa fa-pencil"></span> Edit</a>&nbsp;
                                                 <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-primary btn-sm">
                                                     <span class="fa fa-trash"></span> Delete

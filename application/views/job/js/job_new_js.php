@@ -1,5 +1,6 @@
 <script>
-    $(document).ready(function() {
+    window.onload = function() { // same as window.addEventListener('load', (event) => {
+        //alert('Page loaded');
         $.ajax({
             type: "GET",
             url: "/job/get_customers",
@@ -7,7 +8,6 @@
             {
                 var template_data = JSON.parse(data);
                 var toAppend = '';
-
                 $.each(template_data,function(i,o){
                     toAppend += '<option value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
                 });
@@ -15,6 +15,8 @@
                 //console.log(template_data);
             }
         });
+    };
+    $(document).ready(function() {
 
         $("#jobs_form").submit(function(e) {
             //alert("asf");
@@ -23,16 +25,31 @@
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "/customer/add_furnisher_ajax",
+                url: "/job/save_job",
                 data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
+                success: function(data) {
                     console.log(data);
                 }
             });
         });
 
-        // add more item script
+        $("#fill_esign_btn").click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/job/get_esign_template",
+                success: function(data)
+                {
+                    var template_data = JSON.parse(data);
+                    var toAppend = '';
+                    $.each(template_data,function(i,o){
+                        toAppend += '<option value='+o.esignLibraryTemplateId+'>'+o.title+'</option>';
+                    });
+                    $('#library_template').append(toAppend);
+                    //console.log(template_data);
+                }
+            });
+        });
+
         $("#add_another_item").click(function () {
             // var newFields = document.getElementById('custom_form').cloneNode(true);
             markup = "<tr id=\"ss\">" +
@@ -80,7 +97,7 @@
                 {
                     var template_data = JSON.parse(data);
                     $('#summernote').summernote('code', template_data.content);
-                    console.log(data);
+                    //console.log(data);
                 }
             });
         });
@@ -94,7 +111,7 @@
                 {
                     var template_data = JSON.parse(data);
                     $('#job_tags_right').val(template_data.name);
-                    console.log(data);
+                    //console.log(data);
                 }
             });
         });
@@ -120,63 +137,66 @@
                 $('#authorizer').html($('#authorizer_name').val());
                 $('#appoval_name_right').html($('#authorizer_name').val());
                 $('#date_signed').html(e);
+                $('#datetime_signed').val(e);
+                $('#name').val($('#authorizer_name').val());
+                $('#signature_link').val(data);
                 $("#customer-signature").attr("src",data);
                 $("#customer_signature_right").attr("src",data);
                 //location.reload();
             });
         });
 
-        $('#check_form').hide();
-        $('#cash_form').hide();
-        $('#ach_form').hide();
-        $('#others_warranty_form').hide();
-        $('#svp_form').hide();
+        document.getElementById('check_form').style.display = "none";
+        document.getElementById('cash_form').style.display = "none";
+        document.getElementById('ach_form').style.display = "none";
+        document.getElementById('others_warranty_form').style.display = "none";
+        document.getElementById('svp_form').style.display = "none";
         $("#pay_method").on( 'change', function () {
             var method = this.value;
             if(method === 'CHECK'){
-                $('#check_form').show();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#ach_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
+                document.getElementById('check_form').style.display = "block";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
             }else if(method === 'CC'|| method === 'OCCP'){
-                $('#check_form').hide();
-                $('#credit_card_form').show();
-                $('#cash_form').hide();
-                $('#ach_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "block";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
             }else if(method === 'CASH'){
-                $('#cash_form').show();
-                $('#check_form').hide();
-                $('#ach_form').hide();
-                $('#credit_card_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "block";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
             }
             else if(method === 'ACH'){
-                $('#ach_form').show();
-                $('#check_form').hide();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').hide();
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "block";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "none";
             }else if(method === 'OPT' || method === 'WW'){
-                $('#ach_form').hide();
-                $('#check_form').hide();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#others_warranty_form').show();
-                $('#svp_form').hide();
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "block";
+                document.getElementById('svp_form').style.display = "none";
             }
             else if(method === 'SQ' || method === 'PP' || method === 'VENMO'){
-                $('#ach_form').hide();
-                $('#check_form').hide();
-                $('#credit_card_form').hide();
-                $('#cash_form').hide();
-                $('#others_warranty_form').hide();
-                $('#svp_form').show();
+                document.getElementById('check_form').style.display = "none";
+                document.getElementById('credit_card_form').style.display = "none";
+                document.getElementById('cash_form').style.display = "none";
+                document.getElementById('ach_form').style.display = "none";
+                document.getElementById('others_warranty_form').style.display = "none";
+                document.getElementById('svp_form').style.display = "block";
             }
         });
 
@@ -248,6 +268,7 @@
         $("#save_memo").on( "click", function( event ) {
             var note = $('#note_txt').val();
             $('#notes_edit_btn').text(note);
+            $('#notes_right_display').text(note);
             //$.ajax({
             //    type: "POST",
             //    url: "/customer/update_customer_profile",

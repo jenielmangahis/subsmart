@@ -151,7 +151,7 @@ div#tags-modal button.btn-outline-secondary {
 }
 
 /* Payroll Modal */
-div#payrollModal .divider {
+.divider {
     height: 100%;
     width: 1px;
     border-left: 1px solid #dee2e6 !important;

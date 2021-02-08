@@ -213,6 +213,7 @@ class Esign extends MY_Controller {
 		$this->page_data['recipients'] = $queryRecipients->result_array();
 
 		add_css('assets/css/esign/esign-builder/esign-builder.css');
+		add_footer_js('assets/js/esign/step2.js');
 		$this->load->view('esign/files', $this->page_data);
 	}
 
@@ -518,19 +519,64 @@ class Esign extends MY_Controller {
 	*/
 
 	public function recipients() {
+		$payload = json_decode(file_get_contents('php://input'), true);
 
-		if(isset($_POST['recipients']) && count($_POST['recipients'])>0 ) {
-			foreach($_POST['recipients'] as $key => $value) {
-				$id = $this->db->insert('user_docfile_recipients',[
-					'user_id' => logged('id'),
-					'docfile_id' => $_POST['file_id'],
-					'name' => $value,
-					'email' => $_POST['email'][$key],
-					'color' => $_POST['colors'][$key],
+		if (!array_key_exists('recipients', $payload) || !array_key_exists('doc_id', $payload)) {
+			echo json_encode(null);
+			return;
+		}
+
+		$docId = $payload['doc_id'];
+		$nextRecipients = $payload['recipients'];
+		$userId = logged('id');
+
+		$this->db->where('docfile_id', $docId);
+		$this->db->where('user_id', $userId);
+		$currentRecipients = $this->db->get('user_docfile_recipients')->result();
+		$nextRecipientIds = array_column($nextRecipients, 'id');
+
+		foreach ($currentRecipients as $currentRecipient) {
+			if (!in_array($currentRecipient->id, $nextRecipientIds)) {
+				$this->db->where('user_id', $userId);
+				$this->db->where('docfile_id', $docId);
+				$this->db->where('id', $currentRecipient->id);
+				$this->db->delete('user_docfile_recipients');
+			}
+		}
+		
+		foreach ($payload['recipients'] as $recipient) {
+			['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
+
+			$this->db->where('id', $id);
+			$this->db->where('docfile_id', $docId);
+			$this->db->where('user_id', $userId);
+			$record = $this->db->get('user_docfile_recipients');
+
+			if (!is_null($record->row())) {
+				$this->db->where('id', $id);
+				$this->db->where('docfile_id', $docId);
+				$this->db->where('user_id', $userId);
+
+				$this->db->update('user_docfile_recipients', [
+					'name' => $name,
+					'email' => $email,
+					'role' => $role,
+					'color' => $color,
+				]);
+			} else {
+				$this->db->insert('user_docfile_recipients', [
+					'name' => $name,
+					'email' => $email,
+					'role' => $role,
+					'color' => $color,
+					'docfile_id' => $docId,
+					'user_id' => $userId,
 				]);
 			}
-			redirect('esign/Files?id='.(isset($_POST['file_id'])?$_POST['file_id']:0).'&next_step=3');
 		}
+
+    	header('content-type: application/json');
+    	echo json_encode(['success' => true]);
 	}
 
 	public function photoSave(){

@@ -39,6 +39,7 @@ class Widgets_model extends MY_Model {
     function getWidgetListPerUser($user_id)
     {
         $company_id = getLoggedCompanyID();
+        
         $this->db->join('widgets','widgets_users.wu_widget_id = widgets.w_id','left');
         $this->db->where('wu_user_id', $user_id);
         $this->db->order_by('wu_order', 'ASC');
@@ -49,7 +50,7 @@ class Widgets_model extends MY_Model {
         $this->db->order_by('wu_order', 'ASC');
         $q2 = $this->db->get('widgets_users')->result();
         
-        $details =  array_unique(array_merge($q1,$q2), SORT_REGULAR);
+        $details =  array_unique(array_merge($q2, $q1), SORT_REGULAR);
         
         return $details;
         

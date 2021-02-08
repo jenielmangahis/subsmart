@@ -8,6 +8,9 @@ var timesheetInputs = 'input.day-input';
 var payrollForm = '';
 var payrollFormData = [];
 const noRecordMessage = '<div class="no-results text-center p-4">No customers found for the applied filters.</div>'
+var recurrInterval = '';
+var recurringDays = '';
+var monthlyRecurrFields = ''
 
 $(function() {
     $(document).on('keyup', timesheetInputs + ', div#singleTimeModal input#time', function(e) {
@@ -666,6 +669,204 @@ $(function() {
             }
         }
     });
+
+    $(document).on('change', 'div.modal select#recurringType', function() {
+        if($(this).val() === 'reminder') {
+            if($(this).parent().next().hasClass('col-md-3')) {
+                $(this).parent().next().removeClass('col-md-3');
+                $(this).parent().next().addClass('col-md-4');
+            }
+
+            $(this).parent().next().children('div').children('div').html(`
+                <span>Remind &nbsp;</span>
+                <input type="number" name="day_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
+                <span>&nbsp; days before the transaction date</span>
+            `);
+
+            if($('div.modal div.modal-body select#recurringMode').length === 0) {
+                if($('form#modal-form').next().attr('id') === 'depositModal') {
+                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
+                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                } else {
+                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-details'));
+                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                }
+
+                $(`div.modal input.date`).datepicker({
+                    uiLibrary: 'bootstrap'
+                });
+            }
+        } else if($(this).val() === 'unscheduled') {
+            $('div.modal div.modal-body div.recurring-interval-container').remove();
+            $(this).parent().next().removeClass('col-md-4');
+            $(this).parent().next().addClass('col-md-3');
+            $(this).parent().next().children('div').children('div').html(`
+                <p class="m-0">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</p>
+            `);
+        } else {
+            if($(this).parent().next().hasClass('col-md-3')) {
+                $(this).parent().next().removeClass('col-md-3');
+                $(this).parent().next().addClass('col-md-4');
+            }
+
+            $(this).parent().next().children('div').children('div').html(`
+                <span>Create &nbsp;</span>
+                <input type="number" name="day_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
+                <span>&nbsp; days in advance</span>
+            `);
+
+            if($('div.modal div.modal-body select#recurringMode').length === 0) {
+                if($('form#modal-form').next().attr('id') === 'depositModal') {
+                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
+                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                } else {
+                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-details'));
+                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                }
+
+                $(`div.modal input.date`).datepicker({
+                    uiLibrary: 'bootstrap'
+                });
+            }
+        }
+    });
+
+    $(document).on('change', 'div.modal select[name="recurring_week"]', function(){
+        if($(this).val() !== 'day') {
+            $(this).next().html(`
+                <option value="sunday">Sunday</option>
+                <option value="monday" selected>Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>
+            `);
+        } else {
+            $(this).next().html(recurringDays);
+        }
+    });
+
+    $(document).on('change', 'div.modal select#endType', function(){
+        if($(this).val() === 'by') {
+            $(this).parent().next().remove();
+            $(this).parent().parent().append(`
+                <div class="col-md-2 form-group">
+                    <label for="endBy">End date</label>
+                    <input type="text" class="form-control date" name="recurring_end_by" id="endBy"/>
+                </div>
+            `);
+
+            $(`div.modal input#endBy`).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        } else if($(this).val() === 'after') {
+            $(this).parent().next().remove();
+            $(this).parent().parent().append(`
+                <div class="col-md-2 form-group">
+                    <div class="row m-0 h-100 d-flex">
+                        <div class="align-self-end d-flex align-items-center">
+                            <input type="number" name="recurring_max_occurence" id="maxOccurence" class="form-control" style="width: 50%">
+                            <span>&nbsp; occurrences</span>
+                        </div>
+                    </div>
+                </div>
+            `);
+        } else {
+            $(this).parent().next().remove();
+        }
+    });
+
+    $(document).on('change', 'div.modal select#recurringMode', function(){
+        var fields = '';
+        if($(this).val() === 'daily') {
+            if($(this).parent().next().hasClass('col-md-4')) {
+                $(this).parent().next().removeClass('col-md-4');
+            } else if($(this).parent().next().hasClass('col-md-3')) {
+                $(this).parent().next().removeClass('col-md-3');
+            }
+
+            if($(this).parent().next().hasClass('col-md-2') === false) {
+                $(this).parent().next().addClass('col-md-2');
+            }
+
+            fields = `
+                <span>&nbsp; every &nbsp;</span>
+                <input type="number" value="1" class="form-control" name="recurring_interval" style="width: 30%">
+                <span>&nbsp; day(s)</span>
+            `;
+        } else if($(this).val() === 'weekly') {
+            if($(this).parent().next().hasClass('col-md-4')) {
+                $(this).parent().next().removeClass('col-md-4');
+            } else if($(this).parent().next().hasClass('col-md-2')) {
+                $(this).parent().next().removeClass('col-md-2');
+            }
+
+            if($(this).parent().next().hasClass('col-md-3') === false) {
+                $(this).parent().next().addClass('col-md-3');
+            }
+
+            fields = `
+                <span>&nbsp; every &nbsp;</span>
+                <input type="number" value="1" class="form-control" name="recurring_interval" style="width: 20%">
+                <span>&nbsp; week(s) on &nbsp;</span>
+                <select class="form-control" name="recurring_day" style="width: auto">
+                    <option value="sunday">Sunday</option>
+                    <option value="monday" selected>Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
+                </select>
+            `;
+        } else if($(this).val() === 'yearly') {
+            if($(this).parent().next().hasClass('col-md-4')) {
+                $(this).parent().next().removeClass('col-md-4');
+            } else if($(this).parent().next().hasClass('col-md-2')) {
+                $(this).parent().next().removeClass('col-md-2');
+            }
+
+            if($(this).parent().next().hasClass('col-md-3') === false) {
+                $(this).parent().next().addClass('col-md-3');
+            }
+
+            fields = `
+                <span>&nbsp; every &nbsp;</span>
+                <select class="form-control" name="recurring_month" style="width: 40%">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+                <select class="form-control" name="recurring_day" style="width: 40%">
+                ${recurringDays}
+                </select>
+            `;
+        } else {
+            if($(this).parent().next().hasClass('col-md-3')) {
+                $(this).parent().next().removeClass('col-md-3');
+            } else if($(this).parent().next().hasClass('col-md-2')) {
+                $(this).parent().next().removeClass('col-md-2');
+            }
+
+            if($(this).parent().next().hasClass('col-md-4') === false) {
+                $(this).parent().next().addClass('col-md-4');
+            }
+
+            fields = monthlyRecurrFields;
+        }
+
+        $(this).parent().next().children().children().html(fields);
+    });
 });
 
 const showApplyButton = () => {
@@ -1013,7 +1214,7 @@ const updateBankDepositTotal = (el) => {
 }
 
 const computeBankDepositeTotal = () => {
-    var otherFundsTotal = 0;
+    var otherFundsTotal = 0.00;
 
     $('div#depositModal input[name="amount[]"]').each(function() {
         if($(this).val() !== "") {
@@ -1030,7 +1231,7 @@ const computeBankDepositeTotal = () => {
 
     var totalDepositAmount = (parseFloat(otherFundsTotal) - parseFloat(cashBackAmount)).toFixed(2);
 
-    $('div#depositModal span.other-funds-total').html(`$${otherFundsTotal}`);
+    $('div#depositModal span.other-funds-total').html(`$${parseFloat(otherFundsTotal).toFixed(2)}`);
     $('div#depositModal h2.total-deposit-amount').html(`$${totalDepositAmount}`);
     $('div#depositModal span.total-cash-back').html(`$${totalDepositAmount}`);
 }
@@ -1146,5 +1347,102 @@ const showHiddenFields = (el) => {
             $(el).parent().find('input[name="taxable[]"]').remove();
             $(el).parent().find('label[for="taxable"]').remove();
         }
+    }
+}
+
+const makeRecurring = (modalName) => {
+    var modalId = '';
+    $.get("/accounting/get-recurring-form-fields/"+modalName, function(res) {
+        if(modalName === 'bank_deposit') {
+            modalId = 'depositModal';
+            $(`div#${modalId} div.modal-body div.row.bank-account-details`).remove();
+        } else if(modalName === 'transfer') {
+            modalId = 'transferModal';
+        } else if(modalName === 'journal_entry') {
+            modalId = 'journalEntryModal';
+            $(`div#${modalId} div.modal-body div.row.journal-entry-details`).remove();
+        }
+
+        if($(`div#${modalId} input#templateName`).length === 0) {
+            $(`div#${modalId} div.modal-body`).prepend(res);
+        }
+        $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
+
+        recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
+        recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();
+        monthlyRecurrFields = $(`div#${modalId} div.modal-body div.recurring-interval-container div div.form-row div.form-group:nth-child(2) div.row div`).html();
+
+        $(`div#${modalId} input.date`).datepicker({
+            uiLibrary: 'bootstrap'
+        });
+    });
+}
+
+const viewPrint = (id, title = "") => {
+    var data = {
+        received_from: [],
+        accounts: [],
+        description: [],
+        payment_method: [],
+        reference_no: [],
+        amount: [],
+        title: title,
+        id: id
+    };
+
+    var received_from = $('#bank-deposit-table [name="received_from[]"] option:selected');
+    var accounts = $('#bank-deposit-table [name="account[]"] option:selected');
+    var description = $('#bank-deposit-table [name="description[]"]');
+    var payment_method = $('#bank-deposit-table [name="payment_method[]"] option:selected');
+    var reference_no = $('#bank-deposit-table [name="reference_no[]"]');
+    var amount = $('#bank-deposit-table [name="amount[]"]');
+
+    for (var i in received_from) {
+
+        var rec_from_val = received_from[i].outerText;
+        if (rec_from_val !== undefined) data.received_from[i] = rec_from_val;
+
+        var accounts_val = accounts[i].outerText;
+        if (accounts_val !== undefined) data.accounts[i] = accounts_val;
+
+        var description_val = description[i].value;
+        if (description_val !== undefined) data.description[i] = description_val;
+
+        var payment_method_val = payment_method[i].outerText;
+        if (payment_method_val !== undefined) data.payment_method[i] = payment_method_val;
+
+        var reference_no_val = reference_no[i].value;
+        if (reference_no_val !== undefined) data.reference_no[i] = reference_no_val;
+
+        var amount_val = amount[i].value;
+        if (amount_val !== undefined) {
+            data.amount[i] = amount_val;
+        }
+
+
+    }
+
+    if (data.received_from.length > 0 &&
+        data.accounts.length > 0 &&
+        data.description.length > 0 &&
+        data.payment_method.length > 0 &&
+        data.reference_no.length > 0 &&
+        data.amount.length > 0 || 
+        id != 1) {
+        $.ajax({
+            url: '/accounting/generate-pdf',
+            data: {json: JSON.stringify(data)},
+            type: 'post',
+            dataType: "JSON",
+            success: function(res) {
+                if (res.filename != "") {
+                    $('iframe#showPdf').attr('src', "/accounting/show-pdf?pdf=" +res.filename);
+                    $('#showPdfModal').modal('show');
+                }
+            }
+        });
+    } else {
+        toast(false, "Please enter and complete at least one line item.");
+        return;
     }
 }

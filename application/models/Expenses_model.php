@@ -270,31 +270,51 @@ class Expenses_model extends MY_Model
         $qry = $this->db->get('accounting_expense');
         return $qry->result();
     }
+
+    public function addtransaction($new_data){
+        $vendor = $this->db->insert('accounting_expense_transaction', $new_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
     public function addExpense($new_data){
-        $type = "Expense";
-        $trans_id = $this->transaction($type,false,null,$new_data['total']);
-        $qry = $this->db->get_where('accounting_expense',array(
-            'vendor_id' => $new_data['vendor_id']
-        ));
-        if ($qry->num_rows() == 0){
-            $data = array(
-                'transaction_id' => $trans_id,
-                'vendor_id' => $new_data['vendor_id'],
-                'payment_account' => $new_data['payment_account'],
-                'payment_date' => $new_data['payment_date'],
-                'payment_method' => $new_data['payment_method'],
-                'ref_number' => $new_data['ref_number'],
-                'permit_number' => $new_data['permit_number'],
-                'memo' => $new_data['memo']
-            );
-            $this->db->insert('accounting_expense',$data);
-            $expense_id = $this->db->insert_id();
-            $this->expenseCategory($trans_id,$expense_id,false,$new_data);
-            $this->expensesAttachment($trans_id,$expense_id,$type,$new_data);
-            return true;
-        }else{
-            return false;
-        }
+        // $type = "Expense";
+        // $trans_id = $this->transaction($type,false,null,$new_data['total']);
+        // $qry = $this->db->get_where('accounting_expense',array(
+        //     'vendor_id' => $new_data['vendor_id']
+        // ));
+        // if ($qry->num_rows() == 0){
+        //     $data = array(
+        //         'transaction_id' => $trans_id,
+        //         'vendor_id' => $new_data['vendor_id'],
+        //         'payment_account' => $new_data['payment_account'],
+        //         'payment_date' => $new_data['payment_date'],
+        //         'payment_method' => $new_data['payment_method'],
+        //         'ref_number' => $new_data['ref_number'],
+        //         'permit_number' => $new_data['permit_number'],
+        //         'memo' => $new_data['memo']
+        //     );
+        //     $this->db->insert('accounting_expense',$data);
+        //     $expense_id = $this->db->insert_id();
+        //     $this->expenseCategory($trans_id,$expense_id,false,$new_data);
+        //     $this->expensesAttachment($trans_id,$expense_id,$type,$new_data);
+        //     return true;
+        // }else{
+        //     return false;
+        // }
+
+        $vendor = $this->db->insert('accounting_expense', $new_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+
+    }
+
+    public function saveItems($new_data){
+        $vendor = $this->db->insert('item_details', $new_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
 
     }
     public function updateExpenseData($data){
@@ -344,31 +364,35 @@ class Expenses_model extends MY_Model
     }
 
     public function addCheck($new_data){
-        $type = "Check";
-        $trans_id = $this->transaction($type,false,null,$new_data['total']);
-        $qry = $this->db->get_where('accounting_check',array(
-            'check_number' => $new_data['check_num']
-        ));
-        if ($qry->num_rows() == 0){
-            $data = array(
-                'transaction_id' => $trans_id,
-                'vendor_id' => $new_data['vendor_id'],
-                'mailing_address' => $new_data['mailing_address'],
-                'bank_id' => $new_data['bank_id'],
-                'payment_date' => $new_data['payment_date'],
-                'check_number' => $new_data['check_num'],
-                'print_later' => $new_data['print_later'],
-                'permit_number' => $new_data['permit_number'],
-                'memo' => $new_data['memo']
-            );
-            $this->db->insert('accounting_check',$data);
-            $check_id = $this->db->insert_id();
-            $this->expenseCategory($trans_id,$check_id,false,$new_data);
-            $this->expensesAttachment($trans_id,$check_id,$type,$new_data);
-            return true;
-        }else{
-            return false;
-        }
+        // $type = "Check";
+        // $trans_id = $this->transaction($type,false,null,$new_data['total']);
+        // $qry = $this->db->get_where('accounting_check',array(
+        //     'check_number' => $new_data['check_num']
+        // ));
+        // if ($qry->num_rows() == 0){
+        //     $data = array(
+        //         'transaction_id' => $trans_id,
+        //         'vendor_id' => $new_data['vendor_id'],
+        //         'mailing_address' => $new_data['mailing_address'],
+        //         'bank_id' => $new_data['bank_id'],
+        //         'payment_date' => $new_data['payment_date'],
+        //         'check_number' => $new_data['check_num'],
+        //         'print_later' => $new_data['print_later'],
+        //         'permit_number' => $new_data['permit_number'],
+        //         'memo' => $new_data['memo']
+        //     );
+        //     $this->db->insert('accounting_check',$data);
+        //     $check_id = $this->db->insert_id();
+        //     $this->expenseCategory($trans_id,$check_id,false,$new_data);
+        //     $this->expensesAttachment($trans_id,$check_id,$type,$new_data);
+        //     return true;
+        // }else{
+        //     return false;
+        // }
+        $vendor = $this->db->insert('accounting_check', $new_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
     }
     public function editCheckData($update){
         $type='Check';

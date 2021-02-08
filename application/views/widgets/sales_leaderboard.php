@@ -1,48 +1,40 @@
-<div class="col-sm-4 db-card" id="installs">
-    <div class="expenses tile-container" style="height: 354px;">
-        <div class="inner-container">
-            <div class="tileContent">
-                <div class="clear">
-                    <div class="inner-content">
-                        <div class="header-container" style="border-bottom:1px solid gray;">
-                            <h3 class="header-content"><i class="fa fa-list" aria-hidden="true"></i> Sales Leaderboard</h3>
-                        </div>
-                        <div class="expenses-money-section">
-                            <div class="top-ins-in">
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <div class="insl-bx">
-                                            <h5>Top Reps</h5>
+<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+    <div class="card" style="margin-top:0;">
+        <div class="card-header">
+            <i class="fa fa-bars" aria-hidden="true"></i> Sales Leaderboard
+        </div>
+        <div class="card-body" style="padding:5px 10px;">
+            <div class="row" id="salesLeaderboardBody" style="height: 310px; overflow-y: scroll">
+                <div class="col-md-6 col-sm-6">
+                    <div class="insl-bx">
+                        <h5>Top Reps</h5>
 
-                                            <ul>
-                                                <li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
-                                                <li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6">
-                                        <div class="insl-bx">
-                                            <h5>Top Techs</h5>
+                        <ul>
+                            <li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
+                            <li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="insl-bx">
+                        <h5>Top Techs</h5>
 
-                                            <ul>
-                                                <li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
-                                                <li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
-                                                <li><strong>3.</strong> T.Smith (COR) - <span>133</span></li>
-                                                <li><strong>4.</strong> T.Smith (COR) - <span>133</span></li>
-                                                <li><strong>5.</strong> T.Smith (COR) - <span>133</span></li>
-                                                <li><strong>6.</strong> T.Smith (COR) - <span>133</span></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer view-all-bx">
-                            <a href="#">View All</a>
-                        </div>
+                        <ul>
+                            <li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
+                            <li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
+                            <li><strong>3.</strong> T.Smith (COR) - <span>133</span></li>
+                            <li><strong>4.</strong> T.Smith (COR) - <span>133</span></li>
+                            <li><strong>5.</strong> T.Smith (COR) - <span>133</span></li>
+                            <li><strong>6.</strong> T.Smith (COR) - <span>133</span></li>
+                        </ul>
                     </div>
                 </div>
             </div>
+            <div class="text-center">
+                <a class="text-info" href="#">View All</a>
+            </div>
+
         </div>
+
     </div>
 </div>

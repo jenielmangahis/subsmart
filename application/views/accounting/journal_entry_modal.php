@@ -10,7 +10,7 @@
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body pb-0">
-                    <div class="row">
+                    <div class="row journal-entry-details">
                         <div class="col-md-6">
                             <div class="form-group w-50">
                                 <label for="journalDate">Journal Date</label>
@@ -246,7 +246,7 @@
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4 d-flex">
-
+                            <a href="#" class="text-white m-auto" onclick="makeRecurring('journal_entry')">Make Recurring</a>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

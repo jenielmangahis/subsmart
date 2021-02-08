@@ -19,7 +19,7 @@
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
-            <form method="post" id="jobs_form">
+            <form method="post" name="myform" id="jobs_form">
             <div class="row custom__border left-sidebar-main">
 
                 <div class="col-md-4">
@@ -228,8 +228,8 @@
                                                 </div>
                                                 <div id="notes_input_div" style="display:none;">
                                                     <div style=" height:100px;">
-                                                        <textarea name="memo_txt" id="note_txt" style="width:100%; height:75px;" class="input">sadfdf</textarea>
-                                                        <button class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
+                                                        <textarea name="message" cols="50" style="width: 100%;" rows="3" id="note_txt" class="input"></textarea>
+                                                        <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                                      </div>
                                                 </div>
                                             </div>
@@ -317,7 +317,7 @@
                                     </div>
                                     <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                        <div class="card-body">
-                                            <a style="cursor: pointer;" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
+                                            <a style="cursor: pointer;" id="fill_esign_btn" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
                                                 <center>
                                                     <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
                                                 </center>
@@ -352,7 +352,7 @@
                                             <div class="col-sm-12">
                                                 <div class="col-md-12">
                                                     <label for="">Method</label>
-                                                    <select id="pay_method" class="form-control">
+                                                    <select id="pay_method" name="pay_method" class="form-control">
                                                         <option value="CC">Credit Card</option>
                                                         <option value="CHECK">Check</option>
                                                         <option value="CASH">Cash</option>
@@ -380,25 +380,25 @@
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" class="form-control" id="cardNumber" placeholder="Account Holder Name" required />
+                                                                                    <input type="text" name="account_holder_name" class="form-control" id="cardNumber" placeholder="Account Holder Name" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="1234 1234 1234 1234" required />
+                                                                                    <input type="number" name="card_number" class="form-control" id="cardNumber" placeholder="1234 1234 1234 1234" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
-                                                                                    <input type="text" class="form-control" id="expityMonth" placeholder="MM/YY" required />
+                                                                                    <input type="text" name="card_expiry" class="form-control" id="expityMonth" placeholder="MM/YY" />
                                                                             </div>
                                                                        </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
-                                                                                <input type="number" class="form-control" id="cvCode" placeholder="CVC" required />
+                                                                                <input type="number" name="card_cvc" class="form-control" id="cvCode" placeholder="CVC" />
                                                                             </div>
                                                                         </div>
 
@@ -419,20 +419,20 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="check_form">
+                                                            <div id="check_form" style="display: none;">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing #" required />
+                                                                                    <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account #" required />
+                                                                                    <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -450,20 +450,20 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="ach_form">
+                                                            <div id="ach_form" style="display: none;">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing #" required />
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing #"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account #" required />
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account #"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -486,7 +486,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="cash_form">
+                                                            <div id="cash_form" style="display: none;">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-12" style="text-align: center !important;">
@@ -504,13 +504,13 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="others_warranty_form">
+                                                            <div id="others_warranty_form" style="display: none;">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential" required />
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -530,13 +530,13 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="svp_form">
+                                                            <div id="svp_form" style="display: none;">
                                                                 <div class="col-md-12">
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential" required />
+                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -693,13 +693,13 @@
                                         <tr>
                                             <td>
                                                 <small>Job Title</small>
-                                                <input type="text" name="check_description[]" class="form-control checkDescription" >
+                                                <input type="text" name="job_name" class="form-control checkDescription" >
                                             </td>
                                             <td>
                                             </td>
                                             <td>
                                                 <small>Job Tags</small>
-                                                <input type="text" class="form-control" id="job_tags_right" value="" readonly="readonly">
+                                                <input type="text" name="job_tag" class="form-control" id="job_tags_right" readonly>
                                             </td>
                                             <td>
                                             </td>
@@ -747,7 +747,7 @@
                                 <br>
                                <div class="col-sm-12">
                                     <p>Description of Job (optional)</p>
-                                    <textarea name="message" class="form-control" ></textarea>
+                                    <textarea name="job_description" class="form-control" ></textarea>
                                     <hr/>
                                </div>
                                 <div class="col-md-12 table-responsive">
@@ -849,7 +849,7 @@
                                                             <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
                                                         </div>
                                                         <div class="card-body">
-                                                            <span class="help help-sm help-block">State a note for more information.</span>
+                                                            <span class="help help-sm help-block" id="notes_right_display"></span>
                                                         </div>
                                                         <div class="card-footer">
                                                             <div style="float: right;">
@@ -906,7 +906,9 @@
                                     <br>
                                 </div>
                                 <div class="row">
-                                    <!--<input id="customer_id" type="text" name="customer_id">-->
+                                    <input id="signature_link" type="hidden" name="signature_link">
+                                    <input id="name" type="hidden" name="authorize_name">
+                                    <input id="datetime_signed" type="hidden" name="datetime_signed">
                                     <div class="col-sm-12">
                                         <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
                                         <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
@@ -1037,7 +1039,6 @@
                                 <div class="row">
                                     <div class="col-md-12 ">
                                         <div class="card-header">
-
                                             <h5 style="padding-left: 20px;" class="mb-0">Activity Feeds</h5>
                                         </div>
                                         <div class="card-body">
@@ -1132,121 +1133,12 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="col-md-3">
-                        <div class="form-group">
-                            <input type="text" class="form-control"  placeholder="Company">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control"  placeholder="Job Title">
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                          <label class="form-check-label" for="exampleRadios1">
-                            Homeowner
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                          <label class="form-check-label" for="exampleRadios2">
-                            Business
-                          </label>
-                        </div>
-                    </div>-->
                     <hr>
-
             </div>
         </div>
-        <!--<div class="contact-info">
-            <h3 class="c13 c20"><svg class="MuiSvgIcon-root-362 jss355" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>Address</h3>
-            <div class="row">
-                <form>
-                    <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Street">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Unit">
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="City">
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <select id="inputState" class="form-control">
-                                <option selected>State</option>
-                                <option>...</option>
-                              </select>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Zip">
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Address Note">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button type="button" class="btn btn-primary pull-left text-link">+ Address</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="address-proof">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d389100.8208036594!2d-73.13514834535813!3d40.3678466330292!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1611070455636!5m2!1sen!2sin" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-                        </div>
-                    </div>
-                    <hr>
-                </form>
-            </div>
-        </div> -->
-        <!--<div class="contact-info">
-            <h3 class="c13 c20"><svg class="MuiSvgIcon-root-362 jss355" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;"><path d="M22 10l-6-6H4c-1.1 0-2 .9-2 2v12.01c0 1.1.9 1.99 2 1.99l16-.01c1.1 0 2-.89 2-1.99v-8zm-7-4.5l5.5 5.5H15V5.5z"></path></svg>Notes</h3>
-            <div class="row">
-                <form>
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Customer notes">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="This customer bills to">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Customer tags (press enter)">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <input type="text" class="form-control"  placeholder="Lead Source" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                </form>
-            </div>
-        </div> -->
+
       </div>
       <div class="modal-footer modal-footer-detail">
-        <!--<div class="checkbox-modal">
-            <input type="checkbox" id="receive" name="receive" value="receive">
-            <label for="receive"> Receive notifications</label><br>
-        </div>-->
         <div class="button-modal-list">
             <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
             <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>

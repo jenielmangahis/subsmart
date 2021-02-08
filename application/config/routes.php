@@ -253,6 +253,8 @@ $route['campaign_blast/delete_blast'] = 'Campaign_Blast/delete_blast';
 $route['register/subscribe'] = 'register/subscribe';
 
 // [Accounting]
+$route['accounting/generate-pdf'] = "accounting_modals/generatePDF";
+$route['accounting/show-pdf'] = "accounting_modals/showPDF";
 
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
@@ -260,6 +262,7 @@ $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 $route['accounting/get-job-tags'] = 'accounting_modals/get_job_tags';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
+$route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';

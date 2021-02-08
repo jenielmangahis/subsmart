@@ -73,7 +73,7 @@
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2>$0.00</h2><br>
+                            AMOUNT<h2><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly></h2><br>
                             Location of sale<br>
                             <input type="text" class="form-control" style="width:200px;" name="location_scale">
                         </div>
@@ -143,16 +143,16 @@
 
                     <div class="row">
                         <div class="col-md-2">
-                            Message on invoice<br>
-                            <textarea style="height:100px;width:100%;" name="message"></textarea><br>
-                            Message on statement<br>
+                            Message displayed on refund receipt<br>
+                            <textarea style="height:100px;width:100%;" name="message_refund"></textarea><br>
+                            Message displayed on statement<br>
                             <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             Taxable subtotal <b>$0.00</b><br>
-                            <table class="table table-borderless">
+                            <table class="table table-borderless" style="text-align:right;">
                                 <tr>
                                     <td colspan="2">
                                         <select class="form-control" name="tax_rate">
@@ -168,7 +168,7 @@
                                 </tr>
                                 <tr>
                                     <td>Shipping</td>
-                                    <td><input type="text" class="form-control"></td>
+                                    <td align="right"><input type="text" name="shipping" class="form-control"></td>
                                 </tr>
                                 <tr>
                                     <td>Tax on shipping</td>
@@ -189,7 +189,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="file-upload">
-                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachments</button>
 
                                 <div class="image-upload-wrap">
                                     <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
