@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <hr>
-                    <h3>Category details</h3><br>
+                    <h5>Category details</h5><br>
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-bordered" id="reportstable">
@@ -113,46 +113,70 @@
                         <div>
                     </div>
                     <hr>
-                    <h3>Item details</h3><br>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>PRODUCT/SERVICE</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>QTY</th>
-                                    <th>RATE</th>
-                                    <th>AMOUNT</th>
-                                    <th></th>
-                                </thead>
-                                <tr>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                        <div>
-                    </div>
-                    <hr>
+                        <div class="table-custom">
+                           <div id="headingTwo">
+                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                              <i class="fa fa-caret-right mr-2 " aria-hidden="true"></i> Item details
+                              </button>
+                           </div>
+                           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                              <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+                                 <thead>
+                                    <tr>
+                                       <th></th>
+                                       <th>#</th>
+                                       <th>PRODUCT/SERVICES</th>
+                                       <th>DESCRIPTION</th>
+                                       <th>QTY</th>
+                                       <th>RATE</th>
+                                       <th>AMOUNT</th>
+                                       <th></th>
+                                    </tr>
+                                 </thead>
+                                 <tbody id="line-container-expense">
+                                    <tr id="tableLine-expense">
+                                       <td></td>
+                                       <td><span id="line-counter-expense">1</span></td>
+                                       <td>
+                                          <div id="" style="display:;">
+                                             <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                             </select>
+                                          </div>
+                                       </td>
+                                       <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
+                                       <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                       <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                       <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                       <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
+                                    </tr>
+                                    <tr id="tableLine-expense">
+                                       <td></td>
+                                       <td><span id="line-counter-expense">1</span></td>
+                                       <td>
+                                          <div id="" style="display:;">
+                                             <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                             </select>
+                                          </div>
+                                       </td>
+                                       <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
+                                       <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                       <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                       <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
+                                       <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
+                                    </tr>
+                                    
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
                 
                     <div class="row">
                         <div class="col-md-1">

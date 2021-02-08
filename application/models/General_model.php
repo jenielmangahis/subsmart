@@ -56,6 +56,10 @@ class General_model extends MY_Model {
                 $this->db->order_by($params['order']['order_by'], "DESC");
             }
         }
+
+        if(array_key_exists("limit", $params)){
+            $this->db->limit($params['limit']);
+        }
        // $this->db->where('prof_id', $params['where']['prof_id']);
         $query = $this->db->get();
         if($result){
@@ -102,6 +106,15 @@ class General_model extends MY_Model {
     {
         if($this->db->insert($table,$input)){
             return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function add_return_id($input,$table)
+    {
+        if($this->db->insert($table,$input)){
+            return $this->db->insert_id();
         }else{
             return false;
         }

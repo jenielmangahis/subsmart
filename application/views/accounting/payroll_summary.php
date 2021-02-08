@@ -76,22 +76,6 @@
                             <td><?php echo $employee['net_pay']?></td>
                         </tr>
                     <?php endforeach; ?>
-                    <!-- <tr>
-                        <td>Nguyen, Tom T</td>
-                        <td>Paper check</td>
-                        <td>2.00</td>
-                        <td>$27.08</td>
-                        <td>$2.07</td>
-                        <td>$25.01</td>
-                    </tr>
-                    <tr>
-                        <td>Pemberton, Joshua S</td>
-                        <td>Paper check</td>
-                        <td></td>
-                        <td>$10.00</td>
-                        <td>$0.77</td>
-                        <td>$9.23</td>
-                    </tr> -->
                 </tbody>
                 <tfoot>
                     <tr>

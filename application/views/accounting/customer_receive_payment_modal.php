@@ -83,7 +83,7 @@
                         <div class="col-md-6" align="right">
                             AMOUNT RECEIVED<h2>$0.00</h2><br>
                             <p style="margin-top:100px;">Amount received</p><br>
-                            <input type="text" class="form-control" style="width:200px;text-align:right;" name="amount_received" placeholder="0.00">
+                            <input type="text" class="form-control" style="width:200px;text-align:right;" name="amount" placeholder="0.00">
                         </div>
                     </div>
                     <hr>
@@ -91,7 +91,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             Memo<br>
-                            <textarea style="height:100px;width:100%;" name="memo"></textarea><br>
+                            <textarea style="height:200px;width:100%;" name="memo"></textarea><br>
                             <div class="file-upload">
                                 <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
 

@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Accounting_purchase_order_model extends MY_Model {
 
-	public $table = 'accounting_invoice';
+	public $table = 'accounting_purchase_order';
 	
 	public function __construct()
 	{

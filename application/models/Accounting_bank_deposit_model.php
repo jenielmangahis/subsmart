@@ -21,4 +21,10 @@ class Accounting_bank_deposit_model extends MY_Model {
 		$this->db->insert_batch('accounting_bank_deposit_funds', $data);
 		return $this->db->insert_id();
 	}
+
+	function insertRecurringDetails($data)
+	{
+		$this->db->insert('accounting_recurring_bank_deposit', $data);
+		return $this->db->insert_id();
+	}
 }

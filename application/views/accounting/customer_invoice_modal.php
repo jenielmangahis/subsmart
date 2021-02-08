@@ -96,8 +96,13 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        Tags <a href="#" style="float:right">Manage tags</a>
-                                        <input type="text" class="form-control">
+                                        <!-- Tags <a href="#" style="float:right">Manage tags</a>
+                                        <input type="text" class="form-control"> -->
+                                        <div id="label">
+                                            <label for="tags">Tags</label>
+                                            <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
+                                        </div>
+                                        <select name="tags[]" id="tags" class="form-control js-example-basic-multiple js-data-example-ajax" multiple="multiple"></select>
                                     </div>
                                 </div>
                                 

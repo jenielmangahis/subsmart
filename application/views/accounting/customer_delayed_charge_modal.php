@@ -43,7 +43,7 @@
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2>$0.00</h2>
+                            AMOUNT<h2><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly></h2>
                         </div>
                     </div>
                     <hr>
@@ -103,7 +103,7 @@
                             <b>Subtotal</b>
                         </div>
                         <div class="col-md-1">
-                            <b>$0.00</b>
+                            <b><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="sub_total" value="0.00" readonly></b>
                         </div>
                     </div>
                     <hr>

@@ -714,35 +714,3 @@
     //$( "#sortable" ).disableSelection();
     }
     });</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="<?= base_url() ?>/assets/formbuilder/js/jquery-ui.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-
-    var table_cust_list = $('#customer_list_table').DataTable({
-    "lengthChange": false,
-            "searching" : true,
-            "pageLength": 10,
-            "info": true,
-            "responsive": true,
-            "order": [],
-    });
-    $('.floating-btn-div').hide();
-    $('#shortcut_link').on('click', function(e){
-    if ($('.float1').is(':hidden') && $('.float2').is(':hidden') && $('.float3').is(':hidden')){
-    $('.floating-btn-div ').show('slow');
-    $('.floating-btn-div ').show('slow');
-    $('.floating-btn-div ').show('slow');
-    }
-    else{
-    $('.floating-btn-div ').hide('slow');
-    $('.floating-btn-div ').hide('slow');
-    $('.floating-btn-div ').hide('slow');
-    }
-    });
-    });
-</script>

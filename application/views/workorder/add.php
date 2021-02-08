@@ -57,9 +57,6 @@
                                             <div class="col-sm-6">
                                                 <h3 class="page-title">Basic Work Order</h3>
                                             </div>
-                                            <div class="col-12">
-                                                <iframe src="<?= base_url('/fb/view/25')?>" frameborder="0" class="workorder-container"></iframe>
-                                            </div>
                                         </div>
 
                                         <div class="tab-pane fade standard-accordion" id="alarm1">
@@ -80,7 +77,7 @@
                                                                         <a href="#alarmform2" data-toggle="tab" class="h6 mb-0 nav-link banking-sub-tab">Schedule of Equipment and Services</a>
                                                                     </li>
                                                                     <li class="nav-item">
-                                                                        <a href="#alarmform3" data-toggle="tab" class="h6 mb-0 nav-link banking-sub-tab">Workorder Agreement</a>
+                                                                        <a href="#alarmform3" data-toggle="tab" class="h6 mb-0 nav-link banking-sub-tab">Workorder Arrangement</a>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -94,6 +91,7 @@
                                                                 </div>
                                                                 <div class="tab-pane standard-accordion" id="alarmform3">
                                                                     <iframe src="<?= base_url('/fb/view/25')?>" frameborder="0" class="workorder-container"></iframe>
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                             

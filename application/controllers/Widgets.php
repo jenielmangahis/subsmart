@@ -47,12 +47,14 @@ class Widgets extends MY_Controller {
             'wu_order' => $idCount + 1,
         );
         if (!$this->wizardlib->isWidgetUsed($id)):
-            if ($this->widgets_model->addWidgets($details, $user_id, $id)):
-                $widget = $this->widgets_model->getWidgetByID($id);
-                $data['id'] = $id;
-                $view = $this->load->view($widget->w_view_link,$data);
-                
-                return $view;
+            if(!$this->wizardlib->isWidgetGlobal($id)):
+                if ($this->widgets_model->addWidgets($details, $user_id, $id)):
+                    $widget = $this->widgets_model->getWidgetByID($id);
+                    $data['id'] = $id;
+                    $view = $this->load->view($widget->w_view_link,$data);
+
+                    return $view;
+            endif;
             endif;
         endif;
     }

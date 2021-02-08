@@ -29,12 +29,42 @@
 
   .action-envlo {
     & > ul {
-      display: flex;
+      display: grid;
+      row-gap: 10px;
     }
 
     li .dropdown-toggle:after {
       content: "";
       position: relative;
     }
+  }
+
+  &__submit,
+  &__addForm {
+    cursor: pointer !important;
+  }
+
+  &__submit {
+    color: #1e1e1e;
+    background-color: #ffce00;
+    border: 1px solid #ffce00;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 5px 20px;
+    border-radius: 3px;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: #1e1e1e !important;
+      background-color: #ffce00 !important;
+      border-color: #ffce00 !important;
+    }
+  }
+
+  .left-wnvofrm {
+    margin-bottom: 135px;
   }
 }

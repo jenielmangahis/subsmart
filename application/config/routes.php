@@ -253,6 +253,8 @@ $route['campaign_blast/delete_blast'] = 'Campaign_Blast/delete_blast';
 $route['register/subscribe'] = 'register/subscribe';
 
 // [Accounting]
+$route['accounting/generate-pdf'] = "accounting_modals/generatePDF";
+$route['accounting/show-pdf'] = "accounting_modals/showPDF";
 
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
@@ -260,6 +262,7 @@ $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 $route['accounting/get-job-tags'] = 'accounting_modals/get_job_tags';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
+$route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -559,6 +562,8 @@ $route['credit_note_customer_view/(:any)'] = 'Pages/credit_note_customer_view/$1
 $route['credit_notes/view_pdf/(:num)'] = 'credit_notes/pdf_credit_note/$1';
 $route['credit_notes/close'] = 'Credit_Notes/close_credit_note';
 $route['credit_notes/print/(:num)'] = 'Credit_Notes/print_credit_note/$1';
+$route['credit_notes/clone'] = 'Credit_Notes/clone_credit_note';
+$route['credit_notes/settings'] = 'Credit_Notes/credit_note_settings';
 
 //Event Types
 $route['event_types'] = 'Event_Types/index';

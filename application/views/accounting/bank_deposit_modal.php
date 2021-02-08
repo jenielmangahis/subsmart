@@ -9,8 +9,8 @@
                     <h4 class="modal-title">Bank Deposit</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <div class="modal-body pb-0">
-                    <div class="row">
+                <div class="modal-body py-0">
+                    <div class="row bank-account-details">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-5">
@@ -276,7 +276,13 @@
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4">
-                            
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" onclick="viewPrint(1, 'deposit-summary')" class="text-white">Print deposit summary</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span><a href="#" onclick="makeRecurring('bank_deposit')" class="text-white">Make recurring</a></span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
@@ -300,4 +306,27 @@
     </div>
     <!--end of modal-->
 </form>
+</div>
+<!-- Modal for print -->
+<div class="full-screen-modal">
+    <div id="showPdfModal" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="height: 100%;">
+                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+                    <h4 class="modal-title">Print</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body pb-0">
+                    <div class="row">
+                    <iframe id="showPdf" src="/accounting/show-pdf" frameborder="0" style="width: 100%;    height: 700px;"></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer bg-secondary">
+                    <div class="row w-100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

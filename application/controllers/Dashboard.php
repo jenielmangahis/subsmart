@@ -21,7 +21,7 @@ class Dashboard extends Widgets {
 
         add_css(array(
            // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-//            "assets/css/accounting/accounting.css",
+            "assets/css/accounting/accounting.css",
             'assets/css/dashboard.css'
         ));
 

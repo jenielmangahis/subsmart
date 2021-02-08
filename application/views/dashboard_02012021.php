@@ -681,7 +681,7 @@
                         </div>
                     </div>
                 </div>
-
+                <!--Accounting-->
                 <div class="col-sm-4">
                     <div class="income tile-container">
                         <div class="inner-container">
@@ -930,7 +930,7 @@
                         </div>
                     </div>
                 </div>
-
+                <!--end of accounting-->
                 <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-4 MuiGrid-grid-xl-3">
                     <div class="c65 c61">
                         <div class="MuiPaper-root MuiCard-root jss54 MuiPaper-elevation1 MuiPaper-rounded" style="cursor: auto; width: 100%; position: relative;">

@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Accounting_delayed_credit_model extends MY_Model {
 
-	public $table = 'accounting_delayed_charge';
+	public $table = 'accounting_delayed_Credit';
 	
 	public function __construct()
 	{
