@@ -255,6 +255,7 @@ $route['register/subscribe'] = 'register/subscribe';
 // [Accounting]
 $route['accounting/generate-pdf'] = "accounting_modals/generatePDF";
 $route['accounting/show-pdf'] = "accounting_modals/showPDF";
+$route['accounting/download-pdf'] = "accounting_modals/downloadPDF";
 
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';

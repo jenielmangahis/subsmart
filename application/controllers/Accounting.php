@@ -2146,7 +2146,8 @@ class Accounting extends MY_Controller {
             $i++;
         }
 
-        redirect('accounting/banking');
+        // redirect('accounting/banking');
+        redirect('accounting/invoices');
             
         }
         else{
@@ -3444,4 +3445,83 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         } 
     }
+
+    //
+    public function addInvoiceNew()
+    {
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'customer_email' => $this->input->post('customer_email'),
+            'online_payments' => $this->input->post('online_payments'),
+            'billing_address' => $this->input->post('billing_address'),
+            'shipping_to_address' => $this->input->post('shipping_to_address'),
+            'ship_via' => $this->input->post('ship_via'),
+            'shipping_date' => $this->input->post('shipping_date'),
+            'tracking_number' => $this->input->post('tracking_number'),
+            'terms' => $this->input->post('terms'),
+            'invoice_date' => $this->input->post('invoice_date'),
+            'due_date' => $this->input->post('due_date'),
+            'location_scale' => $this->input->post('location_scale'),
+            'message_on_invoice' => $this->input->post('message_on_invoice'),
+            'message_on_statement' => $this->input->post('message_on_statement'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'test',
+            'status' => 1,
+            'created_by' => logged('id'),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_invoices_model->createInvoice($new_data);
+        if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'product_services' => $this->input->post('prod'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'rate' => $this->input->post('rate'),
+                'amount' => $this->input->post('amount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            // $a['aa'] = $this->input->post('prod');
+            // $b['bb'] = $this->input->post('desc');
+            // $c['cc'] = $this->input->post('qty');
+            $a = $this->input->post('prod');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('rate');
+            $e = $this->input->post('amount');
+            $f = $this->input->post('tax');
+           
+        $i = 0;
+        foreach($a as $row){
+            $data['product_services'] = $a[$i];
+            $data['description'] = $b[$i];
+            $data['qty'] = $c[$i];
+            $data['rate'] = $d[$i];
+            $data['amount'] = $e[$i];
+            $data['tax'] = $f[$i];
+            $data['type'] = '1';
+            $data['type_id'] = $addQuery;
+            $data['status'] = '1';
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+            $i++;
+        }
+
+        // redirect('accounting/banking');
+        redirect('accounting/invoices');
+            
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
 }

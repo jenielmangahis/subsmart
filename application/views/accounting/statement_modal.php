@@ -164,7 +164,7 @@
                         <div class="col-md-4">
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" onclick="viewPrint(2, 'statement-summary')" class="text-white">Print deposit summary</a></span>
+                                    <span><a href="#" onclick="viewPrint(2, 'statement-summary')" class="text-white">Print or preview</a></span>
                                 </div>
                             </div>
                         </div>
@@ -210,6 +210,15 @@
                 </div>
                 <div class="modal-footer bg-secondary">
                     <div class="row w-100">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                        </div>
+                        <div class="col-md-4">
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-success btn-rounded float-right" id="print-deposit-pdf">Print</button>
+                        </div>
                     </div>
                 </div>
             </div>
