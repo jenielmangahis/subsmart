@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
+            <div class="page-title-box pb-2">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title">Online Booking</h1>
@@ -15,6 +15,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </ol>
                     </div>
                 </div>
+            </div>
+            <div class="alert alert-warning mt-0 mb-3" role="alert">
+                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Online booking system is a software solution that allows potential guests to self-book and pay through your website, and other channels, while giving you the best tools to run and scale your operation, all in one place.</span>
             </div>
             <!-- end row -->
             <div class="row">

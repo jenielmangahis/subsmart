@@ -428,8 +428,10 @@ a.top-1 {
                                               </div>
                                           </form>
                                         </div>
-                                        <br class="clearfix"/><br/>
-
+                                        <br class="clearfix"/>
+                                        <div class="alert alert-warning mt-2 mb-4" role="alert">
+                                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">With Calendar, you can quickly schedule meetings and events and get reminders about upcoming activities, so you always know what’s next. Calendar is designed for teams, so it’s easy to share... </span>
+                                        </div>
 
                                     </div>
                                     <div class="left-calendar-loading"></div>

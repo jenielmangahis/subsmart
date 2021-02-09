@@ -135,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		list-style: none;
 	}
 	.payment-method li{
-		margin-bottom: 10px;
+		margin-bottom: 35px;
 	}
 	.payment-method li input{
 		margin-right: 10px;
@@ -427,6 +427,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          		<li>
 								          			<input type="radio" id="stripe" name="payment_method" value="stripe">
 								          			<img src="<?php echo $url->assets ?>img/stripe-logo.png" alt="" style="height: 62px;">
+								          		</li>
+								          		<li>
+								          			<input type="radio" id="converge" name="payment_method" value="converge">
+								          			<img src="<?php echo $url->assets ?>img/converge-logo.png" alt="" style="height: 62px;">
 								          		</li>
 								          	</ul>	
 								          	<hr />
@@ -831,7 +835,7 @@ $(function(){
     step3bBtnPrcPayment.click(function(e){
     	e.preventDefault();
     	var payment_method = $('input[name="payment_method"]:checked').val();    	    	
-    	if( payment_method == 'paypal' ){
+    	if( payment_method == 'paypal' || payment_method == 'converge' ){
     		$( "#subscribe-form-payment" ).submit();
     	}else{
     		$("#step-3").hide();

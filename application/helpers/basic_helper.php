@@ -85,7 +85,13 @@ if (!function_exists('userProfile')) {
         $url = urlUpload('users/' . $id . '.png?' . time());
 
         if ($id != 'default')
-            $url = urlUpload('users/' . $id . '.' . $CI->users_model->getRowById($id, 'profile_img') . '?' . time());
+            //$url = urlUpload('users/' . $id . '.' . $CI->users_model->getRowById($id, 'profile_img') . '?' . time());
+            $image_image = $CI->users_model->getRowById($id, 'profile_img');
+            if( !file_exists(FCPATH."uploads/users/user-profile/" . $image_image) ){
+                $url = base_url('uploads/users/default.png');
+            }else{
+                $url = urlUpload('users/user-profile/' . $CI->users_model->getRowById($id, 'profile_img') . '?' . time());
+            }            
         // $url = 'http://nsmartrac.com/uploads/users/'.$id.'.'.$CI->users_model->getRowById($id, 'img_type').'?'.time();
 
         return $url;

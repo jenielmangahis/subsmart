@@ -371,25 +371,43 @@ class Register extends MY_Controller {
         $subscription_price = $post['plan_price'];
         $subscription_price_discounted = $post['plan_price_discounted'];
         $subscription_type  = $post['subscription_type'];
+        
+        if( $post['payment_method'] == 'stripe' ){
+            if( isset($post['stripeToken']) ){
+                //Stripe
 
-        if( isset($post['stripeToken']) ){
-            //Stripe
+                \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");      
+                $plan      = $this->NsmartPlan_model->getById($subscription_id);
+                $plan_name = strtolower($plan->plan_name);
+                $plan_name = str_replace(" ", "_", $plan_name);
+                $plan_id   = "price_test2_" . $plan_name . "_" . $plan->id;
 
-            \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");      
-            $plan      = $this->NsmartPlan_model->getById($subscription_id);
-            $plan_name = strtolower($plan->plan_name);
-            $plan_name = str_replace(" ", "_", $plan_name);
-            $plan_id   = "price_test2_" . $plan_name . "_" . $plan->id;
+                if( $post['subscription_type'] == 'prospect' ){
+                    $stripe_coupon = 'w1sqO9YX';
+                }else{
+                    $stripe_coupon = 'xlglClNy';
+                }
 
-            if( $post['subscription_type'] == 'prospect' ){
-                $stripe_coupon = 'w1sqO9YX';
-            }else{
-                $stripe_coupon = 'xlglClNy';
-            }
+                if($plan->stripe_price_id != ''){
+                    $stripePlan = \Stripe\Plan::retrieve($plan->stripe_price_id);
+                    if( !$stripePlan ){
+                         //create new plan
+                        $stripePlan = \Stripe\Plan::create(array(
+                          "amount" => round($plan->price,2)*100,
+                          "interval" => "month",
+                          "product" => array(
+                            "name" => $plan->plan_name
+                          ),
+                          "currency" => "usd",
+                          "id" => $plan_id
+                        ));
 
-            if($plan->stripe_price_id != ''){
-                $stripePlan = \Stripe\Plan::retrieve($plan->stripe_price_id);
-                if( !$stripePlan ){
+                        $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
+                            'stripe_plan_id' => $stripePlan->product,
+                            'stripe_price_id' => $plan_id
+                        ));
+                    }
+                }else{
                      //create new plan
                     $stripePlan = \Stripe\Plan::create(array(
                       "amount" => round($plan->price,2)*100,
@@ -406,62 +424,50 @@ class Register extends MY_Controller {
                         'stripe_price_id' => $plan_id
                     ));
                 }
+
+                $stripe = new \Stripe\StripeClient('sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY');
+                $customer = $stripe->customers->create([
+                    'description' => $post['firstname'] . " " . $post['lastname'],
+                    'email' => $post['email'],
+                    'source' => $post['stripeToken'],
+                ]);
+
+                $subscription = \Stripe\Subscription::create(array(
+                    'customer' => $customer->id,
+                    'items' => array(array('plan' => $stripePlan->id)),
+                    'coupon' => $stripe_coupon
+                ));
+
+                $this->Clients_model->update($cid, array(
+                    'paypal_plan_id' => $plan_id,
+                    'nsmart_plan_id' => $post['plan_id'],
+                    'stripe_token' => $post['stripeToken'],
+                    'is_plan_active' => 1
+                ));
+
+                $this->users_model->update($uid, array('status' => 1));
+
+                $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+                if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
+                {
+                    $leads_input['tablename'] = "ac_leads";
+                    $leads_input['field_name'] = "leads_id";
+                    $leads_input['id'] = $reg_temp_user_id;
+                    $this->Customer_advance_model->delete($leads_input);
+
+                    $this->session->unset_userdata('reg_temp_user_id');
+                }
+
+                $this->session->set_flashdata('alert-type', 'success');
+                $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
+
+                redirect('login');
             }else{
-                 //create new plan
-                $stripePlan = \Stripe\Plan::create(array(
-                  "amount" => round($plan->price,2)*100,
-                  "interval" => "month",
-                  "product" => array(
-                    "name" => $plan->plan_name
-                  ),
-                  "currency" => "usd",
-                  "id" => $plan_id
-                ));
-
-                $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
-                    'stripe_plan_id' => $stripePlan->product,
-                    'stripe_price_id' => $plan_id
-                ));
+                $this->session->set_flashdata('alert-type', 'danger');
+                $this->session->set_flashdata('alert', 'Cannot process payment.'); 
+                redirect('registration');
             }
-
-            $stripe = new \Stripe\StripeClient('sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY');
-            $customer = $stripe->customers->create([
-                'description' => $post['firstname'] . " " . $post['lastname'],
-                'email' => $post['email'],
-                'source' => $post['stripeToken'],
-            ]);
-
-            $subscription = \Stripe\Subscription::create(array(
-                'customer' => $customer->id,
-                'items' => array(array('plan' => $stripePlan->id)),
-                'coupon' => $stripe_coupon
-            ));
-
-            $this->Clients_model->update($cid, array(
-                'paypal_plan_id' => $plan_id,
-                'nsmart_plan_id' => $post['plan_id'],
-                'stripe_token' => $post['stripeToken'],
-                'is_plan_active' => 1
-            ));
-
-            $this->users_model->update($uid, array('status' => 1));
-
-            $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
-            if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
-            {
-                $leads_input['tablename'] = "ac_leads";
-                $leads_input['field_name'] = "leads_id";
-                $leads_input['id'] = $reg_temp_user_id;
-                $this->Customer_advance_model->delete($leads_input);
-
-                $this->session->unset_userdata('reg_temp_user_id');
-            }
-
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
-
-            redirect('login');
-        }else{
+        }elseif( $post['payment_method'] == 'paypal' ){
             //Add custom data such as item/subscription id etc.
             //$userID = 123456;        
 
@@ -627,7 +633,63 @@ class Register extends MY_Controller {
 
             /*
              *  Paypal Process Here - End
-            */        
+            */ 
+        }else{
+            //Converge
+            // Provide Converge Credentials
+            $merchantID = "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+            $merchantUserID = "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+            $merchantPIN = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
+
+            //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
+            $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+
+            //$hppurl = "https://demo.api.convergepay.com/hosted-payments"; // URL to the demo Hosted Payments Page
+            $hppurl = "https://api.convergepay.com/hosted-payments"; // URL to the production Hosted Payments Page
+
+            /*Payment Field Variables*/
+
+            // In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
+
+            $amount= $post['plan_price']; //Hard-coded transaction amount for testing.
+
+            //$amount  = $_POST['ssl_amount'];   //Capture ssl_amount as POST data
+            $firstname = $post['firstname'];   //Capture ssl_first_name as POST data
+            $lastname  = $post['lastname'];   //Capture ssl_last_name as POST data
+            //$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture ssl_merchant_txn_id as POST data
+            //$invoicenumber = $_POST['ssl_invoice_number']; //Capture ssl_invoice_number as POST data
+
+            //Follow the above pattern to add additional fields to be sent in curl request below.
+            $merchanttxnid = "3234342343";
+            $ch = curl_init();    // initialize curl handle
+            curl_setopt($ch, CURLOPT_URL,$url); // set POST target URL
+            curl_setopt($ch,CURLOPT_POST, true); // set POST method
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            //Build the request for the session id. Make sure all payment field variables created above get included in the CURLOPT_POSTFIELDS section below.
+
+            curl_setopt($ch,CURLOPT_POSTFIELDS,
+            "ssl_merchant_id=$merchantID".
+            "&ssl_user_id=$merchantUserID".
+            "&ssl_first_name=$firstname".
+            "&ssl_last_name=$lastname".
+            "&ssl_pin=$merchantPIN".
+            "&ssl_transaction_type=ccsale".
+            "&ssl_txn_id=$merchanttxnid".
+            "&ssl_amount=$amount"
+            );
+
+            $result = curl_exec($ch); // run the curl to post to Converge
+            curl_close($ch); // Close cURL
+
+            $sessiontoken= urlencode($result);
+
+            /* Now we redirect to the HPP */
+
+            //header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken");  //Demo Redirect
+            header("Location: https://api.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect   
         }
     }
 

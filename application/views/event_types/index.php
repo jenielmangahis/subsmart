@@ -14,12 +14,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
+            <div class="page-title-box pb-2">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title">Event Types</h1>
                     </div>
                 </div>
+            </div>
+            <div class="alert alert-warning mt-1 mb-4" role="alert">
+                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Schedule adds the ability to create and track events in CRM; An event can be scheduled for single or multiple days; Staff, venue and equipment resources can all be schedule for a given event; The visual event calendar lets you see events by type and venue. <br/><br/>
+                To create a new event type. Click Add New; To edit an existing event type simply click edit.
+                </span>
             </div>
             <!-- end row -->
             <div class="row">
