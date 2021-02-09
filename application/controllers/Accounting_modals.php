@@ -1317,4 +1317,18 @@ class Accounting_modals extends MY_Controller {
         @readfile($filename);
         exit;
     }
+
+    public function downloadPDF() {
+        $filename = $this->input->get('filename');
+        $file = base_url("/assets/pdf/$filename");
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.basename($file).'"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+    }
 }

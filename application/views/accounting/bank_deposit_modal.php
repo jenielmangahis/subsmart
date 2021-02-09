@@ -314,16 +314,26 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Print</h4>
+                    <h4 class="modal-title">Print preview</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <div class="modal-body pb-0">
+                <div class="modal-body">
                     <div class="row">
                     <iframe id="showPdf" src="/accounting/show-pdf" frameborder="0" style="width: 100%;    height: 700px;"></iframe>
                     </div>
                 </div>
                 <div class="modal-footer bg-secondary">
                     <div class="row w-100">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                        </div>
+                        <div class="col-md-4">
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-success btn-rounded float-right" id="print-deposit-pdf">Print</button>
+                            <a class="btn btn-secondary btn-rounded border float-right mr-3 text-white cursor-pointer" id="download-pdf" target="_blank">Download</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -189,8 +189,8 @@
 
     <?php if (isset($next_step) && $next_step == 0) { ?>
 
-        <?php echo form_open_multipart('esign/fileSave', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off']); ?>
-        <input type="hidden" value="0" name="next_step" />
+        <?php echo form_open_multipart('esign/fileSave', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off', 'data-form-step' => '1']); ?>
+        <input type="hidden" value="1" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
         <header style="margin-top: 81px;">
             <div class="container-fluid">
@@ -232,26 +232,36 @@
                     </span>
                 </div>
 
-                <div class="custome-fileup">
+                <div class="d-flex">
+                    <div class="custome-fileup">
 
-                    <div class="upload-btn-wrapper">
-                        <button class="btn">
-                            <img src="<?php echo $url->assets ?>esign/images/fileup-ic.png" alt="">
-                            <span>Upload</span>
-                        </button>
-                        <input type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel" />
+                        <div class="upload-btn-wrapper">
+                            <button class="btn">
+                                <img src="<?php echo $url->assets ?>esign/images/fileup-ic.png" alt="">
+                                <span>Upload</span>
+                            </button>
+                            <input type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel" required/>
+                        </div>
+
+                        <!-- <div class="dropdown">
+                                <button class="btn-upl dropdown-toggle" type="button" data-toggle="dropdown">Get from Cloud
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic1.png" alt=""> Box</a></li>
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic2.png" alt=""> Dropbox</a></li>
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic3.png" alt=""> Google Drive</a></li>
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic4.png" alt=""> One Drive</a></li>
+                                </ul>
+                            </div> -->
                     </div>
 
-                    <!-- <div class="dropdown">
-                            <button class="btn-upl dropdown-toggle" type="button" data-toggle="dropdown">Get from Cloud
-                            <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic1.png" alt=""> Box</a></li>
-                                <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic2.png" alt=""> Dropbox</a></li>
-                                <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic3.png" alt=""> Google Drive</a></li>
-                                <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic4.png" alt=""> One Drive</a></li>
-                            </ul>
-                        </div> -->
+                    <div class="ml-3 esignBuilder__docPreview d-none">
+                        <canvas></canvas>
+                        <div class="esignBuilder__docInfo">
+                            <h5 class="esignBuilder__docTitle"></h5>
+                            <span class="esignBuilder__docPageCount"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -261,10 +271,24 @@
             <div class="container-fluid">
                 <ul>
                     <!-- <li><a href="#">Send Now</a></li> -->
-                    <li><a href="#" onClick="uploadOrNext(true)" class="next-btn">next</a></li>
+                    <li><button type="submit" class="next-btn esignBuilder__submit">next</button></li>
                 </ul>
             </div>
         </footer>
+
+        <div class="modal esignBuilder__modal" id="documentModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
         <!-- End Footer --->
         <?php echo form_close(); ?>
     <?php } ?>

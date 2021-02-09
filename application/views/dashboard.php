@@ -21,6 +21,7 @@
                     .dynamic-widget .card{
                         height: 400px !important
                     }
+                    
                     .card-header{
                         border-bottom: 1px solid gray !important;
                     }
@@ -119,11 +120,11 @@
                 <div class="col-md-8">
                     <div class="row cus-dashboard-div">
                         <?php
-                        $this->load->view('widgets/earned_today');
-                        $this->load->view('widgets/total_jobs');
-                        $this->load->view('widgets/total_invoice_due');
-                        $this->load->view('widgets/total_estimate_pending');
-                        $this->load->view('widgets/hr_widgets');
+                            $this->load->view('widgets/earned_today');
+                            $this->load->view('widgets/total_jobs');
+                            $this->load->view('widgets/total_invoice_due');
+                            $this->load->view('widgets/total_estimate_pending');
+                            $this->load->view('widgets/hr_widgets');
                         ?>
                     </div>
                 </div>
