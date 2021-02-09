@@ -867,6 +867,12 @@ $(function() {
 
         $(this).parent().next().children().children().html(fields);
     });
+
+    $(document).on('click', '#showPdfModal button#print-deposit-pdf', function(e) {
+        var PDF = document.getElementById('showPdf');
+        PDF.focus();
+        PDF.contentWindow.print();
+    });
 });
 
 const showApplyButton = () => {
@@ -1284,7 +1290,9 @@ const submitModalForm = (event, el) => {
         success: function(result) {
             var res = JSON.parse(result);
 
-            $('div#modal-container div.full-screen-modal .modal').modal('hide');
+            if(res.success === true) {
+                $('div#modal-container div.full-screen-modal .modal').modal('hide');
+            }
 
             toast(res.success, res.message);
         }
@@ -1379,56 +1387,80 @@ const makeRecurring = (modalName) => {
 }
 
 const viewPrint = (id, title = "") => {
-    var data = {
-        received_from: [],
-        accounts: [],
-        description: [],
-        payment_method: [],
-        reference_no: [],
-        amount: [],
-        title: title,
-        id: id
-    };
+    var data = {};
+    var flag = false;
+    if(title === 'deposit-summary') {
+        data.received_from = [];
+        data.accounts = [];
+        data.description = [];
+        data.payment_method = [];
+        data.reference_no = [];
+        data.amount = [];
+        data.cash_back_amount = $('#depositModal input#cashBackAmount').val();
+        data.deposit_date = $('#depositModal input#date').val();
+        data.title = title;
+        data.id = id;
 
-    var received_from = $('#bank-deposit-table [name="received_from[]"] option:selected');
-    var accounts = $('#bank-deposit-table [name="account[]"] option:selected');
-    var description = $('#bank-deposit-table [name="description[]"]');
-    var payment_method = $('#bank-deposit-table [name="payment_method[]"] option:selected');
-    var reference_no = $('#bank-deposit-table [name="reference_no[]"]');
-    var amount = $('#bank-deposit-table [name="amount[]"]');
+        var received_from = $('#bank-deposit-table [name="received_from[]"] option:selected');
+        var accounts = $('#bank-deposit-table [name="account[]"] option:selected');
+        var description = $('#bank-deposit-table [name="description[]"]');
+        var payment_method = $('#bank-deposit-table [name="payment_method[]"] option:selected');
+        var reference_no = $('#bank-deposit-table [name="reference_no[]"]');
+        var amount = $('#bank-deposit-table [name="amount[]"]');
 
-    for (var i in received_from) {
+        for (var i in received_from) {
 
-        var rec_from_val = received_from[i].outerText;
-        if (rec_from_val !== undefined) data.received_from[i] = rec_from_val;
-
-        var accounts_val = accounts[i].outerText;
-        if (accounts_val !== undefined) data.accounts[i] = accounts_val;
-
-        var description_val = description[i].value;
-        if (description_val !== undefined) data.description[i] = description_val;
-
-        var payment_method_val = payment_method[i].outerText;
-        if (payment_method_val !== undefined) data.payment_method[i] = payment_method_val;
-
-        var reference_no_val = reference_no[i].value;
-        if (reference_no_val !== undefined) data.reference_no[i] = reference_no_val;
-
-        var amount_val = amount[i].value;
-        if (amount_val !== undefined) {
-            data.amount[i] = amount_val;
+            var rec_from_val = received_from[i].outerText;
+            if (rec_from_val !== undefined && rec_from_val !== "") data.received_from[i] = rec_from_val;
+    
+            var accounts_val = accounts[i].outerText;
+            if (accounts_val !== undefined && accounts_val !== "") data.accounts[i] = accounts_val;
+    
+            var description_val = description[i].value;
+            if (description_val !== undefined && description_val !== "") data.description[i] = description_val;
+    
+            var payment_method_val = payment_method[i].outerText;
+            if (payment_method_val !== undefined && payment_method_val !== "") data.payment_method[i] = payment_method_val;
+    
+            var reference_no_val = reference_no[i].value;
+            if (reference_no_val !== undefined && reference_no_val !== "") data.reference_no[i] = reference_no_val;
+    
+            var amount_val = amount[i].value;
+            if (amount_val !== undefined && amount_val !== "") {
+                data.amount[i] = amount_val;
+            }
         }
 
+        if (data.received_from.length > 0 &&
+            data.accounts.length > 0 &&
+            data.description.length > 0 &&
+            data.payment_method.length > 0 &&
+            data.reference_no.length > 0 &&
+            data.amount.length > 0) {
+            flag = true;
+        }
+    } else {
+        data.title = title;
+        data.id = id;
+        data.customers = [];
+        data.statement_type = $('#statementModal select#statementType').val();
+        data.statement_date = $('#statementModal input#statementDate').val();
+        data.cust_bal_status = $('#statementModal select#customerBalanceStatus').val();
+        data.start_date = data.statement_type !== "2" ? $('#statementModal input#startDate').val() : null;
+        data.end_date = data.statement_type !== "2" ? $('#statementModal input#endDate').val() : null;
 
+        var customers = $('#statements-table tbody tr td:first-child() input:checked');
+
+        customers.each(function() {
+            data.customers.push($(this).val());
+        });
+
+        if(data.customers.length > 0) {
+            flag = true;
+        }
     }
 
-    if (data.received_from.length > 0 &&
-        data.accounts.length > 0 &&
-        data.description.length > 0 &&
-        data.payment_method.length > 0 &&
-        data.reference_no.length > 0 &&
-        data.amount.length > 0 || 
-        id != 1) {
+    if (flag === true) {
         $.ajax({
             url: '/accounting/generate-pdf',
             data: {json: JSON.stringify(data)},
@@ -1438,6 +1470,8 @@ const viewPrint = (id, title = "") => {
                 if (res.filename != "") {
                     $('iframe#showPdf').attr('src', "/accounting/show-pdf?pdf=" +res.filename);
                     $('#showPdfModal').modal('show');
+
+                    $('#showPdfModal div.modal-footer a#download-pdf').attr('href', '/accounting/download-pdf?filename='+res.filename);
                 }
             }
         });

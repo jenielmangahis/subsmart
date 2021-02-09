@@ -66,7 +66,7 @@ public function save_pdf($view, $data = array(), $filename, $orientation)
     $dompdf->loadHtml($html);
 
     // (Optional) Setup the paper size and orientation
-    $dompdf->setPaper('A4', $orientation);
+    $dompdf->setPaper('Letter', $orientation);
 
     // Render the HTML as PDF
     $dompdf->render();

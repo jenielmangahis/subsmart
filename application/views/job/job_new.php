@@ -259,20 +259,18 @@
                                         <a href="javascript:void(0);" id="attach_left_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
                                     </h2>
                                 </div>
-
                                 <div id="photos_attachment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <div class="form-group col-md-12">
-                                                <label for="attachment">Attachments</label>
-                                                <p>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</p>
-                                                <input type="file" class="form-control" name="attachment" id="attachment">
+                                                <img style="width: 100%" id="attachment-image" alt="Attachment" src="/uploads/jobs/attachment/placeholder.jpg">
+                                                <small>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</small>
+                                                <input type="file" class="form-control" name="attachment-file" id="attachment-file">
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
-                                    <br>
+                                <br>
                                 </div>
                             </div>
                         </div>
@@ -294,8 +292,9 @@
 
                                     <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
+                                            <!--<a href="https://www.facebook.com/"><p>https://www.facebook.com/</p></a>-->
                                             <label>Enter Url</label>
-                                            <input type="url" name="link" class="form-control checkDescription" >
+                                            <input type="url" name="link" class="form-control checkDescription">
                                         </div>
                                         <br>
                                     </div>
@@ -352,7 +351,7 @@
                                             <div class="col-sm-12">
                                                 <div class="col-md-12">
                                                     <label for="">Method</label>
-                                                    <select id="pay_method" name="pay_method" class="form-control">
+                                                    <select id="pay_method" name="method" class="form-control">
                                                         <option value="CC">Credit Card</option>
                                                         <option value="CHECK">Check</option>
                                                         <option value="CASH">Cash</option>
@@ -369,7 +368,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Amount</label>
-                                                    <input class="form-control" id="pay_amount" type="number" placeholder="$0.00">
+                                                    <input class="form-control" id="pay_amount" name="amount" type="number" placeholder="$0.00">
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h6>Payment Details</h6>
@@ -401,11 +400,10 @@
                                                                                 <input type="number" name="card_cvc" class="form-control" id="cvCode" placeholder="CVC" />
                                                                             </div>
                                                                         </div>
-
                                                                         <div class="col-sm-12">
                                                                             <label >Save card to file</label>
                                                                             <div class="onoffswitch grid-onoffswitch" style="float: right;">
-                                                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
+                                                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" value="1" data-customize="open" id="onoff-customize">
                                                                                 <label class="onoffswitch-label" for="onoff-customize">
                                                                                     <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
                                                                             </div>
@@ -456,20 +454,20 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Routing #"  />
+                                                                                    <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account #"  />
+                                                                                    <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
-                                                                                <select id="day_of_month_ach" class="form-control">
+                                                                                <select id="day_of_month_ach" name="day_of_month" class="form-control">
                                                                                     <option value="">Select Day of Month</option>
                                                                                     <?php for($x=1;$x<=31;$x++){ ?>
                                                                                         <option value="<?= $x; ?>"><?= $x; ?></option>
@@ -491,15 +489,14 @@
                                                                     <div class="row">
                                                                         <div class="col-md-12" style="text-align: center !important;">
                                                                             <br>
-
                                                                             <button type="button" class="btn btn-sm btn-primary">
                                                                                 <span class="fa fa-search-plus"></span> Scan Payment
                                                                             </button>
                                                                             <br>
-                                                                            <div class="form-group" style="text-align: center;">
-                                                                                <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
-                                                                                <label for="notify_by_email">Payment has been collected.</label>
-                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group" style="text-align: center !important;">
+                                                                            <input type="checkbox" name="is_collected" value="1" id="notify_by_email">
+                                                                            <label for="notify_by_email">Payment has been collected.</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -510,20 +507,20 @@
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential"  />
+                                                                                    <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <textarea  class="form-control" id="cardNumber" placeholder="Account Note"></textarea>
+                                                                                    <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="form-group" style="text-align: center;">
-                                                                                <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
+                                                                                <input type="checkbox" name="is_signed" value="1" id="notify_by_email">
                                                                                 <label for="notify_by_email">Document Signed</label>
                                                                             </div>
                                                                         </div>
@@ -536,21 +533,21 @@
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" class="form-control" id="cardNumber" placeholder="Account Credential"  />
+                                                                                    <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <textarea  class="form-control" id="cardNumber" placeholder="Account Note"></textarea>
+                                                                                    <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <textarea  class="form-control" id="cardNumber" placeholder="Confirmation"></textarea>
+                                                                                    <textarea  class="form-control" name="acct_confirm" id="cardNumber" placeholder="Confirmation"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -909,13 +906,13 @@
                                     <input id="signature_link" type="hidden" name="signature_link">
                                     <input id="name" type="hidden" name="authorize_name">
                                     <input id="datetime_signed" type="hidden" name="datetime_signed">
+                                    <input id="attachment" type="hidden" name="attachment">
                                     <div class="col-sm-12">
                                         <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
                                         <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
                                     </div>
                                 </div>
                             </div>
-
                     </div>
                     <div class="card table-custom" >
                         <div class="card-body">

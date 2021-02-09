@@ -10,6 +10,31 @@ class Accounting_invoices_model extends MY_Model {
 		parent::__construct();
 	}
 
+	public function getCustomerOverdueInvoices($data){
+		$this->db->select('accounting_invoice.*, acs_profile.first_name, acs_profile.last_name, acs_profile.email');
+		$this->db->join('acs_profile', 'accounting_invoice.customer_id = acs_profile.prof_id', 'left');
+		$this->db->where('acs_profile.company_id', $data['company_id']);
+		$this->db->where('accounting_invoice.customer_id', $data['customer_id']);
+		$this->db->where('accounting_invoice.status', 1);
+		$this->db->where('accounting_invoice.due_date <=', $data['end_date']);
+
+		$query = $this->db->get($this->table);
+
+		return $query->result();
+	}
+	public function getCustomerOpenInvoicesByDate($data){
+		$this->db->select('accounting_invoice.*, acs_profile.first_name, acs_profile.last_name, acs_profile.email');
+		$this->db->join('acs_profile', 'accounting_invoice.customer_id = acs_profile.prof_id', 'left');
+		$this->db->where('acs_profile.company_id', $data['company_id']);
+		$this->db->where('accounting_invoice.customer_id', $data['customer_id']);
+		$this->db->where('accounting_invoice.status', 1);
+		$this->db->where('accounting_invoice.invoice_date >=', $data['start_date']);
+		$this->db->where('accounting_invoice.invoice_date <=', $data['end_date']);
+
+		$query = $this->db->get($this->table);
+
+		return $query->result();
+	}
 	public function getStatementInvoices($data){
 		$this->db->select('accounting_invoice.*, acs_profile.first_name, acs_profile.last_name, acs_profile.email');
 		$this->db->join('acs_profile', 'accounting_invoice.customer_id = acs_profile.prof_id', 'left');

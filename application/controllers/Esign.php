@@ -213,7 +213,15 @@ class Esign extends MY_Controller {
 		$this->page_data['recipients'] = $queryRecipients->result_array();
 
 		add_css('assets/css/esign/esign-builder/esign-builder.css');
-		add_footer_js('assets/js/esign/step2.js');
+		add_footer_js([
+			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+			'assets/js/esign/libs/pdf.js',
+			'assets/js/esign/libs/pdf.worker.js',
+
+			'assets/js/esign/step1.js',
+			'assets/js/esign/step2.js',
+		]);
+
 		$this->load->view('esign/files', $this->page_data);
 	}
 

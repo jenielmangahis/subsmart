@@ -265,6 +265,47 @@
             document.getElementById('attach_right_card').style.display = "block";
         });
 
+        $("#attachment-file").change(function(){
+            console.log("A file has been selected.");
+            // var form = $('form')[0]; // You need to use standard javascript object here
+            // var formData = new FormData(form);
+            // var form = $('#upload_library_form').serialize();
+            // var formData = new FormData($(form)[0]);
+            var input = document.getElementById('attachment-file');
+            //  console.log(formData);
+            // console.log(input.files);
+            // for (var i = 0; i < input.files.length; i++) {
+            //     console.log(input.files[i]);
+            // }
+            // The Javascript
+            var fileInput = document.getElementById('attachment-file');
+            var file = fileInput.files[0];
+            var formDatas = new FormData();
+            formDatas.append('file', file);
+            //console.log(formDatas);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/job/add_job_attachments",
+                data: formDatas,
+                processData: false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+
+                },
+                success: function (data) {
+                    $('#attachment').val('/'+data);
+                    $("#attachment-image").attr("src",'/'+data);
+                },
+                error: function (e) {
+                    //$("#result").text(e.responseText);
+                    console.log("ERROR : ", e);
+                    // $("#btnSubmit").prop("disabled", false);
+                }
+            });
+        });
+
         $("#save_memo").on( "click", function( event ) {
             var note = $('#note_txt').val();
             $('#notes_edit_btn').text(note);

@@ -240,7 +240,7 @@
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
             <!-- <form action="" method="post" id="billForm"> -->
-            <form action="<?php echo site_url()?>accounting/addBill" method="post" id="billForm">
+            <form action="<?php echo site_url()?>accounting/addBill" method="post">
                <div class="modal-body" style="margin-bottom: 100px">
                   <div class="row">
                      <div class="col-md-3">
@@ -814,7 +814,8 @@
                <!-- <button type="button" class="close" id="closeModalExpense1"><i class="fa fa-times fa-lg"></i></button> -->
                <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <form action="" method="post" id="expenseForm">
+            <!-- <form action="" method="post" id="expenseForm"> -->
+               <form action="<?php echo site_url()?>accounting/addBill" method="post">
                <div class="modal-body" style="margin-bottom: 100px">
                   <div class="row">
                      <div class="col-md-3">

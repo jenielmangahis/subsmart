@@ -215,6 +215,24 @@ class Job extends MY_Controller
         }
     }
 
+    public function add_job_attachments(){
+
+        if ( 0 < $_FILES['file']['error'] ) {
+            echo 'Error: ' . $_FILES['file']['error'] . '<br>';
+        }
+        else {
+            $uniquesavename=time().uniqid(rand());
+            $path = $_FILES['file']['name'];
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $destination = 'uploads/jobs/attachment/' .$uniquesavename.'.'.$ext;
+            move_uploaded_file($_FILES['file']['tmp_name'], $destination);
+            $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
+            //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
+            echo $destination;
+        }
+
+    }
+
     public function settings() {
         $get = $this->input->get();
         $this->page_data['items'] = $this->items_model->get();
@@ -317,7 +335,7 @@ class Job extends MY_Controller
         $jobs_data = array(
             'job_number' => $job_number,
             'customer_id' => $input['customer_id'],
-            'employee_id' => $input['employee_id'],
+            'employee_ids' => $input['employee_id'],
             'job_name' => $input['job_name'],
             'job_description' => $input['job_description'],
             'start_date' => $input['start_date'],
@@ -334,8 +352,57 @@ class Job extends MY_Controller
             'company_id' => $comp_id,
             'date_created' => date('Y-m-d H:i:s'),
             'notes' => $input['notes'],
+            'attachment' => $input['attachment'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+        $jobs_links_data = array(
+            'link' => $input['link'],
+            'job_id' => $jobs_id,
+        );
+        $this->general->add_($jobs_links_data, 'job_url_links');
+
+        $jobs_approval_data = array(
+            'authorize_name' => $input['authorize_name'],
+            'signature_link' => $input['signature_link'],
+            'datetime_signed' => $input['datetime_signed'],
+            'jobs_id' => $jobs_id,
+        );
+        $this->general->add_($jobs_approval_data, 'jobs_approval');
+
+        $method = $input['method'];
+        $jobs_payments_data = array();
+        $jobs_payments_data['jobs_id'] =  $jobs_id;
+        $jobs_payments_data['method'] =  $method;
+        $jobs_payments_data['amount'] =  $input['amount'];
+
+        if($method == 'CHECK'){
+            $jobs_payments_data['route_num'] = $input['route_number'];
+            $jobs_payments_data['account_num'] = $input['account_number'];
+        }else if($method == 'CC'|| $method == 'OCCP'){
+            $jobs_payments_data['account_name'] = $input['account_holder_name'];
+            $jobs_payments_data['card_number'] = $input['account_holder_name'];
+            $jobs_payments_data['card_mmyy'] = $input['account_holder_name'];
+            $jobs_payments_data['card_cvc'] = $input['account_holder_name'];
+            $jobs_payments_data['is_save_file'] = $input['account_holder_name'];
+        }else if($method === 'CASH'){
+            $jobs_payments_data['is_collected'] = $input['is_collected'];
+        }else if($method === 'ACH'){
+            $jobs_payments_data['route_num'] = $input['route_number'];
+            $jobs_payments_data['account_num'] = $input['account_number'];
+            $jobs_payments_data['day_of_month'] = $input['day_of_month'];
+        }else if($method === 'OPT' || $method === 'WW'){
+            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
+            $jobs_payments_data['acct_note'] = $input['acct_note'];
+            $jobs_payments_data['is_signed'] = $input['is_signed'];
+        }else if($method === 'SQ' || $method === 'PP' || $method === 'VENMO'){
+            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
+            $jobs_payments_data['acct_note'] = $input['acct_note'];
+            $jobs_payments_data['acct_confirm'] = $input['acct_confirm'];
+        }else{
+        }
+        $this->general->add_($jobs_payments_data, 'jobs_pay_details');
+
         echo $jobs_id;
     }
 

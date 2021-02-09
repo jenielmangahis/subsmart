@@ -90,7 +90,7 @@
                     <span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">E</span>
                     <div class="qUickStartde">
                         <h4>Add a News Letter</h4>
-                        <span>Send a company newslatter to all user</span>
+                        <span>Send a company news letter to all user</span>
                     </div>
                 </div>
             </a>
