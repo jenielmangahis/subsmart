@@ -5,6 +5,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .cell-active{
     background-color: #5bc0de;
 }
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
 .cell-inactive{
     background-color: #d9534f;
 }
@@ -14,27 +19,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box pb-2">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Color Settings</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="alert alert-warning mt-1 mb-4" role="alert">
-                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Make scheduling appointments simple and streamlined with the CRM color setting. Now, with just a few clicks, users can add and assign colors to employees, events, and job types.
-                </span>
-            </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card" style="min-height: 400px !important;">
-                        <div class="row dashboard-container-1">
-                            <div class="col-md-12 text-right">
+                    <div class="card mt-2" style="min-height: 400px !important;">
+                      <div class="row">
+                        <div class="col-sm-6 left">
+                          <h3 class="page-title">Color Settings</h3>
+                        </div>
+                        <div class="col-sm-6 right dashboard-container-1">
+                            <div class="text-right">
                                 <a class="btn btn-info" href="<?php echo base_url('color_settings/add_new_color_setting'); ?>"><i class="fa fa-file"></i> Add New</a>
                             </div>
-                        </div>       
-                        <hr />
+                        </div>
+                      </div>
+                      <div class="alert alert-warning mt-1 mb-4" role="alert">
+                          <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Make scheduling appointments simple and streamlined with the CRM color setting. Now, with just a few clicks, users can add and assign colors to employees, events, and job types.
+                          </span>
+                      </div>
                         <?php include viewPath('flash'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
@@ -56,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tr>
                                 <?php } ?>
                             </tbody>
-                        </table>                        
+                        </table>
                     </div>
                     <!-- end card -->
                 </div>
@@ -77,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </div>
               <?php echo form_open_multipart('color_settings/delete_color', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
               <?php echo form_input(array('name' => 'cid', 'type' => 'hidden', 'value' => '', 'id' => 'cid'));?>
-              <div class="modal-body">        
+              <div class="modal-body">
                   <p>Delete selected color?</p>
               </div>
               <div class="modal-footer">
@@ -94,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 
-<script type="text/javascript">  
+<script type="text/javascript">
 $(function(){
     $(".btn-delete-color").click(function(){
         var addon_id = $(this).attr("data-id");

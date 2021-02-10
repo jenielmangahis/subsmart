@@ -204,6 +204,11 @@ a.top-1 {
   .calendar-tooltip .tooltip[x-placement^="left"] {
     margin-right: 5px;
   }
+  .page-title {
+    font-family: Sarabun, sans-serif !important;
+    font-size: 1.75rem !important;
+    font-weight: 600 !important;
+  }
   .calendar-tooltip .popper[x-placement^="left"] .popper__arrow,
   .calendar-tooltip .tooltip[x-placement^="left"] .tooltip-arrow {
     border-width: 5px 0 5px 5px;
@@ -348,7 +353,7 @@ a.top-1 {
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <div class="stcs-2 left">
-                                          <h1 class="page-title left">Schedule</h1>
+                                          <h3 class="page-title left">Schedule</h3>
                                         </div>
                                         <div class="stcs-cover left">
                                           <form id="frm_calender_filter_events" method="post">
@@ -358,7 +363,7 @@ a.top-1 {
                                                         <option value='local' selected>local</option>
                                                         <option value='UTC'>UTC</option>
                                                     </select>-->
-                                                    <?php 
+                                                    <?php
                                                       $a_settings = unserialize($settings[0]->value);
                                                       if( $a_settings ){
                                                         $timezone = $a_settings['calendar_timezone'];
@@ -450,7 +455,7 @@ a.top-1 {
                                           <div id="upcoming-jobs-container"></div>
                                       </div>
                                   </div>
-                              </div>                                
+                              </div>
                             </div>
                             <!-- end card -->
                         </div>
@@ -466,9 +471,9 @@ a.top-1 {
                     <div class="right-calendar-loading"></div>
                     <h4  class="right-filter-header"><a class="btn-mini-calendar" href="javascript:void(0);"><i class="fa fa-minus cmini-icon icon-plus-cz"></i></a> <span class="pl-1">MINI CALENDAR</span></h4>
                     <div class="min-calendar-container">
-                      <div id="right-calendar"></div>  
+                      <div id="right-calendar"></div>
                     </div>
-                    
+
                     <div class="calendar-tooltip"></div>
                 </div>
                 <!-- <div class="col-12" style="margin-top: 15px;">
@@ -576,7 +581,7 @@ a.top-1 {
 
 
                     </ul>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -622,7 +627,7 @@ a.top-1 {
             </div>
             <?php echo form_open_multipart('', ['id' => 'create-google-event', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="modal-body">
-                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">                
+                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
         				<div class="form-group" style="text-align: left;">
         				  <label>Event Name</label> <span class="form-required">*</span>
         				  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
@@ -1044,7 +1049,7 @@ a.top-1 {
                       }
                   });
                 }
-                
+
             },
             loading: function (isLoading) {
               if (isLoading) {
@@ -1178,7 +1183,7 @@ a.top-1 {
                dataType: 'json',
                success: function(o)
                {
-                  
+
 
                	  if( o.is_success ){
                     var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
@@ -1288,7 +1293,7 @@ a.top-1 {
            data: {cid:cid},
            success: function(o)
            {
-              load_calendar();              
+              load_calendar();
            }
         });
     });
@@ -1356,7 +1361,7 @@ a.top-1 {
               // alter the remote JSON data, except to indicate that infinite
               // scrolling can be used
               params.page = params.page || 1;
-        
+
               return {
                 results: data,
                 // pagination: {
@@ -1389,7 +1394,7 @@ a.top-1 {
               // alter the remote JSON data, except to indicate that infinite
               // scrolling can be used
               params.page = params.page || 1;
-        
+
               return {
                 results: data,
                 // pagination: {
@@ -1419,7 +1424,7 @@ a.top-1 {
          data: {},
          success: function(o)
          {
-            $("#upcoming-events-container").html(o);      
+            $("#upcoming-events-container").html(o);
          }
       });
     }
@@ -1434,7 +1439,7 @@ a.top-1 {
          data: {},
          success: function(o)
          {
-            $("#scheduled-estimates-container").html(o);      
+            $("#scheduled-estimates-container").html(o);
          }
       });
     }
