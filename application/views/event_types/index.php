@@ -5,8 +5,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .cell-active{
     background-color: #5bc0de;
 }
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
 .cell-inactive{
     background-color: #d9534f;
+}
+.left {
+  float: left;
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -14,28 +22,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box pb-2">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Event Types</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="alert alert-warning mt-1 mb-4" role="alert">
-                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Schedule adds the ability to create and track events in CRM; An event can be scheduled for single or multiple days; Staff, venue and equipment resources can all be schedule for a given event; The visual event calendar lets you see events by type and venue. <br/><br/>
-                To create a new event type. Click Add New; To edit an existing event type simply click edit.
-                </span>
-            </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card" style="min-height: 400px !important;">
-                        <div class="row dashboard-container-1">
-                            <div class="col-md-12 text-right">
-                                <a class="btn btn-info" href="<?php echo base_url('event_types/add_new'); ?>"><i class="fa fa-file"></i> Add New</a>
-                            </div>
-                        </div>       
-                        <hr />
+                    <div class="card mt-2" style="min-height: 400px !important;">
+                        <div class="row">
+                          <div class="col-sm-6 left">
+                            <h3 class="page-title">Event Types</h3>
+                          </div>
+                          <div class="col-sm-6 right dashboard-container-1">
+                              <div class="text-right">
+                                  <a class="btn btn-info" href="<?php echo base_url('event_types/add_new'); ?>"><i class="fa fa-file"></i> Add New</a>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="alert alert-warning mt-2 mb-4" role="alert">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Schedule adds the ability to create and track events in CRM; An event can be scheduled for single or multiple days; Staff, venue and equipment resources can all be schedule for a given event; The visual event calendar lets you see events by type and venue. <br/><br/>
+                            To create a new event type. Click Add New; To edit an existing event type simply click edit.
+                            </span>
+                        </div>
                         <?php include viewPath('flash'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
@@ -55,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tr>
                                 <?php } ?>
                             </tbody>
-                        </table>                        
+                        </table>
                     </div>
                     <!-- end card -->
                 </div>
@@ -76,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </div>
               <?php echo form_open_multipart('event_types/delete', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
               <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
-              <div class="modal-body">        
+              <div class="modal-body">
                   <p>Delete selected event type?</p>
               </div>
               <div class="modal-footer">
@@ -93,7 +98,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 
-<script type="text/javascript">  
+<script type="text/javascript">
 $(function(){
     $(".btn-delete-event-type").click(function(){
         var event_type_id = $(this).attr("data-id");
