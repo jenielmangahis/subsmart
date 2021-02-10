@@ -29,6 +29,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_purchase_order_model');
         $this->load->model('accounting_credit_card_model');
         $this->load->model('estimate_model');
+        $this->load->model('account_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -292,6 +293,7 @@ class Accounting extends MY_Controller {
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
+        $this->page_data['employees'] = $this->account_model->getemployee();
         $this->load->view('accounting/employees', $this->page_data);
     }
     public function contractors()

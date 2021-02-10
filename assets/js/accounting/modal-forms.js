@@ -278,9 +278,13 @@ $(function() {
                 tableWeekDate();
             }
 
-            $(`${modal_element} .date`).datepicker({
-                uiLibrary: 'bootstrap'
-            });
+            if($(`${modal_element} .date`).length > 0) {
+                $(`${modal_element} .date`).each(function(){
+                    $(this).datepicker({
+                        uiLibrary: 'bootstrap'
+                    });
+                });
+            }
         });
     });
 
@@ -450,6 +454,21 @@ $(function() {
         $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(5)').html(credit);
     });
 
+    $(document).on('change', 'div#statementModal input#startDate, div#statementModal input#endDate, div#statementModal select#statementType, div#statementModal select#customerBalanceStatus', function() {
+        $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
+        $('div#statementModal div.modal-body div.row:last-child()').addClass('hide');
+
+        if($(this).attr('id') === 'statementType') {
+            if($(this).val() === '2') {
+                $('div#statementModal select#customerBalanceStatus option[value="all"]').remove();
+            } else {
+                if($('div#statementModal select#customerBalanceStatus option[value="all"]').length === 0) {
+                    $('div#statementModal select#customerBalanceStatus').prepend('<option value="all">All</option>');
+                }
+            }
+        }
+    });
+
     $(document).on('change', 'div#statementModal div.modal-body select#statementType', function() {
         if($(this).val() === '2') {
             $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').remove();
@@ -458,24 +477,32 @@ $(function() {
             var today = new Date();
             var todayDate = String(today.getDate()).padStart(2, '0');
             var todayMonth = String(today.getMonth() + 1).padStart(2, '0');
-            today = today.getFullYear()+'-'+todayMonth+'-'+todayDate;
+            today = todayMonth+'/'+todayDate+'/'+today.getFullYear();
 
             var startDate = new Date();
             startDate.setMonth(startDate.getMonth() - 1);
             var startDateDay = String(startDate.getDate()).padStart(2, '0');
             var startDateMonth = String(startDate.getMonth() + 1).padStart(2, '0');
-            startDate = startDate.getFullYear()+'-'+startDateMonth+'-'+startDateDay;
+            startDate = startDateMonth+'/'+startDateDay+'/'+startDate.getFullYear();
 
             if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').length === 0) {
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2)').html('<div class="form-group"></div>');
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append('<label for="startDate">Start Date</label>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append(`<input onchange="showApplyButton()" type="date" name="start_date" id="startDate" class="form-control" value="${startDate}">`);
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append(`<input type="text" class="form-control date" name="start_date" id="startDate" value="${startDate}"/>`);
+
+                $(`#statementModal input#startDate`).datepicker({
+                    uiLibrary: 'bootstrap'
+                });
             }
 
             if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').length === 0) {
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3)').html('<div class="form-group"></div>');
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append('<label for="endDate">End Date</label>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append(`<input onchange="showApplyButton()" type="date" name="end_date" id="endDate" class="form-control" value="${today}">`);
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append(`<input type="text" class="form-control date" name="end_date" id="endDate" value="${today}"/>`);
+
+                $(`#statementModal input#endDate`).datepicker({
+                    uiLibrary: 'bootstrap'
+                });
             }
         }
     });
@@ -873,20 +900,51 @@ $(function() {
         PDF.focus();
         PDF.contentWindow.print();
     });
-});
 
-const showApplyButton = () => {
-    if($('div#statementModal select#statementType').val() === '2') {
-        $('div#statementModal select#customerBalanceStatus option[value="all"]').remove();
-    } else {
-        if($('div#statementModal select#customerBalanceStatus option[value="all"]').length === 0) {
-            $('div#statementModal select#customerBalanceStatus').prepend('<option value="all">All</option>');
+    $(document).on('click', '#statementModal div.modal-footer button#save-and-send', function(e) {
+        e.preventDefault();
+        var flag = false;
+        var data = {
+            title: 'statement-summary',
+            customers: [],
+            statement_type: $('#statementModal select#statementType').val(),
+            statement_date: $('#statementModal input#statementDate').val(),
+            cust_bal_status: $('#statementModal select#customerBalanceStatus').val(),
+        };
+
+        data.start_date = data.statement_type !== "2" ? $('#statementModal input#startDate').val() : null;
+        data.end_date = data.statement_type !== "2" ? $('#statementModal input#endDate').val() : null;
+
+        var customers = $('#statements-table tbody tr td:first-child() input:checked');
+
+        customers.each(function() {
+            data.customers.push($(this).val());
+        });
+
+        if(data.customers.length > 0) {
+            flag = true;
         }
-    }
 
-    $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
-    $('div#statementModal div.modal-body div.row:last-child()').addClass('hide');
-}
+        if(flag === true) {
+            $.ajax({
+                url: '/accounting/send-email-form/',
+                data: {json: JSON.stringify(data)},
+                type: 'post',
+                success: function(res) {
+                    if($('#statementModal').parent().children('#showEmailModal').length > 0) {
+                        $('#statementModal').parent().children('#showEmailModal').remove();
+                    }
+                    $('#statementModal').parent().append(res);
+
+                    $('#showEmailModal').modal('show');
+                }
+            });
+        } else {
+            toast(false, "Please select at least one recipient before attempting to save.");
+            return;
+        }
+    });
+});
 
 const convertToDecimal = (el) => {
     var val = parseFloat($(el).val()).toFixed(2).toString();

@@ -280,7 +280,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
                         <thead>
                             <tr>
-                                <th style="width:20%" rowspan="2">Employee Name</th>
+                                <th style="width:40%" rowspan="2">Employee Name</th>
                                 <th rowspan="2">In</th>
                                 <th rowspan="2">Out</th>
                                 <th colspan="2">Lunch</th>

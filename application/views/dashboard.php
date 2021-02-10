@@ -18,12 +18,16 @@
                 </div>
                 <?php include viewPath('flash'); ?>
                 <style>
+                    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title{
+                        font-family: Sarabun, sans-serif !important;
+                    }
                     .dynamic-widget .card{
                         height: 400px !important
                     }
                     
                     .card-header{
                         border-bottom: 1px solid gray !important;
+                        font-family: Sarabun, sans-serif !important;
                     }
 
                     .card-body h6{

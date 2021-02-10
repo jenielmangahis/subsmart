@@ -31,6 +31,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_payroll_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('AcsProfile_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
@@ -1294,6 +1295,7 @@ class Accounting_modals extends MY_Controller {
                 break;
             case '2':
                 # code...
+                $post = $this->generateStatementPdfData($post);
                 $view = "accounting/modals/print_action/statement";
                 break;
         }
@@ -1301,6 +1303,74 @@ class Accounting_modals extends MY_Controller {
 
         echo json_encode(['filename' => $fileName]);
         exit;
+    }
+
+    private function generateStatementPdfData($post) {
+        $customers = [];
+        foreach($post->customers as $customer) {
+            $items = [];
+            $customerProfile = $this->AcsProfile_model->getByProfId((int)$customer);
+            $balance = 0.00;
+            if($post->statement_type === "1" || $post->statement_type === 1) {
+                $overdueQuery = [
+                    'company_id' => logged('company_id'),
+                    'customer_id' => (int)$customer,
+                    'end_date' => date('Y-m-d', strtotime($post->end_date))
+                ];
+
+                $overdueInvoices = $this->accounting_invoices_model->getCustomerOverdueInvoices($overdueQuery);
+
+                $overdueAmount = 0.00;
+                foreach($overdueInvoices as $inv) {
+                    $overdueAmount = $overdueAmount + floatval($inv->amount);
+                }
+                $balance = $balance + floatval($overdueAmount);
+                $items[] = [
+                    'date' => $post->start_date,
+                    'activity' => 'Balance Forward',
+                    'amount' => '',
+                    'balance' => $overdueAmount
+                ];
+            }
+
+            $invoiceQuery = [
+                'company_id' => logged('company_id'),
+                'customer_id' => (int)$customer,
+                'start_date' => date('Y-m-d', strtotime($post->start_date)),
+                'end_date' => date('Y-m-d', strtotime($post->end_date))
+            ];
+
+            $invoices = $this->accounting_invoices_model->getCustomerInvoicesByDate($invoiceQuery);
+
+            foreach($invoices as $invoice) {
+                $balance = $balance + floatval($invoice->amount);
+                $items[] = [
+                    'date' => date('Y-m-d', strtotime($invoice->invoice_date)),
+                    'activity' => 'Invoice #' . $invoice->id,
+                    'amount' => $invoice->amount,
+                    'balance' => $balance
+                ];
+
+                if($invoice->status === 2 || $invoice->status === "2") {
+                    $balance = $balance - floatval($invoice->amount);
+                    $items[] = [
+                        'date' => date('m/d/Y', $invoice->updated_at),
+                        'activity' => 'Payment',
+                        'amount' => $invoice->amount - ($invoice->amount * 2),
+                        'balance' => $balance
+                    ];
+                }
+            }
+
+            $customers[$customer] = [
+                'name' => $customerProfile->first_name . ' ' . $customerProfile->last_name,
+                'date' => $post->statement_date,
+                'total_due' => end($items)['balance'],
+                'items' => $items
+            ];
+        }
+
+        return $customers;
     }
 
     public function showPDF() {
@@ -1330,5 +1400,29 @@ class Accounting_modals extends MY_Controller {
         header('Pragma: public');
         header('Content-Length: ' . filesize($file));
         readfile($file);
+    }
+
+    public function showEmailModal() {
+        $this->load->library('pdf');
+        $post = $this->input->post();
+        $post = json_decode($post['json']);
+
+        if(count($post->customers) === 1) {
+            $customer = $this->AcsProfile_model->getByProfId((int)$post->customers[0]);
+            $this->page_data['email'] = $customer->email;
+            $this->page_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
+        } else {
+            $this->page_data['customer_count'] = count($post->customers);
+        }
+
+        $this->page_data['company_name'] = 'ADI';
+        $filename = 'statement-summary-'.logged('id').'.pdf';
+        $this->page_data['filename'] = $filename;
+
+        $post = $this->generateStatementPdfData($post);
+
+        $this->pdf->save_pdf("accounting/modals/print_action/statement", ['data' => $post], $filename, 'portrait');
+
+        $this->load->view("accounting/send_statement_modal", $this->page_data);
     }
 }
