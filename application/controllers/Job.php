@@ -727,6 +727,23 @@ class Job extends MY_Controller
            redirect('dashboard'); 
         }
     }
+
+    public function ajax_load_upcoming_jobs()
+    {
+        $role    = logged('role');
+        $user_id = getLoggedUserID();
+        $comp_id = logged('company_id');
+
+        if( $role == 1 || $role == 2 ){
+            $upcomingJobs = $this->jobs_model->getAllUpcomingJobs();
+        }else{
+            $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
+        }
+        
+        $this->page_data['upcomingJobs'] = $upcomingJobs;
+        $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
+
+    }
 }
 
 /* End of file Job.php */

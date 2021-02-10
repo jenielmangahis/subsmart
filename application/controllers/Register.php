@@ -770,15 +770,15 @@ class Register extends MY_Controller {
     public function converge_payment()
     {
          // Provide Converge Credentials
-          $merchantID = "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
-          $merchantUserID = "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
-          $merchantPIN = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
+          $merchantID =  "0019127"; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+          $merchantUserID = "webpage"; // "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+          $merchantPIN = "IJFZ3DQUK9MPLHGUS618ZJ9KWH7EI3G0QTQ5IGI6NY3701LZ1E5SHMBE1MEMG7UA"; // "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
 
           //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-          $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+          $url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
 
           //$hppurl = "https://demo.api.convergepay.com/hosted-payments"; // URL to the demo Hosted Payments Page
-          $hppurl = "https://api.convergepay.com/hosted-payments"; // URL to the production Hosted Payments Page
+          $hppurl = "https://api.demo.convergepay.com/hosted-payments"; // URL to the production Hosted Payments Page
 
           /*Payment Field Variables*/
 
@@ -801,13 +801,15 @@ class Register extends MY_Controller {
           curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-          //Build the request for the session id. Make sure all payment field variables created above get included in the CURLOPT_POSTFIELDS section below.
+          //Build the request for the session id. Make sure all payment field variables created above get included in the CURLOPT_POSTFIELDS section below.  ccsale
 
           curl_setopt($ch,CURLOPT_POSTFIELDS,
           "ssl_merchant_id=$merchantID".
           "&ssl_user_id=$merchantUserID".
           "&ssl_pin=$merchantPIN".
-          "&ssl_transaction_type=ccsale".
+          "&ssl_transaction_type=ccaddrecurring".
+          "&ssl_billing_cycle=MONTHLY".
+          "&ssl_next_payment_date=03/25/2021".
           "&ssl_txn_id=$merchanttxnid".
           "&ssl_amount=$amount"
           );
@@ -820,11 +822,27 @@ class Register extends MY_Controller {
           print_r($sessiontoken);
           exit;*/
           /* Now we redirect to the HPP */
-
           //header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken");  //Demo Redirect
-          header("Location: https://api.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect
+          header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect
 
     }
+
+    public function converge_payment_test()
+    {
+
+        $cURLConnection = curl_init();
+         
+        curl_setopt($cURLConnection, CURLOPT_URL, 'https://demo.convergepay.com/hosted-payments/myip');
+        curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+         
+        $response = curl_exec($cURLConnection);
+        curl_close($cURLConnection);
+         
+        echo $response;
+
+    }
+
+
 
 }
 

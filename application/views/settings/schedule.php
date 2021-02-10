@@ -35,6 +35,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Job Time Settings</label>
+                                            <div class="help help-sm help-block">Time Interval Settings</div>
+                                            <select name="job_time_setting" id="library_template" class="form-control">
+                                                <option value="">Select</option>
+                                                <option <?= $settings['job_time_setting'] == 1 ? 'selected="selected"' : ''; ?> value="1">1 hour</option>
+                                                <option <?= $settings['job_time_setting'] == 2 ? 'selected="selected"' : ''; ?> value="2">2 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 3 ? 'selected="selected"' : ''; ?> value="3">3 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 4 ? 'selected="selected"' : ''; ?> value="4">4 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 5 ? 'selected="selected"' : ''; ?> value="5">5 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 6 ? 'selected="selected"' : ''; ?> value="6">6 hours</option>
+                                            </select>
+                                        </div>
+                                </div>
                             </div>
                             <div class="row p-3">
                                 <div class="col-sm-6">

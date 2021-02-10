@@ -245,6 +245,41 @@ class Jobs_model extends MY_Model
 
         return $query->result_array();
     }
+
+    public function getAllUpcomingJobsByCompanyId($company_id = 0)
+    {
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.job_description, jobs.job_type, jobs.start_date, jobs.end_date, jobs.company_id, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+
+        $start_date = date('Y-m-d');
+        $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
+        
+        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->where('jobs.company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        //print_r($this->db->last_query());  exit;
+        return $query->result();
+    }
+
+    public function getAllUpcomingJobs()
+    {
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.job_description, jobs.job_type, jobs.start_date, jobs.end_date, jobs.company_id, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+
+        $start_date = date('Y-m-d');
+        $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
+        
+        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->order_by('jobs.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file JobType_model.php */

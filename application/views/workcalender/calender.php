@@ -446,6 +446,8 @@ a.top-1 {
                                           <div id="upcoming-events-container"></div>
                                           <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
                                           <div id="scheduled-estimates-container"></div>
+                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
+                                          <div id="upcoming-jobs-container"></div>
                                       </div>
                                   </div>
                               </div>                                
@@ -1405,6 +1407,7 @@ a.top-1 {
 
     load_upcoming_events();
     load_scheduled_estimates();
+    load_upcoming_jobs();
 
     function load_upcoming_events(){
       var url = base_url + 'calendar/_load_upcoming_events';
@@ -1432,6 +1435,21 @@ a.top-1 {
          success: function(o)
          {
             $("#scheduled-estimates-container").html(o);      
+         }
+      });
+    }
+
+    function load_upcoming_jobs(){
+      var url = base_url + 'job/_load_upcoming_jobs';
+       $("#upcoming-jobs-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Upcoming Jobs...</div>');
+
+      $.ajax({
+         type: "POST",
+         url: url,
+         data: {},
+         success: function(o)
+         {
+            $("#upcoming-jobs-container").html(o);      
          }
       });
     }

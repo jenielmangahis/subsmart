@@ -82,8 +82,8 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
             <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Custom Form</a>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
+        <!-- <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
             <a href="<?= base_url('job/job_time_settings') ?>" title="Profile Settings"><span class="fa fa-clock-o"></span>Time Window Settings</a>
-        </li>
+        </li> -->
     </ul>
 </nav>
