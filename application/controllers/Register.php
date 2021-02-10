@@ -335,10 +335,7 @@ class Register extends MY_Controller {
 
         postAllowed();
         $post = $this->input->post(); 
-        echo "<pre>";
-        print_r($post);
-        exit;
-
+       
         $cid = $this->Clients_model->create([
             'first_name' => $post['firstname'],
             'last_name'  => $post['lastname'],
