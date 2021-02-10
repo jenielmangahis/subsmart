@@ -118,7 +118,7 @@ class Event_Types extends MY_Controller {
     }   
 
 	public function delete_event_type(){
-		$id = $this->EventType_model->deleteById(post('cid'));
+		$id = $this->EventType_model->deleteById(post('eid'));
 
 		$this->session->set_flashdata('message', 'Event Type has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');

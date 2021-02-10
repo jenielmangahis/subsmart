@@ -26,6 +26,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
+                <div class="alert alert-warning mt-0 mb-2" role="alert">
+                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">You can set up Tasks for yourself and assign them to other people in your organisation. To Add a Task, in the Account, click on the ‘ + Add ‘ button. There are dropdown options for each field and a date picker.</span>
+                </div>
                 <!-- end row -->
                 <section class="content">
                     <!-- Default box -->

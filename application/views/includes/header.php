@@ -613,11 +613,11 @@
                                         <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
                                             <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
                                             <?php
-                                            /* $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
-                                              if( !@getimagesize($image) ){
+                                             $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
+                                              /*if( !@getimagesize($image) ){
                                               $image = base_url('uploads/users/default.png');
                                               } */
-                                            $image = base_url('uploads/users/default.png');
+                                            //$image = base_url('uploads/users/default.png');
                                             ?>
                                             <img src="<?php echo $image; ?>" alt="user" class="rounded-circle nav-user-img">
                                         </a>

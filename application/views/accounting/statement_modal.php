@@ -14,7 +14,7 @@
                         <div class="col-md-8">
                             <div class="form-group w-25">
                                 <label for="statementType">Statement Type</label>
-                                <select name="statement_type" id="statementType" class="form-control" onchange="showApplyButton()">
+                                <select name="statement_type" id="statementType" class="form-control">
                                     <option value="1">Balance Forward</option>
                                     <option value="2">Open Item (Last 365 days)</option>
                                     <option value="3">Transaction Statement</option>
@@ -40,7 +40,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="customerBalanceStatus">Customer Balance Status</label>
-                                <select name="customer_balance_status" id="customerBalanceStatus" class="form-control" onchange="showApplyButton()">
+                                <select name="customer_balance_status" id="customerBalanceStatus" class="form-control">
                                     <option value="all">All</option>
                                     <option value="open" selected>Open</option>
                                     <option value="overdue">Overdue</option>
@@ -50,13 +50,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="startDate">Start Date</label>
-                                <input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>
+                                <input type="text" class="form-control date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="endDate">End Date</label>
-                                <input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
+                                <input type="text" class="form-control date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -171,8 +171,8 @@
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-right ml-2">
-                                <button type="submit" class="btn btn-success">
-                                    Save and new
+                                <button type="button" class="btn btn-success" id="save-and-send">
+                                    Save and send
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
@@ -192,36 +192,33 @@
     </div>
     <!--end of modal-->
 </form>
-</div>
-<!-- Modal for print -->
-<div class="full-screen-modal">
-    <div id="showPdfModal" class="modal fade modal-fluid" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content" style="height: 100%;">
-                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Print</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+<div id="showPdfModal" class="modal fade modal-fluid" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content" style="height: 100%;">
+            <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+                <h4 class="modal-title">Print</h4>
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+            </div>
+            <div class="modal-body pb-0">
+                <div class="row">
+                <iframe id="showPdf" src="/accounting/show-pdf" frameborder="0" style="width: 100%;    height: 700px;"></iframe>
                 </div>
-                <div class="modal-body pb-0">
-                    <div class="row">
-                    <iframe id="showPdf" src="/accounting/show-pdf" frameborder="0" style="width: 100%;    height: 700px;"></iframe>
+            </div>
+            <div class="modal-footer bg-secondary">
+                <div class="row w-100">
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                     </div>
-                </div>
-                <div class="modal-footer bg-secondary">
-                    <div class="row w-100">
-                        <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
-                        </div>
-                        <div class="col-md-4">
-                            
-                        </div>
-                        <div class="col-md-4">
-                            <button type="button" class="btn btn-success btn-rounded float-right" id="print-deposit-pdf">Print</button>
-                        </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-success btn-rounded float-right" id="print-deposit-pdf">Print</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>

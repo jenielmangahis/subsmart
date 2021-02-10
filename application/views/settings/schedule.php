@@ -11,7 +11,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <h1 style="text-align: left;">Settings</h1>
-
+                        <div class="alert alert-warning mt-1 mb-4" role="alert">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Configure your settings to allow employees to see the full schedule or just their own. You can also set up notification. Simply select the item on each field line and save.
+                            </span>
+                        </div>
                         <?php echo form_open('settings/schedule', ['class' => 'form-validate require-validation', 'id' => 'schedule_settings_form', 'autocomplete' => 'off']); ?>
                         <div class="validation-error hide" style="display:none;"></div>
 

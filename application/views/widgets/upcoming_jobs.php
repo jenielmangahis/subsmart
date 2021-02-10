@@ -1,3 +1,9 @@
+<style>
+    .jobsRow:hover{
+        background: #e8e8fa;
+    }
+</style>
+
 <div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header">
@@ -10,7 +16,7 @@
             if ($job) {
                 foreach ($job as $jb) :
                     ?>
-                    <div class="mb-2 col-lg-12 float-left" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer">
+                    <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer">
                         <h6><?= strtoupper(get_format_date_with_day($jb->date_created)); ?></h6>
                         <div class="col-lg-3 float-left no-padding" style="border-right:1px solid #ccc;">
                             <h6 style="font-weight:700; margin:0;"><?php echo strtoupper(get_format_time($jb->date_created)); ?></h6>
@@ -21,7 +27,8 @@
                             </span>
                         </div>
                         <div class="col-lg-7 float-left" style="padding-right: 0;">
-                            <h6 style="font-weight:700; margin:0;"><?php echo strtoupper($jb->job_name); ?></h6>
+                            <h6 style="font-weight:700; margin:0;"><?php echo strtoupper($jb->job_type.' - '.$jb->job_description); ?></h6>
+                            <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($jb->job_name); ?></p>
                             <p style="color: #9d9e9d; "><?php echo strtoupper($jb->job_location); ?></p>
                         </div>
                         <div class="col-lg-2 float-right">

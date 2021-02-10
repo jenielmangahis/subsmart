@@ -14,12 +14,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
+            <div class="page-title-box pb-2">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title">Color Settings</h1>
                     </div>
                 </div>
+            </div>
+            <div class="alert alert-warning mt-1 mb-4" role="alert">
+                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Make scheduling appointments simple and streamlined with the CRM color setting. Now, with just a few clicks, users can add and assign colors to employees, events, and job types.
+                </span>
             </div>
             <!-- end row -->
             <div class="row">

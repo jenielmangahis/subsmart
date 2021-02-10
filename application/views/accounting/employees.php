@@ -46,7 +46,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										</tr>
 										</thead>
 										<tbody>
+												<?php foreach($employees as $employee) : ?>
 											<tr>
+	                                            <td><?php echo $employee->first_name .' '.$employee->last_name; ?></td>
+												<td>100</td>
+												<td>Paypal</td>
+												<td>Monday</td>
+												<td><a href="">Active</a></td>
+											</tr>
+											<?php endforeach; ?>
+											<!-- <tr>
 												<td>John Meyer</td>
 												<td>$32</td>
 												<td>Paypal</td>
@@ -66,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												<td>Check</td>
 												<td>Every Saturday</td>
 												<td><a href="">Active</a></td>
-											</tr>
+											</tr> -->
 										</tbody>
 								</table>
 							</div>

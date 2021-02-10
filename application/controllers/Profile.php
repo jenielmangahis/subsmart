@@ -125,7 +125,58 @@ class Profile extends MY_Controller {
 
 		redirect('profile/index/change_pic');
 
-	}			public function updateUserProfilePic()	{		$id = logged('id');				if (!empty($_FILES['image']['name'])) {			$path = $_FILES['image']['name'];			$ext = pathinfo($path, PATHINFO_EXTENSION);			$this->uploadlib->initialize([				'file_name' => 'p_'.$id.'.'.$ext			]);			$image = $this->uploadlib->uploadImage('image', '/users/user-profile');			if($image['status']){				$this->users_model->update($id, ['profile_img_type' => $ext]);			}			$this->activity_model->add("User #$id Updated his/her Profile Image updated.");			$this->session->set_flashdata('alert-type', 'success');			$this->session->set_flashdata('alert', 'Profile Image has been Updated Successfully');		}		else{			$this->session->set_flashdata('alert-type', 'danger');			$this->session->set_flashdata('alert', 'Server Error Occured while Uploading Image !');		}		redirect('profile/index/change_profile_pic');	}
+	}			
+	public function updateUserProfilePic()	{	
+		$this->load->model('Users_model');
+			
+		$id = logged('id');				
+		if (!empty($_FILES['file']['name'])) {
+			$config = array(
+                'upload_path' => './uploads/users/user-profile/',
+                'allowed_types' => '*',
+                'overwrite' => TRUE,
+                'max_size' => '20000',
+                'max_height' => '0',
+                'max_width' => '0',
+                'encrypt_name' => true
+            );
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);
+            if ($result = $this->upload->do_upload("file")){
+                $uploadData = $this->upload->data();
+                $data = array(
+                    'profile_image'=> $uploadData['file_name'],
+                    'date_created' => time()
+                );
+                $query = $this->users_model->addProfilePhoto($data);
+                $return = new stdClass();
+                $return->photo = $uploadData['file_name'];
+                $return->id = $query;
+
+                $user_id = $id;
+		        $profile_img = $uploadData['file_name'];
+
+		        $user = $this->Users_model->getUser($user_id);
+
+		        if( $profile_img == '' ){
+		        	$profile_img = $user->profile_img;
+		        }
+		        $data = array(            
+					'profile_img' => $profile_img
+		        );
+
+		        $user = $this->Users_model->update($user_id,$data);
+
+            }
+
+			$this->activity_model->add("User #$id Updated his/her Profile Image updated.");			
+			$this->session->set_flashdata('alert-type', 'success');			
+			$this->session->set_flashdata('alert', 'Profile Image has been Updated Successfully');		
+		}else{			
+			$this->session->set_flashdata('alert-type', 'danger');			
+			$this->session->set_flashdata('alert', 'Server Error Occured while Uploading Image !');		
+		}		
+		redirect('profile/index/change_profile_pic');	}
 
 
 }

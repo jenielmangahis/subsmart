@@ -18,12 +18,16 @@
                 </div>
                 <?php include viewPath('flash'); ?>
                 <style>
+                    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title{
+                        font-family: Sarabun, sans-serif !important;
+                    }
                     .dynamic-widget .card{
                         height: 400px !important
                     }
                     
                     .card-header{
                         border-bottom: 1px solid gray !important;
+                        font-family: Sarabun, sans-serif !important;
                     }
 
                     .card-body h6{
@@ -92,6 +96,7 @@
                         <div><a href="<?= base_url() ?>users/timelog">Time Clock</a></div>
                         <div><a href="<?= base_url() ?>customer">Marketing</a></div>
                         <div><a href="#">Trac 360</a></div>
+                        <div><a href="<?= base_url() ?>job">Job</a></div>
                     </div>
                 </div>
                 <div class="col-sm-6 d-none d-lg-flex">
@@ -114,7 +119,7 @@
             </div>
         </div>
         <!-- end row -->
-        <div class="row-tablet-mobile">
+        <div class="row-tablet-mobile mb-fix">
             <div class="row d-none d-lg-flex">
                 <?php $this->load->view('widgets/quick_start', $quick_start_data); ?>
                 <div class="col-md-8">
@@ -676,6 +681,9 @@
         display: none;
     }
     @media only screen and (max-width: 600px) {
+        .mb-fix {
+            margin-top: 26px;
+        }
         .hid-desk{
             display: block !important;
         }

@@ -254,4 +254,17 @@
     </div>
     <!--end of modal-->
 </div>
+<script>
+  function totalfunc(){
+    var inputs = document.getElementsByName('amount[]');
+    // alert(inputs);
+    var sum = 0;
+    for(var i = 0; i<inputs.length; i++){
+      sum += parseInt(inputs[i].value);
+    }
+    document.getElementById('total_amount').value = sum;
+
+  }
+</script>
+
 <?php include viewPath('accounting/add_new_payment_method'); ?>
