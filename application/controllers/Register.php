@@ -335,6 +335,9 @@ class Register extends MY_Controller {
 
         postAllowed();
         $post = $this->input->post(); 
+        echo "<pre>";
+        print_r($post);
+        exit;
 
         $cid = $this->Clients_model->create([
             'first_name' => $post['firstname'],
@@ -637,15 +640,13 @@ class Register extends MY_Controller {
         }else{
             //Converge
             // Provide Converge Credentials
-            $merchantID = "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
-            $merchantUserID = "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
-            $merchantPIN = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
+            $merchantID =  CONVERGE_MERCHANTID; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+            $merchantUserID = CONVERGE_MERCHANTUSERID; // "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+            $merchantPIN = CONVERGE_MERCHANTPIN; // "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
 
             //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-            $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
-
-            //$hppurl = "https://demo.api.convergepay.com/hosted-payments"; // URL to the demo Hosted Payments Page
-            $hppurl = "https://api.convergepay.com/hosted-payments"; // URL to the production Hosted Payments Page
+            $url    = CONVERGE_TOKENURL; // URL to Converge production session token server
+            $hppurl = CONVERGE_HPPURL; // URL to the demo Hosted Payments Page            
 
             /*Payment Field Variables*/
 
@@ -654,13 +655,25 @@ class Register extends MY_Controller {
             $amount= $post['plan_price']; //Hard-coded transaction amount for testing.
 
             //$amount  = $_POST['ssl_amount'];   //Capture ssl_amount as POST data
-            $firstname = $post['firstname'];   //Capture ssl_first_name as POST data
-            $lastname  = $post['lastname'];   //Capture ssl_last_name as POST data
+            //$firstname  = $_POST['ssl_first_name'];   //Capture ssl_first_name as POST data
+            //$lastname  = $_POST['ssl_last_name'];   //Capture ssl_last_name as POST data
             //$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture ssl_merchant_txn_id as POST data
             //$invoicenumber = $_POST['ssl_invoice_number']; //Capture ssl_invoice_number as POST data
 
+            if( $post['subscription_type'] == 'prospect' ){
+                $next_billing = date("m/d/Y",strtotime("+60 days"));
+            }else{
+                $next_billing = date("m/d/Y",strtotime("+30 days"));
+            }
+
+            $ssl_description = $post['plan_name'] . ' / ' . $post['plan_price'];
+            $ssl_firstname = $post['firstname'];
+            $ssl_lastname  = $post['lastname'];
+            $ssl_email = $post['email'];
+            $ssl_phone = $post['phone'];
+
             //Follow the above pattern to add additional fields to be sent in curl request below.
-            $merchanttxnid = "3234342343";
+            //$merchanttxnid = "3234342343";
             $ch = curl_init();    // initialize curl handle
             curl_setopt($ch, CURLOPT_URL,$url); // set POST target URL
             curl_setopt($ch,CURLOPT_POST, true); // set POST method
@@ -668,16 +681,21 @@ class Register extends MY_Controller {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-            //Build the request for the session id. Make sure all payment field variables created above get included in the CURLOPT_POSTFIELDS section below.
+            //Build the request for the session id. Make sure all payment field variables created above get included in the CURLOPT_POSTFIELDS section below.  ccsale
 
             curl_setopt($ch,CURLOPT_POSTFIELDS,
             "ssl_merchant_id=$merchantID".
             "&ssl_user_id=$merchantUserID".
-            "&ssl_first_name=$firstname".
-            "&ssl_last_name=$lastname".
             "&ssl_pin=$merchantPIN".
-            "&ssl_transaction_type=ccsale".
-            "&ssl_txn_id=$merchanttxnid".
+            "&ssl_transaction_type=ccaddrecurring".
+            "&ssl_billing_cycle=MONTHLY".
+            "&ssl_next_payment_date=$next_billing".
+            "&ssl_description=$ssl_description".
+            "&ssl_phone=$ssl_phone".
+            "&ssl_first_name=$ssl_firstname".
+            "&ssl_last_name=$ssl_lastname".
+            "&ssl_test_mode=TRUE".
+            //"&ssl_txn_id=$merchanttxnid".
             "&ssl_amount=$amount"
             );
 
@@ -685,11 +703,12 @@ class Register extends MY_Controller {
             curl_close($ch); // Close cURL
 
             $sessiontoken= urlencode($result);
-
+            /*echo "<pre>";
+            print_r($sessiontoken);
+            exit;*/
             /* Now we redirect to the HPP */
-
             //header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken");  //Demo Redirect
-            header("Location: https://api.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect   
+            header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect 
         }
     }
 
