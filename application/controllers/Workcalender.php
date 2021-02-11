@@ -215,11 +215,13 @@ class Workcalender extends MY_Controller
             $is_mobile = 0;
         }
 
-        $get_users = $this->Users_model->getUsers();
+        $company_id = logged('company_id');
         if ($role == 2 || $role == 3) {
+           $get_users  = $this->Users_model->getAllUsers();
            $get_recent_users = $this->Users_model->getAllRecentUsers();
         }else{
-           $get_recent_users = $this->Users_model->getRecentUsers(); 
+           $get_users  = $this->Users_model->getUsers();
+           $get_recent_users = $this->Users_model->getAllUsersByCompany($company_id); 
         }
         
         $resources_users = array();

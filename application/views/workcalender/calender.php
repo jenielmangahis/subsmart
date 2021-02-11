@@ -327,6 +327,11 @@ a.top-1 {
   .fc-datagrid-cell-main{
     text-align: center;
   }
+  .recent-contacts-container{
+    overflow-y: scroll;
+    height: 400px;
+    overflow-x: hidden;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -338,7 +343,7 @@ a.top-1 {
                     <!-- end row -->
                     <div class="row">
                         <div class="col-xl-12">
-                            <div class="card">
+                            <div class="card pt-3">
                                 <div class="d-block d-none">
                                     <?php
                                         if (count($wordorders) > 0) {
@@ -372,7 +377,7 @@ a.top-1 {
                                         }
                                     ?>
                                 </div>
-                                <div class="card-body col-12" style="text-align: left;">
+                                <div class="card-body col-12 pt-0" style="text-align: left;">
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <div class="stcs-2 left">
@@ -488,7 +493,7 @@ a.top-1 {
             </div>
         </div>
         <?php //if( !$is_mobile ){ ?>
-        <div class="col-12 col-md-3 mt-40 right-col" style="background-color: #ffffff;overflow-y: scroll; max-height: 800px;">
+        <div class="col-12 col-md-3 mt-40 right-col" style="background-color: #ffffff;overflow-y: scroll;overflow-x: hidden;height: max-content;display: block !important;padding-bottom: 20px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div class="right-calendar-loading"></div>
