@@ -37,8 +37,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </form>-->
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <a class="btn btn-primary btn-md" href="<?php echo url('job/new_job1') ?>">
-                                            <span class="fa fa-plus"></span> New</a>
+                                            <a class="btn btn-primary btn-md" href="<?= url('job/new_job1') ?>">
+                                            <span class="fa fa-plus"></span> New Job</a>
                                         </div>
                                     </div>
                                     <div class="float-right d-md-block">
@@ -47,8 +47,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">
+                            <div class="tabs">
+                                <ul class="clearfix work__order" id="myTab" role="tablist">
+                                    <li class="active">
+                                        <a class="nav-link active"  href="#"  aria-controls="tab1" aria-selected="true">All (0)</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">New (0)</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Scheduled 0)</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Started (0)</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Paused (0)</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Invoiced (0)</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Withdrawn (0)</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Closed (0)</a>
+                                    </li>
+                                </ul>
+                            </div>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">   
-                                <input type="hidden" id="selectedIds">
                                 <?php if (!empty($jobs)) { ?>
                                 <!--<div class="dropdown" style="position: relative;display: inline-block;margin-bottom:10px;">
                                     <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" aria-expanded="false">
@@ -69,6 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th scope="col"><strong>Status</strong></th>
                                             <th scope="col"><strong>Amount</strong></th>
                                             <th scope="col"><strong>Job Tags</strong></th>
+                                            <th scope="col"><strong>Job Types</strong></th>
                                             <th scope="col"><strong>Priority</strong></th>
                                             <th scope="col"><strong>Manage</strong></th>
                                         </tr>
@@ -84,9 +112,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td class="pl-3"><?= $job->status; ?></td>
                                             <td class="pl-3">$0.00</td>
                                             <td class="pl-3"><?php echo $job->name; ?></td>
+                                            <td class="pl-3"><?php echo $job->job_type; ?></td>
                                             <td class="pl-3"><?=$job->priority; ?></td>
                                             <td class="pl-3">
-                                                <a href="<?= base_url('job/new_job1') ?>" class="editJobTypeBtn btn btn-primary btn-sm">
+                                                <a href="<?= base_url('job/new_job_edit/').$job->id; ?>" class="editJobTypeBtn btn btn-primary btn-sm">
                                                     <span class="fa fa-pencil"></span> Edit</a>&nbsp;
                                                 <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-primary btn-sm">
                                                     <span class="fa fa-trash"></span> Delete
@@ -131,7 +160,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#jobListTable').DataTable({
             "lengthChange": true,
             "searching" : true,
-            "pageLength": 10
+            "pageLength": 10,
+            "order": [],
         });
 
         $(".delete_job").on( "click", function( event ) {

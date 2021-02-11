@@ -1,6 +1,6 @@
 <div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
-        <div class="card-header">
+        <div class="card-header" style="background: #64443c; color: white;">
             <i class="fa fa-bullhorn" aria-hidden="true"></i> Lead Source
 
             <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">

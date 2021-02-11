@@ -87,7 +87,7 @@ class Settings extends MY_Controller {
 
             $this->session->set_flashdata('alert-type', 'success');
 
-            redirect('workcalender');
+            redirect('settings/Schedule');
             exit();
 
         } else {

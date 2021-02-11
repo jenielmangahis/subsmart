@@ -206,7 +206,7 @@ class Esign extends MY_Controller {
 		$this->page_data['file_url'] = "";
 		if($this->page_data['file_id'] > 0) {
 			$query = $this->db->from('user_docfile')->where('id',$this->page_data['file_id'])->get();
-			$this->page_data['file_url'] = $query->row()->docFile;
+			$this->page_data['file_url'] = $query->row()->name;
 		} 
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
@@ -220,6 +220,7 @@ class Esign extends MY_Controller {
 
 			'assets/js/esign/step1.js',
 			'assets/js/esign/step2.js',
+			'assets/js/esign/step3.js',
 		]);
 
 		$this->load->view('esign/files', $this->page_data);
@@ -230,7 +231,66 @@ class Esign extends MY_Controller {
 		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id', $id)->get();
 		echo json_encode($queryRecipients->result_array());
 	}
-	
+
+	public function apiCreateUserDocfileFields()
+	{
+    	header('content-type: application/json');
+
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			echo json_encode(['success' => false]);
+			return;
+		}
+
+		$payload = json_decode(file_get_contents('php://input'), true);
+
+		$coordinates = json_encode($payload['coordinates']);
+		$docPage = $payload['doc_page'];
+		$docId = $payload['docfile_id'];
+		$field = $payload['field'];
+		$uniqueKey = $payload['unique_key'];
+		$userId = logged('id');
+
+		$this->db->where('docfile_id', $docId);
+		$this->db->where('user_id', $userId);
+		$this->db->where('unique_key', $uniqueKey);
+		$record = $this->db->get('user_docfile_fields')->row();
+
+		if (is_null($record)) {
+			$this->db->insert('user_docfile_fields', [
+				'coordinates' => $coordinates,
+				'doc_page' => $docPage,
+				'docfile_id' => $docId,
+				'field_name' => $field,
+				'unique_key' => $uniqueKey,
+				'user_id' => $userId,
+			]);
+		} else {
+			$this->db->where('id', $record->id);
+			$this->db->update('user_docfile_fields', [
+				'coordinates' => $coordinates,
+				'doc_page' => $docPage,
+				'docfile_id' => $docId,
+				'field_name' => $field,
+				'unique_key' => $uniqueKey,
+				'user_id' => $userId,
+			]);
+		}
+
+		echo json_encode(['success' => true]);
+	}
+
+	public function apiGetUserDocfileFields($docId)
+	{
+		$userId = logged('id');
+
+		$this->db->where('docfile_id', $docId);
+		$this->db->where('user_id', $userId);
+		$records = $this->db->get('user_docfile_fields')->result();
+
+    	header('content-type: application/json');
+		echo json_encode(['fields' => $records]);
+	}
+
 	public function changeFavoriteStatus($id,$isFavorite){
 		// $this->load->model('Esign_model', 'Esign_model');
 		$whereClouser['user_id'] = logged('id');

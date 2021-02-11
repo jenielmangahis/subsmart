@@ -136,7 +136,7 @@
                                         <td><input type="text" class="form-control" name="desc[]"></td>
                                         <td><input type="text" class="form-control" name="qty[]"></td>
                                         <td><input type="text" class="form-control" name="rate[]"></td>
-                                        <td><input type="number" class="form-control" name="amount[]" onchange="totalfunc();"></td>
+                                        <td><input type="text" class="form-control" name="amount[]"></td>
                                         <td><input type="text" class="form-control" name="tax[]"></td>
                                         <td></td>
                                     </tr>
@@ -147,7 +147,7 @@
                                         <td><input type="text" class="form-control" name="desc[]"></td>
                                         <td><input type="text" class="form-control" name="qty[]"></td>
                                         <td><input type="text" class="form-control" name="rate[]"></td>
-                                        <td><input type="number" class="form-control" name="amount[]" onchange="totalfunc();"></td>
+                                        <td><input type="text" class="form-control" name="amount[]"></td>
                                         <td><input type="text" class="form-control" name="tax[]"></td>
                                         <td></td>
                                     </tr>
@@ -280,16 +280,19 @@
     <!--end of modal-->
 </div>
 <script>
-  function totalfunc(){
-    var inputs = document.getElementsByName('amount[]');
-    // alert(inputs);
-    var sum = 0;
-    for(var i = 0; i<inputs.length; i++){
-      sum += parseInt(inputs[i].value);
-    }
-    document.getElementById('total_amount').value = sum;
+  // function totalfunc(){
+  //   var inputs = document.getElementsByName('amount[]');
+  //   // alert(inputs);
+  //   var sum = 0;
+  //   for(var i = 0; i<inputs.length; i++){
+  //     sum += parseInt(inputs[i].value);
+  //   }
+  //   document.getElementById('total_amount').value = sum;
 
-  }
+  // }
+
+ 
+
 </script>
 
 <?php include viewPath('accounting/add_new_term'); ?>

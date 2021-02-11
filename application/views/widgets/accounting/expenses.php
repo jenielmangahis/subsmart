@@ -1,6 +1,6 @@
 <div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
-        <div class="card-header">
+        <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-credit-card" aria-hidden="true"></i> Expenses
 
             <div class="dropdown float-right" style="position: relative;float: right;display: inline-block;margin-left: 10px;">

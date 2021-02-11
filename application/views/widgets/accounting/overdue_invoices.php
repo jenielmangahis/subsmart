@@ -1,6 +1,6 @@
 <div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
-        <div class="card-header">
+        <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-bookmark " aria-hidden="true"></i> Overdue Invoices
         </div>
         <div class="card-body">

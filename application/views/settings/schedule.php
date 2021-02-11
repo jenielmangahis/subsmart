@@ -1,3 +1,10 @@
+<style>
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -10,15 +17,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- end row -->
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
-                        <h1 style="text-align: left;">Settings</h1>
-                        <div class="alert alert-warning mt-1 mb-4" role="alert">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Configure your settings to allow employees to see the full schedule or just their own. You can also set up notification. Simply select the item on each field line and save.
-                            </span>
-                        </div>
                         <?php echo form_open('settings/schedule', ['class' => 'form-validate require-validation', 'id' => 'schedule_settings_form', 'autocomplete' => 'off']); ?>
                         <div class="validation-error hide" style="display:none;"></div>
 
-                        <div class="card">
+                        <div class="card mt-2">
+                            <div class="row">
+                              <div class="col-sm-12 left">
+                                <h3 class="page-title">Settings</h3>
+                              </div>
+                            </div>
+                            <div class="alert alert-warning mt-1 mb-4" role="alert">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Configure your settings to allow employees to see the full schedule or just their own. You can also set up notification. Simply select the item on each field line and save.
+                                </span>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -34,6 +45,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <?php } ?>
                                         </select>
                                     </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Job Time Settings</label>
+                                            <div class="help help-sm help-block">Time Interval Settings</div>
+                                            <select name="job_time_setting" id="library_template" class="form-control">
+                                                <option value="">Select</option>
+                                                <option <?= $settings['job_time_setting'] == 1 ? 'selected="selected"' : ''; ?> value="1">1 hour</option>
+                                                <option <?= $settings['job_time_setting'] == 2 ? 'selected="selected"' : ''; ?> value="2">2 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 3 ? 'selected="selected"' : ''; ?> value="3">3 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 4 ? 'selected="selected"' : ''; ?> value="4">4 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 5 ? 'selected="selected"' : ''; ?> value="5">5 hours</option>
+                                                <option <?= $settings['job_time_setting'] == 6 ? 'selected="selected"' : ''; ?> value="6">6 hours</option>
+                                            </select>
+                                        </div>
                                 </div>
                             </div>
                             <div class="row p-3">
@@ -106,16 +133,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                   <i class="fab fa-google"></i>
                                                   <big>Gmail / G Suite - Connected</big><br />
                                                   <small>Note : This will check or create NsmarTrac calendar for auto add events to google calendar</small>
-                                                </a> 
+                                                </a>
                                             <?php }else{ ?>
                                                 <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
                                                   <small class="plan">Gmail Account</small><br/>
                                                   <i class="fab fa-google"></i>
                                                   <big>Gmail / G Suite</big><br />
                                                   <small>Note : This will check or create NsmarTrac calendar for auto add events to google calendar</small>
-                                                </a> 
+                                                </a>
                                             <?php } ?>
-                                            
+
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -124,7 +151,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                               <small class="plan">Hotmail Account</small><br/>
                                               <i class="fab fa-hotmail"></i>
                                               <big>Microsoft Hotmail</big>
-                                            </a> 
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -133,7 +160,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                               <small class="plan">Apple Account</small><br/>
                                               <i class="fab fa-apple"></i>
                                               <big>Apple</big>
-                                            </a> 
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -181,7 +208,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <hr class="card-hr" style="border-bottom: solid 2px #dfdfdf !important;">
                                     <div class="pt-3">
                                         <button class="btn btn-primary" data-action="save">Save Changes</button>
-                                    </div>             
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -285,7 +312,7 @@ function checkAuth() {
 }
 
 function handleAuthResult(authResult) {
-  //console.log(authResult);  
+  //console.log(authResult);
   var msg1 = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Connecting Gmail Account...</div>';
   var url = base_url + "settings/create_google_account";
   var auth_code = authResult['code'];
@@ -296,11 +323,11 @@ function handleAuthResult(authResult) {
       data:{token: authResult['code']},
       dataType: 'json',
       beforeSend: function(data) {
-        
+
       },
-      success: function(data) {  
-        location.href = base_url + 'settings/schedule?calendar_update=1';        
-      },    
+      success: function(data) {
+        location.href = base_url + 'settings/schedule?calendar_update=1';
+      },
       error: function(e) {
         console.log(e);
       }

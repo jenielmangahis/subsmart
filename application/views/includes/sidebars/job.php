@@ -70,8 +70,14 @@
         </li>
 
         <li class="nav-header header-left">Settings</li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_types') ? "active" : "";  ?>">
+            <a href="<?= base_url('job/job_types') ?>" title="Job Types"><span class="fa fa-book"></span>Job Types</a>
+        </li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/bird_eye_view') ? "active" : "";  ?>">
+            <a href="<?= base_url('job/bird_eye_view') ?>" title="Bird Eye View"><span class="fa fa-users"></span>Bird Eye View</a>
+        </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
-            <a href="<?= base_url('job/job_tags') ?>" title="Profile Settings"><span class="fa fa-tags"></span>Job Tags</a>
+            <a href="<?= base_url('job/job_tags') ?>" title="Job Tags"><span class="fa fa-tags"></span>Job Tags</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
             <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Priority</a>
@@ -82,8 +88,8 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
             <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Custom Form</a>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
+        <!-- <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
             <a href="<?= base_url('job/job_time_settings') ?>" title="Profile Settings"><span class="fa fa-clock-o"></span>Time Window Settings</a>
-        </li>
+        </li> -->
     </ul>
 </nav>

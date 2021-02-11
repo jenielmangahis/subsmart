@@ -50,13 +50,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="startDate">Start Date</label>
-                                <input type="text" class="form-control date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>
+                                <input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="endDate">End Date</label>
-                                <input type="text" class="form-control date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
+                                <input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
                             </div>
                         </div>
                         <div class="col-md-12">

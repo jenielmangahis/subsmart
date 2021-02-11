@@ -11,6 +11,7 @@
     .pointer p{
         line-height: 15px;
         margin-top: 7px;
+        font-size: 11px;
     }
     
     #shotcutsSlide .carousel-indicators{
@@ -25,7 +26,7 @@
 
 <div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
-        <div class="card-header">
+        <div class="card-header" style="background:#fa5252; color:white;">
             <i class="fa fa-dashboard" aria-hidden="true"></i> Shorcuts
         </div>
         <div class="card-body pt-3">

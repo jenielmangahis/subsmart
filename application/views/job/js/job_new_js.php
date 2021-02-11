@@ -1,6 +1,16 @@
+<?php
+    if(isset($jobs_data)){
+        $customer = $jobs_data->customer_id;
+    }else{
+        $customer = 0;
+    }
+?>
+
 <script>
+    var cust_id = <?php echo $customer  ?>;
     window.onload = function() { // same as window.addEventListener('load', (event) => {
         //alert('Page loaded');
+
         $.ajax({
             type: "GET",
             url: "/job/get_customers",
@@ -9,13 +19,40 @@
                 var template_data = JSON.parse(data);
                 var toAppend = '';
                 $.each(template_data,function(i,o){
-                    toAppend += '<option value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
+                    var selected = '';
+                    if(o.prof_id == cust_id){
+                        selected = "selected";
+                    }
+                    console.log(cust_id);
+                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
                 });
                 $('#customer_id').append(toAppend);
                 //console.log(template_data);
             }
         });
+        if(cust_id != 0){
+            load_customer_data(cust_id);
+        }
     };
+    function load_customer_data($id){
+        $.ajax({
+            type: "POST",
+            url: "/job/get_customer_selected",
+            data: {id : $id}, // serializes the form's elements.
+            success: function(data)
+            {
+                var customer_data = JSON.parse(data);
+                //console.log(customer_data);
+                $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
+                $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+                $('#cust_number').text(customer_data.phone_h);
+                $('#cust_email').text(customer_data.email);
+                $('#mail_to').attr("href","mailto:"+customer_data.email);
+                initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+            }
+        });
+    }
+
     $(document).ready(function() {
 
         $("#jobs_form").submit(function(e) {
@@ -29,10 +66,25 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
                     console.log(data);
+                    sucess_add_job();
                 }
             });
         });
-
+        function sucess_add_job(){
+            Swal.fire({
+                title: 'Nice!',
+                text: 'Job has been added!',
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href='/job';
+                }
+            });
+        }
         $("#fill_esign_btn").click(function () {
             $.ajax({
                 type: "GET",
@@ -50,19 +102,28 @@
             });
         });
 
-        $("#add_another_item").click(function () {
-            // var newFields = document.getElementById('custom_form').cloneNode(true);
+        $(".select_item").click(function () {
+            var idd = this.id;
+            console.log(idd);
+            console.log($(this).data('itemname'));
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input type=\"text\" name=\"item_name[]\" class=\"form-control checkDescription\" ></td>\n" +
-                "<td width=\"10%\"><small>Qty</small><input type=\"text\" name=\"item_qty[]\" class=\"form-control checkDescription\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Price</small><input type=\"text\" name=\"item_price[]\" class=\"form-control checkModelAmount\" value=\"0\" placeholder=\"Unit Price\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control checkDescription\"></td>\n" +
-                "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control checkDescription\"></td>\n" +
+                "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ></td>\n" +
+                "<td width=\"10%\"><small>Qty</small><input type=\"text\" name=\"item_qty[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\"><small>Unit Price</small><input value="+price+" type=\"text\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\">$00<a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
                 "</tr>";
             tableBody = $("#jobs_items_table_body");
             tableBody.append(markup);
         });
+
+        // $("#add_another_item").click(function () {
+        //     // var newFields = document.getElementById('custom_form').cloneNode(true);
+        //
+        // });
 
         //$(".color-scheme").on( 'click', function () {});
 
@@ -114,6 +175,11 @@
                     //console.log(data);
                 }
             });
+        });
+
+        $("#job_type_option").on( 'change', function () {
+            var type = this.value;
+            $('#job_type').val(type);
         });
 
         //$('#summernote').summernote('code', '');
@@ -385,22 +451,7 @@
             var customer_selected = this.value;
             //console.log(customer_selected);
             if(customer_selected !== ""){
-                $.ajax({
-                    type: "POST",
-                    url: "/job/get_customer_selected",
-                    data: {id : customer_selected}, // serializes the form's elements.
-                    success: function(data)
-                    {
-                        var customer_data = JSON.parse(data);
-                        //console.log(customer_data);
-                        $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-                        $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                        $('#cust_number').text(customer_data.phone_h);
-                        $('#cust_email').text(customer_data.email);
-                        $('#mail_to').attr("href","mailto:"+customer_data.email);
-                        initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                    }
-                });
+                load_customer_data(customer_selected);
             }else{
                 $('#cust_fullname').text('xxxxx xxxxx');
                 $('#cust_address').text('-------------');
@@ -408,6 +459,17 @@
                 $('#cust_email').text('xxxxx@xxxxx.xxx');
                 initMap();
             }
+        });
+
+        $("#start_date").on("change", function(){
+            $('#end_date').val(this.value);
+        });
+
+        $('#items_table').DataTable({
+            "lengthChange": false,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
         });
 
     });

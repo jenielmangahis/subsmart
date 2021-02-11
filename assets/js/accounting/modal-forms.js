@@ -454,7 +454,7 @@ $(function() {
         $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(5)').html(credit);
     });
 
-    $(document).on('change', 'div#statementModal input#startDate, div#statementModal input#endDate, div#statementModal select#statementType, div#statementModal select#customerBalanceStatus', function() {
+    $(document).on('change', 'div#statementModal select#statementType, div#statementModal select#customerBalanceStatus', function() {
         $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
         $('div#statementModal div.modal-body div.row:last-child()').addClass('hide');
 
@@ -488,7 +488,7 @@ $(function() {
             if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').length === 0) {
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2)').html('<div class="form-group"></div>');
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append('<label for="startDate">Start Date</label>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append(`<input type="text" class="form-control date" name="start_date" id="startDate" value="${startDate}"/>`);
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="${startDate}"/>`);
 
                 $(`#statementModal input#startDate`).datepicker({
                     uiLibrary: 'bootstrap'
@@ -498,7 +498,7 @@ $(function() {
             if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').length === 0) {
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3)').html('<div class="form-group"></div>');
                 $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append('<label for="endDate">End Date</label>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append(`<input type="text" class="form-control date" name="end_date" id="endDate" value="${today}"/>`);
+                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="${today}"/>`);
 
                 $(`#statementModal input#endDate`).datepicker({
                     uiLibrary: 'bootstrap'
@@ -1328,6 +1328,11 @@ const clearTableLines = (e) => {
             $(this).remove();
         }
     });
+}
+
+const showApplyButton = () => {
+    $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
+    $('div#statementModal div.modal-body div.row:last-child()').addClass('hide');
 }
 
 const submitModalForm = (event, el) => {

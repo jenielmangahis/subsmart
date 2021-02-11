@@ -8,8 +8,8 @@
 </head>
 <body style="margin: 0;    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';font-size: 1rem;font-weight: 400;line-height: 1.5;    color: #212529;    text-align: left;    background-color: #fff;">
     <?php $count = 1; ?>
-    <?php foreach($data as $customer): ?>
-    <?php if($count < count($data)) : ?>
+    <?php foreach($data['customers'] as $customer): ?>
+    <?php if($count < count($data['customers'])) : ?>
     <div class="container" style="width: 100%;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: always;">
     <?php else : ?>
     <div class="container" style="width: 100%;padding-right: 15px;padding-left: 15px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: avoid;">
@@ -29,7 +29,9 @@
                                 <div style="float:right;">
                                     <p><strong>STATEMENT NO.</strong>1050</p>
                                     <p><strong>DATE</strong><?= $customer['date'] ?></p>
+                                    <?php if($data['statement_type'] !== '3') : ?>
                                     <p><strong>TOTAL DUE</strong>$<?= number_format($customer['total_due'], 2, '.', ',') ?></p>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
@@ -43,7 +45,13 @@
                             <th style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">DATE</th>
                             <th style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">ACTIVITY</th>
                             <th style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">AMOUNT</th>
+                            <?php if($data['statement_type'] === '1' || $data['statement_type'] === 1) : ?>
                             <th style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">BALANCE</th>
+                            <?php elseif($data['statement_type'] === '2' || $data['statement_type'] === 2) : ?>
+                            <th style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">OPEN AMOUNT</th>
+                            <?php else : ?>
+                            <th style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">RECEIVED</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,6 +64,31 @@
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
+                    <?php if($data['statement_type'] === '3' || $data['statement_type'] === 3) : ?>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">TOTAL AMOUNT</td>
+                            <td style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;">TOTAL RECEIVED</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <?php
+                            $totalAmount = array_sum(array_map(function($item){
+                                return $item['amount'];
+                            }, $customer['items']));
+                            
+                            $totalReceived = array_sum(array_map(function($item){
+                                return $item['balance'];
+                            }, $customer['items']));
+                            ?>
+                            <td style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;"><?= number_format($totalAmount, 2, '.', ',') ?></td>
+                            <td style="border-bottom-width: 2px;vertical-align: bottom;padding: .75rem; text-align:center;"><?= number_format($totalReceived, 2, '.', ',') ?></td>
+                        </tr>
+                    </tfoot>
+                    <?php endif; ?>
                 </table>
             </div>
         </div>

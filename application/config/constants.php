@@ -95,3 +95,10 @@ defined('ESTIMATE_STATUS_INVOICED')      OR define('ESTIMATE_STATUS_INVOICED', '
 defined('ESTIMATE_STATUS_DECLINED')      OR define('ESTIMATE_STATUS_DECLINED', 'Declined by customer');
 defined('ESTIMATE_STATUS_LOST')      OR define('ESTIMATE_STATUS_LOST', 'Lost');
 defined('ESTIMATE_STATUS_DRAFT')      OR define('ESTIMATE_STATUS_DRAFT', 'Draft');
+
+//Converge
+define('CONVERGE_MERCHANTID', '0019127');
+define('CONVERGE_MERCHANTUSERID', 'webpage');
+define('CONVERGE_MERCHANTPIN', 'IJFZ3DQUK9MPLHGUS618ZJ9KWH7EI3G0QTQ5IGI6NY3701LZ1E5SHMBE1MEMG7UA');
+define('CONVERGE_TOKENURL', 'https://api.demo.convergepay.com/hosted-payments/transaction_token');
+define('CONVERGE_HPPURL', 'https://api.demo.convergepay.com/hosted-payments');

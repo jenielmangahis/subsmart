@@ -271,7 +271,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </style>
 <div class="col-lg-3 col-md-6 col-sm-12" id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
-        <div class="card-header">
+        <div class="card-header" style="background:#9775fa; color:white;">
            <i class="fa fa-book" aria-hidden="true"></i> Timesheet
         </div>
         <div class="card-body" style="padding: 0 !important; overflow-x: scroll;">

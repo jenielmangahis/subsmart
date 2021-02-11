@@ -121,4 +121,28 @@
       border-radius: 0;
     }
   }
+
+  .document-page {
+    position: relative;
+
+    &:first-child {
+      margin-top: 0 !important;
+    }
+  }
+
+  .menu_item.ui-draggable {
+    padding: 0;
+    z-index: 1;
+
+    .subData {
+      background-color: #ffd65b;
+      padding: 5px 10px;
+      font-family: monospace;
+      border-radius: 3px;
+    }
+  }
+
+  .docPage {
+    width: max-content;
+  }
 }

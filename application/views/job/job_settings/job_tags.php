@@ -125,7 +125,8 @@
         $('#jobTypeTable').DataTable({
             "lengthChange": true,
             "searching" : false,
-            "pageLength": 10
+            "pageLength": 10,
+            "order": [],
         });
         $("#form_add_tag").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.

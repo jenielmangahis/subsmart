@@ -537,6 +537,7 @@ $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
+$route['job/_load_upcoming_jobs'] = 'Job/ajax_load_upcoming_jobs';
 
 //Estimates
 $route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';
