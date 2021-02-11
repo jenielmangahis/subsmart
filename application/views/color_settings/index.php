@@ -13,19 +13,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .cell-inactive{
     background-color: #d9534f;
 }
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid p-40">
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card mt-2" style="min-height: 400px !important;">
+                    <div class="card" style="min-height: 400px !important;">
                       <div class="row">
                         <div class="col-sm-6 left">
-                          <h3 class="page-title">Color Settings</h3>
+                          <h3 class="page-title mt-0">Color Settings</h3>
                         </div>
                         <div class="col-sm-6 right dashboard-container-1">
                             <div class="text-right">

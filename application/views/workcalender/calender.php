@@ -261,6 +261,29 @@ a.top-1 {
     position: relative;
     bottom: 3px;
   }
+  .pr-b10 {
+    position: relative;
+    bottom: 10px;
+  }
+  .p-40 {
+    padding-top: 40px !important;
+  }
+  .mt-40 {
+    margin-top: 55px !important;
+    border-radius: 5px;
+  }
+  @media only screen and (max-width: 600px) {
+    .p-40 {
+      padding-top: 0px !important;
+    }
+    .mt-40 {
+      margin-top: 0px !important;
+    }
+    .pr-b10 {
+      position: relative;
+      bottom: 0px;
+    }
+  }
   @media screen and (max-width: 1190px) {
     div#calender_toolbar div {
         width: 100%;
@@ -311,7 +334,7 @@ a.top-1 {
             <?php include viewPath('includes/sidebars/schedule'); ?>
             <?php include viewPath('includes/notifications'); ?>
             <div wrapper__section>
-                <div class="container-fluid">
+                <div class="container-fluid p-40">
                     <!-- end row -->
                     <div class="row">
                         <div class="col-xl-12">
@@ -345,7 +368,7 @@ a.top-1 {
                                                 <?php
                                             }
                                         } else {
-                                            echo "No Workorders";
+                                            // Remove UI Improvement task echo "No Workorders";
                                         }
                                     ?>
                                 </div>
@@ -465,7 +488,7 @@ a.top-1 {
             </div>
         </div>
         <?php //if( !$is_mobile ){ ?>
-        <div class="col-12 col-md-3 right-col" style="background-color: #ffffff;overflow-y: scroll; max-height: 800px;">
+        <div class="col-12 col-md-3 mt-40 right-col" style="background-color: #ffffff;overflow-y: scroll; max-height: 800px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div class="right-calendar-loading"></div>
@@ -1454,7 +1477,7 @@ a.top-1 {
          data: {},
          success: function(o)
          {
-            $("#upcoming-jobs-container").html(o);      
+            $("#upcoming-jobs-container").html(o);
          }
       });
     }
