@@ -102,3 +102,11 @@ define('CONVERGE_MERCHANTUSERID', 'webpage');
 define('CONVERGE_MERCHANTPIN', 'IJFZ3DQUK9MPLHGUS618ZJ9KWH7EI3G0QTQ5IGI6NY3701LZ1E5SHMBE1MEMG7UA');
 define('CONVERGE_TOKENURL', 'https://api.demo.convergepay.com/hosted-payments/transaction_token');
 define('CONVERGE_HPPURL', 'https://api.demo.convergepay.com/hosted-payments');
+
+
+//PHPMAILER
+define('MAIL_SERVER', 'mail.nsmartrac.com');
+define('MAIL_PORT', 465);
+define('MAIL_USERNAME', 'webmaster@nsmartrac.com');
+define('MAIL_PASSWORD', 'Lol123lol!@#');
+define('MAIL_FROM', 'webmaster@nsmartrac.com');
