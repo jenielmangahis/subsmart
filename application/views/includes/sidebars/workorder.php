@@ -25,7 +25,6 @@
         <li class="nav-header">Workorders</li>
         <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'workorder' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder') ?>" title="Work Orders"><span
                         class="fa fa-user"></span>Work Orders</a></li>
-        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'map' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/map') ?>" title="Services"><span class="fa fa-users"></span>Bird Eye View</a></li>
         <!--<li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'job_type' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/job_type/') ?>" title="Credentials"><span class="fa fa-cube"></span>Job Type List</a></li>-->
         
         <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'settings' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/settings') ?>" title="Credentials"><span class="fa fa-cube"></span>Settings</a></li>

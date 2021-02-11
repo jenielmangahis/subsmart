@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
-    <?php include viewPath('includes/sidebars/workorder'); ?>
+    <?php include viewPath('includes/sidebars/schedule'); ?>
     <div wrapper__section>
         <div class="container-fluid p-40">
             <div class="card p-20 mt-0 card_holder">
