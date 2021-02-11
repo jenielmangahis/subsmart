@@ -35,6 +35,7 @@ class Widgets extends MY_Controller {
 
         $id = post('id');
         $isGlobal = post('isGlobal');
+        $isMain = post(isMain);
         $user_id = logged('id');
 
         $idCount = count($this->widgets_model->getWidgetListPerUser($user_id));
@@ -45,6 +46,7 @@ class Widgets extends MY_Controller {
             'wu_widget_id' => $id,
             'wu_company_id' => $isGlobal,
             'wu_order' => $idCount + 1,
+            'wu_is_main' => $isMain
         );
         if (!$this->wizardlib->isWidgetUsed($id)):
             if(!$this->wizardlib->isWidgetGlobal($id)):

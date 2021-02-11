@@ -1,6 +1,6 @@
 <div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
-        <div class="card-header">
+        <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-money-bill-wave" aria-hidden="true"></i> Sales
             <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                 <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">

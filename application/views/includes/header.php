@@ -365,10 +365,14 @@
                                     <div class="prev-icon-title">Notification</div>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                         <!-- item-->
-                                        <h6 class="dropdown-item-text">Notifications (258)</h6>
+									<?php 
+                                    $notification = getTimesheetNotification(); 
+                                    $notifyCount = count($notification);
+									?>
+									<h6 class="dropdown-item-text">Notifications (<?php echo $notifyCount; ?>)</h6>
+                                
                                         <div class="slimscroll notification-item-list" id="notificationList">
                                             <?php
-                                            $notification = getTimesheetNotification();
                                             if ($notification != null):
                                                 foreach ($notification as $notify):
                                                     if ($notify->status == 1) {
@@ -377,10 +381,11 @@
                                                         $bg = '#f8f9fa';
                                                     }
                                                     ?>
-                                                    <a href="<?php echo site_url(); ?>timesheet/attendance" id="notificationDP" data-id="<?php echo $notify->id ?>" class="dropdown-item notify-item active" style="background-color: <?php echo $bg; ?>">
-                                                        <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
-                                                        <p class="notify-details"><?php echo $notify->title ?><span class="text-muted"><?php echo $notify->content; ?></span></p>
-                                                    </a>
+													
+                                            <a href="<?php echo site_url();?>timesheet/attendance" id="notificationDP" data-id="<?php echo $notify->id?>" class="dropdown-item notify-item active" style="background-color: <?php echo $bg;?>">
+                                            <img style="width:30px;border-radius: 11px;margin-bottom:-20px" class="profile-user-img img-responsive img-circle" src="<?php echo userProfileImage($userid) ?>" alt="User profile picture" />
+                                            <p class="notify-details"><?php echo $notify->FName." ".$notify->LName ?><span class="text-muted"><?php echo $notify->content;?></span></p>
+                                            </a>
                                                     <?php
                                                 endforeach;
                                             endif;

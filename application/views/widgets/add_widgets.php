@@ -15,7 +15,7 @@
             <hr />
             <div class="justify-content-center text-center">
                 <span>Track stats important to your business</span><br />
-                <button onclick="document.location = '<?= base_url('nsmart_plans/index') ?>'" class="btn btn-primary mt-2">Upgrade to Plan</button>
+                <button onclick="document.location = '<?= base_url('nsmart_plans/index') ?>'" class="btn btn-primary mt-2">Upgrade Plan</button>
             </div>
         </div>
     </div>
@@ -71,10 +71,11 @@
     function addWidget(id)
     {
         var isGlobal = $('#widgetGlobal_'+id).is(":checked")?'1':0;
+        var isMain = $('#widgetMain_'+id).is(":checked")?'1':0;
         $.ajax({
             url: '<?php echo base_url(); ?>widgets/addWidget',
             method: 'POST',
-            data: {id: id, isGlobal:isGlobal},
+            data: {id: id, isGlobal:isGlobal, isMain:isMain},
             //dataType: 'json',
             success: function (response) {
                $(response).insertBefore($('#addWidget'));

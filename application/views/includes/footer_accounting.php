@@ -61,6 +61,20 @@ Chartist Chart-->
 <script>
 jQuery(document).ready(function () {
 $('#reportstable').DataTable();
+var elements = document.getElementsByName("amount[]");
+var element_array = Array.prototype.slice.call(elements);
+
+for(var i=0; i < element_array.length; i++){
+    element_array[i].addEventListener("keyup", sum_values);
+}
+
+function sum_values(){
+    var sum = 0;
+    for(var i=0; i < element_array.length; i++){
+        sum += parseFloat(element_array[i].value, 10);
+    }
+    document.getElementsByName("total_amount")[0].value = 100;
+}
 });
 </script>
 

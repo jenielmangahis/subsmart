@@ -11,14 +11,14 @@
         <div class="page-title-box">
             <div class="row align-items-center">
                 <div class="col-sm-2">
-                    <h1 class="page-title">Dashboard</h1>
+                    <h1 class="page-title" style="font-weight: 600; font-size: 1.75rem;">Dashboard</h1>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active">Welcome to  Dashboard</li>
+                        <li class="breadcrumb-item active">Welcome <?php echo getLoggedName(); ?>!</li>
                     </ol>
                 </div>
                 <?php include viewPath('flash'); ?>
                 <style>
-                    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title{
+                    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title, a, .modal-title{
                         font-family: Sarabun, sans-serif !important;
                     }
                     .dynamic-widget .card{
@@ -101,11 +101,11 @@
                 </div>
                 <div class="col-sm-6 d-none d-lg-flex">
                 </div>
-                <div class="col-sm-4">
+<!--                <div class="col-sm-4">
                     <div class="float-right d-none d-md-block">
                         <ol class="breadcrumb">
                             <?php $image = base_url('uploads/users/default.png'); ?>
-                            <!-- <img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;"> -->
+                             <img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;"> 
                             <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle" style="height: 50px;">
                             <?php
                             /* $id = logged('id');
@@ -115,7 +115,7 @@
                             <h5 style="margin: 13px 0 0px 10px;"><?php echo getLoggedName(); ?></h5>
                         </ol>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
         <!-- end row -->
@@ -125,11 +125,14 @@
                 <div class="col-md-8">
                     <div class="row cus-dashboard-div">
                         <?php
-                            $this->load->view('widgets/earned_today');
-                            $this->load->view('widgets/total_jobs');
-                            $this->load->view('widgets/total_invoice_due');
-                            $this->load->view('widgets/total_estimate_pending');
-                            $this->load->view('widgets/hr_widgets');
+                            $this->load->view('widgets/upcoming_jobs');
+                            $this->load->view('widgets/upcoming_estimates');
+                            $this->load->view('widgets/upcoming_events');
+                            $this->load->view('widgets/task_hub');
+//                            $this->load->view('widgets/total_jobs');
+//                            $this->load->view('widgets/total_invoice_due');
+//                            $this->load->view('widgets/total_estimate_pending');
+//                            $this->load->view('widgets/hr_widgets');
                         ?>
                     </div>
                 </div>

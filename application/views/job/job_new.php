@@ -67,9 +67,11 @@
                                 </tbody>
                             </table>
                             <div class="modal-footer">
-                                <a class="pt-1 pl-2 text-right add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
-                                    <span class="fa fa-plus-square fa-margin-right"></span>Add New Customer
-                                </a>
+                                <div class="row">
+                                    <a style="float: right !important;"  class="add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
+                                        <span class="fa fa-plus-square"></span> Add New Customer
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -86,12 +88,12 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h6 class="page-title"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px; margin-right: -8px; position: relative; top: 1.4px;"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>  &nbsp; &nbsp;Schedule Job</h6>
-
+                            <h6 class="page-title">
+                                <span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6>
                             <hr>
                             <div class="form-group label-width d-flex align-items-center">
                                <label>From</label>
-                               <input type="date" name="start_date" class="form-control" required>
+                               <input type="date" name="start_date" id="start_date" class="form-control" required>
                                <select id="inputState" name="start_time" class="form-control" required>
                                 <option selected="">Start time</option>
                                 <option value="5:00 AM">5:00 AM</option>
@@ -122,7 +124,7 @@
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
                                <label >To</label>
-                               <input type="date" name="end_date" class="form-control mr-2" required>
+                               <input type="date" name="end_date" id="end_date" class="form-control mr-2" required>
                                <select id="inputState" name="end_time" class="form-control" required>
                                 <option selected="">End time</option>
                                    <option value="5:00 AM">5:00 AM</option>
@@ -155,7 +157,7 @@
                                 <option selected="">Select Employee</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
-                                        <option value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->employee_ids == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -166,44 +168,61 @@
                                           <?php foreach ($color_settings as $color): ?>
                                               <li>
                                                   <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1">
+                                                      <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
                                                   </a>
                                               </li>
                                           <?php endforeach; ?>
                                       <?php endif; ?>
                                   </ul>
-                                  <input value="" id="job_color_id" name="event_color" type="hidden" />
+                                  <input value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                             </div>
                             <h6>Customer Reminder Notification</h6>
                             <select name="customer_reminder_notification" class="form-control">
                                 <option value="0">None</option>
-                                <option value="PT5M">5 minutes before</option>
-                                <option value="PT15M">15 minutes before</option>
-                                <option value="PT30M">30 minutes before</option>
-                                <option value="PT1H">1 hour before</option>
-                                <option value="PT2H">2 hours before</option>
-                                <option value="PT4H">4 hours before</option>
-                                <option value="PT6H">6 hours before</option>
-                                <option value="PT8H">8 hours before</option>
-                                <option value="PT12H">12 hours before</option>
-                                <option value="PT16H">16 hours before</option>
-                                <option value="P1D" selected="selected">1 day before</option>
-                                <option value="P2D">2 days before</option>
-                                <option value="PT0M">On date of event</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT30M') ? 'selected' : ''; ?> value="PT30M">30 minutes before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT1H') ? 'selected' : ''; ?> value="PT1H">1 hour before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT2H') ? 'selected' : ''; ?> value="PT2H">2 hours before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT4H') ? 'selected' : ''; ?> value="PT4H">4 hours before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT6H') ? 'selected' : ''; ?> value="PT6H">6 hours before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT8H') ? 'selected' : ''; ?> value="PT8H">8 hours before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT12H') ? 'selected' : ''; ?> value="PT12H">12 hours before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT16H') ? 'selected' : ''; ?> value="PT16H">16 hours before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P1D') ? 'selected' : ''; ?> value="P1D" selected="selected">1 day before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P2D') ? 'selected' : ''; ?> value="P2D">2 days before</option>
+                                <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT0M') ? 'selected' : ''; ?> value="PT0M">On date of event</option>
                             </select>
                             <h6>Time Zone</h6>
                             <select id="inputState" name="timezone" class="form-control">
                                 <option selected="">Central Time (UTC -5)</option>
-                                <option>...</option>
                             </select>
-                            <h6>Select Job Tag</h6>
-                            <select id="job_tags" name="tags" class="form-control">
+                            <h6>Select Job Type</h6>
+                            <select id="job_type_option" name="jobtypes" class="form-control">
                                 <option value="">Select Tag</option>
-                                <?php if(!empty($tags)): ?>
-                                    <?php foreach ($tags as $tag): ?>
-                                        <option value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                <?php if(!empty($job_types)): ?>
+                                    <?php foreach ($job_types as $type): ?>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
+
+                            <h6>Select Job Tag</h6>
+                            <select id="job_tags" name="tags" class="form-control">
+                                <?php if(!empty($tags)): ?>
+                                    <?php foreach ($tags as $tag): ?>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+
+                            <h6>Import Data from Wordorder/Invoice/Estimates</h6>
+
+                            <div class="row" id="import_buttons">
+                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Estimates</button> &nbsp;&nbsp;
+                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> WorkOrder</button> &nbsp;&nbsp;
+                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Invoice</button>
+                            </div>
                             <hr>
                             <button type="button" class="btn btn-primary pull-right text-link"> <span class="fa fa-plus"></span> Share Job</button>
                         </div>
@@ -225,10 +244,11 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div id="notes_edit_btn" class="pencil" style=" width:100%; height:100px;">
+                                                    <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
                                                 </div>
                                                 <div id="notes_input_div" style="display:none;">
                                                     <div style=" height:100px;">
-                                                        <textarea name="message" cols="50" style="width: 100%;" rows="3" id="note_txt" class="input"></textarea>
+                                                        <textarea name="message" cols="50" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
                                                         <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                                      </div>
                                                 </div>
@@ -263,7 +283,7 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <div class="form-group col-md-12">
-                                                <img style="width: 100%" id="attachment-image" alt="Attachment" src="/uploads/jobs/attachment/placeholder.jpg">
+                                                <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/attachment/placeholder.jpg"; ?> ">
                                                 <small>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</small>
                                                 <input type="file" class="form-control" name="attachment-file" id="attachment-file">
                                             </div>
@@ -292,9 +312,17 @@
 
                                     <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
-                                            <!--<a href="https://www.facebook.com/"><p>https://www.facebook.com/</p></a>-->
-                                            <label>Enter Url</label>
-                                            <input type="url" name="link" class="form-control checkDescription">
+                                            <?php
+                                            if(isset($jobs_data) && $jobs_data->link != NULL) {
+                                                ?>
+                                                    <a target="_blank" href="<?= $jobs_data->link; ?>"><p><?= $jobs_data->link; ?></p></a>
+                                                <?php
+                                            }else{
+                                                ?>
+                                                    <label>Enter Url</label>
+                                                    <input type="url" name="link" class="form-control checkDescription">
+                                                <?php
+                                            } ?>
                                         </div>
                                         <br>
                                     </div>
@@ -352,23 +380,23 @@
                                                 <div class="col-md-12">
                                                     <label for="">Method</label>
                                                     <select id="pay_method" name="method" class="form-control">
-                                                        <option value="CC">Credit Card</option>
-                                                        <option value="CHECK">Check</option>
-                                                        <option value="CASH">Cash</option>
-                                                        <option value="ACH">ACH</option>
-                                                        <option value="VENMO">Venmo</option>
-                                                        <option value="PP">Paypal</option>
-                                                        <option value="SQ">Square</option>
-                                                        <option value="WW">Warranty Work</option>
-                                                        <option value="HOF">Home Owner Financing</option>
-                                                        <option value="eT">e-Transfer</option>
-                                                        <option value="OCCP">Other Credit Card Processor</option>
-                                                        <option value="OPT">Other Payment Type</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CC') {echo 'selected'; } ?> value="CC">Credit Card</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CHECK') {echo 'selected'; } ?> value="CHECK">Check</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CASH') {echo 'selected'; } ?> value="CASH">Cash</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'ACH') {echo 'selected'; } ?> value="ACH">ACH</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'VENMO') {echo 'selected'; } ?> value="VENMO">Venmo</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'PP') {echo 'selected'; } ?> value="PP">Paypal</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'SQ') {echo 'selected'; } ?> value="SQ">Square</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'WW') {echo 'selected'; } ?> value="WW">Warranty Work</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'HOF') {echo 'selected'; } ?> value="HOF">Home Owner Financing</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'eT') {echo 'selected'; } ?> value="eT">e-Transfer</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OCCP') {echo 'selected'; } ?> value="OCCP">Other Credit Card Processor</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OPT') {echo 'selected'; } ?> value="OPT">Other Payment Type</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Amount</label>
-                                                    <input class="form-control" id="pay_amount" name="amount" type="number" placeholder="$0.00">
+                                                    <input class="form-control" id="pay_amount" value="<?= isset($jobs_data) ? $jobs_data->amount : ''; ?>" name="amount" type="number" placeholder="$0.00">
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h6>Payment Details</h6>
@@ -588,13 +616,13 @@
                                             <div class="col-sm-12">
                                                 <div style="text-align: center;">
                                                     <center>
-                                                        <img width="100" id="customer-signature" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
+                                                            <img width="100" id="customer-signature" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
                                                     </center>
-                                                    <span id="authorizer">John Doe</span><br>
+                                                    <span id="authorizer"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span><br>
                                                     <span>------------------------</span><br>
                                                     <span>Approved By</span><br><br>
 
-                                                    <small id="date_signed">Jan. 28,2021 2:30PM</small>
+                                                    <small id="date_signed"><?= isset($jobs_data->datetime_signed) ? $jobs_data->datetime_signed : '(date and time)'; ?></small>
                                                 </div>
                                             </div>
                                         </div>
@@ -618,7 +646,11 @@
                     <div class="stepwizard">
                         <div class="stepwizard-row setup-panel">
                             <div class="stepwizard-step col-xs-3">
-                                <a href="#step-1" type="button" class="btn btn-success btn-circle"><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
+                                <a href="#step-1" type="button" class="btn btn-success btn-circle"><span style="font-size: 24px;" class="fa fa-book"></span></a>
+                                <p class=""><small>Draft</small></p>
+                            </div>
+                            <div class="stepwizard-step col-xs-3">
+                                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
                                 <p class=""><small>Schedule</small></p>
                             </div>
                             <div class="stepwizard-step col-xs-3">
@@ -652,32 +684,6 @@
                     <div class="card table-custom">
 
                             <div class="card-body">
-                                <h6 class="page-title">&nbsp; Import Existing Estimate,Workorder or Invoice</h6>
-                                <hr/>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="upload">
-                                            <input id="files" type="file">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="upload workorder">
-                                            <input id="files" type="file" value="Upload Workorder">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="upload invoice">
-                                            <input id="files" type="file">
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-primary"><span class="fa fa-download"></span> Import</button>
-
-                                <div class="col-sm-12">
-                                    <hr>
-                                </div>
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                     <tr>
@@ -689,14 +695,14 @@
                                     <tbody id="jobs_items_table_body">
                                         <tr>
                                             <td>
-                                                <small>Job Title</small>
-                                                <input type="text" name="job_name" class="form-control checkDescription" >
+                                                <small>Job Type</small>
+                                                <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
                                             </td>
                                             <td>
                                             </td>
                                             <td>
                                                 <small>Job Tags</small>
-                                                <input type="text" name="job_tag" class="form-control" id="job_tags_right" readonly>
+                                                <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
                                             </td>
                                             <td>
                                             </td>
@@ -709,42 +715,17 @@
                                             <td>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td width="35%">
-                                                <small>Item name</small>
-                                                <input type="text" name="item_name[]" class="form-control checkDescription" >
-                                            </td>
-                                            <td width="10%">
-                                                <small>Qty</small>
-                                                <input type="text" name="item_qty[]" class="form-control checkDescription">
-                                            </td>
-                                            <td width="15%">
-                                                <small>Unit Price</small>
-                                                <input type="text" name="item_price[]" class="form-control checkModelAmount" value="0" placeholder="Unit Price">
-                                            </td>
-                                            <td width="10%">
-                                                <small>Unit Cost</small>
-                                                <input type="text" name="item_cost[]" class="form-control checkDescription">
-                                            </td>
-                                            <td width="25%">
-                                                <small>Inventory Location</small>
-                                                <input type="text" name="item_loc[]" class="form-control checkDescription">
-                                            </td>
-                                            <td style="text-align: center" class="d-flex" width="15%">
-                                                $00<a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                                 <div class="col-sm-12">
-                                    <a class="link-modal-open" href="javascript:void(0)" id="add_another_item">
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list">
                                         <span class="fa fa-plus-square fa-margin-right"></span>Add Items
                                     </a>
                                 </div>
                                 <br>
                                <div class="col-sm-12">
                                     <p>Description of Job (optional)</p>
-                                    <textarea name="job_description" class="form-control" ></textarea>
+                                    <textarea name="job_description" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
                                     <hr/>
                                </div>
                                 <div class="col-md-12 table-responsive">
@@ -754,12 +735,16 @@
                                                 <div class="drop">
                                                     <div class="cont">
                                                         <div class="tit">
-                                                            <p>Thumbnail</p>
-                                                            <p class="or-text">Or</p>
-                                                            <p>PDF</p>
-                                                            <p class="or-text">Or</p>
-                                                            <p>URL Link</p>
-                                                            <p>To see import source</p>
+                                                            <?php if(isset($jobs_data) && $jobs_data->attachment != ""): ?>
+                                                                <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/attachment/placeholder.jpg"; ?> ">
+                                                            <?php else: ?>
+                                                                <p>Thumbnail</p>
+                                                                <p class="or-text">Or</p>
+                                                                <p>PDF</p>
+                                                                <p class="or-text">Or</p>
+                                                                <p>URL Link</p>
+                                                                <p>To see import source</p>
+                                                            <?php endif; ?>
                                                             <!-- <p class="or-text">Or</p>
                                                             <label>Choose File</label> -->
                                                         </div>
@@ -774,7 +759,7 @@
                                                 <label style="padding: 0 .75rem;">Subtotal</label>
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
-                                                <label id="invoice_sub_total">$1,695.00</label>
+                                                <label id="invoice_sub_total">$0.00</label>
                                                 <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                             </div>
                                             <div class="col-sm-12">
@@ -830,10 +815,12 @@
                                         <div class="col-sm-12" id="approval_card_right" style="display: none;">
                                             <div style="float: right;">
                                                 <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                <img width="100" id="customer_signature_right" alt="Customer Signature" src="/uploads/customer/16092352902893436525feafb5aae2b1.png">
-                                                <center><span id="appoval_name_right">John Doe</span></center><br>
-                                                <span>------------------------</span><br>
-                                                <center><span>Approved By</span></center><br>
+                                                <center>
+                                                    <img width="150" id="customer-customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
+                                                </center>
+                                                <center><span id="appoval_name_right"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span></center><br>
+                                                <span>-----------------------------</span><br>
+                                                <center><small>Approved By</small></center><br>
                                             </div>
                                         </div>
                                         <br>
@@ -846,7 +833,7 @@
                                                             <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
                                                         </div>
                                                         <div class="card-body">
-                                                            <span class="help help-sm help-block" id="notes_right_display"></span>
+                                                            <span class="help help-sm help-block" id="notes_right_display"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></span>
                                                         </div>
                                                         <div class="card-footer">
                                                             <div style="float: right;">
@@ -855,7 +842,7 @@
                                                                 <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
                                                             </div>
                                                         </div>
-
+                                                        <br>
                                                     </div>
                                                 </div>
                                             </div>
@@ -866,7 +853,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12 ">
                                                         <div class="card-header">
-                                                            <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                            <a id="url_right_btn_column" href="#"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                                             <h5 style="padding-left: 20px;">Url Link</h5>
                                                         </div>
                                                         <div class="card-body">
@@ -876,7 +863,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col-sm-12">
                                         <div class="card" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
                                             <div class="row">
@@ -894,10 +880,128 @@
                                         </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <input class="form-control" value="Thank you for your business, Please call Nsmartrac at xxx-xxx-xxxx for quality customer service.">
+                                            <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.">
                                         </div>
                                         <div class="col-sm-12">
                                             <hr>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="card" id="pd_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
+                                                <div class="row">
+                                                    <div class="col-md-12 ">
+                                                        <div class="card-header">
+                                                            <a href="javascript:void(0);" id="pd_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                            <h5 style="padding-left: 20px;" class="mb-0">Payment Details</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-bordered">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>Method</b><br>
+                                                                        <span class="help help-sm help-block" id="pay_method_right">Credit Card</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <b>Amount</b><br>
+                                                                        <span class="help help-sm help-block" id="pay_amount_right">0.00</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <b>Payment Details</b><br>
+                                                                        <span class="help help-sm help-block">xx</span>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                                                <div class="row">
+                                                    <div class="col-md-12 ">
+                                                        <div class="card-header">
+                                                            <h5 style="padding-left: 20px;" class="mb-0">Devices Audit</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <span class="help help-sm help-block">Record all items used on jobs</span>
+                                                            <br>
+                                                            <div style="margin-right:15px; padding-top:1px;font-size: 10px !important;" align="left" class="normaltext1">
+                                                                <a href="javascript:void(0);" id="moreFields" class="more_fields" style="color:#58bc4f;"><span class="fa fa-plus"></span> Add Device </a>&nbsp;&nbsp;
+                                                                <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+                                                            </div>
+                                                            <table cellpadding="0" cellspacing="3" class="table table-striped table-bordered"">
+                                                            <thead>
+                                                            <tr>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Name</b>
+                                                                </td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Sold By</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Points</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Retail Cost</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Purchase Price</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Qty</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Tot Points</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Tot Cost</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Tot Purchase Price</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Net</b></td>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <?php if (isset($device_info)) : ?>
+                                                                <?php foreach ($device_info as $device) { ?>
+                                                                    <tr>
+                                                                        <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                            <?= $device->device_name; ?>
+                                                                        </td>
+                                                                        <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                            <?= $device->sold_by; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                            <?= $device->device_points; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
+                                                                            <?= '$'.$device->retail_cost; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
+                                                                            <?= '$'.$device->purch_price; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                            <?= $device->device_qty; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                            <?= $device->total_points; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
+                                                                            <?= '$'.$device->total_cost; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
+                                                                            <?= '$'.$device->total_purch_price; ?>
+                                                                        </td>
+                                                                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
+                                                                            <?= '$'.$device->device_net; ?>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php } ?>
+                                                            <?php endif ?>
+                                                            </tbody>
+                                                            </table>
+                                                            <br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <br>
@@ -916,122 +1020,6 @@
                     </div>
                     <div class="card table-custom" >
                         <div class="card-body">
-                            <div class="card" id="pd_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
-                                <div class="row">
-                                    <div class="col-md-12 ">
-                                        <div class="card-header">
-                                            <a href="javascript:void(0);" id="pd_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                            <h5 style="padding-left: 20px;" class="mb-0">Payment Details</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <b>Method</b><br>
-                                                        <span class="help help-sm help-block" id="pay_method_right">Credit Card</span>
-                                                    </td>
-                                                    <td>
-                                                        <b>Amount</b><br>
-                                                        <span class="help help-sm help-block" id="pay_amount_right">0.00</span>
-                                                    </td>
-                                                    <td>
-                                                        <b>Payment Details</b><br>
-                                                        <span class="help help-sm help-block">xx</span>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card" style="border-color: #363636 !important;border: 1px solid;">
-                                <div class="row">
-                                    <div class="col-md-12 ">
-                                        <div class="card-header">
-                                            <h5 style="padding-left: 20px;" class="mb-0">Devices Audit</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <span class="help help-sm help-block">Record all items used on jobs</span>
-                                            <br>
-                                            <div style="margin-right:15px; padding-top:1px;font-size: 10px !important;" align="left" class="normaltext1">
-                                                <a href="javascript:void(0);" id="moreFields" class="more_fields" style="color:#58bc4f;"><span class="fa fa-plus"></span> Add Device </a>&nbsp;&nbsp;
-                                                <!--  <a href="javascript:void(0);">Action/Notes</a>-->
-                                            </div>
-                                            <table cellpadding="0" cellspacing="3" class="table table-striped table-bordered"">
-                                                <thead>
-                                                <tr>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Name</b>
-                                                    </td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Sold By</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Points</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Retail Cost</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Purchase Price</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Qty</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Tot Points</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Tot Cost</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Tot Purchase Price</b></td>
-                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                        <b>Net</b></td>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php if (isset($device_info)) : ?>
-                                                    <?php foreach ($device_info as $device) { ?>
-                                                        <tr>
-                                                            <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                <?= $device->device_name; ?>
-                                                            </td>
-                                                            <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                <?= $device->sold_by; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                <?= $device->device_points; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                                                <?= '$'.$device->retail_cost; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                                                <?= '$'.$device->purch_price; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                <?= $device->device_qty; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                <?= $device->total_points; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                                                <?= '$'.$device->total_cost; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                                                <?= '$'.$device->total_purch_price; ?>
-                                                            </td>
-                                                            <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
-                                                                <?= '$'.$device->device_net; ?>
-                                                            </td>
-                                                        </tr>
-                                                    <?php } ?>
-                                                <?php endif ?>
-                                                </tbody>
-                                            </table>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="card" style="border-color: #363636 !important;border: 1px solid;">
                                 <div class="row">
                                     <div class="col-md-12 ">
@@ -1205,6 +1193,52 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                            <table id="items_table" class="table table-hover" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <td> Name</td>
+                                        <td> Price</td>
+                                        <td> </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php if(!empty($items)): ?>
+                                    <?php foreach ($items as $item): ?>
+                                        <tr>
+                                            <td><?= $item->title; ?></td>
+                                            <td><?= $item->price; ?></td>
+                                            <td><button id="<?= $item->id; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item"><span class="fa fa-plus"></span></button></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-detail">
+                <div class="button-modal-list">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <?php
 add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
@@ -1215,6 +1249,8 @@ add_footer_js(array(
 ));
 include viewPath('includes/footer');
 ?>
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=initMap&libraries=&v=weekly"></script>

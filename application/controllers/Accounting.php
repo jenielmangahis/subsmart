@@ -269,6 +269,7 @@ class Accounting extends MY_Controller {
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Deposits";
+        $this->page_data['invoices'] = $this->accounting_invoices_model->getDataInvoices();
         $this->load->view('accounting/deposits', $this->page_data);
     }
     public function products_and_services()

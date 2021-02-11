@@ -6,12 +6,12 @@
 
 <div class="col-lg-6 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
-        <div class="card-header" style="background: #6B5B95; color: white;">
-            <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs
+        <div class="card-header" style="background: #1972c5; color:white;">
+            <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Events
         </div>
         <div class="card-body" style="padding:5px 10px;">
             <div style="height: 250px; overflow-y: scroll">
-                <?php
+            <?php
                 $jobCounter = 0;
                 if ($job) {
                     foreach ($job as $jb) :
@@ -46,9 +46,9 @@
                 ?>
             </div>
             <div class="text-center">
-                <a class="text-info" href="<?= base_url() ?>job">SEE ALL JOBS</a>
+                <a class="text-info" href="<?= base_url() ?>job">SEE ALL EVENTS</a>
             </div>
-
+           
         </div>
 
     </div>

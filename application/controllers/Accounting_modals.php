@@ -1264,6 +1264,36 @@ class Accounting_modals extends MY_Controller {
                 }
 
                 $statementCustomers = $this->accounting_statements_model->insertCustomers($statementCustomers);
+
+                if(isset($data['subject']) && $statementCustomers > 0) {
+                    $this->load->library('pdf');
+                    $this->load->library('email');
+
+                    foreach($data['customer'] as $customer) {
+                        $custProfile = $this->AcsProfile_model->getByProfId((int)$customer);
+                        
+                        $pdfData = new stdClass();
+                        $pdfData->statement_type = $data['statement_type'];
+                        $pdfData->customers = [$customer];
+                        $pdfData->statement_date = $data['statement_date'];
+                        $pdfData->start_date = $data['start_date'];
+                        $pdfData->end_date = $data['end_date'];
+
+                        $pdfData = $this->generateStatementPdfData($pdfData);
+                        $fileName = $custProfile->first_name.'_'.$custProfile->last_name.'_Statement_'.$statementId.'_from_ADI.pdf';
+
+                        $this->pdf->save_pdf("accounting/modals/print_action/statement", ['data' => $pdfData], $fileName, 'portrait');
+
+                        $this->email->clear(true);
+                        $this->email->from('nsmartrac@gmail.com');
+                        $this->email->to($data['email'][$customer]);
+                        $this->email->subject($data['subject']);
+                        $this->email->message($data['body']);
+                        $this->email->attach(base_url("/assets/pdf/$fileName"));
+
+                        $this->email->send();
+                    }
+                }
             }
 
             $return['data'] = $statementId;
@@ -1306,7 +1336,10 @@ class Accounting_modals extends MY_Controller {
     }
 
     private function generateStatementPdfData($post) {
-        $customers = [];
+        $data = [
+            'statement_type' => $post->statement_type,
+            'customers' => []
+        ];
         foreach($post->customers as $customer) {
             $items = [];
             $customerProfile = $this->AcsProfile_model->getByProfId((int)$customer);
@@ -1331,46 +1364,91 @@ class Accounting_modals extends MY_Controller {
                     'amount' => '',
                     'balance' => $overdueAmount
                 ];
-            }
 
-            $invoiceQuery = [
-                'company_id' => logged('company_id'),
-                'customer_id' => (int)$customer,
-                'start_date' => date('Y-m-d', strtotime($post->start_date)),
-                'end_date' => date('Y-m-d', strtotime($post->end_date))
-            ];
-
-            $invoices = $this->accounting_invoices_model->getCustomerInvoicesByDate($invoiceQuery);
-
-            foreach($invoices as $invoice) {
-                $balance = $balance + floatval($invoice->amount);
-                $items[] = [
-                    'date' => date('Y-m-d', strtotime($invoice->invoice_date)),
-                    'activity' => 'Invoice #' . $invoice->id,
-                    'amount' => $invoice->amount,
-                    'balance' => $balance
+                $invoiceQuery = [
+                    'company_id' => logged('company_id'),
+                    'customer_id' => (int)$customer,
+                    'start_date' => date('Y-m-d', strtotime($post->start_date)),
+                    'end_date' => date('Y-m-d', strtotime($post->end_date))
+                ];
+    
+                $invoices = $this->accounting_invoices_model->getCustomerInvoicesByDate($invoiceQuery);
+    
+                foreach($invoices as $invoice) {
+                    $balance = $balance + floatval($invoice->amount);
+                    $items[] = [
+                        'date' => date('m/d/Y', strtotime($invoice->invoice_date)),
+                        'activity' => 'Invoice #' . $invoice->id,
+                        'amount' => $invoice->amount,
+                        'balance' => $balance
+                    ];
+    
+                    if($invoice->status === 2 || $invoice->status === "2") {
+                        $balance = $balance - floatval($invoice->amount);
+                        $items[] = [
+                            'date' => date('m/d/Y', $invoice->updated_at),
+                            'activity' => 'Payment',
+                            'amount' => $invoice->amount - ($invoice->amount * 2),
+                            'balance' => $balance
+                        ];
+                    }
+                }
+            } else if($post->statement_type === "2" || $post->statement_type === 2) {
+                $invoiceQuery = [
+                    'company_id' => logged('company_id'),
+                    'customer_id' => (int)$customer,
+                    'start_date' => date('Y-m-d', strtotime(' -1 year')),
+                    'end_date' => date('Y-m-d')
                 ];
 
-                if($invoice->status === 2 || $invoice->status === "2") {
-                    $balance = $balance - floatval($invoice->amount);
+                $invoices = $this->accounting_invoices_model->getCustomerOpenInvoices($invoiceQuery);
+
+                foreach($invoices as $invoice) {
                     $items[] = [
-                        'date' => date('m/d/Y', $invoice->updated_at),
-                        'activity' => 'Payment',
-                        'amount' => $invoice->amount - ($invoice->amount * 2),
-                        'balance' => $balance
+                        'date' => date('m/d/Y', strtotime($invoice->invoice_date)),
+                        'activity' => 'Invoice #'.$invoice->id.': Due '.date('m/d/Y', strtotime($invoice->due_date)),
+                        'amount' => $invoice->amount,
+                        'balance' => $invoice->amount
+                    ];
+                }
+            } else if($post->statement_type === "3" || $post->statement_type === 3) {
+                $invoiceQuery = [
+                    'cust_bal_status' => $post->cust_bal_status,
+                    'company_id' => logged('company_id'),
+                    'customer_id' => (int)$customer,
+                    'start_date' => date('Y-m-d', strtotime($post->start_date)),
+                    'end_date' => date('Y-m-d', strtotime($post->end_date))
+                ];
+
+                $invoices = $this->accounting_invoices_model->getCustomerTransactions($invoiceQuery);
+
+                foreach($invoices as $invoice) {
+                    $items[] = [
+                        'date' => date('m/d/Y', strtotime($invoice->invoice_date)),
+                        'activity' => 'Invoice #'.$invoice->id.': '.$invoice->message_on_statement,
+                        'amount' => $invoice->amount,
+                        'balance' => ($invoice->status === 2 || $invoice->status === "2") ? $invoice->amount : 0.00
                     ];
                 }
             }
 
-            $customers[$customer] = [
+            if($post->statement_type === "1" || $post->statement_type === 1) {
+                $totalDue = end($items)['balance'];
+            } else {
+                $totalDue = array_sum(array_map(function($item){
+                    return $item['balance'];
+                }, $items));
+            }
+
+            $data['customers'][$customer] = [
                 'name' => $customerProfile->first_name . ' ' . $customerProfile->last_name,
                 'date' => $post->statement_date,
-                'total_due' => end($items)['balance'],
+                'total_due' => $totalDue,
                 'items' => $items
             ];
         }
 
-        return $customers;
+        return $data;
     }
 
     public function showPDF() {

@@ -13,9 +13,6 @@ class Jobs_model extends MY_Model
     public $table_employees = 'employees';
     public $table_customers = 'customers';
     public $table_address = 'address';
-
-
-
     /**
      * @return mixed
      */
@@ -25,11 +22,31 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
-        $this->db->join('users', 'users.id = jobs.id','left');
+        $this->db->join('users', 'users.id = jobs.employee_ids','left');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
         $this->db->where("jobs.company_id", $cid);
+        $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_specific_job($id)
+    {
+        $cid=logged('company_id');
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.*');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
+        $this->db->join('users', 'users.id = jobs.employee_ids','left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id','left');
+        $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id','left');
+        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id','left');
+        $this->db->where("jobs.id", $id);
+        $query = $this->db->get();
+        return $query->row();
     }
 
     /**
@@ -40,6 +57,7 @@ class Jobs_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $comp_id);
+        $this->db->order_by('date_updated','DESC');
         $query = $this->db->get();
 
         return $query->result();
