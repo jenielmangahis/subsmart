@@ -412,16 +412,27 @@ class Credit_Notes extends MY_Controller
         $post = $this->input->post();
 
         if( count($post['customer_id']) > 0 && $post['mail_subject'] != '' && $post['mail_body'] != '' ){
-
-            $subject = $post['mail_subject']; 
-            $msg     = $post['mail_body'];
-
-            //Email Sending                 
-            $from      = 'webmaster@ficoheroes.com';            
+            //Email Sending     
+            $server    = MAIL_SERVER;
+            $port      = MAIL_PORT ;
+            $username  = MAIL_USERNAME;
+            $password  = MAIL_PASSWORD;
+            $from      = MAIL_FROM;        
             $recipient = $post['customer_id'];
+            $subject   = $post['mail_subject']; 
+            $msg       = $post['mail_body'];
+
             $mail = new PHPMailer;
-            $mail->SMTPDebug = 4;                         
-            //$mail->isSMTP();       
+            //$mail->SMTPDebug = 4;                         
+            $mail->isSMTP();                                     
+            $mail->Host = $server; 
+            $mail->SMTPAuth = true;    
+            $mail->Username   = $username; 
+            $mail->Password   = $password;
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->SMTPSecure = 'ssl';    
+            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Port = $port;
             $mail->From = $from; 
             $mail->FromName = 'NsmarTrac';
 
@@ -443,8 +454,6 @@ class Credit_Notes extends MY_Controller
             $mail->isHTML(true);                          
             $mail->Subject = $subject;
             $mail->Body    = $msg;
-
-            echo $msg;exit;
 
             if(!$mail->Send()) {
                 $this->session->set_flashdata('alert-type', 'danger');
