@@ -107,7 +107,12 @@
           <div class="media-body">
               <h4 class="media-heading" style="margin-top: 0px;"><?= $e['event_title']; ?></h4>
               <?php if( $e['start_time'] != '00:00:00' ){ ?>
-                <span class="event-time"><?= $e['start_time'] . ' - ' . $e['end_time']; ?></span>
+                <?php if( $e['start_time'] == $e['end_time'] ){ ?>
+                  <span class="event-time"><?= date("g:i A",strtotime($e['start_time'])); ?></span>
+                <?php }else{ ?>
+                  <span class="event-time"><?= date("g:i A",strtotime($e['start_time'])) . ' - ' . date("g:i A",strtotime($e['end_time'])); ?></span>
+                <?php } ?>
+                
               <?php } ?>
               <?php if( $e['event_description'] != '' ){ ?>
                 <p><?= $e['event_description']; ?></p>

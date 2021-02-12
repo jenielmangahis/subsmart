@@ -393,7 +393,8 @@ class Register extends MY_Controller {
                     if( !$stripePlan ){
                          //create new plan
                         $stripePlan = \Stripe\Plan::create(array(
-                          "amount" => round($plan->price,2)*100,
+                          //"amount" => round($plan->price,2)*100,
+                            "amount" => round($plan->price,2),
                           "interval" => "month",
                           "product" => array(
                             "name" => $plan->plan_name
@@ -635,6 +636,8 @@ class Register extends MY_Controller {
              *  Paypal Process Here - End
             */ 
         }else{
+            $plan      = $this->NsmartPlan_model->getById($subscription_id);
+            $plan_name = strtolower($plan->plan_name);
             //Converge
             // Provide Converge Credentials
             $merchantID =  CONVERGE_MERCHANTID; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
@@ -649,7 +652,8 @@ class Register extends MY_Controller {
 
             // In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
 
-            $amount= $post['plan_price']; //Hard-coded transaction amount for testing.
+            //$amount = $post['plan_price']; //Hard-coded transaction amount for testing.
+            $amount = $plan->discount; //Hard-coded transaction amount for testing.
 
             //$amount  = $_POST['ssl_amount'];   //Capture ssl_amount as POST data
             //$firstname  = $_POST['ssl_first_name'];   //Capture ssl_first_name as POST data
@@ -663,7 +667,7 @@ class Register extends MY_Controller {
                 $next_billing = date("m/d/Y",strtotime("+30 days"));
             }
 
-            $ssl_description = $post['plan_name'] . ' / ' . $post['plan_price'];
+            $ssl_description = $plan_name;
             $ssl_firstname = $post['firstname'];
             $ssl_lastname  = $post['lastname'];
             $ssl_email = $post['email'];
@@ -691,6 +695,7 @@ class Register extends MY_Controller {
             "&ssl_phone=$ssl_phone".
             "&ssl_first_name=$ssl_firstname".
             "&ssl_last_name=$ssl_lastname".
+            "&ssl_email=$ssl_email".
             "&ssl_test_mode=TRUE".
             //"&ssl_txn_id=$merchanttxnid".
             "&ssl_amount=$amount"
@@ -809,7 +814,7 @@ class Register extends MY_Controller {
           //$invoicenumber = $_POST['ssl_invoice_number']; //Capture ssl_invoice_number as POST data
 
           //Follow the above pattern to add additional fields to be sent in curl request below.
-          $merchanttxnid = "3234342343";
+          //$merchanttxnid = "3234342343";
           $ch = curl_init();    // initialize curl handle
           curl_setopt($ch, CURLOPT_URL,$url); // set POST target URL
           curl_setopt($ch,CURLOPT_POST, true); // set POST method
@@ -826,7 +831,6 @@ class Register extends MY_Controller {
           "&ssl_transaction_type=ccaddrecurring".
           "&ssl_billing_cycle=MONTHLY".
           "&ssl_next_payment_date=03/25/2021".
-          "&ssl_txn_id=$merchanttxnid".
           "&ssl_amount=$amount"
           );
 
@@ -856,6 +860,13 @@ class Register extends MY_Controller {
          
         echo $response;
 
+    }
+
+    public function converge_payment_redirect()
+    {
+        echo "<pre>";
+        print_r($_POST);
+        exit;
     }
 
 
