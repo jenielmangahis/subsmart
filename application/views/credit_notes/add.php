@@ -79,7 +79,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card p-20">
-                        <div>
+                        <div class="mbw">
                             <div class="row align-items-center">
                               <div class="col-sm-6">
                                   <h3 class="page-title mt-0">New Credit Note</h3>
