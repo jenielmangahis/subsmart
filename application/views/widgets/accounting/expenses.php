@@ -1,4 +1,4 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-credit-card" aria-hidden="true"></i> Expenses
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="card-body" style="padding:5px 10px;">
-            <div class="row" id="expensesBody" style="height: 310px; overflow-y: scroll; padding: 40px;">
+            <div class="row" id="expensesBody" style="<?= $height; ?> overflow-y: scroll; padding: 40px;">
                 <div class="expenses-money-section">
                     <div class="expenses-money-data">$4,247</div>
                     <div class="expenses-con-data">This month</div>

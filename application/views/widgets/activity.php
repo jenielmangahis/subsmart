@@ -1,10 +1,10 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #fff4e6;">
             <i class="fa fa-tasks" aria-hidden="true"></i> Activity
         </div>
         <div class="card-body" style="padding:5px 10px;">
-            <div class="row" style="height: 310px; overflow-y: scroll">
+            <div class="row" style="<?= $height ?> overflow-y: scroll">
                 <div class="col-lg-12 text-center">
                     <h5 class="mt-5">Activity Here</h5>
                 </div>

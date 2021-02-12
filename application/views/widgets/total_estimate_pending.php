@@ -1,4 +1,4 @@
-<div class="col-lg-6 col-md-6 col-sm-6">
+<div class="<?= $class ?>" >
     <div class="card card-stats">
         <div class="card-header card-header-purple card-header-icon">
             <div class="card-icon">

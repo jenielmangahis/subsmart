@@ -1,4 +1,4 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-money" aria-hidden="true"></i> Bank Accounts
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="row" id="bankBody" style="height: 310px; overflow-y: scroll;">
+            <div class="row" id="bankBody" style="<?= $height; ?> overflow-y: scroll;">
                 <div class="bankList col-lg-12">
                     <div class="dgrid-row connectedAccount">
                         <div class="bankAccountRowLink bankAccountRow">

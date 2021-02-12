@@ -1,4 +1,4 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-money" aria-hidden="true"></i> Discover More
@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="card-body">
-                <div class="discoverMore-container" id="discoverBody" style="height: 310px; overflow-y: hidden;">
+                <div class="discoverMore-container" id="discoverBody" style="<?= $height; ?> overflow-y: hidden;">
                     <div id="discoverMore" class="carousel slide" data-ride="carousel">
                         <!-- The slideshow -->
                         <div class="carousel-inner">

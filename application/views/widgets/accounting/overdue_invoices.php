@@ -1,10 +1,10 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-bookmark " aria-hidden="true"></i> Overdue Invoices
         </div>
         <div class="card-body">
-            <div class="row" id="overdueBody" style="height: 310px; overflow-y: scroll;">
+            <div class="row" id="overdueBody" style="<?= $height; ?> overflow-y: scroll;">
                 <table class="table table-bordered table-striped tbl-employee-attendance table-responsive" style="height: 223px;overflow:scroll;">
                     <thead>
                         <tr>

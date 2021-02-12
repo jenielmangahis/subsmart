@@ -45,7 +45,7 @@ ini_set('max_input_vars', 30000);
                     <h1 class="esignEditor__title">eSign Editor</h1>
                     <div class="alert alert-warning mt-2" role="alert">
                         <span style="color:black;">
-                            Sign and send documents for signing from your automated workflows on any device. Quickly configure templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms.
+                            Build and automate e-signature workflows in seconds. Speed up e-signing processes. Assign roles, set up steps and send documents for signing.
                         </span>
                     </div>
 

@@ -1,13 +1,24 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') or exit('No direct script access allowed');?>
 
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header');?>
 <!-- page wrapper start -->
 <div class="wrapper esign">
 	<br/>
 	<div class="container-fluid" style="font-size:14px;">
 		<div class="row esign__inner">
-			
+			<div class="esign__header">
+				<h1 class="esign__title">eSign Tools</h1>
+				<div class="alert alert-warning mt-2" role="alert">
+					<span style="color:black;">
+					Sign and send documents for signing from your automated workflows on any device. Quickly configure
+					templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms. Draw or
+					create your unique e-signature in a few clicks and sign documents online with your own ready-made
+					templates.
+					</span>
+				</div>
+			</div>
+
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
 				<a href="<?php echo base_url('esign/Files') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
@@ -16,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</a>
 			</div>
-			
+
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
 				<a href="<?php echo base_url('esign/createTemplate') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
@@ -25,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</a>
 			</div>
-			
+
 			<!-- <div class="col-md-2 " style="margin-top:12px;">
 				<a href="<?php echo base_url('esign/Photos') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
@@ -78,7 +89,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<button type="button" class="form-control btn btn-success">Box</button>
 				</div>
 			</div>
-			
+
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
 				<a href="<?php echo base_url('esign') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
@@ -100,10 +111,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		<br/>
 		<div class="row">
 
-			
+
 		</div>
 	</div>
 </div><!-- page wrapper end -->
 
-<?php include viewPath('includes/footer'); ?>
-  
+<?php include viewPath('includes/footer');?>
