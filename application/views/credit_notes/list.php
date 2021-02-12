@@ -1,7 +1,7 @@
-<style> 
+<style>
 button#dropdown-edit {
     width: 100px;
-}       
+}
 .dropdown-toggle::after {
     display: block;
     position: absolute;
@@ -19,6 +19,39 @@ button#dropdown-edit {
     overflow: hidden;
     background-color: #e5e5e5;
 }
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0px !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding: 0px 25px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+  margin-top: 55px !important;
+}
+.subtle-txt {
+    color: rgba(42, 49, 66, 0.7);
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
@@ -26,17 +59,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
-    <div wrapper__section>
+    <div wrapper__section class="p-40">
         <?php include viewPath('includes/notifications'); ?>
-        <div class="card">
+        <div class="card p-20">
             <div class="container-fluid" style="font-size:14px;">
                 <div class="row">
                     <div class="col">
-                        <h2 class="m-0" style="font-size:30px;">Credit Notes</h2>
-                        <p style="margin-top: 20px;margin-bottom: 30px; font-size: 16px;">Listing all credit notes.</p>
+                      <h3 class="page-title mt-0">Credit Notes</h3>
+                      <span class="subtle-txt">Listing all credit notes</span>
                     </div>
                     <div class="col-auto">
-                        <div class="h1-spacer">                             
+                        <div class="h1-spacer">
                             <a class="btn btn-primary btn-md" href="<?php echo url('credit_notes/add_new') ?>">
                                 <span class="fa fa-plus"></span> New Credit Note
                             </a>
@@ -47,13 +80,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
 
-                <div class="tabs">
+                <div class="tabs mt-4">
                     <ul class="clearfix work__order ul-mobile" id="myTab" role="tablist">
                             <li class="<?= $tab == '' ? 'active' : ''; ?>">
                                 <a class="nav-link" id="profile-tab" href="<?php echo base_url('credit_notes/'); ?>" role="tab" aria-controls="profile" aria-selected="false">All(<?= $total_all; ?>)</a>
                             </li>
                         <?php foreach($status as $key => $value){ ?>
-                            <?php 
+                            <?php
                                 $total = $statusSummary[$key];
                             ?>
                             <li class="<?= $tab == $key ? 'active' : ''; ?>">
@@ -100,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('credit_notes/view/' . $c->id) ?>"><span
-                                                                    class="fa fa-file-text-o icon"></span> View</a></li>                                                   
+                                                                    class="fa fa-file-text-o icon"></span> View</a></li>
                                                     </li>
                                                     <li role="separator" class="divider"></li>
                                                      <li role="presentation"><a role="menuitem" tabindex="-1"
@@ -121,7 +154,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <li role="presentation">
                                                         <a role="menuitem" target="_new" href="<?php echo base_url('credit_notes/print/' . $c->id) ?>" class="">
                                                         <span class="fa fa-print icon"></span>  Print</a></li>
-                                                    
+
                                                     </li>
                                                 </ul>
                                             </div>
@@ -131,7 +164,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </tbody>
                             </table>
                         <?php } else { ?>
-                        <?php if( $total_all <= 0 ){ ?>                            
+                        <?php if( $total_all <= 0 ){ ?>
                             <div class="page-empty-container" style="text-align: center;">
                                 <h5 class="page-empty-header">You haven't yet added your credit notes</h5>
                                 <p class="text-ter margin-bottom">Manage your credit notes.</p>
@@ -157,7 +190,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <?php echo form_open_multipart('estimate/_send_customer', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
           <?php echo form_input(array('name' => 'cnid', 'type' => 'hidden', 'value' => '', 'id' => 'cnid'));?>
-          <div class="modal-body">        
+          <div class="modal-body">
               <p>Are you sure you want to send the selected credit note to customer?</p>
           </div>
           <div class="modal-footer">
@@ -181,7 +214,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <?php echo form_open_multipart('credit_notes/delete', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
           <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
-          <div class="modal-body">        
+          <div class="modal-body">
               <p>Are you sure you want to delete selected item?</p>
           </div>
           <div class="modal-footer">
@@ -205,7 +238,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <?php echo form_open_multipart('credit_notes/close', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
           <?php echo form_input(array('name' => 'ceid', 'type' => 'hidden', 'value' => '', 'id' => 'ceid'));?>
-          <div class="modal-body">        
+          <div class="modal-body">
               <p>Are you sure you want to close the <b>Credit Note# <span class="close-credit-note-number"></span></b>?</p>
           </div>
           <div class="modal-footer">
@@ -229,7 +262,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <?php echo form_open_multipart('credit_notes/clone', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
           <?php echo form_input(array('name' => 'cloneid', 'type' => 'hidden', 'value' => '', 'id' => 'cloneid'));?>
-          <div class="modal-body">        
+          <div class="modal-body">
               <p>You are going create a new credit note based on <b>Credit Note #<span class="clone-credit-note-number"></span></b>. Afterwards you can edit the newly created credit note.</p>
           </div>
           <div class="modal-footer">
