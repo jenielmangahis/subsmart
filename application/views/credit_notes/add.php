@@ -35,6 +35,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     color: #8f8f8f;
     display: none;
 }
+.float-right.d-none.d-md-block {
+    position: relative;
+    bottom: 11px;
+}
 .page-title, .box-title {
   font-family: Sarabun, sans-serif !important;
   font-size: 1.75rem !important;
@@ -79,7 +83,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card p-20">
-                        <div class="mbw">
+                        <div>
                             <div class="row align-items-center">
                               <div class="col-sm-6">
                                   <h3 class="page-title mt-0">New Credit Note</h3>
