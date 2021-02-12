@@ -54,40 +54,16 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'job' || $this->uri->uri_string() == 'job/new_job1') ? "active" : "";  ?>">
             <a href="<?= base_url('job') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Jobs</a>
         </li>
-        <li class="submenus dropright">
-            <a href="#submenuForm" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-credit-card" style="margin-right: 20px"></i>Forms</a>
-            <ul class="collapse list-unstyled" id="submenuForm">
-				<li>
-					<a href="<?php echo url('/estimate')?>">Estimate</a>
-                </li>
-                <li>
-                     <a href="<?php echo url('/workorder')?>">Work Orders</a>
-                </li>
-                <li>
-                     <a href="<?php echo url('/invoice')?>">Invoice</a>
-                </li>
-             </ul>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
+            <a href="<?= base_url('job/job_tags') ?>" title="Job Tags"><span class="fa fa-tags"></span>Job Tags</a>
         </li>
-
-        <li class="nav-header header-left">Settings</li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_types') ? "active" : "";  ?>">
             <a href="<?= base_url('job/job_types') ?>" title="Job Types"><span class="fa fa-book"></span>Job Types</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/bird_eye_view') ? "active" : "";  ?>">
             <a href="<?= base_url('job/bird_eye_view') ?>" title="Bird Eye View"><span class="fa fa-users"></span>Bird Eye View</a>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
-            <a href="<?= base_url('job/job_tags') ?>" title="Job Tags"><span class="fa fa-tags"></span>Job Tags</a>
-        </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
-            <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Priority</a>
-        </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
-            <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Status</a>
-        </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
-            <a href="#" title="Profile Settings"><span class="fa fa-cogs"></span>Custom Form</a>
-        </li>
+
         <!-- <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
             <a href="<?= base_url('job/job_time_settings') ?>" title="Profile Settings"><span class="fa fa-clock-o"></span>Time Window Settings</a>
         </li> -->

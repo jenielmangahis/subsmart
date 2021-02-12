@@ -77,6 +77,39 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
                 case 'bank_deposit_modal':
+                    $accounts = $this->chart_of_accounts_model->select();
+                    $accountTypes = $this->account_model->getAccounts();
+
+                    $bankAccounts = [];
+                    $count = 1;
+                    foreach($accountTypes as $accType) {
+                        $accName = strtolower($accType->account_name);
+
+                        foreach($accounts as $account) {
+                            if($account->account_id === $accType->id) {
+                                $bankAccounts[$accType->account_name][] = [
+                                    'value' => $accName.'-'.$account->id,
+                                    'text' => $account->name,
+                                    'selected' => $count === 1 ? true : false
+                                ];
+
+                                if($count === 1) {
+                                    $selectedBalance = $account->balance;
+                                }
+                            }
+                            $count++;
+                        }
+                    }
+
+                    if(strpos($selectedBalance, '-') !== false) {
+                        $balance = str_replace('-', '', $selectedBalance);
+                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                    } else {
+                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                    }
+
+                    $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['accounts'] = $bankAccounts;
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
@@ -442,6 +475,19 @@ class Accounting_modals extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+
+    public function getAccountBalance($accountId = "") {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+
+        if(strpos($account->balance, '-') !== false) {
+            $balance = str_replace('-', '', $account->balance);
+            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format($account->balance, 2, '.', ',');
+        }
+
+        echo json_encode(['balance' => $selectedBalance]);
     }
 
     public function action() {
@@ -834,6 +880,15 @@ class Accounting_modals extends MY_Controller {
     private function bank_deposit($data, $files) {
         $this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
 
+        if($data['cash_back_amount'] !== "") {
+            $this->form_validation->set_rules('cash_back_target', 'Cash back account', 'required|differs[bank_account]');
+        }
+
+        if(isset($data['account']) && isset($data['amount'])) {
+            $this->form_validation->set_rules('account[]', 'Account', 'required');
+            $this->form_validation->set_rules('amount[]', 'Amount', 'required');
+        }
+
         if(!isset($data['template_name'])) {
             $this->form_validation->set_rules('date', 'Date', 'required');
         } else {
@@ -867,11 +922,6 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        if(isset($data['account']) && isset($data['amount'])) {
-            $this->form_validation->set_rules('account[]', 'Account', 'required');
-            $this->form_validation->set_rules('amount[]', 'Amount', 'required');
-        }
-
         $return = [];
 
         if($this->form_validation->run() === false) {
@@ -888,12 +938,19 @@ class Accounting_modals extends MY_Controller {
             $bankAccount = explode('-', $data['bank_account']);
             $cashBackTarget = explode('-', $data['cash_back_target']);
 
+            $totalAmount = array_sum(array_map(function($item) {
+                return floatval($item);
+            }, $data['amount']));
+
+            $totalAmount = $totalAmount - floatval($data['cash_back_amount']);
+
             $insertData = [
                 'company_id' => logged('company_id'),
                 'account_key' => $bankAccount[0],
                 'account_id' => $bankAccount[1],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
                 'tags' => json_encode($data['tags']),
+                'total_amount' => number_format($totalAmount, 2, '.', ','),
                 'cash_back_account_key' => $cashBackTarget[0],
                 'cash_back_account_id' => $cashBackTarget[1],
                 'cash_back_memo' => $data['cash_back_memo'],
@@ -949,9 +1006,36 @@ class Accounting_modals extends MY_Controller {
                         'ref_no' => $data['reference_no'][$key],
                         'amount' => $data['amount'][$key],
                     ];
+
+                    $accountBalance = $this->chart_of_accounts_model->getBalance($account[1]);
+                    $accountData = [
+                        'id' => $account[1],
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval($accountBalance) - floatval($data['amount'][$key])
+                    ];
+                    $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
                 }
 
                 $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
+
+                $depositToAcc = $this->chart_of_accounts_model->getById($bankAccount[1]);
+                $depositData = [
+                    'id' => $depositToAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => floatval($depositToAcc->balance) + floatval($totalAmount)
+                ];
+                $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+
+                if($data['cash_back_amount'] !== "") {
+                    $cashBackAccount = $this->chart_of_accounts_model->getById($cashBackTarget[1]);
+                    $cashBackData = [
+                        'id' => $cashBackAccount->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval($cashBackAccount->balance) + floatval($data['cash_back_amount'])
+                    ];
+
+                    $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
+                }
             }
 
             $return['data'] = $depositId;

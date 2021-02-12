@@ -297,6 +297,17 @@ $(function() {
         }
     });
 
+    $(document).on('change', 'div#depositModal select#bankAccount', function() {
+        var value = $(this).val();
+        var split = value.split('-');
+
+        $.get('/accounting/get-account-balance/'+split[1], function(res) {
+            var result = JSON.parse(res);
+
+            $('div#depositModal span#account-balance').html(result.balance);
+        });
+    })
+
     $(document).on('click', 'div#depositModal a#open-tags-modal', function(e) {
         e.preventDefault();
         var target = e.currentTarget.dataset;

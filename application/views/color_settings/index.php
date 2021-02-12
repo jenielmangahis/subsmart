@@ -20,6 +20,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .p-40 {
   padding-top: 40px !important;
 }
+.p-20 {
+  padding-top: 30px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
 @media only screen and (max-width: 600px) {
   .p-40 {
     padding-top: 0px !important;
@@ -38,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card" style="min-height: 400px !important;">
+                    <div class="card p-20" style="min-height: 400px !important;">
                       <div class="row">
                         <div class="col-sm-6 left">
                           <h3 class="page-title mt-0">Color Settings</h3>

@@ -78,7 +78,9 @@
             data: {id: id, isGlobal:isGlobal, isMain:isMain},
             //dataType: 'json',
             success: function (response) {
-               $(response).insertBefore($('#addWidget'));
+                if(isMain != '1'){
+                    $(response).insertBefore($('#addWidget'));
+                }
             }
         });
     }

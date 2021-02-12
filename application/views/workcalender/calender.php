@@ -268,6 +268,12 @@ a.top-1 {
   .p-40 {
     padding-top: 40px !important;
   }
+  .p-20 {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+  }
   .mt-40 {
     margin-top: 55px !important;
     border-radius: 5px;
@@ -343,7 +349,7 @@ a.top-1 {
                     <!-- end row -->
                     <div class="row">
                         <div class="col-xl-12">
-                            <div class="card pt-3">
+                            <div class="card p-20">
                                 <div class="d-block d-none">
                                     <?php
                                         if (count($wordorders) > 0) {
@@ -377,7 +383,7 @@ a.top-1 {
                                         }
                                     ?>
                                 </div>
-                                <div class="card-body col-12 pt-0" style="text-align: left;">
+                                <div class="card-body col-12 pt-0 pl-0 pr-0" style="text-align: left;">
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <div class="stcs-2 left">

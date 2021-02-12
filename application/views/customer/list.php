@@ -1,6 +1,17 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
+<?php
+// CSS to add only Customer module
+add_css(array(
+    'assets/css/jquery.signaturepad.css',
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+    'assets/css/accounting/sales.css',
+    'assets/textEditor/summernote-bs4.css',
+));
+?>
 <?php include viewPath('includes/header'); ?>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -661,6 +672,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('customer/adv_modals/modal_reasons'); ?>
 <!-- End Modals -->
 
+
+<?php
+// JS to add only Customer module
+add_footer_js(array(
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+    'assets/textEditor/summernote-bs4.js'
+    // 'assets/frontend/js/creditcard.js',
+    // 'assets/frontend/js/customer/add.js',
+));
+?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 

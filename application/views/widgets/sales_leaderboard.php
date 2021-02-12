@@ -1,10 +1,10 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #64443c; color: white;">
             <i class="fa fa-bars" aria-hidden="true"></i> Sales Leaderboard
         </div>
         <div class="card-body" style="padding:5px 10px;">
-            <div class="row" id="salesLeaderboardBody" style="height: 310px; overflow-y: scroll">
+            <div class="row" id="salesLeaderboardBody" style="<?= $height; ?> overflow-y: scroll">
                 <div class="col-md-6 col-sm-6">
                     <div class="insl-bx">
                         <h5>Top Reps</h5>

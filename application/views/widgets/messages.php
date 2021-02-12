@@ -1,10 +1,10 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"   id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header">
             <i class="fa fa-envelope" aria-hidden="true"></i> Messages
         </div>
         <div class="card-body" style="padding:5px 10px;">
-            <div style="height: 310px; overflow-y: scroll" id="messagesBody">
+            <div style="<?= $height; ?> overflow-y: scroll" id="messagesBody">
                 <div class="col-lg-12">
                     <a href="#" class="float-left col-lg-12 no-padding mt-3" style="border-bottom: 1px solid #ccc;">
                         <img class="img-sm rounded-circle float-left" width="43" src="<?= base_url('uploads/users/default.png'); ?>" alt="profile">

@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   font-family: Sarabun, sans-serif !important;
   font-size: 1.75rem !important;
   font-weight: 600 !important;
+  padding-top: 5px;
 }
 .pr-b10 {
   position: relative;
@@ -13,6 +14,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 }
 .p-40 {
   padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
 }
 @media only screen and (max-width: 600px) {
   .p-40 {
@@ -29,7 +36,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <div class="card card_holder mt-0">
+            <div class="card card_holder mt-0 p-20">
                 <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">

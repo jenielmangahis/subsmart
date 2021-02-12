@@ -4,7 +4,7 @@
     }
 </style>
 
-<div class="col-lg-6 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #40c057; color:white;">
             <i class="fa fa-calendar" aria-hidden="true"></i> Open Estimates

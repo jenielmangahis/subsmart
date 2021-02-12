@@ -28,12 +28,22 @@ class Chart_of_accounts_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
-	public function select()  
-      {  
-      	 $this->db->where('active','1');
-         $query = $this->db->get('accounting_chart_of_accounts');  
-         return $query->result();  
-      } 
+	public function select()
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('active','1');
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
+	public function updateBalance($data)
+	{
+		$this->db->where('id', $data['id']);
+		$this->db->where('company_id', $data['company_id']);
+		$balance = $this->db->update($this->table, ['balance' => $data['balance']]);
+
+		return $balance;
+	}
 
     public function getById($id)
     {
