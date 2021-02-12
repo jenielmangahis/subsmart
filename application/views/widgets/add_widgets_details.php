@@ -25,7 +25,7 @@ foreach ($widgets as $w):
             <div class="float-left mt-2">
                 <input <?= $this->wizardlib->isWidgetGlobal($w->w_id) ? 'checked' : '' ?> type="checkbox" id="widgetGlobal_<?= $w->w_id ?>" >
                 Available to All Users &nbsp;
-                <input type="checkbox" id="widgetMain_<?= $w->w_id ?>" >
+                <input <?= $this->wizardlib->isWidgetMain($w->w_id) ? 'checked' : '' ?> type="checkbox" id="widgetMain_<?= $w->w_id ?>" >
                 Add to Main Widget
             </div>
         </a> 

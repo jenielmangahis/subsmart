@@ -72,9 +72,8 @@
                                     <select class="form-control" name="deposit_to">
                                         <option></option>
                                         <option value="1">Cash on hand</option>
-                                        <option value="2">AAA</option>
-                                        <option value="3">AAA</option>
-                                        <option value="4">AAA</option>
+                                        <option value="2">Cash</option>
+                                        <option value="3">Credit</option>
                                     </select>
                                 </div>
                             </div>
@@ -93,7 +92,7 @@
                             Memo<br>
                             <textarea style="height:200px;width:100%;" name="memo"></textarea><br>
                             <div class="file-upload">
-                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachments</button>
 
                                 <div class="image-upload-wrap">
                                     <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" name="attachments"/>

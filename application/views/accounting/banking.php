@@ -6,26 +6,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
 </style>
 <?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
+<div class="wrapper" role="wrapper" style="">
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row" style="padding-bottom: 20px;">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
-                        <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
-                        <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
-                        <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
-                    </div>
-                </div>
+                
+                <div style="background-color:white;height:80%;padding:2%;margin-top:1.3%;">
+                <h3 style="font-family: Sarabun, sans-serif">&nbsp;Bank and Credit Cards</h3>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-4">
-                        <h2>Bank and Credit Cards</h2>
+                        <!-- <h2>Bank and Credit Cards</h2> -->
+                        
+                        <!-- <div class="row"> -->
+                            <div class="col-md-12 banking-tab-container" style="padding-top:2%;width:350px;">
+                                <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
+                                <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
+                                <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
+                                <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
+                            </div>
+                        <!-- </div> -->
+
                     </div>
-                    <div class="col-md-4" style="position: relative;display: inline-block;">
-                        <div class="dropdown bank-account-picker">
-                            <button class="btn btn-default" type="button" data-toggle="dropdown" style="text-decoration: none; color: #393a3d;font-size: 20px;background-color: transparent;border: 0;">
+                    <div class="col-md-4" style="position: relative;display: inline-block;vertical-align: text-bottom;">
+                        <div class="dropdown bank-account-picker" style="vertical-align: text-bottom;">
+                            <button class="btn btn-default" type="button" data-toggle="dropdown" style="text-decoration: none; color: #393a3d;font-size: 18px;background-color: transparent;border: 0;">
                                 <div class="account-logo">
                                     <div class="hi">
                                         <i class="fa fa-credit-card"></i>
@@ -83,8 +88,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:28px;margin-top:13px;">
+                When you connect an account, accounting will automatically downloads and categorizes bank and credit card transactions for you. It enters the details so you don't have to enter transactions manually.  All you have to do is approve the work.
+                </div>
+                <!-- <br> -->
                 <div class="row align-items-center">
-                    <div class="col-md-12" style="">
+                    <div class="col-md-12">
                         <!-- Nav tabs -->
                         <div class="banking-tab-container">
                             <div class="rb-01">
@@ -367,6 +376,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </table>
                             </div>
                         </div>
+                    </div>
                     </div>
 
                 </div>

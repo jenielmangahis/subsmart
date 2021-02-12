@@ -6,18 +6,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row" style="padding-bottom: 20px;">
+                <!-- <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab" style="text-decoration: none">Banking</a>
                         <a href="<?php echo url('/accounting/rules')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="rules")?:'-active';?>">Rules</a>
                         <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
                         <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
                     </div>
-                </div>
+                </div> -->
+            <div style="background-color:white;height:700px;padding:2%;margin-top:1.2%;">
+                <h3 style="font-family: Sarabun, sans-serif">&nbsp;Rules</h3>
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-6"><h2>Rules</h2></div>
+                            <div class="col-md-6">
+                            <!-- <h2>Rules</h2> -->
+                            <div class="col-md-12 banking-tab-container" style="padding-top:2%;width:350px;">
+                                <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab">Banking</a>
+                                <a href="<?php echo url('/accounting/rules')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Rules</a>
+                                <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
+                                <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
+                            </div>
+                            </div>
                             <div class="col-md-6" style="text-align: right">
                                 <a href="" style="font-size: 14px;line-height: 40px;">Learn more about bank rules.</a>
                                 <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
@@ -31,7 +41,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-<!--                        DataTables-->
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:28px;margin-top:28px;">
+                Sample text here for rules tab.
+                </div>
+            <!--                        DataTables-->
                         <table id="rules_table" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
@@ -75,6 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row"></div>
             <!-- end row -->
+        </div>
     </div>
         <!-- end container-fluid -->
 <!--    Modal for creating rules-->

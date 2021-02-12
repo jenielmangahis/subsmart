@@ -53,6 +53,8 @@ class Widgets extends MY_Controller {
                 if ($this->widgets_model->addWidgets($details, $user_id, $id)):
                     $widget = $this->widgets_model->getWidgetByID($id);
                     $data['id'] = $id;
+                    $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
+                    $data['height'] = 'height: 310px;';
                     $view = $this->load->view($widget->w_view_link,$data);
 
                     return $view;

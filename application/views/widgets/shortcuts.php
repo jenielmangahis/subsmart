@@ -24,13 +24,13 @@
     }
 </style>
 
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background:#fa5252; color:white;">
             <i class="fa fa-dashboard" aria-hidden="true"></i> Shorcuts
         </div>
         <div class="card-body pt-3">
-            <div id="shortcutsSlide" class="carousel slide" data-ride="carousel">
+            <div id="shortcutsSlide" class="carousel slide" style="<?= $height ?> overflow:scroll;" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active text-center">
                         <div class="col-lg-12 no-padding">

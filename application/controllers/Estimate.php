@@ -426,18 +426,30 @@ class Estimate extends MY_Controller
             $url = base_url('/estimate_customer_view/' . $eid);
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
 
+            //Email Sending     
+            $server    = MAIL_SERVER;
+            $port      = MAIL_PORT ;
+            $username  = MAIL_USERNAME;
+            $password  = MAIL_PASSWORD;
+            $from      = MAIL_FROM;
+            $recipient = $customer->email;
             $subject = "NsmarTrac : Estimate"; 
             $msg = "<p>Hi " . $customer->first_name . ",</p>";
             $msg .= "<p>Please check the estimate for your approval.</p>";
             $msg .= "<p>Click <a href='".$url."'>Your Estimate</a> to view and approve estimate.</p><br />";
             $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
 
-            //Email Sending                 
-            $from      = 'webmaster@ficoheroes.com';            
-            $recipient = $customer->email;
             $mail = new PHPMailer;
             $mail->SMTPDebug = 4;                         
-            //$mail->isSMTP();       
+            $mail->isSMTP();                                     
+            $mail->Host = $server; 
+            $mail->SMTPAuth = true;    
+            $mail->Username   = $username; 
+            $mail->Password   = $password;
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->SMTPSecure = 'ssl';    
+            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Port = $port;
             $mail->From = $from; 
             $mail->FromName = 'NsmarTrac';
             $mail->addAddress($recipient, $recipient);  

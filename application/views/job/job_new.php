@@ -12,6 +12,18 @@
 
 <!-- add css for this page -->
 <?php include viewPath('job/css/job_new'); ?>
+<style>
+    div[wrapper__section] {
+        padding: 60px 10px !important;
+    }
+    .card_plus_sign{
+        float: right;
+        padding-right: 40px;
+        font-size: 20px;
+        display: block;
+        margin-top: -38px;
+    }
+</style>
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
@@ -20,138 +32,136 @@
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <form method="post" name="myform" id="jobs_form">
-            <div class="row custom__border left-sidebar-main">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 style="font-size: 1.75rem;">Job Configuration Status</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="stepwizard">
+                                <div class="stepwizard-row setup-panel">
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-1" type="button" class="btn btn-success btn-circle"><i style="font-size: 24px;" class="fa fa-pencil"></i></a>
+                                        <p class=""><small>Draft</small></p>
+                                    </div>
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
+                                        <p class=""><small>Schedule</small></p>
+                                    </div>
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
+                                        <p><small>OMW</small></p>
+                                    </div> &nbsp;&nbsp;
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
+                                        <p><small>Start</small></p>
+                                    </div>
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-check-circle-o"></span></a>
+                                        <p><small>Approved</small></p>
+                                    </div>
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
+                                        <p><small>Finish</small></p>
+                                    </div>
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-6" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-paper-plane"></span></a>
+                                        <p><small>Invoice</small></p>
+                                    </div>
+                                    <div class="stepwizard-step col-xs-3">
+                                        <a href="#step-7" type="button" class="btn btn-default btn-circle" disabled="disabled">
+                                            <span style="font-size: 24px;" class="fa  fa-credit-card"></span></a>
+                                        <p><small>Pay</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning" role="alert" style="color:black;display: flex;position: relative;margin-right: 15px;"
+                                <p> With a few clicks, you will be on your way to storing all information about the job performed for an account.
+                                    Stores incident details, resource, expenses, tasks, item audits, communications, billing and more.
+                                    Try our quick import form buttons to seamlessly schedule a job.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <h6 class="page-title">
-                                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;position: relative; top: 1.4px;">
-                                    <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"></path>
-                                </svg> &nbsp;Customer
-                            </h6>
-                            <div class="edit-icon">
-                                <button class="MuiButtonBase-root MuiIconButton-root" tabindex="0" type="button">
-                                <span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="height: 24px; width: 24px;">
-                                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg></span>
-                                    <span class="MuiTouchRipple-root"></span></button>
-                            </div>
-                            <hr>
-                            <small>Select Existing Customer</small>
-                            <select id="customer_id" name="customer_id" class="form-control" required>
-                                <option value="">None</option>
-                            </select>
-                            <table id="customer_info" class="table">
-                                <thead>
-                                    <tr>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td id="cust_fullname">xxxxx xxxxx</td>
-                                        <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cust_address">-------------</td>
-                                        <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cust_number">(xxx) xxx-xxxx</td>
-                                        <td><a href=""><span class="fa fa-phone customer_right_icon"></span></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cust_email">xxxxx@xxxxx.xxx</td>
-                                        <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="modal-footer">
-                                <div class="row">
-                                    <a style="float: right !important;"  class="add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
-                                        <span class="fa fa-plus-square"></span> Add New Customer
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h6 class="page-title">
-                                Map
-                            </h6>
-                            <div class="col-md-12">
-                                <div id="map"></div>
-                            </div>
-                            <br>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h6 class="page-title">
                                 <span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6>
                             <hr>
+                            <p>Import Data from Wordorder/Invoice/Estimates</p>
+                            <div id="import_buttons">
+                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Estimates</button> &nbsp;&nbsp;
+                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> WorkOrder</button> &nbsp;&nbsp;
+                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Invoice</button>
+                            </div>
+                            <hr>
                             <div class="form-group label-width d-flex align-items-center">
-                               <label>From</label>
-                               <input type="date" name="start_date" id="start_date" class="form-control" required>
-                               <select id="inputState" name="start_time" class="form-control" required>
-                                <option selected="">Start time</option>
-                                <option value="5:00 AM">5:00 AM</option>
-                                <option value="5:30 AM">5:30 AM</option>
-                                <option value="6:00 AM">6:00 AM</option>
-                                <option value="6:30 AM">6:30 AM</option>
-                                <option value="7:00 AM">7:00 AM</option>
-                                <option value="7:30 AM">7:30 AM</option>
-                                <option value="">8:00 AM</option>
-                                <option value="">8:30 AM</option>
-                                <option value="">9:00 AM</option>
-                                <option value="">9:30 AM</option>
-                                <option value="">10:00 AM</option>
-                                <option value="">10:30 AM</option>
-                                <option value="">11:00 AM</option>
-                                <option value="">11:30 AM</option>
-                                <option value="">12:00 AM</option>
-                                <option value="">12:30 AM</option>
-                                <option value="">1:00 PM</option>
-                                <option value="">1:30 PM</option>
-                                <option value="">2:00 PM</option>
-                                <option value="">2:30 PM</option>
-                                <option value="">3:00 PM</option>
-                                <option value="">3:30 PM</option>
-                                <option value="">4:00 PM</option>
-                                <option value="">4:30 PM</option>
-                              </select>
+                                <label>From</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control" required>
+                                <select id="inputState" name="start_time" class="form-control" required>
+                                    <option selected="">Start time</option>
+                                    <option value="5:00 AM">5:00 AM</option>
+                                    <option value="5:30 AM">5:30 AM</option>
+                                    <option value="6:00 AM">6:00 AM</option>
+                                    <option value="6:30 AM">6:30 AM</option>
+                                    <option value="7:00 AM">7:00 AM</option>
+                                    <option value="7:30 AM">7:30 AM</option>
+                                    <option value="">8:00 AM</option>
+                                    <option value="">8:30 AM</option>
+                                    <option value="">9:00 AM</option>
+                                    <option value="">9:30 AM</option>
+                                    <option value="">10:00 AM</option>
+                                    <option value="">10:30 AM</option>
+                                    <option value="">11:00 AM</option>
+                                    <option value="">11:30 AM</option>
+                                    <option value="">12:00 AM</option>
+                                    <option value="">12:30 AM</option>
+                                    <option value="">1:00 PM</option>
+                                    <option value="">1:30 PM</option>
+                                    <option value="">2:00 PM</option>
+                                    <option value="">2:30 PM</option>
+                                    <option value="">3:00 PM</option>
+                                    <option value="">3:30 PM</option>
+                                    <option value="">4:00 PM</option>
+                                    <option value="">4:30 PM</option>
+                                </select>
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
-                               <label >To</label>
-                               <input type="date" name="end_date" id="end_date" class="form-control mr-2" required>
-                               <select id="inputState" name="end_time" class="form-control" required>
-                                <option selected="">End time</option>
-                                   <option value="5:00 AM">5:00 AM</option>
-                                   <option value="5:30 AM">5:30 AM</option>
-                                   <option value="6:00 AM">6:00 AM</option>
-                                   <option value="6:30 AM">6:30 AM</option>
-                                   <option value="7:00 AM">7:00 AM</option>
-                                   <option value="7:30 AM">7:30 AM</option>
-                                   <option value="">8:00 AM</option>
-                                   <option value="">8:30 AM</option>
-                                   <option value="">9:00 AM</option>
-                                   <option value="">9:30 AM</option>
-                                   <option value="">10:00 AM</option>
-                                   <option value="">10:30 AM</option>
-                                   <option value="">11:00 AM</option>
-                                   <option value="">11:30 AM</option>
-                                   <option value="">12:00 AM</option>
-                                   <option value="">12:30 AM</option>
-                                   <option value="">1:00 PM</option>
-                                   <option value="">1:30 PM</option>
-                                   <option value="">2:00 PM</option>
-                                   <option value="">2:30 PM</option>
-                                   <option value="">3:00 PM</option>
-                                   <option value="">3:30 PM</option>
-                                   <option value="">4:00 PM</option>
-                                   <option value="">4:30 PM</option>
-                               </select>
+                                <label >To</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" required>
+                                <select id="inputState" name="end_time" class="form-control" required>
+                                    <option selected="">End time</option>
+                                    <option value="5:00 AM">5:00 AM</option>
+                                    <option value="5:30 AM">5:30 AM</option>
+                                    <option value="6:00 AM">6:00 AM</option>
+                                    <option value="6:30 AM">6:30 AM</option>
+                                    <option value="7:00 AM">7:00 AM</option>
+                                    <option value="7:30 AM">7:30 AM</option>
+                                    <option value="">8:00 AM</option>
+                                    <option value="">8:30 AM</option>
+                                    <option value="">9:00 AM</option>
+                                    <option value="">9:30 AM</option>
+                                    <option value="">10:00 AM</option>
+                                    <option value="">10:30 AM</option>
+                                    <option value="">11:00 AM</option>
+                                    <option value="">11:30 AM</option>
+                                    <option value="">12:00 AM</option>
+                                    <option value="">12:30 AM</option>
+                                    <option value="">1:00 PM</option>
+                                    <option value="">1:30 PM</option>
+                                    <option value="">2:00 PM</option>
+                                    <option value="">2:30 PM</option>
+                                    <option value="">3:00 PM</option>
+                                    <option value="">3:30 PM</option>
+                                    <option value="">4:00 PM</option>
+                                    <option value="">4:30 PM</option>
+                                </select>
                             </div>
                             <select id="employee_id" name="employee_id" class="form-control">
                                 <option selected="">Select Employee</option>
@@ -162,19 +172,19 @@
                                 <?php endif; ?>
                             </select>
                             <div class="color-box-custom">
-                                  <h6>Event Color on Calendar</h6>
-                                  <ul>
-                                      <?php if(isset($color_settings)): ?>
-                                          <?php foreach ($color_settings as $color): ?>
-                                              <li>
-                                                  <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1">
-                                                      <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
-                                                  </a>
-                                              </li>
-                                          <?php endforeach; ?>
-                                      <?php endif; ?>
-                                  </ul>
-                                  <input value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
+                                <h6>Event Color on Calendar</h6>
+                                <ul>
+                                    <?php if(isset($color_settings)): ?>
+                                        <?php foreach ($color_settings as $color): ?>
+                                            <li>
+                                                <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1">
+                                                    <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </ul>
+                                <input value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                             </div>
                             <h6>Customer Reminder Notification</h6>
                             <select name="customer_reminder_notification" class="form-control">
@@ -216,69 +226,62 @@
                                 <?php endif; ?>
                             </select>
 
-                            <h6>Import Data from Wordorder/Invoice/Estimates</h6>
 
-                            <div class="row" id="import_buttons">
-                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Estimates</button> &nbsp;&nbsp;
-                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> WorkOrder</button> &nbsp;&nbsp;
-                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Invoice</button>
-                            </div>
                             <hr>
                             <button type="button" class="btn btn-primary pull-right text-link"> <span class="fa fa-plus"></span> Share Job</button>
                         </div>
                         <br>
                     </div>
-                    <div class="card" id="notes_left_card">
+                    <!--<div class="card">
                         <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="headingOne">
-                                        <h2 class="mb-0">
-                                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                <h6 class="page-title"> <span style="font-size: 20px;"  class="fa fa-book"></span> &nbsp; Private Notes </h6>
-                                            </button>
-                                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
-                                        </h2>
+                            <h6 class="page-title">
+                                Map
+                            </h6>
+
+                            <br>
+                        </div>
+                    </div>-->
+                    <div class="card" id="notes_left_card">
+                        <div class="card-header">
+                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <h6 class="page-title"> <span style="font-size: 20px;"  class="fa fa-book"></span> &nbsp; Private Notes </h6>
+                            </button>
+                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 40px;font-size: 20px;display: block;margin-top: -38px;"></span></a>
+                        </div>
+                        <div class="card-body">
+                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div id="notes_edit_btn" class="pencil" style=" width:100%; height:100px;background-color: #e9ecef;">
+                                            <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
+                                        </div>
+                                        <div id="notes_input_div" style="display:none;">
+                                            <div style=" height:100px;">
+                                                <textarea name="message" cols="50" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                                <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div id="notes_edit_btn" class="pencil" style=" width:100%; height:100px;">
-                                                    <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
-                                                </div>
-                                                <div id="notes_input_div" style="display:none;">
-                                                    <div style=" height:100px;">
-                                                        <textarea name="message" cols="50" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
-                                                        <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
-                                                     </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div style="float: right;">
-                                                <a href="javascript:void(0);" id="edit_note"><span style="font-size: 20px;" class="fa fa-pencil"></span></a> &nbsp;
-                                                <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
-                                                <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
-                                            </div>
-                                        </div>
-                                        </div>
                                     <br>
+                                    <div style="float: right;">
+                                        <a href="javascript:void(0);" id="edit_note"><span style="font-size: 20px;" class="fa fa-pencil"></span></a> &nbsp;
+                                        <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
+                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="card" id="attach_left_card">
+                        <div class="card-header" >
+                                <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#photos_attachment" aria-expanded="true" aria-controls="collapseTwo">
+                                    <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-image"></span>&nbsp; &nbsp;Photos / Attachments</h6>
+                                </button>
+                                <a href="javascript:void(0);" id="attach_left_btn_column">
+                                    <span class="fa fa-columns card_plus_sign"></span>
+                                </a>
+                        </div>
                         <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                <div class="card-header" id="headingTwo">
-                                    <h2 class="mb-0">
-                                        <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#photos_attachment" aria-expanded="true" aria-controls="collapseTwo">
-                                            <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-image"></span>&nbsp; &nbsp;Photos / Attachments</h6>
-                                        </button>
-                                        <a href="javascript:void(0);" id="attach_left_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
-                                    </h2>
-                                </div>
                                 <div id="photos_attachment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                     <div class="card-body">
                                         <div class="form-group">
@@ -291,27 +294,20 @@
                                     </div>
                                 </div>
                                 <br>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card" id="url_left_card">
+                        <div class="card-header" id="headingThree">
+                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#url_link_form" aria-expanded="true" aria-controls="url_link_form">
+                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
+                            </button>
+                            <a href="javascript:void(0);" id="url_left_btn_column">
+                                <span class="fa fa-columns card_plus_sign"></span>
+                            </a>
+                        </div>
                         <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="headingThree">
-                                        <h2 class="mb-0">
-                                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#url_link_form" aria-expanded="true" aria-controls="url_link_form">
-                                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
-                                            </button>
-                                        </h2>
-                                        <a href="javascript:void(0);" id="url_left_btn_column">
-                                            <span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span>
-                                        </a>
-                                    </div>
-
-                                    <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                        <div class="card-body">
+                            <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
                                             <?php
                                             if(isset($jobs_data) && $jobs_data->link != NULL) {
                                                 ?>
@@ -326,54 +322,44 @@
                                         </div>
                                         <br>
                                     </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div class="card">
+                        <div class="card-header">
+                            <button  style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
+                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
+                            </button>
+                        </div>
                         <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="headingOne">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
-                                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
-                                            </button>
-                                            <!--<a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>-->
-                                        </h2>
-                                    </div>
-                                    <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                       <div class="card-body">
-                                            <a style="cursor: pointer;" id="fill_esign_btn" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
-                                                <center>
-                                                    <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
-                                                </center>
-                                            </a>
-                                         </div>
-                                        <div style="float: right;">
-                                            <a ><span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;</a>
-                                            <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
-                                        </div>
-                                    </div>
+                            <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <a style="cursor: pointer;" id="fill_esign_btn" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
+                                        <center>
+                                            <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
+                                        </center>
+                                    </a>
+                                </div>
+                                <div style="float: right;">
+                                    <a ><span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;</a>
+                                    <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card" id="pd_left_card">
+                        <div class="card-header">
+
+                                <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="payment">
+                                    <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-money"></span>&nbsp;&nbsp;Payment Details</h6>
+                                </button>
+
+                            <a href="javascript:void(0);" id="pd_left">
+                                <span class="fa fa-columns card_plus_sign"></span>
+                            </a>
+                        </div>
                         <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="headingOne">
-                                        <h2 class="mb-0">
-                                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="payment">
-                                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-money"></span>&nbsp;&nbsp;Payment Details</h6>
-                                            </button>
-                                        </h2>
-                                        <a href="javascript:void(0);" id="pd_left">
-                                            <span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span>
-                                        </a>
-                                    </div>
-                                    <div id="payment" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                            <div id="payment" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <form role="form">
                                             <div class="col-sm-12">
@@ -594,24 +580,19 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <br>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card" id="approval_card_left">
+                        <div class="card-header" id="headingOne">
+                                <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
+                                    <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
+                                </button>
+                            <a href="javascript:void(0);" id="approval_btn_left">
+                                <span class="fa fa-columns card_plus_sign"></span>
+                            </a>
+                        </div>
                         <div class="card-body">
-                            <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="headingOne">
-                                        <h2 class="mb-0">
-                                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
-                                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
-                                            </button>
-                                        </h2>
-                                        <a href="javascript:void(0);" id="approval_btn_left"><span class="fa fa-columns" style="float: right;padding-right: 45px;font-size: 20px;display: block;margin-top: -30px;"></span></a>
-                                    </div>
-                                    <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                            <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="col-sm-12">
                                                 <div style="text-align: center;">
@@ -634,8 +615,6 @@
                                         </div>
                                         <br>
                                     </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <!-- <div class="prev-btn float-right">
@@ -643,47 +622,56 @@
                     </div> -->
                 </div>
                 <div class="col-md-8">
-                    <div class="stepwizard">
-                        <div class="stepwizard-row setup-panel">
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-1" type="button" class="btn btn-success btn-circle"><span style="font-size: 24px;" class="fa fa-book"></span></a>
-                                <p class=""><small>Draft</small></p>
-                            </div>
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
-                                <p class=""><small>Schedule</small></p>
-                            </div>
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
-                                <p><small>OMW</small></p>
-                            </div> &nbsp;&nbsp;
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
-                                <p><small>Start</small></p>
-                            </div>
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-check-circle-o"></span></a>
-                                <p><small>Approved</small></p>
-                            </div>
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
-                                <p><small>Finish</small></p>
-                            </div>
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-6" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-paper-plane"></span></a>
-                                <p><small>Invoice</small></p>
-                            </div>
-                            <div class="stepwizard-step col-xs-3">
-                                <a href="#step-7" type="button" class="btn btn-default btn-circle" disabled="disabled">
-                                    <span style="font-size: 24px;" class="fa  fa-credit-card"></span></a>
-                                <p><small>Pay</small></p>
+
+                    <div class="card table-custom">
+                        <div class="card-body">
+                            <div class="row">
+                                    <a style="float: right !important;"  class="add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
+                                        <span class="fa fa-plus-square"></span> Add New Customer
+                                    </a>
+                                    <hr>
+                                    <div class="col-md-4">
+                                        <h6>Customer Info</h6>
+                                        <select id="customer_id" name="customer_id" class="form-control" required>
+                                            <option value="">Select Existing Customer</option>
+                                        </select>
+                                        <img style="width: 100%;height: 150px;" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/aa.jpg"; ?> ">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <table id="customer_info" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <td></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="cust_fullname">xxxxx xxxxx</td>
+                                                    <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td id="cust_address">-------------</td>
+                                                    <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td id="cust_number">(xxx) xxx-xxxx</td>
+                                                    <td><a href=""><span class="fa fa-phone customer_right_icon"></span></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td id="cust_email">xxxxx@xxxxx.xxx</td>
+                                                    <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="col-md-12">
+                                            <div id="map"></div>
+                                        </div>
+                                    </div>
                             </div>
                         </div>
-                    </div>
-                    <hr/>
-                    <div class="card table-custom">
-
-                            <div class="card-body">
+                                <hr>
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                     <tr>
@@ -1017,8 +1005,8 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
-                    <div class="card table-custom" >
+
+                    <div class="card">
                         <div class="card-body">
                             <div class="card" style="border-color: #363636 !important;border: 1px solid;">
                                 <div class="row">
@@ -1037,13 +1025,14 @@
                         </div>
                     </div>
                 </div>
+
+                </div>
+
             </div>
             </form>
         </div>
         <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
-</div>
 
 <!-- Modal -->
 <div class="modal fade" id="new_customer" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">

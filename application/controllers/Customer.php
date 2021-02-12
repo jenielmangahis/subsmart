@@ -1,26 +1,16 @@
 <?php
-
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
-// add services
-include_once 'application/services/CustomerGroup.php';
-include_once 'application/services/CustomerSource.php';
-include_once 'application/services/CustomerTypes.php';
-include_once 'application/services/CustomerTicket.php';
-
 class Customer extends MY_Controller
-
 {
 
     public function __construct()
-
     {
         parent::__construct();
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
-        $this->load->model('Customer_model', 'customer_model');
-        $this->load->model('CustomerAddress_model', 'customeraddress_model');
+        //$this->load->model('Customer_model', 'customer_model');
+        //$this->load->model('CustomerAddress_model', 'customeraddress_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Esign_model', 'Esign_model');
         $this->load->model('Activity_model','activity');
@@ -40,30 +30,78 @@ class Customer extends MY_Controller
             $uid = $this->session->userdata('uid');
             $this->page_data['uid'] = $uid;
         }
-        // CSS to add only Customer module
-        add_css(array(
-            'assets/css/jquery.signaturepad.css',
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'assets/css/accounting/sales.css',
-            'assets/textEditor/summernote-bs4.css',
-        ));
-        // JS to add only Customer module
-        add_footer_js(array(
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-            'assets/textEditor/summernote-bs4.js'
-           // 'assets/frontend/js/creditcard.js',
-           // 'assets/frontend/js/customer/add.js',
-        ));
+
         //error_reporting(0);
     }
+    public function index()
+    {
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $user_id = logged('id');
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
+        if(!$check_if_exist){
+            $input = array();
+            $input['fk_user_id'] = $user_id ;
+            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
+            $this->customer_ad_model->add($input,"ac_module_sort");
+        }
+        $userid = $this->uri->segment(4);
+        if(!isset($userid) || empty($userid)){
+            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
+            if(!empty($get_id)){
+                $userid =  $get_id[0]->prof_id;
+            }else{
+                $userid = 0;
+            }
+        }else{
+            $this->qrcodeGenerator($userid);
+        }
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $userid;
+
+        //$this->session->set_userdata('customer_data_session', 233);
+        //$this->session->unset_userdata('customer_data_session');
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
+            $this->page_data['minitab'] = $this->uri->segment(5);
+            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
+            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+
+            if($this->uri->segment(5) == "mt3-cdl"){
+                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
+                $this->page_data['letter_id'] = $template_id;
+                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
+            }
+            // print_r($this->page_data['alarm_info']);
+        }
+        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
+        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
+        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
+        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
+        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+        $this->load->model('Activity_model','activity');
+        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->load->view('customer/list', $this->page_data);
+    }
+
 
     public function leads()
     {   $is_allowed = $this->isAllowedModuleAccess(14);
@@ -559,8 +597,6 @@ class Customer extends MY_Controller
         }
     }
 
-
-
     public function add_furnisher_ajax(){
         $input = $this->input->post();
         // customer_ad_model
@@ -1014,79 +1050,6 @@ class Customer extends MY_Controller
         }
     }
 
-    public function index()
-    {
-        $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-
-
-        $this->page_data['customers'] = $this->customer_model->getAllByUserId();
-
-        $user_id = logged('id');
-        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
-        if(!$check_if_exist){
-            $input = array();
-            $input['fk_user_id'] = $user_id ;
-            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
-            $this->customer_ad_model->add($input,"ac_module_sort");
-        }
-        $userid = $this->uri->segment(4);
-        if(!isset($userid) || empty($userid)){
-            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
-            if(!empty($get_id)){
-                $userid =  $get_id[0]->prof_id;
-            }else{
-                $userid = 0;
-            }
-        }else{
-            $this->qrcodeGenerator($userid);
-        }
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $userid;
-
-        //$this->session->set_userdata('customer_data_session', 233);
-        //$this->session->unset_userdata('customer_data_session');
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
-            $this->page_data['minitab'] = $this->uri->segment(5);
-            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
-            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
-
-            if($this->uri->segment(5) == "mt3-cdl"){
-                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
-                $this->page_data['letter_id'] = $template_id;
-                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
-            }
-           // print_r($this->page_data['alarm_info']);
-        }
-
-        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
-        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
-        $this->page_data['cust_tab'] = $this->uri->segment(3);
-        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
-        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
-        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
-        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
-        $this->page_data['users'] = $this->users_model->getUsers();
-        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
-        $this->load->model('Activity_model','activity');
-        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
-        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
-
-        $this->load->view('customer/list', $this->page_data);
-    }
     public function view($id)
     {
         $customer = get_customer_by_id($id);
@@ -1456,141 +1419,6 @@ class Customer extends MY_Controller
 
     }
 
-
-    public function json_get_address_services()
-    {
-        $get = $this->input->get();
-        if (!empty($get['customer_id'])) {
-
-            $cid = $get['customer_id'];
-
-        } else {
-
-            $cid = $this->session->userdata('customer_id');
-
-        }
-
-
-        if (!empty($cid)) {
-
-
-            $this->page_data['customer_id'] = $cid;
-
-            $this->page_data['serviceAddresses'] = $this->customer_model->getServiceAddress(array('id' => $cid));
-
-            // echo '<pre>'; print_r($serviceAddresses); die;
-
-        }
-
-
-        die($this->load->view('customer/service_address_list', $this->page_data, true));
-
-    }
-
-
-    public function add()
-    {
-
-        $user_id = logged('id');
-
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
-
-
-        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-
-        // } else {
-
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-
-        // }
-
-
-        //
-
-
-        $company_id = logged('company_id');
-
-       // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
-
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-
-        //$this->page_data['groups'] = get_customer_groups();
-
-
-        $this->load->view('customer/add', $this->page_data);
-
-    }
-
-
-    public function remove_address_services()
-
-    {
-
-
-        $post = $this->input->post();
-
-
-        if ($this->customer_model->removeServiceAddress($post['customer_id'], $post['index'])) {
-
-
-            die(json_encode(
-
-                array(
-
-                    'status' => 'success'
-
-                )
-
-            ));
-
-        } else {
-
-
-            die(json_encode(
-
-                array(
-
-                    'status' => 'error'
-
-                )
-
-            ));
-
-        }
-
-    }
-
-
-    public function additional_contact_form()
-
-    {
-
-        $get = $this->input->get();
-
-
-        if (!empty($get)) {
-
-
-            $this->page_data['action'] = $get['action'];
-
-            $this->page_data['data_index'] = $get['index'];
-
-            $this->page_data['customer'] = $this->customer_model->getCustomer($get['customer_id']);
-
-            $this->page_data['additional_contacts'] = $this->customer_model->getAdditionalContacts(array('id' => $get['customer_id']), $get['index']);
-
-            // print_r($this->page_data['service_address']); die;
-
-        }
-
-
-        die($this->load->view('customer/additional_contact_form', $this->page_data, true));
-
-    }
-
-
     public function json_get_additional_contacts()
 
     {
@@ -1757,12 +1585,6 @@ class Customer extends MY_Controller
     }
 
 
-    public function tab($index)
-    {
-
-        $this->index($index);
-    }
-
 
     /**
      * @param $id
@@ -1795,14 +1617,6 @@ class Customer extends MY_Controller
     }
 
 
-    /**
-     * used a concept of Service here
-     * If we need the Priority module on other controller, we have to write same code
-     * like add, edit, delete route on that controller again. If we need a change, we have to do on all controller.
-     * Also, it has multiple level of route, so put all together in one controller, code become hard to read.
-     * So, to get rid of these issues, the service class every time whenever we need this module.
-     *
-     */
     public function group()
     {   
         $is_allowed = $this->isAllowedModuleAccess(11);
@@ -1837,153 +1651,6 @@ class Customer extends MY_Controller
         }
         $this->page_data['page_title'] = 'Customer Group Add';
         $this->load->view('customer/group/add', $this->page_data);
-    }
-    /**
-     *
-     */
-    public function source()
-    {
-         $is_allowed = $this->isAllowedModuleAccess(12);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer_source';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-        // pass the $this so that we can use it to load view, model, library or helper classes
-        $customerSource = new CustomerSource($this);
-    }
-
-    public function types()
-    {
-         $is_allowed = $this->isAllowedModuleAccess(13);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer_type';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-        // pass the $this so that we can use it to load view, model, library or helper classes
-        $customerTypes = new CustomerTypes($this);
-    }
-
-    /**
-     *
-     */
-    public function ticket()
-    {
-        $is_allowed = $this->isAllowedModuleAccess(39);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'service_ticket';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-        // pass the $this so that we can use it to load view, model, library or helper classes
-        $customerTicket = new CustomerTicket($this);
-    }
-
-
-    public function group_form()
-    {
-        $get = $this->input->get();
-        if (!empty($get)) {
-            $this->page_data['action'] = $get['action'];
-            $this->page_data['data_index'] = $get['index'];
-            $this->page_data['customer'] = $this->customer_model->getCustomer($get['customer_id']);
-            $this->page_data['group'] = $this->customer_model->getServiceAddress(array('id' => $get['customer_id']), $get['index']);
-        }
-        die($this->load->view('customer/group_form', $this->page_data, true));
-    }
-
-
-    public function print($status_index = 0)
-    {
-
-        $role = logged('role');
-
-        if ($role == 2 || $role == 3) {
-
-            $company_id = logged('company_id');
-
-            if (!empty($status_index)) {
-
-                $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index), $company_id);
-            } else {
-
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')), $company_id);
-                } elseif (!empty(get('type'))) {
-
-                    $this->page_data['type'] = get('type');
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
-                    } else {
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
-                    }
-                } else {
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
-                    } else {
-//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
-                        $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
-                    }
-
-//                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
-                }
-            }
-
-            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount($company_id);
-
-        }
-
-        if ($role == 4) {
-
-            if (!empty($status_index)) {
-
-                $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index));
-            } else {
-
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')));
-                } elseif (!empty(get('type'))) {
-
-                    $this->page_data['type'] = get('type');
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
-                    } else {
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
-                    }
-                } else {
-
-                    if (!empty(get('order'))) {
-                        $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
-                    } else {
-//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
-                        $this->page_data['customers'] = $this->customer_model->getAllByUserId();
-                    }
-
-//                    $this->page_data['customers'] = $this->customer_model->getAllByUserId();
-                }
-            }
-
-            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
-        }
-
-//        print_r($this->page_data['statusCount']); die;
-
-        $this->load->view('customer/print/list', $this->page_data);
-
     }
 
     public function categorizeNameAlphabetically($items) {
@@ -2045,31 +1712,5 @@ class Customer extends MY_Controller
 
         return $result;
     }
-        /*
-     * Callback function to check file value and type during validation
-     */
-    public function file_check($str){
-        $allowed_mime_types = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
-        if(isset($_FILES['file']['name']) && $_FILES['file']['name'] != ""){
-            $mime = get_mime_by_extension($_FILES['file']['name']);
-            $fileAr = explode('.', $_FILES['file']['name']);
-            $ext = end($fileAr);
-            if(($ext == 'csv') && in_array($mime, $allowed_mime_types)){
-                return true;
-            }else{
-                $this->form_validation->set_message('file_check', 'Please select only CSV file to upload.');
-                return false;
-            }
-        }else{
-            $this->form_validation->set_message('file_check', 'Please select a CSV file to upload.');
-            return false;
-        }
-    }
+
 }
-
-
-/* End of file Customer.php */
-
-
-/* Location: ./application/controllers/Customer.php */
-

@@ -1,17 +1,47 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
-    <?php include viewPath('includes/sidebars/workorder'); ?>
+    <?php include viewPath('includes/sidebars/schedule'); ?>
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="card card_holder">
+        <div class="container-fluid p-40">
+            <div class="card p-20 mt-0 card_holder">
                 <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h1 class="page-title">Priority List</h1>
+                            <h3 class="page-title">Priority List</h3>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item active">Manage work order priority list.</li>
                             </ol>

@@ -6,12 +6,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   font-family: Sarabun, sans-serif !important;
   font-size: 1.75rem !important;
   font-weight: 600 !important;
+  padding-top: 5px;
 }
 .pr-b10 {
   position: relative;
   bottom: 10px;
 }
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
 @media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
   .pr-b10 {
     position: relative;
     bottom: 0px;
@@ -22,8 +35,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/schedule'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="card card_holder">
+        <div class="container-fluid p-40">
+            <div class="card card_holder mt-0 p-20">
                 <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
@@ -43,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
                 <div class="alert alert-warning mt-0 mb-2" role="alert">
-                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">You can set up Tasks for yourself and assign them to other people in your organisation. To Add a Task, in the Account, click on the ‘ + Add ‘ button. There are dropdown options for each field and a date picker.</span>
+                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">You can set up Tasks for yourself and assign them to other people in your organization. To Add a Task, in the Account, click on the ‘ + Add ‘ button. There are dropdown options for each field and a date picker.</span>
                 </div>
                 <!-- end row -->
                 <section class="content">

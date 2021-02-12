@@ -4,6 +4,22 @@
   font-size: 1.75rem !important;
   font-weight: 600 !important;
 }
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
@@ -13,14 +29,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <?php include viewPath('includes/sidebars/schedule'); ?>
         <?php include viewPath('includes/notifications'); ?>
         <div wrapper__section>
-            <div class="container-fluid">
+            <div class="container-fluid p-40">
                 <!-- end row -->
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <?php echo form_open('settings/schedule', ['class' => 'form-validate require-validation', 'id' => 'schedule_settings_form', 'autocomplete' => 'off']); ?>
                         <div class="validation-error hide" style="display:none;"></div>
 
-                        <div class="card mt-2">
+                        <div class="card mt-0">
                             <div class="row">
                               <div class="col-sm-12 left">
                                 <h3 class="page-title">Settings</h3>

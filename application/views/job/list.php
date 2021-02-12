@@ -44,6 +44,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="float-right d-md-block">
                                     </div>
                                 </div>
+                                <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
+                                    <span style="color:black;">
+                                        For any business, getting customers is only half the battle; creating a job workflow will help track each scheduled ticket from draft to receiving payment.
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">
