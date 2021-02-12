@@ -22,10 +22,10 @@ class Wizardlib extends MY_Controller {
     
     function isWidgetMain($widget_id)
     {
-        $company_id = getLoggedCompanyID();
+        $user_id = logged('id');
         $ci = &get_instance();
+        $ci->db->where('wu_user_id', $user_id);
         $ci->db->where('wu_widget_id', $widget_id);
-        $ci->db->where('wu_company_id', $company_id);
         $ci->db->where('wu_is_main', 1);
         if($ci->db->get('widgets_users')->num_rows() > 0):
             return true;
@@ -54,7 +54,6 @@ class Wizardlib extends MY_Controller {
         $ci = &get_instance();
         $ci->db->where('wu_user_id', $user_id);
         $ci->db->where('wu_widget_id', $widget_id);
-        $ci->db->where('wu_is_main', 0);
         if($ci->db->get('widgets_users')->num_rows() > 0):
             return true;
         else:

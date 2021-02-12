@@ -14,7 +14,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
 </style>
 <div class="wrapper" role="wrapper">
-	 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">

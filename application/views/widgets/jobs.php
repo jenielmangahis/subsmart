@@ -1,10 +1,10 @@
-<div class="col-lg-3 col-md-6 col-sm-12"  id="widget_<?= $id ?>">
+<div class="<?= $class ?>"   id="widget_<?= $id ?>">
     <div class="card" style="margin-top:0;">
         <div class="card-header" style="background: #64443c; color: white;">
             <i class="fa fa-wrench" aria-hidden="true"></i> Jobs
         </div>
         <div class="card-body" style="padding:5px 10px;">
-            <div>
+            <div cl>
                     <div class="c65 c83" style="text-align: center;">
                         <div class="c66 c92">
                             <p class="c162 c171 c187">$0</p>
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="recharts-responsive-container" style="width: 100%; height: 255px; position: relative;">
+                    <div class="recharts-responsive-container" style="width: 100%; <?= $height; ?> position: relative;">
                         <div class="recharts-wrapper" style="position: relative; cursor: default; width: 265px; height: 255px;">
                             <svg class="recharts-surface" width="265" height="255" viewBox="0 0 265 255" version="1.1">
                             <g class="recharts-cartesian-grid">

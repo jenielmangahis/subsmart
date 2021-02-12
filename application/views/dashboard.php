@@ -125,14 +125,19 @@
                 <div class="col-md-8">
                     <div class="row cus-dashboard-div">
                         <?php
-                            $this->load->view('widgets/upcoming_jobs');
-                            $this->load->view('widgets/upcoming_estimates');
-                            $this->load->view('widgets/upcoming_events');
-                            $this->load->view('widgets/task_hub');
-//                            $this->load->view('widgets/total_jobs');
-//                            $this->load->view('widgets/total_invoice_due');
-//                            $this->load->view('widgets/total_estimate_pending');
-//                            $this->load->view('widgets/hr_widgets');
+                        
+                            foreach ($widgets as $wids):
+                                if($wids->wu_is_main):
+                                    $data['class'] = 'col-lg-6 col-md-6 col-sm-12';
+                                    $data['height'] = 'height: 250px;';
+                                    $data['id'] = $wids->w_id;
+                                    $this->load->view($wids->w_view_link, $data);
+                                endif;
+                            endforeach;
+//                            $this->load->view('widgets/upcoming_jobs');
+//                            $this->load->view('widgets/upcoming_estimates');
+//                            $this->load->view('widgets/upcoming_events');
+//                            $this->load->view('widgets/task_hub');
                         ?>
                     </div>
                 </div>
@@ -141,8 +146,12 @@
                 <?php
                 
                 foreach ($widgets as $wids):
-                    $data['id'] = $wids->w_id;
-                    $this->load->view($wids->w_view_link, $data);
+                    if(!$wids->wu_is_main):
+                        $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
+                        $data['height'] = 'height: 310px;';
+                        $data['id'] = $wids->w_id;
+                        $this->load->view($wids->w_view_link, $data);
+                    endif;
                 endforeach;
                 $this->load->view('widgets/add_widgets');
                 ?>

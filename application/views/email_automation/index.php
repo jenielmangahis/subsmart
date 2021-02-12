@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               $rule_event = ucwords($rule_event);
                             ?>
                             <td><?php echo $rule_event; ?></td>
-                            <td><?php echo '0' ?></td>
+                            <td><a href="javascript:void(0);">view log</a></td>
                             <td>
                               
                               <div class="onoffswitch">

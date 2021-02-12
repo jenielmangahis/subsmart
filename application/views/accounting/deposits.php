@@ -6,8 +6,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
            <div wrapper__section>
         <div class="container-fluid">
 			<div class="page-title-box mx-4">
-				<div class="row pb-2">
-					<div class="col-md-12 banking-tab-container">
+				<!-- <div class="row pb-2"> -->
+					<!-- <div class="col-md-12 banking-tab-container">
+						<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab">Overview</a>
+						<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab">All Sales</a>
+						<a href="<?php echo url('/accounting/invoices')?>" class="banking-tab">Invoices</a>
+						<a href="<?php echo url('/accounting/customers')?>" class="banking-tab">Customers</a>
+						<a href="<?php echo url('/accounting/deposits')?>" class="banking-tab-active text-decoration-none">Deposits</a>
+						<a href="<?php echo url('/accounting/products-and-services')?>" class="banking-tab">Products and Services</a>
+					</div> -->
+				<!-- </div> -->
+
+                <div style="background-color:white;height:700px;padding:2%;margin-top:1.2%;margin-left:-24px;">
+                <h3 style="font-family: Sarabun, sans-serif">&nbsp;Deposits from Payments</h3>
+				<div class="row pt-3">
+					<div class="col-lg-6 px-0">
+						<!-- <h2>Deposits from Payments</h2> -->
+                        <div class="col-md-12 banking-tab-container">
 						<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab">Overview</a>
 						<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab">All Sales</a>
 						<a href="<?php echo url('/accounting/invoices')?>" class="banking-tab">Invoices</a>
@@ -15,15 +30,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<a href="<?php echo url('/accounting/deposits')?>" class="banking-tab-active text-decoration-none">Deposits</a>
 						<a href="<?php echo url('/accounting/products-and-services')?>" class="banking-tab">Products and Services</a>
 					</div>
-				</div>
-
-				<div class="row pt-3">
-					<div class="col-lg-6 px-0">
-						<h2>Deposits from Payments</h2>
 					</div>
 					<div class="col-lg-6">
 					</div>
 				</div>
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
+                Sample text here for Deposits from Payments tab.
+                </div>
 				<div class="row pt-3">
 					<div class="col-lg-12 px-0">
 						<div class="bg-white p-4">
@@ -69,6 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="row ml-2"></div>
             <!-- end row -->
 			</div>
+            </div>
         </div>
         <!-- end container-fluid -->
     </div>
