@@ -68,21 +68,21 @@ class Workcalender extends MY_Controller
 
             foreach ($events as $key => $event) {
 
-                $customer = get_customer_by_id($event->customer_id);
+                $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
 
                 // label of the event
                 if (!empty($customer)) {
 
                     if (!empty($calender_settings)) {
 
-                        $title = make_calender_event_label($calender_settings, $event, $customer);
+                        $title = acs_prof_make_calender_event_label($calender_settings, $event, $customer);
 
                     } else {
 
                         $date = date('a', strtotime($event->start_time));
                         $date = substr($date, -2, 1);
                         $title = date('g', strtotime($event->start_time)) . $date;
-                        $title .= ' ' . $customer->contact_name . ', ' . $customer->mobile;
+                        $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
                     }
                 }
 
@@ -894,27 +894,31 @@ class Workcalender extends MY_Controller
             foreach($events as $event) {
 
                 if($event->employee_id > 0) {
-                    $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
-                    $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
-                    $resources_user_events[$inc]['eventId'] = $event->id;
-                    $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
-                    $resources_user_events[$inc]['title'] = $event->event_description;
-                    $resources_user_events[$inc]['start'] = $start_date_time;
-                    $resources_user_events[$inc]['end'] = $start_date_end;
-                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-
-                $inc++;
-                }elseif($event->employee_id == 0) {
-                    foreach($get_users as $get_user) {
+                    if( $event->event_description != '' ){
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                         $resources_user_events[$inc]['eventId'] = $event->id;
-                        $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
+                        $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
                         $resources_user_events[$inc]['end'] = $start_date_end;
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-                    $inc++; 
+
+                        $inc++;
+                    }                    
+                }elseif($event->employee_id == 0) {
+                    foreach($get_users as $get_user) {
+                        if( $event->event_description != '' ){
+                            $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
+                            $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                            $resources_user_events[$inc]['eventId'] = $event->id;
+                            $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
+                            $resources_user_events[$inc]['title'] = $event->event_description;
+                            $resources_user_events[$inc]['start'] = $start_date_time;
+                            $resources_user_events[$inc]['end'] = $start_date_end;
+                            $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+                            $inc++; 
+                        }                        
                     }
                    
                 }

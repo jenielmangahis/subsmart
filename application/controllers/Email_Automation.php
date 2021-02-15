@@ -278,6 +278,13 @@ class Email_Automation extends MY_Controller {
 
         redirect('email_automation');
     }  
+
+    public function view_logs($id)
+    {
+        $emailAutomation = $this->MarketingEmailAutomation_model->getById($id);
+        $this->page_data['emailAutomation'] = $emailAutomation;
+        $this->load->view('email_automation/view_logs', $this->page_data); 
+    }
 }
 
 

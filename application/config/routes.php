@@ -215,6 +215,8 @@ $route['sms_automation'] = 'Sms_Automation';
 $route['sms_campaigns'] = 'Sms_Campaigns';
 $route['voicemail_campaigns'] = 'Voicemail_Campaigns';
 $route['email_campaigns'] = 'Email_Campaigns';
+
+//Email Automation
 $route['email_automation'] = 'Email_Automation';
 $route['email_automation/templates'] = 'Email_Automation/templates';
 $route['email_automation/create_template'] = 'Email_Automation/save_template';
@@ -230,6 +232,7 @@ $route['email_automation/ajax_set_default_template'] = 'Email_Automation/ajax_se
 $route['email_automation/ajax_set_default_template_edit'] = 'Email_Automation/ajax_set_default_template_edit';
 $route['email_automation/ajax_set_place_holder'] = 'Email_Automation/ajax_set_place_holder';
 $route['email_automation/ajax_set_place_holder_edit'] = 'Email_Automation/ajax_set_place_holder_edit';
+$route['email_automation/view_logs/(:any)'] = 'Email_Automation/view_logs/$1';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 

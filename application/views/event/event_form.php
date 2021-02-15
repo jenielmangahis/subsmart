@@ -136,7 +136,7 @@ input#datepicker_startdate {
 </style>
 <form name="calendar-event-modal-form" id="frm_create_event">
     <input name="type" type="hidden" value="1">
-
+    <div class="event-form-message"></div>
     <?php if (!empty($event)) { ?>
         <input name="event_id" type="hidden" value="<?php echo $event->id; ?>">
     <?php } ?>
@@ -144,9 +144,11 @@ input#datepicker_startdate {
     <div class="form-group">
         <div class="row">
             <div class="col-md-6 col-sm-12">
-                <label class="left">Customer1</label> <span class="form-required left">*</span>
-                <select name="customer_id" id="business-customer" class="form-control select2-hidden-accessible"
-                        placeholder="Select customer" tabindex="-1" aria-hidden="true">
+                <label class="left">Customer</label> <span class="form-required left">*</span>
+                <select name="customer_id" id="business-customer-a" class="form-control select2-hidden-accessible" aria-hidden="true">
+                  <?php foreach($customers as $c){ ?>
+                    <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                  <?php } ?>
                 </select>
             </div>
             <div class="col-md-6 col-sm-12">
@@ -165,7 +167,7 @@ input#datepicker_startdate {
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <label class="left">Schedule Description</label> <span class="form-required left">*</span><!-- &nbsp;<span class="help help-sm left">(write few words about this)</span> -->
-                <input placeholder="Write few words about this..." type="text" name="description" value="<?php echo (!empty($event)) ? $event->description : '' ?>"
+                <input placeholder="Write few words about this..." required="" id="event-description" type="text" name="description" value="<?php echo (!empty($event)) ? $event->description : '' ?>"
                        class="form-control" autocomplete="off">
             </div>
         </div>
@@ -515,6 +517,7 @@ input#datepicker_startdate {
             .val("<?php echo $event->customer_id ?>") //select option of select2
             .trigger("change"); //apply to select2
 
+        $("#business-customer-a").select2();
 
         // select the employee / user
         $('#assign_users')
