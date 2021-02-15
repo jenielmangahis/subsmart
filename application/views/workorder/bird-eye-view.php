@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0 p-20">
-                      <div class="page-title-box pt-0">
+                      <div class="page-title-box pt-0 pb-2">
                           <div class="row align-items-center">
                               <div class="col-sm-6">
                                   <h3 class="page-title">Bird's Eye View</h3>
@@ -50,6 +50,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   </ol>
                               </div>
                           </div>
+                      </div>
+                      <div class="alert alert-warning mt-0 mb-3" role="alert">
+                          <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</span>
                       </div>
                         <div class="filter-container mb-2">
                             <div class="dropdown dropdown-inline filter-date magbottompad">
@@ -188,7 +191,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
 
                         <div class="map-container">
-                            <style>#map-canvas {width: 100%;height: 55vh;}</style>
+                            <style>#map-canvas {width: 100%;height: 50vh;}</style>
                             <div id="map-canvas"></div>
                             <script>
                                 function initMap() {
