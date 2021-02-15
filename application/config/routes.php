@@ -515,6 +515,7 @@ $route['offer_codes/update_edit_offer'] = 'Offer_Codes/update_edit_offer';
 
 //Registration
 $route['registration/_use_offer_code'] = 'Register/registration_use_code';
+$route['registration/success_converge_payment'] = 'Register/converge_success_payment';
 
 //Public Add Employee
 $route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
