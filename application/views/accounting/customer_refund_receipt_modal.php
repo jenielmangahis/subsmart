@@ -157,7 +157,7 @@
                                     <td colspan="2">
                                         <select class="form-control" name="tax_rate">
                                             <option value="1">Based on location</option>
-                                            <option readonly>CUSTOME RATES</option>
+                                            <option readonly>CUSTOMER RATES</option>
                                             <option value="2">+ Add rate</option>
                                         </select>
                                     </td>

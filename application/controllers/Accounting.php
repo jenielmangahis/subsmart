@@ -55,7 +55,7 @@ class Accounting extends MY_Controller {
                 array("Dashboard",	array()),
                 array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
                 array("Expenses", 	array('Expenses','Vendors')),
-                array("Sales", 		array('Overview','All Sales','Invoices','Customers','Deposits','Products and Services', 'Credit Notes')),
+                array("Sales", 		array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
                 array("Payroll", 	array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
                 array("Reports",	array()),
                 array("Taxes",		array("Sales Tax","Payroll Tax")),
@@ -67,7 +67,7 @@ class Accounting extends MY_Controller {
                 array('/accounting/banking',array()),
                 array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/invoices','/accounting/customers','/accounting/deposits','/accounting/products-and-services', 'credit_notes')),
+                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimates','/accounting/customers','/accounting/deposits','/accounting/NewworkOrder','/accounting/addnewInvoice', 'credit_notes')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
                 array("",	array('#','#')),
@@ -158,7 +158,7 @@ class Accounting extends MY_Controller {
     {
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/chart_of_accounts', $this->page_data);
+        $this->load->view('accounting/chart_of_accounts/index', $this->page_data);
     }
 
     public function my_accountant()
@@ -191,16 +191,31 @@ class Accounting extends MY_Controller {
     //Tags
     public function tags()
     {
+        $getTags = $this->tags_model->getTags();
+        $getGroup = $this->tags_model->getGroup();
+        // echo "<pre>";
+        // print_r($getTags);
+        // exit;
+        $this->page_data['tags'] = $getTags;
+        $this->page_data['tagsGroup'] = $getGroup;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/tags', $this->page_data);
     }
 
     public function addTagsGroup(){
+        $company_id  = getLoggedCompanyID();
+        // echo "<pre>";
+        // print_r($this->input->post());
+        // exit;
         $new_data = array(
             'name' => $this->input->post('tags_group_name'),
+            'company_id' => $company_id,
+            'status' => 1,
             'created_at' => date("Y-m-d H:i:s"),
         );
+
         $tags = $this->tags_model->addtagGroup($new_data);
+
         if ($tags != null){
             $this->session->set_flashdata('tags_added','New rules added');
             redirect('accounting/tags');
@@ -212,19 +227,30 @@ class Accounting extends MY_Controller {
     }
 
     public function addTags(){
+        $company_id  = getLoggedCompanyID();
+        $group_id = $this->input->post('group_id');
+
+        // if (isset($group_name) && $group_name) {
+        //     $new_data2 = array(
+        //         'name' => $group_name,
+        //         'company_id' => $company_id,
+        //         'status' => 1,
+        //         'created_at' => date("Y-m-d H:i:s"),
+        //     );
+        //     $tags2 = $this->tags_model->addtagGroup($new_data2);
+        // }
+
         $new_data = array(
             'name' => $this->input->post('tag_name'),
-            'type' => '0',
+            'company_id' => $company_id,
+            'status' => 1,
             'created_at' => date("Y-m-d H:i:s"),
         );
+        
+        if (isset($group_id) && $group_id) $new_data['group_tag_id'] = $group_id;
+
 
         $tags = $this->tags_model->add($new_data);
-
-        $new_data2 = array(
-            'name' => $this->input->post('group_name'),
-            'created_at' => date("Y-m-d H:i:s"),
-        );
-        $tags2 = $this->tags_model->addtagGroup($new_data2);
 
         if ($tags != null){
             $this->session->set_flashdata('tags_added','New rules added');
@@ -234,6 +260,29 @@ class Accounting extends MY_Controller {
             redirect('accounting/tags');
         }
 
+    }
+
+    public function deleteGroupTag($id, $type) {
+        $result = [];
+
+        $delete = $this->tags_model->delete($id, $type);
+        $result['success'] = $delete;
+        $result['message'] = $delete ? 'Deleted' : 'Failed';
+
+        echo json_encode($result);
+        exit;
+    }
+
+    public function updateGroupTag($id, $type) {
+        $result = [];
+        $name = $this->input->post('name');
+
+        $update = $this->tags_model->update($id, $name, $type);
+        $result['success'] = $update;
+        $result['message'] = $update ? 'Updated' : 'Failed';
+
+        echo json_encode($result);
+        exit;
     }
 
     //---->
@@ -1956,6 +2005,47 @@ class Accounting extends MY_Controller {
     }
 
     /*chart_of_accounts start*/
+    public function load_chart_of_accounts()
+    {
+        $postData = json_decode(file_get_contents('php://input'), true);
+
+        $accounts = $this->chart_of_accounts_model->select();
+
+        $data = [];
+
+        foreach($accounts as $account) {
+            $data[] = [
+                'id' => $account->id,
+                'name' => $account->name,
+                'type' => $this->account_model->getName($account->account_id),
+                'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
+                'nsmartrac_balance' => $account->balance,
+                'bank_balance' => '',
+                'action' => "
+                <div class='dropdown show'>
+                    <a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                        View Register
+                    </a>
+
+                    <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
+                        <a class='dropdown-item' href='javascript:void(0);' data-href='/accounting/chart_of_accounts/edit/".$account->id."' id='editAccount' data-id='".$account->id."'>Edit</a>
+                        <a class='dropdown-item' href='#' onclick='make_inactive(".$account->id.")'>Make Inactive (Reduce usage)</a>
+                        <a class='dropdown-item' href='#'>Run Report</a>
+                    </div>
+                </div>"
+            ];
+        }
+
+        $result = [
+            'draw' => $postData['draw'],
+            'recordsTotal' => count($accounts),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
+    }
+
     public function add()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -1964,49 +2054,59 @@ class Accounting extends MY_Controller {
 
     public function addChartofaccounts()
     {
-        $account_id=$this->input->post('account_type');
-        $acc_detail_id=$this->input->post('detail_type');
-        $name=$this->input->post('name');
-        $description=$this->input->post('description');
-        $sub_acc_id=$this->input->post('sub_account_type');
-        $time=$this->input->post('choose_time');
-        $balance=$this->input->post('balance');
-        $time_date=$this->input->post('time_date');
+        $data = [
+            'company_id' => logged('company_id'),
+            'account_id' => $this->input->post('account_type'),
+            'acc_detail_id' => $this->input->post('detail_type'),
+            'name' => $this->input->post('name'),
+            'description' => $this->input->post('description'),
+            'parent_acc_id' => $this->input->post('sub_account_type'),
+            'time' => $this->input->post('choose_time'),
+            'balance' => $this->input->post('balance'),
+            'time_date' => $this->input->post('time_date')
+        ];
 
-        $this->chart_of_accounts_model->saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date);
+        $account = $this->chart_of_accounts_model->saverecords($data);
 
-        //$this->session->set_flashdata('error', "Please try again!");
-        $this->session->set_flashdata('success', "Data inserted successfully!");
+        if($account > 0) {
+            $this->session->set_flashdata('success', "Data inserted successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
         redirect("accounting/chart_of_accounts");
-        //$this->load->view('accounting/chart_of_accounts', $this->page_data);
     }
 
     public function edit($id)
     {
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
-        $this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
+        echo $this->load->view('accounting/chart_of_accounts/edit-new', $this->page_data, true);
+        exit;
     }
 
     public function update()
     {
-        $id=$this->input->post('id');
-        $account_id=$this->input->post('account_type');
-        $acc_detail_id=$this->input->post('detail_type');
-        $name=$this->input->post('name');
-        $description=$this->input->post('description');
-        $sub_acc_id=$this->input->post('sub_account_type');
-        $time=$this->input->post('choose_time');
-        $balance=$this->input->post('balance');
-        $time_date=$this->input->post('time_date');
-        if($time != 'Other')
-        {
-            $time_date = '';
+        $data = [
+            'id' => $this->input->post('id'),
+            'company_id' => logged('company_id'),
+            'account_id' => $this->input->post('account_type'),
+            'acc_detail_id' => $this->input->post('detail_type'),
+            'name' => $this->input->post('name'),
+            'description' => $this->input->post('description'),
+            'parent_acc_id' => $this->input->post('sub_account_type'),
+            'time' => $this->input->post('choose_time'),
+            'balance' => $this->input->post('balance'),
+            'time_date' => $this->input->post('time') === 'Other' ? $this->input->post('time_date') : null
+        ];
+
+        $accountUpdate = $this->chart_of_accounts_model->updaterecords($data);
+
+        if($accountUpdate) {
+            $this->session->set_flashdata('success', "Data updated successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
         }
-
-        $this->chart_of_accounts_model->updaterecords($id,$account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date);
-
-        $this->session->set_flashdata('success', "Data updated successfully!");
         redirect("accounting/chart_of_accounts");
     }
 
@@ -2014,8 +2114,15 @@ class Accounting extends MY_Controller {
     {
         if($this->input->post('account_id'))
         {
-            echo $this->accounts_has_account_details_model->fetch_acc_detail_id($this->input->post('account_id'));
+            foreach($this->account_detail_model->getDetailTypesById($this->input->post('account_id')) as $row) {
+                echo "<option value='".$row->acc_detail_id."'>".$row->acc_detail_name."</option>";
+            }
         }
+    }
+
+    public function lists()
+    {
+        $this->load->view('accounting/list', $this->page_data);
     }
 
     public function update_name()
@@ -2075,7 +2182,24 @@ class Accounting extends MY_Controller {
         $i=1;
         foreach($this->chart_of_accounts_model->select() as $row)
         {
-            $html .="<tr><td><input type='checkbox'></td><td class='edit_field' data-id='".$row->id."'>".$row->name."</td><td class='type'>".$this->account_model->getName($row->account_id)."</td><td class='detailtype'>".$this->account_detail_model->getName($row->acc_detail_id)."</td><td class='nbalance'>".$row->balance."</td><td class='balance'></td><td><div class='dropdown show'><a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>View Register</a><div class='dropdown-menu' aria-labelledby='dropdownMenuLink'><a class='dropdown-item' href=".url('/accounting/chart_of_accounts/edit/'.$row->id).">Edit</a><a class='dropdown-item' href='#' onClick='make_inactive(".$row->id.")'>Make Inactive (Reduce usage)</a><a class='dropdown-item' href='#'>Run Report</a></div></div></td></tr>";
+            $html .="<tr>
+                        <td>
+                            <input type='checkbox'></td><td class='edit_field' data-id='".$row->id."'>".$row->name."
+                        </td>
+                        <td class='type'>".$this->account_model->getName($row->account_id)."</td>
+                        <td class='detailtype'>".$this->account_detail_model->getName($row->acc_detail_id)."</td>
+                        <td class='nbalance'>".$row->balance."</td>
+                        <td class='balance'></td>
+                        <td>
+                            <div class='dropdown show'><a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>View Register</a>
+                                <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
+                                    <a class='dropdown-item' href='javascript:void(0);' data-href=".url('/accounting/chart_of_accounts/edit/'.$row->id)." id='editAccount' data-id='$row->id'>Edit</a>
+                                    <a class='dropdown-item' href='#' onClick='make_inactive(".$row->id.")'>Make Inactive (Reduce usage)</a>
+                                    <a class='dropdown-item' href='#'>Run Report</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>";
             $i++;
         }
         echo $html;
@@ -3525,6 +3649,155 @@ class Accounting extends MY_Controller {
         else{
             echo json_encode(0);
         }
+    }
+
+
+    // New Forms
+    public function addNewEstimate()
+    {   
+        $this->load->model('AcsProfile_model');
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;    
+            } else {
+                
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;        
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+        }
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->load->view('accounting/addnewEstimate', $this->page_data);
+    }
+
+    public function addNewEstimateOptions()
+    {   
+        $this->load->model('AcsProfile_model');
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;    
+            } else {
+                
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;        
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+        }
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->load->view('accounting/addNewEstimateOptions', $this->page_data);
+    }
+    
+    public function addNewEstimateBundle()
+    {   
+        $this->load->model('AcsProfile_model');
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;    
+            } else {
+                
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;        
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+        }
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->load->view('accounting/addNewEstimateBundle', $this->page_data);
+    }
+
+    public function addnewInvoice(){
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['invoices'] = $this->accounting_invoices_model->getInvoices();
+        $this->page_data['page_title'] = "Invoices";
+        // print_r($this->page_data);
+        $this->load->view('accounting/addInvoice', $this->page_data);
+    }
+
+    public function NewworkOrder(){
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Work Order";
+        // print_r($this->page_data);
+        $this->load->view('accounting/NewworkOrder', $this->page_data);
     }
 
 }

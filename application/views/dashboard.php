@@ -148,6 +148,7 @@
                 foreach ($widgets as $wids):
                     if(!$wids->wu_is_main):
                         $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
+                        $data['rawHeight'] = '310';
                         $data['height'] = 'height: 310px;';
                         $data['id'] = $wids->w_id;
                         $this->load->view($wids->w_view_link, $data);
@@ -702,7 +703,38 @@
     }
 </style>
 <?php include viewPath('includes/footer'); ?>
+
+
 <script type="text/javascript">
+    function waitForClockInOut() {
+        $.ajax({
+            type: "GET", 
+            url: "/Timesheet/getClockInOutNotification",
+            async: true,
+            cache: false,
+            timeout: 10000,
+            success: function (data) { 
+
+                var obj = JSON.parse(data); 
+                console.log(obj);
+                $.each(obj, function (currentIndex, currentElem) {
+                    $('#in_now').html(currentElem.ClockIn);
+                    $('#out_now').html(currentElem.ClockOut);
+                });
+                setTimeout(waitForClockInOut,2000);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                addmsg("error", textStatus + " (" + errorThrown + ")");
+                setTimeout(waitForClockInOut,15000);
+            }
+        });
+    };
+
+    $(document).ready(function () {
+        var TimeStamp = null;
+        waitForClockInOut();
+    });
+        
 
 
     $('#onoff-customize').click(function() {

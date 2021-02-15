@@ -20,6 +20,13 @@ class Wizardlib extends MY_Controller {
         
     }
     
+    function getStreetView($address = NULL)
+    {
+        $ci = &get_instance();
+        $data['address'] = $address;
+        $ci->load->view('widgets/streetview', $data);
+    }
+    
     function isWidgetMain($widget_id)
     {
         $user_id = logged('id');

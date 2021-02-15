@@ -13,9 +13,10 @@
 
         $.ajax({
             type: "GET",
-            url: "/job/get_customers",
+            url: "<?= base_url() ?>/job/get_customers",
             success: function(data)
             {
+                console.log(data);
                 var template_data = JSON.parse(data);
                 var toAppend = '';
                 $.each(template_data,function(i,o){
@@ -37,7 +38,7 @@
     function load_customer_data($id){
         $.ajax({
             type: "POST",
-            url: "/job/get_customer_selected",
+            url: "<?= base_url() ?>/job/get_customer_selected",
             data: {id : $id}, // serializes the form's elements.
             success: function(data)
             {
@@ -49,6 +50,20 @@
                 $('#cust_email').text(customer_data.email);
                 $('#mail_to').attr("href","mailto:"+customer_data.email);
                 initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+                loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+            }
+        });
+    }
+    
+    function loadStreetView(address)
+    {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>job/loadStreetView/",
+            data: {address : address}, // serializes the form's elements.
+            success: function(data)
+            {
+                $('#streetViewBody').html(data);
             }
         });
     }
@@ -62,7 +77,7 @@
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "/job/save_job",
+                url: "<?= base_url() ?>/job/save_job",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
                     console.log(data);
@@ -88,7 +103,7 @@
         $("#fill_esign_btn").click(function () {
             $.ajax({
                 type: "GET",
-                url: "/job/get_esign_template",
+                url: "<?= base_url() ?>/job/get_esign_template",
                 success: function(data)
                 {
                     var template_data = JSON.parse(data);
@@ -152,7 +167,7 @@
             var lib_id = this.value;
             $.ajax({
                 type: "POST",
-                url: "/job/get_esign_selected",
+                url: "<?= base_url() ?>/job/get_esign_selected",
                 data: {id : lib_id}, // serializes the form's elements.
                 success: function(data)
                 {
@@ -166,7 +181,7 @@
             var tag_id = this.value;
             $.ajax({
                 type: "POST",
-                url: "/job/get_tag_selected",
+                url: "<?= base_url() ?>/job/get_tag_selected",
                 data: {id : tag_id}, // serializes the form's elements.
                 success: function(data)
                 {
@@ -193,7 +208,7 @@
             e.preventDefault();
             var data = signaturePad.toDataURL('image/png');
             $('#output').val(data);
-            var url = '/job/save_esign';
+            var url = '<?= base_url() ?>/job/save_esign';
             $.ajax({
                 url: url,
                 type: "POST",
@@ -352,7 +367,7 @@
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
-                url: "/job/add_job_attachments",
+                url: "<?= base_url() ?>/job/add_job_attachments",
                 data: formDatas,
                 processData: false,
                 contentType: false,
@@ -461,11 +476,28 @@
             }
         });
 
+        $("#employee2").on( 'change', function () {
+            $('#employee2_id').val(this.value);
+        });
+        $("#employee3").on( 'change', function () {
+            $('#employee3_id').val(this.value);
+        });
+        $("#employee4").on( 'change', function () {
+            $('#employee4_id').val(this.value);
+        });
+
         $("#start_date").on("change", function(){
             $('#end_date').val(this.value);
         });
 
         $('#items_table').DataTable({
+            "lengthChange": false,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
+        });
+
+        $('#estimates_table').DataTable({
             "lengthChange": false,
             "searching" : true,
             "pageLength": 10,

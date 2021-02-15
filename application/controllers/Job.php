@@ -16,6 +16,13 @@ class Job extends MY_Controller
         $this->load->model('General_model', 'general');
 
     }
+    
+    public function loadStreetView($address = NULL)
+    {
+        $this->load->library('wizardlib');
+        $addr = ($address==NULL?post('address'):$address);
+        return $this->wizardlib->getStreetView($addr);
+    }
 
     public function index() {
 
@@ -89,6 +96,16 @@ class Job extends MY_Controller
             'select' => 'id,title,price',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        // get estimates
+        $get_estimates = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'estimates',
+            'select' => 'id,estimate_number,estimate_date,job_name',
+        );
+        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
 
         $this->load->view('job/job_new', $this->page_data);
     }
@@ -368,6 +385,9 @@ class Job extends MY_Controller
             'job_number' => $job_number,
             'customer_id' => $input['customer_id'],
             'employee_ids' => $input['employee_id'],
+            'employee2_id' => $input['employee2_id'],
+            'employee3_id' => $input['employee3_id'],
+            'employee4_id' => $input['employee4_id'],
             'job_name' => $input['job_name'],
             'job_description' => $input['job_description'],
             'start_date' => $input['start_date'],
@@ -607,7 +627,7 @@ class Job extends MY_Controller
             'estimate_date' => date("Y-m-d", strtotime($this->input->post('estimate_date'))),
             'expiry_date' => date("Y-m-d", strtotime($this->input->post('expiry_date'))),
             'description' => $this->input->post('description'),
-            'employee_id' => $this->input->post('employee_id'),
+            'employee_ids' => $this->input->post('employee_id'),
             'status' => $this->input->post('status'),
             'job_id' => $this->input->post('job_id'),
             'estimate_value' => $this->input->post('estimate_value'),

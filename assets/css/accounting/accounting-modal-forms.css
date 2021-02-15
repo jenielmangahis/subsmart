@@ -113,7 +113,7 @@ div.attachments div.attachments-list div.attachments-container div.attachments-c
 }
 
 /* Tags Modal */
-div#tags-modal.modal.right .modal-dialog {
+div.modal.right .modal-dialog {
     position: fixed;
     margin: auto;
     width: 30%;
@@ -124,17 +124,17 @@ div#tags-modal.modal.right .modal-dialog {
     transform: translate3d(0%, 0, 0);
 }
 
-div#tags-modal.modal.right .modal-content {
+div.modal.right .modal-content {
     height: 100%;
     overflow-y: auto;
     border-radius: 0 !important;
 }
 
-div#tags-modal.modal.right .modal-body {
+div.modal.right .modal-body {
     padding: 15px 15px 80px;
 }
 
-div#tags-modal.modal.right.fade .modal-dialog {
+div.modal.right.fade .modal-dialog {
     right: 0;
     -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
     -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
@@ -142,7 +142,7 @@ div#tags-modal.modal.right.fade .modal-dialog {
     transition: opacity 0.3s linear, right 0.3s ease-out;
 }
 
-div#tags-modal.modal.right.fade.in .modal-dialog {
+div.modal.right.fade.in .modal-dialog {
     right: 0;
 }
 

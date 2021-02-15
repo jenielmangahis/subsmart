@@ -66,6 +66,7 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
         $this->db->where("acs_profile.company_id", $cid);
+        $this->db->limit(20);
         $query = $this->db->get();
         return $query->result();
     }

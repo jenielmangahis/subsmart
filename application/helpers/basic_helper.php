@@ -3158,7 +3158,7 @@ function google_credentials(){
     $credentials = [
         'client_id' => '646859198620-ll9trm7obk2olgaoigae4s2hshpf3sle.apps.googleusercontent.com',
         'client_secret' => '-plXDxYZRwx6c1ttmNXE5L2p',
-        'api_key' => 'AIzaSyAzt0c6Rxf0SJo6bsCc046g7671s7TEj_U'
+        'api_key' => 'AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU'
     ];
 
     return $credentials;

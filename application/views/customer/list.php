@@ -121,10 +121,40 @@ add_css(array(
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body" style="padding-bottom:0px;">
+                        <div class="card-body" >
                             <div class="row align-items-center pt-3 bg-white">
                                 <div class="col-md-12">
                                     <!-- Nav tabs -->
+                                    <h3 class="page-title">Customers List</h3>
+                                    <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
+                                        <span style="color:black;">
+                                            A great process of managing interactions with existing as well as past and potential customers is to have one powerful platform that can provide an immediate response to your customer needs.
+                                            Try our quick action icons to create invoices, scheduling, communicating and more with all your customers.
+                                        </span>
+                                    </div>
+                                    <div class="float-right d-md-block">
+                                        <div class="dropdown">
+                                            <!--<input type="file" name="file" /> -->
+                                            <a href="<?= url('customer/import_customer') ?>">
+                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
+                                            </a>
+                                            <a href="<?= url('customer/customer_export') ?>">
+                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
+                                            </a>
+                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
+                                                                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                                                                            </a>-->
+                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
+                                                                                    <span class="fa fa-print "></span> Print
+                                                                            </a>-->
+                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
+                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>">
+                                                <span class="fa fa-plus"></span> New Customer
+                                            </a>
+                                            <?php //endif ?>
+                                        </div>
+                                    </div>
+
                                     <div class="banking-tab-container">
                                         <div class="rb-01">
                                             <ul class="nav nav-tabs border-0">
@@ -140,39 +170,13 @@ add_css(array(
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="tab-content mt-4">
+                                    <div class="tab-content">
                                         <div class="tab-pane <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
                                                 <div class="col-xl-12">
                                                     <div class="card card-mobile">
                                                         <div class="card-body">
-                                                            <div class="col-sm-12">
-                                                                <h6 class="page-title">Customers List</h6>
-                                                            </div>
                                                             <div class="col-sm-6 col-md-12">
-                                                                <div class="float-right d-md-block">
-                                                                    <div class="dropdown">
-                                                                            <!--<input type="file" name="file" /> -->
-                                                                            <a href="<?= url('customer/import_customer') ?>">
-                                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
-                                                                            </a>
-                                                                            <a href="<?= url('customer/customer_export') ?>">
-                                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
-                                                                            </a>
-                                                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
-                                                                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
-                                                                            </a>-->
-                                                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
-                                                                                    <span class="fa fa-print "></span> Print
-                                                                            </a>-->
-                                                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
-                                                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>">
-                                                                                <span class="fa fa-plus"></span> New Customer
-                                                                            </a>
-                                                                            <?php //endif ?>
-                                                                    </div>
-                                                                </div>
-                                                                <br><br><br>
                                                                 <div class="tab-content" id="myTabContent">
                                                                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                                                         <div id="status_sorting"  class=""></div>
@@ -273,7 +277,13 @@ add_css(array(
                                                         <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>"><span class="fa fa-plus"></span> New Customer</a>-->
                                                     </div>
                                                 </div>
-                                                <br/><br/><br/>
+                                                <br>
+                                                <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
+                                                <span style="color:black;">
+                                                 Our customer dashboard is Visual and Easy-To-Use. Simply add a widget and quickly see the information you need to help better assist and maintain a well organized business.
+                                                    Need us to create a customize widget with the table geared around your business.  Send us a request and our support team will be glad to get you a quote.
+                                                </span>
+                                                </div>
                                                 <div class="col-md-12">
 
                                                             <div class="col-sm-12">
@@ -744,6 +754,7 @@ add_footer_js(array(
             start: function(e, ui) {
                 // creates a temporary attribute on the element with the old index
                 $(this).attr('data-previndex', ui.item.index());
+                alert('hey')
             },
             update: function(e, ui) {
                 // gets the new and old index then removes the temporary attribute
@@ -769,7 +780,7 @@ add_footer_js(array(
                 //console.log(new_module_sort);
                 $.ajax({
                     type: "POST",
-                    url: "/customer/ac_module_sort",
+                    url: "<?= base_url() ?>/customer/ac_module_sort",
                     data: {ams_values : new_module_sort,ams_id : <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
                     success: function(data)
                     {

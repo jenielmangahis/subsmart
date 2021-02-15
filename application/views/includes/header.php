@@ -325,6 +325,7 @@
                                 <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
                                     <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                         <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0) ? 'visible' : 'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0) ? count($newtasks) : null; ?></span>
+                                        
                                         <img class="schedule-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/schedule-icon.svg" alt="">
                                         <img class="schedule-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/schedule-icon2.svg" alt="">
                                     </div>
@@ -355,7 +356,7 @@
                                     <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden';  ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null;  ?><!--</span>-->
                                     <!--                                </a>-->
                                     <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"><?php echo (getNotificationCount() != 0) ? getNotificationCount() : null; ?></span>
+                                        <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null; ?></span>
                                         <div class="bell" id="bell-1">
                                             <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
                                             <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
@@ -364,32 +365,10 @@
                                     </div>
                                     <div class="prev-icon-title">Notification</div>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-                                        <!-- item-->
-									<?php 
-                                    $notification = getTimesheetNotification(); 
-                                    $notifyCount = count($notification);
-									?>
-									<h6 class="dropdown-item-text">Notifications (<?php echo $notifyCount; ?>)</h6>
-                                
-                                        <div class="slimscroll notification-item-list" id="notificationList">
-                                            <?php
-                                            if ($notification != null):
-                                                foreach ($notification as $notify):
-                                                    if ($notify->status == 1) {
-                                                        $bg = '#e6e3e3';
-                                                    } else {
-                                                        $bg = '#f8f9fa';
-                                                    }
-                                                    ?>
-													
-                                            <a href="<?php echo site_url();?>timesheet/attendance" id="notificationDP" data-id="<?php echo $notify->id?>" class="dropdown-item notify-item active" style="background-color: <?php echo $bg;?>">
-                                            <img style="width:30px;border-radius: 11px;margin-bottom:-20px" class="profile-user-img img-responsive img-circle" src="<?php echo userProfileImage($userid) ?>" alt="User profile picture" />
-                                            <p class="notify-details"><?php echo $notify->FName." ".$notify->LName ?><span class="text-muted"><?php echo $notify->content;?></span></p>
-                                            </a>
-                                                    <?php
-                                                endforeach;
-                                            endif;
-                                            ?>
+                                    <!-- item-->
+									<h6 class="dropdown-item-text">Notifications (<span id="nfcount"></span>)</h6>
+                                    <div class="slimscroll notification-item-list" id="notificationList">
+                                        <div id="autoNotifications"></div>
                                             <?php
                                             $reorders = getReorderItemsCount();
                                             $reorders_count = 0;
@@ -429,8 +408,11 @@
                                                 </div>
                                                 <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
                                             </a>
-                                        </div><!-- All--> <a href="javascript:void(0);"
-                                                             class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
+                                        </div>
+                                        <!-- All-->
+                                        <a href="<?php echo site_url(); ?>timesheet/notification"
+                                        class="dropdown-item text-center text-primary">View all 
+                                        <i class="fi-arrow-right"></i></a>
                                     </div>
                                 </li>
                                 <?php
@@ -650,3 +632,31 @@
             </div><!-- end topbar-main -->
 
         </header><!-- End Navigation Bar-->
+
+<script type="text/javascript">
+    function notificationClockInOut() {
+        $.ajax({
+            type: "GET", 
+            url: "/Timesheet/getNotificationsAll",
+            async: true,
+            cache: false,
+            timeout: 10000,
+            success: function (data) { 
+                var obj = JSON.parse(data); 
+                $('#notifyBadge').html(obj.notifyCount);
+                $('#nfcount').html(obj.notifyCount);
+                $('#autoNotifications').html(obj.autoNotifications);
+                setTimeout(notificationClockInOut,2000);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                addmsg("error", textStatus + " (" + errorThrown + ")");
+                setTimeout(notificationClockInOut,15000);
+            }
+        });
+    };
+
+    $(document).ready(function () {
+        var TimeStamp = null;
+        notificationClockInOut();
+    });
+</script>

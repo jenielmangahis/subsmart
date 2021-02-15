@@ -1,0 +1,308 @@
+@font-face {
+  font-family: "Southam";
+  src: url(./SouthamDemo.otf) format("truetype");
+}
+
+body {
+  background-color: #fff !important;
+}
+
+.fillAndSign {
+  margin-top: 90px;
+  padding-top: 20px;
+
+  // step 1
+
+  &__docPreview {
+    display: flex;
+    position: relative;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    cursor: zoom-in;
+
+    canvas {
+      width: 250px;
+      border: 0;
+      border-radius: 0;
+    }
+  }
+
+  &__docInfo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #fff;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    padding: 10px 15px;
+    background-color: #f7f7f7;
+  }
+
+  &__docTitle {
+    font-family: "Open Sans", sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    user-select: none;
+    font-weight: 600;
+    margin: 0;
+    font-size: 13px;
+    color: #797979;
+  }
+
+  &__docPageCount {
+    font-size: 12px;
+    color: #797979;
+  }
+
+  &__modal {
+    canvas {
+      display: block;
+      margin: 15px auto;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 0;
+    }
+  }
+
+  // step 2
+
+  &--step2 {
+    background-color: #949494;
+    padding: 0;
+  }
+
+  &__header {
+    .fillAndSign__title {
+      font-family: Sarabun, sans-serif !important;
+      font-weight: 600 !important;
+      font-size: 28px !important;
+    }
+
+    .alert-warning {
+      color: #f8b425;
+      background-color: #fdeac3;
+    }
+  }
+
+  &__upload {
+    position: relative;
+    height: 240px;
+    width: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+
+    [type="file"] {
+      font-size: 0;
+      opacity: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    span {
+      padding: 5px 15px;
+      color: #fff;
+      background-color: #2463d1;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 10px;
+      width: 150px;
+    }
+  }
+
+  &__footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
+    padding: 15px;
+    border-top: 1px solid #d9d9d9;
+
+    .btn {
+      color: #1e1e1e;
+      background-color: #ffce00;
+      border: 1px solid #ffce00;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 5px 20px;
+      border-radius: 3px;
+    }
+  }
+
+  &__topnav {
+    border-bottom: 1px solid #d9d9d9;
+    padding: 5px 0;
+    background-color: #fff;
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fillAndSign {
+      &__primary {
+        border-right: 1px solid #d9d9d9;
+        display: flex;
+        padding-right: 10px;
+        margin-right: 10px;
+      }
+    }
+
+    .action {
+      color: #333;
+      height: 40px;
+      min-width: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+    }
+  }
+
+  &__documentContainer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__canvasContainer {
+    position: relative;
+  }
+
+  &__document {
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%),
+      0 1px 5px 0 rgb(0 0 0 / 12%);
+  }
+
+  &__field {
+    display: flex;
+    align-items: center;
+
+    &--focused {
+      background-color: #ffeb3b;
+    }
+
+    &Input {
+      min-width: 200px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      color: #333;
+      border: 1px solid #e2e2e2;
+      line-height: 2;
+      font-family: monospace;
+      outline: 0;
+      box-sizing: border-box;
+    }
+
+    &Close {
+      background-color: #dc3545;
+      color: #fff;
+      height: 30px;
+      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: var(--border-width) solid #dc3545;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+  }
+
+  #signatureModal {
+    .modal-body {
+      min-height: 200px;
+    }
+  }
+
+  &__signatureInput {
+    font-family: "Southam";
+    height: 200px;
+    font-size: 100px;
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-shadow: none !important;
+
+    &::-webkit-input-placeholder {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 20px;
+    }
+  }
+
+  &__signaturePad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    padding-bottom: 0;
+
+    canvas {
+      border: 1px solid #ece3e3;
+      margin: 0 !important;
+    }
+
+    a {
+      align-self: flex-end;
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  &__signatureText {
+    font-family: "Southam";
+    font-size: 80px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0 20px;
+    white-space: nowrap;
+    border: 1px solid #e2e2e2;
+
+    &.ui-draggable-dragging {
+      background-color: #ffeb3b;
+      cursor: move;
+    }
+  }
+
+  &__signatureDraw {
+    border: 1px solid #e2e2e2;
+
+    &.ui-draggable-dragging {
+      background-color: #ffeb3b;
+      cursor: move;
+    }
+  }
+
+  .action--draggable.action--hasField {
+    &.ui-draggable-dragging {
+      background-color: #ffeb3b;
+      cursor: move;
+    }
+  }
+}

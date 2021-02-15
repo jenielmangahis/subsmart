@@ -86,8 +86,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
@@ -96,7 +94,7 @@
                             <hr>
                             <p>Import Data from Wordorder/Invoice/Estimates</p>
                             <div id="import_buttons">
-                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Estimates</button> &nbsp;&nbsp;
+                                <a href="#" data-toggle="modal" data-target="#estimates_import" data-backdrop="static" data-keyboard="false" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Estimates</a> &nbsp;&nbsp;
                                 <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> WorkOrder</button> &nbsp;&nbsp;
                                 <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Invoice</button>
                             </div>
@@ -225,10 +223,8 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
-
-
                             <hr>
-                            <button type="button" class="btn btn-primary pull-right text-link"> <span class="fa fa-plus"></span> Share Job</button>
+                            <a href="#" data-toggle="modal" data-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="btn btn-primary pull-right text-link"> <span class="fa fa-plus"></span> Share Job</a>
                         </div>
                         <br>
                     </div>
@@ -323,28 +319,6 @@
                                         <br>
                                     </div>
 
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <button  style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
-                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <a style="cursor: pointer;" id="fill_esign_btn" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
-                                        <center>
-                                            <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
-                                        </center>
-                                    </a>
-                                </div>
-                                <div style="float: right;">
-                                    <a ><span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;</a>
-                                    <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card" id="pd_left_card">
@@ -582,6 +556,28 @@
                                     </div>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <button  style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="collapseOne">
+                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <a style="cursor: pointer;" id="fill_esign_btn" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
+                                        <center>
+                                            <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
+                                        </center>
+                                    </a>
+                                </div>
+                                <div style="float: right;">
+                                    <a ><span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;</a>
+                                    <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card" id="approval_card_left">
                         <div class="card-header" id="headingOne">
                                 <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="collapseOne">
@@ -635,38 +631,36 @@
                                         <select id="customer_id" name="customer_id" class="form-control" required>
                                             <option value="">Select Existing Customer</option>
                                         </select>
-                                        <img style="width: 100%;height: 150px;" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/aa.jpg"; ?> ">
-                                    </div>
-                                    <div class="col-md-4">
                                         <table id="customer_info" class="table">
                                             <thead>
-                                                <tr>
-                                                    <td></td>
-                                                </tr>
+                                            <tr>
+                                                <td></td>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td id="cust_fullname">xxxxx xxxxx</td>
-                                                    <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td id="cust_address">-------------</td>
-                                                    <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td id="cust_number">(xxx) xxx-xxxx</td>
-                                                    <td><a href=""><span class="fa fa-phone customer_right_icon"></span></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td id="cust_email">xxxxx@xxxxx.xxx</td>
-                                                    <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
-                                                </tr>
+                                            <tr>
+                                                <td id="cust_fullname">xxxxx xxxxx</td>
+                                                <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="cust_address">-------------</td>
+                                                <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="cust_number">(xxx) xxx-xxxx</td>
+                                                <td><a href=""><span class="fa fa-phone customer_right_icon"></span></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="cust_email">xxxxx@xxxxx.xxx</td>
+                                                <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-8">
                                         <div class="col-md-12">
-                                            <div id="map"></div>
+                                            <div id="streetViewBody" class="col-md-6 float-left no-padding" style="padding-right:15px;"></div>
+                                            <div id="map" class="col-md-6 float-left"></div>
                                         </div>
                                     </div>
                             </div>
@@ -696,9 +690,9 @@
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
-                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:;"></span></button>
-                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:;"></span></button>
-                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:;"></span></button>
+                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:"></span></button>
+                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:"></span></button>
+                                                <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span></button>
                                             </td>
                                             <td>
                                             </td>
@@ -999,13 +993,15 @@
                                     <input id="name" type="hidden" name="authorize_name">
                                     <input id="datetime_signed" type="hidden" name="datetime_signed">
                                     <input id="attachment" type="hidden" name="attachment">
+                                    <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
+                                    <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
+                                    <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
                                     <div class="col-sm-12">
                                         <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
                                         <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
                                     </div>
                                 </div>
                             </div>
-
                     <div class="card">
                         <div class="card-body">
                             <div class="card" style="border-color: #363636 !important;border: 1px solid;">
@@ -1199,6 +1195,7 @@
                                 <thead>
                                     <tr>
                                         <td> Name</td>
+                                        <td> Location</td>
                                         <td> Price</td>
                                         <td> </td>
                                     </tr>
@@ -1227,11 +1224,106 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="estimates_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newcustomerLabel">Select Estimate To Make a Job</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="estimates_table" class="table table-hover" style="width: 100%;">
+                            <thead>
+                            <tr>
+                                <td> Estimate #</td>
+                                <td> Job & Customer</td>
+                                <td> Date</td>
+                                <td> </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php if(!empty($estimates)): ?>
+                                <?php foreach ($estimates as $estimate): ?>
+                                    <tr>
+                                        <td><?= $estimate->estimate_number; ?></td>
+                                        <td><?= $estimate->job_name; ?></td>
+                                        <td><?= date('M d, Y', strtotime($estimate->estimate_date)); ?></td>
+                                        <td><button id="<?= $estimate->id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default"><span class="fa fa-plus"></span></button></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-detail">
+                <div class="button-modal-list">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Signature Modal -->
+<div class="modal fade" id="share_job_modal" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Share Job To Other Employee</h4>
+            </div>
+            <div class="modal-body">
+                <label>Employee 2</label>
+                <select id="employee2" name="employee2_" class="form-control">
+                    <option value="">Select Employee</option>
+                    <?php if(!empty($employees)): ?>
+                        <?php foreach ($employees as $employee): ?>
+                            <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <label>Employee 3</label>
+                <select id="employee3" name="employee3_" class="form-control">
+                    <option value="">Select Employee</option>
+                    <?php if(!empty($employees)): ?>
+                        <?php foreach ($employees as $employee): ?>
+                            <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <label>Employee 4</label>
+                <select id="employee4" name="employee4_" class="form-control">
+                    <option value="">Select Employee</option>
+                    <?php if(!empty($employees)): ?>
+                        <?php foreach ($employees as $employee): ?>
+                            <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="" class="btn btn-primary" data-dismiss="modal">
+                    <span class="fa fa-paper-plane-o"></span> Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <?php
 add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
     'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
     'assets/textEditor/summernote-bs4.js',
@@ -1242,7 +1334,7 @@ include viewPath('includes/footer');
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=initMap&libraries=&v=weekly"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 
 <?php include viewPath('job/js/job_new_js'); ?>
 
@@ -1255,6 +1347,7 @@ include viewPath('includes/footer');
         const myLatLng = { lat: -25.363, lng: 131.044 };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 12,
+            height:220,
             center: myLatLng,
         });
         new google.maps.Marker({
@@ -1265,6 +1358,7 @@ include viewPath('includes/footer');
         geocoder = new google.maps.Geocoder();
         codeAddress(geocoder, map,address);
     }
+    
     function codeAddress(geocoder, map,address) {
         geocoder.geocode({'address': address}, function(results, status) {
             if (status === 'OK') {

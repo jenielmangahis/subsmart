@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                 <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:28px;margin-top:28px;">
-                Sample text here for rules tab.
+                The more you uses your bank rules, the better it gets at categorizing. After a while, it can even scan transactions and add details like payees. Step 1: Create a bank rule. Go to the Banking menu or Transactions menu. Then select the Rules tab. Select New rule. Enter a name in the Rule field. From the drop-down, select Money in or Money out.  Simply acknowledge and our accounting platform will remember your selection for that particular entry for the next time.  Saving you time and money.
                 </div>
             <!--                        DataTables-->
                         <table id="rules_table" class="table table-striped table-bordered" style="width:100%">

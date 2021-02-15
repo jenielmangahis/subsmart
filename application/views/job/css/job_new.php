@@ -3,7 +3,7 @@
         font-size: 14px;
     }
     #map {
-        height: 200px;
+        height: 210px;
         width: 100%;
         padding: 0;
     }
