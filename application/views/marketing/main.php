@@ -113,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Campaign Blast</h5>
                             <p class="card-text mt-txt">Send our jumbo postcards (8.3" x 5.8") to your next potential customer by choosing specific areas and using our numerous filters to ensure you are targeting to the right market for your business.</p>
-                            <div class="card-price bottom-txt">$10.00/1 Month</div>
+                            <div class="card-price bottom-txt">$1.25/postcard</div>
                         </div>
                     </a>
                 </div>

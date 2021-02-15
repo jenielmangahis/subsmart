@@ -1096,7 +1096,13 @@ class Timesheet extends MY_Controller {
         }
         echo json_encode(1);
     }
-	public function attendance(){
+    public function notification(){
+
+        $this->load->model('timesheet_model');
+        $this->page_data['notification'] = $this->timesheet_model->getTSNotification();
+        $this->load->view('users/timesheet_notification_list', $this->page_data);
+    }
+	public function attendance(){ 
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
@@ -1628,13 +1634,14 @@ class Timesheet extends MY_Controller {
 //        }
 //
 //	    $date_time = date('M d, Y H:i:s');
-//        $end_time = date('M d, Y H:i:s', strtotime($duration));
+//        $end_time = date('	M d, Y H:i:s', strtotime($duration));
 //	    $data = new stdClass();
 //	    $data->date_time = $date_time;
 //	    $data->end_time = $end_time;
 //	    echo json_encode($data);
 //    }
     public function clockInEmployee(){
+        
 	    $clock_in = time();
 	    $user_id = $this->session->userdata('logged')['id'];
 
@@ -1647,6 +1654,15 @@ class Timesheet extends MY_Controller {
         $attn_id = $this->db->insert_id();
         $check_attendance = $this->db->get_where('timesheet_attendance',array('id'=>$attn_id));
         if ($check_attendance->num_rows() == 1){
+			$clock_in_notify = array(
+                'user_id' => $user_id, 
+                'title' => 'Clock In',
+                'content' => 'Clock In '.date('d M Y H:i:s',$clock_in),
+                'date_created' => date('Y-m-d H:i:s',$clock_in),
+                'status' => 1,
+            );
+            $this->db->insert('user_notification',$clock_in_notify);
+            
             $logs_insert = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
@@ -1672,6 +1688,84 @@ class Timesheet extends MY_Controller {
 
     }
 
+    public function getClockInOutNotification(){
+        $qry = $this->db->query("SELECT * FROM (SELECT count(DISTINCT user_id) as ClockIn FROM 
+        `user_notification` WHERE title != 'Clock Out' AND Date(date_created)=CURRENT_DATE() ) as t1 INNER
+        JOIN (SELECT count(DISTINCT user_id) as ClockOut FROM `user_notification` WHERE title = 'Clock Out'
+        and Date(date_created)=CURRENT_DATE()) as a")->result_array();
+        echo json_encode($qry);
+    }
+
+    public function getNotificationTbl(){
+
+        $this->load->model('timesheet_model');
+        $notification = $this->timesheet_model->getTSNotification();
+        
+        $table='';
+
+        $i=0; 
+        foreach ($notification as $cnt => $notify){
+        if($notify->title == 'Clock In'){$color='green';}else{$color='red';}
+
+        $table.='<tr>
+                    <td class="tbl-id-number">'.++$i.'</td>
+                    <td>
+                        <center>
+                            <span class="tbl-employee-name">'.$notify->FName.'</span> 
+                            <span class="tbl-employee-name">'.$notify->LName.'</span>
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            <i class="fa fa-circle" aria-hidden="true" style="color:'.$color.'"></i>
+                            &nbsp;'.$notify->content.'
+                        </center>
+                    </td>
+                    <td class="tbl-status">
+                        <center>
+                            <a href="'.site_url().'timesheet/attendance" id="notificationDP" 
+                            data-id="'.$notify->id.'" title="" data-toggle="tooltip" 
+                            data-original-title="Notification Not Viewed ">
+                                <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                            </a>
+                        </center>
+                    </td>
+                </tr>'; 
+        }
+
+        echo $table;
+    }
+
+    public function getNotificationsAll(){
+
+        $userid = $this->session->userdata('logged')['id'];
+        $notification = getTimesheetNotification(); 
+        $notifyCount = count($notification);
+        $html='';
+
+        if ($notification != null){
+            foreach ($notification as $notify){
+                if ($notify->status == 1) { $bg = '#e6e3e3';} 
+                else { $bg = '#f8f9fa';}
+                
+            $userprofile=userProfileImage($userid);
+            $html.='<a href="'.site_url().'timesheet/attendance" id="notificationDP" 
+            data-id='.$notify->id.'" class="dropdown-item notify-item active" 
+            style="background-color:'.$bg.'">
+            <img style="width:30px;border-radius: 11px;margin-bottom:-20px" class="profile-user-img img-responsive img-circle" src="'.$userprofile.'" alt="User profile picture" />
+            <p class="notify-details">'.$notify->FName." ".$notify->LName.'<span class="text-muted">'.$notify->content.'</span></p>
+            </a>';       
+          
+            }
+        }
+
+        $notificationListArray = array (
+            'notifyCount'=>$notifyCount,
+            'autoNotifications'=>$html,
+        );
+        echo json_encode($notificationListArray);
+    }
+
     public function clockOutEmployee(){
 
         
@@ -1687,6 +1781,16 @@ class Timesheet extends MY_Controller {
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance',array('id' => $attn_id,'user_id' => $user_id));
         if ($check_attn->num_rows() == 1){
+			
+			$clock_out_notify = array(
+                'user_id' => $user_id, 
+                'title' => 'Clock Out',
+                'content' => 'Clock Out '.date('d M Y H:i:s',$clock_out),
+                'date_created' => date('Y-m-d H:i:s',$clock_out),
+                'status' => 1,
+            );
+            $this->db->insert('user_notification',$clock_out_notify);
+            
             $out = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,

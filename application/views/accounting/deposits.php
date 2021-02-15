@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</div>
                 <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
-                Sample text here for Deposits from Payments tab.
+                Good accounting gives businesses an easy way to manage bookkeeping with tools to record payments, deposits, costs. Deposits are recorded in your account register making it easy to reverse any errors from your company’s payment record or un-deposited funds.
                 </div>
 				<div class="row pt-3">
 					<div class="col-lg-12 px-0">

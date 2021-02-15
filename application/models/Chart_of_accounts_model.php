@@ -10,16 +10,21 @@ class Chart_of_accounts_model extends MY_Model {
 		parent::__construct();
 	}
 
-	public function saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date)
+	public function saverecords($data)
 	{
-		$query="insert into accounting_chart_of_accounts values('','$account_id','$acc_detail_id','$name','$description','$sub_acc_id','$time','$balance','$time_date','1','','')";
-		echo $this->db->query($query);
+		$this->db->insert($this->table, $data);
+	    return $this->db->insert_id();
 	}
 
-	public function updaterecords($id,$account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date)
+	public function updaterecords($data)
 	{
-		$query="update accounting_chart_of_accounts set account_id = '$account_id', acc_detail_id = '$acc_detail_id', name ='$name', description ='$description', sub_acc_id = '$sub_acc_id', time ='$time', balance ='$balance', time_date ='$time_date' where id = $id";
-		echo $this->db->query($query);
+		$this->db->where('id', $data['id']);
+		$update = $this->db->update($this->table, $data);
+		if($update) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public function update_name($id,$name)
@@ -55,8 +60,9 @@ class Chart_of_accounts_model extends MY_Model {
 
     public function inactive($id)
 	{
-		$query="update accounting_chart_of_accounts set active = 0 where id = $id";
-		echo $this->db->query($query);
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		return $this->db->update($this->table, ['active' => 0]);
 	}
 
 	public function insert($data)

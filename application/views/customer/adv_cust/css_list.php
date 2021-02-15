@@ -104,7 +104,7 @@
     .profile {
         /**background-color: #a4508b;
         background-image: linear-gradient(326deg, #a4508b 0%, #5f0a87 74%); */
-        background-image: url('/assets/img/customer/profile2.png') !important;
+        background-image: url('<?= base_url() ?>/assets/img/customer/profile2.png') !important;
     }
     .customizable {
         background-image: url('/assets/img/customer/customizable.png') !important;

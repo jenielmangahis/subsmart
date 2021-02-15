@@ -4,7 +4,7 @@
             <i class="fa fa-wrench " aria-hidden="true"></i> Recurring service plans
         </div>
         <div class="card-body">
-            <div class="row" style="<?= $height; ?> overflow:scroll">
+            <div class="row" style="height:<?= $rawHeight-160; ?>px; overflow:scroll">
                 <div class="col-lg-6 text-center">
                     <h2>0</h2>
                     <p>Active Service Plans</p>

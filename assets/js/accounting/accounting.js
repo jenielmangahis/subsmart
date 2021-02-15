@@ -293,6 +293,68 @@ $(document).ready(function () {
         });
     }
 
+    $(document).on('click', '#addNewTag', function(e) {
+        var id = $(this).parent().parent().data('id');
+        
+        $('#createTag').modal('show');
+
+        $('select[name="group_id"]').val(id);
+    });
+    
+    $(document).on('click', '#updateTagGroup', function(e) {
+        var id = $(this).parent().parent().data('id');
+        var type = $(this).parent().parent().data('type');
+        var form = $(`.form-${type}-${id}`);
+        var span = $(`.${type}-span-${id}`);
+        
+        form.removeClass('hide');
+        span.addClass('hide');
+    });
+
+    $(document).on('click', '#deleteGroup, #deleteTag', function(e) {
+        var id = $(this).parent().parent().data('id');
+        var type = $(this).parent().parent().data('type');
+        
+        $.ajax({
+            url:`/accounting/delete-group-tag/${id}/${type}`,
+            type:"DELETE",
+            success:function () {
+                
+            }
+        });
+    });
+    
+    $(document).on('click', '#closeFormTag', function(e) {
+        var target = e.currentTarget.dataset;
+        var form = $(`.form-${target.type}-${target.id}`);
+        var span = $(`.${target.type}-span-${target.id}`);
+
+        form.addClass('hide');
+        span.removeClass('hide');
+    });
+
+    $(document).on('click', '#submiteUpdateTag', function(e) {
+        var target = e.currentTarget.dataset;
+        var form = $(`.form-${target.type}-${target.id}`);
+        var span = $(`.${target.type}-span-${target.id}`);
+        var input = $(this).parent().prev().find(`input`).val();
+
+        $.ajax({
+            url:`/accounting/update-group-tag/${target.id}/${target.type}`,
+            type:"POST",
+            data: {name: input},
+            dataType: "json",
+            success:function (res) {
+                if (res.success) {
+                    span.text(input);
+
+                    form.addClass('hide');
+                    span.removeClass('hide');
+                }
+            }
+        });
+    });
+
     $(document).on('change','#expenseTransCategory',function () {
         $(this).parent().next('.fa-spinner').css('display','inline-block');
         $(this).parent('div').css('width','90%');

@@ -398,9 +398,13 @@ a.top-1 {
                                                         <option value='UTC'>UTC</option>
                                                     </select>-->
                                                     <?php
+                                                      $aTimezone  = config_item('calendar_timezone');
                                                       $a_settings = unserialize($settings[0]->value);
                                                       if( $a_settings ){
-                                                        $timezone = $a_settings['calendar_timezone'];
+                                                        if( isset($aTimezone[$a_settings['calendar_timezone']]) ){
+                                                          $timezone = $aTimezone[$a_settings['calendar_timezone']];
+                                                        }
+                                                        //$timezone = $a_settings['calendar_timezone'];
                                                       }else{
                                                         $timezone = 'Central Time (UTC -5)';
                                                       }
@@ -431,8 +435,8 @@ a.top-1 {
                                               <div class="stcs-1 cs-float">
                                                 <div class="form-group margin-left-sec d-1" role="group" aria-label="...">
                                                     <a class="text-white btn btn-primary btn-md" data-calendar="print"
-                                                       href="<?php echo base_url('workorder/add') ?>" target="_blank">
-                                                        <span class="fa fa-plus"></span>&nbsp;&nbsp;Create Work Order
+                                                       href="<?php echo base_url('job/new_job1') ?>" target="_blank">
+                                                        <span class="fa fa-plus"></span>&nbsp;&nbsp;Create New Job
                                                     </a>
                                                 </div>
                                               </div>

@@ -376,11 +376,151 @@ $(document).on("click", "#add_another", function (e) {
     '">0.00</span>\n' +
     "</td>\n" +
     "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-danger">x</a>\n' +
+    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
     "</td>\n" +
     "</tr> ";
 
   $("#table_body").append(html);
+});
+
+$(document).on("click", "#add_another_option1", function (e) { 
+  e.preventDefault();
+  var count = parseInt($("#count").val()) + 1;
+  $("#count").val(count);
+
+  var html =
+    "<tr>\n" +
+    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
+    "<td>\n" +
+    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
+    count +
+    '" id="quantity_' +
+    count +
+    '" value="1">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control price" name="price[]" data-counter="' +
+    count +
+    '" id="price_' +
+    count +
+    '" min="0" value="0">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<span id="span_total_' +
+    count +
+    '">0.00</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
+    "</td>\n" +
+    "</tr> ";
+
+  $("#table_body_option1").append(html);
+});
+
+$(document).on("click", "#add_another_option2", function (e) { 
+  e.preventDefault();
+  var count = parseInt($("#count").val()) + 1;
+  $("#count").val(count);
+
+  var html =
+    "<tr>\n" +
+    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
+    "<td>\n" +
+    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
+    count +
+    '" id="quantity_' +
+    count +
+    '" value="1">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control price" name="price[]" data-counter="' +
+    count +
+    '" id="price_' +
+    count +
+    '" min="0" value="0">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<span id="span_total_' +
+    count +
+    '">0.00</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
+    "</td>\n" +
+    "</tr> ";
+
+  $("#table_body_option2").append(html);
+});
+
+$(document).on("click", "#add_another_bundle1", function (e) { 
+  e.preventDefault();
+  var count = parseInt($("#count").val()) + 1;
+  $("#count").val(count);
+
+  var html =
+    "<tr>\n" +
+    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
+    "<td>\n" +
+    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
+    count +
+    '" id="quantity_' +
+    count +
+    '" value="1">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control price" name="price[]" data-counter="' +
+    count +
+    '" id="price_' +
+    count +
+    '" min="0" value="0">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<span id="span_total_' +
+    count +
+    '">0.00</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
+    "</td>\n" +
+    "</tr> ";
+
+  $("#table_body_bundle1").append(html);
+});
+
+$(document).on("click", "#add_another_bundle2", function (e) { 
+  e.preventDefault();
+  var count = parseInt($("#count").val()) + 1;
+  $("#count").val(count);
+
+  var html =
+    "<tr>\n" +
+    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
+    "<td>\n" +
+    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
+    count +
+    '" id="quantity_' +
+    count +
+    '" value="1">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control price" name="price[]" data-counter="' +
+    count +
+    '" id="price_' +
+    count +
+    '" min="0" value="0">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<span id="span_total_' +
+    count +
+    '">0.00</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
+    "</td>\n" +
+    "</tr> ";
+
+  $("#table_body_bundle2").append(html);
 });
 
 $(document).on("click", "#add_another_zone", function (e) {
@@ -519,4 +659,104 @@ $(document).ready(function () {
   //     "removeformat | help",
   //   content_css: "//www.tiny.cloud/css/codepen.min.css",
   // });
+});
+
+$(document).on("click", "#add_another_new_invoice", function (e) {
+  e.preventDefault();
+  var count = parseInt($("#count").val()) + 1;
+  $("#count").val(count);
+
+  var html =
+    "<tr>\n" +
+    "<td>\n" +
+    '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
+    "</td>\n" +
+    '<td><select name="item_type[]" class="form-control"><option value="service">Service</option><option value="material">Material</option><option value="product">Product</option></select></td>\n' +
+    "<td>\n" +
+    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
+    count +
+    '" id="quantity_' +
+    count +
+    '" value="1">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control price" name="price[]" data-counter="' +
+    count +
+    '" id="price_' +
+    count +
+    '" min="0" value="0">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control discount" name="discount[]" data-counter="' +
+    count +
+    '" id="discount_' +
+    count +
+    '" min="0" value="0.00" readonly>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="hidden" class="form-control tax" name="tax[]" data-counter="' +
+    count +
+    '" id="tax_' +
+    count +
+    '" min="0" value="0">\n' +
+    '<span id="span_tax_' +
+    count +
+    '">0.00 (7.5%)</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="hidden" class="form-control total" name="total[]" data-counter="' +
+    count +
+    '" id="total_' +
+    count +
+    '" min="0" value="0">\n' +
+    '<span id="span_total_' +
+    count +
+    '">0.00</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<a href="#" class="remove"><span class="fa fa-trash" /></a>\n' +
+    "</td>\n" +
+    "</tr> ";
+
+  $("#table_body_new").append(html);
+});
+
+// signature for Technician
+$("#smoothed1a").signaturePad({
+  drawOnly: true,
+  drawBezierCurves: true,
+  lineTop: 200,
+});
+$("#company_representative_approval_signature1a").on("click touchstart",
+  function () {
+    var canvas = document.getElementById(
+      "company_representative_approval_signature1a"
+    );
+    var dataURL = canvas.toDataURL("image/png");
+    $("#saveCompanySignatureDB1a").val(dataURL);
+  }
+);
+
+// signature for Technician
+$("#smoothed2a").signaturePad({
+  drawOnly: true,
+  drawBezierCurves: true,
+  lineTop: 200,
+});
+$("#primary_account_holder_signature2a").on("click touchstart", function () {
+  var canvas = document.getElementById("primary_account_holder_signature2a");
+  var dataURL = canvas.toDataURL("image/png");
+  $("#savePrimaryAccountSignatureDB2a").val(dataURL);
+});
+
+// signature for Technician
+$("#smoothed3a").signaturePad({
+  drawOnly: true,
+  drawBezierCurves: true,
+  lineTop: 200,
+});
+$("#secondary_account_holder_signature3a").on("click touchstart", function () {
+  var canvas = document.getElementById("secondary_account_holder_signature3a");
+  var dataURL = canvas.toDataURL("image/png");
+  $("#saveSecondaryAccountSignatureDB3a").val(dataURL);
 });

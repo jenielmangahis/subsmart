@@ -11,7 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     padding-bottom: 20px;
     margin-bottom: 20px;
     background: #f2f2f2;
-     padding: 0px !important; 
+     padding: 0px !important;
     margin: 0;
     /* margin-bottom: 20px; */
     /* border-radius: 8px; */
@@ -32,31 +32,41 @@ defined('BASEPATH') or exit('No direct script access allowed');
     color: #8f8f8f;
     display: none;
 }
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0px !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
 </style>
 <div class="wrapper" role="wrapper">
 
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Edit Credit Note</h1>                        
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('credit_notes') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Credit Note List
-                                    </a>
-                                <?php //endif ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="container-fluid p-40">
             <!-- end row -->
             <?php echo form_open_multipart('credit_notes/update', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <input type="hidden" name="cid" value="<?= $creditNote->id; ?>">
@@ -66,10 +76,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <div class="row custom__border">
                 <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 form-group">
+                    <div class="card p-20">
+                        <div>
+                            <div class="row align-items-center">
+                              <div class="col-sm-6">
+                                  <h3 class="page-title mt-0">Edit Credit Note</h3>
+                              </div>
+                              <div class="col-sm-6">
+                                  <div class="float-right d-none d-md-block">
+                                      <div class="dropdown">
+                                          <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                              <a href="<?php echo base_url('credit_notes') ?>" class="btn btn-primary"
+                                                 aria-expanded="false">
+                                                  <i class="mdi mdi-settings mr-2"></i> Go Back to Credit Note List
+                                              </a>
+                                          <?php //endif ?>
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="row mt-4">
+                              <div class="col-md-6 form-group">
                                     <label for="customers">Customer</label>
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option></option>
@@ -155,12 +182,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <td>
                                                     <a href="javascript:void(0);" class="btn-set-discount" data-id="<?= $row_counter; ?>">
                                                         <span class="form-control-block">
-                                                            <span class="discount-<?= $row_counter; ?>"><?= number_format($ci->discount,2); ?></span>                                                        
-                                                        </span>    
-                                                        <input type="hidden" class="form-control discount" name="discount[]" data-counter="<?= $row_counter; ?>" id="discount_<?= $row_counter; ?>" value="<?= $ci->discount; ?>" readonly>                             
-                                                        <i class="item-link-sm">set discount</i>                   
+                                                            <span class="discount-<?= $row_counter; ?>"><?= number_format($ci->discount,2); ?></span>
+                                                        </span>
+                                                        <input type="hidden" class="form-control discount" name="discount[]" data-counter="<?= $row_counter; ?>" id="discount_<?= $row_counter; ?>" value="<?= $ci->discount; ?>" readonly>
+                                                        <i class="item-link-sm">set discount</i>
                                                     </a>
-                                                    
+
                                                 </td>
                                                 <td>
                                                     <input type="hidden" name="tax[]" id="tax_<?= $row_counter; ?>" value="<?= $ci->tax; ?>">
@@ -195,12 +222,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td>
                                                 <a href="javascript:void(0);" class="btn-set-discount" data-id="0">
                                                     <span class="form-control-block">
-                                                        <span class="discount-0">0.00</span>                                                        
-                                                    </span>    
-                                                    <input type="hidden" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" value="0"readonly>                             
-                                                    <i class="item-link-sm">set discount</i>                   
+                                                        <span class="discount-0">0.00</span>
+                                                    </span>
+                                                    <input type="hidden" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" value="0"readonly>
+                                                    <i class="item-link-sm">set discount</i>
                                                 </a>
-                                                
+
                                             </td>
                                             <td>
                                                 <input type="hidden" name="tax[]" id="tax_0" value="">
@@ -238,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td class="d-flex align-items-center">
                                                 <input type="text" value="0.00" name="total_discount" id="total_discount" readonly class="form-control">
                                             </td>
-                                        </tr>                                        
+                                        </tr>
                                         <tr>
                                             <td><input type="text" class="form-control" value="<?= $creditNote->adjustment_name; ?>" name="adjustment_name" placeholder="Adjustment"></td>
                                             <td class="d-flex align-items-center">
@@ -270,7 +297,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <button type="submit" class="btn btn-flat btn-primary">Save as Draft</button>
@@ -320,7 +347,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <p class="margin-bottom">Set fixed or percent discount. Input 0 to remove the discount.</p>
                             <form name="discount-modal-form" class="discount-form">
                                 <input type="hidden" id="row-id" value="0">
-                                <input type="hidden" id="discount-type" value="percent"> 
+                                <input type="hidden" id="discount-type" value="percent">
                                 <div class="form-inline">
                                     <div class="btn-group margin-right-sec" role="group">
                                         <button class="btn btn-primary" type="button" name="discount_type_percent">%</button>
@@ -369,7 +396,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <!-- end container-fluid -->
     </div>
-    
+
         <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper end -->
 </div>
@@ -409,7 +436,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           calculation(count);
           addAdjustment();
         });
-        
+
         <?php if($total_items > 0){ ?>
             calculation("<?= $total_items; ?>");
         <?php } ?>
@@ -420,7 +447,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $(this).removeClass('btn-default');
 
             $('button[name="discount_type_amount"]').removeClass('btn-primary');
-            $('button[name="discount_type_amount"]').addClass('btn-default');            
+            $('button[name="discount_type_amount"]').addClass('btn-default');
         });
 
         $('button[name="discount_type_amount"]').click(function(){
@@ -430,13 +457,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $(this).removeClass('btn-default');
 
             $('button[name="discount_type_percent"]').removeClass('btn-primary');
-            $('button[name="discount_type_percent"]').addClass('btn-default');          
+            $('button[name="discount_type_percent"]').addClass('btn-default');
         });
 
         $(".btn-set-discount").click(function(){
             var row_id = $(this).attr("data-id");
 
-            $("#row-id").val(row_id);            
+            $("#row-id").val(row_id);
             $("#modalAddDiscount").modal('show');
         });
 
@@ -456,7 +483,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             }else{
                 var total_discount = 0;
             }
-            
+
             $("#discount_"+row_id).val(total_discount);
 
             calculation(row_id);
@@ -479,7 +506,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +
             "<td>\n" +
             '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
-            "</td>\n" +    
+            "</td>\n" +
             "<td>\n" +
             '<input type="hidden" class="form-control itemid" name="itemIds[]" id="itemid_' + count +'" value="0"><input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
             count +
@@ -517,7 +544,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $(".btn-set-discount").click(function(){
                 var row_id = $(this).attr("data-id");
 
-                $("#row-id").val(row_id);            
+                $("#row-id").val(row_id);
                 $("#modalAddDiscount").modal('show');
             });
         });

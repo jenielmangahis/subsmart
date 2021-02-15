@@ -8,47 +8,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 </style>
 <div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
+        <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Chart of Accounts</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Add Chart of Accounts</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">New Chart of account</h4>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h3>Account</h3>
+                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                            <?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                            <div class="row align-items-center">
+                                <div class="col-sm-12">
+                                    <h3 class="page-title">Chart of Accounts List</h3>
                                 </div>
+                                <div class="alert alert-warning mt-4 mb-4" role="alert">
+                                    <span style="color:black;">Affiliates partners are other professionals who refer new leads/clients to you. They are often Mortgage Brokers, Realtors, Auto Dealers, whose business depends upon having clients with good credit. Visit Affiliate Payments to set commission options and record payments for your affiliates. To see an overview of revenue from affiliates on your Afiliate Stats Dashboard. </span>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4 form-group">
                                      <label for="account_type">Account Type</label>
                                     <select name="account_type" id="account_type" class="form-control select2" required>
-                                        <option value="">Select Account Type</option>
-                                        <?php foreach ($this->account_model->get() as $row): ?>
+                                        <?php foreach ($this->account_model->getAccounts() as $row): ?>
                                             <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
                                         <?php endforeach ?>
                                     </select>
                                 </div>
-                                 <div class="col-md-4 form-group">
+                                <div class="col-md-4 form-group">
                                     <label for="name">Name</label>
                                     <input type="text" class="form-control" name="name" id="name" required
                                            placeholder="Enter Name"
@@ -59,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-4 form-group">
                                     <label for="detail_type">Detail Type</label>
                                     <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required>
-                                        <?php foreach ($this->account_detail_model->get() as $row_detail): ?>
+                                        <?php foreach ($this->account_detail_model->getDetailTypesById(1) as $row_detail): ?>
                                             <option value="<?php echo $row_detail->acc_detail_id ?>" ><?php echo $row_detail->acc_detail_name ?></option>
                                         <?php endforeach ?>
                                     </select>
@@ -96,7 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 form-group"></div>
+                                <div class="col-md-4"></div>
                                 <div class="col-md-4 form-group hide-div" style="display: none;">
                                      <label for="balance">Balance</label>
                                     <input type="text" class="form-control" name="balance" id="balance" required
@@ -105,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 form-group"></div>
+                                <div class="col-md-4"></div>
                                 <div class="col-md-4 form-group hide-date" style="display: none;">
                                      <label for="time_date">Date</label>
                                      <div class="col-xs-10 date_picker">
@@ -116,26 +107,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit"  name="save" class="btn btn-flat btn-primary">Submit</button>
+                                    <button type="submit"  name="save" class="btn btn-flat btn-primary float-right">Submit</button>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <a href="<?php echo url('/accounting/chart_of_accounts') ?>" class="btn btn-flat btn-primary">Cancel</a>
                                 </div>
+                            </div>
+                            <?php echo form_close(); ?>
+                        </div>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                
                             </div>
                         </div>
                     </div>
                     <!-- end card -->
                 </div>
             </div>
-            <?php echo form_close(); ?>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<?php /*include viewPath('includes/footer');*/ ?>
+
+<!-- page wrapper end -->
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     $(document).ready(function () {

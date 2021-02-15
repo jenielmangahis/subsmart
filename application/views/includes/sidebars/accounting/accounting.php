@@ -30,6 +30,9 @@
    border: solid 2px #adff2f;
    color:#adff2f;
    }
+   #sidebar{
+       z-index: 999;
+   }
 </style>
 <nav id="sidebar" class="navbar-side">
    <ul class="nav sidebar-accounting">
@@ -72,9 +75,11 @@
                             <h4>CUSTOMERS</h4>
 
                             <ul>
-                                <li><a href="#" class="ajax-modal_invoice" data-toggle="modal" data-target="#addinvoiceModal">Invoice</a></li>
+                                <!-- <li><a href="#" class="ajax-modal_invoice" data-toggle="modal" data-target="#addinvoiceModal">Invoice</a></li> -->
+                                <li><a href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a></li>
                                 <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a></li>
-                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li>
+                                <!-- <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li> -->
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#newJobModal">Estimate</a></li>
                                 <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addcreditmemoModal">Credit memo</a></li>
                                 <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addsalesreceiptModal">Sales receipt</a></li>
                                 <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addrefundreceiptModal">Refund receipt</a></li>
@@ -143,6 +148,7 @@
 <?php // include viewPath('accounting/journal_entry_modal'); ?>
 
 
+<div><?php include viewPath('accounting/estimate_one_modal'); ?></div>
 <div><?php include viewPath('accounting/vendors_modal'); ?></div>
 
 <div><?php include viewPath('accounting/customer_invoice_modal'); ?></div>
