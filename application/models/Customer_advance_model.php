@@ -7,6 +7,12 @@ class Customer_advance_model extends MY_Model {
     public function __construct() {
         parent::__construct();
     }
+    
+    public function getModulesList()
+    {
+        return $this->db->get('ac_modules')->result();
+    }
+    
     public function add($input,$tablename)
     {
         if ($this->db->insert($tablename, $input)) {

@@ -7,6 +7,7 @@ class Customer extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
         //$this->load->model('Customer_model', 'customer_model');
@@ -33,8 +34,21 @@ class Customer extends MY_Controller
 
         //error_reporting(0);
     }
+    
+    
+    public function getModulesList()
+    {
+        $user_id = logged('id');
+        $this->load->library('wizardlib');
+        
+        $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+        $this->page_data['widgets'] = $this->customer_ad_model->getModulesList();
+        $this->load->view('customer/adv_cust_modules/add_module_details', $this->page_data);
+    }
+    
     public function index()
     {
+        $this->load->library('wizardlib');
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
@@ -69,7 +83,7 @@ class Customer extends MY_Controller
         //$this->session->unset_userdata('customer_data_session');
 
         if(isset($userid) || !empty($userid)){
-//            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
 //            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
 //            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
 //            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
@@ -78,6 +92,7 @@ class Customer extends MY_Controller
 //            $this->page_data['minitab'] = $this->uri->segment(5);
 //            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
 
             if($this->uri->segment(5) == "mt3-cdl"){
                 $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';

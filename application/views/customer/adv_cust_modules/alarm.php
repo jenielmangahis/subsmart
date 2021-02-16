@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="alarm module_med ui-state-default" id="alarm">
-    <h5></h5>
+<div class="alarm module_med ui-state-default"  id="<?= $id ?>">
     <div class="col-sm-12">
+        <h6></h6>
         <div class="row">
             <div class="col-sm-6">
                 <div class="contacttext">

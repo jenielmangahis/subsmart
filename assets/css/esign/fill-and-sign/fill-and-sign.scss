@@ -249,6 +249,7 @@ body {
     padding-top: 0;
     padding-bottom: 0;
     box-shadow: none !important;
+    color: #000 !important;
 
     &::-webkit-input-placeholder {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -290,13 +291,35 @@ body {
     }
   }
 
-  &__signatureDraw {
+  &__signatureContainer {
     border: 1px solid #e2e2e2;
 
     &.ui-draggable-dragging {
       background-color: #ffeb3b;
       cursor: move;
     }
+  }
+
+  &__signatureContainer {
+    &:hover {
+      .fillAndSign__signatureClose {
+        display: flex;
+      }
+    }
+  }
+
+  &__signatureClose {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: -30px;
+    background-color: #dc3545;
+    color: #fff;
+    cursor: pointer;
   }
 
   .action--draggable.action--hasField {

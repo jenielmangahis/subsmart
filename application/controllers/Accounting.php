@@ -67,7 +67,7 @@ class Accounting extends MY_Controller {
                 array('/accounting/banking',array()),
                 array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimates','/accounting/customers','/accounting/deposits','/accounting/NewworkOrder','/accounting/addnewInvoice', 'credit_notes')),
+                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/addnewInvoice', 'credit_notes')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
                 array("",	array('#','#')),
@@ -216,14 +216,13 @@ class Accounting extends MY_Controller {
 
         $tags = $this->tags_model->addtagGroup($new_data);
 
-        if ($tags != null){
-            $this->session->set_flashdata('tags_added','New rules added');
-            redirect('accounting/tags');
-        }else{
-            $this->session->set_flashdata('tags_failed','Rules name already exist.');
-            redirect('accounting/tags');
-        }
+        $return = [
+            'data' => $tags,
+            'success' => $tags !== null ? true : false,
+            'message' => $tags !== null ? 'Success' : 'Error'
+        ];
 
+        echo json_encode($return);
     }
 
     public function addTags(){
@@ -3798,6 +3797,100 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data);
         $this->load->view('accounting/NewworkOrder', $this->page_data);
+    }
+
+    public function listworkOrder(){
+        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->page_data['page_title'] = "Work Order List";
+        // print_r($this->page_data);
+        $is_allowed = $this->isAllowedModuleAccess(24);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'workorder';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $is_allowed = $this->isAllowedModuleAccess(24);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'workorder';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $role = logged('role');
+        $this->page_data['workorderStatusFilters'] = array ();
+        $this->page_data['workorders'] = array ();
+        // $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
+        if ($role == 2 || $role == 3) {
+            $company_id = logged('company_id');
+
+            if (!empty($tab_index)) {
+                $this->page_data['tab_index'] = $tab_index;
+                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
+            } else {
+
+                // search
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+                } elseif (!empty(get('order'))) {
+
+                    $this->page_data['search'] = get('search');
+                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+
+                } else {
+
+                    // $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
+                }
+            }
+
+            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
+        }
+        if ($role == 4) {
+
+            if (!empty($tab_index)) {
+
+                $this->page_data['tab_index'] = $tab_index;
+                // $this->page_data['workorders'] = $this->workorder_model->filterBy();
+
+            } elseif (!empty(get('order'))) {
+
+                $this->page_data['order'] = get('order');
+                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+
+            } else {
+
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+                } else {
+                    // $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
+                }
+            }
+
+            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
+        }
+
+        // unserialized the value
+
+        $statusFilter = array();
+        foreach ($this->page_data['workorders'] as $workorder) {
+
+            if (is_serialized($workorder)) {
+
+                $workorder = unserialize($workorder);
+            }
+        }
+        $this->load->view('accounting/work_order_list', $this->page_data);
+    }
+
+    public function newEstimateList(){
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Estimate Lists";
+        // print_r($this->page_data);
+        $this->load->view('accounting/estimatesList', $this->page_data);
     }
 
 }

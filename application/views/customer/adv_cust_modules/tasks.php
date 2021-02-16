@@ -1,8 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="tasks module ui-state-default" id="tasks">
-    <div class="col-sm-12">
+<div class="tasks module ui-state-default"  id="<?= $id ?>">
+    <div class="col-sm-12 individual-module">
+        <h6>Tasks</h6>
         <div class="row">
             <div class="normaltext1" id="client_reminders_div" style="margin-left: -7px;">
                 <!--Added by akshay on 05-10-2016 end-->
@@ -75,7 +76,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                     </div>
 
-                    <div id="client-portal" class="tabcontent" style="display: ;width: 432px;">
+                    <div id="client-portal" class="tabcontent" style="width: 432px;">
                         <div style=" overflow-y: auto; height: 91px; width: 100%;">
                             <table class="odd-even-table" width="100%" border="0" cellspacing="0" cellpadding="0">
 
