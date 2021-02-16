@@ -165,4 +165,75 @@ class FillAndSign extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['success' => true]);
     }
+
+    public function storeSignature()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $coordinates = json_encode($payload['coordinates']);
+        $documentPage = $payload['document_page'];
+        $documentId = $payload['document_id'];
+        $value = $payload['value'];
+        $uniqueKey = $payload['unique_key'];
+        $userId = logged('id');
+
+        $this->db->where('user_id', $userId);
+        $this->db->where('document_id', $documentId);
+        $this->db->where('unique_key', $uniqueKey);
+        $record = $this->db->get('fill_and_sign_documents_signatures')->row();
+
+        if (is_null($record)) {
+            $this->db->insert('fill_and_sign_documents_signatures', [
+                'coordinates' => $coordinates,
+                'document_page' => $documentPage,
+                'document_id' => $documentId,
+                'value' => $value,
+                'unique_key' => $uniqueKey,
+                'user_id' => $userId,
+            ]);
+        } else {
+            $this->db->where('id', $record->id);
+            $this->db->update('fill_and_sign_documents_signatures', [
+                'coordinates' => $coordinates,
+                'document_page' => $documentPage,
+                'document_id' => $documentId,
+                'value' => $value,
+                'unique_key' => $uniqueKey,
+            ]);
+        }
+
+        echo json_encode(['success' => true]);
+    }
+
+    public function getSignatures($documentId)
+    {
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('document_id', $documentId);
+        $records = $this->db->get('fill_and_sign_documents_signatures')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['signatures' => $records]);
+    }
+
+    public function deleteSignature($uniqueKey)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('unique_key', $uniqueKey);
+        $this->db->delete('fill_and_sign_documents_signatures');
+
+        header('content-type: application/json');
+        echo json_encode(['success' => true]);
+    }
 }

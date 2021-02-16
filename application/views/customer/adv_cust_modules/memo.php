@@ -1,8 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="memos module ui-state-default" id="memo">
-    <div class="col-sm-12">
+<div class="memos module ui-state-default"   id="<?= $id ?>">
+    <div class="col-sm-12 individual-module">
+        <h6>Memo</h6>
         <div class="row">
             <div id="momo_edit_btn" class="pencil" >
                 <?= isset($profile_info) ? $profile_info->notes : ''; ?>

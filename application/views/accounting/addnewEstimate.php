@@ -49,6 +49,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div style="background-color:white; width:100%;padding:.5%;">
                     Submit your estimate. Include a breakdown of all costs for this job.
                 </div>
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
+                Our standard estimate form is carefully design with quantity takeoff of each items.  With a clear break down of the items to be included in each project, this will insure a higher acceptance rate.  Try our options form layout if you wish to give your customers a choice of multiple projects. 
+                </div>
 
             </div>
             <!-- end row -->

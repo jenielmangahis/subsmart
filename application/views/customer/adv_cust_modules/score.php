@@ -1,8 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="score module ui-state-default" id="score">
-    <div class="col-sm-12">
+<div class="score module ui-state-default" id="<?= $id ?>">
+    <div class="col-sm-12 individual-module">
+        <h6>Scores</h6>
         <div class="row">
             <div class="storescontent" id="storescontent">
 

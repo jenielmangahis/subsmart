@@ -49,6 +49,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div style="background-color:white; width:100%;padding:.5%;">
                     Submit your estimate. Include a breakdown of all costs for this job.
                 </div>
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
+                This form is also known as a bundle estimate.  With each bundle of valued items in each project package, your prospect will have an extra incentives for choosing to do both plans you have layout for them.  Under each listing of stages or project your have a description section to help your prospect make an informed decision.  We added a bundle discount to help make your next group project have that exception value each prospect have grown to love.   
+                </div>
 
             </div>
             <!-- end row -->
