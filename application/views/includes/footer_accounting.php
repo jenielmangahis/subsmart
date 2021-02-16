@@ -88,10 +88,6 @@ function sum_values(){
 		$('.to-hide-div').show();
 	});
 // });
-$('#e2').on('click', function(){
-    var title = $(this).val();
-    $(this).css('background-color', title);
-});
 
 $('.ajax-modal_invoice').click(function(e){
   e.preventDefault(); 

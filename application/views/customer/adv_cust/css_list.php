@@ -104,8 +104,22 @@
     .profile {
         /**background-color: #a4508b;
         background-image: linear-gradient(326deg, #a4508b 0%, #5f0a87 74%); */
-        background-image: url('<?= base_url() ?>/assets/img/customer/profile2.png') !important;
+        // background-image: url('<?= base_url() ?>/assets/img/customer/profile2.png') !important;
     }
+    .individual-module h6 {
+        transform: rotate(-90deg);
+        width: 190px;
+        text-align: center;
+        background: #34203f;
+        padding: 5px;
+        position: absolute;
+        float: left;
+        left: -120px;
+        top: 58px;
+        color: white;
+        border-radius: 10px 10px 0px 0;
+    }
+
     .customizable {
         background-image: url('/assets/img/customer/customizable.png') !important;
     }
@@ -137,7 +151,7 @@
         background-image: url('/assets/img/customer/client.png') !important;
     }
     .score {
-        background-image: url('/assets/img/customer/scores.png') !important;
+        /*background-image: url('/assets/img/customer/scores.png') !important;*/
     }
     .documents {
         background-image: url('/assets/img/customer/documents.png') !important;
@@ -399,32 +413,32 @@
     }
 
     @media (max-width: 767px) {
-      .client, .project {
-          height: auto !important;
-          width: 100% !important;
-          padding: 30px 30px;
-          margin-bottom: 40px;
-      }
-      div.ui-state-default div a {
-          margin-left: 16px;
-      }
-      table.widget_client {
-          position: relative;
-          right: 25px;
-      }
-      div#chart_column, .contactrighttxt {
-          position: relative;
-          left: 20px;
-      }
-      .assigncontactlist.normaltext1 img {
-          margin: 0 auto;
-      }
-      div.ui-state-default {
-          padding: 30px 10px;
-          clear: both;
-          margin-bottom: 40px;
-          height: auto;
-      }
+        .client, .project {
+            height: auto !important;
+            width: 100% !important;
+            padding: 30px 30px;
+            margin-bottom: 40px;
+        }
+        div.ui-state-default div a {
+            margin-left: 16px;
+        }
+        table.widget_client {
+            position: relative;
+            right: 25px;
+        }
+        div#chart_column, .contactrighttxt {
+            position: relative;
+            left: 20px;
+        }
+        .assigncontactlist.normaltext1 img {
+            margin: 0 auto;
+        }
+        div.ui-state-default {
+            padding: 30px 10px;
+            clear: both;
+            margin-bottom: 40px;
+            height: auto;
+        }
     }
 
     @media only screen and (max-width: 600px) {

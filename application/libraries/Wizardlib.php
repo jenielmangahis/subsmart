@@ -27,6 +27,13 @@ class Wizardlib extends MY_Controller {
         $ci->load->view('widgets/streetview', $data);
     }
     
+    function getModuleById($id)
+    {
+       $ci = &get_instance();
+       $ci->load->model('Customer_advance_model', 'customer_ad_model');
+       return $ci->customer_ad_model->get_data_by_id('ac_id',$id,"ac_modules");
+    }
+    
     function isWidgetMain($widget_id)
     {
         $user_id = logged('id');

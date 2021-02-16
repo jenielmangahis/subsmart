@@ -862,7 +862,7 @@ class Register extends MY_Controller {
 
     }
 
-    public function converge_payment_redirect()
+    public function converge_success_payment()
     {
         echo "<pre>";
         print_r($_POST);

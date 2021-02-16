@@ -311,6 +311,30 @@ $(document).ready(function () {
         span.addClass('hide');
     });
 
+    $(document).on('change', '#e2', function(){
+        var title = $(this).val();
+        $(this).css('background-color', title);
+    });
+
+    $(document).on('submit', '#tags_group_form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(document.getElementById('tags_group_form'));
+
+        $.ajax({
+            url: '/accounting/addTagsGroup',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                $('#tags_group_form').addClass('hide');
+                $('table#tags-group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span></td></tr>`);
+                $('table#tags-group').removeClass('hide');
+            }
+        });
+    })
+
     $(document).on('click', '#deleteGroup, #deleteTag', function(e) {
         var id = $(this).parent().parent().data('id');
         var type = $(this).parent().parent().data('type');
