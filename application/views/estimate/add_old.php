@@ -1,44 +1,38 @@
-<style>
-.page-title, .box-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-  padding-top: 5px;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.p-20 {
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/estimate'); ?>
-
+   
 
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title">Submit Standard Estimate</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
+                                for this job.
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="float-right d-none d-md-block">
+                            <div class="dropdown">
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                    <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary"
+                                       aria-expanded="false">
+                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
+                                    </a>
+                                <?php //endif ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- end row -->
             <?php echo form_open_multipart('estimate/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <style>
@@ -46,28 +40,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </style>
             <div class="row custom__border">
                 <div class="col-xl-12">
-                    <div class="card mt-0 p-20">
-                        <div>
-                          <div class="row">
-                            <div class="col-sm-6 left">
-                              <h3 class="page-title mt-0">Submit Standard Estimate</h3>
-                            </div>
-                            <div class="col-sm-6 right dashboard-container-1">
-                              <div class="float-right d-none d-md-block">
-                                  <div class="dropdown">
-                                      <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                          <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary"
-                                             aria-expanded="false">
-                                              <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
-                                          </a>
-                                      <?php //endif ?>
-                                  </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="alert alert-warning mt-1 mb-4" role="alert">
-                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Submit your estimate. Include a breakdown of all costs for this job.</span>
-                          </div>
+                    <div class="card">
+                        <div class="card-body">
                             <div class="row">
 
                                 <div class="col-md-6 form-group">
@@ -97,7 +71,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Estimate#</label>
                                     <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>"
+                                           required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-4 form-group">
@@ -348,7 +322,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                               </div>
                             </div>
-
+                            
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <button type="submit" class="btn btn-flat btn-primary">Save</button>

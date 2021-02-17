@@ -131,11 +131,42 @@ class Customer extends MY_Controller
         $this->load->view('customer/leads', $this->page_data);
     }
 
-    public function ac_module_sort(){
+    public function ac_module_sort($id=NULL){
         //$user_id = logged('id');
+        $this->load->library('wizardlib');
         $input = $this->input->post();
         if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
-            echo "Module Sort Updated!";
+            $view = $this->wizardlib->getModuleById($id);
+            $data['id'] = $id;
+            $this->load->view($view->ac_view_link, $data);
+        }else{
+            echo "Error";
+        }
+    }
+    
+    private function removeItemString($string, $item)
+    {
+        $parts = explode(',', $string);
+        while(($i = array_search($item, $parts)) !== false){
+            unset($parts[$i]);
+        }
+        
+        return implode(',', $parts);
+    }
+
+    public function remove_module(){
+        $user_id = logged('id');
+        $this->load->library('wizardlib');
+        $details = post('ams_values');
+        $ams_id = post('ams_id');
+        $id = post('id');
+        
+        $mod_ids = $this->removeItemString($details, $id);
+        $input = array('ams_id'=>$ams_id,'ams_values' => $mod_ids);
+        
+        if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
+            $details = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+            echo $details->ams_values;
         }else{
             echo "Error";
         }
@@ -1550,7 +1581,6 @@ class Customer extends MY_Controller
                     'status' => 'success'
 
                 )
-
             ));
 
         } else {

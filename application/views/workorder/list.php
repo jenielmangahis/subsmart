@@ -10,16 +10,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="container-fluid" style="font-size:14px;">
                 <div class="row">
                     <div class="col">
-                        <h1 class="m-0">Work Orders</h1>
+                        <h3 class="m-0">Work Orders</h3>
+                    </div>
+                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.  
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px;">
+                    <div class="col">
+                        <!-- <h1 class="m-0">Work Orders</h1> -->
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
                              <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
                             </a>
-                            <a class="btn btn-primary btn-md" href="<?php echo base_url('/workorder/add') ?>">
+                            <!-- <a class="btn btn-primary btn-md" href="<?php echo base_url('/workorder/add') ?>">
                                 <span class="fa fa-plus"></span> &nbsp; New Work Order
-                            </a>
+                            </a> -->
+                            <a href="#" class=" btn-primary btn-md" data-toggle="modal" data-target="#workordermodal"><span class="fa fa-plus"></span> &nbsp; New Work Order</a>
                         </div>
                     </div>
                 </div>
@@ -369,6 +378,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
-    <!-- page wrapper end -->
+    
+    
+<div class="modal fade" id="workordermodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New Work Order</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body text-center">
+                <p class="text-lg margin-bottom">
+                    What type of Work Order you want to create
+                </p><center>
+                <div class="margin-bottom text-center" style="width:60%;">
+                    <div class="help help-sm">Create new work Order</div>
+                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/add_new') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                </div>
+                <div class="margin-bottom" style="width:60%;">
+                    <div class="help help-sm">Existing Work Order</div>
+                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="#"><span class="fa fa-list-ul fa-margin-right"></span> Existing </a>
+                </div></center>
+        </div>
+    </div>
+</div>   
+
+ <!-- page wrapper end -->
     <?php include viewPath('includes/footer'); ?>
 </div>

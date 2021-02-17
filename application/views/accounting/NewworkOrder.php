@@ -44,7 +44,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('workorder/save', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
 
             <div class="row" style="margin-top:-30px;">
                 <div class="col-xl-12">
@@ -75,59 +75,59 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </select>
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="street_address">Security Number</label>
-                                <input type="text" class="form-control" name="street_address" id="street_address"/>
+                                <label for="security_number">Security Number</label>
+                                <input type="text" class="form-control" name="security_number" id="security_number" placeholder="xxx-xx-xxxx" required/>
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="contact_name">Birth Date</label>
-                                <input type="text" class="form-control" name="contact_name" id="contact_name" required  />
+                                <label for="birthdate">Birth Date</label>
+                                <input type="text" class="form-control" name="birthdate" id="birthdate"  placeholder="mm/dd/yy" required/>
                             </div>
                         </div>
                         <div class="row">                   
                             <div class="col-md-3 form-group">
-                                <label for="contact_name">Phone Number</label>
-                                <input type="text" class="form-control" name="contact_name" id="contact_name" required  />
+                                <label for="phone_no">Phone Number</label>
+                                <input type="text" class="form-control" name="phone_no" id="phone_no" required  />
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="contact_email">Mobile Number</label>
-                                <input type="text" class="form-control" name="contact_name" id="contact_name" required  />
+                                <label for="mobile_no">Mobile Number</label>
+                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" required  />
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="contact_name">Email</label>
-                                <input type="email" class="form-control" name="contact_name" id="contact_name" required  />
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" name="email" id="email" required  />
                             </div>
                         </div>
                         
                         <!-- end row -->
                         <div class="row">                    
                             <div class="col-md-3 form-group">
-                                <label for="contact_mobile">Job Location</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label>
-                                <input type="text" class="form-control" name="contact_mobile" id="contact_mobile" required/>
+                                <label for="job_location">Job Location</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label>
+                                <input type="text" class="form-control" name="job_location" id="job_location" required/>
                             </div>
                             <div class="col-md-3 form-group">
-                                <label class="checkbox-inline">
+                                <label for="city">
                                     City
                                 </label>
-                                    <input type="text" class="form-control" name="" id="" />
+                                    <input type="text" class="form-control" name="city" id="city" />
                             </div>
                             <div class="col-md-2 form-group">
-                                <label class="checkbox-inline">
+                                <label for="state">
                                     State
                                 </label>
-                                    <input type="text" class="form-control" name="" id="" />
+                                    <input type="text" class="form-control" name="state" id="state" />
                             </div>
                             <div class="col-md-1 form-group">
-                                <label class="checkbox-inline">
+                                <label for="zip">
                                     Zip code
                                 </label>
-                                    <input type="text" class="form-control" name="" id="" />
+                                    <input type="text" class="form-control" name="zip" id="zip" />
                             </div>
                             
                             <div class="col-md-3 form-group">
-                                <label class="checkbox-inline">
+                                <label for="cross_street">
                                     Cross Street
                                 </label>
-                                    <input type="text" class="form-control" name="" id="" />
+                                    <input type="text" class="form-control" name="cross_street" id="cross_street" />
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -146,7 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                         <div class="row">                   
                             <div class="col-md-4 form-group">
-                                <label for="contact_phone">Password</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <label for="contact_phone">Password</label> <i class="fa fa-pencil" aria-hidden="true" ></i>
                                 <input type="text" class="form-control" name="contact_phone" id="contact_phone" placeholder="Password" />
                             </div>
                             <div class="col-md-4 form-group">

@@ -93,7 +93,7 @@ class Job extends MY_Controller
                 'is_active' => 1,
             ),
             'table' => 'items',
-            'select' => 'id,title,price',
+            'select' => 'id,title,price,units',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 
@@ -384,7 +384,7 @@ class Job extends MY_Controller
         $jobs_data = array(
             'job_number' => $job_number,
             'customer_id' => $input['customer_id'],
-            'employee_ids' => $input['employee_id'],
+            'employee_id' => $input['employee_id'],
             'employee2_id' => $input['employee2_id'],
             'employee3_id' => $input['employee3_id'],
             'employee4_id' => $input['employee4_id'],
@@ -462,6 +462,24 @@ class Job extends MY_Controller
             'company_id' => $comp_id
         );
         $this->general->add_($jobs_settings_data, 'job_settings');
+
+//        $events_data = array(
+//            'customer_id' => $input['customer_id'],
+//            'event_description' => $input['job_name'],
+//            'employee_id' => $input['employee_id'],
+//            'start_date' => $input['start_date'],
+//            'start_time' => $input['start_time'],
+//            'end_date' => $input['end_date'],
+//            'end_time' => $input['end_time'],
+//            'event_color' => $jobs_id,
+//            'customer_reminder_notification' => $jobs_id,
+//            'company_id' => $jobs_id,
+//            'description' => $jobs_id,
+//            'tags' => $jobs_id,
+//            'notify_at' => $jobs_id,
+//        );
+//        $this->general->add_($events_data, 'events');
+
         echo $jobs_id;
     }
 

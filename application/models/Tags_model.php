@@ -72,7 +72,7 @@ class Tags_model extends MY_Model
             $regroup[] = $tag;
         }
 
-        // return array_filter($regroup, fn($value) => !is_null($value) && $value !== '');
+        return array_filter($regroup, function ($value) { return !is_null($value) && $value !== ''; });
     }
 
     public function updateGroup() {

@@ -15,7 +15,7 @@ class Workorder extends MY_Controller
         parent::__construct();
 
         $this->checkLogin();
-
+        $this->load->model('accounting_invoices_model');
         $this->page_data['page']->title = 'Workorder Management';
 
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
@@ -269,6 +269,23 @@ class Workorder extends MY_Controller
         }
 
         $this->load->view('workorder/add2', $this->page_data);
+    }
+
+    public function add_new()
+    {
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        //}
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->load->view('workorder/add', $this->page_data);
     }
 
     public function addnew()

@@ -180,17 +180,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <tbody></tbody>
                                                     </table>
                                                     <h6>Add tags to this group</h6>
-                                                    <form>
+                                                    <form class="mb-3" id="tags_form">
                                                         <div class="form-row mb-3">
                                                             <div class="col-md-8">
                                                                 <label for="tag_name">Tag name</label>
-                                                                <input type="text" name="rules_name" id="tag_name" class="form-control">
+                                                                <input type="text" name="tag_name" id="tag_name" class="form-control">
                                                             </div>
                                                             <div class="col-md-4 d-flex align-items-end">
                                                                 <button class="btn btn-success w-100">Add</button>
                                                             </div>
                                                         </div>
                                                     </form>
+                                                    <table id="group-tags" class="table table-bordered mb-3 hide">
+                                                        <tbody></tbody>
+                                                    </table>
                                                     <hr>
                                                     <div class="form-group">
                                                         <label for="" style="position: relative;display: inline-block;">Put similar tags in the same group to get better reports. <a href="#">Find out more</a></label>
@@ -288,23 +291,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <h3 class="modal-title" id="myModalLabel2" >Create New Tag</h3>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
-                                            <form action="<?php echo site_url()?>accounting/addTags" method="post">
-                                            <div class="modal-body">
+                                            <form id="create-tag-form">
+                                                <div class="modal-body">
                                                     <div class="form-group">
-                                                            <label for="">Tag name</label>
-                                                            <input type="text" name="tag_name" class="form-control">
+                                                        <label for="">Tag name</label>
+                                                        <input type="text" name="tag_name" class="form-control">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="">Group</label>
-                                                        <select class="form-control" name="group_id" id="exampleFormControlSelect1">
+                                                        <select class="form-control" name="group_id" id="group-tags-select2">
                                                             <option></option>
                                                             <?php foreach ($tagsGroup as $group): ?>
                                                             <option value="<?= $group['id'] ?>"><?= $group['name'] ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
-
-                                            </div>
+                                                </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                                     <button type="submit" class="btn btn-success">Save</button>
@@ -349,6 +351,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     //DataTables JS
     $(document).ready(function() {
+        
         $('#rules_table').DataTable({
             searching:false,
             paging:false,

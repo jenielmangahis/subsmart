@@ -226,4 +226,19 @@ $colorPreviewFooter: #fff;
       }
     }
   }
+
+  &__header {
+    .vault__title {
+      font-family: Sarabun, sans-serif;
+      font-weight: 600;
+      margin: 0;
+      font-size: 28px;
+      color: #1e1e1e;
+    }
+
+    .alert-warning {
+      color: #f8b425;
+      background-color: #fdeac3;
+    }
+  }
 }
