@@ -1,4 +1,4 @@
-<?php
+1`<?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -412,6 +412,8 @@ class Credit_Notes extends MY_Controller
         $post = $this->input->post();
 
         if( count($post['customer_id']) > 0 && $post['mail_subject'] != '' && $post['mail_body'] != '' ){
+            $creditNote = $this->CreditNote_model->getById($post['cid']);
+
             //Email Sending     
             $server    = MAIL_SERVER;
             $port      = MAIL_PORT ;
@@ -419,10 +421,12 @@ class Credit_Notes extends MY_Controller
             $password  = MAIL_PASSWORD;
             $from      = MAIL_FROM;        
             $recipient = $post['customer_id'];
-            $subject   = $post['mail_subject']; 
-            $image     = $msg . "<br />" . '<img src="'.$url.'"/>';
-            $msg       = $post['mail_body'];
-            $url = base_url('/tracker/imageTracker/' . $eid);            
+            $subject   = $post['mail_subject'];
+            $eid = hashids_encrypt($creditNote->id, '', 15); 
+            //$url       = base_url('/tracker/imageTracker?id=' . $eid); 
+            $url       = 'https://nsmartrac.com/tracker/imageTracker?id=' . $eid;              
+            $msg       = $post['mail_body'];                    
+            $msg       = $msg . "<br />" . '<img src="'.$url.'"/>'; 
 
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;                         
@@ -438,19 +442,22 @@ class Credit_Notes extends MY_Controller
             $mail->From = $from; 
             $mail->FromName = 'NsmarTrac';
 
-            $mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');  
+            $mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');            
             /*foreach( $post['customer_id'] as $value ){
                 $mail->addAddress($value, $value);  
             }*/
-
-            if( count($post['email_bcc']) > 0 ){
-                $bcc = implode(",", $post['email_bcc']);
-                $mail->addBcc($bcc);
+            if( isset($post['email_bcc']) ){
+               if( count($post['email_bcc']) > 0 ){
+                    $bcc = implode(",", $post['email_bcc']);
+                    $mail->addBcc($bcc);
+                } 
             }
-
-            if( count($post['email_cc']) > 0 ){
-                $cc = implode(",", $post['email_cc']);
-                $mail->addCC($cc);
+            
+            if( isset($post['email_cc']) ){
+                if( count($post['email_cc']) > 0 ){
+                    $cc = implode(",", $post['email_cc']);
+                    $mail->addCC($cc);
+                }
             }
 
             $mail->isHTML(true);                          
@@ -461,10 +468,10 @@ class Credit_Notes extends MY_Controller
                 $this->session->set_flashdata('alert-type', 'danger');
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             }else {
-                $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
+                $this->CreditNote_model->update($creditNote->id, ['status' => $this->CreditNote_model->isSubmitted()]);
 
                 $this->session->set_flashdata('alert-type', 'success');
-                $this->session->set_flashdata('alert', 'Your estimate was successfully sent');
+                $this->session->set_flashdata('alert', 'Your credit note was successfully sent');
             }
         }else{
             $this->session->set_flashdata('alert-type', 'danger');
