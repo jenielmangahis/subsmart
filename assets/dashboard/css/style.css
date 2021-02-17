@@ -4579,7 +4579,9 @@ div#calender_toolbar h1 {
 }
 
 #topnav .topbar-main {
-    background: linear-gradient(to top, #c4daeb, #F0F8FF);
+    background: #c4daeb;
+    /* background: linear-gradient(to top, #c4daeb, #F0F8FF); */
+    background: linear-gradient(to right, rgb(107 239 253), rgb(35 194 255), rgb(107 239 253));
     border: none;
     border-bottom-color: currentcolor;
     border-bottom-style: none;
@@ -10574,7 +10576,7 @@ select#select-employee {
 .table-block .table thead th:last-child {
     border-right: none;
 }
-/* **** End Audit Page **** */ 
+/* **** End Audit Page **** */
 /**/
 
 .MuiButton-textPrimary:hover {

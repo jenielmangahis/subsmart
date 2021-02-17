@@ -1,25 +1,88 @@
+<style>
+ .but:hover {
+  font-weight: 900;
+  color:black;
+  }
+  .but-red:hover {
+  font-weight: 900;
+  color:red;
+  }
+  .required:after {
+  content:" *";
+  color: red;
+  }
+  button#dropdown-edit {
+      width: 100px;
+  }
+  .dropdown-toggle::after {
+      display: block;
+      position: absolute;
+      top: 54% !important;
+      right: 9px !important;
+  }
+  .page-title, .box-title {
+    font-family: Sarabun, sans-serif !important;
+    font-size: 1.75rem !important;
+    font-weight: 600 !important;
+    padding-top: 5px;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 10px;
+  }
+  .left {
+    float: left;
+  }
+  .p-40 {
+      padding-left: 25px !important;
+      padding-top: 55px !important;
+  }
+  a.btn-primary.btn-md {
+      height: 38px;
+      display: inline-block;
+      border: 0px;
+      padding-top: 7px;
+      position: relative;
+      top: 0px;
+  }
+  .card.p-20 {
+      padding-top: 25px !important;
+  }
+  .col.col-4.pd-17.left.alert.alert-warning.mt-0.mb-2 {
+      position: relative;
+      left: 13px;
+  }
+  .fr-right {
+    float: right;
+    justify-content: flex-end;
+  }
+  .p-20 {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+  }
+  .pd-17 {
+    position: relative;
+    left: 17px;
+  }
+  @media only screen and (max-width: 600px) {
+    .p-40 {
+      padding-top: 0px !important;
+    }
+    .pr-b10 {
+      position: relative;
+      bottom: 0px;
+    }
+  }
+</style>
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
-    
-<style>
-   .but:hover {
-    font-weight: 900;
-    color:black;
-    }
-    .but-red:hover {
-    font-weight: 900;
-    color:red;
-    }
-    .required:after {
-    content:" *";
-    color: red;
-    }
-   </style>
     <!-- page wrapper start -->
-    <div wrapper__section>
+    <div wrapper__section class="p-40">
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
@@ -44,23 +107,28 @@
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 
             <div class="row" style="margin-top:-30px;">
-                <div class="col-xl-12">
-                    <div class="card">
-                    <div class="card-body">
-                        <h4 class="mt-0 header-title mb-5">Header</h4>
-                        <div class="row">
+                <div class="col-xl-12 pl-0 pr-0">
+                    <div class="card pt-0">
+                    <div class="card-body pl-0 pr-0">
+                        <!-- <h4 class="mt-0 header-title mb-2">Header</h4 >-->
+                        <div class="row" style="padding: 0px 13px;">
+                            <div class="alert alert-warning mt-0 mb-4" role="alert">
+                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location).</span>
+                            </div>
+                            <!--
                             <div class="col-md-12">
                                 <ol class="breadcrumb" style="margin-top:-30px;">
                                     <li class="breadcrumb-item active">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location)</li>
                                 </ol>
                             </div>
+                            -->
                         </div>
                         <br>
 
-                        <div class="row">                   
+                        <div class="row">
                             <div class="col-md-3 form-group">
                                 <label for="contact_name">Work Order #</label>
                                 <input type="text" class="form-control" name="contact_name" id="contact_name" required autofocus />
@@ -83,7 +151,7 @@
                                 <input type="text" class="form-control" name="birthdate" id="birthdate"  placeholder="mm/dd/yy" required/>
                             </div>
                         </div>
-                        <div class="row">                   
+                        <div class="row">
                             <div class="col-md-3 form-group">
                                 <label for="phone_no">Phone Number</label>
                                 <input type="text" class="form-control" name="phone_no" id="phone_no" required  />
@@ -97,9 +165,9 @@
                                 <input type="email" class="form-control" name="email" id="email" required  />
                             </div>
                         </div>
-                        
+
                         <!-- end row -->
-                        <div class="row">                    
+                        <div class="row">
                             <div class="col-md-3 form-group">
                                 <label for="job_location">Job Location</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label>
                                 <input type="text" class="form-control" name="job_location" id="job_location" required/>
@@ -122,7 +190,7 @@
                                 </label>
                                     <input type="text" class="form-control" name="zip" id="zip" />
                             </div>
-                            
+
                             <div class="col-md-3 form-group">
                                 <label for="cross_street">
                                     Cross Street
@@ -140,11 +208,11 @@
                                 <input type="radio" name="customer_type" value="Commercial">Commercial
                                 </label>
                             </div>
-                        </div> 
+                        </div>
                         <div class="row">
                         </div>-->
 
-                        <div class="row">                   
+                        <div class="row">
                             <div class="col-md-4 form-group">
                                 <label for="contact_phone">Password</label> <i class="fa fa-pencil" aria-hidden="true" ></i>
                                 <input type="text" class="form-control" name="contact_phone" id="contact_phone" placeholder="Password" />
@@ -154,7 +222,7 @@
                                 <input type="text" class="form-control" name="suit" id="suit"/>
                             </div>
                         </div>
-                        <div class="row">     
+                        <div class="row">
                             <div class="col-md-4 form-group">
                                 <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="suit" id="suit"/>
@@ -164,7 +232,7 @@
                                 <input type="text" class="form-control" name="suit" id="suit"/>
                             </div>
                         </div>
-                        <div class="row">     
+                        <div class="row">
                             <div class="col-md-4 form-group">
                                 <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="suit" id="suit"/>
@@ -184,7 +252,7 @@
                                         <option value="<?php echo $key?>"><?php echo $val;?></option>
                                         <?php }?>
                                     </select>
-                            </div>                    
+                            </div>
                         </div> -->
                         <!-- <div class="row">
                             <div class=" col-md-9">
@@ -224,10 +292,10 @@
                                             <td>
                                                 <input type="number" class="form-control price" name="price[]" data-counter="0" id="price_0" min="0" value="0">
                                             </td>
-                                        </tr>                
+                                        </tr>
                                     </tbody>
                                     </table>
-                                    <a href="#" id="add_another_workOr" style="color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items</a>                                        
+                                    <a href="#" id="add_another_workOr" style="color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items</a>
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;font-size:16px;">
@@ -268,7 +336,7 @@
                                     <div class="work_nore">
                                         <h6>Checklist</h6>
                                         <p> You can set up a checklist for employees. </p>
-                                        
+
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#checklistModal">+Select Checklist</button>
                                     </div>
                                 </div>
@@ -279,30 +347,30 @@
                                         <h6>Assign To <span>(Optional)</span></h6>
                                     </div>
                                     <div class="col-md-12 form-group">
-                                        <div class="checbox_lable">                                      
+                                        <div class="checbox_lable">
                                             <?php //foreach($users as $row) { ?>
 
                                                 <label class="checkbox-inline">
                                                     <input type="checkbox" value="<?php e//cho $row->id;?>" name="assign_to[]" value="<?php //echo $row->id;?>"><?php// echo ucfirst($row->name);?>
-                                                </label> 
-                                            <?php }?> 
+                                                </label>
+                                            <?php }?>
                                         </div>
                                     </div>
-                                </div>                       
+                                </div>
                             <?php //}?>    -->
                             <br><br>
-                            <div class="row">                        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="start_date">Enter an offer code</label>
                                     <input type="text" class="form-control" name="start_date" id="start_date" />
-                                </div>    
+                                </div>
                                 <div class="form-group col-md-4">
                                     <br><button class="btn btn-success">VALIDATE</button>
-                                </div>                                     
+                                </div>
                             </div>
-                            
+
                             <h6>JOB DETAIL</h6><br>
-                            
+
                         <div class="row">
                             <div class="col-md-4 form-group">
                                 <label for="city">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
@@ -312,7 +380,7 @@
                                 </select>
                             </div>
                         </div>
-                            <!-- <div class="row">                        
+                            <!-- <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="start_date">Date Issued</label>
                                     <input type="text" class="form-control" name="start_date" id="start_date" />
@@ -321,21 +389,21 @@
                                     <label for="start_time">Job Type</label>
                                     <select class="form-control" name="start_time">
                                     </select>
-                                </div>                                           
+                                </div>
                             </div>
-                            <div class="row">                        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="end_date">Job Name</label>
                                     <input type="text" class="form-control" name="end_date" id="end_date" />
-                                </div>                                         
+                                </div>
                             </div>
-                            <div class="row">  
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="end_time">Job Description</label>
                                     <input type="text" class="form-control" name="end_time" id="end_time" />
-                                </div>                                           
+                                </div>
                             </div>
-                            <div class="row">                        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label>Customer Reminder Notification</label>
                                     <select name="custom_reminder" id="custom_reminder" class="form-control custom-select">
@@ -351,7 +419,7 @@
                                         <option value="2H">12 hours before</option>
                                         <option value="16H">16 hours before</option>
                                         <option value="1D">1 day before</option>
-                                        <option value="2D">2 days before</option>                   
+                                        <option value="2D">2 days before</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -359,9 +427,9 @@
                                     <div class="color_checkbox p-0">
                                         <input type="color" class="form-control" name="event_color" id="event_color" style="width: 85%;height: 30px !important;padding: 2px;"/>
                                     </div>
-                                </div>                                           
+                                </div>
                             </div> -->
-                            <div class="row">                        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Date Issued</label>
                                     <input type="text" class="form-control" name="date_issued" id="date_issued" required />
@@ -375,17 +443,17 @@
                                         <option value="Repair">Repair</option>
                                         <option value="Replace">Replace</option>
                                     </select>
-                                </div>                                           
+                                </div>
                             </div>
-                            <div class="row">                        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="job_name">Job Name</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name" required  autofocus />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="job_desc">Job Description</label>
-                                    <textarea name="job_desc" id="job_desc" cols="5" rows="2" class="form-control"></textarea> 
-                                </div>                                           
+                                    <textarea name="job_desc" id="job_desc" cols="5" rows="2" class="form-control"></textarea>
+                                </div>
                             </div>
 
                             <!-- ====== TERMS AND CONDITIONS ====== -->
@@ -435,7 +503,7 @@
                                 </div>
                             </div>
                             <br><br>
-                            <div class="row">                        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="workorder_status">Status</label>
                                     <select name="workorder_status" id="workorder_status" class="form-control custom-select">
@@ -455,17 +523,17 @@
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
                                         <option value="Standard">Standard</option>
-                                        <option value="Urgent">Urgent</option>                
+                                        <option value="Urgent">Urgent</option>
                                     </select>
-                                </div>                                           
+                                </div>
                             </div>
-                            
 
-                            <div class="row">                        
+
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="purchase_order">Purchase Order# (optional)</label>
-                                    <input type="text" class="form-control" name="purchase_order" id="purchase_order" /> 
-                                </div>                                        
+                                    <input type="text" class="form-control" name="purchase_order" id="purchase_order" />
+                                </div>
                             </div>
 
                             <!-- ====== TERMS OF USE ====== -->
@@ -487,11 +555,11 @@
                                 </div>
                             </div>
                             <br><br>
-                            <div class="row">        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="instructions">Instructions</label>
                                     <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control"></textarea>
-                                </div>                                           
+                                </div>
                             </div>
 
                              <!-- ====== SIGNATURE ====== -->
@@ -581,19 +649,19 @@
                             </div>
 
 
-                            <div class="row" style="margin-top:80px;">                        
+                            <div class="row" style="margin-top:80px;">
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
                                     <input type="file" class="form-control" name="attachment" id="attachment">
-                                </div>                                                                
+                                </div>
                             </div>
-                            <div class="row">                        
+                            <div class="row">
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Document Links</label>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
                                     <input type="file" class="form-control" name="attachment" id="attachment">
-                                </div>                                                                
+                                </div>
                             </div>
                         <div class="row">
                             <div class="col-md-12 form-group">
@@ -609,7 +677,7 @@
                 </div>
             </div>
             <div class="modal fade" id="checklistModal" role="dialog">
-                        <div class="modal-dialog">            
+                        <div class="modal-dialog">
                         <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-header">
@@ -623,7 +691,7 @@
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Add Selected</button>
                             </div>
-                        </div>                
+                        </div>
                     </div>
                 </div>
 
@@ -719,7 +787,7 @@
 
 
     $(document).ready(function () {
-        
+
 
 
         // phone type change, add the value to hiddend field and show the text

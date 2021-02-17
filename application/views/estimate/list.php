@@ -26,7 +26,7 @@ button#dropdown-edit {
     padding-top: 55px !important;
 }
 .card.p-20 {
-    padding-top: 15px !important;
+    padding-top: 25px !important;
 }
 .col.col-4.pd-17.left.alert.alert-warning.mt-0.mb-2 {
     position: relative;
@@ -68,35 +68,31 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card p-20">
             <div class="container-fluid pt-0 pl-0" style="font-size:14px;">
                 <div class="row">
-                    <div class="col">
-                        <h3 class="page-title">Estimates</h3>
+                    <div class="col-sm-6 left">
+                      <h3 class="page-title mt-0">Estimates</h3>
                     </div>
-                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                        Create an estimate when you want to give your customer a quote, bid, or proposal for work you plan to do. There are 3 forms of estimate:  standard, options and bundle (package)  The estimate can later be turned into a sales order or an invoice.  With this layout you will be able to monitor the status of each estimate. 
-                    </div>
-                </div>
-                <div class="row" style="margin-bottom:20px;">
-                    <div class="col">
-                        <!-- <h1 class="m-0">Estimates</h1> -->
-                    </div>
-                    <div class="col-auto">
-                        <div class="h1-spacer">
-                             <?php if (isset($estimates) && count($estimates)>0) { ?>
-                                                <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
-                                                    <span class="fa fa-print "></span> Print
-                                                </a>
-                                            <?php } ?>
+                    <div class="col-sm-6 right dashboard-container-1">
+                      <div class="float-right d-none d-md-block">
+                        <div class="col-auto">
+                            <div class="h1-spacer">
+                                 <?php if (isset($estimates) && count($estimates)>0) { ?>
+                                                    <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
+                                                        <span class="fa fa-print "></span> Print
+                                                    </a>
+                                                <?php } ?>
 
-                            <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
-                                <span class="fa fa-plus"></span> New Estimate
-                            </a>
+                                <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
+                                    <span class="fa fa-plus"></span> New Estimate
+                                </a>
+                            </div>
                         </div>
+                      </div>
                     </div>
                 </div>
-                <div class="col mb-3 left alert alert-warning mt-0 mb-2">
-                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing your estimates.</span>
+                <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Create an estimate when you want to give your customer a quote, bid, or proposal for work you plan to do. There are 3 forms of estimate:  standard, options and bundle (package)  The estimate can later be turned into a sales order or an invoice.  With this layout you will be able to monitor the status of each estimate.</span>
                 </div>
-                <br style="clear:both;"/>
+                <br style="clear:both;"/><br/>
                 <div class="align-items-center mb-4 margin-bottom-ter">
                     <div class="row pl-0 pr-0">
                       <div class="col col-4 ">

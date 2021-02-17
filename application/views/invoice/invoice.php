@@ -1,3 +1,33 @@
+<style>
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 15px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
@@ -13,8 +43,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                    <div class="card mt-0 p-20">
+                        <div class="hid-desk" style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
                                     <h3 class="page-title">Invoices & Payments</h3>
@@ -31,13 +61,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row margin-bottom-ter align-items-center">
-                                <div class="col-auto">
-                                    <p>
-                                        Listing all invoices.
-                                    </p>
+                                <div class="col-sm-6 right dashboard-container-1">
+
                                 </div>
+                            </div>
+                            <div class="row">
+                              <div class="alert alert-warning mt-1 ml-3 mb-3" role="alert">
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing all invoices.</span>
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-ter mb-0 align-items-center">
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <form style="display: inline-flex;" class="form-inline form-search"
                                           name="form-search"

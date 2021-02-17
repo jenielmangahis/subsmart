@@ -1,3 +1,33 @@
+<style>
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 15px !important;
+  padding-bottom: 25px !important;
+  padding-right: 7px !important;
+  padding-left: 7px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
@@ -11,24 +41,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">New Invoice</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Complete the fields below to create a new invoice.</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices
-                                    </a>
-                                <?php endif ?>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-sm-12">
                         <div class="validation-error" id="estimate-error" style="display: none;">You selected Credit Card Payments as payment method for this invoice. Please configure the <a href="https://www.markate.com/pro/settings/payments/main">Online Payment processor</a> first to accept cart payments.</div>
                     </div>
@@ -39,7 +51,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <div class="row custom__border">
                 <div class="col-xl-12">
-                    <div class="card">
+                    <div class="card p-20">
+                        <div class="col-sm-12">
+                            <h1 class="page-title">New Invoice</h1>
+                            <div class="alert alert-warning mt-1 mb-4" role="alert">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Complete the fields below to create a new invoice.</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-right d-none d-md-block">
+                                <div class="dropdown">
+                                    <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                        <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
+                                           aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices
+                                        </a>
+                                    <?php endif ?>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-5 form-group">
@@ -73,7 +103,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="text" class="form-control" name="job_name" id="job_name" required/>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-3 form-group">
                                     <label for="estimate_date">Invoice Type <span style="color:red;">*</span></label>
@@ -100,7 +130,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input type="text" class="form-control" name="purchase_order" id="purchase_order">
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3 form-group">
                                 </div>
 
@@ -264,7 +294,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
                                 </div>
                                 <div class="col-md-12">
-                                    <span class="help help-sm help-block">Your payment processor is not set up 
+                                    <span class="help help-sm help-block">Your payment processor is not set up
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalNewCustomer">setup payment</a></span>
                                 </div>
