@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="module">
+<div class="module" id="addModuleBody">
     <div class="col-sm-12 individual-module">
         <div class="text-center justify-content-center" 
              onclick="$('#addModule').modal('show')"
@@ -80,11 +80,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
         $('#custom_modules').val(cleanModules);
         $.ajax({
             type: "POST",
-            url: "<?= base_url() ?>/customer/ac_module_sort",
+            url: "<?= base_url() ?>/customer/ac_module_sort/"+id,
             data: {ams_values : cleanModules.toString(),ams_id : <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
             success: function(data)
             {
-                console.log(data);
+                $(data).insertBefore($('#addModuleBody'));
             }
         });
     }
@@ -100,31 +100,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
         
         return unique;
     }
+    
+    function pushMod(item)
+    {
+        modules.push(item);
+    }
 
     function removeWidget(dis)
     {
         var mod = $('#custom_modules').val();
-        var arr = mod.split(',');
-        if(mod!=""){
-            for(var i=0; i<arr.length;i++){
-                modules.push(arr[i]);
-            }
-        }
-        
-        var cleanModules = removeDuplicates(modules)
-        const index = cleanModules.indexOf(dis);
-        if (index > -1) {
-          cleanModules.splice(index, 1);
-        }
-        $('#custom_modules').val(cleanModules);
         
         $.ajax({
             type: "POST",
-            url: "<?= base_url() ?>/customer/ac_module_sort",
-            data: {ams_values : cleanModules.toString(),ams_id : <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
+            url: "<?= base_url() ?>/customer/remove_module",
+            data: {ams_values : mod,ams_id : <?php echo $module_sort->ams_id; ?>, id:dis}, // serializes the form's elements.
             success: function(data)
             {
-                console.log(data);
+                $('#'+dis).remove();
+                $('#custom_modules').val(data)
+                
             }
         });
         

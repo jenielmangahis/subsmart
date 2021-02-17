@@ -328,12 +328,150 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function(res) {
-                $('#tags_group_form').addClass('hide');
-                $('table#tags-group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span></td></tr>`);
-                $('table#tags-group').removeClass('hide');
+                var result = JSON.parse(res);
+
+                if(result.success === true) {
+                    $('#tags_group_form').addClass('hide');
+                    $('table#tags-group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
+                    $('table#tags-group').removeClass('hide');
+                    $('#tags_form').prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
+                    $('#tags_group_form').prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
+                } else {
+                    $('#tag_group_name').addClass('border-danger');
+                }
             }
         });
-    })
+    });
+
+    $(document).on('click', 'table#tags-group tbody a', function() {
+        if($('#update_group_form').length === 0) {
+            $('#tags_group_form').attr('id', 'update_group_form');
+        }
+
+        $('#update_group_form').removeClass('hide');
+        
+        $('table#tags-group').addClass('hide');
+    });
+
+    $(document).on('submit', '#update_group_form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(document.getElementById('update_group_form'));
+
+        $.ajax({
+            url:`/accounting/update-group-tag/${data.get('group_id')}/group`,
+            data: {name: data.get('tags_group_name')},
+            type:"POST",
+            dataType: "json",
+            success:function (res) {
+                if(res.success === true) {
+                    $('#update_group_form').addClass('hide');
+
+                    $('table#tags-group tbody tr').remove();
+                    $('table#tags-group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
+
+                    $('table#tags-group').removeClass('hide');
+                } else {
+                    $('#tag_group_name').addClass('border-danger');
+                }
+            }
+        });
+    });
+    
+    $(document).on('submit', '#tags_form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(document.getElementById('tags_form'));
+
+        $.ajax({
+            url: '/accounting/addTags',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                var result = JSON.parse(res);
+                $('table#group-tags tbody').append(`
+                <tr>
+                    <td>
+                        <div class="tag-name-cont">
+                            <span>${data.get('tag_name')}</span><a href="#" class="float-right text-info">Edit</a>
+                        </div>
+                        <form class="hide" id="form-tag-${result.data}">
+                            <input type="hidden" name="tag_id" value="${result.data}">
+                            <div class="form-row">
+                                <div class="col-md-8">
+                                    <label for="tag_name">Tag name</label>
+                                    <input type="text" name="update_tag_name" value="${data.get('tag_name')}" class="form-control">
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-success w-100">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                </tr>`);
+
+                $('#tags_form input#tag_name').val('');
+                $('table#group-tags').removeClass('hide');
+            }
+        });
+    });
+
+    $(document).on('click', 'table#group-tags tbody .tag-name-cont a', function() {
+        $(this).parent().addClass('hide');
+        $(this).parent().next().removeClass('hide');
+    });
+
+    $(document).on('submit', 'table#group-tags tbody form', function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var data = new FormData(document.getElementById(form.attr('id')));
+
+        $.ajax({
+            url:`/accounting/update-group-tag/${data.get('tag_id')}/tag`,
+            data: {name: data.get('update_tag_name')},
+            type:"POST",
+            dataType: "json",
+            success:function (res) {
+                form.addClass('hide');
+
+                form.prev().children('span').html(data.get('update_tag_name'));
+                form.prev().removeClass('hide');
+            }
+        });
+    });
+
+    $(document).on('submit', '#create-tag-form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(document.getElementById('create-tag-form'));
+
+        $.ajax({
+            url: '/accounting/addTags',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                var result = JSON.parse(res);
+                $('#createTag').modal('hide');
+
+                $.toast({
+                    icon: result.success ? 'success' : 'error',
+                    heading: result.message,
+                    text: result.message,
+                    showHideTransition: 'fade',
+                    hideAfter: 3000,
+                    allowToastClose: true,
+                    position: 'top-right',
+                    stack: false,
+                    loader: false,
+                });
+            }
+        });
+    });
 
     $(document).on('click', '#deleteGroup, #deleteTag', function(e) {
         var id = $(this).parent().parent().data('id');

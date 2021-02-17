@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="module ui-state-default" id="<?= $id ?>">
+<div class="module ui-state-default" data-id="<?= $id ?>" id="<?= $id ?>">
     <div class="col-sm-12 individual-module">
         <h6>Profile</h6>
         <div class="row">

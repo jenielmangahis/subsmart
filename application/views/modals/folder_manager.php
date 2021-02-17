@@ -61,17 +61,37 @@
         <?php } ?>
 
         <div class="card vaultContainer">
-          <div class="page-title-box">
-              <div class="row align-items-center">
-                  <div class="col-sm-12">
-                      <h3 class="page-title">Shared Library</h3>
-                      <ol class="breadcrumb">
-                          <li class="breadcrumb-item active">Accessible folders and files within the company.</li>
-                      </ol>
-                  </div>
-              </div>
-          </div>
-          <div class="card-header pb-0">
+
+        <div class="vault__header">
+
+          <?php if($isMyLibrary): ?>
+            <h1 class="vault__title">My Library</h1>
+            <div class="alert alert-warning mt-2" role="alert">
+              <span style="color:black;">
+                My Library is a place where you can quickly find and access all of your files, content, and customer information from anywhere, on any device. Create specific or general folders to better categorized your files for quicker access. Format to includes are PDF, DOC, JPEG, GIF, CSV and much more. It is your private storage area for you documents.
+              </span>
+            </div>
+
+          <?php elseif($isBusinessFormTemplates): ?>
+            <h1 class="vault__title">Business Form Templates</h1>
+            <div class="alert alert-warning mt-2" role="alert">
+              <span style="color:black;">
+                Our archive of business forms include over 1000 commonly used templates to start, plan, organize, manage, finance and grow your business.
+              </span>
+            </div>
+
+          <?php else: ?>
+            <h1 class="vault__title">Shared Library</h1>
+            <div class="alert alert-warning mt-2" role="alert">
+              <span style="color:black;">
+                Store, share, and manage the company's shared files in this location so you can decide who has access to files in each folder and what permissions they have. Here in Shared Library each user can share their personal files to be used and viewed by others team member. Each org can have up to 100 libraries.
+              </span>
+            </div>
+
+          <?php endif; ?>
+        </div>
+
+          <div class="card-header pb-0">        
             <div class="row">
                 <div class="col-md-6">
                   <h5 id="folders_name">

@@ -71,6 +71,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col">
                         <h3 class="page-title">Estimates</h3>
                     </div>
+                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                        Create an estimate when you want to give your customer a quote, bid, or proposal for work you plan to do. There are 3 forms of estimate:  standard, options and bundle (package)  The estimate can later be turned into a sales order or an invoice.  With this layout you will be able to monitor the status of each estimate. 
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px;">
+                    <div class="col">
+                        <!-- <h1 class="m-0">Estimates</h1> -->
+                    </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
                              <?php if (isset($estimates) && count($estimates)>0) { ?>
@@ -384,7 +392,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body text-center">
+      <!-- <div class="modal-body text-center">
         <p class="text-lg margin-bottom">
             What type of estimate you want to create
         </p>
@@ -404,7 +412,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
-    </div>
+    </div> -->
+    <div class="modal-body text-center">
+        <p class="text-lg margin-bottom">
+            What type of estimate you want to create
+        </p><center>
+        <div class="margin-bottom text-center" style="width:60%;">
+            <div class="help help-sm">Create a regular estimate with items</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/add') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
+        </div>
+        <div class="margin-bottom" style="width:60%;">
+            <div class="help help-sm">Customers can select all or only certain options</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/addoptions?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+        </div>
+        <div  class="margin-bottom" style="width:60%;">
+            <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall discount</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/addbundle?type=3') ?>"><span class="fa fa-cubes"></span> Bundle Estimate</a>
+        </div></center>
+      </div>
   </div>
 </div>
 <style>

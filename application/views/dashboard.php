@@ -6,128 +6,156 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
 <link rel="stylesheet" href="<?= base_url("assets/plugins/morris.js/morris.css") ?>">
 <!-- page wrapper start -->
-<div class="wrapper">
-    <div class="container-fluid">
-        <div class="page-title-box">
-            <div class="row align-items-center">
-                <div class="col-sm-2">
-                    <h1 class="page-title" style="font-weight: 600; font-size: 1.75rem;">Dashboard</h1>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active">Welcome <?php echo getLoggedName(); ?>!</li>
-                    </ol>
-                </div>
-                <?php include viewPath('flash'); ?>
-                <style>
-                    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title, a, .modal-title{
-                        font-family: Sarabun, sans-serif !important;
-                    }
-                    .dynamic-widget .card{
-                        height: 400px !important
-                    }
-                    
-                    .card-header{
-                        border-bottom: 1px solid gray !important;
-                        font-family: Sarabun, sans-serif !important;
-                    }
-
-                    .card-body h6{
-                        font-size: 16px;
-                        font-family: Open sans, Lato, Arial, sans-serif;
-                        font-weight: 400;
-                        line-height: 1.5;
-                    }
-
-                    .card-body .job-status{
-                        width:100%;
-                        background:#a5d8ff;
-                        color: rgb(33, 150, 243);
-                        text-align: center;
-                        font-size: 12px;
-                        line-height: 1.5;
-                        margin-top:10px;
-                    }
-
-                    .card-body .job-caption{
-                        color: #616161;
-                        font-size: 10px;
-                        font-family: Roboto, Lato, Arial, sans-serif;
-                        font-weight: 800;
-                        line-height: 1.3;
-                        text-transform: uppercase;
-                    }
-                    .smart__grid{
-                        background: #fff;
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        grid-gap: 10px;
-                        height: 78vh;
-                        padding: 10px;
-                    }
-                    .smart__grid > div{
-                        background: #f2f2f2;
-                        text-align: center;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                </style>
-                <div class="col-12 d-md-none d-block p-0">
-                    <div class="smart__grid" id="1">
-                        <div><a href="<?= base_url() ?>inquiries">Leads</a></div>
-                        <div><a href="<?= base_url() ?>customer">Customers</a></div>
-                        <div><a href="<?= base_url() ?>estimate">Estimates</a></div>
-                        <div><a href="<?= base_url() ?>invoice">Invoices</a></div>
-                        <div><a href="<?= base_url() ?>workcalender">Calendar</a></div>
-                        <div><a href="<?= base_url() ?>workorder">Work Order</a></div>
-                        <div><a href="<?= base_url() ?>users">Employees</a></div>
-                        <div><a href="#">Route Planner</a></div>
-                        <div><a href="<?= base_url() ?>accounting/reports">Reports</a></div>
-                        <div><a href="<?= base_url() ?>inventory">Inventory</a></div>
-                        <div><a href="<?= base_url() ?>survey">Quick Links</a></div>
-                        <div><a href="<?= base_url() ?>users/businessview">Business</a></div>
-                        <div><a href="<?= base_url() ?>accounting/banking">Accounting</a></div>
-                        <div><a href="<?= base_url() ?>vault">Files Vault</a></div>
-                        <div><a href="<?= base_url() ?>esignmain">eSign</a></div>
-                        <div><a href="<?= base_url() ?>taskhub">Tasks</a></div>
-                        <div><a href="#">Bulletin</a></div>
-                        <div><a href="<?= base_url() ?>vault/beforeafter">Collage Maker</a></div>
-                        <div><a href="<?= base_url() ?>estimate">Cost Estimator</a></div>
-                        <div><a href="<?= base_url() ?>inventory">Virtual Estimator</a></div>
-                        <div><a href="<?= base_url() ?>users/timelog">Time Clock</a></div>
-                        <div><a href="<?= base_url() ?>customer">Marketing</a></div>
-                        <div><a href="#">Trac 360</a></div>
-                        <div><a href="<?= base_url() ?>job">Job</a></div>
-                    </div>
-                </div>
-                <div class="col-sm-6 d-none d-lg-flex">
-                </div>
-<!--                <div class="col-sm-4">
-                    <div class="float-right d-none d-md-block">
+<div class="wrapper" style="padding: 80px 14px;">
+    <div class="bg-white" style="margin-top:20px; border-radius: 30px 30px 0 0;">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row col-12 align-items-center d-flex">
+                    <div class="col-sm-2 col-lg-3">
+                        <h1 class="page-title" style="font-weight: 600; font-size: 1.75rem;">Dashboard</h1>
                         <ol class="breadcrumb">
-                            <?php $image = base_url('uploads/users/default.png'); ?>
-                             <img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;"> 
-                            <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle" style="height: 50px;">
-                            <?php
-                            /* $id = logged('id');
-                              $query = $this->db->query("Select name from users where id = $id");
-                              $query11 = $query->row(); */
-                            ?>
-                            <h5 style="margin: 13px 0 0px 10px;"><?php echo getLoggedName(); ?></h5>
+                            <li class="breadcrumb-item active">Welcome <?php echo getLoggedName(); ?>!</li>
                         </ol>
                     </div>
-                </div>-->
+                    <div class="col-lg-6 justify-content-center d-none d-lg-block">
+                        <div class="col-lg-12" style="background: #dcdddc; height:50px; height:130px; margin:0 auto; top:-25px; border-radius: 0 0 60px 60px; padding-top:25px;">
+                            <div class="float-left col-lg-2 no-padding text-center pointer">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'08_add_customer.png' ?>" style="margin: 0 auto;" />
+                                <p>Add Customer</p>
+                            </div>
+                            <div class="float-left col-lg-2 no-padding text-center pointer">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
+                                <p>Search Customer</p>
+                            </div>
+                            <div class="float-left col-lg-2 no-padding text-center pointer">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
+                                <p>Add a Job</p>
+                            </div>
+                            <div class="float-left col-lg-2 no-padding text-center pointer">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
+                                <p>Add a Event</p>
+                            </div>
+                            <div class="float-left col-lg-2 no-padding text-center pointer">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
+                                <p>New Feed</p>
+                            </div>
+                            <div class="float-left col-lg-2 no-padding text-center pointer">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
+                                <p>Add Newsletter</p>
+                            </div>
+                        </div>
+                    </div>
+                    <?php include viewPath('flash'); ?>
+                    <style>
+                        h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title, a, .modal-title{
+                            font-family: Sarabun, sans-serif !important;
+                        }
+                        .dynamic-widget .card{
+                            height: 400px !important
+                        }
+
+                        .card-header{
+                            border-bottom: 1px solid gray !important;
+                            font-family: Sarabun, sans-serif !important;
+                        }
+
+                        .card-body h6{
+                            font-size: 16px;
+                            font-family: Open sans, Lato, Arial, sans-serif;
+                            font-weight: 400;
+                            line-height: 1.5;
+                        }
+
+                        .card-body .job-status{
+                            width:100%;
+                            background:#a5d8ff;
+                            color: rgb(33, 150, 243);
+                            text-align: center;
+                            font-size: 12px;
+                            line-height: 1.5;
+                            margin-top:10px;
+                        }
+
+                        .card-body .job-caption{
+                            color: #616161;
+                            font-size: 10px;
+                            font-family: Roboto, Lato, Arial, sans-serif;
+                            font-weight: 800;
+                            line-height: 1.3;
+                            text-transform: uppercase;
+                        }
+                        .smart__grid{
+                            background: #fff;
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            grid-gap: 10px;
+                            height: 78vh;
+                            padding: 10px;
+                        }
+                        .smart__grid > div{
+                            background: #f2f2f2;
+                            text-align: center;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                    </style>
+                    <div class="col-12 d-md-none d-block p-0">
+                        <div class="smart__grid" id="1">
+                            <div><a href="<?= base_url() ?>inquiries">Leads</a></div>
+                            <div><a href="<?= base_url() ?>customer">Customers</a></div>
+                            <div><a href="<?= base_url() ?>estimate">Estimates</a></div>
+                            <div><a href="<?= base_url() ?>invoice">Invoices</a></div>
+                            <div><a href="<?= base_url() ?>workcalender">Calendar</a></div>
+                            <div><a href="<?= base_url() ?>workorder">Work Order</a></div>
+                            <div><a href="<?= base_url() ?>users">Employees</a></div>
+                            <div><a href="#">Route Planner</a></div>
+                            <div><a href="<?= base_url() ?>accounting/reports">Reports</a></div>
+                            <div><a href="<?= base_url() ?>inventory">Inventory</a></div>
+                            <div><a href="<?= base_url() ?>survey">Quick Links</a></div>
+                            <div><a href="<?= base_url() ?>users/businessview">Business</a></div>
+                            <div><a href="<?= base_url() ?>accounting/banking">Accounting</a></div>
+                            <div><a href="<?= base_url() ?>vault">Files Vault</a></div>
+                            <div><a href="<?= base_url() ?>esignmain">eSign</a></div>
+                            <div><a href="<?= base_url() ?>taskhub">Tasks</a></div>
+                            <div><a href="#">Bulletin</a></div>
+                            <div><a href="<?= base_url() ?>vault/beforeafter">Collage Maker</a></div>
+                            <div><a href="<?= base_url() ?>estimate">Cost Estimator</a></div>
+                            <div><a href="<?= base_url() ?>inventory">Virtual Estimator</a></div>
+                            <div><a href="<?= base_url() ?>users/timelog">Time Clock</a></div>
+                            <div><a href="<?= base_url() ?>customer">Marketing</a></div>
+                            <div><a href="#">Trac 360</a></div>
+                            <div><a href="<?= base_url() ?>job">Job</a></div>
+                        </div>
+                    </div>
+<!--                    <div class="col-sm-6 d-none d-lg-flex">
+                    </div>-->
+                    <!--                <div class="col-sm-4">
+                                        <div class="float-right d-none d-md-block">
+                                            <ol class="breadcrumb">
+                    <?php $image = base_url('uploads/users/default.png'); ?>
+                                                 <img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;"> 
+                                                <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle" style="height: 50px;">
+                    <?php
+                    /* $id = logged('id');
+                      $query = $this->db->query("Select name from users where id = $id");
+                      $query11 = $query->row(); */
+                    ?>
+                                                <h5 style="margin: 13px 0 0px 10px;"><?php echo getLoggedName(); ?></h5>
+                                            </ol>
+                                        </div>
+                                    </div>-->
+                </div>
             </div>
-        </div>
-        <!-- end row -->
-        <div class="row-tablet-mobile mb-fix">
-            <div class="row d-none d-lg-flex">
-                <?php $this->load->view('widgets/quick_start', $quick_start_data); ?>
-                <div class="col-md-8">
-                    <div class="row cus-dashboard-div">
-                        <?php
-                        
+            <!-- end row -->
+            <div class="row-tablet-mobile mb-fix">
+                <div class="row d-none d-lg-flex">
+                    <?php $this->load->view('widgets/quick_start', $quick_start_data); ?>
+                    <div class="col-md-8">
+                        <div class="row cus-dashboard-div">
+                            <?php
                             foreach ($widgets as $wids):
-                                if($wids->wu_is_main):
+                                if ($wids->wu_is_main):
                                     $data['class'] = 'col-lg-6 col-md-6 col-sm-12';
                                     $data['height'] = 'height: 250px;';
                                     $data['id'] = $wids->w_id;
@@ -138,162 +166,163 @@
 //                            $this->load->view('widgets/upcoming_estimates');
 //                            $this->load->view('widgets/upcoming_events');
 //                            $this->load->view('widgets/task_hub');
-                        ?>
+                            ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget" id="widgetWrapper">
-                <?php
-                
-                foreach ($widgets as $wids):
-                    if(!$wids->wu_is_main):
-                        $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
-                        $data['rawHeight'] = '310';
-                        $data['height'] = 'height: 310px;';
-                        $data['id'] = $wids->w_id;
-                        $this->load->view($wids->w_view_link, $data);
-                    endif;
-                endforeach;
-                $this->load->view('widgets/add_widgets');
-                ?>
-            </div>
+                <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget" id="widgetWrapper">
+                    <?php
+                    foreach ($widgets as $wids):
+                        if (!$wids->wu_is_main):
+                            $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
+                            $data['rawHeight'] = '310';
+                            $data['height'] = 'height: 310px;';
+                            $data['id'] = $wids->w_id;
+                            $this->load->view($wids->w_view_link, $data);
+                        endif;
+                    endforeach;
+                    $this->load->view('widgets/add_widgets');
+                    ?>
+                </div>
 
-            <!-- end row -->
-            <br>
-            <div class="row d-none d-lg-flex">
-                <div class="col-xl-12">
-                    <!-- TradingView Widget BEGIN -->
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-                            {
-                            "symbols": [
-                            {
-                            "proName": "FOREXCOM:SPXUSD",
-                                    "title": "S&P 500"
-                            },
-                            {
-                            "proName": "FOREXCOM:NSXUSD",
-                                    "title": "Nasdaq 100"
-                            },
-                            {
-                            "proName": "FX_IDC:EURUSD",
-                                    "title": "EUR/USD"
-                            },
-                            {
-                            "proName": "BITSTAMP:BTCUSD",
-                                    "title": "BTC/USD"
-                            },
-                            {
-                            "proName": "BITSTAMP:ETHUSD",
-                                    "title": "ETH/USD"
-                            },
-                            {
-                            "proName": "RF"
-                            },
-                            {
-                            "proName": "LOW"
-                            },
-                            {
-                            "proName": "HD"
-                            },
-                            {
-                            "proName": "AMZN"
-                            },
-                            {
-                            "proName": "HON"
-                            },
-                            {
-                            "proName": "GE"
-                            },
-                            {
-                            "proName": "AAPL"
-                            },
-                            {
-                            "proName": "WMT"
-                            },
-                            {
-                            "proName": "DIS"
-                            },
-                            {
-                            "proName": "FB"
-                            },
-                            {
-                            "proName": "CIT"
-                            },
-                            {
-                            "proName": "UA"
-                            },
-                            {
-                            "proName": "BAC"
-                            },
-                            {
-                            "proName": "SSL"
-                            },
-                            {
-                            "proName": "CNTY"
-                            },
-                            {
-                            "proName": "MCD"
-                            },
-                            {
-                            "proName": "CCL"
-                            },
-                            {
-                            "proName": "KO"
-                            },
-                            {
-                            "proName": "JBLU"
-                            },
-                            {
-                            "proName": "AAL"
-                            },
-                            {
-                            "proName": "NYMT"
-                            },
-                            {
-                            "proName": "NFLX"
-                            },
-                            {
-                            "proName": "BP"
-                            },
-                            {
-                            "proName": "TGT"
-                            },
-                            {
-                            "proName": "DAL"
-                            },
-                            {
-                            "proName": "ZAGG"
-                            },
-                            {
-                            "proName": "BUD"
-                            },
-                            {
-                            "proName": "UPS"
-                            },
-                            {
-                            "proName": "KIRK"
-                            },
-                            {
-                            "proName": "BGG"
-                            }
-                            ],
-                                    "colorTheme": "light",
-                                    "isTransparent": false,
-                                    "displayMode": "adaptive",
-                                    "locale": "en"
-                            }
-                        </script>
+                <!-- end row -->
+                <br>
+                <div class="row d-none d-lg-flex">
+                    <div class="col-xl-12">
+                        <!-- TradingView Widget BEGIN -->
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                                {
+                                "symbols": [
+                                {
+                                "proName": "FOREXCOM:SPXUSD",
+                                        "title": "S&P 500"
+                                },
+                                {
+                                "proName": "FOREXCOM:NSXUSD",
+                                        "title": "Nasdaq 100"
+                                },
+                                {
+                                "proName": "FX_IDC:EURUSD",
+                                        "title": "EUR/USD"
+                                },
+                                {
+                                "proName": "BITSTAMP:BTCUSD",
+                                        "title": "BTC/USD"
+                                },
+                                {
+                                "proName": "BITSTAMP:ETHUSD",
+                                        "title": "ETH/USD"
+                                },
+                                {
+                                "proName": "RF"
+                                },
+                                {
+                                "proName": "LOW"
+                                },
+                                {
+                                "proName": "HD"
+                                },
+                                {
+                                "proName": "AMZN"
+                                },
+                                {
+                                "proName": "HON"
+                                },
+                                {
+                                "proName": "GE"
+                                },
+                                {
+                                "proName": "AAPL"
+                                },
+                                {
+                                "proName": "WMT"
+                                },
+                                {
+                                "proName": "DIS"
+                                },
+                                {
+                                "proName": "FB"
+                                },
+                                {
+                                "proName": "CIT"
+                                },
+                                {
+                                "proName": "UA"
+                                },
+                                {
+                                "proName": "BAC"
+                                },
+                                {
+                                "proName": "SSL"
+                                },
+                                {
+                                "proName": "CNTY"
+                                },
+                                {
+                                "proName": "MCD"
+                                },
+                                {
+                                "proName": "CCL"
+                                },
+                                {
+                                "proName": "KO"
+                                },
+                                {
+                                "proName": "JBLU"
+                                },
+                                {
+                                "proName": "AAL"
+                                },
+                                {
+                                "proName": "NYMT"
+                                },
+                                {
+                                "proName": "NFLX"
+                                },
+                                {
+                                "proName": "BP"
+                                },
+                                {
+                                "proName": "TGT"
+                                },
+                                {
+                                "proName": "DAL"
+                                },
+                                {
+                                "proName": "ZAGG"
+                                },
+                                {
+                                "proName": "BUD"
+                                },
+                                {
+                                "proName": "UPS"
+                                },
+                                {
+                                "proName": "KIRK"
+                                },
+                                {
+                                "proName": "BGG"
+                                }
+                                ],
+                                        "colorTheme": "light",
+                                        "isTransparent": false,
+                                        "displayMode": "adaptive",
+                                        "locale": "en"
+                                }
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- Earnings Display -->
+            <!-- end row -->
+            <!-- end container-fluid -->
         </div>
-        <!-- Earnings Display -->
-        <!-- end row -->
-        <!-- end container-fluid -->
     </div>
+
     <!-- page wrapper end -->
 </div>
 
@@ -380,7 +409,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <?php echo form_open('dashboard/saveTags', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
+<?php echo form_open('dashboard/saveTags', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group">
@@ -393,7 +422,7 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
-            <?php echo form_close(); ?>
+<?php echo form_close(); ?>
         </div>
     </div>
 </div>
@@ -707,36 +736,32 @@
 
 <script type="text/javascript">
     function waitForClockInOut() {
-        $.ajax({
-            type: "GET", 
+    $.ajax({
+    type: "GET",
             url: "/Timesheet/getClockInOutNotification",
             async: true,
             cache: false,
             timeout: 10000,
-            success: function (data) { 
+            success: function (data) {
 
-                var obj = JSON.parse(data); 
-                console.log(obj);
-                $.each(obj, function (currentIndex, currentElem) {
-                    $('#in_now').html(currentElem.ClockIn);
-                    $('#out_now').html(currentElem.ClockOut);
-                });
-                setTimeout(waitForClockInOut,2000);
+            var obj = JSON.parse(data);
+            console.log(obj);
+            $.each(obj, function (currentIndex, currentElem) {
+            $('#in_now').html(currentElem.ClockIn);
+            $('#out_now').html(currentElem.ClockOut);
+            });
+            setTimeout(waitForClockInOut, 2000);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                addmsg("error", textStatus + " (" + errorThrown + ")");
-                setTimeout(waitForClockInOut,15000);
+            addmsg("error", textStatus + " (" + errorThrown + ")");
+            setTimeout(waitForClockInOut, 15000);
             }
-        });
-    };
-
-    $(document).ready(function () {
-        var TimeStamp = null;
-        waitForClockInOut();
     });
-        
-
-
+    };
+    $(document).ready(function () {
+    var TimeStamp = null;
+    waitForClockInOut();
+    });
     $('#onoff-customize').click(function() {
     if (this.checked) {
     //var current = 1;

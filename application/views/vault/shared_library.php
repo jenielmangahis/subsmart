@@ -35,8 +35,24 @@
 <div class="wrapper" role="wrapper">
    <?php include viewPath('includes/sidebars/filevault'); ?>
    <div wrapper__section>
+      <!-- <div class="container-fluid">
+         <div class="page-title-box">
+            <div class="row align-items-center">
+               <div class="col-sm-6">
+                  <h1 class="page-title">Shared Library</h1>
+                  <ol class="breadcrumb">
+                     <li class="breadcrumb-item active">Accessible folders and files within the company</li>
+                  </ol>
+               </div>
+               <div class="col-sm-6">
+                  
+               </div>
+            </div>
+         </div>
+      </div> -->
+                    
       <div class="row">
-         <div class="col-xl-12 p-40 pl-4 pr-4">
+         <div class="col-xl-12 pl-4 pr-4">
                <div>
                   <?php echo $folder_manager; ?>
                </div>

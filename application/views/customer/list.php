@@ -313,17 +313,17 @@ add_css(array(
                                                     </div>
                                                     <div class="indata sortable2" id="sorting">
                                                         <?php
-                                                            $data['module_sort'] = $module_sort;
-                                                            $this->load->view('customer/adv_cust_modules/add_module', $data);
                                                             $modules = explode(",", $module_sort->ams_values);
                                                             if($module_sort->ams_values!=""):
                                                                 foreach ($modules as $m):
                                                                     $view = $this->wizardlib->getModuleById($m);
                                                                     //echo $view;
                                                                     $data['id'] = $view->ac_id;
-                                                                    include viewPath($view->ac_view_link, $data);
+                                                                    $this->load->view($view->ac_view_link, $data);
                                                                 endforeach;
                                                             endif;
+                                                            $datas['module_sort'] = $module_sort;
+                                                            $this->load->view('customer/adv_cust_modules/add_module', $datas);
                                                         ?>
                                                         <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />
                                                     </div>
@@ -843,39 +843,49 @@ add_footer_js(array(
                 $(this).attr('style', 'top:0');
 
             },
-            update: function (e, ui) {
-                // gets the new and old index then removes the temporary attribute
-                var newIndex = ui.item.index();
-                var oldIndex = $(this).attr('data-previndex');
-                var element_id = ui.item.attr('id');
-                $(this).attr('style', 'top:0');
-
-                console.log('id of Item moved = ' + element_id + ' old position = ' + oldIndex + ' new position = ' + newIndex);
-                $(this).removeAttr('data-previndex');
-                console.log("Module Changed!");
-
-                var idsInOrder = $(".sortable2").sortable("toArray");
+            over(event, ui)
+            {
+                
+            }
+            update: function (e, ui) 
+            {
+                var oldOrder = $(this).attr('data-previndex');
+                var idsInOrder = $(".sortable2").sortable("toArray",{ attribute: 'data-id' });
+                
+                
                 console.log(idsInOrder);
-
-                var new_module_sort = "";
-                for (var x = 0; x < idsInOrder.length; x++) {
-                    if (x === 0) {
-                        new_module_sort = new_module_sort + idsInOrder[x];
-                    } else {
-                        new_module_sort = new_module_sort + "," + idsInOrder[x];
-                    }
-                    console.log(idsInOrder[x]);
-                }
-                //console.log(new_module_sort);
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url() ?>/customer/ac_module_sort",
-                    data: {ams_values: new_module_sort, ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
-                    success: function (data)
-                    {
-                        console.log(data);
-                    }
-                });
+//                // gets the new and old index then removes the temporary attribute
+//                var newIndex = ui.item.index();
+//                var oldIndex = $(this).attr('data-previndex');
+//                var element_id = ui.item.attr('id');
+//                $(this).attr('style', 'top:0');
+//
+//                console.log('id of Item moved = ' + element_id + ' old position = ' + oldIndex + ' new position = ' + newIndex);
+//                $(this).removeAttr('data-previndex');
+//                console.log("Module Changed!");
+//
+//                var idsInOrder = $(".sortable2").sortable("toArray");
+//                console.log(idsInOrder);
+//
+//                var new_module_sort = "";
+//                for (var x = 0; x < idsInOrder.length; x++) {
+//                    if (x === 0) {
+//                        new_module_sort = new_module_sort + idsInOrder[x];
+//                    } else {
+//                        new_module_sort = new_module_sort + "," + idsInOrder[x];
+//                    }
+//                    console.log(idsInOrder[x]);
+//                }
+//                //console.log(new_module_sort);
+//                $.ajax({
+//                    type: "POST",
+//                    url: "<?= base_url() ?>/customer/ac_module_sort",
+//                    data: {ams_values: new_module_sort, ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
+//                    success: function (data)
+//                    {
+//                        console.log(data);
+//                    }
+//                });
             }
         });
 

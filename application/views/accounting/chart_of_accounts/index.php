@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php include viewPath('includes/header'); ?>
 <style type="text/css">
     .hide-toggle::after {
         display: none !important;
@@ -12,7 +13,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         padding-left: 10%;
     }
 </style>
-<?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->
