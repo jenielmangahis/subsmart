@@ -45,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-xl-12">
                     <div class="card p-20">
                         <div class="card-body">
-                            <div style="display:flex !important; padding-top:20px; padding-bottom:20px;">
+                            <div style="display:flex !important; padding-top:20px; padding-bottom:0px;">
                                 <h3 class="pl-0 page-title col-md-4 text-left pr-0">Inventory</h3>
                                 <div class="col-md-8 pr-0 text-right" style="margin-bottom:10px;">
                                     <form action="<?php echo base_url('inventory/importItems'); ?>" method="post" enctype="multipart/form-data">
@@ -54,6 +54,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <button type="button" class="btn btn-info" id="exportItemsInventory"><span class="fa fa-download"></span> Export</button>
                                     </form>
                                 </div>
+                            </div>
+                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                             </div>
                             <div class="row">
                                 <input type="hidden" id="selectedIds">
