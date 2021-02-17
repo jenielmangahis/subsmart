@@ -247,7 +247,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <?php echo get_customer_by_id($estimate->customer_id)->contact_name ?>
                                             </a>
                                         </td>
-                                        <td><?php echo $estimate->status ?></td>
+                                        <td>
+                                          <?php 
+                                            if( $estimate->is_mail_open == 1 ){
+                                              echo "<i class='fa fa-eye'></i>  ";
+                                            }
+                                            echo $estimate->status;                                              
+                                          ?>
+                                          
+                                        </td>
                                         <td>
                                             <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
                                                 $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>

@@ -527,6 +527,9 @@ class Estimate extends MY_Controller
             $msg .= "<p>Click <a href='".$url."'>Your Estimate</a> to view and approve estimate.</p><br />";
             $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
 
+            $image_url = base_url('/tracker/estimateImageTracker?id=' . $eid); 
+            $msg .= "<br />" . '<img src="'.$image_url.'"/>';
+
             $mail = new PHPMailer;
             $mail->SMTPDebug = 4;                         
             $mail->isSMTP();                                     
