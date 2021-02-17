@@ -171,6 +171,13 @@ input#datepicker_startdate {
                        class="form-control" autocomplete="off">
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <label class="left">Event Location</label>
+                <input placeholder="" required="" id="event-location" type="text" name="event_location" value="<?php echo (!empty($event)) ? $event->event_location : '' ?>"
+                       class="form-control" autocomplete="off">
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <div class="row">

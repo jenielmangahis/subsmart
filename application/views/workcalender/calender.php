@@ -485,11 +485,11 @@ a.top-1 {
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
                                       <div class="margin-bottom">
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
                                           <div id="upcoming-jobs-container"></div>
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
                                           <div id="upcoming-events-container"></div>
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
                                           <div id="scheduled-estimates-container"></div>
                                       </div>
                                   </div>

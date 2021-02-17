@@ -104,7 +104,9 @@
       <?php foreach($upcomingJobs as $uj){ ?>
         <li class="media">
           <div class="estimate-details">
-            <h4><?= $uj->first_name . ' ' . $uj->last_name; ?> <span class="estimate-gray">(<?= $uj->job_number; ?>)</span></h4>
+            <h4><?= $uj->job_type; ?> - <?= $uj->tags; ?></h4>
+            <span class="estimate-gray"><?= strtoupper($uj->first_name . ' ' . $uj->last_name); ?> </span><br />
+            <span class="estimate-gray"><?= strtoupper($uj->job_location); ?> </span><br />
             <span class="estimate-gray"><i class="fa fa-calendar"></i> <?= date("Y-m-d",strtotime($uj->start_date)) . ' - ' . date("Y-m-d",strtotime($uj->end_date)); ?></span>
           </div>
       </li>

@@ -61,7 +61,8 @@ class Event extends MY_Controller
             'notify_at' => $post['notify_at'],
             'event_description' => $post['description'],
             'instructions' => $post['instructions'],
-            'is_recurring' => $is_recurring
+            'is_recurring' => $is_recurring,
+            'event_location' => $post['event_location']
         );
 
         if (!empty(post('event_id'))) {

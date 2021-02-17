@@ -697,7 +697,7 @@ class Register extends MY_Controller {
             "&ssl_first_name=$ssl_firstname".
             "&ssl_last_name=$ssl_lastname".
             "&ssl_email=$ssl_email".
-            "&ssl_test_mode=TRUE".
+            //"&ssl_test_mode=TRUE".
             //"&ssl_txn_id=$merchanttxnid".
             "&ssl_amount=$amount"
             );

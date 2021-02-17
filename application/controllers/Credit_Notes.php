@@ -420,7 +420,9 @@ class Credit_Notes extends MY_Controller
             $from      = MAIL_FROM;        
             $recipient = $post['customer_id'];
             $subject   = $post['mail_subject']; 
+            $image     = $msg . "<br />" . '<img src="'.$url.'"/>';
             $msg       = $post['mail_body'];
+            $url = base_url('/tracker/imageTracker/' . $eid);            
 
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;                         
