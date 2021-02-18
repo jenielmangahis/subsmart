@@ -829,63 +829,50 @@ add_footer_js(array(
         ///$( ".sortable2" ).sortable("disable");
         $('#onoff-customize').change(function () {
             if (this.checked) {
-                $(".sortable2").sortable("enable");
+                $('.module').mouseover(function(){
+                   if($(this).attr('id')=='addModuleBody'){
+                        $(".sortable2").sortable("disable");
+                   }else{
+                    $(".sortable2").sortable("enable");
+                   }
+                });
             } else {
                 $(".sortable2").sortable("disable");
             }
 
         });
+        
+        
 
         $(".sortable2").sortable({
             start: function (e, ui) {
                 // creates a temporary attribute on the element with the old index
                 $(this).attr('data-previndex', ui.item.index());
-                $(this).attr('style', 'top:0');
+                $(this).attr('style', 'top:0;cursor: grabbing');
 
             },
-            over(event, ui)
+            change(event, ui)
             {
-                
-            }
+                $(this).attr('style', 'top:0;cursor: grabbing ');
+            },
             update: function (e, ui) 
             {
+                $(this).attr('style', 'top:0;cursor: pointer');
                 var oldOrder = $(this).attr('data-previndex');
                 var idsInOrder = $(".sortable2").sortable("toArray",{ attribute: 'data-id' });
+                var filteredArray = idsInOrder.filter(function(e){return e});
                 
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>/customer/ac_module_sort",
+                    data: {ams_values: filteredArray.toString(), ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
+                    success: function (data)
+                    {
+                        console.log(data);
+                    }
+                });
                 
-                console.log(idsInOrder);
-//                // gets the new and old index then removes the temporary attribute
-//                var newIndex = ui.item.index();
-//                var oldIndex = $(this).attr('data-previndex');
-//                var element_id = ui.item.attr('id');
-//                $(this).attr('style', 'top:0');
-//
-//                console.log('id of Item moved = ' + element_id + ' old position = ' + oldIndex + ' new position = ' + newIndex);
-//                $(this).removeAttr('data-previndex');
-//                console.log("Module Changed!");
-//
-//                var idsInOrder = $(".sortable2").sortable("toArray");
-//                console.log(idsInOrder);
-//
-//                var new_module_sort = "";
-//                for (var x = 0; x < idsInOrder.length; x++) {
-//                    if (x === 0) {
-//                        new_module_sort = new_module_sort + idsInOrder[x];
-//                    } else {
-//                        new_module_sort = new_module_sort + "," + idsInOrder[x];
-//                    }
-//                    console.log(idsInOrder[x]);
-//                }
-//                //console.log(new_module_sort);
-//                $.ajax({
-//                    type: "POST",
-//                    url: "<?= base_url() ?>/customer/ac_module_sort",
-//                    data: {ams_values: new_module_sort, ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
-//                    success: function (data)
-//                    {
-//                        console.log(data);
-//                    }
-//                });
+                console.log(filteredArray.toString());
             }
         });
 

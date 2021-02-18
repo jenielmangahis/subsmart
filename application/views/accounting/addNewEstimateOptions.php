@@ -49,9 +49,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div style="background-color:white; width:100%;padding:.5%;">
                     Submit your estimate. Include a breakdown of all costs for this job.
                 </div>
-                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
-                    This form can be used for any job which can be divided into stages, options, etc.   Under each listing of stages, options, etc. your have a description section to help your prospects make a better decision.  
-                </div>
 
             </div>
             <!-- end row -->

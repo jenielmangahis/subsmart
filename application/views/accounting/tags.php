@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-sm-12 p-0">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                        <span style="color:black;">Tags are customizable labels that let you track your money however you want. When you put tags into groups, you get deeper insights into how your business is doing. You'll need groups to get reports for your tags. You can tag transactions such as invoices, expenses and bills.</span>
+                                        <span style="color:black;">Message here</span>
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +40,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="col-md-6"><a href="#">See all untagged transactions</a></div>
                                         <div class="col-md-6" style="text-align: right">
                                             <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                                                <button style="padding:6px 30px" type="button" class="btn btn-success" data-toggle="dropdown"><span>New</span>&nbsp;&nbsp;<span class="fa fa-caret-down"></span></button>
+                                                <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px;width:100px;">New</button>
+                                                <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
+                                                    <span class="fa fa-caret-down"></span>
+                                                </button>
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#createTagGroup" >Tag Group</a></li>
                                                     <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#createTag">Tag</a></li>
@@ -157,43 +160,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                         
-                                            <div class="modal-body pt-3">
+                                            <div class="modal-body">
                                                 <!-- <div class="subheader">Rules only apply to unreviewed transactions.</div> -->
-                                                    <form class="mb-3" id="tags_group_form">
-                                                        <div class="form-row mb-3">
-                                                            <div class="col-md-8">
-                                                                <label for="tag_group_name">Group name</label>
-                                                                <input type="text" name="tags_group_name" id="tag_group_name" class="form-control">
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label for="">&nbsp;</label>
-                                                                <select id="e2" class="form-control" name="group_color" style="background-color: green; color: white">
-                                                                    <option value="green" style="background-color:green">Green</option>
-                                                                    <option value="yellow" style="background-color:yellow; color: black">Yellow</option>
-                                                                    <option value="red" style="background-color:red">Red</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <button class="btn btn-success" type="submit">Save</button>
-                                                    </form>
-                                                    <table id="tags-group" class="table table-bordered mb-3 hide">
-                                                        <tbody></tbody>
-                                                    </table>
-                                                    <h6>Add tags to this group</h6>
-                                                    <form class="mb-3" id="tags_form">
-                                                        <div class="form-row mb-3">
-                                                            <div class="col-md-8">
-                                                                <label for="tag_name">Tag name</label>
-                                                                <input type="text" name="tag_name" id="tag_name" class="form-control">
-                                                            </div>
-                                                            <div class="col-md-4 d-flex align-items-end">
-                                                                <button class="btn btn-success w-100">Add</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                    <table id="group-tags" class="table table-bordered mb-3 hide">
-                                                        <tbody></tbody>
-                                                    </table>
+                                                    <div class="form-group">
+                                                        <form action="<?php echo site_url()?>accounting/addTagsGroup" method="post">
+                                                            <label for="">Group name</label>
+                                                            <input type="text" name="tags_group_name" class="form-control">
+                                                            <select class="form-control" id="e2" style="width:100px;">
+                                                                <option value="green"></option>
+                                                                <option value="yellow"></option>
+                                                                <option value="red"></option>
+                                                            </select>
+                                                            <button class="btn btn-success">Save</button>
+                                                        </form>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <form action="<?php echo site_url()?>accounting/addTagsGroup" method="post">
+                                                            <h6>Add tags to this group</h6>
+                                                            <label for="">Tag name</label>
+                                                            <input type="text" name="rules_name" class="form-control">
+                                                            <button class="btn btn-success" >Add</button>
+                                                        </form>
+                                                    </div>
                                                     <hr>
                                                     <div class="form-group">
                                                         <label for="" style="position: relative;display: inline-block;">Put similar tags in the same group to get better reports. <a href="#">Find out more</a></label>
@@ -291,22 +279,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <h3 class="modal-title" id="myModalLabel2" >Create New Tag</h3>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
-                                            <form id="create-tag-form">
-                                                <div class="modal-body">
+                                            <form action="<?php echo site_url()?>accounting/addTags" method="post">
+                                            <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label for="">Tag name</label>
-                                                        <input type="text" name="tag_name" class="form-control">
+                                                            <label for="">Tag name</label>
+                                                            <input type="text" name="tag_name" class="form-control">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="">Group</label>
-                                                        <select class="form-control" name="group_id" id="group-tags-select2">
+                                                        <select class="form-control" name="group_id" id="exampleFormControlSelect1">
                                                             <option></option>
                                                             <?php foreach ($tagsGroup as $group): ?>
                                                             <option value="<?= $group['id'] ?>"><?= $group['name'] ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
-                                                </div>
+
+                                            </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                                     <button type="submit" class="btn btn-success">Save</button>
@@ -351,13 +340,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     //DataTables JS
     $(document).ready(function() {
-        
         $('#rules_table').DataTable({
-            searching:false,
-            paging:false,
-            ordering:false,
-            language: {
-                emptyTable: "<h5>Use rules to save time</h5> <span>Make rules for your frequently occurring transactions and tell nSmartrac exactly what should happen when conditions are met. <a href='#' data-toggle=\"modal\" data-target=\"#createRules\" style='color: #0b97c4'>Create a rule</a></span>"
+            "paging":false,
+            "language": {
+                "emptyTable": "<h5>Use rules to save time</h5> <span>Make rules for your frequently occurring transactions and tell nSmartrac exactly what should happen when conditions are met. <a href='#' data-toggle=\"modal\" data-target=\"#createRules\" style='color: #0b97c4'>Create a rule</a></span>"
             }
         });
     } );

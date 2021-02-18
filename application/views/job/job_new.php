@@ -666,7 +666,7 @@
                             </div>
                         </div>
                                 <hr>
-                                <table class="table table-striped">
+                                <table class="table table-striped table-bordered">
                                     <thead>
                                     <tr>
                                         <td>
@@ -773,6 +773,7 @@
                                                 <hr>
                                             </div>
                                             <div class="col-sm-6">
+
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
                                                 <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
@@ -784,9 +785,9 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <label style="padding: 0 .75rem;">Total</label>
-                                        </div>
+                                            </div>
                                             <div class="col-sm-6 text-right pr-3">
-                                                <label id="invoice_overall_total">$0.00</label>
+                                                <label id="invoice_sub_total">$1,695.00</label>
                                                 <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                             </div>
                                         </div>
@@ -828,6 +829,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-sm-12">
                                             <div class="card" id="url_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
                                                 <div class="row">
@@ -844,20 +846,20 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <div class="card" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
-                                                <div class="row">
-                                                    <div class="col-md-12 ">
-                                                        <div class="card-header">
-                                                            <a href="javascript:void(0);" id="attach_right_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                            <h5 style="padding-left: 20px;">Photos/Attachments</h5>
+                                        <div class="card" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
+                                            <div class="row">
+                                                <div class="col-md-12 ">
+                                                    <div class="card-header">
+                                                        <a href="javascript:void(0);" id="attach_right_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                        <h5 style="padding-left: 20px;">Photos/Attachments</h5>
 
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <span class="help help-sm help-block">download pdf,jpg,png</span>
-                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <span class="help help-sm help-block">download pdf,jpg,png</span>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         </div>
                                         <div class="col-sm-12">
                                             <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.">
@@ -907,26 +909,38 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <span class="help help-sm help-block">Record all items used on jobs</span>
-                                                            <a href="#" id="" data-toggle="modal" data-target="#new_items" type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span> Add New Item</a>
                                                             <br>
-                                                            <table style="width: 100%;" id="device_audit" class="table table-hover table-bordered table-striped">
+                                                            <div style="margin-right:15px; padding-top:1px;font-size: 10px !important;" align="left" class="normaltext1">
+                                                                <a href="javascript:void(0);" id="moreFields" class="more_fields" style="color:#58bc4f;"><span class="fa fa-plus"></span> Add Device </a>&nbsp;&nbsp;
+                                                                <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+                                                            </div>
+                                                            <table cellpadding="0" cellspacing="3" class="table table-striped table-bordered"">
                                                             <thead>
-                                                                <tr>
-                                                                    <td>Name</td>
-                                                                    <td>Sold By</td>
-                                                                    <td>Points</td>
-                                                                    <td>Retail Cost</td>
-                                                                    <td>Purchase Price</td>
-                                                                    <td>Qty</td>
-                                                                    <td>Tot Points</td>
-                                                                    <td>Tot Cost</td>
-                                                                    <td>Tot Purchase Price</td>
-                                                                    <td>Net</td>
-                                                                    <td>Action</td>
-                                                                </tr>
+                                                            <tr>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Name</b>
+                                                                </td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Sold By</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Points</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Retail Cost</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Purchase Price</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Qty</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Tot Points</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Tot Cost</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Tot Purchase Price</b></td>
+                                                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
+                                                                    <b>Net</b></td>
+                                                            </tr>
                                                             </thead>
-                                                            <tbody id="device_audit_datas">
-
+                                                            <tbody>
                                                             <?php if (isset($device_info)) : ?>
                                                                 <?php foreach ($device_info as $device) { ?>
                                                                     <tr>
@@ -966,11 +980,6 @@
                                                             </tbody>
                                                             </table>
                                                             <br>
-                                                            <style>
-                                                                .table-bordered td, .table-bordered th {
-                                                                    border: 1px solid #dee2e6 !important;
-                                                                }
-                                                            </style>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1110,160 +1119,6 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="new_items" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="item_details_title">Add New Item</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="new_customer_form">
-                <div class="modal-body">
-                    <div class="contact-info">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Item Name</label>
-                                            <input type="text" id="item_details_name" name="item_details_name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="last_name" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Qty</label>
-                                            <input type="text" id="item_details_qty" name="middle_name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Cost</label>
-                                            <input type="number" id="item_details_cost" name="email" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Cost Per</label>
-                                            <select class="form-control" name="cost_per" id="cost_per" required>
-                                                <option value="each" selected>Each</option>
-                                                <option>Weight</option>
-                                                <option>Length</option>
-                                                <option>Area</option>
-                                                <option>Volume</option>
-                                                <option>Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Unit</label>
-                                            <input type="text" name="mail_add" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Brand</label>
-                                            <input type="text" name="middle_name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Vendor</label>
-                                            <select class="form-control" name="vendor" id="exampleFormControlSelect1">
-                                                <option disabled>Select</option>
-                                                <option value="1">Vendor A</option>
-                                                <option value="2">Vendor B</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product Url</label>
-                                            <input type="text" name="state" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Cost of Goods</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Model Number</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Item Group</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Sold By</label>
-                                            <select id="employee_id_sold" name="employee_id_sold" class="form-control">
-                                                <option selected="">Select Employee</option>
-                                                <?php if(!empty($employees)): ?>
-                                                    <?php foreach ($employees as $employee): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->employee_ids == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Points</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Location</label>
-                                            <button class="btn btn-default" type="button" data-id="<?php echo $item[3]; ?>" id="seeLocation" data-toggle="dropdown" aria-expanded="true">
-                                                <span class="btn-label">See Location <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-right" id="<?php echo 'locQtyList' . $item[3]; ?>" style="width:300px;" role="menu" aria-labelledby="dropdown-edit">
-                                                <li role="presentation" style="background-color:#D3D3D3;">
-                                                    <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"><span style="padding-right:150px;">
-                                                            <strong>Location</strong></span><span style="border-left:1px solid black;"> <strong>Qty</strong></span>
-                                                </li>
-                                                <li role="separator" class="divider"></li>
-                                            </ul>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer modal-footer-detail">
-                    <div class="button-modal-list">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                        <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <!-- Signature Modal -->
 <div class="modal fade" id="updateSignature" role="dialog">
     <div class="close-modal" data-dismiss="modal">&times;</div>
@@ -1325,7 +1180,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -1336,13 +1191,13 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="items_table" class="table table-hover" style="width: 100%;">
+                            <table id="items_table" class="table table-hover" style="width: 100%;">
                                 <thead>
                                     <tr>
                                         <td> Name</td>
-                                        <td> Qty</td>
+                                        <td> Location</td>
                                         <td> Price</td>
-                                        <td> Action</td>
+                                        <td> </td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1350,14 +1205,13 @@
                                     <?php foreach ($items as $item): ?>
                                         <tr>
                                             <td><?= $item->title; ?></td>
-                                            <td><?= $item->units; ?></td>
                                             <td><?= $item->price; ?></td>
-                                            <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item"><span class="fa fa-plus"></span></button></td>
+                                            <td><button id="<?= $item->id; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item"><span class="fa fa-plus"></span></button></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                                 </tbody>
-                        </table>
+                            </table>
                     </div>
                 </div>
             </div>
@@ -1417,6 +1271,7 @@
     </div>
 </div>
 
+
 <!-- Signature Modal -->
 <div class="modal fade" id="share_job_modal" role="dialog">
     <div class="close-modal" data-dismiss="modal">&times;</div>
@@ -1464,6 +1319,7 @@
         </div>
     </div>
 </div>
+
 
 <?php
 add_footer_js(array(

@@ -10,8 +10,8 @@
         <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
         <!--Morris Chart CSS -->
         <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
-
         <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
         <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
         <!-- DataTables -->
         <!--<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />-->
@@ -24,6 +24,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
         <!--<script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
         <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet"> -->
+        
+        <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+        <script src="<?php echo $url->assets ?>push_notification/push.min.js"></script>
+        <script src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js"></script>
 
 
         <!-- taxes page -->
@@ -339,18 +343,19 @@
                                 } ?></h6>
                                         <div class="slimscroll notification-item-list">
                                                         <?php foreach ($newtasks as $value) { ?>
-                                                <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
-    <?php
-    $date_created = date_create($value->date_created);
-    echo date_format($date_created, "F d, Y h:i:s");
-    ?>
-                                                        </span></p>
-                                                </a>
-<?php } ?>
-                                        </div><!-- All--> <a href="<?php echo base_url('taskhub') ?>"
+                                        <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
+                                        <?php
+                                            $date_created = date_create($value->date_created);
+                                            echo date_format($date_created, "F d, Y h:i:s");
+                                        ?></span></p>
+                                        </a>
+                                <?php } ?>
+                                        </div><!-- All--> 
+                                        <a href="<?php echo base_url('taskhub') ?>"
                                                              class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
                                     </div>
                                 </li>
+
                                 <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                                     <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="javascript:void (0)" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i>-->
                                     <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden';  ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null;  ?><!--</span>-->
@@ -654,7 +659,6 @@
             }
         });
     };
-
     $(document).ready(function () {
         var TimeStamp = null;
         notificationClockInOut();

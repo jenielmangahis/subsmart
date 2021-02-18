@@ -67,7 +67,7 @@ class Accounting extends MY_Controller {
                 array('/accounting/banking',array()),
                 array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/addnewInvoice', 'credit_notes')),
+                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimates','/accounting/customers','/accounting/deposits','/accounting/NewworkOrder','/accounting/addnewInvoice', 'credit_notes')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
                 array("",	array('#','#')),
@@ -216,18 +216,29 @@ class Accounting extends MY_Controller {
 
         $tags = $this->tags_model->addtagGroup($new_data);
 
-        $return = [
-            'data' => $tags,
-            'success' => $tags !== null ? true : false,
-            'message' => $tags !== null ? 'Success' : 'Error'
-        ];
+        if ($tags != null){
+            $this->session->set_flashdata('tags_added','New rules added');
+            redirect('accounting/tags');
+        }else{
+            $this->session->set_flashdata('tags_failed','Rules name already exist.');
+            redirect('accounting/tags');
+        }
 
-        echo json_encode($return);
     }
 
     public function addTags(){
         $company_id  = getLoggedCompanyID();
         $group_id = $this->input->post('group_id');
+
+        // if (isset($group_name) && $group_name) {
+        //     $new_data2 = array(
+        //         'name' => $group_name,
+        //         'company_id' => $company_id,
+        //         'status' => 1,
+        //         'created_at' => date("Y-m-d H:i:s"),
+        //     );
+        //     $tags2 = $this->tags_model->addtagGroup($new_data2);
+        // }
 
         $new_data = array(
             'name' => $this->input->post('tag_name'),
@@ -241,13 +252,13 @@ class Accounting extends MY_Controller {
 
         $tags = $this->tags_model->add($new_data);
 
-        $return = [
-            'data' => $tags,
-            'success' => $tags !== null ? true : false,
-            'message' => $tags !== null ? 'Success' : 'Error'
-        ];
-
-        echo json_encode($return);
+        if ($tags != null){
+            $this->session->set_flashdata('tags_added','New rules added');
+            redirect('accounting/tags');
+        }else{
+            $this->session->set_flashdata('tags_failed','Rules name already exist.');
+            redirect('accounting/tags');
+        }
 
     }
 
@@ -3785,224 +3796,8 @@ class Accounting extends MY_Controller {
     public function NewworkOrder(){
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         // print_r($this->page_data);
         $this->load->view('accounting/NewworkOrder', $this->page_data);
-    }
-
-    public function listworkOrder(){
-        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        // $this->page_data['page_title'] = "Work Order List";
-        // print_r($this->page_data);
-        $is_allowed = $this->isAllowedModuleAccess(24);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'workorder';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-
-        $is_allowed = $this->isAllowedModuleAccess(24);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'workorder';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-
-        $role = logged('role');
-        $this->page_data['workorderStatusFilters'] = array ();
-        $this->page_data['workorders'] = array ();
-        // $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
-        if ($role == 2 || $role == 3) {
-            $company_id = logged('company_id');
-
-            if (!empty($tab_index)) {
-                $this->page_data['tab_index'] = $tab_index;
-                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
-            } else {
-
-                // search
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
-                } elseif (!empty(get('order'))) {
-
-                    $this->page_data['search'] = get('search');
-                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
-
-                } else {
-
-                    // $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
-                }
-            }
-
-            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
-        }
-        if ($role == 4) {
-
-            if (!empty($tab_index)) {
-
-                $this->page_data['tab_index'] = $tab_index;
-                // $this->page_data['workorders'] = $this->workorder_model->filterBy();
-
-            } elseif (!empty(get('order'))) {
-
-                $this->page_data['order'] = get('order');
-                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
-
-            } else {
-
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
-                } else {
-                    // $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
-                }
-            }
-
-            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
-        }
-
-        // unserialized the value
-
-        $statusFilter = array();
-        foreach ($this->page_data['workorders'] as $workorder) {
-
-            if (is_serialized($workorder)) {
-
-                $workorder = unserialize($workorder);
-            }
-        }
-        $this->load->view('accounting/work_order_list', $this->page_data);
-    }
-
-    public function newEstimateList(){
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Estimate Lists";
-        // print_r($this->page_data);
-        $this->load->view('accounting/estimatesList', $this->page_data);
-    }
-
-    public function savenewWorkOrder(){
-        postAllowed();
-
-        $post = $this->input->post();
-
-//        echo '<pre>'; print_r($post); die;
-
-        $user = (object)$this->session->userdata('logged');
-
-        //
-        if (is_array(post('item'))) {
-
-            $items = post('item');
-            $quantity = post('quantity');
-            $price = post('price');
-            $discount = post('discount');
-            $type = post('item_type');
-            $location = post('location');
-
-            $itemArray = array();
-
-            foreach (post('item') as $key => $val) {
-
-                $itemArray[] = array(
-
-                    'item' => $items[$key],
-                    'item_type' => $type[$key],
-                    'quantity' => $quantity[$key],
-                    'location' => $location[$key],
-                    'discount' => $discount[$key],
-                    'price' => $price[$key]
-                );
-            }
-
-            $additional_services = serialize($itemArray);
-        } else {
-
-            $additional_services = '';
-        }
-
-//        print_r(post('customer')); die;
-
-        $eqpt_cost = array(
-
-            'eqpt_cost' => post('eqpt_cost') ? post('eqpt_cost') : 0,
-            'sales_tax' => post('sales_tax') ? post('sales_tax') : 0,
-            'inst_cost' => post('inst_cost') ? post('inst_cost') : 0,
-            'one_time' => post('one_time') ? post('one_time') : 0,
-            'm_monitoring' => post('m_monitoring') ? post('m_monitoring') : 0
-        );
-
-        $company_id = logged('company_id');
-
-        // create the workorder customer
-        $this->load->model('Customer_model', 'customer_model');
-        $customer_id = $this->customer_model->create([
-
-            'customer_type' => post('customer')['customer_type'],
-            'contact_name' => post('customer')['first_name'] . ' ' . post('customer')['last_name'],
-            'contact_email' => post('customer')['email'],
-            'mobile' => post('customer')['contact_mobile'],
-            'phone' => serialize(post('customer')['contact_phone']),
-            'notification_method' => serialize(post('customer')['notification_type']),
-            'street_address' => post('customer')['monitored_location'],
-            'suite_unit' => post('customer')['cross_street'],
-            'city' => post('customer')['city'],
-            'postal_code' => post('customer')['zip'],
-            'state' => post('customer')['state'],
-            'birthday' => date('Y-m-d', strtotime(post('customer')['contact_dob'])),
-            'company_id' => $company_id
-        ]);
-
-//        print_r(serialize(post('post_service_summary'))); die;
-
-
-        if ($customer_id) {
-
-            $id = $this->workorder_model->create([
-
-                'user_id' => $user->id,
-                'company_id' => $company_id,
-                'customer_id' => $customer_id,
-                'customer' => serialize(post('customer')),
-                'emergency_call_list' => serialize(post('emergency_call_list')),
-                'plan_type' => post('plan_type'),
-                'account_type' => serialize(post('account_type')),
-                'panel_type' => serialize(post('panel_type')),
-                'panel_communication' => post('panel_communication'),
-                'panel_location' => post('panel_location'),
-                'date_issued' => date('Y-m-d', strtotime(post('date_issued'))),
-                'job_type_id' => post('job_type_id'),
-                'status_id' => post('status_id'),
-                'priority_id' => post('job_priority'),
-                'ip_cameras' => serialize(post('ip_cameras')),
-                'dvr_nvr' => serialize(post('dvr_nvr')),
-                'doorlocks' => serialize(post('doorlocks')),
-                'automation' => serialize(post('automation')),
-                'pers' => serialize(post('pers')),
-                'additional_services' => $additional_services,
-                'total' => serialize($eqpt_cost),
-                'billing_date' => date('Y-m-d', strtotime(post('billing_date'))),
-                'payment_type' => post('payment_type'),
-                'billing_freq' => post('billing_freq'),
-                'card_info' => serialize(post('card')),
-                'company_rep_approval' => post('company_representative_approval_signature'),
-                'primary_account_holder' => post('primary_account_holder_signature'),
-                'secondary_account_holder' => post('secondery_account_holder_signature'),
-                'company_rep_name' => post('company_representative_printed_name'),
-                'primary_account_holder_name' => post('primary_account_holder_name'),
-                'secondary_account_holder_name' => post('secondery_account_holder_name'),
-                'post_service_summary' => serialize(post('post_service_summary')),
-            ]);
-
-            $this->activity_model->add('New User $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'New Workorder Created Successfully');
-
-            redirect('workorder');
-        }
     }
 
 }

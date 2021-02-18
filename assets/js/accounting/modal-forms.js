@@ -1232,15 +1232,6 @@ const getTagForm = (data = {}, method) => {
     });
 }
 
-const getGroupTagForm = () => {
-    $.get('/accounting/get-group-tag-form/', function(res) {
-        $('#tags-modal div.modal-dialog div#tags-list').remove();
-
-        $('#tags-modal div.modal-dialog').append(`<div class="h-100"></div>`)
-        $('#tags-modal div.modal-dialog div').append(res);
-    });
-}
-
 const showTagsList = (el) => {
     $(el).parent().parent().parent().remove();
 

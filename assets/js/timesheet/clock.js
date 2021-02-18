@@ -73,7 +73,18 @@ $(document).ready(function () {
                                 html: "You are now Clock-in",
                                 icon: 'success'
                             });
-                    }
+                
+                        Push.Permission.GRANTED; // 'granted'
+                        Push.create("Clock In", {
+                            body: "User : "+data.FName+" "+data.LName,
+                            icon: '/users/user-profile/'+data.profile_img,
+                            timeout: 20000,
+                                onClick: function () {
+                                    window.focus();
+                                    this.close();
+                                }
+                            });
+                        }
                } 
             });
         }
@@ -90,7 +101,7 @@ $(document).ready(function () {
             confirmButtonColor: '#2ca01c',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, I want to Clock-out!'
-        }).then((result) => {
+        }).then((result) => { console.log(result);
             if (result.value) {
             $.ajax({
                 url:'/timesheet/clockOutEmployee',
@@ -116,7 +127,18 @@ $(document).ready(function () {
                                 html: "You are now Clock-out",
                                 icon: 'success'
                             });
-                    }
+
+                        Push.Permission.GRANTED; // 'granted'
+                        Push.create("Clock Out", {
+                            body: "User : "+data.FName+" "+data.LName,
+                            icon: '/uploads/users/user-profile/'+data.profile_img,
+                            timeout: 20000,
+                                onClick: function () {
+                                    window.focus();
+                                    this.close();
+                                }
+                            });
+                        }
                 }
             });
         }

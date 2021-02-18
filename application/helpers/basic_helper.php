@@ -1383,17 +1383,6 @@ function get_customer_by_id($customer_id, $key = '')
     return $CI->customer->getCustomer($customer_id);
 }
 
-/**
- * return customer acs_profile details based on ID
- */
-function acs_prof_get_customer_by_prof_id($customer_id)
-{
-    $CI =& get_instance();
-    $CI->load->model('AcsProfile_model', 'customer');
-
-    return $CI->customer->getByProfId($customer_id);
-}
-
 
 /**
  * all customers based on company or user id
@@ -1756,34 +1745,6 @@ function make_calender_event_label($settings, $event, $customer)
     return $title;
 }
 
-/**
- * @param $settings
- * @param $event
- * @param $customer
- * @return string
- */
-function acs_prof_make_calender_event_label($settings, $event, $customer)
-{
-    $settings = unserialize($settings);
-    $date = date('a', strtotime($event->start_time));
-    $date = substr($date, -2, 1);
-    $title = date('g', strtotime($event->start_time)) . $date;
-
-    if (!empty($settings['work_order_show_customer'])) {
-        $title .= ' ' . $customer->first_name . " " . $customer->last_name . ', ' . $customer->phone_m;
-    }
-
-    if (!empty($settings['work_order_show_details'])) {
-        $title .= ', ' . $event->description;
-    }
-
-    if (!empty($settings['work_order_show_price'])) {
-        $title .= ', $0.00';
-    }
-
-    return $title;
-}
-
 
 /**
  * @param $settings
@@ -1792,36 +1753,6 @@ function acs_prof_make_calender_event_label($settings, $event, $customer)
  * @return string
  */
 function make_calender_wordorder_label($settings, $workorder)
-{
-    $settings = unserialize($settings);
-
-    $date = date('a', strtotime($workorder->date_issued));
-    $date = substr($date, -2, 1);
-    $title = date('g', strtotime($workorder->date_issued)) . $date;
-
-    if (!empty($settings['work_order_show_customer'])) {
-        $title .= ' ' . $workorder->customer['first_name'] . ' ' . $workorder->customer['last_name'] . ', ';
-        $title .= $workorder->customer['contact_mobile'];
-    }
-
-    if (!empty($settings['work_order_show_details'])) {
-        $title .= ', ' . $workorder->customer['monitored_location'];
-    }
-
-    if (!empty($settings['work_order_show_price'])) {
-        $title .= ', $' . $workorder->total['eqpt_cost'];
-    }
-
-    return $title;
-}
-
-/**
- * @param $settings
- * @param $workorder
- * @param $customer
- * @return string
- */
-function acs_prof_make_calender_wordorder_label($settings, $workorder)
 {
     $settings = unserialize($settings);
 

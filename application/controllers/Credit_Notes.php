@@ -24,7 +24,7 @@ class Credit_Notes extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
             'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-			"assets/css/accounting/sidebar.css",
+            "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
         ));
 

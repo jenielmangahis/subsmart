@@ -637,6 +637,7 @@ class Register extends MY_Controller {
             */ 
         }else{
             $plan      = $this->NsmartPlan_model->getById($subscription_id);
+            $plan_name = strtolower($plan->plan_name);
             //Converge
             // Provide Converge Credentials
             $merchantID =  CONVERGE_MERCHANTID; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
@@ -666,12 +667,11 @@ class Register extends MY_Controller {
                 $next_billing = date("m/d/Y",strtotime("+30 days"));
             }
 
-            $ssl_description = $plan->plan_name . " / " . $plan->price;
+            $ssl_description = $plan_name;
             $ssl_firstname = $post['firstname'];
             $ssl_lastname  = $post['lastname'];
             $ssl_email = $post['email'];
             $ssl_phone = $post['phone'];
-            $ssl_companyname = $post['business_name'];
 
             //Follow the above pattern to add additional fields to be sent in curl request below.
             //$merchanttxnid = "3234342343";
@@ -693,7 +693,6 @@ class Register extends MY_Controller {
             "&ssl_next_payment_date=$next_billing".
             "&ssl_description=$ssl_description".
             "&ssl_phone=$ssl_phone".
-            "&ssl_company=$ssl_companyname".
             "&ssl_first_name=$ssl_firstname".
             "&ssl_last_name=$ssl_lastname".
             "&ssl_email=$ssl_email".
@@ -706,10 +705,6 @@ class Register extends MY_Controller {
             curl_close($ch); // Close cURL
 
             $sessiontoken= urlencode($result);
-
-            $this->session->set_userdata('regiserUserId', $uid);
-            $this->session->set_userdata('regiserClientId', $cid);
-
             /*echo "<pre>";
             print_r($sessiontoken);
             exit;*/
@@ -867,57 +862,15 @@ class Register extends MY_Controller {
 
     }
 
-    public function converge_success_payment()
+    public function converge_payment_redirect()
     {
-        $cid = $this->session->userdata('regiserClientId');
-        $uid = $this->session->userdata('regiserUserId');
-
-        $this->Clients_model->update($cid, array(
-            'converge_ssl_transaction_type' => $_GET['ssl_transaction_type'],
-            'converge_ssl_recurring_id' => $_GET['ssl_recurring_id'],
-            'is_plan_active' => 1,
-            'is_startup' => 1,
-            'plan_date_registered' => date("Y-m-d H:i:s")
-        ));
-
-        $this->users_model->update($uid,[
-            'status' => 1
-        ]);
-
-        $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
-        if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
-        {
-            $leads_input['tablename']   = "ac_leads";
-            $leads_input['field_name']  = "leads_id";
-            $leads_input['id']          = $reg_temp_user_id;
-            $this->Customer_advance_model->delete($leads_input);
-
-            $this->session->unset_userdata('reg_temp_user_id');
-        }
-
-        $payment_complete = true;
-        $payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
-
-        $this->session->set_flashdata('message_type', 'success');
-        $this->session->set_flashdata('message', 'Registration Sucessful. You can login to your account.'); 
-
-        redirect('login');
+        echo "<pre>";
+        print_r($_POST);
+        exit;
     }
 
-    public function cancel_converge_payment()
-    {
-        $cid = $this->session->userdata('regiserClientId');
-        $uid = $this->session->userdata('regiserUserId');
 
-        //Delete data
-        $this->Clients_model->deleteClient($cid);
-        $this->Users_model->deleteUser($uid);
 
-        $this->session->set_flashdata('message_type', 'danger');
-        $this->session->set_flashdata('message', 'Registration cancelled.');
-
-        redirect('login');
-    }
 }
 
 /* End of file Register.php */

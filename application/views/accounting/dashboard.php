@@ -226,6 +226,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!--                        </div>-->
 
                 <div class="row">
+                    <div class="col-lg-4 col-sm-6">
+                        <?php $this->load->view('accounting/shortcuts'); ?>
+                    </div>
                     <div class="col-sm-4">
                         <div class="sales tile-container" >
                             <div class="inner-container">

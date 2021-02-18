@@ -6,6 +6,66 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
 <link rel="stylesheet" href="<?= base_url("assets/plugins/morris.js/morris.css") ?>">
 <!-- page wrapper start -->
+
+<style>
+    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title, a, .modal-title{
+        font-family: Sarabun, sans-serif !important;
+    }
+
+    .pointer{
+        cursor: pointer;
+    }
+
+    .dynamic-widget .card{
+        height: 400px !important
+    }
+
+    .card-header{
+        border-bottom: 1px solid gray !important;
+        font-family: Sarabun, sans-serif !important;
+    }
+
+    .card-body h6{
+        font-size: 16px;
+        font-family: Open sans, Lato, Arial, sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+
+    .card-body .job-status{
+        width:100%;
+        background:#a5d8ff;
+        color: rgb(33, 150, 243);
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-top:10px;
+    }
+
+    .card-body .job-caption{
+        color: #616161;
+        font-size: 10px;
+        font-family: Roboto, Lato, Arial, sans-serif;
+        font-weight: 800;
+        line-height: 1.3;
+        text-transform: uppercase;
+    }
+    .smart__grid{
+        background: #fff;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+        height: 78vh;
+        padding: 10px;
+    }
+    .smart__grid > div{
+        background: #f2f2f2;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 <div class="wrapper" style="padding: 80px 14px;">
     <div class="bg-white" style="margin-top:20px; border-radius: 30px 30px 0 0;">
         <div class="container-fluid">
@@ -19,87 +79,73 @@
                     </div>
                     <div class="col-lg-6 justify-content-center d-none d-lg-block">
                         <div class="col-lg-12" style="background: #dcdddc; height:50px; height:130px; margin:0 auto; top:-25px; border-radius: 0 0 60px 60px; padding-top:25px;">
-                            <div class="float-left col-lg-2 no-padding text-center pointer">
-                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'08_add_customer.png' ?>" style="margin: 0 auto;" />
+                            <div onclick="document.location = '<?php echo base_url('/customer/add_lead') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'new_customer_qs.png' ?>" style="margin: 0 auto;" />
                                 <p>Add Customer</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer">
-                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
-                                <p>Search Customer</p>
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="$('#modal_customer').modal('show')">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'find_customer_qs.png' ?>" style="margin: 0 auto;"  />
+                                <p>Find Customer</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer">
-                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
-                                <p>Add a Job</p>
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="document.location = '<?php echo base_url('job/new_job1') ?>'">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'add_job_qs.png' ?>" style="margin: 0 auto;"  />
+                                <p>Add Job</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer">
-                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
-                                <p>Add a Event</p>
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="$('#NewEvent').modal('show')">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'quick_link_qs.png' ?>" style="margin: 0 auto;"  />
+                                <p>Quick Links</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer">
-                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="$('#newFeed').modal('show')">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'new_feed_qs.png' ?>" style="margin: 0 auto;"  />
                                 <p>New Feed</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer">
-                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/sales/').'01_add_a_job.png' ?>" style="margin: 0 auto;"  />
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="$('#addNewsLetter').modal('show')">
+                                <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'news_letter_qs.png' ?>" style="margin: 0 auto;"  />
                                 <p>Add Newsletter</p>
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="newFeed" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
+                        <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
+                            <div class="modal-content" style="border-radius: 30px;">
+                                <div class="modal-header">
+                                    <input type="text" placeholder="Subject Line" class="form-control" />
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <textarea style="height:130px;" class="form-control" placeholder="Feed Message" ></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="float-right btn btn-success btn-small">Send Feed</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="addNewsLetter" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
+                        <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
+                            <div class="modal-content" style="border-radius: 30px;">
+                                <div class="modal-header">
+                                    Company's News Letter
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+
+                                </div>
+                                <div class="modal-body text-center">
+                                    <textarea style="height:130px;" class="form-control" placeholder="News Bulletin" ></textarea>
+                                    <br />
+                                    <input class="float-left" type="file" value="Upload File" />
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="float-right btn btn-success btn-small">Send Newsletter</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <?php include viewPath('flash'); ?>
-                    <style>
-                        h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title, a, .modal-title{
-                            font-family: Sarabun, sans-serif !important;
-                        }
-                        .dynamic-widget .card{
-                            height: 400px !important
-                        }
-
-                        .card-header{
-                            border-bottom: 1px solid gray !important;
-                            font-family: Sarabun, sans-serif !important;
-                        }
-
-                        .card-body h6{
-                            font-size: 16px;
-                            font-family: Open sans, Lato, Arial, sans-serif;
-                            font-weight: 400;
-                            line-height: 1.5;
-                        }
-
-                        .card-body .job-status{
-                            width:100%;
-                            background:#a5d8ff;
-                            color: rgb(33, 150, 243);
-                            text-align: center;
-                            font-size: 12px;
-                            line-height: 1.5;
-                            margin-top:10px;
-                        }
-
-                        .card-body .job-caption{
-                            color: #616161;
-                            font-size: 10px;
-                            font-family: Roboto, Lato, Arial, sans-serif;
-                            font-weight: 800;
-                            line-height: 1.3;
-                            text-transform: uppercase;
-                        }
-                        .smart__grid{
-                            background: #fff;
-                            display: grid;
-                            grid-template-columns: 1fr 1fr;
-                            grid-gap: 10px;
-                            height: 78vh;
-                            padding: 10px;
-                        }
-                        .smart__grid > div{
-                            background: #f2f2f2;
-                            text-align: center;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                        }
-                    </style>
                     <div class="col-12 d-md-none d-block p-0">
                         <div class="smart__grid" id="1">
                             <div><a href="<?= base_url() ?>inquiries">Leads</a></div>
@@ -128,23 +174,6 @@
                             <div><a href="<?= base_url() ?>job">Job</a></div>
                         </div>
                     </div>
-<!--                    <div class="col-sm-6 d-none d-lg-flex">
-                    </div>-->
-                    <!--                <div class="col-sm-4">
-                                        <div class="float-right d-none d-md-block">
-                                            <ol class="breadcrumb">
-                    <?php $image = base_url('uploads/users/default.png'); ?>
-                                                 <img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;"> 
-                                                <img src="<?php echo userProfileImage(logged('id')) ?>" alt="user" class="rounded-circle" style="height: 50px;">
-                    <?php
-                    /* $id = logged('id');
-                      $query = $this->db->query("Select name from users where id = $id");
-                      $query11 = $query->row(); */
-                    ?>
-                                                <h5 style="margin: 13px 0 0px 10px;"><?php echo getLoggedName(); ?></h5>
-                                            </ol>
-                                        </div>
-                                    </div>-->
                 </div>
             </div>
             <!-- end row -->
@@ -409,7 +438,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-<?php echo form_open('dashboard/saveTags', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
+                    <?php echo form_open('dashboard/saveTags', ['class' => 'form-validate require-validation', 'id' => 'feed_form', 'autocomplete' => 'off']); ?>
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group">
@@ -422,7 +451,7 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
-<?php echo form_close(); ?>
+            <?php echo form_close(); ?>
         </div>
     </div>
 </div>

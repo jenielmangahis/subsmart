@@ -328,10 +328,6 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($return);
     }
 
-    public function group_job_tag_form() {
-        $this->load->view("accounting/group_tag_form");
-    }
-
     public function job_tag_modal() {
         $this->load->view("accounting/job_tags_modal");
     }
