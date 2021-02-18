@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card p-20" style="min-height: 400px !important;">
-                        <div class="page-title-box pb-2">
+                        <div class="page-title-box">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
                                     <h3 class="page-title">Online Booking</h3>

@@ -163,7 +163,6 @@ class Customer extends MY_Controller
         
         $mod_ids = $this->removeItemString($details, $id);
         $input = array('ams_id'=>$ams_id,'ams_values' => $mod_ids);
-        
         if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
             $details = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
             echo $details->ams_values;

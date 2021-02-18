@@ -44,29 +44,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+            <?php echo form_open_multipart('workorder/save', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
 
             <div class="row" style="margin-top:-30px;">
                 <div class="col-xl-12">
                     <div class="card">
                     <div class="card-body">
                         <h4 class="mt-0 header-title mb-5">Header</h4>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ol class="breadcrumb" style="margin-top:-30px;">
-                                    <li class="breadcrumb-item active">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location)</li>
-                                </ol>
-                            </div>
-                        </div>
+                        <ol class="breadcrumb" style="margin-top:-30px;">
+                            <li class="breadcrumb-item active">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location)</li>
+                        </ol>
                         <br>
-
                         <div class="row">                   
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="contact_name">Work Order #</label>
-                                <input type="text" class="form-control" name="contact_name" id="contact_name" required autofocus />
+                                <input type="text" class="form-control" name="contact_name" id="contact_name" required placeholder="Enter Name" autofocus />
                             </div>
-                            <div class="col-md-3 form-group">
-                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Customer</label>
+                            <div class="col-md-4 form-group">
+                                <label for="contact_email">Select Customer</label>
                                 <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
@@ -74,60 +69,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php } ?>
                                     </select>
                             </div>
-                            <div class="col-md-3 form-group">
-                                <label for="security_number">Security Number</label>
-                                <input type="text" class="form-control" name="security_number" id="security_number" placeholder="xxx-xx-xxxx" required/>
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="birthdate">Birth Date</label>
-                                <input type="text" class="form-control" name="birthdate" id="birthdate"  placeholder="mm/dd/yy" required/>
-                            </div>
                         </div>
-                        <div class="row">                   
-                            <div class="col-md-3 form-group">
-                                <label for="phone_no">Phone Number</label>
-                                <input type="text" class="form-control" name="phone_no" id="phone_no" required  />
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="mobile_no">Mobile Number</label>
-                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" required  />
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" id="email" required  />
-                            </div>
-                        </div>
-                        
                         <!-- end row -->
                         <div class="row">                    
-                            <div class="col-md-3 form-group">
-                                <label for="job_location">Job Location</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label>
-                                <input type="text" class="form-control" name="job_location" id="job_location" required/>
+                            <div class="col-md-4 form-group">
+                                <label for="contact_mobile">Job Location</label>
+                                <input type="text" class="form-control" name="contact_mobile" id="contact_mobile" placeholder="Enter Mobile" required/>
                             </div>
-                            <div class="col-md-3 form-group">
-                                <label for="city">
-                                    City
-                                </label>
-                                    <input type="text" class="form-control" name="city" id="city" />
-                            </div>
-                            <div class="col-md-2 form-group">
-                                <label for="state">
-                                    State
-                                </label>
-                                    <input type="text" class="form-control" name="state" id="state" />
-                            </div>
-                            <div class="col-md-1 form-group">
-                                <label for="zip">
-                                    Zip code
-                                </label>
-                                    <input type="text" class="form-control" name="zip" id="zip" />
-                            </div>
-                            
-                            <div class="col-md-3 form-group">
-                                <label for="cross_street">
-                                    Cross Street
-                                </label>
-                                    <input type="text" class="form-control" name="cross_street" id="cross_street" />
+                            <div class="col-md-4 form-group">
+                                <label for="contact_phone">Password</label>
+                                <input type="text" class="form-control" name="contact_phone" id="contact_phone" placeholder="Enter Phone" />
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -140,38 +91,43 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="radio" name="customer_type" value="Commercial">Commercial
                                 </label>
                             </div>
-                        </div> 
+                        </div> -->
                         <div class="row">
-                        </div>-->
+                            <div class="col-md-3 form-group">
+                                <label class="checkbox-inline">
+                                    City
+                                </label>
+                                    <input type="text" class="form-control" name="" id="" />
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label class="checkbox-inline">
+                                    Street
+                                </label>
+                                    <input type="text" class="form-control" name="" id="" />
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label class="checkbox-inline">
+                                    Zip code
+                                </label>
+                                    <input type="text" class="form-control" name="" id="" />
+                            </div>
+                        </div>
 
                         <div class="row">                   
                             <div class="col-md-4 form-group">
-                                <label for="contact_phone">Password</label> <i class="fa fa-pencil" aria-hidden="true" ></i>
-                                <input type="text" class="form-control" name="contact_phone" id="contact_phone" placeholder="Password" />
+                                <label for="street_address">Security Number</label>
+                                <input type="text" class="form-control" name="street_address" id="street_address" placeholder="Enter Address"/>
                             </div>
                             <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
-                            </div>
-                        </div>
-                        <div class="row">     
-                            <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
+                                <label for="suit">Custom Field</label>
+                                <input type="text" class="form-control" name="suit" id="suit" placeholder="Enter Suit/Unit"/>
                             </div>
                         </div>
-                        <div class="row">     
-                            <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="city">Tags</label>
+                                <!-- <input type="text" class="form-control" name="city" id="city" placeholder="Enter City"/> -->
+                                <select class="form-control"></select>
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -203,7 +159,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div><br/> -->
                         <br><br>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-9">
                                 <table class="table table-hover">
                                     <input type="hidden" name="count" value="0" id="count">
                                     <thead>
@@ -213,7 +169,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <th><b>Price</b></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="table_body_work">
+                                    <tbody id="table_body">
                                         <tr>
                                             <td>
                                                 <input type="text" class="form-control" name="item[]">
@@ -227,11 +183,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>                
                                     </tbody>
                                     </table>
-                                    <a href="#" id="add_another_workOr" style="color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items</a>                                        
+                                    <a href="#" id="add_another_work" style="color:green;">Add Items</a>                                        
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;font-size:16px;">
-                                <div class="col-md-7">
+                                <div class="col-md-4">
                                 </div>
                                 <div class="col-md-5">
                                     <table class="table" style="text-align:left;">
@@ -261,6 +217,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td><b>0.00</b></td>
                                         </tr>
                                     </table>
+                                </div>
+                                <div class="col-md-3">
                                 </div>
                             </div>
                             <!-- <div class="row">
@@ -301,17 +259,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>                                     
                             </div>
                             
-                            <h6>JOB DETAIL</h6><br>
-                            
-                        <div class="row">
-                            <div class="col-md-4 form-group">
-                                <label for="city">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
-                                <!-- <input type="text" class="form-control" name="city" id="city" placeholder="Enter City"/> -->
-                                <select class="form-control">
-                                            <option>---</option>
-                                </select>
-                            </div>
-                        </div>
+                            <h6>JOB DETAIL</h6>
+
                             <!-- <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="start_date">Date Issued</label>
@@ -390,7 +339,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <!-- ====== TERMS AND CONDITIONS ====== -->
                             <div class="row">
-                                <div class=" col-md-12">
+                                <div class=" col-md-8">
                                     <h6>TERMS AND CONDITIONS</h6>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="showuploadagreement">
@@ -470,7 +419,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row">
-                                <div class=" col-md-12">
+                                <div class=" col-md-8">
                                     <h6>TERMS OF USE</h6>
                                     <div style="height:100px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="showuploadagreement">
@@ -503,12 +452,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             and you authorize payment and confirmation with nSmarTrac. </p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class=" col-md-4">
+                                <div class=" col-md-6">
                                     <h5>Company Representative Approval</h5>
-                                    <div class="sigPad" id="smoothed1a" style="width:100%;height:150px;border:solid gray 1px;">
-                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
+                                    <div class="sigPad" id="smoothed1a" style="width:404px;">
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -530,10 +476,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-4">
+                                <div class=" col-md-6">
                                     <h5>Primary Account Holder</h5>
-                                    <div class="sigPad" id="smoothed2a" style="width:100%;height:150px;border:solid gray 1px;">
-                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
+                                    <div class="sigPad" id="smoothed2a" style="width:404px;">
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -554,10 +499,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-4">
+                                <div class=" col-md-6">
                                     <h5>Secondary Account Holder</h5>
-                                    <div class="sigPad" id="smoothed3a" style="width:100%;height:150px;border:solid gray 1px;">
-                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
+                                    <div class="sigPad" id="smoothed3a" style="width:404px;">
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -581,7 +525,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
 
-                            <div class="row" style="margin-top:80px;">                        
+                            <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
@@ -599,7 +543,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-md-12 form-group">
                                 <button type="submit" class="btn btn-flat btn-success">Submit</button>
                                 <button type="submit" class="btn btn-flat btn-success">Preview</button>
-                                <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                             </div>
                         </div>

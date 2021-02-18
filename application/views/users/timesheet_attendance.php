@@ -331,13 +331,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>In Now</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-in-now"><?php //echo $in_now;?></span>
+                                                                <span id="employee-in-now"></span>
                                                             </div>
-                                                            <div class="progress">
-                                                                <div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php //    echo $in_now;?>"
-                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php //echo round(($in_now / $total_users) * 100,0).'%';?>">
-                                                                    <?php //echo round(($in_now / $total_users) * 100,2).'%';?>
-                                                                </div>
+                                                            <div class="progress" id="progressClockIn">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -355,13 +351,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>Out Now</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-out-now"><?php //echo $out_now?></span>
+                                                                <span id="employee-out-now"></span>
                                                             </div>
-                                                            <div class="progress">
-                                                                <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $out_now?>"
-                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php //echo round(($out_now / $total_users) * 100,0).'%';?>">
-                                                                    <?php //echo round(($out_now / $total_users) * 100,2).'%';?>
-                                                                </div>
+                                                            <div class="progress" id="progressOutNow">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -788,7 +780,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     }
                                                                 }
                                                             }
-
                                                             //Employee's task
                                                             $task_name = '-';
                                                             $start_time = '-';
@@ -1371,27 +1362,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     });
    function waitForClockInOutattendance() {
 
-    var einnow="<?php echo round(($in_now / $total_users) * 100,2).'%';?>";
-    var eoutnow="<?php echo round(($out_now / $total_users) * 100,2).'%';?>";
-                                                                
+    var total_users="<?php echo $total_users;?>";
+    //var eoutnow="<?php //echo round(($out_now / $total_users) * 100,2).'%';?>";
+
                                                             
         $.ajax({
             type: "GET", 
             url: "/Timesheet/getClockInOutNotification",
             async: true,
             cache: false,
-            timeout: 10000,
+            timeout: 50000,
             success: function (data) { 
 
                 var obj = JSON.parse(data); 
                 $.each(obj, function (currentIndex, currentElem) {
 
-                    //$("#employee-in-now").css({"width": einnow});
-                    //$('#progressInNow').html(currentElem.ClockIn + "%");
-                    //$('#progressOutNow').html(currentElem.ClockOut + "%");
-
                     $('#employee-in-now').html(currentElem.ClockIn);
                     $('#employee-out-now').html(currentElem.ClockOut);
+
+                    var in1=Math.round((currentElem.ClockIn / total_users) * 100,0)+ '%'; 
+                    var in2=Math.round((currentElem.ClockIn / total_users) * 100,2)+ '%'; 
+                    var out1=Math.round((currentElem.ClockOut / total_users) * 100,0)+ '%'; 
+                    var out2=Math.round((currentElem.ClockOut / total_users) * 100,2)+ '%'; 
+                    
+                   $("#progressClockIn").html('<div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="'+currentElem.ClockIn+'" aria-valuemin="0" aria-valuemax="100" style="width:'+in1+'">'+in2+'</div>');
+                   $("#progressOutNow").html('<div id="progressOutNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="'+currentElem.ClockOut+'" aria-valuemin="0" aria-valuemax="100" style="width:'+out1+'">'+out2+'</div>');
                 });
                 setTimeout(waitForClockInOutattendance,2000);
             },  

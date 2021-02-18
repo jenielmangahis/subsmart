@@ -226,7 +226,6 @@ class Event extends MY_Controller
     {        
         $this->load->model('ColorSettings_model');
         $this->load->model('EventType_model');
-        $this->load->model('AcsProfile_model');
 
         $get = $this->input->get();
 
@@ -251,16 +250,13 @@ class Event extends MY_Controller
         if( $role_id == 1 || $role_id == 2 ){
             $args = array();
             $eventTypes = $this->EventType_model->getAll();
-            $customers  = $this->AcsProfile_model->getAll();
         }else{
             $args = array('company_id' => logged('company_id'));
             $eventTypes = $this->EventType_model->getAllByCompanyId(logged('company_id'));
-            $customers  = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
         }
 
         $colorSettings = $this->ColorSettings_model->getByWhere($args);
 
-        $this->page_data['customers'] = $customers;
         $this->page_data['eventTypes'] = $eventTypes;
         $this->page_data['colorSettings'] = $colorSettings;
         

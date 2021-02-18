@@ -8,16 +8,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
-            <!-- <div class="page-title-box">
-            </div> -->
+            <div class="page-title-box">
+            </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body hid-desk p-0" style="padding-bottom:0px;">
-                            <div class="row margin-bottom-ter align-items-center vault__header mb-0">
+                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                            <div class="row margin-bottom-ter align-items-center">
                                 <div class="col-auto">
-                                    <h2 class="page-title vault__title">Before and After Photos</h2>
+                                    <h2 class="page-title">Before and After Photos</h2>
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
@@ -29,12 +29,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="float-right d-md-block">
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="alert alert-warning mt-2" role="alert">
-                                <span style="color:black;">
-                                    One of the best way for prospect to process information is with visual data.  Before and after photos serve as proof that the product (or service) works.  Start sharing your success photos to others to grow your business. 
-                                </span>
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">

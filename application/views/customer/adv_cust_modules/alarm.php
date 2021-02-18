@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="alarm module_med ui-state-default"  id="<?= $id ?>">
+<div class="alarm module_med ui-state-default"  data-id="<?= $id ?>"  id="<?= $id ?>">
     <div class="col-sm-12">
         <h6></h6>
         <div class="row">

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="dispute module_med ui-state-default" id="<?= $id ?>">
+<div class="dispute module_med ui-state-default"  data-id="<?= $id ?>" id="<?= $id ?>">
     <div class="col-sm-12">
         <div class="row">
             <div class="statuscontent">

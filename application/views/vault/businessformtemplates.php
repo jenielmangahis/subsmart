@@ -5,7 +5,7 @@
 <div class="wrapper" role="wrapper">
    <?php include viewPath('includes/sidebars/filevault'); ?>
    <div wrapper__section>
-      <!-- <div class="container-fluid">
+      <div class="container-fluid">
          <div class="page-title-box">
             <div class="row align-items-center">
                <div class="col-sm-6">
@@ -19,7 +19,7 @@
                </div>
             </div>
          </div>
-      </div> -->
+      </div>
                     
       <div class="row">
          <div class="col-xl-12">

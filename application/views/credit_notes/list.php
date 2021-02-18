@@ -129,7 +129,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                     <li role="presentation">
-                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/send_customer/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
+                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/send/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('credit_notes/view/' . $c->id) ?>"><span

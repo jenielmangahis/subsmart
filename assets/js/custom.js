@@ -383,39 +383,6 @@ $(document).on("click", "#add_another", function (e) {
   $("#table_body").append(html);
 });
 
-$(document).on("click", "#add_another_workOr", function (e) 
-{
-  // alert('yeah');
-  e.preventDefault();
-  var count = parseInt($("#count").val()) + 1;
-  $("#count").val(count);
-
-  var html =
-    "<tr>\n" +
-    '<td><input type="text" class="form-control" name="order_items[]"></td>\n' +
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
-    count +
-    '" id="quantity_' +
-    count +
-    '" value="1">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control price" name="price[]" data-counter="' +
-    count +
-    '" id="price_' +
-    count +
-    '" min="0" value="0">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-    "</td>\n" +
-    "</tr> ";
-
-  $("#table_body_work").append(html);
-});
-
-
 $(document).on("click", "#add_another_option1", function (e) { 
   e.preventDefault();
   var count = parseInt($("#count").val()) + 1;
@@ -793,4 +760,3 @@ $("#secondary_account_holder_signature3a").on("click touchstart", function () {
   var dataURL = canvas.toDataURL("image/png");
   $("#saveSecondaryAccountSignatureDB3a").val(dataURL);
 });
-

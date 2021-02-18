@@ -40,7 +40,6 @@ class Timesheet extends MY_Controller {
         ));
 
 	}
-
 	// added for tracking Timesheet of employees: Single Employee View
 //	public function timesheet_user()
 //	{
@@ -102,7 +101,6 @@ class Timesheet extends MY_Controller {
             "Sunday" => date("M d,y",strtotime('sunday this week')),
         );
         $this->page_data['date_this_week'] = $date_this_week;
-		
 		$this->load->view('users/timesheet-employee', $this->page_data);
 	}
 
@@ -1642,8 +1640,11 @@ class Timesheet extends MY_Controller {
 //    }
     public function clockInEmployee(){
         
+        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=".$_SERVER['HTTP_CLIENT_IP']);
+        $getTimeZone=json_decode($ipInfo);
+        date_default_timezone_set($getTimeZone->geoplugin_timezone);
 	    $clock_in = time();
-	    $user_id = $this->session->userdata('logged')['id'];
+	    $user_id =$this->session->userdata('logged')['id'];
 
         $attendance = array(
             'user_id' => $user_id, 
@@ -1675,14 +1676,26 @@ class Timesheet extends MY_Controller {
             );
             $this->db->insert('timesheet_logs',$logs_insert);
         }
+ 
+
 
         if($this->db->affected_rows() != 1){
             echo json_encode(0);
         }else{
+
+            $this->db->select('FName,LName,profile_img');
+            $this->db->from('users');
+            $this->db->where('id',$user_id);
+            $query = $this->db->get();
+            $getUserDetail = $query->row();
+
             $data = new stdClass();
             $data->clock_in_time = date('h:i A',$clock_in);
             $data->clock_out_time = 'Pending...';
             $data->attendance_id = $attn_id;
+            $data->FName = $getUserDetail->FName;
+            $data->LName = $getUserDetail->LName;
+            $data->profile_img = $getUserDetail->profile_img;
             echo json_encode($data);
         }
 
@@ -1769,6 +1782,9 @@ class Timesheet extends MY_Controller {
     public function clockOutEmployee(){
 
         
+        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=".$_SERVER['HTTP_CLIENT_IP']);
+        $getTimeZone=json_decode($ipInfo);
+        date_default_timezone_set($getTimeZone->geoplugin_timezone);
         $attn_id = $this->input->post('attn_id');
         $clock_out = 0;
         $sched_clockOut = $this->input->post('time');
@@ -1819,10 +1835,19 @@ class Timesheet extends MY_Controller {
             if($affected_row != 1){
                 echo json_encode(0);
             }else{
+                $this->db->select('FName,LName,profile_img');
+                $this->db->from('users');
+                $this->db->where('id',$user_id);
+                $query = $this->db->get();
+                $getUserDetail = $query->row();
+
                 $data = new stdClass();
                 $data->clock_out_time = date('h:i A',$clock_out);
                 $data->attendance_id = $attn_id;
                 $data->shift_duration = $shift_duration;
+                $data->FName = $getUserDetail->FName;
+                $data->LName = $getUserDetail->LName;
+                $data->profile_img = $getUserDetail->profile_img;
                 echo json_encode($data);
             }
 

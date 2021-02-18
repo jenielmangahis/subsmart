@@ -52,9 +52,9 @@ class Items extends MY_Controller
 
         if (!empty($get['search'])) {
             $this->page_data['search'] = $get['search'];
-            // $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
+            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
         } else {
-            // $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
+            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
         }
 
         $this->load->view('items/list', $this->page_data);
@@ -62,13 +62,13 @@ class Items extends MY_Controller
 
     public function add()
     {
-        $is_allowed = $this->isAllowedModuleAccess(20);
+        /*$is_allowed = $this->isAllowedModuleAccess(20);
         if( !$is_allowed ){
             $this->page_data['module'] = 'items_add';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-        ifPermissions('items_add');
+        ifPermissions('items_add');*/
         $this->load->view('items/add', $this->page_data);
     }
 

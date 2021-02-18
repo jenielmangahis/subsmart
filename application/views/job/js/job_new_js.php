@@ -16,7 +16,7 @@
             url: "<?= base_url() ?>/job/get_customers",
             success: function(data)
             {
-                //console.log(data);
+                console.log(data);
                 var template_data = JSON.parse(data);
                 var toAppend = '';
                 $.each(template_data,function(i,o){
@@ -24,7 +24,7 @@
                     if(o.prof_id == cust_id){
                         selected = "selected";
                     }
-                    //console.log(cust_id);
+                    console.log(cust_id);
                     toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
                 });
                 $('#customer_id').append(toAppend);
@@ -80,7 +80,7 @@
                 url: "<?= base_url() ?>/job/save_job",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
-                    //console.log(data);
+                    console.log(data);
                     sucess_add_job();
                 }
             });
@@ -117,64 +117,23 @@
             });
         });
 
-        function numberWithCommas(x) {
-            return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-        }
-
         $(".select_item").click(function () {
             var idd = this.id;
             console.log(idd);
             console.log($(this).data('itemname'));
             var title = $(this).data('itemname');
             var price = $(this).data('price');
-            var qty = $(this).data('quantity');
-
-            var total_ = price * qty;
-            var total = parseFloat(total_).toFixed(2);
-            var withCommas = Number(total).toLocaleString('en');
-            total = '$' + withCommas + '.00';
-            console.log(total);
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ></td>\n" +
-                "<td width=\"10%\"><small>Qty</small><input value='"+qty+"' type=\"text\" name=\"item_qty[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\"><small>Qty</small><input type=\"text\" name=\"item_qty[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"10%\"><small>Unit Price</small><input value="+price+" type=\"text\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><b id='"+total_+"' class=\"total_per_item\">"+total+"</b><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\">$00<a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
                 "</tr>";
             tableBody = $("#jobs_items_table_body");
             tableBody.append(markup);
-            markup2 = "<tr id=\"sss\">" +
-                "<td >"+title+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
-                "<td >"+price+"</td>\n" +
-                "<td ></td>\n" +
-                "<td >"+qty+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
-                "<td >0</td>\n" +
-                "<td ></td>\n" +
-                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-                "</tr>";
-            tableBody2 = $("#device_audit_datas");
-            tableBody2.append(markup2);
-            calculate_subtotal();
         });
-
-        function calculate_subtotal (){
-            var subtotal = 0 ;
-            $('.total_per_item').each(function(index) {
-                var idd = this.id;
-                subtotal = Number(subtotal) + Number(idd);
-            });
-            var total = parseFloat(subtotal).toFixed(2);
-            var withCommas = Number(total).toLocaleString('en');
-            $('#invoice_sub_total').html('$' + withCommas + '.00');
-            $('#invoice_overall_total').html('$' + withCommas + '.00');
-        }
-
-
 
         // $("#add_another_item").click(function () {
         //     // var newFields = document.getElementById('custom_form').cloneNode(true);
@@ -187,29 +146,12 @@
             $(this).parent().parent().remove();
         });
 
-        $("body").delegate(".remove_audit_item_row", "click", function(){
-            $(this).parent().parent().remove();
-        });
-
         $("body").delegate(".color-scheme", "click", function(){
             var id = this.id;
             $('[id="job_color_id"]').val(id);
             console.log(id);
             $( "#"+id ).append( "<i class=\"fa fa-check calendar_button\" aria-hidden=\"true\"></i>" );
             remove_others(id);
-        });
-
-        $("body").delegate(".edit_item_list", "click", function(){
-            var id = this.id;
-            console.log(id);
-            var title = $(this).data('name');
-            var price = $(this).data('price');
-            var qty = $(this).data('quantity');
-            $('#new_items').modal('show');
-            $('#item_details_name').val(title);
-            $('#item_details_qty').val(qty);
-            $('#item_details_cost').val(price);
-            $('#item_details_title').html('Edit Item');
         });
 
         function remove_others (color_id){
@@ -551,15 +493,7 @@
         $('#items_table').DataTable({
             "lengthChange": false,
             "searching" : true,
-            "pageLength": 5,
-            "order": [],
-        });
-
-        $('#device_audit').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 5,
-            "paging" : false,
+            "pageLength": 10,
             "order": [],
         });
 

@@ -5,7 +5,6 @@
     .hid-deskx {
         display: none !important;
     }
-
     body {
         margin: 0;
         padding: 0;
@@ -13,8 +12,6 @@
         font-weight: 400;
         font-size: 13px;
     }
-
-
     .indata {
         width : 100%;
         float: left;
@@ -24,7 +21,6 @@
         justify-content: space-around;
         flex-flow: wrap;
     }
-
     .module{
         border: 2px solid #e4e4e4 !important;
         border-radius: 10px;
@@ -39,7 +35,6 @@
         margin-bottom: 10px;
         background: #ffffff !important;
     }
-
     .module_med{
         border: 1px solid #32243d;
         border-radius: 10px;
@@ -54,7 +49,6 @@
         margin-bottom: 10px;
         background: #ffffff !important;
     }
-
     .module_lg{
         border: 1px solid #32243d;
         border-radius: 10px;
@@ -69,7 +63,6 @@
         margin-bottom: 10px;
         background: #ffffff !important;
     }
-
     @media only screen and (max-width: 954px){
         .module {
             width: 590px;
@@ -83,7 +76,6 @@
             max-width: 100%;
         }
     }
-
     @media (min-width: 600px) and (max-width: 767px){
         .module {
             width: 460px ;
@@ -96,15 +88,8 @@
             max-width: 90%;
         }
     }
-
     @media only screen and (max-width: 900px){
         #container2 { width: 90%; }
-    }
-
-    .profile {
-        /**background-color: #a4508b;
-        background-image: linear-gradient(326deg, #a4508b 0%, #5f0a87 74%); */
-        // background-image: url('<?= base_url() ?>/assets/img/customer/profile2.png') !important;
     }
     .individual-module h6 {
         transform: rotate(-90deg);
@@ -118,58 +103,7 @@
         top: 58px;
         color: white;
         border-radius: 10px 10px 0px 0;
-    }
-
-    .customizable {
-        background-image: url('/assets/img/customer/customizable.png') !important;
-    }
-    .billings {
-        background-image: url('/assets/img/customer/billing2.png') !important;
-    }
-    .alarm {
-        background-image: url('/assets/img/customer/alarm_im.png') !important;
-    }
-    .tech {
-        background-image: url('/assets/img/customer/tech2.png') !important;
-    }
-    .access {
-        background-image: url('/assets/img/customer/access2.png') !important;
-    }
-    .admin {
-        background-image: url('/assets/img/customer/admin.png') !important;
-    }
-    .office {
-        background-image: url('/assets/img/customer/office2.png') !important;
-    }
-    .owner {
-        background-image: url('/assets/img/customer/owner2.png') !important;
-    }
-    .contract {
-        background-image: url('/assets/img/customer/contract2.png') !important;
-    }
-    .clients {
-        background-image: url('/assets/img/customer/client.png') !important;
-    }
-    .score {
-        /*background-image: url('/assets/img/customer/scores.png') !important;*/
-    }
-    .documents {
-        background-image: url('/assets/img/customer/documents.png') !important;
-    }
-    .tasks {
-        background-image: url('/assets/img/customer/tasks.png') !important;
-    }
-    .dispute {
-        background-image: url('/assets/img/customer/dispute_stat.png') !important;
-    }
-    .memos {
-        background-image: url('/assets/img/customer/memo.png') !important;
-    }
-    .invoices {
-        background-image: url('/assets/img/customer/invoices.png')!important;
-    }
-    .assigned {
-        background-image: url('/assets/img/customer/assigned.png')!important;
+        cursor: pointer;
     }
     .client {
         background-image: url('https://app.creditrepaircloud.com/application/images/client_new.png');
@@ -189,7 +123,6 @@
         cursor: pointer;
         color: #0070c8;
     }
-
     .contactrighttab {
         height: 35px;
         margin-top: 6px;
@@ -197,9 +130,7 @@
         padding-bottom: 3px;
         float: left;
         border: 1px solid #fff;
-
     }
-
     .contactrighttxt {
         width: 207px;
         font-size: 12px;
@@ -216,7 +147,6 @@
         padding: 2px;
         width: 35px;
     }
-
     .project {
         background-image: url('https://app.creditrepaircloud.com/application/images/scores_new.png');
         width: 530px;
@@ -268,8 +198,6 @@
         clear: both;
         height: 10px;
     }
-
-
     .paperwork {
         background-image: url('https://app.creditrepaircloud.com/application/images/documents_new.png');
         background-repeat: no-repeat;
@@ -279,7 +207,6 @@
         margin: 10px 0 0 10px;
         padding: 0 0 0 50px;
     }
-
     .statusbg {
         background-image: url('https://app.creditrepaircloud.com/application/images/status_new.png');
         height: 340px;
@@ -314,7 +241,6 @@
     .chart2, .signin {
         border-top-right-radius: 10px;
     }
-
     .reminder {
         background-image: url('https://app.creditrepaircloud.com/application/images/reminder_new.png');
         width: 480px;
@@ -348,8 +274,6 @@
         float: left;
         width: 50%;
     }
-
-
     .memo {
         background-image: url('https://app.creditrepaircloud.com/application/images/memo1_new.png');
         width: 480px;
@@ -399,7 +323,6 @@
         margin: 10px 0 0 50px;
         line-height: 27px;
     }
-
     .assigncontactbg {
         background-image: url('https://app.creditrepaircloud.com/application/images/contacts-bg.png');
         height: 265px;
@@ -411,7 +334,6 @@
         background-repeat: no-repeat;
         padding-top: 10px;
     }
-
     @media (max-width: 767px) {
         .client, .project {
             height: auto !important;
@@ -440,12 +362,10 @@
             height: auto;
         }
     }
-
     @media only screen and (max-width: 600px) {
         .hid-desk {
             display: none !important;
         }
-
         .hid-deskx {
             display: block !important;
         }

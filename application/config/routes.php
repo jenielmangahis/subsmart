@@ -215,8 +215,6 @@ $route['sms_automation'] = 'Sms_Automation';
 $route['sms_campaigns'] = 'Sms_Campaigns';
 $route['voicemail_campaigns'] = 'Voicemail_Campaigns';
 $route['email_campaigns'] = 'Email_Campaigns';
-
-//Email Automation
 $route['email_automation'] = 'Email_Automation';
 $route['email_automation/templates'] = 'Email_Automation/templates';
 $route['email_automation/create_template'] = 'Email_Automation/save_template';
@@ -232,7 +230,6 @@ $route['email_automation/ajax_set_default_template'] = 'Email_Automation/ajax_se
 $route['email_automation/ajax_set_default_template_edit'] = 'Email_Automation/ajax_set_default_template_edit';
 $route['email_automation/ajax_set_place_holder'] = 'Email_Automation/ajax_set_place_holder';
 $route['email_automation/ajax_set_place_holder_edit'] = 'Email_Automation/ajax_set_place_holder_edit';
-$route['email_automation/view_logs/(:any)'] = 'Email_Automation/view_logs/$1';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 
@@ -273,7 +270,6 @@ $route['accounting/load-job-tags']['post'] = 'accounting_modals/load_job_tags';
 $route['accounting/submit-job-tag-form']['post'] = 'accounting_modals/submit_job_tag';
 $route['accounting/get-job-tag-modal'] = 'accounting_modals/job_tag_modal';
 $route['accounting/get-job-tag-form'] = 'accounting_modals/job_tag_form';
-$route['accounting/get-group-tag-form'] = 'accounting_modals/group_job_tag_form';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
@@ -516,8 +512,6 @@ $route['offer_codes/update_edit_offer'] = 'Offer_Codes/update_edit_offer';
 
 //Registration
 $route['registration/_use_offer_code'] = 'Register/registration_use_code';
-$route['registration/success_converge_payment'] = 'Register/converge_success_payment';
-$route['registration/cancel_converge_payment'] = 'Register/cancel_converge_payment';
 
 //Public Add Employee
 $route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
