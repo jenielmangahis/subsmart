@@ -68,21 +68,21 @@ class Workcalender extends MY_Controller
 
             foreach ($events as $key => $event) {
 
-                $customer = get_customer_by_id($event->customer_id);
+                $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
 
                 // label of the event
                 if (!empty($customer)) {
 
                     if (!empty($calender_settings)) {
 
-                        $title = make_calender_event_label($calender_settings, $event, $customer);
+                        $title = acs_prof_make_calender_event_label($calender_settings, $event, $customer);
 
                     } else {
 
                         $date = date('a', strtotime($event->start_time));
                         $date = substr($date, -2, 1);
                         $title = date('g', strtotime($event->start_time)) . $date;
-                        $title .= ' ' . $customer->contact_name . ', ' . $customer->mobile;
+                        $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
                     }
                 }
 
