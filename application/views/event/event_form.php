@@ -144,9 +144,16 @@ input#datepicker_startdate {
     <div class="form-group">
         <div class="row">
             <div class="col-md-6 col-sm-12">
-                <label class="left">Customer1</label> <span class="form-required left">*</span>
-                <select name="customer_id" id="business-customer" class="form-control select2-hidden-accessible"
-                        placeholder="Select customer" tabindex="-1" aria-hidden="true">
+                <label class="left">Customer</label> <span class="form-required left">*</span>
+                <select name="customer_id" id="acs-customer" class="form-control" placeholder="Select customer" tabindex="-1" aria-hidden="true">
+                  <option></option>
+                  <?php foreach($customers as $c){ ?>
+                    <?php if (!empty($event)) { ?>
+                      <option <?= $event->customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                    <?php }else{ ?>
+                      <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                    <?php } ?>
+                  <?php } ?>
                 </select>
             </div>
             <div class="col-md-6 col-sm-12">
@@ -154,7 +161,11 @@ input#datepicker_startdate {
                 <select name="what_of_even" id="what_of_even" class="form-control gray-first">
                     <option value="">Select type of event</option>
                     <?php foreach($eventTypes as $e){ ?>
-                      <option value="<?= $e->event_type_name; ?>"><?= $e->event_type_name; ?></option>
+                      <?php if (!empty($event)) { ?>
+                        <option <?= $event->what_of_even == $e->event_type_name ? 'selected="selected"' : ''; ?> value="<?= $e->event_type_name; ?>"><?= $e->event_type_name; ?></option>
+                      <?php }else{ ?>
+                        <option value="<?= $e->event_type_name; ?>"><?= $e->event_type_name; ?></option>
+                      <?php } ?>
                     <?php } ?>
                 </select>
             </div>
@@ -514,6 +525,7 @@ input#datepicker_startdate {
     $(document).ready(function () {
 
         // select the customer
+        $('#acs-customer').select2();
         $('#business-customer')
             .empty() //empty select
             .append($("<option/>") //add option tag in select

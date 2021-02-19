@@ -9,8 +9,11 @@
                 </div>
                 <a class="customer-avatar" href="javascript:void(0);"> 
                     <img class="customer-avatar-img" src="<?php echo base_url('assets/img/customer_sm.png') ?>">
-                    <?php echo get_customer_by_id($event->customer_id)->contact_name ?><br />
-                    <?php echo get_customer_by_id($event->customer_id)->contact_email ?>
+                    <?php 
+                        $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
+                    ?>
+                    <?php echo $customer->first_name . ' ' . $customer->last_name; ?><br />
+                    <?php echo $customer->email; ?>
                     <br> <br>
                 </a>
             </div>
@@ -29,6 +32,13 @@
                 <?php } ?>
 
             </div>
+
+            <?php if($event->event_location != ''){ ?>
+                <div class="margin-bottom-sec">
+                    <div class="text-ter text-sm">LOCATION</div>   
+                    <span><?= $event->event_location; ?></span>
+                </div>
+            <?php } ?>
 
             <div class="margin-bottom-sec">
                 <div class="text-ter text-sm">NOTIFICATION</div>
