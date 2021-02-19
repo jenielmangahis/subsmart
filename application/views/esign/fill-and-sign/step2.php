@@ -4,27 +4,32 @@
 <section class="container-fluid fillAndSign fillAndSign--step2" data-step="2">
     <div class="fillAndSign__topnav">
         <div class="container">
-            <div class="fillAndSign__primary">
-                <div class="action action--draggable" title="Text" data-text-type="initial">
-                    <i class="fa fa-font"></i>
+            <div class="d-flex fillAndSign__actions">
+                <div class="fillAndSign__primary">
+                    <div class="action action--draggable" title="Text" data-text-type="initial">
+                        <i class="fa fa-font"></i>
+                    </div>
+                    <div class="action action--draggable" title="Bold" data-text-type="bold">
+                        <i class="fa fa-bold"></i>
+                    </div>
+                    <div class="action action--draggable" title="Underline" data-text-type="underline">
+                        <i class="fa fa-underline"></i>
+                    </div>
+                    <div class="action action--draggable" title="Strikethrough" data-text-type="strikethrough">
+                        <i class="fa fa-strikethrough"></i>
+                    </div>
+                    <div class="action action--draggable" title="Italic" data-text-type="italic">
+                        <i class="fa fa-italic"></i>
+                    </div>
                 </div>
-                <div class="action action--draggable" title="Bold" data-text-type="bold">
-                    <i class="fa fa-bold"></i>
-                </div>
-                <div class="action action--draggable" title="Underline" data-text-type="underline">
-                    <i class="fa fa-underline"></i>
-                </div>
-                <div class="action action--draggable" title="Strikethrough" data-text-type="strikethrough">
-                    <i class="fa fa-strikethrough"></i>
-                </div>
-                <div class="action action--draggable" title="Italic" data-text-type="italic">
-                    <i class="fa fa-italic"></i>
+                <div class="fillAndSign__secondary">
+                    <div class="action" title="Sign" id="addSignatureButton">
+                        <i class="fa fa-pencil mr-2"></i><span>Sign</span>
+                    </div>
                 </div>
             </div>
-            <div class="fillAndSign__secondary">
-                <div class="action" title="Sign" id="addSignatureButton">
-                    <i class="fa fa-pencil mr-2"></i><span>Sign</span>
-                </div>
+            <div class="fillAndSign__readonly">
+                <p>This document is read-only.</p>
             </div>
         </div>
     </div>

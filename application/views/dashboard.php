@@ -179,22 +179,19 @@
             <!-- end row -->
             <div class="row-tablet-mobile mb-fix">
                 <div class="row d-none d-lg-flex">
-                    <?php $this->load->view('widgets/quick_start', $quick_start_data); ?>
-                    <div class="col-md-8">
+                    <?php //$this->load->view('widgets/quick_start', $quick_start_data); ?>
+                    <div class="col-md-12">
                         <div class="row cus-dashboard-div">
                             <?php
                             foreach ($widgets as $wids):
                                 if ($wids->wu_is_main):
-                                    $data['class'] = 'col-lg-6 col-md-6 col-sm-12';
+                                    $data['class'] = 'col-lg-4 col-md-4 col-sm-12';
+                                    $data['rawHeight'] = '250';
                                     $data['height'] = 'height: 250px;';
                                     $data['id'] = $wids->w_id;
                                     $this->load->view($wids->w_view_link, $data);
                                 endif;
                             endforeach;
-//                            $this->load->view('widgets/upcoming_jobs');
-//                            $this->load->view('widgets/upcoming_estimates');
-//                            $this->load->view('widgets/upcoming_events');
-//                            $this->load->view('widgets/task_hub');
                             ?>
                         </div>
                     </div>

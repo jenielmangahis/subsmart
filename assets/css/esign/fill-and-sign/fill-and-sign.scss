@@ -305,4 +305,76 @@ body {
       cursor: move;
     }
   }
+
+  &__shareLink {
+    position: fixed;
+    bottom: -65px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    background-color: #f3f3f3;
+    padding: 10px 20px;
+    border: 1px solid #e7e7e7;
+    border-radius: 4px;
+    z-index: 2;
+    transition: bottom 0.3s;
+
+    &--show {
+      bottom: 30px;
+    }
+
+    .fillAndSign__shareLinkContent {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 250px;
+    }
+
+    .btn {
+      margin-left: 10px;
+      border: 0 !important;
+      outline: 0 !important;
+    }
+  }
+
+  .fillAndSign__readonly {
+    display: none;
+  }
+
+  &--readonly {
+    .fillAndSign__actions {
+      display: none !important;
+    }
+
+    .fillAndSign__readonly {
+      background-color: #17a2b8;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      position: relative;
+      top: -1px;
+
+      p {
+        font-family: "Open Sans", sans-serif;
+        margin-bottom: 0;
+        color: #fff;
+      }
+    }
+
+    .fillAndSign__canvasContainer {
+      pointer-events: none;
+    }
+
+    .fillAndSign__signatureContainer,
+    .fillAndSign__fieldInput {
+      border: 0;
+    }
+
+    .fillAndSign__signatureClose,
+    .fillAndSign__fieldClose {
+      display: none !important;
+    }
+  }
 }

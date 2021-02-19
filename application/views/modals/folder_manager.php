@@ -5,7 +5,7 @@
  .treeview span.icon{width:12px;margin-right:5px}
  .treeview .node-disabled{color:silver;cursor:not-allowed}
  .node-folders_treeview{}
- .node-folders_treeview:not(.node-disabled):hover{background-color:#F5F5F5;} 
+ .node-folders_treeview:not(.node-disabled):hover{background-color:#F5F5F5;}
 
 </style>
 <?php if(!$isMain){ ?>
@@ -20,25 +20,58 @@
       </div>
       <div class="modal-body" style="padding: 1rem !important">
 <?php } ?>
-        <?php 
+        <?php
               $default_tag = 'Welcome ' . $company_name;
 
-              if($isMyLibrary){ 
+              if($isMyLibrary){
                 $default_tag = 'Hello ' . $user_fname . ' ' . $user_lname;
         ?>
           <input type="hidden" id="vault_type" value="mylibrary" />
         <?php } else if($isBusinessFormTemplates){ ?>
-          <input type="hidden" id="vault_type" value="businessformtemplates" />  
+          <input type="hidden" id="vault_type" value="businessformtemplates" />
         <?php } else { ?>
           <input type="hidden" id="vault_type" value="sharedlibrary" />
         <?php } ?>
 
         <div class="card vaultContainer">
-          <div class="card-header pb-0">        
+          <?php if($isBusinessFormTemplates) { ?>
+            <div class="row pl-3 mt-1">
+              <h3 class="page-title mb-0">Business Form Templates</h3>
+              <span class="col-12 row pt-0" style="color: #858992;font-size: 14px;">Categorized Files and Folders</span>
+            </div>
+            <div class="pl-3 pr-3 mt-2 row">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+              </div>
+            </div>
+          <?php } ?>
+          <?php if(($isMain) && ($isMyLibrary)) { ?>
+            <div class="row pl-3 mt-1">
+              <h3 class="page-title mb-0">My Library</h3>
+              <span class="col-12 row pt-0" style="color: #858992;font-size: 14px;">My folders and files</span>
+            </div>
+            <div class="pl-3 pr-3 mt-2 row">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+              </div>
+            </div>
+          <?php } ?>
+          <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))){ ?>
+            <div class="row pl-3 mt-1">
+              <h3 class="page-title mb-0">Shared Library</h3>
+              <span class="col-12 row pt-0" style="color: #858992;font-size: 14px;">Accessible folders and files within the company</span>
+            </div>
+            <div class="pl-3 pr-3 mt-2 row">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+              </div>
+            </div>
+          <?php } ?>
+          <div class="card-header pb-0">
             <div class="row">
                 <div class="col-md-6">
                   <h5 id="folders_name">
-                    <?php echo $default_tag; ?>    
+                    <?php echo $default_tag; ?>
                   </h5>
                   <p id="folders_path"></p>
                 </div>
@@ -61,18 +94,18 @@
                         </tr>
                         <tr>
                           <td class="p-0 pb-1">
-                          <?php if($isBusinessFormTemplates){ ?>  
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a> 
-                          <?php } ?> 
+                          <?php if($isBusinessFormTemplates){ ?>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a>
+                          <?php } ?>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="view" title="View Details"><i class="fa fa-eye" title="View Details"></i></a>
-                          </td>  
+                          </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                </div> 
+                </div>
             </div>
             <div class="row table-danger pt-1 pb-1 d-none" id="move_details">
               <div class="col-md-9">
@@ -111,7 +144,7 @@
           </div>
         </div>
 
-<?php if(!$isMain){ ?>    
+<?php if(!$isMain){ ?>
       </div>
     </div>
 
@@ -142,7 +175,7 @@
           <div class="d-none w-100" id="file_entry">
             <div class="col-md-12 form-group d-none" id="div_file_path_display">
               <label for="file_path_display">Original File</label>
-              <input type="text" class="form-control" name="file_path_display" id="file_path_display" filetitle="" readonly/>  
+              <input type="text" class="form-control" name="file_path_display" id="file_path_display" filetitle="" readonly/>
             </div>
             <div class="col-md-12 form-group">
               <label for="fullfile">Select File<small> (Allowed type: pdf, doc, docx, rtf, png, jpg, gif. Max size 8MB.)</small></label>
@@ -151,8 +184,8 @@
             <div class="col-md-12 form-group">
               <label for="file_desc">Description<small> Details about the file(Max of 255 characters)</small></label>
               <input type="text" class="form-control" name="file_desc" id="file_desc" placeholder="Enter File Description" maxlength="255" autofocus />
-            </div>  
-          </div>  
+            </div>
+          </div>
           <?php if($isBusinessFormTemplates){ ?>
             <div class="d-none w-100" id="category_entry">
               <div class="col-md-12 form-group">
@@ -162,26 +195,26 @@
               <div class="col-md-12 form-group">
                 <label for="category_desc">Description<small> Details about the category(Max of 255 characters)</small></label>
                 <input type="text" class="form-control" name="category_desc" id="category_desc" placeholder="Enter Category Description" maxlength="255" autofocus />
-              </div>  
+              </div>
             </div>
             <div class="w-100" id="category_selection">
               <div class="col-md-12 form-group">
                 <label for="categories">Categories<small> Select category to put the file/folder</small></label>
                 <select class="form-control" name="f_category" id="f_category">
                   <option value="">Select Category</option>
-                  <?php 
+                  <?php
                     foreach($categories as $category){
                   ?>
                     <option value="<?php echo $category->category_id; ?>" catdesc="<?php echo $category->category_desc; ?>"><?php echo $category->category_name; ?></option>
                 <?php } ?>
                 </select>
               </div>
-            </div> 
+            </div>
             <div class="w-100 text-center d-none" id="category_controls">
               <button type="button" class="btn btn-default bft-btn-control border-info" id="btn-modal-folder-manager-entry-create-category">Create</button>
               <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-edit-category">Edit</button>
-              <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-delete-category">Delete</button>  
-            </div> 
+              <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-delete-category">Delete</button>
+            </div>
           <?php } ?>
           <div class="d-none w-100" id="general_permissions_entry">
             <div class="col-md-12">
@@ -199,7 +232,7 @@
                           <th class="font-weight-bold">Title</th>
                         </thead>
                         <tbody>
-                        
+
                         </tbody>
                       </table>
                     </div>
@@ -216,7 +249,7 @@
                           <th class="font-weight-bold">Name</th>
                         </thead>
                         <tbody>
-                        
+
                         </tbody>
                       </table>
                     </div>
@@ -262,7 +295,7 @@
                   </div>
                 </div>
               </div>
-            </div>  
+            </div>
           </div>
         </div>
       </div>
@@ -270,7 +303,7 @@
         <button type="button" class="btn btn-default" id="btn-modal-folder-manager-entry-save">Save</button>
         <button type="button" class="btn btn-default" id="btn-modal-folder-manager-entry-cancel">Cancel</button>
       </div>
-    </div>  
+    </div>
   </div>
 </div>
 
@@ -283,7 +316,7 @@
         <h4 id="modal-folder-manager-alert-title" class="modal-title"></h4>
       </div>
       <div class="modal-body">
-        <p id="modal-folder-manager-alert-text"></p>  
+        <p id="modal-folder-manager-alert-text"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default d-none" id="btn-modal-folder-manager-alert-ok">OK</button>
@@ -485,7 +518,7 @@
               </ul>
             </div>
         </div>
-        <div id="recycle_bin">   
+        <div id="recycle_bin">
         </div>
       </div>
     </div>
@@ -520,7 +553,7 @@
                   <label for="f_category">Categories<small> Select category to put the file/folder</small></label>
                   <select class="form-control" name="dtu_f_category" id="dtu_f_category">
                     <option value="">Select Category</option>
-                    <?php 
+                    <?php
                       foreach($categories as $category){
                     ?>
                       <option value="<?php echo $category->category_id; ?>" catdesc="<?php echo $category->category_desc; ?>"><?php echo $category->category_name; ?></option>
@@ -549,7 +582,7 @@
               <tbody>
               </tbody>
             </table>
-          </div>  
+          </div>
         </div>
         <div class="modal-footer">
           <h6 id="upload_counter" class="d-none">Uploading . . . 0/0</h6>

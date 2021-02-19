@@ -261,6 +261,8 @@ $route['accounting/send-email-form']['post'] = "accounting_modals/showEmailModal
 $route['accounting/delete-group-tag/(:any)/(:any)']['DELETE'] = "accounting/deleteGroupTag/$1/$2";
 $route['accounting/update-group-tag/(:any)/(:any)']['POST'] = "accounting/updateGroupTag/$1/$2";
 
+$route['accounting/get-group-tags'] = 'accounting/get_group_tags';
+$route['accounting/load-all-tags']['post'] = "accounting/load_all_tags";
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
 $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
@@ -270,6 +272,7 @@ $route['accounting/load-job-tags']['post'] = 'accounting_modals/load_job_tags';
 $route['accounting/submit-job-tag-form']['post'] = 'accounting_modals/submit_job_tag';
 $route['accounting/get-job-tag-modal'] = 'accounting_modals/job_tag_modal';
 $route['accounting/get-job-tag-form'] = 'accounting_modals/job_tag_form';
+$route['accounting/get-group-tag-form'] = 'accounting_modals/group_job_tag_form';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';

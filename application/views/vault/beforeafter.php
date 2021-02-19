@@ -1,3 +1,69 @@
+<style>
+button#dropdown-edit {
+    width: 100px;
+}
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 54% !important;
+    right: 9px !important;
+}
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.left {
+  float: left;
+}
+.p-40 {
+    padding-left: 25px !important;
+    padding-top: 55px !important;
+}
+a.btn-primary.btn-md {
+    height: 38px;
+    display: inline-block;
+    border: 0px;
+    padding-top: 7px;
+    position: relative;
+    top: 0px;
+}
+.card.p-20 {
+    padding-top: 25px !important;
+}
+.col.col-4.pd-17.left.alert.alert-warning.mt-0.mb-2 {
+    position: relative;
+    left: 13px;
+}
+.fr-right {
+  float: right;
+  justify-content: flex-end;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+.pd-17 {
+  position: relative;
+  left: 17px;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
@@ -14,25 +80,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                            <div class="row margin-bottom-ter align-items-center">
-                                <div class="col-auto">
-                                    <h2 class="page-title">Before and After Photos</h2>
-                                </div>
-                                <div class="col text-right-sm d-flex justify-content-end align-items-center">
-                                    <div class="float-right d-md-block">
-                                        <div class="dropdown">
-                                            <a class="btn btn-primary btn-md" id="newJobBtn" href="<?php echo url('before-after/add_photo') ?>">
-                                            <span class="fa fa-plus"></span> Add Photos</a>
-                                        </div>
-                                    </div>
-                                    <div class="float-right d-md-block">
-                                    </div>
-                                </div>
-                            </div>
+                      <div class="row margin-bottom-ter mb-2 align-items-center">
+                          <div class="col-auto">
+                              <h3 class="page-title mb-0">Before and After Photos</h3>
+                          </div>
+                          <div class="col text-right-sm d-flex justify-content-end align-items-center">
+                              <div class="float-right d-md-block">
+                                  <div class="dropdown">
+                                      <a class="btn btn-primary btn-md" id="newJobBtn" href="<?php echo url('before-after/add_photo') ?>">
+                                      <span class="fa fa-plus"></span> Add Photos</a>
+                                  </div>
+                              </div>
+                              <div class="float-right d-md-block">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="pl-3 pr-3 mt-0 row">
+                        <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                         </div>
+                      </div>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">   
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <?php if (!empty($photos)) { ?>
                                 <table class="table table-hover table-bordered table-striped" style="width:100%;" id="beforeAfterListTable">
                                     <thead>
@@ -77,7 +146,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php //endif;?>
                                     <?php endforeach; ?>
                                     </tbody>
-                                </table>  
+                                </table>
                                 <?php } else { ?>
                                     <div class="page-empty-container" style="text-align:center; margin-top:50px;">
                                         <h5 class="page-empty-header">You haven't uploaded any photos.</h5>

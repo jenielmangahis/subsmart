@@ -17,7 +17,7 @@ class Tracker extends MY_Controller {
 			$this->CreditNote_model->update($creditNote->id, ['is_seen' => 1]);
 		}		
 		
-		$image = base_url('/assets/img/trackingpixel.png'); 
+		$image = base_url('/assets/img/tracking_pixel.png'); 
 		ob_clean(); 
 		header("content-type: image/png");
 		echo file_get_contents($image);
@@ -34,7 +34,7 @@ class Tracker extends MY_Controller {
 			$this->Estimate_model->update($estimate->id, ['is_mail_open' => 1, 'mail_open_date' => date("Y-m-d H:i:s")]);
 		}		
 		
-		$image = base_url('/assets/img/trackingpixel.png'); 
+		$image = base_url('/assets/img/tracking_pixel.png'); 
 		ob_clean(); 
 		header("content-type: image/png");
 		echo file_get_contents($image);

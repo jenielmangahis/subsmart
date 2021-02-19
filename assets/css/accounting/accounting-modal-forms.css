@@ -131,7 +131,7 @@ div.modal.right .modal-content {
 }
 
 div.modal.right .modal-body {
-    padding: 15px 15px 80px;
+    padding: 0 30px 80px;
 }
 
 div.modal.right.fade .modal-dialog {
