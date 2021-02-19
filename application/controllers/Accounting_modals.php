@@ -32,7 +32,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_statements_model');
         $this->load->model('AcsProfile_model');
-        $this->load->model('job_tags_model');
+        $this->load->model('tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
     }
@@ -267,23 +267,53 @@ class Accounting_modals extends MY_Controller {
     public function load_job_tags() {
         $postData = json_decode(file_get_contents('php://input'), true);
 
-        $tags = $this->job_tags_model->getJobTagsByCompany();
+        $tags = $this->tags_model->getTags();
 
         $data = [];
         $search = $postData['columns'][0]['search']['value'];
 
         foreach($tags as $tag) {
-            if($search !== "" ) {
-                if(stripos($tag->name, $search) !== false) {
+            if($search !== "") {
+                if(stripos($tag['name'], $search) !== false) {
+                    if($tag['type'] === 'group-tag') {
+                        $data[] = [
+                            'id' => $tags[$tag['parentIndex']]['id'],
+                            'tag_name' => $tags[$tag['parentIndex']]['name'],
+                            'type' => $tags[$tag['parentIndex']]['type'],
+                            'parentIndex' => $tags[$tag['parentIndex']]['type'] === 'group-tag' ? $tags[$tag['parentIndex']]['parentIndex'] : null,
+                            'tags' => $tags[$tag['parentIndex']]['type'] === 'group' ? $tags[$tag['parentIndex']]['tags'] : null
+                        ];
+                    }
+
+                    $groupIndex = array_key_last($data);
                     $data[] = [
-                        'id' => $tag->id,
-                        'tag_name' => $tag->name
+                        'id' => $tag['id'],
+                        'tag_name' => $tag['name'],
+                        'type' => $tag['type'],
+                        'parentIndex' => $tag['type'] === 'group-tag' ? $groupIndex : null,
+                        'tags' => $tag['type'] === 'group' ? $tag['tags'] : null
                     ];
+
+                    if($tag['type'] === 'group') {
+                        $parentIndex = array_key_last($data);
+                        foreach($tag['tags'] as $groupTag) {
+                            $data[] = [
+                                'id' => $groupTag['id'],
+                                'tag_name' => $groupTag['name'],
+                                'type' => 'group-tag',
+                                'parentIndex' => $parentIndex,
+                                'tags' => null
+                            ];
+                        }
+                    }
                 }
             } else {
                 $data[] = [
-                    'id' => $tag->id,
-                    'tag_name' => $tag->name
+                    'id' => $tag['id'],
+                    'tag_name' => $tag['name'],
+                    'type' => $tag['type'],
+                    'parentIndex' => $tag['type'] === 'group-tag' ? $tag['parentIndex'] : null,
+                    'tags' => $tag['type'] === 'group' ? $tag['tags'] : null
                 ];
             }
         }
@@ -328,6 +358,10 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($return);
     }
 
+    public function group_job_tag_form() {
+        $this->load->view("accounting/group_tag_form");
+    }
+
     public function job_tag_modal() {
         $this->load->view("accounting/job_tags_modal");
     }
@@ -337,14 +371,19 @@ class Accounting_modals extends MY_Controller {
     }
 
     public function get_job_tags() {
-        $tags = $this->job_tags_model->getJobTagsByCompany();
+        $tags = $this->tags_model->getCompanyTags();
 
         $return = [];
 
         foreach($tags as $tag) {
+            $name = $tag['name'];
+            if($tag['group_tag_id'] !== null) {
+                $group = $this->tags_model->getGroupById($tag['group_tag_id']);
+                $name = $group->name.': '.$tag['name'];
+            }
             $return['results'][] = [
-                'id' => $tag->id,
-                'text' => $tag->name
+                'id' => $tag['id'],
+                'text' => $name
             ];
         }
 

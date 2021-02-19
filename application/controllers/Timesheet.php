@@ -1709,6 +1709,20 @@ class Timesheet extends MY_Controller {
         echo json_encode($qry);
     }
 
+
+    public function removeNotification(){
+
+        $this->load->model('timesheet_model');
+        $id = $this->input->post('notificationid');
+
+        $this->db->set('status', 0);
+        $this->db->where_in('id', $id);
+        $this->db->update('user_notification'); 
+        return ($this->db->affected_rows() > 0) ? TRUE : FALSE; 
+
+    }
+
+
     public function getNotificationTbl(){
 
         $this->load->model('timesheet_model');

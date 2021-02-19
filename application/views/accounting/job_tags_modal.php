@@ -5,10 +5,13 @@
                 <h4 class="modal-title">Manage your tags</h4>
                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pt-3">
                 <div class="row">
-                    <div class="col-12 d-flex">
+                    <div class="col-6 d-flex">
                         <button type="button" class="btn btn-outline-secondary m-auto" onclick="getTagForm({}, 'create')">Create Tag</button>
+                    </div>
+                    <div class="col-6 d-flex">
+                        <button type="button" class="btn btn-outline-secondary m-auto" onclick="getGroupTagForm()">Create Group</button>
                     </div>
                     <div class="col-12 py-3">
                         <input type="text" name="search_tag" id="search-tag" class="form-control" placeholder="Find tag by name">

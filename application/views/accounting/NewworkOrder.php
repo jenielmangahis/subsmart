@@ -58,7 +58,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row">                   
                             <div class="col-md-4 form-group">
                                 <label for="contact_name">Work Order #</label>
-                                <input type="text" class="form-control" name="contact_name" id="contact_name" required placeholder="Enter Name" autofocus />
+                                <input type="text" class="form-control" name="contact_name" id="contact_name" value="WO-0000001" required autofocus />
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="contact_email">Select Customer</label>
@@ -72,9 +72,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <!-- end row -->
                         <div class="row">                    
-                            <div class="col-md-4 form-group">
-                                <label for="contact_mobile">Job Location</label>
-                                <input type="text" class="form-control" name="contact_mobile" id="contact_mobile" placeholder="Enter Mobile" required/>
+                            <div class="col-md-3 form-group">
+                                <label for="job_location">Job Location</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label>
+                                <input type="text" class="form-control" name="job_location" id="searchTextField" required/>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="city">
+                                    City
+                                </label>
+                                    <input type="text" class="form-control" name="city" id="city" />
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <label for="state">
+                                    State
+                                </label>
+                                    <input type="text" class="form-control" name="state" id="state" />
+                            </div>
+                            <div class="col-md-1 form-group">
+                                <label for="zip">
+                                    Zip code
+                                </label>
+                                    <input type="text" class="form-control" name="zip" id="zip" />
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="contact_phone">Password</label>
@@ -162,7 +180,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-9">
                                 <table class="table table-hover">
                                     <input type="hidden" name="count" value="0" id="count">
-                                    <thead>
+                                    <thead  style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Work Order Items</b></th>
                                             <th><b>Quantity</b></th>
@@ -339,8 +357,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <!-- ====== TERMS AND CONDITIONS ====== -->
                             <div class="row">
-                                <div class=" col-md-8">
-                                    <h6>TERMS AND CONDITIONS</h6>
+                                <div class=" col-md-12">
+                                    <label style="font-weight:bold;font-size:18%;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#">Update Terms and Conditions</a></label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="showuploadagreement">
                                         <p>2. Install of the system. Company agrees to schedule and install an alarm
@@ -419,8 +437,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row">
-                                <div class=" col-md-8">
-                                    <h6>TERMS OF USE</h6>
+                                <div class=" col-md-12">
+                                    <label style="font-weight:bold;font-size:18%;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#">Update Terms of Use</a></label>
                                     <div style="height:100px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="showuploadagreement">
                                          **This isn't everything... just a summary**</strong> You may CANCEL this
@@ -645,7 +663,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- page wrapper end -->
 </div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM&libraries=places"></script>
 <?php include viewPath('includes/footer_accounting'); ?>
+<script>
+function initialize() {
+  var input = document.getElementById('searchTextField');
+  new google.maps.places.Autocomplete(input);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 <script>
 
     document.getElementById('contact_mobile').addEventListener('input', function (e) {

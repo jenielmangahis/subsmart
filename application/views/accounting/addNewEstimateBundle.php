@@ -97,8 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
-                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                           required placeholder="Enter Estimate#" autofocus value="EST-0000001"/>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
@@ -300,6 +299,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 form-group">
                                     <div class="input-group">
                                         <!-- <div class="input-group-addon bold">$</div> -->
+                                        <!-- <label><h4>$</h4></label> -->
                                         <input type="text" name="deposit_amount" value="0" class="form-control"
                                                autocomplete="off">
                                     </div>
