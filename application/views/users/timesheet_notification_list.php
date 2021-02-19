@@ -356,23 +356,67 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <?php endif; ?>
                           </div>
                       </div>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
                         <div class="card-body">
                             <div class="today-date">
                                <center> <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y')." ".date_default_timezone_get();?></span></h6></center>
                             </div>
                             <?php if ($this->session->userdata('logged')['role'] < 5):?>
+
                                 <div class="row">
                                     <div class="col-lg-12 table-responsive">
-                                        <table id="ts-notification" class="table table-bordered table-striped tbl-employee-attendance">
+                                    <table id="ts-notification" class="table table-bordered table-striped tbl-employee-attendance">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Employee Name</th>
                                                     <th>Clock In Out</th>
                                                     <th>Status</th>
+                                                    <th><input type="checkbox" id="checkAl"> Select All
+                                                        <button class="btn btn-warning" id="btn_delete"><i class="fa fa-trash"></i></button>
+                                                    </th>
+
                                                 </tr>
                                             </thead>
                                             <tbody id="notifytd">
+                                            <?php  
+                                            $i=0; 
+                                            foreach ($notification as $cnt => $notify){
+                                            if($notify->title == 'Clock In'){$color='green';}else{$color='red';}
+                                            ?>
+                                        <tr id="<?php echo $notify->id; ?>">
+                                        <td class="tbl-id-number"><?php echo ++$i; ?></td>
+                                        <td>
+                                            <center>
+                                                <span class="tbl-employee-name"><?php echo $notify->FName; ?></span> 
+                                                <span class="tbl-employee-name"><?php echo $notify->LName; ?></span>
+                                            </center>
+                                        </td>
+                                        <td>
+                                        <center>
+                                        <i class="fa fa-circle" aria-hidden="true" style="color:<?php echo $color; ?>"></i>&nbsp; <?php echo $notify->content; ?>
+                                        </center>
+                                        </td>
+                                        <td class="tbl-status">
+                                            <center>
+                                                <a href="<?php echo site_url(); ?>'timesheet/attendance" 
+                                                id="notificationDP" 
+                                                data-id="<?php echo $notify->id; ?>" title="" data-toggle="tooltip" 
+                                                data-original-title="Notification Not Viewed ">
+                                                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                                </a>
+                                            </center>
+                                        </td>
+                                        <td>
+                                        <center><input type="checkbox" id="checkItem" name="check[]" 
+                                        value="<?php echo $notify->id; ?>">
+                                        </center>
+                                        </td>
+
+                                    </tr>
+                                    <?php } ?>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -392,15 +436,70 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
+$("#checkAl").click(function () {
+    $('input:checkbox').not(this).prop('checked', this.checked);
+});
     //DataTable Table Attendance
     $('#ts-notification').DataTable({
         "sort": false
     });
+$(document).ready(function(){
+ 
+ $('#btn_delete').click(function(){
+  
+  if(confirm("Are you sure you want to delete this?"))
+  {
+   var id = []; 
+   
+   $(':checkbox:checked').each(function(i){ 
+    //if(i != 0){
+    id[i] = $(this).val(); //alert(id[i]);
+    //}
+   });
 
-    function notificationTbl() {
+   if(id.length === 0) //tell you if the array is empty
+   {
+    alert("Please Select atleast one checkbox");
+   }
+   else
+   { 
+    $.ajax({
+    type:"POST",
+    async: true,
+    cache: false,
+    url: base_url + 'timesheet/removeNotification',
+    data:{notificationid:id},
+     success:function()
+     {
+
+      for(var i=0; i<id.length; i++)
+      {
+       $('tr#'+id[i]+'').css('background-color', '#ccc');
+       $('tr#'+id[i]+'').fadeOut('slow');
+      }
+      //location.reload();
+     }
+     
+    });
+   }
+   
+  }
+  else
+  {
+   return false;
+  }
+ });
+ 
+});
+
+    /*function notificationTbl() {
         $.ajax({
             type: "GET",
+<<<<<<< HEAD
             url: "/Timesheet/getNotificationTbl",
+=======
+            url: "/timesheet/getNotificationTbl",
+>>>>>>> staging-master
             async: true,
             cache: false,
             timeout: 10000,
@@ -419,6 +518,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $(document).ready(function () {
         var TimeStamp = null;
         notificationTbl();
-    });
+    });*/
 
 </script>

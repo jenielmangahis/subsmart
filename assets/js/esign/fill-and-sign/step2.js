@@ -13,10 +13,18 @@ function Step2(documentId) {
   const $signaturePadClear = $signaturePad.find("a");
   const $signatureApplyButton = $("#signatureApplyButton");
 
+  const $copyLink = $("#copyLink");
+  const $linkPreview = $(".fillAndSign__shareLink");
+  const $copyLinkButton = $linkPreview.find(".btn");
+
+  const $downloadButton = $("#downloadDocument");
+  const $container = $(".fillAndSign");
+
   let fields = [];
   let documentUrl = null;
   let signaturePad = null;
   let isStoring = false;
+  let link = null;
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
   async function renderPage({ canvas, page, document }) {
@@ -104,7 +112,7 @@ function Step2(documentId) {
 
     const html = `
       <div class="fillAndSign__field" data-key="${unique_key || Date.now()}">
-        <div tabindex="0" class="fillAndSign__fieldInput" contenteditable="true">
+        <div tabindex="0" class="fillAndSign__fieldInput" contenteditable="true" spellcheck="false">
           ${value || ""}
         </div>
         <div class="fillAndSign__fieldClose"><i class="fa fa-times"></i></div>
@@ -171,6 +179,20 @@ function Step2(documentId) {
     const response = await fetch(endpoint);
     const data = await response.json();
     fields = data.fields;
+  }
+
+  async function fetchSignatures() {
+    const endpoint = `${prefixURL}/FillAndSign/getSignatures/${documentId}`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    signatures = data.signatures;
+  }
+
+  async function fetchLink() {
+    const endpoint = `${prefixURL}/FillAndSign/getLink/${documentId}`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    link = data.link;
   }
 
   async function renderPDF() {
@@ -327,6 +349,65 @@ function Step2(documentId) {
 
       $signatureModal.hide();
     });
+
+    $copyLink.on("click", async (event) => {
+      event.preventDefault();
+
+      const pdfDoc = await generatePDF(documentId);
+      const formData = new FormData();
+      formData.append("document", pdfDoc.output("blob"));
+
+      const endpoint = `${prefixURL}/FillAndSign/createLink/${documentId}`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+        headers: {
+          accepts: "application/json",
+        },
+      });
+
+      const { link } = await response.json();
+      const documentLink = `${window.location.origin}${prefixURL}/uploads/fillandsign/out/${link.hash}.pdf`;
+      $container.addClass("fillAndSign--readonly");
+
+      $copyLinkButton.on("click", () => {
+        const $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(documentLink).select();
+        document.execCommand("copy");
+        $temp.remove();
+        $copyLinkButton.text("Copied!");
+      });
+
+      $linkPreview.find(".fillAndSign__shareLinkContent").html(documentLink);
+      $linkPreview.addClass("fillAndSign__shareLink--show");
+      setTimeout(() => {
+        $linkPreview.removeClass("fillAndSign__shareLink--show");
+        $copyLinkButton.text("Copy link");
+      }, 5000);
+    });
+
+    $downloadButton.on("click", async (event) => {
+      event.preventDefault();
+
+      const pdfDoc = await generatePDF(documentId);
+      const formData = new FormData();
+      formData.append("document", pdfDoc.output("blob"));
+
+      const endpoint = `${prefixURL}/FillAndSign/createLink/${documentId}`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+        headers: {
+          accepts: "application/json",
+        },
+      });
+
+      const { link } = await response.json();
+      const documentLink = `${window.location.origin}${prefixURL}/uploads/fillandsign/out/${link.hash}.pdf`;
+      $container.addClass("fillAndSign--readonly");
+      downloadURI(documentLink);
+    });
   }
 
   async function fetchDocument() {
@@ -345,6 +426,12 @@ function Step2(documentId) {
     signaturePad = new SignaturePad($signaturePadCanvas.get(0));
     attachEventHandlers();
 
+    await fetchLink();
+
+    if (link) {
+      $container.addClass("fillAndSign--readonly");
+    }
+
     await fetchDocument();
     await fetchFields();
     await renderPDF();
@@ -357,6 +444,144 @@ function Step2(documentId) {
   }
 
   return { init };
+}
+
+async function generatePDF(documentId) {
+  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+  let documentPdf = null;
+  let fields = [];
+  let signatures = [];
+
+  async function fetchDocument() {
+    const endpoint = `${prefixURL}/FillAndSign/get/${documentId}`;
+    const response = await fetch(endpoint, {
+      headers: {
+        accepts: "application/json",
+      },
+    });
+
+    const data = await response.json();
+    documentPdf = data.document;
+  }
+
+  async function fetchFields() {
+    const endpoint = `${prefixURL}/FillAndSign/getFields/${documentId}`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    fields = data.fields;
+  }
+
+  async function fetchSignatures() {
+    const endpoint = `${prefixURL}/FillAndSign/getSignatures/${documentId}`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    signatures = data.signatures;
+  }
+
+  async function getPage({ page, ...rest }) {
+    const html = `<canvas id="pdfCanvas"></canvas>`;
+    const $element = createElementFromHTML(html);
+    const canvas = $element.get(0);
+
+    await renderPage({ canvas, page, ...rest });
+    return $element;
+  }
+
+  async function renderPage({ canvas, page, document }) {
+    const documentPage = await document.getPage(page);
+    const viewport = await documentPage.getViewport(1.5);
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    await documentPage.render({
+      viewport,
+      canvasContext: canvas.getContext("2d"),
+    });
+
+    return canvas;
+  }
+
+  async function init() {
+    await fetchDocument();
+    await fetchFields();
+    await fetchSignatures();
+
+    const documentUrl = `${prefixURL}/uploads/fillandsign/${documentPdf.name}`;
+    const document = await PDFJS.getDocument({ url: documentUrl });
+
+    for (let index = 1; index <= document.numPages; index++) {
+      if (index > 1) break;
+
+      const currentFields = fields.filter(({ document_page }) => document_page == index); // prettier-ignore
+      const currentSignatures = signatures.filter(({ document_page }) => document_page == index); // prettier-ignore
+      const $page = await getPage({ page: index, document });
+      const canvas = $page.get(0);
+      const context = canvas.getContext("2d");
+
+      currentFields.forEach((field) => {
+        const { coordinates, textType, value } = field;
+
+        const fontStyle = {
+          initial: "",
+          bold: "bold",
+          italic: "italic",
+          underline: "",
+          strikethrough: "",
+        };
+
+        // manual adjustments in px to position correctly :D
+        const adjustments = { top: 20, left: 8 };
+
+        const coords = JSON.parse(coordinates);
+        const x = coords.left + adjustments.left;
+        const y = coords.top + adjustments.top;
+        const color = "black";
+
+        context.font = `${fontStyle[textType]} 14px monospace`;
+        context.fillStyle = color;
+        context.fillText(value, x, y);
+
+        const underlineParams = {
+          x,
+          y,
+          color,
+          context,
+          text: value,
+          textSize: 14,
+        };
+
+        if (textType === "underline") {
+          textUnderline(underlineParams);
+        } else if (textType === "strikethrough") {
+          textUnderline({ ...underlineParams, strikethrough: true });
+        }
+      });
+
+      currentSignatures.forEach((signature) => {
+        const { top, left } = JSON.parse(signature.coordinates);
+        const image = new Image();
+        image.src = signature.value;
+        context.drawImage(image, left, top);
+      });
+
+      // $(window.document.body).append($page);
+
+      const doc = new jspdf.jsPDF();
+      const width = doc.internal.pageSize.getWidth();
+      const height = doc.internal.pageSize.getHeight();
+
+      const image = canvas.toDataURL("image/png");
+      const imageAlias = undefined;
+      const imageCompression = "MEDIUM"; // 'NONE', 'FAST', 'MEDIUM', 'SLOW'
+
+      doc.addImage(image, "PNG", 0, 0, width, height, imageAlias, imageCompression); // prettier-ignore
+      // doc.save(`${documentPdf.name}.pdf`);
+      return doc;
+    }
+  }
+
+  return init();
 }
 
 $(document).ready(function () {
@@ -503,3 +728,76 @@ function cloneCanvas(oldCanvas) {
   //return the new canvas
   return newCanvas;
 }
+
+// https://stackoverflow.com/a/15832662/8062659
+function downloadURI(uri) {
+  var link = document.createElement("a");
+  link.download = name;
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  delete link;
+}
+
+// https://scriptstock.wordpress.com/2012/06/12/html5-canvas-text-underline-workaround/
+var textUnderline = function ({
+  context,
+  text,
+  x,
+  y,
+  color = "black",
+  textSize = 16,
+  strikethrough = false,
+  align = undefined,
+}) {
+  //Get the width of the text
+  var textWidth = context.measureText(text).width;
+
+  //var to store the starting position of text (X-axis)
+  var startX;
+
+  //var to store the starting position of text (Y-axis)
+  // I have tried to set the position of the underline according
+  // to size of text. You can change as per your need
+  var startY = y + parseInt(textSize) / 15;
+  if (strikethrough) {
+    startY = y - 3; // adjust if needed :D
+  }
+
+  //var to store the end position of text (X-axis)
+  var endX;
+
+  //var to store the end position of text (Y-axis)
+  //It should be the same as start position vertically.
+  var endY = startY;
+
+  //To set the size line which is to be drawn as underline.
+  //Its set as per the size of the text. Feel free to change as per need.
+  var underlineHeight = parseInt(textSize) / 15;
+
+  //Because of the above calculation we might get the value less
+  //than 1 and then the underline will not be rendered. this is to make sure
+  //there is some value for line width.
+  if (underlineHeight < 1) {
+    underlineHeight = 1;
+  }
+
+  context.beginPath();
+  if (align == "center") {
+    startX = x - textWidth / 2;
+    endX = x + textWidth / 2;
+  } else if (align == "right") {
+    startX = x - textWidth;
+    endX = x;
+  } else {
+    startX = x;
+    endX = x + textWidth;
+  }
+
+  context.strokeStyle = color;
+  context.lineWidth = underlineHeight;
+  context.moveTo(startX, startY);
+  context.lineTo(endX, endY);
+  context.stroke();
+};

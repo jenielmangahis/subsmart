@@ -22,9 +22,14 @@ class Dashboard extends Widgets {
         add_css(array(
            // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             "assets/css/accounting/accounting.css",
-            'assets/css/dashboard.css'
+            'assets/css/dashboard.css',
+            'assets/barcharts/css/chart.min.css'
         ));
-
+        add_header_js(array(
+            'assets/barcharts/js/chart.min.js',
+            'assets/barcharts/js/utils.js',
+            'assets/barcharts/js/chartjs-plugin-labels.js'
+        ));
         add_footer_js(array(
             //'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'assets/frontend/js/dashboard/main.js',

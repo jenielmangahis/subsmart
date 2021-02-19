@@ -376,7 +376,7 @@ $(function() {
         $('#tags-table').DataTable().ajax.reload();
     });
 
-    $(document).on('click', 'div#tags-modal table#tags-table tbody tr td a', function(e) {
+    $(document).on('click', 'div#tags-modal table#tags-table tbody tr td a.edit', function(e) {
         e.preventDefault();
 
         getTagForm(e.currentTarget.dataset, 'update');
@@ -955,6 +955,131 @@ $(function() {
             return;
         }
     });
+
+    $(document).on('submit', '#tags-modal #tags-group-form', function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+
+        var data = new FormData(document.getElementById(form.attr('id')));
+
+        $.ajax({
+            url: '/accounting/addTagsGroup',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                var result = JSON.parse(res);
+
+                form.addClass('hide');
+                form.next().children('tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
+                form.next().removeClass('hide');
+                $('#tags-modal #tags-form').prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
+                form.prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
+            }
+        });
+    });
+
+    $(document).on('click', '#tags-modal table#tags_group tbody a', function() {
+        if($('#tags-modal #update-group-form').length === 0) {
+            $('#tags-modal #tags-group-form').attr('id', 'update-group-form');
+        }
+
+        $('#tags-modal #update-group-form').removeClass('hide');
+        
+        $('#tags-modal table#tags_group').addClass('hide');
+    });
+
+    $(document).on('submit', '#tags-modal #update-group-form', function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+
+        var data = new FormData(document.getElementById(form.attr('id')));
+
+        $.ajax({
+            url:`/accounting/update-group-tag/${data.get('group_id')}/group`,
+            data: {name: data.get('tags_group_name')},
+            type:"POST",
+            dataType: "json",
+            success:function (res) {
+                form.addClass('hide');
+
+                $('#tags-modal table#tags_group tbody tr').remove();
+                $('#tags-modal table#tags_group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
+
+                $('#tags-modal table#tags_group').removeClass('hide');
+            }
+        });
+    });
+
+    $(document).on('submit', '#tags-modal #tags-form', function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+
+        var data = new FormData(document.getElementById(form.attr('id')));
+
+        $.ajax({
+            url: '/accounting/addTags',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                var result = JSON.parse(res);
+                form.next().children('tbody').append(`
+                <tr>
+                    <td>
+                        <div class="tag-name-cont">
+                            <span>${data.get('tag_name')}</span><a href="#" class="float-right text-info">Edit</a>
+                        </div>
+                        <form class="hide" id="form-tag-${result.data}">
+                            <input type="hidden" name="tag_id" value="${result.data}">
+                            <div class="form-row">
+                                <div class="col-md-8">
+                                    <label for="tag_name">Tag name</label>
+                                    <input type="text" name="update_tag_name" value="${data.get('tag_name')}" class="form-control">
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-success w-100">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                </tr>`);
+
+                $('#tags-modal #tags-form input#tag-name').val('');
+                form.next().removeClass('hide');
+            }
+        });
+    });
+
+    $(document).on('click', '#tags-modal table#group_tags tbody .tag-name-cont a', function() {
+        $(this).parent().addClass('hide');
+        $(this).parent().next().removeClass('hide');
+    });
+
+    $(document).on('submit', '#tags-modal table#group_tags tbody form', function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var data = new FormData(document.getElementById(form.attr('id')));
+
+        $.ajax({
+            url:`/accounting/update-group-tag/${data.get('tag_id')}/tag`,
+            data: {name: data.get('update_tag_name')},
+            type:"POST",
+            dataType: "json",
+            success:function (res) {
+                form.addClass('hide');
+
+                form.prev().children('span').html(data.get('update_tag_name'));
+                form.prev().removeClass('hide');
+            }
+        });
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -1202,10 +1327,20 @@ const loadTagsDataTable = () => {
                 data: 'tag_name', 
                 name: 'tag_name',
                 fnCreatedCell: function (td, cellData, rowData, row, col) {
-                    $(td).html(`<span>${rowData.tag_name}</span><a href="#" class="float-right text-info" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
+                    $(td).html(`<span>${rowData.tag_name} ${rowData.type === 'group' ? `(${rowData.tags.length})` : ''}</span><a href="#" class="float-right text-info edit" data-type="${rowData.type}" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
+
+                    if(rowData.type === 'group') {
+                        $(td).prepend(`<a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-${row}"><i class="fa fa-chevron-down"></i></a>`);
+                    }
                 }
             }
-        ]
+        ],
+        fnCreatedRow: function(nRow, aData, iDataIndex) {
+            if(aData['type'] === 'group-tag') {
+                $(nRow).attr('id', `child-${aData['parentIndex']}`);
+                $(nRow).addClass('collapse');
+            }
+        }
     });
 }
 
@@ -1229,6 +1364,23 @@ const getTagForm = (data = {}, method) => {
             $('#tags-modal div.modal-dialog form input[name="tag_name"]').val(name);
             $('#tags-modal div.modal-dialog form').prepend(`<input type="hidden" name="id" value="${id}">`);
         }
+
+        $('#tags-modal #tagGroup').select2({
+            dropdownParent: $('#tags-modal'),
+            ajax: {
+                url: '/accounting/get-group-tags',
+                dataType: 'json'
+            }
+        });
+    });
+}
+
+const getGroupTagForm = () => {
+    $.get('/accounting/get-group-tag-form/', function(res) {
+        $('#tags-modal div.modal-dialog div#tags-list').remove();
+
+        $('#tags-modal div.modal-dialog').append(`<div class="h-100"></div>`)
+        $('#tags-modal div.modal-dialog div').append(res);
     });
 }
 
