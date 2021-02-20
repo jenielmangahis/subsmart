@@ -52,12 +52,12 @@
                 Notifications
             </a>
         </li>  
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'online_payments')  ? "active" : ""; ?>">
+        <!-- <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'online_payments')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/online_payments') ?>" title="Online Payments">
                 <span class="fa fa-credit-card"></span>
                 Online Payments
             </a>
-        </li>  
+        </li> -->  
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'files_vault')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/files_vault') ?>" title="Files Vault">
                 <span class="fa fa-folder-o"></span>
