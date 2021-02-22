@@ -17,15 +17,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
     content:" *";
     color: red;
     }
+    .input-groupss{
+    position:relative;width:100%;overflow:hidden;
+    }
+    .input-groupss input{position:relative;height:45px;border-radius:30px;min-width:500px;box-shadow:none;border:1px solid #eaeaea;padding-left:160px;}
+    .input-groupss label{position:absolute;left:0;height:48px;background:#55ccf2;padding:0px 25px;border-radius:30px;line-height:48px;font-size:18px;color:#fff;top:0;width:100px;font-weight:100;}
    </style>
 
     <!-- page wrapper start -->
-    <div wrapper__section>
+    <div wrapper__section style="margin-top:2%;padding-left:1.5%;">
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Submit Options Estimate</h1>
+                        <h4 style="font-family: Sarabun, sans-serif">Submit Options Estimate</h4>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
                                 for this job.
@@ -36,7 +41,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary"
+                                    <a href="<?php echo base_url('accounting/newEstimateList') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
                                     </a>
@@ -48,6 +53,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 
                 <div style="background-color:white; width:100%;padding:.5%;">
                     Submit your estimate. Include a breakdown of all costs for this job.
+                </div>
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
+                    This form can be used for any job which can be divided into stages, options, etc.   Under each listing of stages, options, etc. your have a description section to help your prospects make a better decision.  
                 </div>
 
             </div>
@@ -97,7 +105,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#" autofocus value="EST-0000001"/>
+                                           required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
+                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
@@ -139,15 +148,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                             </div>
 
+                            <div class="row" style="background-color:white;font-size:16px;">
+                                <div class="col-md-3">
+                                    <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-3" align="right">
+                                    <b>Show qty as: </b>
+                                    <select class="dropdown">
+                                        <option>Quantity</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="row" id="plansItemDiv" style="background-color:white;">
-                                <div class="col-md-8 table-responsive">
+                                <div class="col-md-14 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
-                                        <thead>
+                                        <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Option-1 Items</b></th>
                                             <th><b>Quantity</b></th>
-                                            <th style="width:150px;"><b>Price</b></th>
+                                            <th><b>Price</b></th>
                                             <th><b>Total</b></th>
                                         </tr>
                                         </thead>
@@ -158,7 +181,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                 </select></td>
-                                            <td style="width:150px;"><input type="text" class="form-control quantity" name="quantity[]"
+                                            <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="text" class="form-control" name="price[]"></td>
                                             <td><span id="span_total_0">0.00</span></td>
@@ -170,9 +193,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-60px;">
-                                <div class="col-md-4">
+                                <div class="col-md-7">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
@@ -191,26 +214,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-4">
-                                </div>
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
-                                <div class="col-md-5 table-responsive">
+                                <div class="col-md-6 table-responsive">
                                     <label for="option1_m"><h6>Option 1 Message</h6></label>
                                     <textarea name="option1_message" cols="40" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
 
                             <div class="row" id="plansItemDiv" style="background-color:white;">
-                                <div class="col-md-8 table-responsive">
+                                <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
-                                        <thead>
+                                        <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Option-2 Items</b></th>
                                             <th><b>Quantity</b></th>
-                                            <th style="width:150px;"><b>Price</b></th>
+                                            <th><b>Price</b></th>
                                             <th><b>Total</b></th>
                                         </tr>
                                         </thead>
@@ -221,7 +242,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                 </select></td>
-                                            <td style="width:150px;"><input type="text" class="form-control quantity" name="quantity[]"
+                                            <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="text" class="form-control" name="price[]"></td>
                                             <td><span id="span_total_0">0.00</span></td>
@@ -233,9 +254,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-60px;">
-                                <div class="col-md-4">
+                                <div class="col-md-7">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
@@ -254,12 +275,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-4">
-                                </div>
+                                <!-- <div class="col-md-4">
+                                </div> -->
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
-                                <div class="col-md-5 table-responsive">
+                                <div class="col-md-6 table-responsive">
                                     <label for="option2_m"><h6>Option 2 Message</h6></label>
                                     <textarea name="option2_message" cols="40" rows="2" class="form-control"></textarea>
                                 </div>

@@ -584,6 +584,11 @@ class Vault extends MY_Controller {
 
 		echo json_encode($return);
 	}
+
+	public function filesvault()
+    {
+        $this->load->view('vault/filesvault', $this->page_data);
+    }
 }
 
 /* End of file Permissions.php */

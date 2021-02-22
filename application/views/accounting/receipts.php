@@ -3,17 +3,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid">
+    <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
+        <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box mx-4">
-                <div class="row pb-2">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab" style="text-decoration: none">Banking</a>
-                        <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
-                        <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="receipts")?:'-active';?>">Receipts</a>
-                        <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
+                    <div class="col-lg-6 px-0">
+						<h3>Receipts</h3>
+					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+                        This is Receipts gold band 
                     </div>
-                </div>
+                    <div class="row pb-2">
+                        <div class="col-md-12 banking-tab-container">
+                            <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab" style="text-decoration: none">Banking</a>
+                            <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
+                            <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="receipts")?:'-active';?>">Receipts</a>
+                            <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
+                        </div>
+                    </div>
                 <div class="row align-items-center mt-3">
                     <div class="col-md-12 px-0">
                         <div class="row">

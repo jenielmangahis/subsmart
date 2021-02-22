@@ -44,24 +44,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('workorder/save', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
 
             <div class="row" style="margin-top:-30px;">
                 <div class="col-xl-12">
                     <div class="card">
                     <div class="card-body">
                         <h4 class="mt-0 header-title mb-5">Header</h4>
-                        <ol class="breadcrumb" style="margin-top:-30px;">
-                            <li class="breadcrumb-item active">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location)</li>
-                        </ol>
-                        <br>
-                        <div class="row">                   
-                            <div class="col-md-4 form-group">
-                                <label for="contact_name">Work Order #</label>
-                                <input type="text" class="form-control" name="contact_name" id="contact_name" value="WO-0000001" required autofocus />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ol class="breadcrumb" style="margin-top:-30px;">
+                                    <li class="breadcrumb-item active">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location)</li>
+                                </ol>
                             </div>
-                            <div class="col-md-4 form-group">
-                                <label for="contact_email">Select Customer</label>
+                        </div>
+                        <br>
+
+                        <div class="row">                   
+                            <div class="col-md-3 form-group">
+                                <label for="contact_name">Work Order #</label>
+                                <input type="text" class="form-control" name="contact_name" id="contact_name" required autofocus />
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Customer</label>
                                 <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
@@ -69,12 +74,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php } ?>
                                     </select>
                             </div>
+                            <div class="col-md-3 form-group">
+                                <label for="security_number">Security Number</label>
+                                <input type="text" class="form-control" name="security_number" id="security_number" placeholder="xxx-xx-xxxx" required/>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="birthdate">Birth Date</label>
+                                <input type="text" class="form-control" name="birthdate" id="birthdate"  placeholder="mm/dd/yy" required/>
+                            </div>
                         </div>
+                        <div class="row">                   
+                            <div class="col-md-3 form-group">
+                                <label for="phone_no">Phone Number</label>
+                                <input type="text" class="form-control" name="phone_no" id="phone_no" required  />
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="mobile_no">Mobile Number</label>
+                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" required  />
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" name="email" id="email" required  />
+                            </div>
+                        </div>
+                        
                         <!-- end row -->
                         <div class="row">                    
                             <div class="col-md-3 form-group">
                                 <label for="job_location">Job Location</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label>
-                                <input type="text" class="form-control" name="job_location" id="searchTextField" required/>
+                                <input type="text" class="form-control" name="job_location" id="job_location" required/>
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="city">
@@ -94,9 +122,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </label>
                                     <input type="text" class="form-control" name="zip" id="zip" />
                             </div>
-                            <div class="col-md-4 form-group">
-                                <label for="contact_phone">Password</label>
-                                <input type="text" class="form-control" name="contact_phone" id="contact_phone" placeholder="Enter Phone" />
+                            
+                            <div class="col-md-3 form-group">
+                                <label for="cross_street">
+                                    Cross Street
+                                </label>
+                                    <input type="text" class="form-control" name="cross_street" id="cross_street" />
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -109,43 +140,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="radio" name="customer_type" value="Commercial">Commercial
                                 </label>
                             </div>
-                        </div> -->
+                        </div> 
                         <div class="row">
-                            <div class="col-md-3 form-group">
-                                <label class="checkbox-inline">
-                                    City
-                                </label>
-                                    <input type="text" class="form-control" name="" id="" />
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label class="checkbox-inline">
-                                    Street
-                                </label>
-                                    <input type="text" class="form-control" name="" id="" />
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label class="checkbox-inline">
-                                    Zip code
-                                </label>
-                                    <input type="text" class="form-control" name="" id="" />
-                            </div>
-                        </div>
+                        </div>-->
 
                         <div class="row">                   
                             <div class="col-md-4 form-group">
-                                <label for="street_address">Security Number</label>
-                                <input type="text" class="form-control" name="street_address" id="street_address" placeholder="Enter Address"/>
+                                <label for="contact_phone">Password</label> <i class="fa fa-pencil" aria-hidden="true" ></i>
+                                <input type="text" class="form-control" name="contact_phone" id="contact_phone" placeholder="Password" />
                             </div>
                             <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label>
-                                <input type="text" class="form-control" name="suit" id="suit" placeholder="Enter Suit/Unit"/>
+                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="suit" id="suit"/>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label for="city">Tags</label>
-                                <!-- <input type="text" class="form-control" name="city" id="city" placeholder="Enter City"/> -->
-                                <select class="form-control"></select>
+                        <div class="row">     
+                            <div class="col-md-4 form-group">
+                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="suit" id="suit"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="suit" id="suit"/>
+                            </div>
+                        </div>
+                        <div class="row">     
+                            <div class="col-md-4 form-group">
+                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="suit" id="suit"/>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="suit" id="suit"/>
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -175,9 +201,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </select>
                             </div>
                         </div><br/> -->
-                        <br><br>
+                        <div class="row" style="background-color:white;font-size:16px;">
+                                <div class="col-md-3">
+                                    <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-3" align="right">
+                                    <b>Show qty as: </b>
+                                    <select class="dropdown">
+                                        <option>Quantity</option>
+                                    </select>
+                                </div>
+                            </div>
+                        <!-- <br><br> -->
                             <div class="row">
-                                <div class="col-md-9">
+                                <div class="col-md-12">
                                 <table class="table table-hover">
                                     <input type="hidden" name="count" value="0" id="count">
                                     <thead  style="background-color:#E9E8EA;">
@@ -187,7 +226,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <th><b>Price</b></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="table_body">
+                                    <tbody id="table_body_work">
                                         <tr>
                                             <td>
                                                 <input type="text" class="form-control" name="item[]">
@@ -201,11 +240,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>                
                                     </tbody>
                                     </table>
-                                    <a href="#" id="add_another_work" style="color:green;">Add Items</a>                                        
+                                    <a href="#" id="add_another_workOr" style="color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items</a>                                        
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;font-size:16px;">
-                                <div class="col-md-4">
+                                <div class="col-md-7">
                                 </div>
                                 <div class="col-md-5">
                                     <table class="table" style="text-align:left;">
@@ -235,8 +274,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td><b>0.00</b></td>
                                         </tr>
                                     </table>
-                                </div>
-                                <div class="col-md-3">
                                 </div>
                             </div>
                             <!-- <div class="row">
@@ -277,8 +314,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>                                     
                             </div>
                             
-                            <h6>JOB DETAIL</h6>
-
+                            <h6>JOB DETAIL</h6><br>
+                            
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label for="city">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
+                                <!-- <input type="text" class="form-control" name="city" id="city" placeholder="Enter City"/> -->
+                                <select class="form-control">
+                                            <option>---</option>
+                                </select>
+                            </div>
+                        </div>
                             <!-- <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="start_date">Date Issued</label>
@@ -330,7 +376,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div> -->
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="contact_name">Date Issued</label>
+                                    <label for="contact_name">Schedule Date Given</label>
                                     <input type="text" class="form-control" name="date_issued" id="date_issued" required />
                                 </div>
                                 <div class="form-group col-md-4">
@@ -358,8 +404,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <!-- ====== TERMS AND CONDITIONS ====== -->
                             <div class="row">
                                 <div class=" col-md-12">
-                                    <label style="font-weight:bold;font-size:18%;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#">Update Terms and Conditions</a></label>
-                                    <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;"
+                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#update_tc">Update Terms of Use</a></label>
+                                    <div style="height:200px; overflow:auto; background:#FFFFFF;"
                                          id="showuploadagreement">
                                         <p>2. Install of the system. Company agrees to schedule and install an alarm
                                             system and/or devices in connection with a Monitoring Agreement which
@@ -438,7 +484,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row">
                                 <div class=" col-md-12">
-                                    <label style="font-weight:bold;font-size:18%;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#">Update Terms of Use</a></label>
+                                    <label style="font-weight:bold;font-size:18px;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#update_TU">Update Terms of Use</a></label>
                                     <div style="height:100px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="showuploadagreement">
                                          **This isn't everything... just a summary**</strong> You may CANCEL this
@@ -470,9 +516,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             and you authorize payment and confirmation with nSmarTrac. </p>
                                     </div>
                                 </div>
-                                <div class=" col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class=" col-md-4">
                                     <h5>Company Representative Approval</h5>
-                                    <div class="sigPad" id="smoothed1a" style="width:404px;">
+                                    <div class="sigPad" id="smoothed1a" style="width:100%;height:150px;border:solid gray 1px;">
+                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -494,9 +543,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-6">
+                                <div class=" col-md-4">
                                     <h5>Primary Account Holder</h5>
-                                    <div class="sigPad" id="smoothed2a" style="width:404px;">
+                                    <div class="sigPad" id="smoothed2a" style="width:100%;height:150px;border:solid gray 1px;">
+                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -517,9 +567,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-6">
+                                <div class=" col-md-4">
                                     <h5>Secondary Account Holder</h5>
-                                    <div class="sigPad" id="smoothed3a" style="width:404px;">
+                                    <div class="sigPad" id="smoothed3a" style="width:100%;height:150px;border:solid gray 1px;">
+                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -543,7 +594,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
 
-                            <div class="row">                        
+                            <div class="row" style="margin-top:80px;">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
@@ -561,6 +612,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-md-12 form-group">
                                 <button type="submit" class="btn btn-flat btn-success">Submit</button>
                                 <button type="submit" class="btn btn-flat btn-success">Preview</button>
+                                <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                             </div>
                         </div>
@@ -662,17 +714,51 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
-</div>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM&libraries=places"></script>
-<?php include viewPath('includes/footer_accounting'); ?>
-<script>
-function initialize() {
-  var input = document.getElementById('searchTextField');
-  new google.maps.places.Autocomplete(input);
-}
+    <!-- Modal -->
+    <div class="modal fade" id="update_tc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
-google.maps.event.addDomListener(window, 'load', initialize);
-</script>
+    <!-- Modal -->
+<!-- <div class="modal fade" id="update_tc" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+</div>
+
+<?php include viewPath('includes/footer_accounting'); ?>
 <script>
 
     document.getElementById('contact_mobile').addEventListener('input', function (e) {

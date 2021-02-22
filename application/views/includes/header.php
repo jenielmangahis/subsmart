@@ -26,6 +26,8 @@
         <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet"> -->
         
         <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+        <link href="<?php echo $url->assets ?>css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+
         <script src="<?php echo $url->assets ?>push_notification/push.min.js"></script>
         <script src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js"></script>
 

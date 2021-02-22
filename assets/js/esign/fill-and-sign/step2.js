@@ -21,6 +21,7 @@ function Step2(documentId) {
   const $container = $(".fillAndSign");
 
   let fields = [];
+  let signatures = [];
   let documentUrl = null;
   let signaturePad = null;
   let isStoring = false;
@@ -133,6 +134,23 @@ function Step2(documentId) {
     return $element;
   }
 
+  function createSignature({ value, unique_key, onDelete }) {
+    // prettier-ignore
+    const html = `
+    <div class="fillAndSign__signatureContainer">
+      <img class="fillAndSign__signatureDraw" data-key=${unique_key || Date.now()} src="${value}"/>
+      <div class="fillAndSign__signatureClose"><i class="fa fa-times"></i></div>
+    </div>
+    `;
+
+    const $element = createElementFromHTML(html);
+
+    $close = $element.find(".fillAndSign__signatureClose");
+    $close.on("click", onDelete);
+
+    return $element;
+  }
+
   async function storeField(position, $element) {
     if (isStoring) {
       return;
@@ -175,7 +193,7 @@ function Step2(documentId) {
   }
 
   async function fetchFields() {
-    const endpoint = `${prefixURL}/FillAndSign/getfields/${documentId}`;
+    const endpoint = `${prefixURL}/FillAndSign/getFields/${documentId}`;
     const response = await fetch(endpoint);
     const data = await response.json();
     fields = data.fields;
@@ -208,6 +226,8 @@ function Step2(documentId) {
       if (index > 1) break;
 
       const currentFields = fields.filter(({ document_page }) => document_page == index); // prettier-ignore
+      const currentSignatures = signatures.filter(({ document_page }) => document_page == index); // prettier-ignore
+
       const $page = await getPage({ page: index, document });
 
       const $fields = currentFields.map((field) => {
@@ -238,7 +258,36 @@ function Step2(documentId) {
         return $item;
       });
 
+      const $signatures = currentSignatures.map((signature) => {
+        const { coordinates, unique_key, value } = signature;
+        const { top, left } = JSON.parse(coordinates);
+
+        $item = createSignature({
+          value,
+          unique_key,
+          onDelete: onDeleteSignature,
+        });
+
+        $item.css({
+          position: "absolute",
+          top: `${top}px`,
+          left: `${left}px`,
+        });
+
+        $item.draggable({
+          containment: ".ui-droppable",
+          appendTo: ".ui-droppable",
+          stop: (_, ui) => {
+            storeSignature(ui.position, $(ui.helper));
+          },
+        });
+
+        return $item;
+      });
+
       $page.append($fields);
+      $page.append($signatures);
+
       $page.droppable({
         drop: function (_, ui) {
           if (!ui.draggable.hasClass("action")) {
@@ -269,6 +318,54 @@ function Step2(documentId) {
 
       $documentContainer.append($page);
     }
+  }
+
+  async function storeSignature(position, $element) {
+    if (isStoring) {
+      return;
+    }
+
+    isStoring = true;
+
+    if (!$element.hasClass("fillAndSign__signatureDraw")) {
+      $element = $element.find(".fillAndSign__signatureDraw");
+    }
+
+    const $parent = $element.closest(".fillAndSign__canvasContainer");
+    const value = $element.attr("src");
+    const documentPage = $parent.data("page");
+    const uniqueKey = $element.data("key");
+
+    const payload = {
+      coordinates: position,
+      document_page: documentPage,
+      document_id: documentId,
+      value,
+      unique_key: uniqueKey,
+    };
+
+    const endpoint = `${prefixURL}/FillAndSign/storeSignature`;
+    await fetch(endpoint, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        accepts: "application/json",
+        "content-type": "application/json",
+      },
+    });
+
+    isStoring = false;
+  }
+
+  async function onDeleteSignature(event) {
+    const $parent = $(event.target).closest(".ui-draggable");
+    const $signature = $parent.find(".fillAndSign__signatureDraw");
+    const uniqueKey = $signature.data("key");
+
+    const endpoint = `${prefixURL}/FillAndSign/deleteSignature/${uniqueKey}`;
+    await fetch(endpoint, { method: "DELETE" });
+
+    $parent.remove();
   }
 
   function attachEventHandlers() {
@@ -304,11 +401,13 @@ function Step2(documentId) {
       signaturePad.clear();
     });
 
-    $signatureApplyButton.on("click", () => {
+    $signatureApplyButton.on("click", async () => {
       const $activeTab = $(".tab-pane.active");
       const signatureType = $activeTab.data("signature-type");
 
       let $element = null;
+      let signatureDataUrl = null;
+      const canvas = $signaturePadCanvas.get(0);
 
       if (signatureType === "type") {
         const $input = $(".fillAndSign__signatureInput");
@@ -318,35 +417,39 @@ function Step2(documentId) {
           return;
         }
 
-        const html = `
-          <div class="fillAndSign__signatureText">
-            ${signature}
-          </div>
-        `;
+        const clonedCanvas = cloneCanvas(canvas);
+        const context = clonedCanvas.getContext("2d");
+        context.font = "bold 100px Southam";
+        const textWidth = context.measureText(signature).width;
+        context.fillText(signature, clonedCanvas.width / 2 - textWidth / 2, 100); // prettier-ignore
 
-        $element = createElementFromHTML(html);
+        trimCanvas(context);
+        signatureDataUrl = clonedCanvas.toDataURL("image/png");
       } else {
-        const canvas = $signaturePadCanvas.get(0);
-
         if (isCanvasBlank(canvas)) {
           return;
         }
 
         const clonedCanvas = cloneCanvas(canvas);
         trimCanvas(clonedCanvas.getContext("2d"));
-
-        const signature = clonedCanvas.toDataURL("image/png");
-        const html = `<img class="fillAndSign__signatureDraw" src="${signature}"/>`;
-        $element = createElementFromHTML(html);
+        signatureDataUrl = clonedCanvas.toDataURL("image/png");
       }
 
+      $element = createSignature({
+        value: signatureDataUrl,
+        onDelete: onDeleteSignature,
+      });
+
       $(".ui-droppable").append($element);
-      $element.css({ top: 0, left: 0, position: "absolute" });
+      const position = { top: 0, left: 0 };
+      $element.css({ position: "absolute", ...position });
       $element.draggable({
         containment: ".ui-droppable",
         appendTo: ".ui-droppable",
+        stop: (_, ui) => storeSignature(ui.position, $(ui.helper)),
       });
 
+      await storeSignature(position, $element);
       $signatureModal.hide();
     });
 
@@ -434,6 +537,7 @@ function Step2(documentId) {
 
     await fetchDocument();
     await fetchFields();
+    await fetchSignatures();
     await renderPDF();
 
     $actions.draggable({

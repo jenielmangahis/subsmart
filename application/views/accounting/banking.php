@@ -13,7 +13,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="page-title-box">
                 
                 <div style="background-color:white;height:80%;padding:2%;margin-top:1.3%;">
-                <h3 style="font-family: Sarabun, sans-serif">&nbsp;Bank and Credit Cards</h3>
+                <!-- <h3 style="font-family: Sarabun, sans-serif">&nbsp;Bank and Credit Cards</h3> -->
+                    <div class="col-sm-12">
+                          <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Bank and Credit Cards</h3>
+                    </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-4">
                         <!-- <h2>Bank and Credit Cards</h2> -->

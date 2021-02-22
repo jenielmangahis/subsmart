@@ -4,9 +4,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="wrapper accounting-sales" role="wrapper" >
         <!-- page wrapper start -->
            <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid" style="background-color:white;">
+        
+                <div style="padding-top:1%;">
+						<h3 style="font-family: Sarabun, sans-serif">Sales Transactions</h3>
+					</div>
 			<div class="page-title-box mx-4">
-				<div class="row pb-2">
+				<!-- <div class="row pb-2">
+					<div class="col-md-12 banking-tab-container">
+						<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab">Overview</a>
+						<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab-active text-decoration-none">All Sales</a>
+						<a href="<?php echo url('/accounting/invoices')?>" class="banking-tab">Invoices</a>
+						<a href="<?php echo url('/accounting/customers')?>" class="banking-tab">Customers</a>
+						<a href="<?php echo url('/accounting/deposits')?>" class="banking-tab">Deposits</a>
+						<a href="<?php echo url('/accounting/products-and-services')?>" class="banking-tab">Products and Services</a>
+					</div>
+				</div> -->
+                <br>
+                <div class="row pb-2">
 					<div class="col-md-12 banking-tab-container">
 						<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab">Overview</a>
 						<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab-active text-decoration-none">All Sales</a>
@@ -17,8 +32,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</div>
 				<div class="row pt-3">
-					<div class="col-lg-6 px-0">
-						<h2>Sales Transactions</h2>
+                    <div class="col-lg-6 px-0">
+						<!-- <h2>Sales Transactions</h2> -->
 					</div>
 					<div class="col-lg-6">
 						<div class="pull-right">
@@ -49,14 +64,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="col-md-4 col-sm-4 col-xs-12">
 						<div class="row pt-3 align-items-end mr-1">
 							<div class="col px-0">
-								<div class="bg-info px-3 py-2">
+								<div class="bg-info px-3 py-2" style="height:100px !important;">
 									<h4 class="text-white">0</h4>
 									<h6 class="text-white">ESTIMATES</h6>
 								</div>
 							</div>
 							<div class="col px-0">
 								<p class="text-primary mb-1">Unbilled Last 365 Days</p>
-								<div class="bg-primary px-3 py-2">
+								<div class="bg-primary px-3 py-2" style="height:100px !important;">
 									<h4 class="text-white">0</h4>
 									<h6 class="text-white">UNBILLED ACTIVITY</h6>
 								</div>
@@ -67,13 +82,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="row pt-3 align-items-end mr-1">
 							<div class="col px-0">
 								<p class="text-primary mb-1">Unpaid Last 365 Days</p>
-								<div class="bg-warning px-3 py-2">
+								<div class="bg-warning px-3 py-2" style="height:100px !important;">
 									<h4 class="text-white">0</h4>
 									<h6 class="text-white">OVERDUE</h6>
 								</div>
 							</div>
 							<div class="col px-0">
-								<div class="bg-secondary px-3 py-2">
+								<div class="bg-secondary px-3 py-2" style="height:100px !important;">
 									<h4 class="text-white">3</h4>
 									<h6 class="text-white">OPEN INVOICES</h6>
 								</div>
@@ -84,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="row pt-3 align-items-end">
 							<div class="col px-0">
 								<p class="text-primary mb-1">Paid</p>
-								<div class="bg-success px-3 py-2">
+								<div class="bg-success px-3 py-2" style="height:100px !important;">
 									<h4 class="text-white">0</h4>
 									<h6 class="text-white">PAID LAST 30 DAYS</h6>
 								</div>

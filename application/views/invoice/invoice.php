@@ -1,33 +1,3 @@
-<style>
-.page-title, .box-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-  padding-top: 5px;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.p-20 {
-  padding-top: 15px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-</style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
@@ -43,14 +13,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card mt-0 p-20">
-                        <div class="hid-desk" style="padding-bottom:0px;">
+                    <div class="card">
+                        <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
                                     <h3 class="page-title">Invoices & Payments</h3>
 
                                 </div>
-                                <div class="col-sm-6">
+                                <!-- <div class="col-sm-6">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
                                             <?php if (hasPermissions('WORKORDER_MASTER')): ?>
@@ -60,17 +30,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php endif ?>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-6 right dashboard-container-1">
-
-                                </div>
+                                </div> -->
                             </div>
+                            
+                            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                            An invoice provides customers with a detailed description and cost of the products or services that you have provided. Invoices are required for sales where the customers do not pay you immediately.  Our invoices are tracked so that you know how much each customer owes you and when payment is due.  This listing and our dashboard widget will help you keep your eyes on your money. 
+                            </div>
+                            
                             <div class="row">
-                              <div class="alert alert-warning mt-1 ml-3 mb-3" role="alert">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing all invoices.</span>
-                              </div>
+                                <div class="col-md-12" style="text-align:right;padding-bottom:10px;">
+                                    <a class="btn btn-primary" href="<?php echo base_url('invoice/add') ?>"><span class="fa fa-plus fa-margin-right"></span> Add New Invoice</a>
+                                </div>
                             </div>
-                            <div class="row margin-bottom-ter mb-0 align-items-center">
+                            
+                            <div class="row margin-bottom-ter align-items-center">
+                                <!-- <div class="col-auto">
+                                    <p>
+                                        Listing all invoices.
+                                    </p>
+                                </div> -->
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <form style="display: inline-flex;" class="form-inline form-search"
                                           name="form-search"
@@ -428,9 +406,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="page-empty-container">
                                         <h5 class="page-empty-header">There are no invoices</h5>
                                         <p class="text-ter margin-bottom">Manage your invoice.</p>
-                                        <a class="btn btn-primary"
-                                        href="<?php echo base_url('invoice/add') ?>"><span
-                                                    class="fa fa-plus fa-margin-right"></span> Add New Invoice</a>
+                                       
                                     </div>
                                 <?php } ?>
                             </div>

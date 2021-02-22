@@ -4,9 +4,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="wrapper" role="wrapper" >
        
         <!-- page wrapper start -->
-        <div wrapper__section>
-            <div class="container-fluid">
+        <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
+            <div class="container-fluid" style="background-color:white;">
 				<div class="page-title-box mx-4">
+					<div class="col-lg-6 px-0">
+						<h3>Payroll Overview</h3>
+					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+                        This is Payroll Overview gold band 
+                    </div>
 					<div class="row pb-2">
 						<div class="col-md-12 banking-tab-container">
 							<a href="<?php echo url('/accounting/payroll-overview')?>" class="banking-tab-active text-decoration-none">Overview</a>

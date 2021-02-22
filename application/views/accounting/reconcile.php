@@ -2891,502 +2891,452 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <!-- End Add Terms -->
 
 <div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
+        <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row pb-2">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/accounting/chart_of_accounts')?>" class="banking-tab">Chart of Accounts</a>
-                        <a href="<?php echo url('/accounting/reconcile')?>" class="banking-tab-active text-decoration-none">Reconcile</a>
-                    </div>
-                </div>
-                <div class="row align-items-center">
-                    <div class="col-sm-2">
-                        <h1 class="page-title">Reconcile</h1>
-                    </div>
-                    <div class="col-md-3">
-                        <h4><?=$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)?></h4>
-                    </div>
-                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->service_charge?></h4></div>
-                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->interest_earned?></h4></div>
-                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?></h4></div>
-                    <div class="diff" style="display: none;"><?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?></div>
-                    <div class="col-sm-4">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown show">
-                            <a href="<?php echo url('accounting/reconcile/edit/')?><?=$rows[0]->id?>" class="btn btn-primary"
-                                   aria-expanded="false">
-                                    Edit Info
-                            </a>
-                             <a href="#" class="btn btn-primary"
-                                   aria-expanded="false">
-                                    Save for later
-                              </a>
-                              <a class="btn btn-primary hide-toggle dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-chevron-down"></i>
-                              </a>
 
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="#" data-toggle="modal"  onclick="getDiff()" >Finish Now</a>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-opn">Save for later</a>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-cls">Close without saving</a>
-                              </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-2">Statement ending date:</div>
-                    <div class="col-md-3"><?=date("d.m.Y", strtotime($rows[0]->ending_date));?></div>
-                    <div class="col-md-1 hide-col">1PAYMENT</div>
-                    <div class="col-md-1 hide-col">1DEPOSIT</div>
-                    <div class="col-md-1 hide-col">DIFFERENCE</div>
-                    <div class="col-sm-4"></div>
-                </div>
-                <div class="row">
-                    <p>
-                      <button class="btn btn-primary ex-button" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                        <i class="fa fa-chevron-down"></i>
-                      </button>
-                    </p>
-                    <div class="collapse" id="collapseExample">
-                      <div class="card card-body">
-                       <p style="color: #ffff"> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.</p>
-                         <div class="row">
-                            <div class="col-md-9">
-                                <div class="row">
-                                    <div class="col-md-4"><h3 id="ending_balance">$<?=$rows[0]->ending_balance?>.00</h3></div>
-                                    <div class="col-md-1"><h4>-</h4></div>
-                                    <div class="col-md-4"><h3>$<?=($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned?>.00</h3></div>
-                                </div>
-                                 <div class="row">
-                                    <div class="col-md-4">STATEMENT ENDING BALANCE</div>
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-4">CLEARED BALANCE</div>
-                                </div>
-                                 <div class="row">
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-3"><h4>$<?=$accBalance?>.00</h4></div>
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-5"><h4>$<?=$rows[0]->service_charge?></h4></div>
-                                            <div class="col-md-2"><h4>+</h4></div>
-                                            <div class="col-md-5"><h4>$<?=$rows[0]->interest_earned?></h4></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-3">BEGINNING BALANCE</div>
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-5">1 PAYMENT</div>
-                                            <div class="col-md-2"></div>
-                                            <div class="col-md-5">1 DEPOSIT</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="row">
-                                    <div class="col-md-12"><h3>$<?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?>.00</h3></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">DIFFERENCE</div>
-                                </div>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
             </div>
             <!-- end row -->
-           <div id="chart_of_accounts_id" style="display: none;"><?=$rows[0]->chart_of_accounts_id?></div>
-             <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
-                                <div class="col-md-10"></div>
-                                <div class="col-md-2"><a href="">Show me around</a></div>
-                            </div>
-                             <div class="row">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-4">
-                                    <ul class="nav nav-pills nav-fill" style="border: 5;">
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#" id="nav_filter_pay" onclick="payments()">Payments</a>
-                                      </li>
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#" id="nav_filter_dep" onclick="deposites()">Deposites</a>
-                                      </li>
-                                      <li class="nav-item">
-                                        <a class="nav-link active" href="#" id="nav_filter_all" onclick="displayall()">All</a>
-                                      </li>
-                                    </ul>
+                                <div class="col-sm-6">
+                                    <h3 class="page-title" style="margin: 0 !important">Reconcile&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)?></h3>
+                                    <p>Statement ending date: <?=date("F d,Y", strtotime($rows[0]->ending_date));?></p>
                                 </div>
-                                <div class="col-md-3"></div>
-                                <div class="col-md-1 form-group">
-                                     <div class="dropdown">
-                                       <a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a>
-                                       <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-cog"></i>
-                                       </a>
-                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        Edit Columns<br/>
-                                        <p class="p-padding"><input type="checkbox" name="chk_type" id="chk_type" checked="checked" onchange="col_type()"> Type</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_refno" id="chk_refno" checked="checked" onchange="col_refno()"> Ref. no</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_account" id="chk_account" checked="checked" onchange="col_account()"> Account</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_payee" id="chk_payee" checked="checked" onchange="col_payee()"> Payee</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_memo" id="chk_memo" checked="checked" onchange="col_memo()"> Memo</p>
-                                        <!-- <p class="p-padding"><input type="checkbox" name="chk_status" id="chk_status" checked="checked" onchange="col_status()"> Banking Status</p> -->
-                                        <br/>
-                                        <!-- Display Density
-                                        <p class="p-padding"><input type="radio" name="" id=""> Regular</p>
-                                        <p class="p-padding"><input type="radio" name="" id=""> Compact</p>
-                                        <p class="p-padding"><input type="radio" name="" id=""> Ultra compact</p> -->
-                                      </div>
+                                <div class="col-sm-12 p-0">
+                                    <div class="alert alert-warning mt-4 mb-4" role="alert">
+                                        <span style="color:black;">Reconcile message</span>
                                     </div>
-                                 </div>
-                             </div>
-                             <div class="row">
-                                 <div class="col-md-7">
-                                    <section class="filter-wrp">
-                                        <div class="container">
-                                            <div class="filter-box dropdown">
-                                                <a href="javascript:void(0);" class="dropopenbx"><i class="fa fa-filter"></i></a>
-
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-sm-6">
+                                    <div class="breadcrumb-pager m-0">
+                                        <ul>
+                                            <li><a href="<?= url('accounting/chart_of_accounts') ?>">Chart of Accounts</a></li>
+                                            <li><a href="#">Bank Register</a></li>
+                                            <li>Reconcile</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="float-right d-none d-md-block">
+                                        <div class="dropdown show">
+                                            <a href="#" class="btn btn-secondary mr-2"
+                                                aria-expanded="false" style="padding: 10px 12px !important">
+                                                    Edit Info
+                                            </a>
+                                            
+                                            <div class="btn-group float-right">
+                                                <a href="javascript:void(0);" class="btn btn-success d-flex align-items-center justify-content-center">
+                                                    Save for later
+                                                </a>
+                                                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
                                                 <div class="dropdown-menu">
-                                                    <div class="inner-filter-list">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label>Find</label>
-                                                                    <input type="search" id="find" size="20" maxlength="524288" minlength="0" class="form-control" placeholder="Memo, Ref. no, $amt, >$amt, <$amt" aria-controls="reconcile_table">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label>Cleared status</label>
-                                                                    <select id="cleardrop" name="cleardrop" class="form-control">
-                                                                        <option>All</option>
-                                                                        <option>Cleared</option>
-                                                                        <option>Not Cleared</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label>Transaction type</label>
-                                                                    <select id="transaction_type" class="form-control">
-                                                                        <option>All</option>
-                                                                        <option>Bill</option>
-                                                                        <option>Bill Payment</option>
-                                                                        <option>CC Bill Payment</option>
-                                                                        <option>Cash Expense</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label>Payee</label>
-                                                                    <select name='payee_drop' class='form-control select2'>
-                                                                        <option value='' disabled selected>All</option>
-                                                                        <?php
-                                                                        foreach($this->AccountingVendors_model->select() as $ro)
-                                                                        {
-                                                                            echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
-                                                                        }
-                                                                        ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label>Date</label>
-                                                                    <select id="dropdate" name="dropdate" class="form-control" onchange="myfunc();">
-                                                                        <option>All</option>
-                                                                        <option>Custome Date</option>
-                                                                        <option>Statement Ending Date</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label>From</label>
-                                                                    <div class="col-xs-10 date_picker">
-                                                                    <input type="text" id="from_date" name="from_date" class="form-control disableFuturedate">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4 col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label>To</label>
-                                                                    <div class="col-xs-10 date_picker">
-                                                                    <input type="text" id="to_date" name="to_date" class="form-control">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="btn-group">
-                                                            <a href="#" class="btn-main" onclick="resetbtn()">Reset</a>
-                                                            <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applybtn()">Apply</a>
-                                                        </div>
-                                                    </div>
+                                                    <a class="dropdown-item" href="#" data-toggle="modal"  onclick="getDiff()" >Finish Now</a>
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-opn">Save for later</a>
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-cls">Close without saving</a>
                                                 </div>
                                             </div>
                                         </div>
-                                    </section>
-                                 </div>
-                                 <div class="col-md-3"><!-- <a href="#"><i class="fa fa-close"></i>Statment ending date</a> --></div>
-                                 <div class="col-md-2"><a href="#">Clear All / View All</a></div>
-                             </div>
-                             <?php
-                             foreach($rows as $row)
-                              {
-                                echo "<input id='ending_date' type='hidden' value='".date("d.m.Y", strtotime($rows[0]->ending_date))."'/>";
-                              }
-                             ?>
-                             <div class="row" id="filtername" style="margin-bottom: 20px">
-                                 
-                             </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 py-3">
+                                    <div class="row text-center">
+                                        <div class="col-sm-9">
+                                            <div class="row">
+                                                <div class="col-sm-5">
+                                                    <h4 id="ending_balance">$<?=$rows[0]->ending_balance?>.00</h4>
+                                                    <p>STATEMENT ENDING BALANCE</p>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <h4>-</h4>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <h4>$<?=($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned?>.00</h4>
+                                                    <p>CLEARED BALANCE</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <h4>$<?=$accBalance?>.00</h4>
+                                                    <p>BEGINNING BALANCE</p>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <h4>-</h4>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <h4>$<?=$rows[0]->service_charge?></h4>
+                                                    <p>1 PAYMENT</p>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <h4>+</h4>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <h4>$<?=$rows[0]->interest_earned?></h4>
+                                                    <p>1 DEPOSIT</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center">
+                                            <div class="difference-container">
+                                                <h4>$<?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?>.00</h4>
+                                                <p>DIFFERENCE</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="filter-box dropdown">
+                                        <a href="javascript:void(0);" class="dropopenbx"><i class="fa fa-filter"></i></a>
 
-                            <div id="XYZ_id" style="display: none;"><?=$rows[0]->id?></div>
-                            <table id="reconcile_table" class="table table-striped table-bordered accordion" style="width:100%;cursor: pointer;">
-                                <thead>
-                                <tr>
-                                    <th>DATE</th>
-                                    <th class="type">TYPE</th>
-                                    <th class="refno">REF. NO</th>
-                                    <th class="account">ACCOUNT</th>
-                                    <th class="payee">PAYEE</th>
-                                    <th class="memo">MEMO</th>
-                                    <!-- <th class="status">status</th> -->
-                                    <th>PAYMENT(USD)</th>
-                                    <th>DEPOSIT(USD)</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody id="tbody">
-                            <?php
-                              $i=1;
-                              $o=1;
-                              foreach($rows as $row)
-                              {
-                                echo "<input style='display:none' type='text' id='id' value='".$row->id."'/>";
-                                if($row->service_charge !=0 && $row->expense_account!='')
-                                {
-                                echo "<tr id='payments' onclick='trClick(".$o.")'>";
-                                echo "<td >".$row->first_date."</td>";
-                                echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td class='refno' >".$row->checkno."</td>";
-                                echo "<td class='account'>".$row->expense_account."</td>";
-                                echo "<td name='payee' class='payee' >";
-                                    echo "<select name='payee' class='form-control select2'>";
-                                    echo "<option value='' disabled selected>Payee</option>";
-                                    foreach($this->AccountingVendors_model->select() as $ro)
+                                        <div class="dropdown-menu">
+                                            <div class="inner-filter-list">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label>Find</label>
+                                                            <input type="search" id="find" size="20" maxlength="524288" minlength="0" class="form-control" placeholder="Memo, Ref. no, $amt, >$amt, <$amt" aria-controls="reconcile_table">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Cleared status</label>
+                                                            <select id="cleardrop" name="cleardrop" class="form-control">
+                                                                <option>All</option>
+                                                                <option>Cleared</option>
+                                                                <option>Not Cleared</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Transaction type</label>
+                                                            <select id="transaction_type" class="form-control">
+                                                                <option>All</option>
+                                                                <option>Bill</option>
+                                                                <option>Bill Payment</option>
+                                                                <option>CC Bill Payment</option>
+                                                                <option>Cash Expense</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Payee</label>
+                                                            <select name="payee_drop" class="form-control select2">
+                                                                <option value="" disabled selected>All</option>
+                                                                <?php foreach($this->AccountingVendors_model->select() as $ro) : ?>
+                                                                    <option value="<?=$ro->id?>"><?=$ro->f_name." ".$ro->l_name?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Date</label>
+                                                            <select id="dropdate" name="dropdate" class="form-control" onchange="myfunc();">
+                                                                <option>All</option>
+                                                                <option>Custome Date</option>
+                                                                <option>Statement Ending Date</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>From</label>
+                                                            <div class="col-xs-10 date_picker">
+                                                            <input type="text" id="from_date" name="from_date" class="form-control disableFuturedate">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>To</label>
+                                                            <div class="col-xs-10 date_picker">
+                                                            <input type="text" id="to_date" name="to_date" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <a href="#" class="btn-main" onclick="resetbtn()">Reset</a>
+                                                    <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applybtn()">Apply</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <ul class="nav nav-pills nav-fill" style="border: 5;">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#" id="nav_filter_pay" onclick="payments()">Payments</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#" id="nav_filter_dep" onclick="deposites()">Deposites</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#" id="nav_filter_all" onclick="displayall()">All</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="action-bar">
+                                        <ul>
+                                            <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
+                                            <li>
+                                            <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-cog"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <p class="p-padding">Edit Columns</p>
+                                                <p class="p-padding"><input type="checkbox" name="chk_type" id="chk_type" checked="checked" onchange="col_type()"> Type</p>
+                                                <p class="p-padding"><input type="checkbox" name="chk_refno" id="chk_refno" checked="checked" onchange="col_refno()"> Ref. no</p>
+                                                <p class="p-padding"><input type="checkbox" name="chk_account" id="chk_account" checked="checked" onchange="col_account()"> Account</p>
+                                                <p class="p-padding"><input type="checkbox" name="chk_payee" id="chk_payee" checked="checked" onchange="col_payee()"> Payee</p>
+                                                <p class="p-padding"><input type="checkbox" name="chk_memo" id="chk_memo" checked="checked" onchange="col_memo()"> Memo</p>
+                                                <!-- <p class="p-padding"><input type="checkbox" name="chk_status" id="chk_status" checked="checked" onchange="col_status()"> Banking Status</p> -->
+                                                <br/>
+                                                <!-- Display Density
+                                                <p class="p-padding"><input type="radio" name="" id=""> Regular</p>
+                                                <p class="p-padding"><input type="radio" name="" id=""> Compact</p>
+                                                <p class="p-padding"><input type="radio" name="" id=""> Ultra compact</p> -->
+                                        </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <?php
+                                    foreach($rows as $row)
                                     {
-                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                        echo "<input id='ending_date' type='hidden' value='".date("d.m.Y", strtotime($rows[0]->ending_date))."'/>";
                                     }
-                                    echo  "</select>";
-                                echo "</td>";
-                                echo "<td class='memo' >".$row->memo_sc."</td>";
-                                /*echo  "<td class='status'></td>";*/
-                                echo  "<td >".$row->service_charge."</td>";
-                                echo  "<td></td>";
-                                echo "<td><input type='checkbox'></td>";
-                                echo "</tr>";
-                                echo "<tr class='tr_class_".$o."' style='display:none'>";
-                                echo "<td><div class='col-xs-10 date_picker'><input type='text' name='first_date' id='first_date' value='".$row->first_date."' class='form-control'></div></td>";
-                                echo "<td id='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td><input type='text' name='SVCCHRG' id='SVCCHRG' value='".$row->checkno."' class='form-control'></td>";
-                                echo "<td><select name='expense_account' id='expense_account' class='form-control'>";
-                                        foreach ($this->account_sub_account_model->get() as $rw)
-                                        {
-                                           echo "<option ";
-                                           if($row->expense_account == $rw->sub_acc_name){
-                                            echo "selected";
-                                            }
-                                            echo " value='".$rw->sub_acc_name."'>".$rw->sub_acc_name."</option>";
-                                        }
-                                echo "</select></td>";
-                                echo "<td><select name='payee_name' id='payee_name' class='form-control'>
-                                        <option value='' disabled selected>Payee</option>";
-                                        foreach($this->AccountingVendors_model->select() as $ro)
-                                        {
-                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
-                                        }
-                                echo "</select></td>";
-                                echo "<td><input type='text' name='sc' id='sc' value='".$row->memo_sc."' class='form-control'></td>";
-                                echo "<td><input type='text' name='service_charge' id='service_charge' value='".$row->service_charge."' class='form-control'></td>";   
-                                echo "<td></td>";                                
-                                echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
-                                echo "</tr>";
-                                echo "<tr class='tr_class_".$o."' style='display:none'>";
-                                echo "<td><a href='#' class='btn-ed' onclick='crossClick(".$o.")'>Cancel</a></td>";
-                                echo "<td><a href='#' class='btn-ed' onclick='openFullNav()'>Edit</a></td>";
-                                echo "<td><a href='#' class='btn-ed savebt1'>Save</a></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "</tr>";
-                                }
-                                $o++;
-                                if($row->interest_earned !=0 && $row->income_account!='')
-                                {
-                                echo "<tr id='deposites' onclick='trClick(".$o.")'>";
-                                echo "<td contenteditable='true'>".$row->second_date."</td>";
-                                echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td class='refno' contenteditable='true'>INTEREST</td>";
-                                echo "<td class='account'>".$row->income_account."</td>";
-                                echo "<td class='payee' contenteditable='true'>";
-                                    echo "<select name='payee' class='form-control select2'>";
-                                    echo "<option value='' disabled selected>Payee</option>";
-                                    foreach($this->AccountingVendors_model->select() as $ro)
-                                    {
-                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
-                                    }
-                                    echo  "</select>";
-                                echo "</td>";
-                                echo "<td class='memo' contenteditable='true'>".$row->memo_it."</td>";
-                                /*echo  "<td class='status'></td>";*/
-                                echo  "<td contenteditable='true'></td>";
-                                echo  "<td>".$row->interest_earned."</td>";
-                                echo "<td><input type='checkbox'></td>";
-                                echo "</tr>";
-                                echo "<tr class='tr_class_".$o."' style='display:none'>";
-                                echo "<td><div class='col-xs-10 date_picker'><input type='text' name='second_date' id='second_date' value='".$row->second_date."' class='form-control'></div></td>";
-                                echo "<td id='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td><input disabled type='text' name='INTEREST' id='INTEREST' value='INTEREST' class='form-control'></td>";
-                                echo "<td><select name='income_account' id='income_account' class='form-control'>";
-                                        foreach ($this->account_sub_account_model->get() as $rw)
-                                        {
-                                           echo "<option ";
-                                           if($row->income_account == $rw->sub_acc_name){
-                                            echo "selected";
-                                            }
-                                            echo " value='".$rw->sub_acc_name."'>".$rw->sub_acc_name."</option>";
-                                        }
-                                echo "</select></td>";
-                                 echo "<td><select disabled name='' id='' class='form-control'>
-                                        <option value='' disabled selected>Payee</option>";
-                                        foreach($this->AccountingVendors_model->select() as $ro)
-                                        {
-                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
-                                        }
-                                echo "</select></td>";
-                                echo "<td><input type='text' name='it' id='it' value='".$row->memo_it."' class='form-control'></td>";
-                                echo "<td></td>";                                
-                                echo "<td><input type='text' name='interest_earned' id='interest_earned' value='".$row->interest_earned."' class='form-control'></td>";
-                                echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
-                                echo "</tr>";
-                                echo "<tr class='tr_class_".$o."' style='display:none'>";
-                                echo "<td><a href='#' class='btn-ed'>Cancel</a></td>";
-                                echo "<td><a href='#' class='btn-ed' onclick='openFullNav_int()'>Edit</a></td>";
-                                echo "<td><a href='#' class='btn-ed savebt2'>Save</a></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "</tr>";
-                                }
-                              $i++;
-                              $o++;
-                              }
-                               ?>
-                               <?php
-                                $osc= 1;
-                               if(!empty($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id)))
-                                {
-                                    foreach ($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id) as $row_sc) 
-                                    {
-                                        echo "<input type='text' name='scid_".$osc."' id='scid_".$osc."' value='".$row_sc->id."' style='display:none'>";
-                                        echo "<tr id='payments' onclick='trClickSC(".$osc.")'>";
-                                        echo "<td >".$rows[0]->first_date."</td>";
-                                        echo "<td class='type'>".$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)."</td>";
-                                        echo "<td class='refno' >".$rows[0]->CHRG."</td>";
-                                        echo "<td class='account expense_account_sub_".$osc."'>".$row_sc->expense_account_sub."</td>";
-                                        echo "<td name='payee' class='payee' >";
-                                            echo "<select name='payee' class='form-control select2'>";
-                                            echo "<option value='' disabled selected>Payee</option>";
-                                            foreach($this->AccountingVendors_model->select() as $ro)
-                                            {
-                                                echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
-                                            }
-                                            echo  "</select>";
-                                        echo "</td>";
-                                        echo "<td class='memo descp_sc_sub_".$osc."' >".$row_sc->descp_sc_sub."</td>";
-                                        /*echo  "<td class='status'></td>";*/
-                                        echo  "<td class='service_charge_sub_".$osc."' >".$row_sc->service_charge_sub."</td>";
-                                        echo  "<td></td>";
-                                        echo "<td><input type='checkbox'></td>";
-                                        echo "</tr>";
-                                         echo "<tr class='tr_sc_class_".$osc."' style='display:none'>";
-                                        echo "<td><div class='col-xs-10 date_picker'><input type='text' name='first_date' id='first_date' value='".$rows[0]->first_date."' class='form-control'></div></td>";
-                                        echo "<td id='type'>".$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)."</td>";
-                                        echo "<td><input type='text' name='SVCCHRG_".$osc."' id='SVCCHRG_".$osc."' value='".$rows[0]->checkno."' class='form-control'></td>";
-                                        echo "<td><select name='expense_account_sub_".$osc."' id='expense_account_sub_".$osc."' class='form-control' disabled>";
-                                                foreach ($this->account_sub_account_model->get() as $rw)
-                                                {
-                                                   echo "<option ";
-                                                   if($row_sc->expense_account_sub == $rw->sub_acc_name){
-                                                    echo "selected";
-                                                    }
-                                                    echo " value='".$rw->sub_acc_name."'>".$rw->sub_acc_name."</option>";
-                                                }
-                                        echo "</select></td>";
-                                        echo "<td><select name='payee_name' id='payee_name' class='form-control'>
-                                                <option value='' disabled selected>Payee</option>";
-                                                foreach($this->AccountingVendors_model->select() as $ro)
-                                                {
-                                                echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
-                                                }
-                                        echo "</select></td>";
-                                        echo "<td><input type='text' name='descp_sc_sub_".$osc."' id='descp_sc_sub_".$osc."' value='".$row_sc->descp_sc_sub."' class='form-control'></td>";
-                                        echo "<td><input type='text' name='service_charge_sub_".$osc."' id='service_charge_sub_".$osc."' value='".$row_sc->service_charge_sub."' class='form-control' disabled></td>";   
-                                        echo "<td></td>";                                
-                                        echo "<td><i class='fa fa-times' onclick='crossClickSC(".$osc.")'></i></td>";    
-                                        echo "</tr>";
-                                        echo "<tr class='tr_sc_class_".$osc."' style='display:none'>";
-                                        echo "<td><a href='#' class='btn-ed' onclick='crossClickSC(".$osc.")'>Cancel</a></td>";
-                                        echo "<td><a href='#' class='btn-ed' onclick='openFullNav()'>Edit</a></td>";
-                                        echo "<td><a href='#' class='btn-ed savebtsc' onclick='savebtsc(".$osc.")'>Save</a></td>";
-                                        echo "<td></td>";
-                                        echo "<td></td>";
-                                        echo "<td></td>";
-                                        echo "<td></td>";
-                                        echo "<td></td>";
-                                        echo "<td></td>";
-                                        echo "</tr>";
-                                    $osc++;
-                                    }
-                                }
-                               ?>
-                                </tbody>
-                            </table>
-                            <div id="textContent"></div>
+                                    ?>
+                                    <div class="row" id="filtername" style="margin-bottom: 20px">
+                                 
+                                    </div>
+                                    <div id="XYZ_id" style="display: none;"><?=$rows[0]->id?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <table id="reconcile_table" class="table table-striped table-bordered accordion" style="width:100%;cursor: pointer;">
+                                    <thead>
+                                        <tr>
+                                            <th>DATE</th>
+                                            <th class="type">TYPE</th>
+                                            <th class="refno">REF. NO</th>
+                                            <th class="account">ACCOUNT</th>
+                                            <th class="payee">PAYEE</th>
+                                            <th class="memo">MEMO</th>
+                                            <!-- <th class="status">status</th> -->
+                                            <th>PAYMENT(USD)</th>
+                                            <th>DEPOSIT(USD)</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        <?php $i = 1; $o = 1; 
+                                            foreach($rows as $row) :
+                                        ?>
+                                            <input type="hidden" id="id" value="<?=$row->id?>"/>
+                                            <?php if($row->service_charge !=0 && $row->expense_account!='') : ?>
+                                                <tr class="payments" onclick="trClick(<?=$o?>)">
+                                                    <td><?=$row->first_date?></td>
+                                                    <td class="type"><?=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)?></td>
+                                                    <td class="refno"><?=$row->checkno?></td>
+                                                    <td class="account"><?=$row->expense_account?></td>
+                                                    <td class="payee">
+                                                        <select name='payee' class='form-control select2'>
+                                                            <option value='' disabled selected>Payee</option>
+                                                            <?php foreach($this->AccountingVendors_model->select() as $ro) : ?>
+                                                                <option value="<?=$ro->id?>"><?=$ro->f_name.' '.$ro->l_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td class="memo"><?=$row->memo_sc?></td>
+                                                    <td><?=$row->service_charge?></td>
+                                                    <td></td>
+                                                    <td><input type='checkbox'></td>
+                                                </tr>
+                                                <tr class="tr_class_<?=$o?>" style="display:none">
+                                                    <td>
+                                                        <div class="col-xs-10 date_picker">
+                                                            <input type="text" name="first_date" id="first_date" value="<?=$row->first_date?>" class="form-control">
+                                                        </div>
+                                                    </td>
+                                                    <td id="type"><?=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)?></td>
+                                                    <td><input type="text" name="SVCCHRG" id="SVCCHRG" value="<?=$row->checkno?>" class="form-control"></td>
+                                                    <td>
+                                                        <select name="expense_account" id="expense_account" class="form-control">
+                                                            <?php foreach ($this->account_sub_account_model->get() as $rw) : ?>
+                                                                <option value="<?=$rw->sub_acc_name?>" <?=$row->expense_account == $rw->sub_acc_name ? "selected" : ""?>><?=$rw->sub_acc_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="payee_name" id="payee_name" class="form-control">
+                                                            <option value="" disabled selected>Payee</option>
+                                                            <?php foreach($this->AccountingVendors_model->select() as $ro) : ?>
+                                                                <option value="<?=$ro->id?>"><?=$ro->f_name." ".$ro->l_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" name="sc" id="sc" value="<?=$row->memo_sc?>" class="form-control"></td>
+                                                    <td><input type="text" name="service_charge" id="service_charge" value="<?=$row->service_charge?>" class="form-control"></td>
+                                                    <td><i class="fa fa-times" onclick="crossClick('<?=$o?>')"></i></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr class="tr_class_<?=$o?>" style="display:none">
+                                                    <td><a href="#" class="btn-ed" onclick="crossClick('<?=$o?>')">Cancel</a></td>
+                                                    <td><a href='#' class='btn-ed' onclick='openFullNav()'>Edit</a></td>
+                                                    <td><a href='#' class='btn-ed savebt1'>Save</a></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            <?php endif; $o++?>
+                                            <?php if($row->interest_earned !=0 && $row->income_account!='') : ?>
+                                                <tr class="deposites" onclick="trClick('<?=$o?>')">
+                                                    <td contenteditable="true"><?=$row->second_date?></td>
+                                                    <td class="type"><?=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)?></td>
+                                                    <td class="refno" contenteditable="true">INTEREST</td>
+                                                    <td class="account"><?=$row->income_account?></td>
+                                                    <td class="payee" contenteditable="true">
+                                                        <select name="payee" class="form-control select2">
+                                                            <option value="" disabled selected>Payee</option>
+                                                            <?php foreach($this->AccountingVendors_model->select() as $ro) : ?>
+                                                                <option value="<?=$ro->id?>"><?=$ro->f_name." ".$ro->l_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td class="memo" contenteditable="true"><?=$row->memo_it?></td>
+                                                    <td contenteditable="true"></td>
+                                                    <td><?=$row->interest_earned?></td>
+                                                    <td><input type="checkbox"></td>
+                                                </tr>
+                                                <tr class="tr_class_<?=$o?>" style="display:none">
+                                                    <td><div class="col-xs-10 date_picker"><input type="text" name="second_date" id="second_date" value="<?=$row->second_date?>" class="form-control"></div>
+                                                    <td id="type"><?=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)?></td>
+                                                    <td><input disabled type="text" name="INTEREST" id="INTEREST" value="INTEREST" class="form-control"></td>
+                                                    <td>
+                                                        <select name="income_account" id="income_account" class="form-control">
+                                                            <?php foreach ($this->account_sub_account_model->get() as $rw) : ?>
+                                                                <option value="<?=$rw->sub_acc_name?>" <?=$row->income_account == $rw->sub_acc_name ? "selected" : ""?>><?=$rw->sub_acc_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select disabled name="" id="" class="form-control">
+                                                            <option value="" disabled selected>Payee</option>
+                                                            <?php foreach($this->AccountingVendors_model->select() as $ro) : ?>
+                                                                <option value="<?=$ro->id?>"><?=$ro->f_name." ".$ro->l_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" name="it" id="it" value="<?=$row->memo_it?>" class="form-control"></td>
+                                                    <td></td>
+                                                    <td><input type="text" name="interest_earned" id="interest_earned" value="<?=$row->interest_earned?>" class="form-control"></td>
+                                                    <td><i class="fa fa-times" onclick="crossClick('<?=$o?>')"></i></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr class="tr_class_<?=$o?>" style="display:none">
+                                                    <td><a href="#" class="btn-ed">Cancel</a></td>
+                                                    <td><a href="#" class="btn-ed" onclick="openFullNav_int()">Edit</a></td>
+                                                    <td><a href="#" class="btn-ed savebt2">Save</a></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            <?php endif;  $i++; $o++;?>
+                                        <?php endforeach; $osc= 1; ?>
+                                        <?php if(!empty($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id))) : ?>
+                                            <?php foreach ($this->reconcile_model->select_service($rows[0]->id,$rows[0]->chart_of_accounts_id) as $row_sc) : ?>
+                                                <input type="text" name="scid_<?=$osc?>" id="scid_<?=$osc?>" value="<?=$row_sc->id?>" style="display:none">
+                                                <tr class="payments" onclick="trClickSC('<?=$osc?>')">
+                                                    <td><?=$rows[0]->first_date?></td>
+                                                    <td class="type"><?=$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)?></td>
+                                                    <td class="refno"><?=$rows[0]->CHRG?></td>
+                                                    <td class="account expense_account_sub_<?=$osc?>"><?=$row_sc->expense_account_sub?></td>
+                                                    <td name="payee" class="payee">
+                                                        <select name="payee" class="form-control select2">
+                                                            <option value="" disabled selected>Payee</option>
+                                                            <?php foreach($this->AccountingVendors_model->select() as $ro) : ?>
+                                                                <option value="<?=$ro->id?>"><?=$ro->f_name." ".$ro->l_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td class="memo descp_sc_sub_<?=$osc?>"><?=$row_sc->descp_sc_sub?></td>
+                                                    <td class="service_charge_sub_<?=$osc?>"><?=$row_sc->service_charge_sub?></td>
+                                                    <td></td>
+                                                    <td><input type="checkbox"></td>
+                                                </tr>
+                                                <tr class="tr_sc_class_<?=$osc?>" style="display:none">
+                                                    <td><div class="col-xs-10 date_picker"><input type="text" name="first_date" id="first_date" value="<?=$rows[0]->first_date?>" class="form-control"></div></td>
+                                                    <td id="type"><?=$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)?></td>
+                                                    <td><input type="text" name="SVCCHRG_<?=$osc?>" id="SVCCHRG_<?=$osc?>" value="<?=$rows[0]->checkno?>" class="form-control"></td>
+                                                    <td>
+                                                        <select name="expense_account_sub_<?=$osc?>" id="expense_account_sub_<?=$osc?>" class="form-control" disabled>
+                                                            <?php foreach ($this->account_sub_account_model->get() as $rw) : ?>
+                                                                <option value="<?=$rw->sub_acc_name?>" <?=$row_sc->expense_account_sub == $rw->sub_acc_name ? "selected" : ""?>><?=$rw->sub_acc_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="payee_name" id="payee_name" class="form-control">
+                                                            <option value="" disabled selected>Payee</option>
+                                                            <?php foreach($this->AccountingVendors_model->select() as $ro) : ?>
+                                                                <option value="<?=$ro->id?>"><?=$ro->f_name." ".$ro->l_name?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" name="descp_sc_sub_<?=$osc?>" id="descp_sc_sub_<?=$osc?>" value="<?=$row_sc->descp_sc_sub?>" class="form-control"></td>
+                                                    <td><input type="text" name="service_charge_sub_<?=$osc?>" id="service_charge_sub_<?=$osc?>" value="<?=$row_sc->service_charge_sub?>" class="form-control" disabled></td>
+                                                    <td></td>
+                                                    <td><i class="fa fa-times" onclick="crossClickSC('<?=$osc?>')"></i></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr class="tr_sc_class_<?=$osc?>" style="display:none">
+                                                    <td><a href="#" class="btn-ed" onclick="crossClickSC('<?=$osc?>')">Cancel</a></td>
+                                                    <td><a href="#" class="btn-ed" onclick="openFullNav()">Edit</a></td>
+                                                    <td><a href="#" class="btn-ed savebtsc" onclick="savebtsc('<?=$osc?>')">Save</a></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            <?php $osc++; endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <!-- end card -->
                 </div>
             </div>
-            <?php echo form_close(); ?>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     function convertDate(inputFormat) {
@@ -3405,7 +3355,12 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         $('#to_date').attr("disabled", "disabled" );
     } );
 
-    var table = $('#reconcile_table').DataTable({sDom: 'lrtip',"iDisplayLength": 12});
+    var table = $('#reconcile_table').DataTable({
+        sDom: 'lrtip',
+        "iDisplayLength": 12,
+        searching: false,
+        lengthChange: false
+    });
 
     function applybtn(){
         var filtername = document.getElementById('filtername').innerHTML;
@@ -3580,27 +3535,27 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
 
     function payments()
     {
-        $("#deposites").hide();
-        $("#payments").show();
-        $("nav_filter_pay").addClass('active');
-        $("nav_filter_all").removeClass('active');
-        $("nav_filter_dep").removeClass('active');
+        $(".deposites").hide();
+        $(".payments").show();
+        $("#nav_filter_pay").addClass('active');
+        $("#nav_filter_all").removeClass('active');
+        $("#nav_filter_dep").removeClass('active');
     }
     function deposites()
     {
-        $("#deposites").show();
-        $("#payments").hide();
-        $("nav_filter_dep").addClass('active');
-        $("nav_filter_pay").removeClass('active');
-        $("nav_filter_all").removeClass('active');
+        $(".deposites").show();
+        $(".payments").hide();
+        $("#nav_filter_dep").addClass('active');
+        $("#nav_filter_pay").removeClass('active');
+        $("#nav_filter_all").removeClass('active');
     }
     function displayall()
     {
-        $("#deposites").show();
-        $("#payments").show();
-        $("nav_filter_all").addClass('active');
-        $("nav_filter_pay").removeClass('active');
-        $("nav_filter_dep").removeClass('active');
+        $(".deposites").show();
+        $(".payments").show();
+        $("#nav_filter_all").addClass('active');
+        $("#nav_filter_pay").removeClass('active');
+        $("#nav_filter_dep").removeClass('active');
     }
 </script>
 

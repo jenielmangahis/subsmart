@@ -1082,6 +1082,14 @@ class Workorder extends MY_Controller
         redirect('workorder/edit_checklist/'.$cid);
 
     }
+
+    public function NewworkOrder()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Work Order";
+        // print_r($this->page_data);
+        $this->load->view('workorder/addNewworkOrder', $this->page_data);
+    }
 }
 
 
