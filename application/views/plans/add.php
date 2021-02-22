@@ -1,3 +1,123 @@
+<style>
+hr{
+    border: 0.5px solid #32243d !important;
+    width: 100%;
+}
+.form-group {
+    margin-bottom: 2px !important;
+}
+.banking-tab-container {
+    border-bottom: 1px solid grey;
+    padding-left: 0;
+}
+.form-line{
+    padding-bottom: 1px;
+}
+.input_select{
+    color: #363636;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+    display: inline-block !important;
+    width: 100%;
+    background-color: #fff;
+    background-clip: padding-box;
+    font-size: 11px !important;
+}
+.pb-30 {
+  padding-bottom: 30px;
+}
+h5.card-title.mb-0, p.card-text.mt-txt {
+  text-align: center !important;
+}
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 54% !important;
+    right: 9px !important;
+}
+.card-deck-upgrades {
+  display: block;
+}
+.card-deck-upgrades div {
+    padding: 20px;
+    float: left;
+    width: 33.33%;
+}
+.card-body.align-left {
+  width: 100% !important;
+}
+.card-deck-upgrades div a {
+    display: block;
+    width: 100%;
+    min-height: 400px;
+    float: left;
+    text-align: center;
+}
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.left {
+  float: left;
+}
+.p-40 {
+  padding-left: 15px !important;
+  padding-top: 40px !important;
+}
+a.btn-primary.btn-md {
+    height: 38px;
+    display: inline-block;
+    border: 0px;
+    padding-top: 7px;
+    position: relative;
+    top: 0px;
+}
+.card.p-20 {
+    padding-top: 18px !important;
+}
+.fr-right {
+  float: right;
+  justify-content: flex-end;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+.pd-17 {
+  position: relative;
+  left: 17px;
+}
+@media only screen and (max-width: 1300px) {
+  .card-deck-upgrades div a {
+      min-height: 440px;
+  }
+}
+@media only screen and (max-width: 1250px) {
+  .card-deck-upgrades div a {
+      min-height: 480px;
+  }
+  .card-deck-upgrades div {
+    padding: 10px !important;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -6,35 +126,36 @@
  <?php include viewPath('includes/sidebars/inventory'); ?>
    <?php include viewPath('includes/notifications'); ?>
    <div wrapper__section>
-   <div class="container-fluid">
+   <div class="container-fluid p-40">
       <section class="content">
          <!-- Default box -->
          <div class="box">
-            
-			<div class="page-title-box">
-				<div class="row align-items-center">
-					<div class="col-sm-6">
-						<h1 class="page-title">Plan</h1>
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item active">Add Plan</li>
-						</ol>
-					</div>
-					<div class="col-sm-6">
-						<div class="float-right d-none d-md-block">
-							<div class="dropdown">
-								<a href="<?php echo url('plans') ?>" class="btn btn-primary" aria-expanded="false">
-									<i class="mdi mdi-settings mr-2"></i> Go Back to Plans
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
             <?php echo form_open('plans/save', [ 'class' => 'form-validate' ]); ?>
             <div class="row custom__border">
 				<div class="col-xl-12">
 					<div class="card">
-						<div class="card-body">
+            <div style="padding:14px ​0px 11px !important;">
+              <div class="row align-items-center">
+                <div class="col-sm-6">
+                  <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Plan</h5>
+                </div>
+                <div class="col-sm-6">
+                  <div class="float-right d-none d-md-block">
+                    <div class="dropdown">
+                      <a href="<?php echo url('plans') ?>" class="btn btn-primary" aria-expanded="false">
+                        <i class="mdi mdi-settings mr-2"></i> Go Back to Plans
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pl-3 pr-3 mt-2 row">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Add New Plan.</span>
+              </div>
+            </div>
+						<div class="card-body" style="padding: 0px;">
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
@@ -42,7 +163,7 @@
 									  <input type="text" class="form-control" name="plan_name" id="formClient-Name" required placeholder="Enter Name" autofocus />
 									</div>
 								</div>
-								
+
 								<div class="col-sm-6">
 									<div class="form-group">
 										<label for="discount_fixed">Status</label>
@@ -52,7 +173,7 @@
 										</select>
 									</div>
 								</div>
-								
+
 								<div class="col-md-12 table-responsive">
 									<h5>Assign Items</h5>
 									<table class="table table-hover">
@@ -88,22 +209,22 @@
 									</table>
 									<a href="#" class="btn btn-primary" id="add_another">Add Items</a>
 								</div>
-								
+
 								<div class="col-sm-6 mt-3">
 									<button type="submit" class="btn btn-flat btn-primary">Submit</button>
 								</div>
-										   
+
 							</div>
 						</div>
 					</div>
 				</div>
             </div>
-            
+
             <?php echo form_close(); ?>
          </div>
          <!-- /.box -->
       </section>
-      <!-- end row -->           
+      <!-- end row -->
    </div>
    <!-- end container-fluid -->
 </div>
@@ -111,37 +232,37 @@
 <?php include viewPath('includes/footer'); ?>
 <script>
    $(document).ready(function() {
-   
+
      $('.form-validate').validate();
-   
-   
-   
+
+
+
      $('.check-select-all-p').on('change', function() {
-   
-   
-   
+
+
+
        $('.check-select-p').attr('checked', $(this).is(':checked'));
-   
-       
-   
+
+
+
      })
-   
-   
-   
+
+
+
      $('.table-DT').DataTable({
-   
+
        "ordering": false,
-   
+
      });
-   
+
    })
-   
-   
-   
+
+
+
 </script>
 <script>
    //Initialize Select2 Elements
-   
+
    $('.select2').select2()
-   
+
 </script>
