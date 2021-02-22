@@ -1,3 +1,33 @@
+<style>
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -6,23 +36,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/sidebars/job'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Bird Eye View</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage Bird Eye View</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
+        <div class="container-fluid p-40">
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card">
-
-                        <div class="filter-container">
+                    <div class="card p-20">
+                      <div class="col-sm-12 pl-0 pr-0">
+                          <h3 class="mt-0 page-title pb-0 mb-0">Bird's Eye View</h3>
+                          <span style="margin-top:4px;margin-bottom: 8px;display: block;font-size: 14px;color: rgba(42, 49, 66, 0.7);">Manage Bird's Eye View</span>
+                      </div>
+                      <div class="pl-3 pr-3 mt-1 row">
+                        <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                        </div>
+                      </div>
+                        <div class="filter-container mb-3">
                             <div class="dropdown dropdown-inline filter-date magbottompad">
                                 <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                     <span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name"></span> <span class="caret"></span>
@@ -159,7 +187,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
 
                         <div class="map-container">
-                            <style>#map-canvas {width: 100%;height: 300px;}</style>
+                            <style>#map-canvas {width: 100%;height: 50vh;}</style>
                             <div id="map-canvas"></div>
                             <script>
                                 function initMap() {

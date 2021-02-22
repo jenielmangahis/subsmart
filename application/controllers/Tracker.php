@@ -14,7 +14,7 @@ class Tracker extends MY_Controller {
 		$credit_note_id = hashids_decrypt($eid, '', 15);
 		$creditNote     = $this->CreditNote_model->getById($credit_note_id);
 		if( $creditNote->is_seen == 0 ){
-			$this->CreditNote_model->update($creditNote->id, ['is_seen' => 1]);
+			$this->CreditNote_model->update($creditNote->id, ['is_seen' => 1, 'mail_open_date' => date("Y-m-d H:i:s")]);
 		}		
 		
 		$image = base_url('/assets/img/tracking_pixel.png'); 

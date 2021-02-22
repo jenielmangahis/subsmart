@@ -288,9 +288,116 @@
                                     </div>
                                 </div>
                             </li>
-
-
                         </ul>
+
+                        <!-- Online Payments -->
+                        <div class="col-sm-6">
+                            <h1 class="page-title">Online Payments</h1>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">
+                                    Please select the online preferred payment method. Once the setup is completed, your payment status will be tracked and updated automatically.
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="col-sm-6"></div><br /><br />
+                        <div class="col-sm-6">
+                            <div class="float-right d-none d-md-block">
+                                <div class="dropdown">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <?php 
+                                if( $setting['is_active'] == 1 ){
+                                    $is_active = 'YES';
+                                    $is_setup = 'YES';
+                                }else{
+                                    $is_active = 'NO';
+                                    $is_setup = 'NOT SET';
+                                }
+                            ?>
+                            <ul class="addon-list">
+                                <li class="addon-li">
+                                    <div class="addon">
+                                        <div class="addon__on"></div>
+                                        <div class="addon__img" style="margin: 23px 0; height: 100px;">
+                                            <img class="img-responsive" style="height: 87px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
+                                        </div>
+                                        <div class="addon__name">PayPal</div>
+                                        <div class="addon__description text-ter">
+                                            Online Transaction Fees: as set by PayPal.
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="addon_price">
+                                                    Is Setup : <?= $is_setup; ?><br />
+                                                    Is Active : <?= $is_active; ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a class="" href="#setupPaypalModal" data-toggle="modal" data-target="#setupPaypalModal"><span class="fa fa-pencil-square-o icon"></span> Setup</a>
+                                            </div>
+                                        </div>
+                                        <div class="addon__switch">
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="addon-li">
+                                    <div class="addon">
+                                        <div class="addon__on"></div>
+                                        <div class="addon__img" style="margin: 23px 0; height: 100px;">
+                                            <img class="img-responsive" style="height: 87px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/square-payment.png">
+                                        </div>
+                                        <div class="addon__name">Square</div>
+                                        <div class="addon__description text-ter">
+                                            Online Transaction Fees: as set by Square, Instant Deposit is available.
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="addon_price">
+                                                    Is Setup : NOT SET<br />
+                                                    Is Active : NO
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a href="#setupSqaureModal" data-toggle="modal" data-target="#setupSqaureModal"><span class="fa fa-pencil-square-o icon"></span> Setup</a>
+                                            </div>
+                                        </div>
+                                        <div class="addon__switch">
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="addon-li">
+                                    <div class="addon">
+                                        <div class="addon__on"></div>
+                                        <div class="addon__img" style="margin: 23px 0; height: 100px;">
+                                            <img class="img-responsive" style="max-width: 200px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/wepay-logo.png">
+                                        </div>
+                                        <div class="addon__name">WEPAY</div>
+                                        <div class="addon__description text-ter">
+                                            Online Transaction Fees: 2.9% + $0.30
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="addon_price">
+                                                    Is Setup : NOT SET<br />
+                                                    Is Active : NO
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a  href="#setupWePayModal" data-toggle="modal" data-target="#setupWePayModal"><span class="fa fa-pencil-square-o icon"></span> Setup</a>
+                                            </div>
+                                        </div>
+                                        <div class="addon__switch">
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,5 +411,6 @@
     </div>
     <!-- page wrapper end -->
 </div>
+<?php include viewPath('includes/settings_modal'); ?>
 <?php include viewPath('includes/footer'); ?>
 <?php include viewPath('tools/css/style'); ?>
