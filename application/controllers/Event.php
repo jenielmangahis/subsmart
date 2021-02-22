@@ -46,6 +46,16 @@ class Event extends MY_Controller
             $is_recurring = 0;
         }
 
+        $event_address = '';
+        $event_zip_code = '';
+        $event_state    = '';
+
+        if( isset($post['event_add_address']) ){
+            $event_address  = $post['event_address'];
+            $event_zip_code = $post['event_zip_code'];
+            $event_state    = $post['event_state'];
+        }
+
         $data = array(
             'company_id' => $company_id,
             'customer_id' => $post['customer_id'],
@@ -62,7 +72,9 @@ class Event extends MY_Controller
             'event_description' => $post['description'],
             'instructions' => $post['instructions'],
             'is_recurring' => $is_recurring,
-            'event_location' => $post['event_location']
+            'event_address' => $event_address,
+            'event_zip_code' => $event_zip_code,
+            'event_state' => $event_state
         );
 
         if (!empty(post('event_id'))) {
@@ -229,16 +241,16 @@ class Event extends MY_Controller
         $this->load->model('EventType_model');
         $this->load->model('AcsProfile_model');
 
-        $get = $this->input->get();
+        $post = $this->input->post();
 
         // popup open request to edit a particular event
-        if (!empty($get['event_id'])) {
+        if (!empty($post['event_id'])) {
 
-            $this->page_data['event'] = $this->event_model->getById($get['event_id']);
+            $this->page_data['event'] = $this->event_model->getById($post['event_id']);
 
             // load the event users
             $this->load->model('UserEvent_model', 'UserEvent_model');
-            $users = $this->UserEvent_model->getByEventId($get['event_id']);
+            $users = $this->UserEvent_model->getByEventId($post['event_id']);
 
             // load one user for the event
             if (!empty($users)) {
@@ -249,6 +261,7 @@ class Event extends MY_Controller
         // print_r($this->page_data['event']); die;
         $user_id = logged('id');
         $role_id = logged('role');
+        $company_id = logged('company_id');
         if( $role_id == 1 || $role_id == 2 ){
             $args = array();
             $eventTypes = $this->EventType_model->getAll();

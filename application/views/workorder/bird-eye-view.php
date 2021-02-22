@@ -208,7 +208,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   });
                                 }
                             </script>
-                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzt0c6Rxf0SJo6bsCc046g7671s7TEj_U&callback=initMap&sensor=false" async defer></script>
+                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&callback=initMap"></script>
                         </div>
 
                     </div>
