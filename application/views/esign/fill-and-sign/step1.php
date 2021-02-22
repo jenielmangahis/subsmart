@@ -3,10 +3,10 @@
 
 <section class="container fillAndSign" data-step="1">
     <div class="fillAndSign__header">
-        <h1 class="fillAndSign__title">Add Recipients to the Envelope</h1>
+        <h1 class="fillAndSign__title">Fill and eSign</h1>
         <div class="alert alert-warning mt-2" role="alert">
             <span style="color:black;">
-                Sign and send documents for signing from your automated workflows on any device. Quickly configure templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms.
+                To get started, upload a form from your library or from your local hard drive. Once the document is uploaded successfully, press NEXT. To add text, select the Text button in the main toolbar, click where you’d like to place the text cursor and type. Simply select another item from the toolbar and do it again.
             </span>
         </div>
     </div>
@@ -27,11 +27,16 @@
                     <h5 class="fillAndSign__docTitle"></h5>
                     <span class="fillAndSign__docPageCount"></span>
                 </div>
+
+
+                <div class="fillAndSign__uploadProgress" width="100%">
+                    <span></span>
+                </div>
             </div>
         </div>
 
         <div class="fillAndSign__footer">
-            <button type="submit" class="btn">Send</button>
+            <button type="submit" class="btn">Next</button>
         </div>
     </form>
 

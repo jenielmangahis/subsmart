@@ -103,9 +103,29 @@ class Job extends MY_Controller
                 'company_id' => logged('company_id'),
             ),
             'table' => 'estimates',
-            'select' => 'id,estimate_number,estimate_date,job_name',
+            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
         );
         $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
+
+        // get workorder
+        $get_workorder = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'work_orders',
+            'select' => 'id,work_order_number,start_date,job_name,customer_id',
+        );
+        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
+
+        // get invoices
+        $get_invoices = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'invoices',
+            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+        );
+        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
 
         $this->load->view('job/job_new', $this->page_data);
     }
@@ -462,6 +482,24 @@ class Job extends MY_Controller
             'company_id' => $comp_id
         );
         $this->general->add_($jobs_settings_data, 'job_settings');
+
+        // add to cslendar of the new job
+        $events_data = array(
+            'customer_id' => $input['customer_id'],
+            'event_description' => $input['job_description'],
+            'employee_id' => $input['employee_id'],
+            'start_date' => $input['start_date'],
+            'start_time' => $input['start_time'],
+            'end_date' => $input['end_date'],
+            'end_time' => $input['end_time'],
+            'event_color' => $jobs_id,
+            'customer_reminder_notification' => $input['customer_reminder_notification'],
+            'company_id' => $comp_id,
+            'description' => $jobs_id,
+            'tags' => $jobs_id,
+            'notify_at' => $jobs_id,
+        );
+        $this->general->add_($events_data, 'events');
         echo $jobs_id;
     }
 

@@ -273,11 +273,14 @@ $route['accounting/submit-job-tag-form']['post'] = 'accounting_modals/submit_job
 $route['accounting/get-job-tag-modal'] = 'accounting_modals/job_tag_modal';
 $route['accounting/get-job-tag-form'] = 'accounting_modals/job_tag_form';
 $route['accounting/get-group-tag-form'] = 'accounting_modals/group_job_tag_form';
+$route['accounting/edit-group-tag-form'] = 'accounting_modals/edit_group_tag_form';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
+$route['accounting/attachments'] = 'accounting/attachments';
+$route['accounting/upload-files']['post'] = 'accounting/upload_files';
 $route['accounting/load-chart-of-accounts']['post'] = 'accounting/load_chart_of_accounts';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
@@ -308,6 +311,7 @@ $route['accounting/reconcile/do_upload/(:any)'] = 'reconcile/do_upload/$1';
 $route['accounting/reconcile/delete/reconcile'] = 'reconcile/delete';
 $route['accounting/reconcile/view/report/(:any)'] = 'reconcile/report/$1';
 $route['accounting/reconcile/view/summary'] = 'reconcile/summary';
+$route['accounting/reconcile/view/history-by-account'] = 'reconcile/history_by_account';
 $route['accounting/reconcile/view/export_csv'] = 'reconcile/export_csv';
 $route['accounting/reconcile/view/fetch_ending_date'] = 'reconcile/fetch_ending_date';
 $route['accounting/reconcile/updatesingle/adjustment_date'] = 'reconcile/adjustment_date';

@@ -36,6 +36,15 @@ class Dashboard extends Widgets {
         ));
     }
     
+    
+    public function sendSMS()
+    {
+        $this->load->library('Ringcentral');
+        $this->ringcentral->sample();
+        
+    }
+    
+    
     public function getWidgetList(){
         $this->load->model('widgets_model');
         $user_id = logged('id');

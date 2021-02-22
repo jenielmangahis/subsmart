@@ -24,7 +24,7 @@
                 datasets: [{
                         label: 'Job Count',
                         data: [500, 700, 1300],
-                        backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                        backgroundColor: window.chartColors.blue,
                         yAxisID: "id1",
                         order:2
                     }, {

@@ -3,9 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid">
+    <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
+        <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box mx-4">
+                    <div class="col-lg-6 px-0">
+						<h3>Vendors</h3>
+					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+                        This is Vendors gold band 
+                    </div>
                 <div class="row pb-2">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/expenses')?>" class="banking-tab" style="text-decoration: none">Expenses</a>
@@ -16,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-12 px-0" >
                         <div class="row">
                             <div class="col-md-6">
-                                <h2>Vendors</h2>
+                                <!-- <h2>Vendors</h2> -->
                             </div>
                             <div class="col-md-6" style="text-align: right">
                                 <div class="dropdown" style="position: relative;display: inline-block;">

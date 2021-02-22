@@ -39,7 +39,7 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.*');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
-        $this->db->join('users', 'users.id = jobs.employee_ids','left');
+        $this->db->join('users', 'users.id = jobs.employee_id','left');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
         $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id','left');
         $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id','left');

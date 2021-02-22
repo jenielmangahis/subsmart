@@ -11,10 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 				<h1 class="esign__title">eSign Tools</h1>
 				<div class="alert alert-warning mt-2" role="alert">
 					<span style="color:black;">
-						Sign and send documents for signing from your automated workflows on any device. Quickly configure
-						templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms. Draw or
-						create your unique e-signature in a few clicks and sign documents online with your own ready-made
-						templates.
+						Electronic signatures, or e-signatures, are transforming the way companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process. Implementing e-signatures into your existing workflows is easier than you think.  Explore all various tools.
 					</span>
 				</div>
 			</div>

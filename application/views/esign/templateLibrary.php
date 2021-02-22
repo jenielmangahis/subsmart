@@ -27,7 +27,7 @@ ini_set('max_input_vars', 30000);
                 <h1 class="library__title">Library</h1>
                 <div class="alert alert-warning mt-2" role="alert">
                     <span style="color:black;">
-                        Sign and send documents for signing from your automated workflows on any device. Quickly configure templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms.
+                        Library is used to interact with the with our eSign Tools.  These ready made templates include placeholders for quick delivery.  Choose from these various industry types of letters and save time.
                     </span>
                 </div>
 

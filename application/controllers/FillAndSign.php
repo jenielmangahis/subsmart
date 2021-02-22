@@ -41,6 +41,8 @@ class FillAndSign extends MY_Controller
             'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
             'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
+            'https://html2canvas.hertzen.com/dist/html2canvas.js',
 
             'assets/js/esign/libs/pdf.js',
             'assets/js/esign/libs/pdf.worker.js',

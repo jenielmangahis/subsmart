@@ -144,14 +144,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                             <div class="row" id="plansItemDiv" style="background-color:white;">
-                                <div class="col-md-8 table-responsive">
+                                <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead>
                                         <tr>
                                             <th><b>Bundle-1 Items</b></th>
                                             <th><b>Quantity</b></th>
-                                            <th style="width:150px;"><b>Price</b></th>
+                                            <th><b>Price</b></th>
                                             <th><b>Total</b></th>
                                         </tr>
                                         </thead>
@@ -162,7 +162,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                 </select></td>
-                                            <td style="width:150px;"><input type="text" class="form-control quantity" name="quantity[]"
+                                            <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="text" class="form-control" name="price[]"></td>
                                             <td><span id="span_total_0">0.00</span></td>
@@ -174,9 +174,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-60px;">
-                                <div class="col-md-4">
+                                <div class="col-md-7">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
@@ -200,8 +200,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-4">
-                                </div>
+                                <!-- <div class="col-md-4">
+                                </div> -->
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
@@ -212,14 +212,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                             <div class="row" id="plansItemDiv" style="background-color:white;">
-                                <div class="col-md-8 table-responsive">
+                                <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead>
                                         <tr>
                                             <th><b>Bundle-2 Items</b></th>
                                             <th><b>Quantity</b></th>
-                                            <th style="width:150px;"><b>Price</b></th>
+                                            <th><b>Price</b></th>
                                             <th><b>Total</b></th>
                                         </tr>
                                         </thead>
@@ -230,7 +230,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                 </select></td>
-                                            <td style="width:150px;"><input type="text" class="form-control quantity" name="quantity[]"
+                                            <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="text" class="form-control" name="price[]"></td>
                                             <td><span id="span_total_0">0.00</span></td>
@@ -242,9 +242,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-60px;">
-                                <div class="col-md-4">
+                                <div class="col-md-7">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
@@ -278,8 +278,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-4">
-                                </div>
+                                <!-- <div class="col-md-4">
+                                </div> -->
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">

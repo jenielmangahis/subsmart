@@ -8,11 +8,12 @@ class Reconcile extends MY_Controller {
 		parent::__construct();
 		$this->checkLogin();
         add_css(array(
-            "assets/css/accounting/banking.css?v='rand()'",
-            "assets/css/accounting/accounting.modal.css?v='rand()'",
+            "assets/css/accounting/banking.css?v=".rand(),
+            "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
 			"assets/css/accounting/sales.css",
-            "assets/plugins/dropzone/dist/dropzone.css"
+            "assets/plugins/dropzone/dist/dropzone.css",
+            "assets/css/accounting/accounting.css"
         ));
 
         add_footer_js(array(
@@ -232,6 +233,12 @@ class Reconcile extends MY_Controller {
         $this->load->view('accounting/reconcile/summary', $this->page_data);
     }
     
+    public function history_by_account()
+    {
+        $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/reconcile/history_by_account', $this->page_data);
+    }
 
     public function export_csv(){ 
         // file name 

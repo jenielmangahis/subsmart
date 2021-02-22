@@ -99,8 +99,9 @@ $user_id = getLoggedUserID();
                     </div>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>
-                        <a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Job</a>
-                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i><b> Estimates</b></a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-calendar-check-o"></i> Events</a>
+                        <a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Jobs</a>
+                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i> Estimates</a>
                         <?php ////if (hasPermissions('WORKORDER_MASTER')): ?>
                         <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i><b> Work Orders</b></a>
                         <?php //endif ?>
@@ -112,7 +113,7 @@ $user_id = getLoggedUserID();
                         <!-- <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a> -->
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
-                        <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
+                        <a class="dropdown-item" href="<?php echo url('customer/ticketslist') ?>"><i class="fa fa-ticket"></i> Tickets</a>
                         <a class="dropdown-item" href="<?php echo url('credit_notes') ?>"><i class="fa fa-list"></i> Credit Notes</a>
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>

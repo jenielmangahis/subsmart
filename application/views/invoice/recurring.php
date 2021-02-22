@@ -33,10 +33,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="row margin-bottom-ter align-items-center">
-                                <div class="col-auto">
+                                <div class="col-md-6">
                                     <p>
                                         Listing all recurring invoices.
                                     </p>
+                                </div>
+                                <div class="col-md-6" style="text-align:right !important;">
+                                    <a class="btn btn-primary" href="#"><span class="fa fa-plus fa-margin-right"></span> Add New </a>
                                 </div>
                             </div>
                         </div>                        

@@ -4,10 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <div wrapper__section>
+    <div wrapper__section style="margin-top:2%;padding-left:1.5%;">
         <?php include viewPath('includes/notifications'); ?>
         <div class="card"> 
             <div class="container-fluid" style="font-size:14px;">
+            <div class="page-title-box">
                 <div class="row">
                     <div class="col">
                         <h3 class="m-0">Estimates</h3>
@@ -223,7 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
 
 
-
+            </div>
             </div>
         </div>
     </div>

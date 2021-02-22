@@ -3,12 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid" >
+    <div wrapper__section style="padding-left:1%;">
+        <div class="container-fluid" style="background-color:white;">
+                    <div style="padding-top:1%;">
+						<h3 style="font-family: Sarabun, sans-serif">Dashboard</h3>
+					</div>
             <div class="page-title-box">
                 <div class="row">
                     <div class="col-sm-4">
-                        <div class="income tile-container">
+                        <div class="income tile-container" style="height:445px;">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -40,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="expenses tile-container">
+                        <div class="expenses tile-container" style="height:445px;">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -97,7 +100,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="bank-accounts tile-container">
+                        <div class="bank-accounts tile-container" style="height:445px;">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -230,7 +233,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php $this->load->view('accounting/shortcuts'); ?>
                     </div>
                     <div class="col-sm-4">
-                        <div class="sales tile-container" >
+                        <div class="sales tile-container" style="height:445px;">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -256,7 +259,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                             <div class="moduleContent">
-                                                <div class="subContainer salesValues">
+                                                <div class="subContainer salesValues" style="height:300px;">
                                                     <div class="paid moneySection">
                                                         <div class="fancyMoney">$4</div>
                                                         <div class="fancyText dataSelection">Last 30 Days</div>
@@ -271,7 +274,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="more tile-container" >
+                        <div class="more tile-container" style="height:445px;">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">

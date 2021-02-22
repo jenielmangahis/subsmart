@@ -161,7 +161,7 @@ add_css(array(
                                                 <li class="nav-item">
                                                     <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($cust_tab == 'tab1') {
                                                 echo "active";
-                                            } ?>" data-toggle="tab" href="#basic">Customer Manager</a>
+                                            } ?>" data-toggle="tab" href="#basic">Manager List</a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($cust_tab == 'tab2' || $cust_tab == '') {

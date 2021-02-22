@@ -25,6 +25,15 @@ body {
       border: 0;
       border-radius: 0;
     }
+
+    &--completed {
+      .fillAndSign__docInfo {
+        .fillAndSign__docTitle,
+        .fillAndSign__docPageCount {
+          display: block;
+        }
+      }
+    }
   }
 
   &__docInfo {
@@ -51,11 +60,13 @@ body {
     margin: 0;
     font-size: 13px;
     color: #797979;
+    display: none;
   }
 
   &__docPageCount {
     font-size: 12px;
     color: #797979;
+    display: none;
   }
 
   &__modal {
@@ -112,17 +123,17 @@ body {
       align-items: center;
       justify-content: center;
       flex-direction: column;
-    }
 
-    span {
-      padding: 5px 15px;
-      color: #fff;
-      background-color: #2463d1;
-      font-size: 14px;
-      font-weight: bold;
-      text-transform: uppercase;
-      margin-top: 10px;
-      width: 150px;
+      & > span {
+        padding: 5px 15px;
+        color: #fff;
+        background-color: #2463d1;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-top: 10px;
+        width: 150px;
+      }
     }
   }
 
@@ -147,6 +158,13 @@ body {
       text-transform: uppercase;
       padding: 5px 20px;
       border-radius: 3px;
+
+      &:active,
+      &:focus {
+        background-color: #ffce00 !important;
+        border: 1px solid #ffce00 !important;
+        color: #1e1e1e !important;
+      }
     }
   }
 
@@ -178,7 +196,13 @@ body {
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
       padding: 0 10px;
+
+      span {
+        font-size: 12px;
+        font-family: "Ubuntu", "Trebuchet MS", sans-serif;
+      }
     }
   }
 
@@ -249,6 +273,7 @@ body {
     padding-top: 0;
     padding-bottom: 0;
     box-shadow: none !important;
+    color: #000 !important;
 
     &::-webkit-input-placeholder {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -290,13 +315,35 @@ body {
     }
   }
 
-  &__signatureDraw {
+  &__signatureContainer {
     border: 1px solid #e2e2e2;
 
     &.ui-draggable-dragging {
       background-color: #ffeb3b;
       cursor: move;
     }
+  }
+
+  &__signatureContainer {
+    &:hover {
+      .fillAndSign__signatureClose {
+        display: flex;
+      }
+    }
+  }
+
+  &__signatureClose {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: -30px;
+    background-color: #dc3545;
+    color: #fff;
+    cursor: pointer;
   }
 
   .action--draggable.action--hasField {
@@ -375,6 +422,38 @@ body {
     .fillAndSign__signatureClose,
     .fillAndSign__fieldClose {
       display: none !important;
+    }
+  }
+
+  &__uploadProgress {
+    opacity: 1;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 16px;
+    width: 120px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    overflow: hidden;
+
+    span {
+      background: linear-gradient(to bottom, #666, #444);
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      transition: width 300ms ease-in-out;
+      opacity: 0;
+    }
+
+    &--completed {
+      span {
+        opacity: 1;
+        width: 100%;
+      }
     }
   }
 }
