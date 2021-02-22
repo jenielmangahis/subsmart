@@ -1,3 +1,99 @@
+<style>
+.pb-30 {
+  padding-bottom: 30px;
+}
+h5.card-title.mb-0, p.card-text.mt-txt {
+  text-align: center !important;
+}
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 54% !important;
+    right: 9px !important;
+}
+.card-deck-upgrades {
+  display: block;
+}
+.card-deck-upgrades div {
+    padding: 20px;
+    float: left;
+    width: 33.33%;
+}
+.card-body.align-left {
+  width: 100% !important;
+}
+.card-deck-upgrades div a {
+    display: block;
+    width: 100%;
+    min-height: 400px;
+    float: left;
+    text-align: center;
+}
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.left {
+  float: left;
+}
+.p-40 {
+  padding-left: 30px !important;
+  padding-top: 40px !important;
+}
+a.btn-primary.btn-md {
+    height: 38px;
+    display: inline-block;
+    border: 0px;
+    padding-top: 7px;
+    position: relative;
+    top: 0px;
+}
+.card.p-20 {
+    padding-top: 18px !important;
+}
+.fr-right {
+  float: right;
+  justify-content: flex-end;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+.pd-17 {
+  position: relative;
+  left: 17px;
+}
+@media only screen and (max-width: 1300px) {
+  .card-deck-upgrades div a {
+      min-height: 440px;
+  }
+}
+@media only screen and (max-width: 1250px) {
+  .card-deck-upgrades div a {
+      min-height: 480px;
+  }
+  .card-deck-upgrades div {
+    padding: 10px !important;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -6,12 +102,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/notifications'); ?>
     <?php include viewPath('includes/sidebars/customer'); ?>
     <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding-top: 10px;">
             <div class="card card_holder">
                 <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h1 class="page-title">Customer Groups</h1>
+                            <h3 class="page-title">Customer Groups</h3>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item active">Listing all customer groups.</li>
                             </ol>
