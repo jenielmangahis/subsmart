@@ -278,7 +278,7 @@ $(document).ready(function() {
     // edit button click on the event popup for the event
     // it will open the popup of the event
     // and close the current popup
-    $(document).on("click", "#edit_schedule", function() {
+    /*$(document).on("click", "#edit_schedule", function() {
 
       $("#modalEventDetails").modal('hide');
 
@@ -291,7 +291,7 @@ $(document).ready(function() {
 
       open_create_event_modal_for_event($(element).attr('data-event-id'), true);
 
-    });
+    });*/
 });
 
 
@@ -410,7 +410,7 @@ function open_create_event_modal_for_customer(customer_id, customer) {
 
 
 function open_create_event_modal_for_event(event_id, open_edit_modal) {
-
+  alert(event_id);
   $('#modalCreateEvent').modal('show');
 
   if ( open_edit_modal ) {

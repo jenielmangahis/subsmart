@@ -803,6 +803,25 @@ a.top-1 {
     </div>
 </div>
 
+<div id="modalEditEvent" class="modal fade" role="dialog" style="">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 style="" class="modal-title">Edit Event</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body edit-event-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_submit_form">Confirm</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <style>
     .hid-deskx {
         display: none !important;
@@ -850,6 +869,29 @@ a.top-1 {
             }
         })
     }
+
+    $("#edit_schedule").click(function(){
+      var event_id = $(this).attr("data-event-id");
+      var message = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+      var url = base_url + 'event/get_event_form';
+
+      $("#modalEventDetails").modal('hide');
+      $("#modalEditEvent").modal('show');
+
+      $(".edit-event-body").html(message);
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {event_id:event_id},
+             success: function(o)
+             {
+                $(".edit-event-body").html(o);
+             }
+          });
+      }, 800);
+    });
 
 
 
