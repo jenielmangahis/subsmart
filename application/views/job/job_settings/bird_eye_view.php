@@ -1,3 +1,38 @@
+<style>
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.bg-white {
+  border-radius: 4px !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  position: relative;
+  bottom: 8px;
+  padding-top: 0px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
@@ -5,15 +40,16 @@
     <?php include viewPath('includes/sidebars/job'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="row align-items-center mt-5 bg-white">
-                <div class="card col-lg-12">
-                    <div class="card-body" >
-                        <div class="col-sm-12">
-                            <h3 class="page-title">Bird Eye View</h3>
-                            <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
+        <div class="container-fluid p-40">
+            <div class="align-items-center mt-5 bg-white">
+                <div class="card p-20">
+                    <div>
+                        <div class="col-sm-12 pl-0">
+                            <h3 class="mt-0 page-title pb-0 mb-0">Bird's Eye View</h3>
+                            <span style="margin-top:4px;margin-bottom: 8px;display: block;font-size: 14px;color: rgba(42, 49, 66, 0.7);">Manage Bird's Eye View</span>
+                            <div class="alert alert-warning col-md-12 mt-1 mb-4" role="alert">
                                 <span style="color:black;">
-                                    Get a birds-eye view of your calendar events and jobs’ location scheduled for the day.  With this tool your be able to see your team location and better position them to maximize the current day. 
+                                    Get a birds-eye view of your calendar events and jobs’ location scheduled for the day.  With this tool your be able to see your team location and better position them to maximize the current day.
                                 </span>
                             </div>
                         </div>
@@ -21,9 +57,8 @@
                     <!-- end row -->
                     <div class="row">
                         <div class="col-xl-12">
-                            <div class="card">
-
-                                <div class="filter-container">
+                            <div>
+                                <div class="filter-container mb-3">
                                     <div class="dropdown dropdown-inline filter-date magbottompad">
                                         <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                             <span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name"></span> <span class="caret"></span>
@@ -160,7 +195,7 @@
                                 </div>
 
                                 <div class="map-container">
-                                    <style>#map-canvas {width: 100%;height: 300px;}</style>
+                                    <style>#map-canvas {width: 100%;height: 50vh;}</style>
                                     <div id="map-canvas"></div>
                                     <script>
                                         function initMap() {
