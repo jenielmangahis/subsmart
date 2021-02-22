@@ -149,7 +149,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
       float: left;
     }
     .p-40 {
-      padding-left: 30px !important;
+      padding-left: 15px !important;
       padding-top: 40px !important;
     }
     a.btn-primary.btn-md {
@@ -209,7 +209,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                 <div class="row pl-0 pr-0">
                     <div class="col-md-12 pl-0 pr-0">
-                        <div class="col-md-6 pr-0" style="padding-left: 15px;">
+                        <div class="col-md-12 pr-3" style="padding-left: 15px;">
                             <h3 class="page-title mt-0">New Advance Customer</h3>
                             <div class="pl-3 pr-3 mt-1 row">
                               <div class="col mb-4 left alert alert-warning mt-0 mb-2">
