@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                     <!--                        DataTables-->
-                                    <table id="rules_table" class="table table-bordered mt-5" style="width:100%">
+                                    <table id="tags_table" class="table table-bordered mt-5" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th>TAGS AND TAG GROUPS</th>
@@ -271,7 +271,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
 
-        $('#rules_table').DataTable({
+        $('#tags_table').DataTable({
             autoWidth: false,
             searching: false,
             processing: true,

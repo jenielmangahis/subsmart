@@ -293,7 +293,7 @@ $(document).ready(function () {
         });
     }
     function reloadTagsTable() {
-        $('#rules_table').DataTable().ajax.reload();
+        $('#tags_table').DataTable().ajax.reload();
     }
 
     $(document).on('show.bs.modal', '#createTag', function() {
@@ -323,6 +323,11 @@ $(document).ready(function () {
 
     $(document).on('change', '#e2', function(){
         var title = $(this).val();
+        var color = 'white';
+        if(title === 'yellow') {
+            color = 'black';
+        }
+        $(this).css('color', color);
         $(this).css('background-color', title);
     });
 

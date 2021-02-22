@@ -5,6 +5,7 @@ function Step1() {
   const $fileInput = $("#fileInput");
   const $docPreview = $(".fillAndSign__docPreview");
   const $docModal = $("#documentModal");
+  const $progress = $(".fillAndSign__uploadProgress");
 
   let documentUrl = null;
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
@@ -17,14 +18,25 @@ function Step1() {
       return;
     }
 
-    documentUrl = URL.createObjectURL(file);
-    const document = await PDFJS.getDocument({ url: documentUrl });
-    const documentPage = await document.getPage(1);
-
     const $canvas = $docPreview.find("canvas").get(0);
     const $docTitle = $docPreview.find(".fillAndSign__docTitle");
     const $docPageCount = $docPreview.find(".fillAndSign__docPageCount");
     const $docModalTitle = $docModal.find(".modal-title");
+    const context = $canvas.getContext("2d");
+
+    $docPreview.removeClass("d-none");
+    context.clearRect(0, 0, $canvas.width, $canvas.height);
+    $docPreview.removeClass("fillAndSign__docPreview--completed");
+    $progress.removeClass("fillAndSign__uploadProgress--completed");
+
+    await sleep(1000);
+
+    $docPreview.addClass("fillAndSign__docPreview--completed");
+    $progress.addClass("fillAndSign__uploadProgress--completed");
+
+    documentUrl = URL.createObjectURL(file);
+    const document = await PDFJS.getDocument({ url: documentUrl });
+    const documentPage = await document.getPage(1);
 
     $docTitle.text(file.name);
     $docModalTitle.text(file.name);
@@ -34,11 +46,10 @@ function Step1() {
     const viewport = documentPage.getViewport(scaleRequired);
     const canvasContext = {
       viewport,
-      canvasContext: $canvas.getContext("2d"),
+      canvasContext: context,
     };
 
     await documentPage.render(canvasContext);
-    $docPreview.removeClass("d-none");
   }
 
   async function showDocument() {
@@ -102,3 +113,6 @@ $(document).ready(function () {
     step.init();
   }
 });
+
+// https://stackoverflow.com/a/47480429/8062659
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));

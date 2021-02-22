@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <p>Displays the products and services you sell. From here, you can edit information about a product or service, such as its description, or the rate you charge.</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <h5><a href="#" class="text-info">Attachments</a></h5>
+                                    <h5><a href="/accounting/attachments" class="text-info">Attachments</a></h5>
                                     <p>Displays the list of all attachments uploaded. From here you can add, edit, download, and export your attachments. You can also see all transactions linked to a particular attachment.</p>
                                 </div>
                             </div>

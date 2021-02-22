@@ -103,7 +103,7 @@ class Customer extends MY_Controller
         }
 //        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
 //        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
-//        $this->page_data['cust_tab'] = $this->uri->segment(3);
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
 //        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
 //        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
 //        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
@@ -1756,5 +1756,56 @@ class Customer extends MY_Controller
 
         return $result;
     }
+
+    public function ticketslist(){
+        // $user_id = logged('id');
+        // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
+        $this->load->view('tickets/list', $this->page_data);
+    }
+
+    public function addTicket()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;    
+            } else {
+                
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;        
+        }
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+        }
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->load->view('tickets/add', $this->page_data);
+    }
+    
 
 }

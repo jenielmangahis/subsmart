@@ -33,6 +33,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_statements_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('tags_model');
+        $this->load->model('job_tags_model');
         $this->load->model('users_model');
 		$this->load->library('form_validation');
     }
@@ -276,35 +277,64 @@ class Accounting_modals extends MY_Controller {
             if($search !== "") {
                 if(stripos($tag['name'], $search) !== false) {
                     if($tag['type'] === 'group-tag') {
-                        $data[] = [
-                            'id' => $tags[$tag['parentIndex']]['id'],
-                            'tag_name' => $tags[$tag['parentIndex']]['name'],
-                            'type' => $tags[$tag['parentIndex']]['type'],
-                            'parentIndex' => $tags[$tag['parentIndex']]['type'] === 'group-tag' ? $tags[$tag['parentIndex']]['parentIndex'] : null,
-                            'tags' => $tags[$tag['parentIndex']]['type'] === 'group' ? $tags[$tag['parentIndex']]['tags'] : null
-                        ];
-                    }
+                        $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
 
-                    $groupIndex = array_key_last($data);
-                    $data[] = [
-                        'id' => $tag['id'],
-                        'tag_name' => $tag['name'],
-                        'type' => $tag['type'],
-                        'parentIndex' => $tag['type'] === 'group-tag' ? $groupIndex : null,
-                        'tags' => $tag['type'] === 'group' ? $tag['tags'] : null
-                    ];
-
-                    if($tag['type'] === 'group') {
-                        $parentIndex = array_key_last($data);
-                        foreach($tag['tags'] as $groupTag) {
+                        if($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
                             $data[] = [
-                                'id' => $groupTag['id'],
-                                'tag_name' => $groupTag['name'],
-                                'type' => 'group-tag',
-                                'parentIndex' => $parentIndex,
+                                'id' => $tags[$tag['parentIndex']]['id'],
+                                'tag_name' => $tags[$tag['parentIndex']]['name'],
+                                'type' => $tags[$tag['parentIndex']]['type'],
+                                'parentIndex' => $tags[$tag['parentIndex']]['type'] === 'group-tag' ? $tags[$tag['parentIndex']]['parentIndex'] : null,
+                                'tags' => $tags[$tag['parentIndex']]['type'] === 'group' ? $tags[$tag['parentIndex']]['tags'] : null
+                            ];
+                        }
+
+                        $idExists = array_search($tag['id'], array_column($data, 'id'));
+
+                        if($idExists === false || $idExists !== false && $data[$idExists]['type'] !== 'group-tag') {
+                            $groupIndex = array_key_last($data);
+                            $data[] = [
+                                'id' => $tag['id'],
+                                'tag_name' => $tag['name'],
+                                'type' => $tag['type'],
+                                'group_tag_id' => $tag['group_tag_id'],
+                                'parentIndex' => $groupIndex,
                                 'tags' => null
                             ];
                         }
+                    } else if($tag['type'] === 'group') {
+                        $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
+
+                        if($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
+                            $data[] = [
+                                'id' => $tag['id'],
+                                'tag_name' => $tag['name'],
+                                'type' => $tag['type'],
+                                'parentIndex' => null,
+                                'tags' => $tag['tags']
+                            ];
+
+                            $parentIndex = array_key_last($data);
+                            foreach($tag['tags'] as $groupTag) {
+                                $data[] = [
+                                    'id' => $groupTag['id'],
+                                    'tag_name' => $groupTag['name'],
+                                    'type' => 'group-tag',
+                                    'group_tag_id' => $tag['group_tag_id'],
+                                    'parentIndex' => $parentIndex,
+                                    'tags' => null
+                                ];
+                            }
+                        }
+                    } else {
+                        $data[] = [
+                            'id' => $tag['id'],
+                            'tag_name' => $tag['name'],
+                            'type' => $tag['type'],
+                            'group_tag_id' => $tag['group_tag_id'],
+                            'parentIndex' => null,
+                            'tags' => null
+                        ];
                     }
                 }
             } else {
@@ -312,6 +342,7 @@ class Accounting_modals extends MY_Controller {
                     'id' => $tag['id'],
                     'tag_name' => $tag['name'],
                     'type' => $tag['type'],
+                    'group_tag_id' => $tag['group_tag_id'],
                     'parentIndex' => $tag['type'] === 'group-tag' ? $tag['parentIndex'] : null,
                     'tags' => $tag['type'] === 'group' ? $tag['tags'] : null
                 ];
@@ -331,6 +362,7 @@ class Accounting_modals extends MY_Controller {
     public function submit_job_tag() {
         $data = [
             'name' => $this->input->post('tag_name'),
+            'group_tag_id' => $this->input->post('group_id') !== "" ? $this->input->post('group_id') : null, 
             'company_id' => logged('company_id')
         ];
 
@@ -368,6 +400,10 @@ class Accounting_modals extends MY_Controller {
 
     public function job_tag_form() {
         $this->load->view("accounting/job_tag_modal_form");
+    }
+
+    public function edit_group_tag_form() {
+        $this->load->view("accounting/edit_group_form");
     }
 
     public function get_job_tags() {

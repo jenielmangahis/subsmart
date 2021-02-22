@@ -23,24 +23,24 @@ class Tags_model extends MY_Model
     public function delete($id, $type = "tag") {
         if ($type == "tag" || $type == "group-tag") {
             return $this->db->where('id', $id)
-                ->update('job_tags', ['status' => 0]);
+                ->update('job_tags', ['status' => 0, 'updated_at' => date('Y-m-d h:i:s')]);
         }
 
         $this->db->where('group_tag_id', $id)
-                ->update('job_tags', ['group_tag_id' => NULL]);
+                ->update('job_tags', ['group_tag_id' => NULL, 'updated_at' => date('Y-m-d h:i:s')]);
 
         return $this->db->where('id', $id)
-                ->update('tags_group', ['status' => 0]);
+                ->update('tags_group', ['status' => 0, 'updated_at' => date('Y-m-d h:i:s')]);
     }
 
     public function update($id, $name, $type = "tag") {
         if ($type == "tag") {
             return $this->db->where('id', $id)
-                ->update('job_tags', ['name' => $name]);
+                ->update('job_tags', ['name' => $name, 'updated_at' => date('Y-m-d h:i:s')]);
         }
 
         return $this->db->where('id', $id)
-                ->update('tags_group', ['name' => $name]);
+                ->update('tags_group', ['name' => $name, 'updated_at' => date('Y-m-d h:i:s')]);
     }
 
     public function getGroup() {
@@ -91,9 +91,5 @@ class Tags_model extends MY_Model
         $group = $this->db->where(['company_id' => getLoggedCompanyID(), 'status' => 1, 'id' => $id])->get('tags_group')->row();
 
         return $group;
-    }
-
-    public function updateGroup() {
-
     }
 }

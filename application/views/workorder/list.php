@@ -3,30 +3,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/workorder'); ?>
-    <div wrapper__section>
+<?php include viewPath('includes/sidebars/workorder'); ?>
+    <div wrapper__section style="padding-left:1%;padding-top:2.5%;">
         <?php include viewPath('includes/notifications'); ?>
         <div class="card"> 
             <div class="container-fluid" style="font-size:14px;">
+
                 <div class="row">
                     <div class="col">
-                        <h1 class="m-0">Work Orders</h1>
+                        <h3 class="m-0">Work Orders</h3>
+                    </div>
+                </div>
+                
+                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.  
+                    </div>
+                <div class="row" style="margin-bottom:20px;">
+                    <div class="col">
+                        <!-- <h1 class="m-0">Work Orders</h1> -->
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
                              <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
                             </a>
-                            <a class="btn btn-primary btn-md" href="<?php echo base_url('/workorder/add') ?>">
+                            <!-- <a class="btn btn-primary btn-md" href="#" data-toggle="modal" data-target="#workordermodal">
+                                <span class="fa fa-plus"></span> &nbsp; New Work Order
+                            </a> -->
+                            <a href="#" class="btn btn-primary btn-md" data-toggle="modal" data-target="#workordermodal">
                                 <span class="fa fa-plus"></span> &nbsp; New Work Order
                             </a>
                         </div>
                     </div>
                 </div>
+            
 
                 <div class="row align-items-center mb-4 margin-bottom-ter">
                     <div class="col">
-                        <p class="m-0">Listing all your work orders.</p>
+                        <!-- <p class="m-0">Listing all your work orders.</p> -->
                     </div>
                     <div class="col-auto text-right-sm d-flex align-items-center">
                         <form style="display: inline;" class="form-inline form-search" name="form-search"
@@ -372,3 +386,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
     <?php include viewPath('includes/footer'); ?>
 </div>
+<?php include viewPath('workorder/workorder_modal_w'); ?>

@@ -19,8 +19,26 @@ class Tools extends MY_Controller {
       } */
 
     public function api_connectors() {
-        
-        $this->page_data['sidebar'] = $this->api_sidebars();
+        $this->load->model('SettingOnlinePayment_model');
+        $this->load->model('users_model');
+
+        $user = $this->session->userdata('logged');
+
+        $settingOnlinePayment = $this->SettingOnlinePayment_model->findByUserId($user['id']);
+
+        if( $settingOnlinePayment ){
+            $setting = [
+                'paypal_email' => $settingOnlinePayment->paypal_email_address,
+                'is_active' => $settingOnlinePayment->paypal_is_active
+            ];
+        }else{
+            $setting = [
+                'paypal_email' => '',
+                'is_active' => 0
+            ];
+        }
+
+        $this->page_data['setting'] = $setting;                
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('tools/api_connectors', $this->page_data);
     }

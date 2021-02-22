@@ -495,7 +495,11 @@ $(document).ready(function(){
     /*function notificationTbl() {
         $.ajax({
             type: "GET",
+<<<<<<< HEAD
+            url: "/Timesheet/getNotificationTbl",
+=======
             url: "/timesheet/getNotificationTbl",
+>>>>>>> staging-master
             async: true,
             cache: false,
             timeout: 10000,

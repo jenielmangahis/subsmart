@@ -379,7 +379,11 @@ $(function() {
     $(document).on('click', 'div#tags-modal table#tags-table tbody tr td a.edit', function(e) {
         e.preventDefault();
 
-        getTagForm(e.currentTarget.dataset, 'update');
+        if(e.currentTarget.dataset.type === 'group') {
+            editGroupTagForm(e.currentTarget.dataset);
+        } else {
+            getTagForm(e.currentTarget.dataset, 'update');
+        }
     });
 
     $(document).on('click', 'div#weeklyTimesheetModal button#add-table-line', function(e) {
@@ -991,7 +995,7 @@ $(function() {
         $('#tags-modal table#tags_group').addClass('hide');
     });
 
-    $(document).on('submit', '#tags-modal #update-group-form', function(e) {
+    $(document).on('submit', '#tags-modal #update-group-form, #tags-modal #edit_group_tag', function(e) {
         e.preventDefault();
 
         var form = $(this);
@@ -1004,12 +1008,19 @@ $(function() {
             type:"POST",
             dataType: "json",
             success:function (res) {
-                form.addClass('hide');
+                if(form.attr('id') === 'update-group-form') {
+                    form.addClass('hide');
+                    form.next().children('tbody').children('tr').remove();
+                    form.next().children('tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
 
-                $('#tags-modal table#tags_group tbody tr').remove();
-                $('#tags-modal table#tags_group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-right text-info">Edit</a></td></tr>`);
+                    form.next().removeClass('hide');
+                } else {
+                    console.log(res);
 
-                $('#tags-modal table#tags_group').removeClass('hide');
+                    toast(res.success, res.message);
+
+                    showTagsList(form.children().children('.modal-header').children('a'));
+                }
             }
         });
     });
@@ -1327,7 +1338,7 @@ const loadTagsDataTable = () => {
                 data: 'tag_name', 
                 name: 'tag_name',
                 fnCreatedCell: function (td, cellData, rowData, row, col) {
-                    $(td).html(`<span>${rowData.tag_name} ${rowData.type === 'group' ? `(${rowData.tags.length})` : ''}</span><a href="#" class="float-right text-info edit" data-type="${rowData.type}" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
+                    $(td).html(`<span>${rowData.tag_name} ${rowData.type === 'group' ? `(${rowData.tags.length})` : ''}</span><a href="#" class="float-right text-info edit" data-group-tag="${rowData.group_tag_id}" data-type="${rowData.type}" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
 
                     if(rowData.type === 'group') {
                         $(td).prepend(`<a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-${row}"><i class="fa fa-chevron-down"></i></a>`);
@@ -1338,18 +1349,35 @@ const loadTagsDataTable = () => {
         fnCreatedRow: function(nRow, aData, iDataIndex) {
             if(aData['type'] === 'group-tag') {
                 $(nRow).attr('id', `child-${aData['parentIndex']}`);
-                $(nRow).addClass('collapse');
+                $(nRow).addClass('collapse bg-light');
             }
         }
     });
 }
 
+const editGroupTagForm = (data) => {
+    $.get('/accounting/edit-group-tag-form', function(res) {
+        $('#tags-modal div.modal-dialog div#tags-list').remove();
+
+        $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="edit_group_tag"></form>`);
+        $('#tags-modal div.modal-dialog form').append(res);
+
+        $('#tags-modal div.modal-dialog form input').val(data.name);
+        $('#tags-modal div.modal-dialog form input').parent().parent().prepend(`<input type="hidden" name="group_id" value="${data.id}">`);
+    });
+}
+
 const getTagForm = (data = {}, method) => {
     $.get('/accounting/get-job-tag-form/', function(res) {
+        if(method === 'update' && data.groupTag !== null && data.type === 'group-tag') {
+            var groupTagName = $(`#tags-modal #tags-table tbody tr td a[data-id="${data.groupTag}"][data-type="group"]`).prev().html();
+
+            groupTagName = groupTagName.slice(0, -4);
+        }
         $('#tags-modal div.modal-dialog div#tags-list').remove();
 
         if(method === 'create') {
-            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create-tag-form" onsubmit="submitTagsForm(this, 'create', event)"></form>`);
+            $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="create_tag_form" onsubmit="submitTagsForm(this, 'create', event)"></form>`);
         } else {
             $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="update-tag-form" onsubmit="submitTagsForm(this, 'update', event)"></form>`);
         }
@@ -1363,6 +1391,10 @@ const getTagForm = (data = {}, method) => {
             $('#tags-modal div.modal-dialog form h5').html('Edit tag');
             $('#tags-modal div.modal-dialog form input[name="tag_name"]').val(name);
             $('#tags-modal div.modal-dialog form').prepend(`<input type="hidden" name="id" value="${id}">`);
+
+            if(data.groupTag !== null && data.type === 'group-tag') {
+                $('#tags-modal div.modal-dialog form select#tagGroup').append(`<option value="${data.groupTag}" selected>${groupTagName}</option>`);
+            }
         }
 
         $('#tags-modal #tagGroup').select2({
@@ -1399,7 +1431,7 @@ const submitTagsForm = (el, method = "", e) => {
     data.append('method', method);
 
     $.ajax({
-        url: '/accounting/submit-job-tag-form',
+        url: '/accounting/addTags',
         data: data,
         type: 'post',
         processData: false,
@@ -1407,9 +1439,9 @@ const submitTagsForm = (el, method = "", e) => {
         success: function(result) {
             var res = JSON.parse(result);
 
-            $('.modal#tags-modal').modal('hide');
-
             toast(res.success, res.message);
+
+            showTagsList($(el).children().children('.modal-header').children('a'));
         }
     });
 }

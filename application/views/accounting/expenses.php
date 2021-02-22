@@ -3,23 +3,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid">
+    <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
+        <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box accouting-modal">
-                <div class="row" style="padding-bottom: 20px;">
-                    <div class="col-md-12 banking-tab-container">
+                    <div class="col-lg-6 px-0">
+						<h3>Expense Transactions</h3>
+					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:10px;margin-top:5px;">
+                        This is Expense Transactions gold band 
+                    </div>
+                <div class="row" style="padding-bottom: 20px;padding-left: 20px;">
+                    <div class="col-md-6 banking-tab-container">
                         <a href="<?php echo url('/accounting/expenses')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="expenses")?:'-active';?>" style="text-decoration: none">Expenses</a>
                         <a href="<?php echo url('/accounting/vendors')?>" class="banking-tab">Vendors</a>
                     </div>
-                </div>
-                <div class="row align-items-center">
-                    <div class="col-md-12" style="padding: 0 30px 10px;">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h2>Expense Transactions</h2>
-                            </div>
-                            <div class="col-md-6" style="text-align: right">
-                                <div class="dropdown" style="position: relative;display: inline;">
+                    <div class="col-md-6" style="text-align: right">
+                        <div class="dropdown" style="position: relative;display: inline;">
                                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#print-checks-modal"  style="border-radius: 20px 0 0 20px">Print Checks</button>
                                     <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
@@ -40,8 +39,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <li><a href="#" data-toggle="modal" data-target="#payDown-modal">Pay down credit card</a></li>
                                     </ul>
                                 </div>
-                            </div>
                         </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-12" style="padding: 0 30px 10px;">
                         <div class="container-wrapper">
                             <div class="row">
                                 <div class="col-md-12" style="padding: 0 30px 10px;">

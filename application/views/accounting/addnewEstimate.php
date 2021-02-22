@@ -20,12 +20,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
    </style>
 
     <!-- page wrapper start -->
-    <div wrapper__section>
+    <div wrapper__section style="margin-top:2%;padding-left:1.5%;">
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Submit Standard Estimate</h1>
+                        <h4 style="font-family: Sarabun, sans-serif">Submit Standard Estimate</h4>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
                                 for this job.
@@ -36,7 +36,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary"
+                                    <a href="<?php echo base_url('accounting/newEstimateList') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
                                     </a>
@@ -48,6 +48,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 
                 <div style="background-color:white; width:100%;padding:.5%;">
                     Submit your estimate. Include a breakdown of all costs for this job.
+                </div>
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
+                Our standard estimate form is carefully design with quantity takeoff of each items.  With a clear break down of the items to be included in each project, this will insure a higher acceptance rate.  Try our options form layout if you wish to give your customers a choice of multiple projects. 
                 </div>
 
             </div>
@@ -97,8 +100,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
-                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                           required placeholder="Enter Estimate#" autofocus value="EST-0000001" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
@@ -175,7 +177,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
-                                        <thead>
+                                        <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th>Type</th>
                                             <th>Description</th>
