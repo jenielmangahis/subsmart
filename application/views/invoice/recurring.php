@@ -1,3 +1,123 @@
+<style>
+hr{
+    border: 0.5px solid #32243d !important;
+    width: 100%;
+}
+.form-group {
+    margin-bottom: 2px !important;
+}
+.banking-tab-container {
+    border-bottom: 1px solid grey;
+    padding-left: 0;
+}
+.form-line{
+    padding-bottom: 1px;
+}
+.input_select{
+    color: #363636;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+    display: inline-block !important;
+    width: 100%;
+    background-color: #fff;
+    background-clip: padding-box;
+    font-size: 11px !important;
+}
+.pb-30 {
+  padding-bottom: 30px;
+}
+h5.card-title.mb-0, p.card-text.mt-txt {
+  text-align: center !important;
+}
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 54% !important;
+    right: 9px !important;
+}
+.card-deck-upgrades {
+  display: block;
+}
+.card-deck-upgrades div {
+    padding: 20px;
+    float: left;
+    width: 33.33%;
+}
+.card-body.align-left {
+  width: 100% !important;
+}
+.card-deck-upgrades div a {
+    display: block;
+    width: 100%;
+    min-height: 400px;
+    float: left;
+    text-align: center;
+}
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.left {
+  float: left;
+}
+.p-40 {
+  padding-left: 15px !important;
+  padding-top: 0px !important;
+}
+a.btn-primary.btn-md {
+    height: 38px;
+    display: inline-block;
+    border: 0px;
+    padding-top: 7px;
+    position: relative;
+    top: 0px;
+}
+.card.p-20 {
+    padding-top: 18px !important;
+}
+.fr-right {
+  float: right;
+  justify-content: flex-end;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+.pd-17 {
+  position: relative;
+  left: 17px;
+}
+@media only screen and (max-width: 1300px) {
+  .card-deck-upgrades div a {
+      min-height: 440px;
+  }
+}
+@media only screen and (max-width: 1250px) {
+  .card-deck-upgrades div a {
+      min-height: 480px;
+  }
+  .card-deck-upgrades div {
+    padding: 10px !important;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
@@ -7,21 +127,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
+        <div class="container-fluid p-40">
             <div class="page-title-box">
             </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                    <div class="card p-20">
+                        <div style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title">Recurring Invoices</h3>
-
+                                    <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Recurring Invoices</h5>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
+                                        <a class="btn btn-primary" href="#"><span class="fa fa-plus fa-margin-right"></span> Add New </a>
                                         <div class="dropdown">
                                             <?php if (hasPermissions('WORKORDER_MASTER')): ?>
                                                 <a class="btn btn-primary btn-md"
@@ -32,6 +152,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
+                            <!--
                             <div class="row margin-bottom-ter align-items-center">
                                 <div class="col-md-6">
                                     <p>
@@ -42,7 +163,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <a class="btn btn-primary" href="#"><span class="fa fa-plus fa-margin-right"></span> Add New </a>
                                 </div>
                             </div>
-                        </div>                        
+                          -->
+                        </div>
+                        <div class="pl-3 pr-3 mt-2 row">
+                          <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing all recurring invoices.</span>
+                          </div>
+                        </div>
                         <div class="tabs">
                             <ul class="clearfix work__order" id="myTab" role="tablist">
                                 <li <?php echo ((empty($tab)) || $tab == 1) ? "class='active'" : "" ?>>
@@ -77,7 +204,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                                            
+
                                 <?php if (!empty($invoices)) { ?>
                                     <table class="table table-hover table-to-list" data-id="work_orders">
                                         <thead>

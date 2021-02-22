@@ -9,24 +9,81 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-repeat: no-repeat;
         padding: 6px 12px;
     }
+    .page-title, .box-title {
+      font-family: Sarabun, sans-serif !important;
+      font-size: 1.75rem !important;
+      font-weight: 600 !important;
+      padding-top: 5px;
+    }
+    .pr-b10 {
+      position: relative;
+      bottom: 10px;
+    }
+    .left {
+      float: left;
+    }
+    .p-40 {
+      padding-left: 15px !important;
+      padding-top: 40px !important;
+    }
+    .card.p-20 {
+        padding-top: 18px !important;
+    }
+    .fr-right {
+      float: right;
+      justify-content: flex-end;
+    }
+    .p-20 {
+      padding-top: 25px !important;
+      padding-bottom: 25px !important;
+      padding-right: 20px !important;
+      padding-left: 20px !important;
+    }
+    .float-right.d-md-block {
+      position: relative;
+      bottom: 5px;
+    }
+    .pd-17 {
+      position: relative;
+      left: 17px;
+    }
+    @media only screen and (max-width: 1300px) {
+      .card-deck-upgrades div a {
+          min-height: 440px;
+      }
+    }
+    @media only screen and (max-width: 1250px) {
+      .card-deck-upgrades div a {
+          min-height: 480px;
+      }
+      .card-deck-upgrades div {
+        padding: 10px !important;
+      }
+    }
+    @media only screen and (max-width: 600px) {
+      .p-40 {
+        padding-top: 0px !important;
+      }
+      .pr-b10 {
+        position: relative;
+        bottom: 0px;
+      }
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
-
-            </div>
+        <div class="container-fluid p-40">
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                            <div class="row align-items-center">
+                        <div class="card-body hid-desk pl-0 pr-0" style="padding-top:0px;padding-bottom:0px;">
+                            <div class="row align-items-center mb-0">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title">Leads Manager</h3>
+                                    <h3 class="page-title mt-0" style="margin:5px 0 10px 0 !important;">Leads Manager</h3>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
@@ -39,13 +96,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row margin-bottom-ter align-items-center">
-                                <div class="col-auto">
-                                    <p>
-                                        Listing all leads.
-                                    </p>
-                                    <br>
-                                </div>
+                            <div class="pl-3 pr-3 mt-0 row">
+                              <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing all leads.</span>
+                              </div>
                             </div>
                             <div class="col-md-12">
                                 <table class="table table-hover" id="leads_list_table">

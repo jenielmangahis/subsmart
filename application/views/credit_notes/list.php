@@ -66,7 +66,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="row">
                     <div class="col">
                       <h3 class="page-title mt-0">Credit Notes</h3>
-                      <span class="subtle-txt">Listing all credit notes</span>
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
@@ -79,8 +78,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-
-                <div class="tabs mt-4">
+                <div class="pl-3 pr-3 mt-2 row">
+                  <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing all credit notes.</span>
+                  </div>
+                </div>
+                <div class="tabs mt-2">
                     <ul class="clearfix work__order ul-mobile" id="myTab" role="tablist">
                             <li class="<?= $tab == '' ? 'active' : ''; ?>">
                                 <a class="nav-link" id="profile-tab" href="<?php echo base_url('credit_notes/'); ?>" role="tab" aria-controls="profile" aria-selected="false">All(<?= $total_all; ?>)</a>
