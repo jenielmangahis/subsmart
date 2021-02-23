@@ -4577,11 +4577,15 @@ div#calender_toolbar h1 {
     background-color: #3a87ad;
     font-weight: normal;
 }
-
+.logo {
+    position: relative;
+    top: 14px;
+    left: 20px;
+}
 #topnav .topbar-main {
-    background: #c4daeb;
+    background: #dddede;
     /* background: linear-gradient(to top, #c4daeb, #F0F8FF); */
-    background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253));
+    /* background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253)); */
     /*background: linear-gradient(to right, #6FB1FC, #0052D4, #6FB1FC);*/
     border: none;
     border-bottom-color: currentcolor;

@@ -24,7 +24,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
         <!--<script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
         <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet"> -->
-        
+
         <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
         <link href="<?php echo $url->assets ?>css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 
@@ -199,7 +199,7 @@
             }
 
             .stepwizard-step p {
-                margin-top: 10px;    
+                margin-top: 10px;
             }
 
             .stepwizard-row {
@@ -207,7 +207,7 @@
             }
 
             .stepwizard {
-                display: table;     
+                display: table;
                 width: 100%;
                 position: relative;
             }
@@ -229,7 +229,7 @@
 
             }
 
-            .stepwizard-step {    
+            .stepwizard-step {
                 display: table-cell;
                 text-align: center;
                 position: relative;
@@ -278,7 +278,8 @@ border-bottom-width: medium">-->
                 <div class="container-fluid">
                     <div class="row">
                         <!-- Logo container-->
-                        <div class="logo col-lg-3"><a style="position:absolute; top:50%; margin-top:-20px;" href="<?php echo url('dashboard'); ?>">
+                        <!-- style="position:absolute; top:50%; margin-top:-20px;" -->
+                        <div class="logo col-lg-3"><a href="<?php echo url('dashboard'); ?>">
                                 <img width="200" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a>
                         </div><!-- End Logo container-->
                         <!-- MENU Start -->
@@ -354,7 +355,7 @@ border-bottom-width: medium">-->
                                 <li title="Tasks" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
                                     <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                         <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0) ? 'visible' : 'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0) ? count($newtasks) : null; ?></span>
-                                        
+
                                         <img class="schedule-icon-static" src="<?php echo $url->assets; ?>/css/icons/tasks.svg" alt="">
                                         <img class="schedule-icon-hover" src="<?php echo $url->assets; ?>/css/icons/tasks.svg" alt="">
                                     </div>
@@ -375,7 +376,7 @@ border-bottom-width: medium">-->
                                         ?></span></p>
                                         </a>
                                 <?php } ?>
-                                        </div><!-- All--> 
+                                        </div><!-- All-->
                                         <a href="<?php echo base_url('taskhub') ?>"
                                                              class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
                                     </div>
@@ -441,7 +442,7 @@ border-bottom-width: medium">-->
                                         </div>
                                         <!-- All-->
                                         <a href="<?php echo site_url(); ?>timesheet/notification"
-                                        class="dropdown-item text-center text-primary">View all 
+                                        class="dropdown-item text-center text-primary">View all
                                         <i class="fi-arrow-right"></i></a>
                                     </div>
                                 </li>
@@ -666,13 +667,13 @@ border-bottom-width: medium">-->
 <script type="text/javascript">
     function notificationClockInOut() {
         $.ajax({
-            type: "GET", 
+            type: "GET",
             url: "/Timesheet/getNotificationsAll",
             async: true,
             cache: false,
             timeout: 10000,
-            success: function (data) { 
-                var obj = JSON.parse(data); 
+            success: function (data) {
+                var obj = JSON.parse(data);
                 $('#notifyBadge').html(obj.notifyCount);
                 $('#nfcount').html(obj.notifyCount);
                 $('#autoNotifications').html(obj.autoNotifications);
