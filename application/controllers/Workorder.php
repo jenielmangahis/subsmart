@@ -677,12 +677,37 @@ class Workorder extends MY_Controller
      */
     public function map()
     {
+        $this->load->model('Event_model');
+
         $is_allowed = $this->isAllowedModuleAccess(25);
         if( !$is_allowed ){
             $this->page_data['module'] = 'bird_eye_view';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
+
+        $events = $this->Event_model->getAllEventsWithAddress();
+        $locations = array();
+        $center_lat = '';
+        $center_lng = '';
+        $counter = 1;
+        foreach($events as $e){
+            $address = urlencode($e->event_address . " " . $e->event_state);
+            $gdata = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".$address."&sensor=false");
+            if($gdata){
+                $json = json_decode($gdata, true);   
+                if($center_lng == '' && $center_lat == ''){
+                    $center_lng = $json['results'][0]['geometry']['location']['lng'];
+                    $center_lat = $json['results'][0]['geometry']['location']['lat'];
+                }
+                $locations[] = "['".$json['results'][0]['formatted_address']."',".$json['results'][0]['geometry']['location']['lat'].",".$json['results'][0]['geometry']['location']['lng'].",".$counter."]";
+            }
+            $counter++;    
+        }
+
+        $this->page_data['center_lng'] = $center_lng;
+        $this->page_data['center_lat'] = $center_lat;
+        $this->page_data['locations'] = $locations;
         $this->load->view('workorder/bird-eye-view', $this->page_data);
     }
 
