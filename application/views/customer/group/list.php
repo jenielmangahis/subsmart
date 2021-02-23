@@ -107,7 +107,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h3 class="page-title">Customer Groups</h3>
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Customer Groups</h3>
+                            </div>
+
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item active">Listing all customer groups.</li>
                             </ol>
@@ -121,15 +124,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
+                        <div class="alert alert-warning col-md-12 mt-4" role="alert">
+                                        <span style="color:black;">
+                                            A great process of managing interactions with existing as well as past and potential customers is to have one powerful platform that can provide an immediate response to your customer needs.
+                                            Try our quick action icons to create invoices, scheduling, communicating and more with all your customers.
+                                        </span>
+                        </div>
                     </div>
                 </div>
                 <!-- end row -->
                 <section class="content">
                     <!-- Default box -->
                     <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">List of Groups</h3>
-                        </div>
+
                         <div class="box-body">
                             <table id="dataTable1" class="table table-bordered table-striped">
                                 <thead>

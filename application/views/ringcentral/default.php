@@ -23,7 +23,10 @@
                             <h3 class="page-title">Ring Central</h3>
                             <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
                                 <span style="color:black;">
-                                    Connect to your clients using Ring Central.
+                                    Call, Message, and Meet Seamlessly
+                                    The Ring Central app's intuitive and unified user interface allows you to seamlessly transition between phone calls, video meetings, and team chat without
+                                    losing track of what you’re working on. Less toggling between communications applications and solutions means your projects move forward, your teams
+                                    stay connected, and your productivity increases.
                                 </span>
                             </div>
                         </div>
@@ -33,9 +36,6 @@
                                 <a class="btn btn-primary btn-small" href="<?= $url; ?>">Login RingCentral Account</a>
                             <?php else: ?>
                                 <a class="btn btn-primary btn-small" href="<?= base_url('ring_central/logout') ?>">Logout</a>
-                                <?php 
-                                        print_r($platform->auth()->data());
-                                ?>
                             <?php endif; ?>
                         </div>
                     </div>

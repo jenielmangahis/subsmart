@@ -30,7 +30,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_credit_card_model');
         $this->load->model('estimate_model');
         $this->load->model('account_model');
-        $this->load->model('accounting_attachments');
+        $this->load->model('accounting_attachments_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -59,8 +59,8 @@ class Accounting extends MY_Controller {
                 array("Sales", 		array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
                 array("Payroll", 	array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
                 array("Reports",	array()),
-                // array("Taxes",		array("Sales Tax","Payroll Tax")),
-                // array("Mileage",	array()),
+                array("Taxes",		array("Sales Tax","Payroll Tax")),
+                array("Mileage",	array()),
                 array("Accounting",	array("Chart of Accounts","Reconcile"))
             );
         $this->page_data['menu_link'] =
@@ -71,8 +71,8 @@ class Accounting extends MY_Controller {
                 array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/addnewInvoice', 'credit_notes')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
-                // array("",	array('#','#')),
-                // array('#',	array()),
+                array("",	array('#','#')),
+                array('#',	array()),
                 array("",	array('/accounting/chart_of_accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
@@ -170,18 +170,29 @@ class Accounting extends MY_Controller {
 
     public function upload_files()
     {
+        $this->load->helper('string');
         $files = $_FILES['attachments'];
 
         if(count($files) > 0) {
             $data = [];
             foreach($files['name'] as $key => $name) {
+                $extension = end(explode('.', $name));
+
+                do {
+                    $randomString = random_string('alnum');
+                    $fileNameToStore = $randomString . '.' .$extension;
+                    $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+                } while ($exists);
+
                 $fileType = explode('/', $files['type'][$key]);
+                $uploadedName = str_replace('.'.$extension, '', $name);
+
                 $data[] = [
                     'company_id' => getLoggedCompanyID(),
-                    'type' => ucfirst($fileType[0]),
-                    'uploaded_name' => $name,
-                    'stored_name' => '',
-                    'file_extension' => end(explode('.', $name)),
+                    'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
+                    'uploaded_name' => $uploadedName,
+                    'stored_name' => $fileNameToStore,
+                    'file_extension' => $extension,
                     'size' => $files['size'][$key],
                     'notes' => null,
                     'status' => 1,
@@ -189,10 +200,10 @@ class Accounting extends MY_Controller {
                     'updated_at' => date('Y-m-d h:i:s')
                 ];
 
-                move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$name);
+                move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
             }
 
-            $insert = $this->accounting_attachments->insertBatch($data);
+            $insert = $this->accounting_attachments_model->insertBatch($data);
 
 
             $return = [
@@ -209,6 +220,39 @@ class Accounting extends MY_Controller {
         }
 
         echo json_encode($return);
+    }
+
+    public function load_attachment_files()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+
+        $attachments = $this->accounting_attachments_model->getCompanyAttachments();
+
+        $data = [];
+
+        if(count($attachments) > 0) {
+            foreach($attachments as $attachment) {
+                $data[] = [
+                    'id' => $attachment['id'],
+                    'thumbnail' => $attachment['stored_name'],
+                    'type' => $attachment['type'],
+                    'name' => $attachment['uploaded_name'],
+                    'size' => $attachment['size'],
+                    'upload_date' => date('m/d/Y', strtotime($attachment['created_at'])),
+                    'links' => '',
+                    'note' => $attachment['notes']
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($attachments),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
     }
 
     public function my_accountant()

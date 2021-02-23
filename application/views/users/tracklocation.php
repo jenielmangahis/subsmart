@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row align-items-center">
+                <!--<div class="row align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title">Employees</h1>
                         <ol class="breadcrumb">
@@ -33,13 +33,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="col-sm-6">
+                                <h3 class="page-title">Employees</h3>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item active">Track Employees Location</li>
+                                </ol>
+                            </div>
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#trackMap">Map</a>

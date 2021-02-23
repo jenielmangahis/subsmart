@@ -164,7 +164,8 @@ a.btn-primary.btn-md {
                             </div>
                             <div class="pl-3 pr-3 mt-0 row">
                               <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Define the different job tags.</span>
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">A job tag identifies similar jobs or job templates.  Use job tags to easily search and filter jobs and job templates when viewing them in the Jobs view.
+                                      Tags will also help you to see the growth direction of your product, service, source and more.</span>
                               </div>
                             </div>
                             <div class="tab-content">

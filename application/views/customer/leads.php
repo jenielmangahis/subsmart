@@ -98,7 +98,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="pl-3 pr-3 mt-0 row">
                               <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing all leads.</span>
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                    A great process of managing interactions with existing as well as past and potential customers is to have one powerful platform that can provide an immediate response to your customer needs. Try our quick action icons to create invoices, scheduling, communicating and more with all your customers.
+                                  </span>
                               </div>
                             </div>
                             <div class="col-md-12">

@@ -117,6 +117,148 @@ class Customer extends MY_Controller
         $this->load->view('customer/list', $this->page_data);
     }
 
+    public function settings()
+    {
+        $this->load->library('wizardlib');
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $user_id = logged('id');
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
+        if(!$check_if_exist){
+            $input = array();
+            $input['fk_user_id'] = $user_id ;
+            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
+            $this->customer_ad_model->add($input,"ac_module_sort");
+        }
+        $userid = $this->uri->segment(4);
+        if(!isset($userid) || empty($userid)){
+            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
+            if(!empty($get_id)){
+                $userid =  $get_id[0]->prof_id;
+            }else{
+                $userid = 0;
+            }
+        }else{
+            $this->qrcodeGenerator($userid);
+        }
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $userid;
+
+        //$this->session->set_userdata('customer_data_session', 233);
+        //$this->session->unset_userdata('customer_data_session');
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+//            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+//            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+//            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+//            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+//            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
+//            $this->page_data['minitab'] = $this->uri->segment(5);
+//            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
+            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+
+            if($this->uri->segment(5) == "mt3-cdl"){
+                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
+                $this->page_data['letter_id'] = $template_id;
+                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
+            }
+            // print_r($this->page_data['alarm_info']);
+        }
+//        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
+//        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
+//        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+//        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
+//        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
+//        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+//        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+        $this->load->model('Activity_model','activity');
+        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->load->view('customer/settings', $this->page_data);
+    }
+
+    public function module()
+    {
+        $this->load->library('wizardlib');
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $user_id = logged('id');
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
+        if(!$check_if_exist){
+            $input = array();
+            $input['fk_user_id'] = $user_id ;
+            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
+            $this->customer_ad_model->add($input,"ac_module_sort");
+        }
+        $userid = $this->uri->segment(4);
+        if(!isset($userid) || empty($userid)){
+            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
+            if(!empty($get_id)){
+                $userid =  $get_id[0]->prof_id;
+            }else{
+                $userid = 0;
+            }
+        }else{
+            $this->qrcodeGenerator($userid);
+        }
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $userid;
+
+        //$this->session->set_userdata('customer_data_session', 233);
+        //$this->session->unset_userdata('customer_data_session');
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+//            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+//            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+//            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+//            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+//            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
+//            $this->page_data['minitab'] = $this->uri->segment(5);
+//            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
+            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+
+            if($this->uri->segment(5) == "mt3-cdl"){
+                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
+                $this->page_data['letter_id'] = $template_id;
+                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
+            }
+            // print_r($this->page_data['alarm_info']);
+        }
+//        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
+//        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
+//        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+//        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
+//        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
+//        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+//        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+        $this->load->model('Activity_model','activity');
+        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->load->view('customer/module', $this->page_data);
+    }
+
 
     public function leads()
     {   $is_allowed = $this->isAllowedModuleAccess(14);

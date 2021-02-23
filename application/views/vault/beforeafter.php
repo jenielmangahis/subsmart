@@ -74,15 +74,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
-            <div class="page-title-box">
-            </div>
+            <!-- <div class="page-title-box">
+            </div> -->
             <!-- end row -->
             <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
+                <div class="col-xl-12 p-0">
+                    <div class="card" style="padding: 5px 20px !important;">
                       <div class="row margin-bottom-ter mb-2 align-items-center">
-                          <div class="col-auto">
-                              <h3 class="page-title mb-0">Before and After Photos</h3>
+                          <div class="col-auto vault__header">
+                              <h3 class="page-title mb-0 vault__title">Before and After Photos</h3>
                           </div>
                           <div class="col text-right-sm d-flex justify-content-end align-items-center">
                               <div class="float-right d-md-block">
@@ -97,7 +97,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </div>
                       <div class="pl-3 pr-3 mt-0 row">
                         <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                One of the best way for prospect to process information is with visual data.  Before and after photos serve as proof that the product (or service) works.  Start sharing your success photos to others to grow your business. 
+                            </span>
                         </div>
                       </div>
                         <div class="tab-content" id="myTabContent">

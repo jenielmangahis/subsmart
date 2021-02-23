@@ -2,7 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
- 
+    .table-responsive {
+        overflow-x:hidden;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -10,14 +12,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Pay Scale</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage Pay Scale</li>
-                        </ol>
-                    </div>
-                </div>
+                <!--<div class="row align-items-center">
+                </div>-->
             </div>
             <!-- end row -->
             <div class="row">
@@ -26,15 +22,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h4 class="mt-0 header-title mb-5">Pay Scale list</h4>
+                                    <h3 class="page-title">Pay Scale list</h3>
                                 </div>
                                 <div class="col-md-6" style="text-align: right;">
-                                    <button class="btn btn-info add-employee" id="addPayscale"><i class="fa fa-user-plus"></i> Add Pay Scale</button>
+                                    <button class="btn btn-primary btn-md add-employee" id="addPayscale"><i class="fa fa-user-plus"></i> Add Pay Scale</button>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="payscaleTable" data-page-length='25' class="table table-bordered table-striped">
+                                    <table id="payscaleTable" data-page-length='25' class="table table-hover table-striped">
                                         <thead>
                                         <tr>
                                             <th style="width: 70%;">Pay Scale</th>

@@ -281,6 +281,7 @@ $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_r
 $route['accounting/lists'] = 'accounting/lists';
 $route['accounting/attachments'] = 'accounting/attachments';
 $route['accounting/upload-files']['post'] = 'accounting/upload_files';
+$route['accounting/load-attachments']['post'] = 'accounting/load_attachment_files';
 $route['accounting/load-chart-of-accounts']['post'] = 'accounting/load_chart_of_accounts';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';

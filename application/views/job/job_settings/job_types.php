@@ -164,7 +164,10 @@ add_css(array(
                         </div>
                         <div class="pl-3 pr-3 mt-0 row">
                           <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Define the different job tags.</span>
+                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                  In our software, jobs are project that an invoice will need to be issued for payment.
+                                  This will help organize your projects into categories and will help you see the profitability of your business based on the various job type.
+                              </span>
                           </div>
                         </div>
                         <div class="tab-content">
@@ -183,7 +186,7 @@ add_css(array(
                                         <?php foreach($job_types as $types) : ?>
                                             <tr>
                                                 <td class="pl-3"><?= $types->title; ?></td>
-                                                <td class="pl-3"><?= $types->created_at; ?></td>
+                                                <td class="pl-3"><?= date_format(date_create($types->created_at),"m/d/Y"); ?></td>
                                                 <td class="pl-3">
                                                     <a href="javascript:void(0)" data-toggle="modal" data-target="#newJobTypeModal" data-id="<?php echo $types->id; ?>" data-jobtype="<?php echo $types->title; ?>" class="editJobTypeBtn btn btn-primary btn-sm">
                                                         <span class="fa fa-pencil"></span> Edit</a>&nbsp;

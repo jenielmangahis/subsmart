@@ -85,6 +85,8 @@ class Dashboard extends Widgets {
             $status_arr[] = $status_selec->status_text . "@#@" . $task_status;
         }
         
+        $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
+        
         $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['status_arr'] = $status_arr;

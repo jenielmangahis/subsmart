@@ -37,9 +37,22 @@ class Job extends MY_Controller
         $this->load->view('job/list', $this->page_data);
     }
 
-    public function new_job1() {
+    public function new_job1($id=null) {
+        $this->load->helper('functions');
         $comp_id = logged('company_id');
+        $user_id = logged('id');
         // get all employees
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+
         $get_employee = array(
             'where' => array(
                 'company_id' => $comp_id
@@ -126,12 +139,27 @@ class Job extends MY_Controller
             'select' => 'id,invoice_number,date_issued,job_name,customer_id',
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
-
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+        }
         $this->load->view('job/job_new', $this->page_data);
     }
 
     public function new_job_edit($id) {
+        $this->load->helper('functions');
         $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
         // get all employees
         $get_employee = array(
             'where' => array(
@@ -158,8 +186,49 @@ class Job extends MY_Controller
             'table' => 'color_settings',
             'select' => '*',
         );
+
+        // get company info
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        // get estimates
+        $get_estimates = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'estimates',
+            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
+        );
+        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
+
+        // get workorder
+        $get_workorder = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'work_orders',
+            'select' => 'id,work_order_number,start_date,job_name,customer_id',
+        );
+        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
+
+        // get invoices
+        $get_invoices = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'invoices',
+            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+        );
+        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
+
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-        $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+
         $this->load->view('job/job_new', $this->page_data);
     }
 
@@ -399,12 +468,12 @@ class Job extends MY_Controller
             ),
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'-000'.$job_settings[0]->job_num_next;
+        $job_number = $job_settings[0]->job_num_prefix.'000'.$job_settings[0]->job_num_next;
 
         $jobs_data = array(
             'job_number' => $job_number,
             'customer_id' => $input['customer_id'],
-            'employee_ids' => $input['employee_id'],
+            'employee_id' => $input['employee_id'],
             'employee2_id' => $input['employee2_id'],
             'employee3_id' => $input['employee3_id'],
             'employee4_id' => $input['employee4_id'],
@@ -419,12 +488,13 @@ class Job extends MY_Controller
             //'job_type' => $this->input->post('job_type'),
             'priority' => 'Standard',//$this->input->post('job_priority'),
             'tags' => $input['tags'],//$this->input->post('job_priority'),
-            'status' => 'New',//$this->input->post('job_status'),
+            'status' => 'Scheduled',//$this->input->post('job_status'),
             'message' => $input['message'],
             'company_id' => $comp_id,
             'date_created' => date('Y-m-d H:i:s'),
             'notes' => $input['notes'],
             'attachment' => $input['attachment'],
+            'tax_rate' => $input['tax_rate'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
 
@@ -500,6 +570,7 @@ class Job extends MY_Controller
             'notify_at' => $jobs_id,
         );
         $this->general->add_($events_data, 'events');
+
         echo $jobs_id;
     }
 
