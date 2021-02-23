@@ -1,3 +1,65 @@
+<style>
+    .page-title, .box-title {
+      font-family: Sarabun, sans-serif !important;
+      font-size: 1.75rem !important;
+      font-weight: 600 !important;
+      padding-top: 5px;
+    }
+    .pr-b10 {
+      position: relative;
+      bottom: 10px;
+    }
+    .left {
+      float: left;
+    }
+    .p-40 {
+      padding-left: 15px !important;
+      padding-top: 10px !important;
+    }
+    .card.p-20 {
+        padding-top: 18px !important;
+    }
+    .fr-right {
+      float: right;
+      justify-content: flex-end;
+    }
+    .p-20 {
+      padding-top: 25px !important;
+      padding-bottom: 25px !important;
+      padding-right: 20px !important;
+      padding-left: 20px !important;
+    }
+    .float-right.d-md-block {
+      position: relative;
+      bottom: 5px;
+    }
+    .pd-17 {
+      position: relative;
+      left: 17px;
+    }
+    @media only screen and (max-width: 1300px) {
+      .card-deck-upgrades div a {
+          min-height: 440px;
+      }
+    }
+    @media only screen and (max-width: 1250px) {
+      .card-deck-upgrades div a {
+          min-height: 480px;
+      }
+      .card-deck-upgrades div {
+        padding: 10px !important;
+      }
+    }
+    @media only screen and (max-width: 600px) {
+      .p-40 {
+        padding-top: 0px !important;
+      }
+      .pr-b10 {
+        position: relative;
+        bottom: 0px;
+      }
+    }
+</style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -6,27 +68,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/notifications'); ?>
     <?php include viewPath('includes/sidebars/workorder'); ?>
     <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid p-40">
             <div class="card card_holder">
-                <div class="page-title-box">
+                <div class="page-title-box" style="padding:14px 0 0 0;">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
                             <h1 class="page-title">Workorder Type</h1>
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item active">Manage Workorder Type</li>
-                            </ol>
                         </div>
                         <div class="col-sm-6">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
                                     <?php ////if (hasPermissions('add_plan')): ?>
-                                    <a href="<?php echo url('workstatus/add') ?>" class="btn btn-primary"><i
+                                    <a href="<?php echo url('workstatus/add') ?>" class="btn btn-primary" style="position: relative;bottom: 2px;"><i
                                                 class="fa fa-plus"></i> New Workorder type</a>
 
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="pl-3 pr-3 mt-0 row">
+                  <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Workorder Type</span>
+                  </div>
                 </div>
                 <!-- end row -->
                 <section class="content">

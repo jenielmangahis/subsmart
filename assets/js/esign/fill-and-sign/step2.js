@@ -55,53 +55,8 @@ function Step2(documentId) {
     return $element;
   }
 
-  async function onDeleteField(event) {
-    const $parent = $(event.target).closest(".fillAndSign__field");
-    const uniqueKey = $parent.data("key");
-
-    const endpoint = `${prefixURL}/FillAndSign/deleteField/${uniqueKey}`;
-    await fetch(endpoint, { method: "DELETE" });
-
-    $parent.remove();
-  }
-
-  function onFocusField(event) {
-    const $parent = $(event.target).closest(".fillAndSign__field");
-    $parent.addClass("fillAndSign__field--focused");
-  }
-
-  async function onFocusOutField(event) {
-    const $root = $(event.target).closest(".ui-draggable");
-    const $parent = $root.find(".fillAndSign__field");
-
-    $root.removeClass("ui-draggable-dragging");
-    $parent.removeClass("fillAndSign__field--focused");
-
-    const position = {
-      top: parseInt($root.css("top"), 10),
-      left: parseInt($root.css("left"), 10),
-    };
-
-    await storeField(position, $parent);
-  }
-
-  function onClickField(event) {
-    const $target = $(event.target);
-
-    if (
-      $target.hasClass("fillAndSign__fieldClose") ||
-      $target.parent().hasClass("fillAndSign__fieldClose")
-    ) {
-      return;
-    }
-
-    const $parent = $target.closest(".fillAndSign__field");
-    const $input = $parent.find(".fillAndSign__fieldInput");
-    placeCaretAtEnd($input.get(0));
-  }
-
   function createInputField({ textType, ...rest }) {
-    const { value, unique_key, onClick, onDelete, onFocus, onFocusOut } = rest;
+    const { value, unique_key } = rest;
 
     const styles = {
       initial: {},
@@ -111,24 +66,94 @@ function Step2(documentId) {
       strikethrough: { "text-decoration": "line-through" },
     };
 
+    const events = {
+      onClick: (event) => {
+        const $target = $(event.target);
+
+        if (
+          $target.hasClass("fillAndSign__fieldClose") ||
+          $target.parent().hasClass("fillAndSign__fieldClose")
+        ) {
+          return;
+        }
+
+        const $parent = $target.closest(".fillAndSign__field");
+        const $input = $parent.find(".fillAndSign__fieldInput");
+        placeCaretAtEnd($input.get(0));
+      },
+      onFocusOut: async (event) => {
+        const $root = $(event.target).closest(".ui-draggable");
+        const $parent = $root.find(".fillAndSign__field");
+
+        $root.removeClass("ui-draggable-dragging");
+        $parent.removeClass("fillAndSign__field--focused");
+
+        const position = {
+          top: parseInt($root.css("top"), 10),
+          left: parseInt($root.css("left"), 10),
+        };
+
+        await storeField(position, $parent);
+      },
+      onFocus: (event) => {
+        const $parent = $(event.target).closest(".fillAndSign__field");
+        $parent.addClass("fillAndSign__field--focused");
+      },
+      onDelete: async (event) => {
+        event.stopPropagation();
+        const $parent = $(event.target).closest(".fillAndSign__field");
+        const uniqueKey = $parent.data("key");
+
+        const endpoint = `${prefixURL}/FillAndSign/deleteField/${uniqueKey}`;
+        await fetch(endpoint, { method: "DELETE" });
+
+        $parent.remove();
+      },
+      onIncreaseFontSize: (event) => setFontSize(event),
+      onReduceFontSize: (event) => setFontSize(event, false),
+    };
+
+    const setFontSize = (event, increase = true) => {
+      event.stopPropagation();
+      const $parent = $(event.target).closest(".fillAndSign__field");
+      const $input = $parent.find(".fillAndSign__fieldInput");
+
+      const fontSize = parseInt($input.css("font-size"), 10);
+      $input.css({ fontSize: increase ? fontSize + 1 : fontSize - 1 });
+    };
+
     const html = `
       <div class="fillAndSign__field" data-key="${unique_key || Date.now()}">
         <div tabindex="0" class="fillAndSign__fieldInput" contenteditable="true" spellcheck="false">
           ${value || ""}
         </div>
-        <div class="fillAndSign__fieldClose"><i class="fa fa-times"></i></div>
+        <div class="fillAndSign__fieldOptions">
+          <div class="fillAndSign__fieldReduce" title="Reduce size">
+            <i class="fa fa-font"></i>
+          </div>
+          <div class="fillAndSign__fieldEnlarge" title="Increase size">
+            <i class="fa fa-font"></i>
+          </div>
+          <div class="fillAndSign__fieldClose" title="Delete">
+            <i class="fa fa-times"></i>
+          </div>
+        </div>
       </div>
     `;
 
     const $element = createElementFromHTML(html);
 
-    $close = $element.find(".fillAndSign__fieldClose");
     $input = $element.find(".fillAndSign__fieldInput");
+    $increase = $element.find(".fillAndSign__fieldEnlarge");
+    $reduce = $element.find(".fillAndSign__fieldReduce");
+    $close = $element.find(".fillAndSign__fieldClose");
 
-    $element.on("click", onClick);
-    $close.on("click", onDelete);
-    $input.on("focus", onFocus);
-    $input.on("focusout", onFocusOut);
+    $element.on("click", events.onClick);
+    $input.on("focus", events.onFocus);
+    $input.on("focusout", events.onFocusOut);
+    $increase.on("click", events.onIncreaseFontSize);
+    $reduce.on("click", events.onReduceFontSize);
+    $close.on("click", events.onDelete);
 
     $element.css(styles[textType]);
     return $element;
@@ -215,12 +240,6 @@ function Step2(documentId) {
 
   async function renderPDF() {
     const document = await PDFJS.getDocument({ url: documentUrl });
-    const fieldParams = {
-      onClick: onClickField,
-      onDelete: onDeleteField,
-      onFocus: onFocusField,
-      onFocusOut: onFocusOutField,
-    };
 
     for (let index = 1; index <= document.numPages; index++) {
       if (index > 1) break;
@@ -239,7 +258,7 @@ function Step2(documentId) {
           ></div>
         `);
 
-        const $itemInner = createInputField({ ...fieldParams, ...field });
+        const $itemInner = createInputField(field);
         $item.html($itemInner);
         $item.css({
           position: "absolute",
@@ -296,7 +315,6 @@ function Step2(documentId) {
 
           const $item = $(ui.helper).clone();
           const $itemInner = createInputField({
-            ...fieldParams,
             textType: $item.data("text-type"),
           });
 

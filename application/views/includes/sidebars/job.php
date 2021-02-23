@@ -50,8 +50,8 @@
                 <path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path>
             </svg>
         </span>
-        <br><br>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job' || $this->uri->uri_string() == 'job/new_job1') || $this->uri->segment(2) == "new_job_edit" ? "active" : "";  ?>">
+        <li class="nav-header">JOBS</li>
+        <li class="submenus <?= $this->uri->segment(2) == 'new_job1' || $this->uri->segment(2) == '' ? "active" : "";  ?>">
             <a href="<?= base_url('job') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Jobs</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
@@ -63,7 +63,6 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'job/bird_eye_view') ? "active" : "";  ?>">
             <a href="<?= base_url('job/bird_eye_view') ?>" title="Bird Eye View"><span class="fa fa-users"></span>Bird Eye View</a>
         </li>
-
         <!-- <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
             <a href="<?= base_url('job/job_time_settings') ?>" title="Profile Settings"><span class="fa fa-clock-o"></span>Time Window Settings</a>
         </li> -->

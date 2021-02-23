@@ -29,7 +29,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card vaultContainer" style="min-height: 400px !important;">
+                    <div class="card vaultContainer" style="padding: 5px 20px !important; min-height: 400px !important;">
 
                         <div class="vault__header">
                             <h1 class="vault__title">Files Vault</h1>

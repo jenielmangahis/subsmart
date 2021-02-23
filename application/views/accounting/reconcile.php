@@ -3253,7 +3253,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                                     <td></td>
                                                 </tr>
                                                 <tr class="tr_class_<?=$o?>" style="display:none">
-                                                    <td><a href="#" class="btn-ed">Cancel</a></td>
+                                                    <td><a href="#" class="btn-ed" onclick="crossClick('<?=$o?>')">Cancel</a></td>
                                                     <td><a href="#" class="btn-ed" onclick="openFullNav_int()">Edit</a></td>
                                                     <td><a href="#" class="btn-ed savebt2">Save</a></td>
                                                     <td></td>
@@ -3359,6 +3359,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         sDom: 'lrtip',
         "iDisplayLength": 12,
         searching: false,
+        ordering: false,
         lengthChange: false
     });
 

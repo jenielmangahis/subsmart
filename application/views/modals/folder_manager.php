@@ -1,12 +1,39 @@
 <style>
-
+ .vaultContainer { padding: 5px 20px !important; }
  .treeview .list-group-item{cursor:pointer}
  .treeview span.indent{margin-left:10px;margin-right:10px}
  .treeview span.icon{width:12px;margin-right:5px}
  .treeview .node-disabled{color:silver;cursor:not-allowed}
  .node-folders_treeview{}
  .node-folders_treeview:not(.node-disabled):hover{background-color:#F5F5F5;}
-
+ .page-title, .box-title {
+   font-family: Sarabun, sans-serif !important;
+   font-size: 1.75rem !important;
+   font-weight: 600 !important;
+   padding-top: 5px;
+ }
+ .pr-b10 {
+   position: relative;
+   bottom: 10px;
+ }
+ .p-40 {
+   padding-top: 40px !important;
+ }
+ .p-20 {
+   padding-top: 25px !important;
+   padding-bottom: 25px !important;
+   padding-right: 20px !important;
+   padding-left: 20px !important;
+ }
+ @media only screen and (max-width: 600px) {
+   .p-40 {
+     padding-top: 0px !important;
+   }
+   .pr-b10 {
+     position: relative;
+     bottom: 0px;
+   }
+ }
 </style>
 <?php if(!$isMain){ ?>
 <div id="modal-folder-manager" class="modal" role="dialog">
@@ -34,40 +61,37 @@
         <?php } ?>
 
         <div class="card vaultContainer">
-          <?php if($isBusinessFormTemplates) { ?>
-            <div class="row pl-3 mt-1">
-              <h3 class="page-title mb-0">Business Form Templates</h3>
-              <span class="col-12 row pt-0" style="color: #858992;font-size: 14px;">Categorized Files and Folders</span>
+
+        <div class="vault__header">
+
+          <?php if($isMyLibrary): ?>
+            <h1 class="vault__title">My Library</h1>
+            <div class="alert alert-warning mt-2" role="alert">
+              <span style="color:black;">
+                My Library is a place where you can quickly find and access all of your files, content, and customer information from anywhere, on any device. Create specific or general folders to better categorized your files for quicker access. Format to includes are PDF, DOC, JPEG, GIF, CSV and much more. It is your private storage area for you documents.
+              </span>
             </div>
-            <div class="pl-3 pr-3 mt-2 row">
-              <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </div>
+
+          <?php elseif($isBusinessFormTemplates): ?>
+            <h1 class="vault__title">Business Form Templates</h1>
+            <div class="alert alert-warning mt-2" role="alert">
+              <span style="color:black;">
+                Our archive of business forms include over 1000 commonly used templates to start, plan, organize, manage, finance and grow your business.
+              </span>
             </div>
-          <?php } ?>
-          <?php if(($isMain) && ($isMyLibrary)) { ?>
-            <div class="row pl-3 mt-1">
-              <h3 class="page-title mb-0">My Library</h3>
-              <span class="col-12 row pt-0" style="color: #858992;font-size: 14px;">My folders and files</span>
+
+          <?php else: ?>
+            <h1 class="vault__title">Shared Library</h1>
+            <div class="alert alert-warning mt-2" role="alert">
+              <span style="color:black;">
+                Store, share, and manage the company's shared files in this location so you can decide who has access to files in each folder and what permissions they have. Here in Shared Library each user can share their personal files to be used and viewed by others team member. Each org can have up to 100 libraries.
+              </span>
             </div>
-            <div class="pl-3 pr-3 mt-2 row">
-              <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </div>
-            </div>
-          <?php } ?>
-          <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))){ ?>
-            <div class="row pl-3 mt-1">
-              <h3 class="page-title mb-0">Shared Library</h3>
-              <span class="col-12 row pt-0" style="color: #858992;font-size: 14px;">Accessible folders and files within the company</span>
-            </div>
-            <div class="pl-3 pr-3 mt-2 row">
-              <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </div>
-            </div>
-          <?php } ?>
-          <div class="card-header pb-0">
+
+          <?php endif; ?>
+        </div>
+
+          <div class="card-header pb-0">        
             <div class="row">
                 <div class="col-md-6">
                   <h5 id="folders_name">

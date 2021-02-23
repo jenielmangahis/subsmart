@@ -111,7 +111,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <option></option>
                                                 <!-- <option>Add New</option>
                                                 <option>John Doe</option>-->
-                                                <option value="0">Add New</option> 
+                                                <option value="0">Add New</option>
                                                 <?php foreach($terms as $term) : ?>
                                                 <option value="<?php echo $term->id; ?>"><?php echo $term->description . ' ' . $term->day; ?></option>
                                                 <?php endforeach; ?>
@@ -125,7 +125,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <label>Tracking no.</label><br>
                                             <input type="text" class="form-control" name="tracking_number">
                                         </div>
-                                        
+
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
@@ -140,11 +140,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <input type="text" class="form-control">
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <br><br>
-                            
+
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-3 form-group">
                                     <label for="estimate_date">Invoice Type <span style="color:red;">*</span></label>
@@ -171,7 +171,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input type="text" class="form-control" name="purchase_order" id="purchase_order">
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3 form-group">
                                 </div>
 
@@ -304,7 +304,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                 </div>
                             </div>
-                            
+
 
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
@@ -348,7 +348,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
                                 </div>
                                 <div class="col-md-12">
-                                    <span class="help help-sm help-block">Your payment processor is not set up 
+                                    <span class="help help-sm help-block">Your payment processor is not set up
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalNewCustomer">setup payment</a></span>
                                 </div>

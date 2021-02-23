@@ -16,6 +16,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     /* margin-bottom: 20px; */
     /* border-radius: 8px; */
 }
+.dropdown .btn {
+    position: relative;
+    top:12px;
+}
 .subtle-txt {
     color: rgba(42, 49, 66, 0.7);
 }
@@ -87,7 +91,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row align-items-center">
                               <div class="col-sm-6">
                                   <h3 class="page-title mt-0">New Credit Note</h3>
-                                  <span class="subtle-txt">Add a new credit note.</span>
                               </div>
                               <div class="col-sm-6">
                                   <div class="float-right d-none d-md-block">
@@ -102,7 +105,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                   </div>
                               </div>
                             </div>
-                            <div class="row mt-4">
+                            <div class="pl-3 pr-3 mt-2 row">
+                              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Add a new credit note.</span>
+                              </div>
+                            </div>
+                            <div class="row mt-2">
                                 <div class="col-md-6 form-group">
                                     <label for="customers">Customer</label>
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">

@@ -246,6 +246,7 @@ time.icon-calendar-live:hover, time.icon-calendar-live:focus
 }
 .icons-list-navbar:hover .bar-active{
     display: inline-block;
+    width:50px;
 }
 .icons-list-navbar:hover .bar-static{
     visibility: hidden;

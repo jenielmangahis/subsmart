@@ -9,7 +9,7 @@ if(isset($jobs_data)){
 <script>
     var cust_id = <?php echo $customer  ?>;
     window.onload = function() { // same as window.addEventListener('load', (event) => {
-        //alert('Page loaded');
+        //alert(cust_id);
         $.ajax({
             type: "GET",
             url: "<?= base_url() ?>/job/get_customers",
@@ -85,7 +85,7 @@ if(isset($jobs_data)){
     {
         $.ajax({
             type: "POST",
-            url: "<?= base_url() ?>job/loadStreetView/",
+            url: "<?= base_url() ?>job/loadStreetView",
             data: {address : address}, // serializes the form's elements.
             success: function(data)
             {
@@ -106,12 +106,12 @@ if(isset($jobs_data)){
                 url: "<?= base_url() ?>/job/save_job",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
-                    //console.log(data);
+                    console.log(data);
                     sucess_add_job();
                 }
             });
         });
-        function sucess_add_job(){
+        function sucess_add_job($id){
             Swal.fire({
                 title: 'Nice!',
                 text: 'Job has been added!',
@@ -122,7 +122,7 @@ if(isset($jobs_data)){
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href='/job';
+                    window.location.href='<?= base_url(); ?>job/new_job1/'+$id;
                 }
             });
         }
@@ -224,6 +224,7 @@ if(isset($jobs_data)){
                 $('#invoice_sub_total').html('$' + withCommas);
             }
             $('#invoice_overall_total').html('$' + withCommas);
+            $('#pay_amount').val(withCommas);
         }
         //$(".color-scheme").on( 'click', function () {});
 
@@ -340,11 +341,12 @@ if(isset($jobs_data)){
                 data:{base64: data}
             }).done(function(e){
                 //$('#updateSignature').modal('hide');
-                $('#authorizer').html($('#authorizer_name').val());
-                $('#appoval_name_right').html($('#authorizer_name').val());
+                var name = $('#authorizer_name').val();
+                $('#authorizer').html(name);
+                $('#appoval_name_right').html(name);
                 $('#date_signed').html(e);
                 $('#datetime_signed').val(e);
-                $('#name').val($('#authorizer_name').val());
+                $('#name').val(name);
                 $('#signature_link').val(data);
                 $("#customer-signature").attr("src",data);
                 $("#customer_signature_right").attr("src",data);
@@ -352,11 +354,17 @@ if(isset($jobs_data)){
             });
         });
 
+        $('#clear-signature').click(function(e){
+            signaturePad.clear();
+        });
+
+
         document.getElementById('check_form').style.display = "none";
         document.getElementById('cash_form').style.display = "none";
         document.getElementById('ach_form').style.display = "none";
         document.getElementById('others_warranty_form').style.display = "none";
         document.getElementById('svp_form').style.display = "none";
+
         $("#pay_method").on( 'change', function () {
             var method = this.value;
             if(method === 'CHECK'){
@@ -430,15 +438,24 @@ if(isset($jobs_data)){
             document.getElementById('pd_right_card').style.display = "none";
         });
 
+        $("#notes_edit_btn_right").on( "click", function( event ) {
+            document.getElementById('notes_input_div_right').style.display = "block";
+            document.getElementById('notes_edit_btn_right').style.display = "none";
+        });
+
         $("#notes_edit_btn").on( "click", function( event ) {
             document.getElementById('notes_input_div').style.display = "block";
             document.getElementById('notes_edit_btn').style.display = "none";
         });
 
         $("#edit_note").on( "click", function( event ) {
-            console.log('asdsad');
             document.getElementById('notes_edit_btn').style.display = "none";
             document.getElementById('notes_input_div').style.display = "block";
+        });
+
+        $("#edit_note_right").on( "click", function( event ) {
+            document.getElementById('notes_edit_btn_right').style.display = "none";
+            document.getElementById('notes_input_div_right').style.display = "block";
         });
 
         $("#notes_left").on( "click", function( event ) {
@@ -515,24 +532,28 @@ if(isset($jobs_data)){
         $("#save_memo").on( "click", function( event ) {
             var note = $('#note_txt').val();
             $('#notes_edit_btn').text(note);
-            $('#notes_right_display').text(note);
-            //$.ajax({
-            //    type: "POST",
-            //    url: "/customer/update_customer_profile",
-            //    data: { notes : note , id : <?//= isset($customer_profile_id) ? $customer_profile_id : 0; ?>// }, // serializes the form's elements.
-            //    success: function(data)
-            //    {
-            //        if(data === "Success"){
-            //            //$('#momo_edit_btn').text("");
-            //            $('#momo_edit_btn').text(note);
-            //            // $('#memo_txt').text(note);
+            $('#note_txt').text(note);
+
+            // update right box note
+            $('#note_txt_right').text(note);
+            $('#notes_edit_btn_right').text(note);
+
             document.getElementById('notes_input_div').style.display = "none";
             document.getElementById('notes_edit_btn').style.display = "block";
-            //        }else {
-            //            console.log(data);
-            //        }
-            //    }
-            //});
+        });
+
+        $("#save_memo_right").on( "click", function( event ) {
+            var note = $('#note_txt_right').val();
+            $('#notes_edit_btn_right').text(note);
+            $('#notes_right_display_right').text(note);
+            $('#note_txt_right').text(note);
+
+            // update left box note
+            $('#notes_edit_btn').text(note);
+            $('#note_txt').text(note);
+
+            document.getElementById('notes_input_div_right').style.display = "none";
+            document.getElementById('notes_edit_btn_right').style.display = "block";
         });
 
         $("#new_customer_form").submit(function(e) {

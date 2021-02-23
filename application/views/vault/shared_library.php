@@ -5,7 +5,7 @@
 <div class="wrapper" role="wrapper">
    <?php include viewPath('includes/sidebars/filevault'); ?>
    <div wrapper__section>
-      <div class="row" style="padding: 40px 15px 0px 15px;">
+      <div class="row">
          <div class="col-xl-12">
                <div>
                   <?php echo $folder_manager; ?>

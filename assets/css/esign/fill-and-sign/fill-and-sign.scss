@@ -95,6 +95,10 @@ body {
     .alert-warning {
       color: #f8b425;
       background-color: #fdeac3;
+
+      span {
+        font-family: "Open Sans", sans-serif;
+      }
     }
   }
 
@@ -224,6 +228,15 @@ body {
   &__field {
     display: flex;
     align-items: center;
+    position: relative;
+
+    &Options {
+      position: absolute;
+      top: -32px;
+      display: flex;
+      align-items: center;
+      background-color: #333;
+    }
 
     &--focused {
       background-color: #ffeb3b;
@@ -231,7 +244,7 @@ body {
 
     &Input {
       min-width: 200px;
-      height: 30px;
+      min-height: 30px;
       display: flex;
       align-items: center;
       padding: 0 8px;
@@ -243,17 +256,25 @@ body {
       box-sizing: border-box;
     }
 
-    &Close {
-      background-color: #dc3545;
+    &Close,
+    &Enlarge,
+    &Reduce {
       color: #fff;
       height: 30px;
       width: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: var(--border-width) solid #dc3545;
       cursor: pointer;
       box-sizing: border-box;
+
+      &:hover {
+        background-color: #3e3d3d;
+      }
+    }
+
+    &Reduce {
+      font-size: 9px;
     }
   }
 

@@ -4579,12 +4579,20 @@ div#calender_toolbar h1 {
 }
 
 #topnav .topbar-main {
-    background: linear-gradient(to top, #c4daeb, #F0F8FF);
+    background: #c4daeb;
+    /* background: linear-gradient(to top, #c4daeb, #F0F8FF); */
+    background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253));
+    /*background: linear-gradient(to right, #6FB1FC, #0052D4, #6FB1FC);*/
     border: none;
     border-bottom-color: currentcolor;
     border-bottom-style: none;
     border-bottom-width: medium;
 }
+
+/*.logo img{
+    background-color: #32243d;
+    padding: 10px;
+}*/
 
 #calender_toolbar form .margin-left-sec {
     width: auto;
@@ -10574,7 +10582,7 @@ select#select-employee {
 .table-block .table thead th:last-child {
     border-right: none;
 }
-/* **** End Audit Page **** */ 
+/* **** End Audit Page **** */
 /**/
 
 .MuiButton-textPrimary:hover {

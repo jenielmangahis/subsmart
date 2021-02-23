@@ -59,4 +59,17 @@ function time_selector($index=0){
 
 }
 
+function time_availability($index=0,$count=FALSE){
+    $time = array('5:00 am','5:30 am','6:00 am', '6:30 am', '7:00 am','7:30 am','8:00 am','8:30 am','9:00 am','9:30 am','10:00 am','10:30 am','11:00 am','11:30 am','12:00 pm','12:30 pm','1:00 pm','1:30 pm','2:00 pm','2:30 pm','3:00 pm','3:30 pm','4:00 pm','4:30 pm');
+    if($index<0 || $index>=count($time)){
+        $index=0;
+    }else if(!is_int($index)){
+        $index=0;
+    }
+
+    if($count){
+        return count($time);
+    }
+    return $time[$index];
+}
 ?>

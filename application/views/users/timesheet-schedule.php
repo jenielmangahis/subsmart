@@ -54,6 +54,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         right: 0;
         margin: auto;
     }
+    .table-responsive {
+        overflow-x:hidden;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -65,35 +68,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
 
-                <div class="row align-items-center">
+                <!--<div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Time Schedule</h1>
+                        <h1 class="page-title">Time Schedule</h1>-->
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol> -->
-                    </div>
+                    <!--</div>-->
                     <!-- <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('users_add')): ?>
-                                    <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
+                                <?php //if (hasPermissions('users_add')): ?>
+                                    <a href="<?php //echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div> -->
-                </div>
-                <div class="row" style="padding-bottom: 20px;">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab" style="text-decoration: none">Attendance</a>
-                        <a href="<?php echo url('/timesheet/notification')?>" class="banking-tab">Notification</a>
-                        <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab"style="text-decoration: none">Employee</a>
-                        <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="schedule")?:'-active';?>">Schedule</a>
-                        <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
-                        <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab">Settings</a>
-                    </div>
                 </div>
             </div>
             <!-- end row -->
@@ -101,6 +94,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="col-sm-12">
+                                <h3 class="page-title">Time Schedule</h3>
+                            </div>
+                            <div class="row" style="padding: 10px 33px 20px 33px;">
+                                <div class="col-md-12 banking-tab-container">
+                                    <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab" style="text-decoration: none">Attendance</a>
+                                    <a href="<?php echo url('/timesheet/notification')?>" class="banking-tab">Notification</a>
+                                    <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab"style="text-decoration: none">Employee</a>
+                                    <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="schedule")?:'-active';?>">Schedule</a>
+                                    <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
+                                    <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab">Settings</a>
+                                </div>
+                            </div>
                             <!-- Date Selector -->
                             <div class="row">
                                 <div class="col-lg-3" style="margin-bottom: 12px">
@@ -111,7 +117,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <div class="table-wrapper-settings">
-                                        <table id="ts_schedule_tbl" class="table table-bordered table-striped"></table>
+                                        <table id="ts_schedule_tbl" class="table table-hover table-striped"></table>
                                         <div class="table-ts-loader">
                                             <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
                                         </div>

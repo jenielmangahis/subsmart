@@ -11,7 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     padding-bottom: 20px;
     margin-bottom: 20px;
     background: #f2f2f2;
-     padding: 0px !important; 
+     padding: 0px !important;
     margin: 0;
     /* margin-bottom: 20px; */
     /* border-radius: 8px; */
@@ -32,28 +32,102 @@ defined('BASEPATH') or exit('No direct script access allowed');
     color: #8f8f8f;
     display: none;
 }
+.custom__border .card-body>.row {
+    background: none !important;
+}
+.custom__border .card-body>.row {
+    border-bottom: 0;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    background: #f2f2f2;
+     padding: 0px !important;
+    margin: 0;
+    /* margin-bottom: 20px; */
+    /* border-radius: 8px; */
+}
+.dropdown .btn {
+    position: relative;
+    top:12px;
+}
+.subtle-txt {
+    color: rgba(42, 49, 66, 0.7);
+}
+.form-control-block {
+    display: block;
+    width: 100%;
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    height: 27px;
+    padding: 3px 0 0 0;
+    text-align: center;
+}
+.item-link-sm {
+    font-style: italic;
+    font-size: 12px;
+    color: #8f8f8f;
+    display: none;
+}
+.float-right.d-none.d-md-block {
+    position: relative;
+    bottom: 11px;
+}
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0px !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 19px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
 </style>
 <div class="wrapper" role="wrapper">
 
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Settings</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active"></li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
+        <div class="container-fluid p-40">
             <!-- end row -->
             <?php echo form_open_multipart('credit_notes/update_settings', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="form-group">
+                      <div class="page-title-box" style="padding:5px 0 0 0;">
+                          <div class="row align-items-center">
+                              <div class="col-sm-6">
+                                  <h3 class="page-title mt-0">Settings</h3>
+                                  <ol class="breadcrumb">
+                                      <li class="breadcrumb-item active"></li>
+                                  </ol>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="pl-3 pr-3 mt-0 row">
+                        <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</span>
+                        </div>
+                      </div>
+                      <div class="form-group mt-2">
                             <label>Credit Note Number</label>
                             <div class="help help-sm help-block">Set the prefix and the next auto-generated number.</div>
                             <br />
@@ -62,12 +136,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="margin-bottom-qui">Prefix</div>
                                     <input type="text" name="credit_note_number_prefix" value="<?= $settings->credit_note_number_prefix . '-'; ?>" class="form-control" autocomplete="off">
                                 </div>
-                                <?php 
+                                <?php
                                     $next_number = str_pad($settings->credit_note_number_next_number, 5, '0', STR_PAD_LEFT);
                                 ?>
                                 <div class="col-sm-5">
                                     <div class="margin-bottom-qui">Next number</div>
-                                    <input type="text" name="credit_note_number_next_number" value="<?= $next_number; ?>" class="form-control" autocomplete="off">                                    
+                                    <input type="text" name="credit_note_number_next_number" value="<?= $next_number; ?>" class="form-control" autocomplete="off">
                                 </div>
                             </div>
                             <hr style="margin:44px;" />
@@ -87,7 +161,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <button type="submit" class="btn btn-flat btn-primary">Save Changes</button>
                                     <a href="<?php echo base_url('credit_notes') ?>" class="btn btn-primary" aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Credit Note List
-                                    </a>                                    
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -97,12 +171,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <?php echo form_close(); ?>
-            
+
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
     </div>
-    
+
         <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper end -->
 </div>
@@ -126,7 +200,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           alert("An error has occurred");
         },
       });
-    }   
+    }
 
     function addAdjustment(){
         var adjustment_amount = $("#adjustment-total").val();
@@ -150,7 +224,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $(this).removeClass('btn-default');
 
             $('button[name="discount_type_amount"]').removeClass('btn-primary');
-            $('button[name="discount_type_amount"]').addClass('btn-default');            
+            $('button[name="discount_type_amount"]').addClass('btn-default');
         });
 
         $('button[name="discount_type_amount"]').click(function(){
@@ -160,13 +234,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $(this).removeClass('btn-default');
 
             $('button[name="discount_type_percent"]').removeClass('btn-primary');
-            $('button[name="discount_type_percent"]').addClass('btn-default');          
+            $('button[name="discount_type_percent"]').addClass('btn-default');
         });
 
         $(".btn-set-discount").click(function(){
             var row_id = $(this).attr("data-id");
 
-            $("#row-id").val(row_id);            
+            $("#row-id").val(row_id);
             $("#modalAddDiscount").modal('show');
         });
 
@@ -186,7 +260,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             }else{
                 var total_discount = 0;
             }
-            
+
             $("#discount_"+row_id).val(total_discount);
 
             calculation(row_id);
@@ -209,7 +283,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +
             "<td>\n" +
             '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
-            "</td>\n" +    
+            "</td>\n" +
             "<td>\n" +
             '<input type="hidden" class="form-control itemid" name="itemIds[]" id="itemid_' + count +'" value="0"><input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
             count +
@@ -247,7 +321,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $(".btn-set-discount").click(function(){
                 var row_id = $(this).attr("data-id");
 
-                $("#row-id").val(row_id);            
+                $("#row-id").val(row_id);
                 $("#modalAddDiscount").modal('show');
             });
         });

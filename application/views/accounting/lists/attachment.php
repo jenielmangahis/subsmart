@@ -11,6 +11,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .p-padding{
         padding-left: 10%;
     }
+    #attachments_table .btn-group .btn:hover, #attachments_table .btn-group .btn:focus {
+        color: unset;
+    }
+    #attachments_table .btn-group .btn {
+        padding: 10px;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -94,15 +100,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="attachments_table" class="table table-striped table-bordered" style="width:100%">
 									<thead>
                                         <tr>
-                                            <th></th>
-                                            <th>THUMBNAIL</th>
+                                            <th width="3%"></th>
+                                            <th width="10%">THUMBNAIL</th>
                                             <th class='type'>TYPE</th>
                                             <th class='name'>NAME</th>
                                             <th class='size'>SIZE</th>
                                             <th class='uploaded'>UPLOADED</th>
                                             <th class='links'>LINKS</th>
                                             <th class='note'>NOTE</th>
-                                            <th>Action</th>
+                                            <th width="10%">Action</th>
                                         </tr>
 									</thead>
 									<tbody id="customer_data">
@@ -118,7 +124,87 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <!-- end container-fluid -->
     </div>
+
+    <div class="modal fade" id="edit_attachment" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Attachment</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
+                                <div class="card-body" style="max-height: 650px;">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="file_name">File name</label>
+                                                <input type="text" name="file_name" id="file_name" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="notes">Notes</label>
+                                                <textarea name="notes" id="notes" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="file-preview">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-success btn-rounded border float-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="delete_attachment" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
+                                <div class="card-body" style="max-height: 650px;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p>Deleting this attachment will remove this attachment from all linked transactions. Are you sure you want to delete the attachment?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">No</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-success btn-rounded border float-right">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer_accounting'); ?>
@@ -131,9 +217,138 @@ $(function(){
            language: "de"
         });
 
-        $('#attachments_table').DataTable({
+        var table = $('#attachments_table').DataTable({
+            autoWidth: false,
             searching: false,
-            lengthChange: false
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            ordering: false,
+            info: false,
+            ajax: {
+                url: 'load-attachments/',
+                dataType: 'json',
+                contentType: 'application/json', 
+                type: 'POST',
+                data: function(d) {
+                    return JSON.stringify(d);
+                },
+                pagingType: 'full_numbers',
+            },
+            columns: [
+                {
+                    data: null,
+                    name: 'checkbox',
+                    fnCreatedCell: function (td, cellData, rowData, row, col) {
+                        $(td).html(`<input type="checkbox" value="${rowData.id}" class="m-auto">`);
+                    }
+                },
+                {
+                    data: 'thumbnail',
+                    name: 'thumbnail',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        if(rowData.type === 'Image') {
+                            $(td).html(`<img src="/uploads/accounting/attachments/${cellData}">`);
+                        } else {
+                            $(td).html(`No preview available`);
+                        }
+                    }
+                },
+                {
+                    data: 'type',
+                    name: 'type'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'size',
+                    name: 'size'
+                },
+                {
+                    data: 'upload_date',
+                    name: 'upload_date'
+                },
+                {
+                    data: 'links',
+                    name: 'links'
+                },
+                {
+                    data: 'note',
+                    name: 'note'
+                },
+                {
+                    data: null,
+                    name: 'action',
+                    fnCreatedCell: function (td, cellData, rowData, row, col) {
+                        $(td).html(`
+                        <div class="btn-group float-center">
+                            <a href="#" class="btn text-primary d-flex align-items-center justify-content-center download-attachment">
+                                Download
+                            </a>
+
+                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item edit-attachment" href="#" data-type="${rowData.type}" data-name="${rowData.name}" data-notes="${rowData.notes}" data-id="${rowData.id}" data-file="${rowData.thumbnail}">Edit</a>
+                                <a class="dropdown-item delete-attachment" href="#" data-id="${rowData.id}">Delete</a>
+                                <a class="dropdown-item" href="#">Create invoice</a>
+                                <a class="dropdown-item" href="#">Create expense</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                }
+            ]
+        });
+
+        $(document).on('click', '#attachments_table a.download-attachment', function(e) {
+            e.preventDefault();
+            var parentRow = $(this).parent().parent().parent();
+            var rowData = table.row(parentRow).data();
+            
+            if(rowData.type === 'Image' || rowData.type === 'Pdf') {
+                window.open(`/uploads/accounting/attachments/${rowData.thumbnail}`, '__blank');
+            } else {
+                window.location.href = `/uploads/accounting/attachments/${rowData.thumbnail}`;
+            }
+        });
+
+        $(document).on('click', '#attachments_table a.delete-attachment', function(e) {
+            e.preventDefault();
+
+            var id = e.currentTarget.dataset.id;
+
+            $('#delete_attachment .modal-footer .btn-success').attr('data-id', id);
+
+            $('#delete_attachment').modal('show');
+        });
+
+        $(document).on('click', '#attachments_table a.edit-attachment', function(e) {
+            e.preventDefault();
+
+            var data = e.currentTarget.dataset;
+
+            $('#edit_attachment #file_name').val(data.name);
+
+            if(data.notes !== "undefined" && data.notes !== "") {
+                $('#edit_attachment #notes').val(data.notes);
+            }
+
+            var preview = '';
+            if(data.type === 'Image') {
+                preview = `<img src="/uploads/accounting/attachments/${data.file}">`;
+            } else if(data.type === 'Pdf') {
+                preview = `<iframe src="/uploads/accounting/attachments/${data.file}"></iframe>`;
+            }
+
+            $('#edit_attachment .file-preview').html(preview);
+
+            $('#edit_attachment .modal-footer .btn-success').attr('data-id', data.id);
+
+            $('#edit_attachment').modal('show');
         });
 
         $('#attachments').on('change', function() {
@@ -159,6 +374,8 @@ $(function(){
                         stack: false,
                         loader: false,
                     });
+
+                    $('#attachments_table').DataTable().ajax.reload();
                 }
             });
         });

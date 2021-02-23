@@ -68,8 +68,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         text-align: center;
     }
     .tbl-employee-attendance .tbl-employee-name{
-        font-size: 15px;
-        font-weight: bold;
+        font-size: 14px;
+        /*font-weight: bold;*/
     }
     .tbl-employee-attendance .tbl-emp-role{
         display: block;
@@ -315,6 +315,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         bottom: 0px;
       }
     }
+    .table-responsive {
+        overflow-x:hidden;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -339,11 +342,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <div class="col-sm-12">
                           <h3 class="page-title left">Notification</h3>
                       </div>
-                      <div class="pl-4 pr-4 row">
+                      <!--<div class="pl-4 pr-4 row">
                         <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                             <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                         </div>
-                      </div>
+                      </div>-->
                       <div class="row" style="padding: 10px 33px 20px 33px;">
                           <div class="col-md-12 banking-tab-container">
                               <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab">Attendance</a>
@@ -356,7 +359,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <?php endif; ?>
                           </div>
                       </div>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
                         <div class="card-body">
                             <div class="today-date">
@@ -366,7 +368,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                 <div class="row">
                                     <div class="col-lg-12 table-responsive">
-                                    <table id="ts-notification" class="table table-bordered table-striped tbl-employee-attendance">
+                                    <table id="ts-notification" class="table table-hover table-to-list">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -374,7 +376,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <th>Clock In Out</th>
                                                     <th>Status</th>
                                                     <th><input type="checkbox" id="checkAl"> Select All
-                                                        <button class="btn btn-warning" id="btn_delete"><i class="fa fa-trash"></i></button>
+                                                        <button class="btn btn-primary btn-md"
+                                                        id="btn_delete"><i class="fa fa-trash"></i></button>
                                                     </th>
 
                                                 </tr>

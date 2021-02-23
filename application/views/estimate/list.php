@@ -1,12 +1,59 @@
-<style> 
+<style>
 button#dropdown-edit {
     width: 100px;
-}       
+}
 .dropdown-toggle::after {
     display: block;
     position: absolute;
     top: 54% !important;
     right: 9px !important;
+}
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.left {
+  float: left;
+}
+.p-40 {
+    padding-left: 25px !important;
+    padding-top: 55px !important;
+}
+.card.p-20 {
+    padding-top: 25px !important;
+}
+.col.col-4.pd-17.left.alert.alert-warning.mt-0.mb-2 {
+    position: relative;
+    left: 13px;
+}
+.fr-right {
+  float: right;
+  justify-content: flex-end;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+.pd-17 {
+  position: relative;
+  left: 17px;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
 }
 </style>
 <?php
@@ -16,85 +63,93 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/estimate'); ?>
     <?php include viewPath('includes/notifications'); ?>
-    <div wrapper__section>
+    <div wrapper__section class="p-40">
         <?php include viewPath('includes/notifications'); ?>
-        <div class="card">
-            <div class="container-fluid" style="font-size:14px;">
+        <div class="card p-20">
+            <div class="container-fluid pt-0 pl-0" style="font-size:14px;">
                 <div class="row">
-                    <div class="col">
-                        <h1 class="m-0">Estimates</h1>
+                    <div class="col-sm-6 left">
+                      <h3 class="page-title mt-0">Estimates</h3>
                     </div>
-                    <div class="col-auto">
-                        <div class="h1-spacer">
-                             <?php if (isset($estimates) && count($estimates)>0) { ?>
-                                                <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
-                                                    <span class="fa fa-print "></span> Print
-                                                </a>
-                                            <?php } ?>
+                    <div class="col-sm-6 right dashboard-container-1">
+                      <div class="float-right d-none d-md-block">
+                        <div class="col-auto">
+                            <div class="h1-spacer">
+                                 <?php if (isset($estimates) && count($estimates)>0) { ?>
+                                                    <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
+                                                        <span class="fa fa-print "></span> Print
+                                                    </a>
+                                                <?php } ?>
 
-                            <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
-                                <span class="fa fa-plus"></span> New Estimate
-                            </a>
+                                <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
+                                    <span class="fa fa-plus"></span> New Estimate
+                                </a>
+                            </div>
                         </div>
+                      </div>
                     </div>
                 </div>
-
-                <div class="row align-items-center mb-4 margin-bottom-ter">
-                    <div class="col">
-                        <p class="m-0 mb-fix-list">Listing your estimates.</p>
-                    </div>
-                    <div class="col-auto text-right-sm d-flex align-items-center mb-fix-list">
-                        <form style="display: inline;" class="form-inline form-search" name="form-search"
-                              action="<?php echo base_url('estimate') ?>" method="get">
-                            <div class="form-group m-0 mobile-form" style="margin:0 !important;">
-                                <span>Search:</span> &nbsp;<input class="form-control form-control-md"
-                                                                  name="search"
-                                                                  value="<?php echo (!empty($search)) ? $search : '' ?>"
-                                                                  type="text"
-                                                                  placeholder="Search..."
-                                                                  style="border-width: 1px;height: 38px !important;margin-right: 8px;">
-                                <button class="btn btn-default btn-md" type="submit">
-                                    <span class="fa fa-search"></span>
-                                </button>
-                                <?php if (!empty($search)) { ?>
-                                    <a class="btn btn-default btn-md ml-2"
-                                       href="<?php echo base_url('estimate') ?>"><span
-                                                class="fa fa-times"></span></a>
-                                <?php } ?>
-                            </div>
-                        </form>
-                        <span class="margin-left-sec sc-2 mobile-mt-2">Sort:</span> &nbsp;
-                        <div class="dropdown dropdown-inline open sc-2"><a class="btn btn-default dropdown-toggle mobile-mt-2"
-                                                                      data-toggle="dropdown" aria-expanded="true"
-                                                                      href="<?php echo base_url('estimate') ?>?order=added-desc">Newest
-                                first <span class="caret"></span></a>
-                            <ul class="dropdown-menu  btn-block" role="menu">
-                                <li class="active" role="presentation"><a role="menuitem" tabindex="-1"
-                                                                          href="<?php echo base_url('estimate') ?>?order=added-desc">Newest
-                                        first</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                           href="<?php echo base_url('estimate') ?>?order=added-asc">Oldest
-                                        first</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                           href="<?php echo base_url('estimate') ?>?order=date-accepted-desc">Accepted:
-                                        newest</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                           href="<?php echo base_url('estimate') ?>?order=date-accepted-asc">Accepted:
-                                        oldest</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                           href="<?php echo base_url('estimate') ?>?order=number-asc">Number:
-                                        Asc</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                           href="<?php echo base_url('estimate') ?>?order=number-desc">Number:
-                                        Desc</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                           href="<?php echo base_url('estimate') ?>?order=amount-asc">Amount:
-                                        Lowest</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                           href="<?php echo base_url('estimate') ?>?order=amount-desc">Amount:
-                                        Highest</a></li>
-                            </ul>
-                        </div>
+                <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Create an estimate when you want to give your customer a quote, bid, or proposal for work you plan to do. There are 3 forms of estimate:  standard, options and bundle (package)  The estimate can later be turned into a sales order or an invoice.  With this layout you will be able to monitor the status of each estimate.</span>
+                </div>
+                <br style="clear:both;"/><br/>
+                <div class="align-items-center mb-4 margin-bottom-ter">
+                    <div class="row pl-0 pr-0">
+                      <div class="col col-4 ">
+                      </div>
+                      <div class="col col-8 fr-right text-right-sm d-flex align-items-center mb-fix-list">
+                          <form style="display: inline;" class="form-inline form-search" name="form-search"
+                                action="<?php echo base_url('estimate') ?>" method="get">
+                              <div class="form-group m-0 mobile-form" style="margin:0 !important;">
+                                  <span>Search:</span> &nbsp;<input class="form-control form-control-md"
+                                                                    name="search"
+                                                                    value="<?php echo (!empty($search)) ? $search : '' ?>"
+                                                                    type="text"
+                                                                    placeholder="Search..."
+                                                                    style="border-width: 1px;height: 38px !important;margin-right: 8px;">
+                                  <button class="btn btn-default btn-md" type="submit">
+                                      <span class="fa fa-search"></span>
+                                  </button>
+                                  <?php if (!empty($search)) { ?>
+                                      <a class="btn btn-default btn-md ml-2"
+                                         href="<?php echo base_url('estimate') ?>"><span
+                                                  class="fa fa-times"></span></a>
+                                  <?php } ?>
+                              </div>
+                          </form>
+                          <span class="margin-left-sec sc-2 mobile-mt-2">Sort:</span> &nbsp;
+                          <div class="dropdown dropdown-inline open sc-2"><a class="btn btn-default dropdown-toggle mobile-mt-2"
+                                                                        data-toggle="dropdown" aria-expanded="true"
+                                                                        href="<?php echo base_url('estimate') ?>?order=added-desc">Newest
+                                  first <span class="caret"></span></a>
+                              <ul class="dropdown-menu  btn-block" role="menu">
+                                  <li class="active" role="presentation"><a role="menuitem" tabindex="-1"
+                                                                            href="<?php echo base_url('estimate') ?>?order=added-desc">Newest
+                                          first</a></li>
+                                  <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                             href="<?php echo base_url('estimate') ?>?order=added-asc">Oldest
+                                          first</a></li>
+                                  <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                             href="<?php echo base_url('estimate') ?>?order=date-accepted-desc">Accepted:
+                                          newest</a></li>
+                                  <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                             href="<?php echo base_url('estimate') ?>?order=date-accepted-asc">Accepted:
+                                          oldest</a></li>
+                                  <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                             href="<?php echo base_url('estimate') ?>?order=number-asc">Number:
+                                          Asc</a></li>
+                                  <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                             href="<?php echo base_url('estimate') ?>?order=number-desc">Number:
+                                          Desc</a></li>
+                                  <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                             href="<?php echo base_url('estimate') ?>?order=amount-asc">Amount:
+                                          Lowest</a></li>
+                                  <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                             href="<?php echo base_url('estimate') ?>?order=amount-desc">Amount:
+                                          Highest</a></li>
+                              </ul>
+                          </div>
+                      </div>
                     </div>
                     <div></div>
                 </div>
@@ -283,7 +338,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
               <?php echo form_open_multipart('estimate/_send_customer', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
               <?php echo form_input(array('name' => 'eid', 'type' => 'hidden', 'value' => '', 'id' => 'eid'));?>
-              <div class="modal-body">        
+              <div class="modal-body">
                   <p>Are you sure you want to send the selected estimate to customer?</p>
               </div>
               <div class="modal-footer">
@@ -379,7 +434,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
     </div>
-  </div>
 </div>
 <style>
     .hid-deskx {

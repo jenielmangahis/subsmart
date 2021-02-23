@@ -128,7 +128,6 @@ $(document).ready(function() {
     $(document).on('click', '#button_submit_form', function(e) {
 
         e.preventDefault();
-
         $("#frm_create_event").submit();
     });
 
@@ -139,57 +138,66 @@ $(document).ready(function() {
 
         var saveButton = $("#modalCreateEvent #button_submit_form");
         var saveButtontext = $(saveButton).html();
+        var event_description = $("#event-description").val();
 
-        $(saveButton).attr('disabled', true);
+        if( event_description != '' ){
+          $(saveButton).attr('disabled', true);
 
-        $("#calendar").css('opacity', '.5');
-        $("#calendar").attr('disabled', true);
+          $("#calendar").css('opacity', '.5');
+          $("#calendar").attr('disabled', true);
 
-        jQuery.ajax({
-            url: options.urlSaveEvent,
-            type: 'POST',
-            data: $(this).serialize(),
-            beforeSend: function() {
-               $(saveButton).text('saving...');
-            },
-            success: function(response) {
+          jQuery.ajax({
+              url: options.urlSaveEvent,
+              type: 'POST',
+              data: $(this).serialize(),
+              beforeSend: function() {
+                 $(saveButton).text('saving...');
+              },
+              success: function(response) {
 
-                console.log(response);
+                  console.log(response);
 
-                jQuery.ajax({
-                    url: options.urlEvents,
-                    type: 'GET',
-                    success: function(response) {
+                  jQuery.ajax({
+                      url: options.urlEvents,
+                      type: 'GET',
+                      success: function(response) {
 
-                        console.log(response);
+                          console.log(response);
 
-                        $("#calendar").css('opacity', '1');
-                        $("#calendar").attr('disabled', false);
+                          $(".event-form-description").html('');
 
-                        $("#modalCreateEvent").modal('hide');
+                          $("#calendar").css('opacity', '1');
+                          $("#calendar").attr('disabled', false);
 
-                        var calendarEl = document.getElementById('calendar');
-                        var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+                          $("#modalCreateEvent").modal('hide');
 
-                        $(calendarEl).empty();
+                          var calendarEl = document.getElementById('calendar');
+                          var timeZoneSelectorEl = document.getElementById('time-zone-selector');
 
-                        render_calender(calendarEl, timeZoneSelectorEl, JSON.parse(response));
+                          $(calendarEl).empty();
 
-                        $(saveButton).html(saveButtontext);
+                          render_calender(calendarEl, timeZoneSelectorEl, JSON.parse(response));
 
-                        $(saveButton).attr('disabled', false);
-                    }
-                });
+                          $(saveButton).html(saveButtontext);
 
-                load_upcoming_events();
-            },
-            error: function(er) {
+                          $(saveButton).attr('disabled', false);
+                      }
+                  });
 
-              $(saveButton).html(saveButtontext);
+                  load_upcoming_events();
+              },
+              error: function(er) {
 
-              $(saveButton).attr('disabled', false);
-            }
-        });
+                $(saveButton).html(saveButtontext);
+
+                $(saveButton).attr('disabled', false);
+              }
+          });
+        }else{
+          $(saveButton).html(saveButtontext);
+          $(saveButton).attr('disabled', false);
+          $(".event-form-message").html('<div class="alert alert-danger" role="alert">Please specify event description</div>');
+        }        
     });
 
     function load_upcoming_events(){
@@ -270,7 +278,7 @@ $(document).ready(function() {
     // edit button click on the event popup for the event
     // it will open the popup of the event
     // and close the current popup
-    $(document).on("click", "#edit_schedule", function() {
+    /*$(document).on("click", "#edit_schedule", function() {
 
       $("#modalEventDetails").modal('hide');
 
@@ -283,7 +291,7 @@ $(document).ready(function() {
 
       open_create_event_modal_for_event($(element).attr('data-event-id'), true);
 
-    });
+    });*/
 });
 
 
@@ -402,7 +410,7 @@ function open_create_event_modal_for_customer(customer_id, customer) {
 
 
 function open_create_event_modal_for_event(event_id, open_edit_modal) {
-
+  alert(event_id);
   $('#modalCreateEvent').modal('show');
 
   if ( open_edit_modal ) {

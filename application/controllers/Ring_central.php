@@ -2,62 +2,62 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Ring_central extends MY_Controller
-{
+class Ring_central extends MY_Controller {
+
     public function __construct() {
         parent::__construct();
         $this->checkLogin();
         $this->load->library('Ringcentral');
-        
     }
-    
-    public function index()
-    {
+
+    public function index() {
         $platform = $this->ringcentral->getPlatform();
         $RINGCENTRAL_REDIRECT_URL = "http://localhost/projects/nsmartrac/ring_central/engine?oauth2callback";
-        
-        if(!$this->session->isRCLogin):
+
+        if (!$this->session->isRCLogin):
             $this->session->set_userdata('isRCLogin', false);
         endif;
 //        
         $this->page_data['RINGCENTRAL_REDIRECT_URL'] = $RINGCENTRAL_REDIRECT_URL;
         $this->page_data['platform'] = $platform;
         $this->load->view('ringcentral/default', $this->page_data);
-        
     }
-    
-    public function sendSMS()
-    {
+
+    public function sendSMS($to = NULL, $message = NULL) {
         $platform = $this->ringcentral->getPlatform();
-        $apiResponse = $platform->post('/account/~/extension/~/sms', array(
-            'from' => array('phoneNumber' => '+16505691634'),
-            'to'   => array(
-                array('phoneNumber' => '+639177722713'),
-            ),
-            'text' => 'Test from PHP',
-        ));
-        print_r("SMS sent. Message status: " . $apiResponse->json()->messageStatus . PHP_EOL);
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                $apiResponse = $platform->post('/account/~/extension/~/sms', array(
+                    'from' => array('phoneNumber' => '+16505691634'),
+                    'to' => array(
+                        array('phoneNumber' => $to),
+                    ),
+                    'text' => urldecode($message),
+                ));
+                print_r("SMS sent. Message status: " . $apiResponse->json()->messageStatus . PHP_EOL);
+            } else {
+                echo 'something went wrong';
+            }
+        }
     }
 
-
-    public function logout()
-    {
+    public function logout() {
         $platform = $this->ringcentral->getPlatform();
-        
-            $this->session->unset_userdata('rcData');
-            $this->session->set_userdata('isRCLogin', false);
-            
-            header("Location: http://localhost/projects/nsmartrac/ring_central");
-            //exit();
+
+        $this->session->unset_userdata('rcData');
+        $this->session->set_userdata('isRCLogin', false);
+
+        header("Location: http://localhost/projects/nsmartrac/ring_central");
+        //exit();
     }
 
-    public function engine()
-    {
+    public function engine() {
         $platform = $this->ringcentral->getPlatform();
         $RINGCENTRAL_REDIRECT_URL = "http://localhost/projects/nsmartrac/ring_central/engine?oauth2callback";
-        
-       
-        
+
+
+
         if (isset($_REQUEST['oauth2callback'])) {
             if (!isset($_GET['code'])) {
                 return;
@@ -67,9 +67,8 @@ class Ring_central extends MY_Controller
 
             $platform->login($qs);
             $this->session->set_userdata(array('rcData' => $platform->auth()->data(), 'isRCLogin' => true));
-            $platform->auth()->setData((array)$this->session->rcData);
+            //$this->sendSMS($platform);
             header("Location: http://localhost/projects/nsmartrac/ring_central");
-           
         }
 
 //        if (!isset($_SESSION['sessionAccessToken'])) {
@@ -107,9 +106,7 @@ class Ring_central extends MY_Controller
 //                }
 //            }
 //        }
-
     }
-    
 
     function callGetRequest($endpoint, $params) {
         $platform = $this->ringcentral->getPlatform();
@@ -121,6 +118,4 @@ class Ring_central extends MY_Controller
         }
     }
 
-
-      
 }

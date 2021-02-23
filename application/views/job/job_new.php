@@ -23,6 +23,13 @@ add_css(array(
         display: block;
         margin-top: -38px;
     }
+    .box_footer_icon{
+        font-size: 20px;
+    }
+    .box_right{
+        border-color: #e0e0e0 !important;
+        border: 1px solid;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -43,35 +50,35 @@ add_css(array(
                                 <div class="stepwizard">
                                     <div class="stepwizard-row setup-panel">
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-1" type="button" class="btn btn-success btn-circle"><i style="font-size: 24px;" class="fa fa-pencil"></i></a>
+                                            <a href="#step-1" type="button" class="btn btn-circle <?= !isset($jobs_data) || $jobs_data->status == 'New'  ? 'btn-success' : 'btn-default' ; ?>"><i style="font-size: 24px;" class="fa fa-pencil"></i></a>
                                             <p class=""><small>Draft</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
+                                            <a href="#step-2" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
                                             <p class=""><small>Schedule</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
+                                            <a href="#step-2" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'On My Way'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
                                             <p><small>OMW</small></p>
                                         </div> &nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
+                                            <a href="#step-3" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
                                             <p><small>Start</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-check-circle-o"></span></a>
+                                            <a href="#step-4" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Completed'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-check-circle-o"></span></a>
                                             <p><small>Approved</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
+                                            <a href="#step-5" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Finished'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
                                             <p><small>Finish</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-6" type="button" class="btn btn-default btn-circle" disabled="disabled"><span style="font-size: 24px;" class="fa fa-paper-plane"></span></a>
+                                            <a href="#step-6" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-paper-plane"></span></a>
                                             <p><small>Invoice</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-7" type="button" class="btn btn-default btn-circle" disabled="disabled">
+                                            <a href="#step-7" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Withdrawn'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa  fa-credit-card"></span></a>
                                             <p><small>Pay</small></p>
                                         </div>
@@ -92,6 +99,7 @@ add_css(array(
                             <h6 class="page-title">
                                 <span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6>
                             <hr>
+                            <?php if(!isset($jobs_data)): ?>
                             <p>Import Data from Wordorder/Invoice/Estimates</p>
                             <div id="import_buttons">
                                 <a href="#" data-toggle="modal" data-target="#estimates_import" data-backdrop="static" data-keyboard="false" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Estimates</a> &nbsp;&nbsp;
@@ -99,73 +107,32 @@ add_css(array(
                                 <a href="#" data-toggle="modal" data-target="#invoice_import" data-backdrop="static" data-keyboard="false" type="button" class="btn btn-sm btn-primary"><span class="fa fa-upload"></span> Invoice</a>
                             </div>
                             <hr>
+                            <?php endif; ?>
                             <div class="form-group label-width d-flex align-items-center">
                                 <label>From</label>
-                                <input type="date" name="start_date" id="start_date" class="form-control" required>
+                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>
                                 <select id="inputState" name="start_time" class="form-control" required>
                                     <option selected="">Start time</option>
-                                    <option value="5:00 AM">5:00 AM</option>
-                                    <option value="5:30 AM">5:30 AM</option>
-                                    <option value="6:00 AM">6:00 AM</option>
-                                    <option value="6:30 AM">6:30 AM</option>
-                                    <option value="7:00 AM">7:00 AM</option>
-                                    <option value="7:30 AM">7:30 AM</option>
-                                    <option value="">8:00 AM</option>
-                                    <option value="">8:30 AM</option>
-                                    <option value="">9:00 AM</option>
-                                    <option value="">9:30 AM</option>
-                                    <option value="">10:00 AM</option>
-                                    <option value="">10:30 AM</option>
-                                    <option value="">11:00 AM</option>
-                                    <option value="">11:30 AM</option>
-                                    <option value="">12:00 AM</option>
-                                    <option value="">12:30 AM</option>
-                                    <option value="">1:00 PM</option>
-                                    <option value="">1:30 PM</option>
-                                    <option value="">2:00 PM</option>
-                                    <option value="">2:30 PM</option>
-                                    <option value="">3:00 PM</option>
-                                    <option value="">3:30 PM</option>
-                                    <option value="">4:00 PM</option>
-                                    <option value="">4:30 PM</option>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                        <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
                                 <label >To</label>
-                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" required>
+                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
                                 <select id="inputState" name="end_time" class="form-control" required>
                                     <option selected="">End time</option>
-                                    <option value="5:00 AM">5:00 AM</option>
-                                    <option value="5:30 AM">5:30 AM</option>
-                                    <option value="6:00 AM">6:00 AM</option>
-                                    <option value="6:30 AM">6:30 AM</option>
-                                    <option value="7:00 AM">7:00 AM</option>
-                                    <option value="7:30 AM">7:30 AM</option>
-                                    <option value="">8:00 AM</option>
-                                    <option value="">8:30 AM</option>
-                                    <option value="">9:00 AM</option>
-                                    <option value="">9:30 AM</option>
-                                    <option value="">10:00 AM</option>
-                                    <option value="">10:30 AM</option>
-                                    <option value="">11:00 AM</option>
-                                    <option value="">11:30 AM</option>
-                                    <option value="">12:00 AM</option>
-                                    <option value="">12:30 AM</option>
-                                    <option value="">1:00 PM</option>
-                                    <option value="">1:30 PM</option>
-                                    <option value="">2:00 PM</option>
-                                    <option value="">2:30 PM</option>
-                                    <option value="">3:00 PM</option>
-                                    <option value="">3:30 PM</option>
-                                    <option value="">4:00 PM</option>
-                                    <option value="">4:30 PM</option>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                        <option <?= isset($jobs_data) && strtolower($jobs_data->end_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                             <select id="employee_id" name="employee_id" class="form-control">
                                 <option selected="">Select Employee</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->employee_ids == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                        <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -237,38 +204,45 @@ add_css(array(
                             <br>
                         </div>
                     </div>-->
-                    <div class="card" id="notes_left_card">
+
+                    <div class="card" id="notes_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header">
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                <h6 class="page-title"> <span style="font-size: 20px;"  class="fa fa-book"></span> &nbsp; Private Notes </h6>
+                                <h6 class="page-title"> <span class="fa fa-book box_footer_icon"></span> &nbsp; Private Notes </h6>
                             </button>
                             <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 40px;font-size: 20px;display: block;margin-top: -38px;"></span></a>
                         </div>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#collapseOne">
                         <div class="card-body">
-                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#collapseOne">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div id="notes_edit_btn" class="pencil" style=" width:100%; height:100px;background-color: #e9ecef;">
-                                            <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
-                                        </div>
-                                        <div id="notes_input_div" style="display:none;">
-                                            <div style=" height:100px;">
-                                                <textarea name="message" cols="50" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
-                                                <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div style="float: right;">
-                                        <a href="javascript:void(0);" id="edit_note"><span style="font-size: 20px;" class="fa fa-pencil"></span></a> &nbsp;
-                                        <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
-                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                            <div class="row">
+                                <!--<div style="background-color: #32243d; width: 32px; height: 32px;">
+                                <img alt="Vance Wayne" src="https://housecall-attachments-production.s3.amazonaws.com/service_pros/avatars/000/137/270/original/avatar_1565038188.jpeg?1565038188" class="MuiAvatar-img">
+                                 </div>
+                                <p>&nbsp; 01/27/2021, 5:36pm</p>-->
+                                <div id="notes_edit_btn" class="pencil" style="width:100%; height:100px;cursor: pointer;">
+                                    <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
+                                </div>
+                                <div id="notes_input_div" style="display:none;">
+                                    <div style=" height:70px;margin-bottom: 10px;">
+                                        <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                        <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="card-footers">
+                            <div style="float: right;margin-bottom: 10px;">
+                                <a href="javascript:void(0);" id="edit_note" class="fa fa-pencil box_footer_icon"></a> &nbsp;
+                                <?php if(isset($jobs_data)) : ?>
+                                <a href="#"  class="fa fa-history box_footer_icon"></a> &nbsp;
+                                <a href="#"  class="fa fa-trash box_footer_icon"></a> &nbsp;
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                            <br>
+                        </div>
                     </div>
-                    <div class="card" id="attach_left_card">
+                    <div class="card" id="attach_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header" >
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#photos_attachment" aria-expanded="true" aria-controls="photos_attachment">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-image"></span>&nbsp; &nbsp;Photos / Attachments</h6>
@@ -282,7 +256,7 @@ add_css(array(
                                 <div class="card-body">
                                     <div class="form-group">
                                         <div class="form-group col-md-12">
-                                            <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/attachment/placeholder.jpg"; ?> ">
+                                            <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/placeholder.jpg"; ?> ">
                                             <small>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</small>
                                             <input type="file" class="form-control" name="attachment-file" id="attachment-file">
                                         </div>
@@ -292,7 +266,7 @@ add_css(array(
                             <br>
                         </div>
                     </div>
-                    <div class="card" id="url_left_card">
+                    <div class="card" id="url_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header" id="headingThree">
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#url_link_form" aria-expanded="true" aria-controls="url_link_form">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
@@ -321,7 +295,7 @@ add_css(array(
 
                         </div>
                     </div>
-                    <div class="card" id="pd_left_card">
+                    <div class="card" id="pd_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header">
 
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="payment">
@@ -355,8 +329,8 @@ add_css(array(
                                                 </select>
                                             </div>
                                             <div class="col-md-12">
-                                                <label for="">Amount</label>
-                                                <input class="form-control" id="pay_amount" value="<?= isset($jobs_data) ? $jobs_data->amount : ''; ?>" name="amount" type="number" placeholder="$0.00">
+                                                <label for="">Amount <small class="help help-sm" >(in dollar)</small></label>
+                                                <input class="form-control" id="pay_amount" value="<?= isset($jobs_data) ? $jobs_data->amount : ''; ?>" name="amount" type="text" placeholder="0.00">
                                             </div>
                                             <div class="col-md-12">
                                                 <h6>Payment Details</h6>
@@ -556,7 +530,7 @@ add_css(array(
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header">
                             <button  style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="fill-eSign">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
@@ -578,12 +552,12 @@ add_css(array(
                             </div>
                         </div>
                     </div>
-                    <div class="card" id="approval_card_left">
+                    <div class="card" id="approval_card_left" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header" id="headingOne">
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="approval">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
                             </button>
-                            <a href="javascript:void(0);" id="approval_btn_left">
+                            <a href="#" id="approval_btn_left">
                                 <span class="fa fa-columns card_plus_sign"></span>
                             </a>
                         </div>
@@ -604,7 +578,7 @@ add_css(array(
                                     </div>
                                 </div>
                                 <div style="float: right;">
-                                    <a data-toggle="modal" data-target="#updateSignature" data-backdrop="static" data-keyboard="false">
+                                    <a href="#" data-toggle="modal" data-target="#updateSignature" data-backdrop="static" data-keyboard="false">
                                         <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
                                     </a>
                                     <!--<span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp; -->
@@ -616,13 +590,17 @@ add_css(array(
                     <!-- <div class="prev-btn float-right">
                        <button type="button" class="btn btn-primary">Preview</button>
                     </div> -->
+
                 </div>
                 <div class="col-md-8">
 
                     <div class="card table-custom">
                         <div class="card-body">
                             <div class="row">
-                                <a style="float: right !important;"  class="add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
+                                <div style="display: flex; margin: 0;margin-right: auto;" >
+                                    <b>Created By: </b> <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
+                                </div>
+                                <a  class="add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
                                     <span class="fa fa-plus-square"></span> Add New Customer
                                 </a>
                                 <hr>
@@ -749,7 +727,7 @@ add_css(array(
                                     </div>
                                     <div class="col-sm-6">
                                         <small>Tax Rate</small>
-                                        <select id="tax_rate" class="form-control">
+                                        <select id="tax_rate" name="tax_rate" class="form-control">
                                             <option value="">None</option>
                                             <option value="0.075">FL Tax(7.5%)</option>
                                         </select>
@@ -787,11 +765,11 @@ add_css(array(
                                 <div class="col-sm-12">
                                     <hr>
                                 </div>
-                                <div class="col-sm-12" id="approval_card_right" style="display: none;">
+                                <div class="col-sm-12" id="approval_card_right" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                     <div style="float: right;">
                                         <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                         <center>
-                                            <img width="150" id="customer-customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
+                                            <img width="150" id="customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
                                         </center>
                                         <center><span id="appoval_name_right"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span></center><br>
                                         <span>-----------------------------</span><br>
@@ -800,7 +778,7 @@ add_css(array(
                                 </div>
                                 <br>
                                 <div class="col-sm-12">
-                                    <div class="card" id="notes_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
+                                    <div class="card box_right" id="notes_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
@@ -808,37 +786,56 @@ add_css(array(
                                                     <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <span class="help help-sm help-block" id="notes_right_display"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></span>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <div style="float: right;">
-                                                        <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
-                                                        <span style="font-size: 20px;" class="fa fa-history"></span> &nbsp;
-                                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                                    <div id="notes_edit_btn_right" class="pencil" style="width:100%; height:100px;cursor: pointer;">
+                                                        <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
+                                                    </div>
+                                                    <div id="notes_input_div_right" style="display:none;">
+                                                        <div style=" height:70px;margin-bottom: 10px;">
+                                                            <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt_right" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                                            <button type="button" class="btn btn-primary btn-sm" id="save_memo_right" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <br>
+                                                <div class="card-footers">
+                                                    <div style="float: right;margin-bottom: 10px;">
+                                                        <a href="javascript:void(0);" id="edit_note_right" class="fa fa-pencil box_footer_icon"></a> &nbsp;
+                                                        <?php if(isset($jobs_data)) : ?>
+                                                        <a href="#"  class="fa fa-history box_footer_icon"></a> &nbsp;
+                                                        <a href="#"  class="fa fa-trash box_footer_icon"></a> &nbsp;
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div class="card" id="url_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
+                                    <div class="card box_right" id="url_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
-                                                    <a id="url_right_btn_column" href="#"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                    <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                                     <h5 style="padding-left: 20px;">Url Link</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <span class="help help-sm help-block">Upload url link or a pdf link </span>
+
+                                                    <?php
+                                                    if(isset($jobs_data) && $jobs_data->link != NULL) {
+                                                        ?>
+                                                        <a target="_blank" href="<?= $jobs_data->link; ?>"><p><?= $jobs_data->link; ?></p></a>
+                                                        <?php
+                                                    }else{
+                                                        ?>
+                                                        <span class="help help-sm help-block">Enter url link or a pdf link </span>
+                                                        <?php
+                                                    } ?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-12">
-                                    <div class="card" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
+                                <!--<div class="col-sm-12">
+                                    <div class="card box_right" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
@@ -852,7 +849,7 @@ add_css(array(
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="col-sm-12">
                                     <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.">
                                 </div>
@@ -860,7 +857,7 @@ add_css(array(
                                     <hr>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div class="card" id="pd_right_card" style="border-color: #363636 !important;border: 1px solid;display: none;">
+                                    <div class="card box_right" id="pd_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
@@ -873,15 +870,21 @@ add_css(array(
                                                         <tr>
                                                             <td>
                                                                 <b>Method</b><br>
-                                                                <span class="help help-sm help-block" id="pay_method_right">Credit Card</span>
+                                                                <span class="help help-sm help-block" id="pay_method_right">
+                                                                    <?= isset($jobs_data) ? $jobs_data->method : ''; ?>
+                                                                </span>
                                                             </td>
                                                             <td>
                                                                 <b>Amount</b><br>
-                                                                <span class="help help-sm help-block" id="pay_amount_right">0.00</span>
+                                                                <span class="help help-sm help-block" id="pay_amount_right">
+                                                                    <?=  isset($jobs_data) && $jobs_data->amount != NULL ? '$'.$jobs_data->amount : '$0.00'; ?>
+                                                                </span>
                                                             </td>
                                                             <td>
-                                                                <b>Payment Details</b><br>
-                                                                <span class="help help-sm help-block">xx</span>
+                                                                <b>Account Name</b><br>
+                                                                <span class="help help-sm help-block">
+                                                                   <?= isset($jobs_data) && $jobs_data->account_name != NULL ? $jobs_data->account_name : 'n/a'; ?>
+                                                                </span>
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -893,7 +896,7 @@ add_css(array(
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                                    <div class="card box_right">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
@@ -978,6 +981,7 @@ add_css(array(
                             <input id="name" type="hidden" name="authorize_name">
                             <input id="datetime_signed" type="hidden" name="datetime_signed">
                             <input id="attachment" type="hidden" name="attachment">
+                            <input id="created_by" type="hidden" name="created_by" value="<?= $logged_in_user->id; ?>">
                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
@@ -989,7 +993,7 @@ add_css(array(
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <div class="card" style="border-color: #363636 !important;border: 1px solid;">
+                            <div class="card box_right">
                                 <div class="row">
                                     <div class="col-md-12 ">
                                         <div class="card-header">
@@ -1279,7 +1283,13 @@ add_css(array(
             </div>
             <div class="modal-footer">
                 <button type="button" id="click" class="btn btn-primary save-signature" data-dismiss="modal">
-                    <span class="fa fa-paper-plane-o"></span>Save
+                    <span class="fa fa-paper-plane-o"></span> Save
+                </button>
+                <button type="button" id="cancel-signature" class="btn btn-default" data-dismiss="modal">
+                    <span class="fa fa-close"></span> Cancel
+                </button>
+                <button type="button" id="clear-signature" class="btn btn-default">
+                    <span class="fa fa-close"></span> Clear
                 </button>
             </div>
         </div>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+<rect x="5" y="19" fill="#CFD8DC" width="38" height="19"/>
+<rect x="5" y="38" fill="#B0BEC5" width="38" height="4"/>
+<rect x="12" y="24" fill="#E3F2FD" width="24" height="18"/>
+<rect x="13" y="25" fill="#2196F3" width="22" height="17"/>
+<polygon fill="#64B5F6" points="35,42 13,42 13,35 35,25 "/>
+<g>
+	<path fill="#D84315" d="M27,19c0,1.656-1.343,3-3,3s-3-1.344-3-3s1.343-3,3-3S27,17.344,27,19"/>
+	<path fill="#D84315" d="M39,19c0,1.656-1.343,3-3,3s-3-1.344-3-3s1.343-3,3-3S39,17.344,39,19"/>
+	<path fill="#D84315" d="M9,19c0,1.656,1.343,3,3,3s3-1.344,3-3s-1.343-3-3-3S9,17.344,9,19"/>
+</g>
+<g>
+	<path fill="#FF5722" d="M40,6H8C6.895,6,6,6.895,6,8v3h36V8C42,6.895,41.104,6,40,6"/>
+	<rect x="21" y="11" fill="#FF5722" width="6" height="8"/>
+	<polygon fill="#FF5722" points="37,11 32,11 33,19 39,19 	"/>
+	<polygon fill="#FF5722" points="11,11 16,11 15,19 9,19 	"/>
+</g>
+<g>
+	<path fill="#FFA000" d="M33,19c0,1.656-1.343,3-3,3s-3-1.344-3-3s1.343-3,3-3S33,17.344,33,19"/>
+	<path fill="#FFA000" d="M45,19c0,1.656-1.343,3-3,3s-3-1.344-3-3s1.343-3,3-3L45,19z"/>
+	<path fill="#FFA000" d="M15,19c0,1.656,1.343,3,3,3s3-1.344,3-3s-1.343-3-3-3S15,17.344,15,19"/>
+	<path fill="#FFA000" d="M3,19c0,1.656,1.343,3,3,3s3-1.344,3-3s-1.343-3-3-3L3,19z"/>
+</g>
+<g>
+	<polygon fill="#FFC107" points="32,11 27,11 27,19 33,19 	"/>
+	<polygon fill="#FFC107" points="42,11 37,11 39,19 45,19 	"/>
+	<polygon fill="#FFC107" points="16,11 21,11 21,19 15,19 	"/>
+	<polygon fill="#FFC107" points="6,11 11,11 9,19 3,19 	"/>
+</g>
+<rect x="23" y="25" fill="#1976D2" width="2" height="17"/>
+<g>
+	<polygon fill="#1E88E5" points="23,30.454 23,42 25,42 25,29.546 	"/>
+	<circle fill="#1E88E5" cx="28" cy="34" r="1"/>
+	<circle fill="#1E88E5" cx="20" cy="34" r="1"/>
+</g>
+</svg>

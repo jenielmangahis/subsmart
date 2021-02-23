@@ -17,13 +17,9 @@ application/config/user_agents.php
 *application/config/database.php
 *application/cache/
 *assets/img/customer/qr/
-
 .idea
-
 app/
 api/
-
-
 *application/config/database.php
 *api/
 .idea
@@ -34,3 +30,4 @@ application/cache/*
 .idea/*
 
 application/config/database.php
+uploads/jobs/attachment

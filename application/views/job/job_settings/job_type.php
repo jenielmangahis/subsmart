@@ -15,7 +15,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row margin-bottom-ter align-items-center" style="background-color:white; padding:0px;">
                                 <div class="col-auto">
                                     <h5 class="page-title">Job Tags</h5>
-                                    <span>Define the different job tags</span>
+                                    <span>
+                                        In our software, jobs are project that an invoice will need to be issued for payment.
+                                        This will help organize your projects into categories and will help you see the profitability of your business based on the various job type.
+                                    </span>
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">

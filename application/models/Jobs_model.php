@@ -266,7 +266,7 @@ class Jobs_model extends MY_Model
 
     public function getAllUpcomingJobsByCompanyId($company_id = 0)
     {
-        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.job_description, jobs.job_type, jobs.start_date, jobs.end_date, jobs.company_id, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, jobs.end_date, jobs.company_id, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
 
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
@@ -284,7 +284,7 @@ class Jobs_model extends MY_Model
 
     public function getAllUpcomingJobs()
     {
-        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.job_description, jobs.job_type, jobs.start_date, jobs.end_date, jobs.company_id, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, jobs.end_date, jobs.company_id, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
 
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');

@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="pl-3 pr-3 mt-1 row">
                           <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Get a birds-eye view of your calendar events and jobs’ location scheduled for the day.  With this tool your be able to see your team location and better position them to maximize the current day.</span>
                           </div>
                         </div>
                         <div class="filter-container mb-3">
@@ -208,7 +208,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   });
                                 }
                             </script>
-                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzt0c6Rxf0SJo6bsCc046g7671s7TEj_U&callback=initMap&sensor=false" async defer></script>
+                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&callback=initMap"></script>
                         </div>
 
                     </div>

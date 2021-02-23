@@ -242,7 +242,7 @@ a.top-1 {
     margin-right: 10px;
   }
   .fc .fc-toolbar-title {
-  	font-size: 23px;
+    font-size: 23px;
   }
   .btn-gcustom {
     min-width: 24px;
@@ -485,12 +485,12 @@ a.top-1 {
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
                                       <div class="margin-bottom">
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
-                                          <div id="upcoming-events-container"></div>
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
-                                          <div id="scheduled-estimates-container"></div>
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
                                           <div id="upcoming-jobs-container"></div>
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
+                                          <div id="upcoming-events-container"></div>
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
+                                          <div id="scheduled-estimates-container"></div>
                                       </div>
                                   </div>
                               </div>
@@ -666,22 +666,22 @@ a.top-1 {
             <?php echo form_open_multipart('', ['id' => 'create-google-event', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="modal-body">
                 <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
-        				<div class="form-group" style="text-align: left;">
-        				  <label>Event Name</label> <span class="form-required">*</span>
-        				  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
-        				</div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Event Name</label> <span class="form-required">*</span>
+                  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
+                </div>
                 <div class="form-group" style="text-align: left;">
                   <label>Event Description</label> <span class="form-required">*</span>
                   <input type="text" name="gevent_description" value=""  class="form-control" required="" autocomplete="off" required />
                 </div>
-        				<div class="form-group" style="text-align: left;">
-        				  <label>Date from</label> <span class="form-required">*</span>
-        				  <input type="text" name="gevent_date_from" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
-        				</div>
-        				<div class="form-group" style="text-align: left;">
-        				  <label>Date to</label> <span class="form-required">*</span>
-        				  <input type="text" name="gevent_date_to" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
-        				</div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Date from</label> <span class="form-required">*</span>
+                  <input type="text" name="gevent_date_from" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
+                </div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Date to</label> <span class="form-required">*</span>
+                  <input type="text" name="gevent_date_to" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
+                </div>
                 <div class="form-group" style="text-align: left;">
                   <label>Start Time</label> <span class="form-required">*</span>
                   <div class="form-group">
@@ -737,7 +737,7 @@ a.top-1 {
                       <option value="Service">Install</option>
                   </select>
                 </div>
-				        <div class="create-gevent-validation-error" style="text-align: left;"></div>
+                <div class="create-gevent-validation-error" style="text-align: left;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -761,11 +761,11 @@ a.top-1 {
             <?php echo form_open_multipart('', ['id' => 'create-google-calendar', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="modal-body">
                 <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
-				<div class="form-group" style="text-align: left;">
-				  <label>Calendar Name</label> <span class="form-required">*</span>
-				  <input type="text" name="gcalendar_name" value=""  class="form-control" required="" autocomplete="off" required />
-				</div>
-				<div class="create-gcalendar-validation-error" style="text-align: left;"></div>
+        <div class="form-group" style="text-align: left;">
+          <label>Calendar Name</label> <span class="form-required">*</span>
+          <input type="text" name="gcalendar_name" value=""  class="form-control" required="" autocomplete="off" required />
+        </div>
+        <div class="create-gcalendar-validation-error" style="text-align: left;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -797,6 +797,25 @@ a.top-1 {
                 </button>
                 <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
                 </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="modalEditEvent" class="modal fade" role="dialog" style="">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 style="" class="modal-title">Edit Event</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body edit-event-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_submit_form">Confirm</button>
             </div>
         </div>
 
@@ -850,6 +869,29 @@ a.top-1 {
             }
         })
     }
+
+    $("#edit_schedule").click(function(){
+      var event_id = $(this).attr("data-event-id");
+      var message = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+      var url = base_url + 'event/get_event_form';
+
+      $("#modalEventDetails").modal('hide');
+      $("#modalEditEvent").modal('show');
+
+      $(".edit-event-body").html(message);
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {event_id:event_id},
+             success: function(o)
+             {
+                $(".edit-event-body").html(o);
+             }
+          });
+      }, 800);
+    });
 
 
 
@@ -1191,26 +1233,26 @@ a.top-1 {
     }
   });
 
-	$(".btn-add-gevent").click(function(){
-		var gid = $(this).attr("data-id");
+  $(".btn-add-gevent").click(function(){
+    var gid = $(this).attr("data-id");
 
-		$("#gevent_gcid").val(gid);
-		$("#modalCreateGoogleEvent").modal('show');
+    $("#gevent_gcid").val(gid);
+    $("#modalCreateGoogleEvent").modal('show');
     $('#create-google-event').trigger("reset");
-	});
+  });
 
-	$(".btn-add-gcalendar").click(function(){
-		$("#modalCreateGoogleCalendar").modal('show');
+  $(".btn-add-gcalendar").click(function(){
+    $("#modalCreateGoogleCalendar").modal('show');
     $('#create-google-calendar').trigger("reset");
-	});
+  });
 
-	$('.default-datepicker').datepicker({
-	    format: 'yyyy-mm-dd',
-	    autoclose: true
-	});
+  $('.default-datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true
+  });
 
-	$("#btn-create-google-event").click(function(){
-		var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
+  $("#btn-create-google-event").click(function(){
+    var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
         var url = base_url + '/calendar/_create_google_event';
         $(".create-gevent-validation-error").html(msg);
         setTimeout(function () {
@@ -1223,7 +1265,7 @@ a.top-1 {
                {
 
 
-               	  if( o.is_success ){
+                  if( o.is_success ){
                     var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
                     $(".create-gevent-validation-error").html(msg);
 
@@ -1234,17 +1276,17 @@ a.top-1 {
                     var calendarEl = document.getElementById('calendar');
                     var timeZoneSelectorEl = document.getElementById('time-zone-selector');
                     render_calender(calendarEl, timeZoneSelectorEl);
-               	  }else{
-               	  	var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
+                  }else{
+                    var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
                     $(".create-gevent-validation-error").html(msg);
-               	  }
+                  }
                }
             });
         }, 1000);
-	});
+  });
 
-	$("#btn-create-google-calendar").click(function(){
-		var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
+  $("#btn-create-google-calendar").click(function(){
+    var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
         var url = base_url + '/calendar/_create_google_calendar';
         $(".create-gcalendar-validation-error").html(msg);
         setTimeout(function () {
@@ -1255,20 +1297,20 @@ a.top-1 {
                dataType: 'json',
                success: function(o)
                {
-               	  if( o.is_success ){
-               	  	var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
-               	  	$(".create-gcalendar-validation-error").html(msg);
+                  if( o.is_success ){
+                    var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
+                    $(".create-gcalendar-validation-error").html(msg);
 
-               	  	location.reload();
+                    location.reload();
 
-               	  }else{
-               	  	var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
-               	  	$(".create-gcalendar-validation-error").html(msg);
-               	  }
+                  }else{
+                    var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
+                    $(".create-gcalendar-validation-error").html(msg);
+                  }
                }
             });
         }, 1000);
-	});
+  });
 
     $(".btn-right-nav-hide-show").click(function(){
         if( $(this).hasClass("show-right") ){
