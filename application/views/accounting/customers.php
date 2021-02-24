@@ -3,11 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
     <div class="wrapper accounting-sales" role="wrapper" >
         <!-- page wrapper start -->
-           <div wrapper__section>
+		<div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
         <div class="container-fluid" style="background-color:white;">
 					<div style="padding-top:1%;">
 						<h3 style="font-family: Sarabun, sans-serif">Customers</h3>
 					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+                        This is Customers gold band 
+                    </div>
 			<div class="page-title-box mx-4">
 				<!-- <div class="row pb-2">
 					<div class="col-md-12 banking-tab-container">

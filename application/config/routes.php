@@ -280,9 +280,16 @@ $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_r
 
 $route['accounting/lists'] = 'accounting/lists';
 $route['accounting/attachments'] = 'accounting/attachments';
-$route['accounting/upload-files']['post'] = 'accounting/upload_files';
-$route['accounting/load-attachments']['post'] = 'accounting/load_attachment_files';
+$route['accounting/attachments/upload']['post'] = 'accounting/upload_files';
+$route['accounting/attachments/load-attachments']['post'] = 'accounting/load_attachment_files';
+$route['accounting/attachments/download'] = "accounting/download_attachment";
+$route['accounting/attachments/update']['post'] = "accounting/edit_attachment";
+$route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting/delete_attachment/$1";
 $route['accounting/load-chart-of-accounts']['post'] = 'accounting/load_chart_of_accounts';
+
+$route['accounting/payment-methods'] = 'accounting/payment_methods';
+$route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting/load_payment_methods';
+$route['accounting/payment-methods/add']['post'] = 'accounting/add_payment_method';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';

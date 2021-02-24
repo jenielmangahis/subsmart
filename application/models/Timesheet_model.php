@@ -11,7 +11,7 @@ class Timesheet_model extends MY_Model {
     private $tbl_ts_settings = 'timesheet_schedule';
 
     public function getNotifyCount(){
-        
+
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('user_notification',array('user_id'=>$user_id,'status'=>1))->num_rows();
         return $qry;
@@ -280,7 +280,7 @@ class Timesheet_model extends MY_Model {
 
         $whitelist = array(
             '127.0.0.1', // IPv4 address
-            '::1' // IPv6 address 
+            '::1' // IPv6 address
         );
         if (in_array($ipaddress, $whitelist)) {
             return "";
@@ -288,13 +288,14 @@ class Timesheet_model extends MY_Model {
         {
             return $ipaddress;
         }
-        
+
     }
     public function employeeCoordinates(){
         $ipaddress = $this->gtMyIpGlobal();
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
         return $get_location->lat.",".$get_location->lon; //to get coordinates
     }
+    
     private function employeeAddress(){
         $ipaddress = $this->gtMyIpGlobal();
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));

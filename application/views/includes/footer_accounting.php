@@ -206,6 +206,12 @@ $(document).ready(function () {
 		$('#add_new_payment_method').modal('toggle');
     	}
 	}
+	document.getElementById("expname").onchange = function() {
+    if (this.value == '00') {
+        // alert('yeah');
+		$('#addexpname').modal('toggle');
+    	}
+	}
 });
 
 

@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+define("FIREBASE_API_KEY", "AAAA0yE6SAE:APA91bFQOOZnqWcMbdBY9ZfJfc0TWanlN1l6f95QfjpfMhVLWNfHVd63nlfxP69I_snCkaqaY9yuezx65GLyevUmkflRADYdYAZKPY8e8SS5Q_dyPDqQaxxlstamhhUG1BiFr4bC4ABo");
 
 
 
@@ -75,7 +76,7 @@ class Timesheet extends MY_Controller {
 
 	// added for tracking Timesheet of employees: Schedule View
 	public function employee()
-	{	
+	{
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
         $user_id = logged('id');
@@ -106,7 +107,7 @@ class Timesheet extends MY_Controller {
 
 
 	public function schedule()
-	{	
+	{
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
         $user_id = logged('id');
@@ -127,12 +128,12 @@ class Timesheet extends MY_Controller {
             "Sunday" => date("M d",strtotime('sunday this week'))
         );
         $this->page_data['date_this_week'] = $date_this_week;
-		
+
 		$this->load->view('users/timesheet-schedule', $this->page_data);
 	}
 
 	public function list()
-	{	
+	{
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
         $user_id = logged('id');
@@ -155,12 +156,12 @@ class Timesheet extends MY_Controller {
             "Sunday" => date("M d,y",strtotime('sunday this week'))
         );
         $this->page_data['date_this_week'] = $date_this_week;
-		
+
 		$this->load->view('users/timesheet-list', $this->page_data);
 	}
 
 	public function settings()
-	{	
+	{
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
         $user_id = logged('id');
@@ -193,13 +194,13 @@ class Timesheet extends MY_Controller {
             "Sunday" => date("M d",strtotime('sunday this week'))
         );
         $this->page_data['date_this_week'] = $date_this_week;
-		
+
 		$this->load->view('users/timesheet-settings', $this->page_data);
 	}
 
 	// added for tracking Time Log of employees
 	public function timelog()
-	{	
+	{
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
 		//ifPermissions('users_list');
@@ -208,7 +209,7 @@ class Timesheet extends MY_Controller {
         $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
 
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		
+
 		$this->page_data['users'] = $this->users_model->getUsers();
 
 
@@ -226,18 +227,18 @@ class Timesheet extends MY_Controller {
 
 
 	public function tracklocation()
-	{	
+	{
 //		ifPermissions('users_list');
 
 //		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		
+
 //		$this->page_data['users'] = $this->users_model->getUsers();
-			
-		
+
+
 		$this->load->view('users/tracklocation', $this->page_data);
 
 	}
-	
+
 	public function index()
 
 	{
@@ -245,7 +246,7 @@ class Timesheet extends MY_Controller {
 		$this->load->model('users_model');
 		//ifPermissions('users_list');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		
+
 		$this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
         $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
@@ -1100,7 +1101,7 @@ class Timesheet extends MY_Controller {
         $this->page_data['notification'] = $this->timesheet_model->getTSNotification();
         $this->load->view('users/timesheet_notification_list', $this->page_data);
     }
-	public function attendance(){ 
+	public function attendance(){
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
@@ -1639,7 +1640,7 @@ class Timesheet extends MY_Controller {
 //	    echo json_encode($data);
 //    }
     public function clockInEmployee(){
-        
+
         $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=".$_SERVER['HTTP_CLIENT_IP']);
         $getTimeZone=json_decode($ipInfo);
         date_default_timezone_set($getTimeZone->geoplugin_timezone);
@@ -1647,23 +1648,25 @@ class Timesheet extends MY_Controller {
 	    $user_id =$this->session->userdata('logged')['id'];
 
         $attendance = array(
-            'user_id' => $user_id, 
+            'user_id' => $user_id,
             'status' => 1,
-            'date_created' => date('Y-m-d H:i:s',$clock_in),
+            'date_created' => date('Y-m-d H:i:s', $clock_in),
         );
         $this->db->insert('timesheet_attendance',$attendance);
         $attn_id = $this->db->insert_id();
         $check_attendance = $this->db->get_where('timesheet_attendance',array('id'=>$attn_id));
-        if ($check_attendance->num_rows() == 1){
+        if ($check_attendance->num_rows() == 1) {
+			// insert to user_notification
 			$clock_in_notify = array(
-                'user_id' => $user_id, 
+                'user_id' => $user_id,
                 'title' => 'Clock In',
                 'content' => 'Clock In '.date('d M Y H:i:s',$clock_in),
                 'date_created' => date('Y-m-d H:i:s',$clock_in),
                 'status' => 1,
             );
             $this->db->insert('user_notification',$clock_in_notify);
-            
+
+			// insert to timesheet_logs
             $logs_insert = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
@@ -1676,12 +1679,12 @@ class Timesheet extends MY_Controller {
             );
             $this->db->insert('timesheet_logs',$logs_insert);
         }
- 
+
 
 
         if($this->db->affected_rows() != 1){
             echo json_encode(0);
-        }else{
+        } else {
 
             $this->db->select('FName,LName,profile_img');
             $this->db->from('users');
@@ -1702,7 +1705,7 @@ class Timesheet extends MY_Controller {
     }
 
     public function getClockInOutNotification(){
-        $qry = $this->db->query("SELECT * FROM (SELECT count(DISTINCT user_id) as ClockIn FROM 
+        $qry = $this->db->query("SELECT * FROM (SELECT count(DISTINCT user_id) as ClockIn FROM
         `user_notification` WHERE title != 'Clock Out' AND Date(date_created)=CURRENT_DATE() ) as t1 INNER
         JOIN (SELECT count(DISTINCT user_id) as ClockOut FROM `user_notification` WHERE title = 'Clock Out'
         and Date(date_created)=CURRENT_DATE()) as a")->result_array();
@@ -1717,8 +1720,8 @@ class Timesheet extends MY_Controller {
 
         $this->db->set('status', 0);
         $this->db->where_in('id', $id);
-        $this->db->update('user_notification'); 
-        return ($this->db->affected_rows() > 0) ? TRUE : FALSE; 
+        $this->db->update('user_notification');
+        return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 
     }
 
@@ -1727,10 +1730,10 @@ class Timesheet extends MY_Controller {
 
         $this->load->model('timesheet_model');
         $notification = $this->timesheet_model->getTSNotification();
-        
+
         $table='';
 
-        $i=0; 
+        $i=0;
         foreach ($notification as $cnt => $notify){
         if($notify->title == 'Clock In'){$color='green';}else{$color='red';}
 
@@ -1738,7 +1741,7 @@ class Timesheet extends MY_Controller {
                     <td class="tbl-id-number">'.++$i.'</td>
                     <td>
                         <center>
-                            <span class="tbl-employee-name">'.$notify->FName.'</span> 
+                            <span class="tbl-employee-name">'.$notify->FName.'</span>
                             <span class="tbl-employee-name">'.$notify->LName.'</span>
                         </center>
                     </td>
@@ -1750,14 +1753,14 @@ class Timesheet extends MY_Controller {
                     </td>
                     <td class="tbl-status">
                         <center>
-                            <a href="'.site_url().'timesheet/attendance" id="notificationDP" 
-                            data-id="'.$notify->id.'" title="" data-toggle="tooltip" 
+                            <a href="'.site_url().'timesheet/attendance" id="notificationDP"
+                            data-id="'.$notify->id.'" title="" data-toggle="tooltip"
                             data-original-title="Notification Not Viewed ">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
                             </a>
                         </center>
                     </td>
-                </tr>'; 
+                </tr>';
         }
 
         echo $table;
@@ -1766,23 +1769,23 @@ class Timesheet extends MY_Controller {
     public function getNotificationsAll(){
 
         $userid = $this->session->userdata('logged')['id'];
-        $notification = getTimesheetNotification(); 
+        $notification = getTimesheetNotification();
         $notifyCount = count($notification);
         $html='';
 
         if ($notification != null){
             foreach ($notification as $notify){
-                if ($notify->status == 1) { $bg = '#e6e3e3';} 
+                if ($notify->status == 1) { $bg = '#e6e3e3';}
                 else { $bg = '#f8f9fa';}
-                
+
             $userprofile=userProfileImage($userid);
-            $html.='<a href="'.site_url().'timesheet/attendance" id="notificationDP" 
-            data-id='.$notify->id.'" class="dropdown-item notify-item active" 
+            $html.='<a href="'.site_url().'timesheet/attendance" id="notificationDP"
+            data-id='.$notify->id.'" class="dropdown-item notify-item active"
             style="background-color:'.$bg.'">
             <img style="width:30px;border-radius: 11px;margin-bottom:-20px" class="profile-user-img img-responsive img-circle" src="'.$userprofile.'" alt="User profile picture" />
             <p class="notify-details">'.$notify->FName." ".$notify->LName.'<span class="text-muted">'.$notify->content.'</span></p>
-            </a>';       
-          
+            </a>';
+
             }
         }
 
@@ -1795,7 +1798,7 @@ class Timesheet extends MY_Controller {
 
     public function clockOutEmployee(){
 
-        
+
         $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=".$_SERVER['HTTP_CLIENT_IP']);
         $getTimeZone=json_decode($ipInfo);
         date_default_timezone_set($getTimeZone->geoplugin_timezone);
@@ -1811,16 +1814,16 @@ class Timesheet extends MY_Controller {
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance',array('id' => $attn_id,'user_id' => $user_id));
         if ($check_attn->num_rows() == 1){
-			
+
 			$clock_out_notify = array(
-                'user_id' => $user_id, 
+                'user_id' => $user_id,
                 'title' => 'Clock Out',
                 'content' => 'Clock Out '.date('d M Y H:i:s',$clock_out),
                 'date_created' => date('Y-m-d H:i:s',$clock_out),
                 'status' => 1,
             );
             $this->db->insert('user_notification',$clock_out_notify);
-            
+
             $out = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
@@ -2200,10 +2203,66 @@ class Timesheet extends MY_Controller {
 	    $data = array('name'=>'Tommy Nguyen','link'=>sha1(rand()));
         $this->load->view('users/invite_link_template',$data);
     }
+
+	// send push to android
+	function send_android_push($registrationIds, $body, $title) {
+
+		$notification = array('body' 	=> $body,
+							  'title'	=> $title,
+						 	  'sound' 	=> 'default');
+
+		$fields = array('registration_ids'	=> $registrationIds,
+						'data'				=> $notification);
+
+
+		$headers = array('Authorization: key=' . FIREBASE_API_KEY,
+					     'Content-Type: application/json');
+
+
+		//send curl
+		$ch = curl_init();
+		curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+		curl_setopt( $ch,CURLOPT_POST, true );
+		curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+		curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ));
+		$response = curl_exec($ch);
+		curl_close($ch);
+	}
+
+
+	function send_ios_push($registrationIds, $title, $body) {
+
+		$notification = array('title' 	=> $title ,
+							  'body' 	=> $body,
+							  'sound' 	=> 'default',
+							  'badge' 	=> '1');
+
+		// registration_ids for multipale tokens array
+		$payload = array('registration_ids' => $registrationIds,
+						 'notification' 	=> $notification,
+						 'priority'			=> 'high');
+		$json = json_encode($payload);
+
+
+		$headers = array('Authorization: key=' . FIREBASE_API_KEY,
+		 				 'Content-Type: application/json');
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://fcm.googleapis.com/fcm/send");
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true);
+		curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false);
+		$response = curl_exec($ch);
+		curl_close($ch);
+	}
 }
 
 
 
-/* End of file Users.php */
+/* End of file Timesheet.php */
 
-/* Location: ./application/controllers/Users.php */
+/* Location: ./application/controllers/Timesheet.php */
