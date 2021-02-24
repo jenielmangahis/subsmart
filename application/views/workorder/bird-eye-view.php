@@ -106,12 +106,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <option value="paused">Paused</option>
                                 <option value="completed">Completed</option>
                             </select>
-                            <select class="form-control" name="user">
+                            <!-- <select class="form-control" name="user">
                                 <option value="all">All Employees</option>
                                 <?php foreach($companyUsers as $u){ ?>
                                   <option value="<?= $u->id; ?>"><?= $u->FName . ' ' . $u->LName; ?></option>
                                 <?php } ?>
-                            </select>
+                            </select> -->
                         </div>
                         <div class="map-container"></div>
                     </div>
