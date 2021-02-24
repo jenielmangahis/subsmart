@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 
 require('ringcentral/autoload.php');
 
-use \RingCentral\SDK\Http\ApiException;
+use RingCentral\SDK\Http\ApiException;
 use RingCentral\SDK\Http\HttpException;
 use RingCentral\SDK\Http\ApiResponse;
 use RingCentral\SDK\SDK;
@@ -46,22 +46,31 @@ class RingCentral {
         }
     }
 
-    function send_sms($fromNumber = NULL) {
+    function send_sms($to = NULL, $message = NULL) {
         $platform = $this->getPlatform();
-        $RECIPIENT = '+639989803926';
-        try {
-            $resp = $platform->post('/account/~/extension/~/sms',
-                    array(
-                        'from' => array('phoneNumber' => '+639177722713'),
-                        'to' => array(
-                            array('phoneNumber' => $RECIPIENT)
-                        ),
-                        'text' => 'Hello World from PHP'
-            ));
-            print_r("SMS sent. Message status: " . $resp->json()->messageStatus . PHP_EOL);
-        } catch (ApiException $e) {
-            //print '  Message: ' . $e->apiResponse->response()->error() . PHP_EOL;
-            print_r($e->apiResponse->response()->error() . PHP_EOL);
+        
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                try{
+                    $apiResponse = $platform->post('/account/~/extension/~/sms', array(
+                    'from' => array('phoneNumber' => '+16505691634'),
+                    'to' => array(
+                        array('phoneNumber' => $to),
+                    ),
+                    'text' => urldecode($message),
+                    ));
+                    return true;
+                    
+                } catch (ApiException $ex) {
+                        print '  Message: ' . $e->apiResponse->response()->error() . PHP_EOL;
+                   //return false;
+                }
+            } else {
+                echo 'something went wrong';
+            }
+        }else{
+            echo 'session expired';
         }
     }
 

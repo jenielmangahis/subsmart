@@ -8,6 +8,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     left: 48%;
     top: -35px;
 }
+.icons-list-navbar span {
+  font-size: 14px !important;
+}
 img.datagrid-image {
     width: 50px;
     height: 50px;

@@ -6,6 +6,7 @@ function Step1() {
   const $docPreview = $(".fillAndSign__docPreview");
   const $docModal = $("#documentModal");
   const $progress = $(".fillAndSign__uploadProgress");
+  const $submitButton = $("#formSubmit");
 
   let documentUrl = null;
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
@@ -50,6 +51,9 @@ function Step1() {
     };
 
     await documentPage.render(canvasContext);
+
+    $submitButton.attr("disabled", false);
+    $submitButton.addClass("btn-success");
   }
 
   async function showDocument() {
@@ -77,6 +81,9 @@ function Step1() {
 
   async function onSubmit(event) {
     event.preventDefault();
+
+    $submitButton.attr("disabled", true);
+    $submitButton.find(".spinner-border").removeClass("d-none");
 
     const formData = new FormData();
     formData.append("document", $fileInput.get(0).files[0]);

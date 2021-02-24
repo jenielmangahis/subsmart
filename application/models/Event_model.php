@@ -137,4 +137,29 @@ class Event_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getAllEventsWithAddress()
+    {
+
+        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->from($this->table);
+
+        $this->db->where('events.event_address !=', '');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllCompanyEventsWithAddress($company_id)
+    {
+
+        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->from($this->table);
+
+        $this->db->where('events.event_address !=', '');
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

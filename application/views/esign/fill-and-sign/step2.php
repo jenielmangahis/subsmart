@@ -83,40 +83,62 @@
             <div class="modal-body">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item active">
-                        <a class="nav-link" id="type-tab" data-toggle="tab" href="#type" role="tab" aria-controls="type" aria-selected="true">
-                            <i class="fa fa-keyboard-o mr-2"></i>Type
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" id="draw-tab" data-toggle="tab" href="#draw" role="tab" aria-controls="draw" aria-selected="false">
                             <i class="fa fa-pencil mr-2"></i>Draw
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="type-tab" data-toggle="tab" href="#type" role="tab" aria-controls="type" aria-selected="true">
+                            <i class="fa fa-keyboard-o mr-2"></i>Type
+                        </a>
+                    </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" data-signature-type="type" id="type" role="tabpanel" aria-labelledby="type-tab">
-                        <input class="form-control fillAndSign__signatureInput" spellcheck="false" autocomplete="off" autofocus tabindex="0" aria-label="Type your signature here" maxlength="255" placeholder="Type your signature here">
-                    </div>
-                    <div class="tab-pane" data-signature-type="draw" id="draw" role="tabpanel" aria-labelledby="draw-tab">
+                    <div class="tab-pane active" data-signature-type="draw" id="draw" role="tabpanel" aria-labelledby="draw-tab">
                         <div class="fillAndSign__signaturePad">
                             <canvas width="700" height="200"></canvas>
                             <a href="#">Clear</a>
                         </div>
                     </div>
+                    <div class="tab-pane" data-signature-type="type" id="type" role="tabpanel" aria-labelledby="type-tab">
+
+                        <div class="dropdown mt-2 mb-2" id="fontSelect">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="fontDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Font
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="fontDropdown">
+                                <a class="dropdown-item" href="#" data-font="font-1">Font 1</a>
+                                <a class="dropdown-item" href="#" data-font="font-2">Font 2</a>
+                                <a class="dropdown-item" href="#" data-font="font-3">Font 3</a>
+                                <a class="dropdown-item" href="#" data-font="font-4">Font 4</a>
+                                <a class="dropdown-item" href="#" data-font="font-5">Font 5</a>
+                            </div>
+                        </div>
+
+                        <input class="form-control fillAndSign__signatureInput" spellcheck="false" autocomplete="off" autofocus tabindex="0" aria-label="Type your signature here" maxlength="255" placeholder="Type your signature here">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="signatureApplyButton">Apply Signature</button>
+                <button type="button" class="btn btn-primary d-flex align-items-center" id="signatureApplyButton">
+                    <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Apply Signature
+                </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="signatureModalCloseButton">Close</button>
             </div>
         </div>
-
     </div>
 </div>
 
 <div class="fillAndSign__shareLink">
     <div class="fillAndSign__shareLinkContent"></div>
     <button class="btn btn-info">Copy link</button>
+</div>
+
+<div class="fillAndSign__preview">
+
 </div>
 
 <?php echo put_footer_assets(); ?>

@@ -31,6 +31,7 @@ class Accounting extends MY_Controller {
         $this->load->model('estimate_model');
         $this->load->model('account_model');
         $this->load->model('accounting_attachments_model');
+        $this->load->model('accounting_payment_methods_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -248,6 +249,122 @@ class Accounting extends MY_Controller {
         $result = [
             'draw' => $post['draw'],
             'recordsTotal' => count($attachments),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function download_attachment() {
+        $filename = $this->input->get('filename');
+        $file = "./uploads/accounting/attachments/$filename";
+
+        if(file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            readfile($file);
+        }
+    }
+
+    public function edit_attachment() {
+        $post = $this->input->post();
+
+        $data = [
+            'uploaded_name' => $post['file_name'],
+            'notes' => $post['notes']
+        ];
+
+        $update = $this->accounting_attachments_model->updateAttachment($post['id'], $data);
+
+        echo json_encode([
+            'data' => $update,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Success!' : 'Error!'
+        ]);
+    }
+
+    public function delete_attachment($id) {
+        $result = [];
+
+        $attachment = $this->accounting_attachments_model->getById($id);
+        if(file_exists("./uploads/accounting/attachments/".$attachment->stored_name)) {
+            unlink("./uploads/accounting/attachments/".$attachment->stored_name);
+        }
+        $delete = $this->accounting_attachments_model->delete($id);
+        $result['success'] = $delete;
+        $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
+
+        echo json_encode($result);
+        exit;
+    }
+
+    public function payment_methods()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/payment_methods', $this->page_data);
+    }
+
+    public function add_payment_method()
+    {
+        $data = [
+            'company_id' => getLoggedCompanyID(),
+            'name' => $this->input->post('name'),
+            'credit_card' => $this->input->post('credit_card'),
+            'status' => 1,
+            'created_at' => date('Y-m-d h:i:s'),
+            'updated_at' => date('Y-m-d h:i:s')
+        ];
+
+        $paymentMethod= $this->accounting_payment_methods_model->create($data);
+
+        $return = [
+            'data' => $paymentMethod,
+            'success' => $paymentMethod ? true : false,
+            'message' => $paymentMethod ? 'Success!' : 'Error!'
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function load_payment_methods()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $order = $post['order'][0]['dir'];
+
+        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods($order);
+
+        $data = [];
+        $search = $post['columns'][0]['search']['value'];
+
+        if(count($paymentMethods) > 0) {
+            foreach($paymentMethods as $method) {
+                if($search !== "") {
+                    if(stripos($method['name'], $search) !== false) {
+                        $data[] = [
+                            'id' => $method['id'],
+                            'name' => $method['name'],
+                            'credit_card' => $method['credit_card']
+                        ];
+                    }
+                } else {
+                    $data[] = [
+                        'id' => $method['id'],
+                        'name' => $method['name'],
+                        'credit_card' => $method['credit_card']
+                    ];
+                }
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($paymentMethods),
             'recordsFiltered' => count($data),
             'data' => $data
         ];

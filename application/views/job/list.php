@@ -216,8 +216,8 @@ add_css(array(
                                             <th scope="col"><strong>Employee</strong></th>
                                             <th scope="col"><strong>Status</strong></th>
                                             <th scope="col"><strong>Amount</strong></th>
-                                            <th scope="col"><strong>Job Tags</strong></th>
                                             <th scope="col"><strong>Job Types</strong></th>
+                                            <th scope="col"><strong>Job Tags</strong></th>
                                             <th scope="col"><strong>Priority</strong></th>
                                             <th scope="col"><strong>Manage</strong></th>
                                         </tr>
@@ -231,9 +231,10 @@ add_css(array(
                                                 <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
                                                 <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
                                                 <td class="pl-3"><?= $job->status; ?></td>
-                                                <td class="pl-3">$0.00</td>
-                                                <td class="pl-3"><?php echo $job->name; ?></td>
+                                                <td class="pl-3">$<?= $job->amount; ?></td>
                                                 <td class="pl-3"><?php echo $job->job_type; ?></td>
+                                                <td class="pl-3"><?php echo $job->name; ?></td>
+
                                                 <td class="pl-3"><?=$job->priority; ?></td>
                                                 <td class="pl-3">
                                                     <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-primary btn-sm">

@@ -102,7 +102,7 @@ $user_id = getLoggedUserID();
                     </div>
                     <div class="dropdown-menu dropdown-menu-right">
                         <!--<a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>-->
-                        <a class="dropdown-item" href="#"><i class="fa fa-calendar-check-o"></i> Events</a>
+                        <a class="dropdown-item" href="<?= base_url('events') ?>"><i class="fa fa-calendar-check-o"></i> Events</a>
                         <a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Jobs</a>
                         <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i> Estimates</a>
                         <?php ////if (hasPermissions('WORKORDER_MASTER')): ?>

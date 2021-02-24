@@ -69,6 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <th scope="col"><strong>Brand</strong></th>
                                                 <th scope="col"><strong>QTY-OH</strong></th>
                                                 <th scope="col"><strong>Qty-Ordered</strong></th>
+                                                <th scope="col"><strong>Re-order Point</strong></th>
                                                 <th scope="col"><strong>Locations</strong></th>
                                                 <th scope="col" class="text-center"><strong>Actions</strong></th>
                                             </tr>
@@ -85,7 +86,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td><?php echo $item[7]; ?></td>
                                                     <td><?php echo $item[2]; ?></td>
                                                     <td><?php echo getItemQtyOH($item[3]); ?></td>
-                                                    <td>&nbsp;</td>
+                                                    <td><?php echo $item[8]; ?></td>
+                                                    <td><?php echo $item[9]; ?></td>
                                                     <td>
                                                         <!-- <a href='#' data-id="<?php echo $item[3]; ?>" data-toggle="modal" id="seeLocation" data-target="#modalAddLocation">See Location</a>  -->
                                                         <div class="dropdown dropdown-btn text-center">
@@ -117,6 +119,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <tr style="background-color:#D3D3D3;">
                                                     <td>&nbsp;</td>
                                                     <td colspan="6"><?php echo $item[0]; ?></td>
+                                                    <td style="display: none"></td>
                                                     <td style="display: none"></td>
                                                     <td style="display: none"></td>
                                                     <td style="display: none"></td>
@@ -343,6 +346,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <label class="col-md-2 pt-2 pl-0 text-left">Model Number</label>
                                             <input type="text" id="modelNumItem" name="model_number" class="form-control col-md-5" required>
                                         </div>
+
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Serial Number</label>
+                                            <input type="text" id="modelNumItem" name="serial_number" class="form-control col-md-5" >
+                                        </div>
+
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Points</label>
+                                            <input type="text" id="modelNumItem" name="points" class="form-control col-md-5" >
+                                        </div>
+
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Quantity Order</label>
+                                            <input type="text" id="modelNumItem" name="qty_order" class="form-control col-md-5" >
+                                        </div>
+
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Reorder Point</label>
+                                            <input type="text" id="modelNumItem" name="re_order_points" class="form-control col-md-5" >
+                                        </div>
+
                                         <div class="row col-md-12 pt-4">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Item Group</label>
                                             <select class="form-control col-md-5" name="item_category" id="exampleFormControlSelect1">

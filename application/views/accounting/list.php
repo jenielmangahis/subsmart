@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <p>Displays your accounts. Balance sheet accounts track your assets and liabilities, and income and expense accounts categorize your transactions. From here, you can add or edit accounts.</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <h5><a href="#" class="text-info">Payment Methods</a></h5>
+                                    <h5><a href="/accounting/payment-methods" class="text-info">Payment Methods</a></h5>
                                     <p>Displays Cash, Check, and any other ways you categorize payments you receive from customers. That way, you can print deposit slips when you deposit the payments you have received.</p>
                                 </div>
                             </div>

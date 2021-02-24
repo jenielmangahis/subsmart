@@ -986,8 +986,9 @@ add_css(array(
                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
                             <div class="col-sm-12">
-                                <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
                                 <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
+                                <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
+
                             </div>
                         </div>
                     </div>

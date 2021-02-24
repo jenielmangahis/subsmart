@@ -12,7 +12,7 @@ class Ring_central extends MY_Controller {
 
     public function index() {
         $platform = $this->ringcentral->getPlatform();
-        $RINGCENTRAL_REDIRECT_URL = "http://localhost/projects/nsmartrac/ring_central/engine?oauth2callback";
+        $RINGCENTRAL_REDIRECT_URL = base_url()."ring_central/engine?oauth2callback";
 
         if (!$this->session->isRCLogin):
             $this->session->set_userdata('isRCLogin', false);
@@ -22,9 +22,51 @@ class Ring_central extends MY_Controller {
         $this->page_data['platform'] = $platform;
         $this->load->view('ringcentral/default', $this->page_data);
     }
+    
+    private function response($status)
+    {
+        if($status=="Queued"):
+            echo 'SMS Sent';
+        else:
+            echo 'Something went wrong';
+        endif;
+    }
+    
+    public function fetchSMS($to)
+    {
+        $platform = $this->ringcentral->getPlatform();
+         
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                
+                $queryParams = array(
+                    
+                );
+                
+                $r = $platform->get("/account/~/extension/~/message-store", $queryParams);
+                
+                $jsonResponse = json_decode($r->text());
+                //print_r($jsonResponse->records);
+                
+                foreach ($jsonResponse->records as $r):
+                    echo $r->subject.'<br />';
+                endforeach;
+                    
+            } else {
+                echo 'something went wrong';
+            }
+        }else{
+            echo json_encode(array('msg'=>'Your are not Logged In to Ring Central or your Session has expired', 'status'=>false));
+        }
+        
+    }
 
     public function sendSMS($to = NULL, $message = NULL) {
         $platform = $this->ringcentral->getPlatform();
+        $to = post('to');
+        $message = post('message');
+        
         if ($this->session->rcData) {
             $platform->auth()->setData((array) $this->session->rcData);
             if ($platform->loggedIn()) {
@@ -33,14 +75,29 @@ class Ring_central extends MY_Controller {
                     'to' => array(
                         array('phoneNumber' => $to),
                     ),
-                    'text' => urldecode($message),
-                ));
-                print_r("SMS sent. Message status: " . $apiResponse->json()->messageStatus . PHP_EOL);
+                    'text' => $message,
+                    ));
+                   print_r("Message status: " . $apiResponse->json()->messageStatus . PHP_EOL);
+//                try{
+//                    $apiResponse = $platform->post('/account/~/extension/~/sms', array(
+//                    'from' => array('phoneNumber' => '+16505691634'),
+//                    'to' => array(
+//                        array('phoneNumber' => $to),
+//                    ),
+//                    'text' => $message,
+//                    ));
+//                    $this->response($apiResponse->json()->messageStatus);
+//                } catch (\RingCentral\SDK\Http\ApiException $ex) {
+//                    echo $ex->apiResponse->response()->error();
+//                }
             } else {
                 echo 'something went wrong';
             }
+        }else{
+            echo json_encode(array('msg'=>'Your are not Logged In to Ring Central or your Session has expired', 'status'=>false));
         }
     }
+    
 
     public function logout() {
         $platform = $this->ringcentral->getPlatform();
@@ -48,15 +105,13 @@ class Ring_central extends MY_Controller {
         $this->session->unset_userdata('rcData');
         $this->session->set_userdata('isRCLogin', false);
 
-        header("Location: http://localhost/projects/nsmartrac/ring_central");
+        header("Location: ". base_url()."/ring_central");
         //exit();
     }
 
     public function engine() {
         $platform = $this->ringcentral->getPlatform();
-        $RINGCENTRAL_REDIRECT_URL = "http://localhost/projects/nsmartrac/ring_central/engine?oauth2callback";
-
-
+        $RINGCENTRAL_REDIRECT_URL = base_url()."ring_central/engine?oauth2callback";
 
         if (isset($_REQUEST['oauth2callback'])) {
             if (!isset($_GET['code'])) {
