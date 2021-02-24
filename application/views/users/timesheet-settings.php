@@ -716,15 +716,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </ol> -->
                 <!--</div>
                 </div>-->
-                
+
             </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="padding: 0">
                         <div class="card-body">
-                            <div class="col-sm-6">
-                                <h3 class="page-title">Settings </h3>
+                            <div class="col-sm-12">
+                                <h3 class="page-title" style="margin-bottom: 10px !important;">Settings</h3>
+                                <div class="pl-3 pr-3 mt-0 row">
+                                  <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</span>
+                                  </div>
+                                </div>
                             </div>
                                 <div class="row" style="padding: 10px 33px 20px 33px;">
                                     <div class="col-md-12 banking-tab-container">
@@ -736,7 +741,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="settings")?:'-active';?>">Settings</a>
                                     </div>
                                 </div>
-                            
+
                             <center><h3 class="mt-0 header-title">Settings Overview</h3></center>
                             <!-- Date Selector -->
                             <div class="row">

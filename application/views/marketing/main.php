@@ -125,7 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="pl-3 pr-3 mt-1 row">
                       <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                          <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                          <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Get everything you need to manage and grow your business. The tools you need to scale and the marketing programs and talent you need to grow. Get The Talent & Technology To Do It For You and it’s all in one place.</span>
                       </div>
                     </div>
                     <div class="marketing-card-deck card-deck pl-50 pb-100">

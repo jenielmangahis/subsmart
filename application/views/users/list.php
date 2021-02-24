@@ -12,6 +12,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         horiz-align: center;
         border-radius: 50%;
     }
+    .header-title {
+        font-size: 22px;
+        position: relative;
+        top: 5px;
+    }
     #employeeTable tr > th{
         text-align: center;
     }
@@ -108,40 +113,95 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         padding:10px;
         margin-bottom: 27px;
     }
-
+    .page-title, .box-title {
+      font-family: Sarabun, sans-serif !important;
+      font-size: 1.75rem !important;
+      font-weight: 600 !important;
+      padding-top: 5px;
+    }
+    .pr-b10 {
+      position: relative;
+      bottom: 10px;
+    }
+    .left {
+      float: left;
+    }
+    .p-40 {
+      padding-left: 15px !important;
+      padding-top: 40px !important;
+    }
+    a.btn-primary.btn-md {
+        height: 38px;
+        display: inline-block;
+        border: 0px;
+        padding-top: 7px;
+        position: relative;
+        top: 0px;
+    }
+    .card.p-20 {
+        padding-top: 18px !important;
+    }
+    .col.col-4.pd-17.left.alert.alert-warning.mt-0.mb-2 {
+        position: relative;
+        left: 13px;
+    }
+    .fr-right {
+      float: right;
+      justify-content: flex-end;
+    }
+    .p-20 {
+      padding-top: 25px !important;
+      padding-bottom: 25px !important;
+      padding-right: 20px !important;
+      padding-left: 20px !important;
+    }
+    .pd-17 {
+      position: relative;
+      left: 17px;
+    }
+    @media only screen and (max-width: 1300px) {
+      .card-deck-upgrades div a {
+          min-height: 440px;
+      }
+    }
+    @media only screen and (max-width: 1250px) {
+      .card-deck-upgrades div a {
+          min-height: 480px;
+      }
+      .card-deck-upgrades div {
+        padding: 10px !important;
+      }
+    }
+    @media only screen and (max-width: 600px) {
+      .p-40 {
+        padding-top: 0px !important;
+      }
+      .pr-b10 {
+        position: relative;
+        bottom: 0px;
+      }
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Employees</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage Employees</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php ////if (hasPermissions('users_add')): ?>
-                                <!--                                <a href="--><?php //echo url('users/add') ?><!--" class="btn btn-primary"-->
-                                <!--                                   aria-expanded="false">-->
-                                <!--                                    <i class="mdi mdi-settings mr-2"></i> New Employee-->
-                                <!--                                </a>-->
-                                <?php //endif ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="container-fluid p-40">
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-sm-12">
+                                <h3 class="page-title" style="margin-top: 5px;margin-bottom:10px;">Employees</h3>
+                            </div>
+                        </div>
+                        <div class="pl-3 pr-3 mt-0 row">
+                          <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Employees.</span>
+                          </div>
+                        </div>
+                        <div class="card-body" style="padding:0px !important;">
                             <div class="row">
                                 <div class="col-md-6">
                                     <h4 class="mt-0 header-title mb-5">Employee list</h4>
@@ -179,7 +239,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </a>
                                                     <div><?php echo $row->FName.' '.$row->LName ?></div>
                                                     <div>
-                                                        <?php 
+                                                        <?php
                                                             if( $row->employee_number ){
                                                                 $employee_number = $row->employee_number;
                                                             }else{
@@ -375,7 +435,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <br />
-                        <div class="row">                            
+                        <div class="row">
                             <div class="col-md-6">
                                 <label for="">First Name</label>
                                 <input type="text" name="firstname" class="form-control" placeholder="Enter First Name">
@@ -483,7 +543,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <input type="hidden" name="img_id" id="photoIdAdd">
                                 <input type="hidden" name="profile_photo" id="photoNameAdd">
-                                
+
                                 <div>
                                     <label for="">Payscale</label>
                                     <select name="empPayscale" id="empPayscale" class="form-control select2-payscale">
@@ -542,7 +602,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <label for="role_5"><span>Field Sales</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
-                                        View only no input 
+                                        View only no input
                                     </div>
                                 </div>
                                 <div>
@@ -551,7 +611,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <label for="role_6"><span>Field Tech</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
-                                        App access only, no Web access 
+                                        App access only, no Web access
                                     </div>
                                 </div>
                             </div>
@@ -579,8 +639,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-            	<p>You public URL for adding employees</p>   
-            	<div class="copy-info"></div>         	
+            	<p>You public URL for adding employees</p>
+            	<div class="copy-info"></div>
             	<input type="hidden" id="e-public-url" value="<?php echo base_url('/add_company_employee/' . $eid); ?>">
             	<label class="label label-default label-public-url" style="padding: 10px;font-size:15px;width: 88%; color: #ffffff;"><?php echo base_url('/add_company_employee/' . $eid); ?></label><a class="btn-copy-public-url" href="javascript:void(0);" style="padding: 10px;"><i class="fa fa-copy"></i></a>
             </div>
@@ -911,11 +971,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
 
-        $(document).on('click','#updatePassword',function () { 
+        $(document).on('click','#updatePassword',function () {
         	let values = {};
             $.each($('#changePasswordForm').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
-            });           
+            });
             if(values['new_password'] && values['re_password']){
                 $.ajax({
                     url: base_url + 'users/_update_employee_password',
@@ -995,7 +1055,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $("#changePasswordEmployeeName").val(employee_name);
             $("#modalChangePassword").modal('show');
         });
-        
+
         /*Old Edit*/
         /*$(document).on('click','#editEmployee',function () {
             var user_id = $(this).attr('data-id');
