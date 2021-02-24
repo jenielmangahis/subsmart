@@ -43,6 +43,7 @@ class FillAndSign extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
             'https://html2canvas.hertzen.com/dist/html2canvas.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
 
             'assets/js/esign/libs/pdf.js',
             'assets/js/esign/libs/pdf.worker.js',
@@ -111,6 +112,7 @@ class FillAndSign extends MY_Controller
         $value = $payload['value'];
         $uniqueKey = $payload['unique_key'];
         $textType = $payload['text_type'];
+        $fontSize = $payload['size'];
         $userId = logged('id');
 
         $this->db->where('user_id', $userId);
@@ -127,6 +129,7 @@ class FillAndSign extends MY_Controller
                 'unique_key' => $uniqueKey,
                 'user_id' => $userId,
                 'textType' => $textType,
+                'size' => $fontSize,
             ]);
         } else {
             $this->db->where('id', $record->id);
@@ -137,6 +140,7 @@ class FillAndSign extends MY_Controller
                 'value' => $value,
                 'unique_key' => $uniqueKey,
                 'textType' => $textType,
+                'size' => $fontSize,
             ]);
         }
 
@@ -184,6 +188,7 @@ class FillAndSign extends MY_Controller
         $documentId = $payload['document_id'];
         $value = $payload['value'];
         $uniqueKey = $payload['unique_key'];
+        $size = json_encode($payload['size']);
         $userId = logged('id');
 
         $this->db->where('user_id', $userId);
@@ -199,6 +204,7 @@ class FillAndSign extends MY_Controller
                 'value' => $value,
                 'unique_key' => $uniqueKey,
                 'user_id' => $userId,
+                'size' => $size,
             ]);
         } else {
             $this->db->where('id', $record->id);
@@ -208,6 +214,7 @@ class FillAndSign extends MY_Controller
                 'document_id' => $documentId,
                 'value' => $value,
                 'unique_key' => $uniqueKey,
+                'size' => $size,
             ]);
         }
 

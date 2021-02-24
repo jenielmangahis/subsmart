@@ -136,7 +136,7 @@ add_css(array(
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/job'); ?>
+    <?php include viewPath('includes/sidebars/events'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
@@ -147,13 +147,13 @@ add_css(array(
                         <div class="card-body hid-desk pt-0" style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
                             <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0px;">
                                 <div class="col-auto pl-0">
-                                    <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Jobs</h5>
+                                    <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Events</h5>
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <a class="btn btn-primary btn-md" href="<?= base_url('job/new_job1') ?>">
-                                                <span class="fa fa-plus"></span> New Job
+                                            <a class="btn btn-primary btn-md" href="<?= base_url('events/new_event') ?>">
+                                                <span class="fa fa-plus"></span> New Event
                                             </a>
                                         </div>
                                     </div>
@@ -164,7 +164,13 @@ add_css(array(
                         </div>
                         <div class="pl-3 pr-3 mt-0 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">For any business, getting customers is only half the battle; creating a job workflow will help track each scheduled ticket from draft to receiving payment.</span>
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                      This is where you will create, view, and edit your events and all event-related records,
+                                    go to the Events work area where you can create a new event and—working from this single event
+                                    record—add most of the other types of records and information that you need to plan, publish,
+                                    promote, and analyze it.  Like many of our sales items the event record provides a customizable
+                                    business process workflow that helps guide you through each step of the process.
+                                   </span>
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">
@@ -250,8 +256,8 @@ add_css(array(
                                 <?php } else { ?>
                                     <hr>
                                     <div class="page-empty-container" style="text-align:center; margin-top:50px;">
-                                        <h5 class="page-empty-header">You haven't yet added your Jobs</h5>
-                                        <p class="text-ter margin-bottom">Manage your job.</p>
+                                        <h5 class="page-empty-header">You haven't yet added Events yet</h5>
+                                        <p class="text-ter margin-bottom">Manage your Events.</p>
                                     </div>
                                 <?php } ?>
                             </div>

@@ -20,10 +20,11 @@ class Jobs_model extends MY_Model
     {
         $cid=logged('company_id');
         $this->db->from($this->table);
-        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name');
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,jobs_pay_details.amount');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
         $this->db->join('users', 'users.id = jobs.employee_id','left');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
+        $this->db->join('jobs_pay_details', 'jobs.id = jobs_pay_details.jobs_id','left');
         $this->db->where("jobs.company_id", $cid);
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();

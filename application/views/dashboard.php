@@ -67,7 +67,7 @@
     }
 </style>
 <div class="wrapper" style="padding: 80px 14px;">
-    <div class="bg-white" style="margin-top:20px; border-radius: 30px 30px 0 0;">
+    <div class="bg-white" style=" border-radius: 30px 30px 0 0;margin-top: 15px;">
         <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row col-12 align-items-center d-flex">
@@ -78,7 +78,7 @@
                         </ol>
                     </div>
                     <div class="col-lg-6 justify-content-center d-none d-lg-block">
-                        <div class="col-lg-12" style="background: #dcdddc; height:50px; height:130px; margin:0 auto; top:-25px; border-radius: 0 0 60px 60px; padding-top:25px;">
+                        <div class="col-lg-12" style="background: #ffffff; height:50px; height:130px; margin:0 auto; top:-27px; border-radius: 0 0 60px 60px; padding-top:25px;">
                             <div onclick="document.location = '<?php echo base_url('/customer/add_lead') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'new_customer_qs.png' ?>" style="margin: 0 auto;" />
                                 <p>Add Customer</p>

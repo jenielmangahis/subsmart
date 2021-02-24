@@ -30,4 +30,5 @@ application/cache/*
 .idea/*
 
 application/config/database.php
+uploads/fillandsign/
 uploads/jobs/attachment

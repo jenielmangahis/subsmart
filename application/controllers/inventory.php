@@ -60,12 +60,15 @@ class Inventory extends MY_Controller
 
             $items = $this->items_model->getByWhere($arg);
         }
+        //print_r($items);
         $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
 
         $comp = array(
             'company_id' => $comp_id
         );
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
+        //print_r($this->page_data['items']);
+
         $this->load->view('inventory/list', $this->page_data);
     }
   
@@ -412,7 +415,7 @@ class Inventory extends MY_Controller
                 array_push($result,$header);
 
                 foreach($c as $v) {
-                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model);
+                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model,$v->qty_order,$v->re_order_points);
                     array_push($result,$value);
                 }
             }

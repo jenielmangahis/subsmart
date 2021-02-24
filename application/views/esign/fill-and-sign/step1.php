@@ -36,7 +36,12 @@
         </div>
 
         <div class="fillAndSign__footer">
-            <button type="submit" class="btn">Next</button>
+            <button type="submit" class="btn" id="formSubmit" disabled>
+                <div class="spinner-border spinner-border-sm d-none" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                Next
+            </button>
         </div>
     </form>
 

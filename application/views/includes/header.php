@@ -199,7 +199,7 @@
             }
 
             .stepwizard-step p {
-                margin-top: 10px;
+                margin-top: 10px;    
             }
 
             .stepwizard-row {
@@ -207,7 +207,7 @@
             }
 
             .stepwizard {
-                display: table;
+                display: table;     
                 width: 100%;
                 position: relative;
             }
@@ -229,7 +229,7 @@
 
             }
 
-            .stepwizard-step {
+            .stepwizard-step {    
                 display: table-cell;
                 text-align: center;
                 position: relative;
@@ -259,27 +259,26 @@
         </style>
     </head>
 
-    <body>
+    <body style="background:white !important;">
         <!-- Navigation Bar-->
         <header id="topnav">
             <input type="hidden" id="siteurl" value="<?php echo url(); ?>"> <!-- for js programing -->
-<!--            <div class="topbar-main"style="background: #c4daeb;
-background: linear-gradient(to top, #c4daeb, #F0F8FF);
-background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253));
-background: linear-gradient(to right, #6FB1FC, #0052D4, #6FB1FC);
-border: none;
-border-bottom-color: currentcolor;
-border-bottom-style: none;
-border-bottom-width: medium;
-border-bottom-color: currentcolor;
-border-bottom-style: none;
-border-bottom-width: medium">-->
-            <div style="background:#dcdcdc;">
+            <!--            <div class="topbar-main"style="background: #c4daeb;
+            background: linear-gradient(to top, #c4daeb, #F0F8FF);
+            background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253));
+            background: linear-gradient(to right, #6FB1FC, #0052D4, #6FB1FC);
+            border: none;
+            border-bottom-color: currentcolor;
+            border-bottom-style: none;
+            border-bottom-width: medium;
+            border-bottom-color: currentcolor;
+            border-bottom-style: none;
+            border-bottom-width: medium">-->
+            <div style="background:white; box-shadow: 5px 0px 10px 4px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12); padding: 7px 0;">
                 <div class="container-fluid">
                     <div class="row">
                         <!-- Logo container-->
-                        <!-- style="position:absolute; top:50%; margin-top:-20px;" -->
-                        <div class="logo col-lg-3"><a href="<?php echo url('dashboard'); ?>">
+                        <div class="logo col-lg-3"><a style="position:absolute; top:50%; margin-top:-20px;" href="<?php echo url('dashboard'); ?>">
                                 <img width="200" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a>
                         </div><!-- End Logo container-->
                         <!-- MENU Start -->
@@ -294,18 +293,18 @@ border-bottom-width: medium">-->
                                     </a>
                                 </li>
                                 <li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img class="icon-logo-nav" width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a></li>
-<!--                                <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-                                    <div class="plus-icon-container">
-                                        <a href="javascript:void (0)">
-                                            <img class="plus-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/add-1.1s-47px.svg" alt="">
-                                            <img class="plus-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/add-1.1s-47px%20(2).svg" alt="">
-                                        </a>
-                                    </div>
-                                </li>-->
+                                <!--                                <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                                                                                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+                                                                    <div class="plus-icon-container">
+                                                                        <a href="javascript:void (0)">
+                                                                            <img class="plus-icon-static" src="<?php echo $url->assets; ?>/css/icons/images/add-1.1s-47px.svg" alt="">
+                                                                            <img class="plus-icon-hover" src="<?php echo $url->assets; ?>/css/icons/images/add-1.1s-47px%20(2).svg" alt="">
+                                                                        </a>
+                                                                    </div>
+                                                                </li>-->
                                 <li title="SMS" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                                     <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <a href="javascript:void (0)">
+                                        <a href="#" onclick="$('#createSMS').modal('show')" >
                                             <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
                                             <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
                                         </a>
@@ -339,7 +338,7 @@ border-bottom-width: medium">-->
                                     </div>
                                 </li>
                                 <li title="Settings" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                    <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates')  ?><!--">-->
+                                    <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates')       ?><!--">-->
                                     <div class="settings-icon-container">
                                         <a href="<?php echo base_url('settings/email_templates') ?>">
                                             <img class="settings-icon-static" src="<?php echo $url->assets; ?>/css/icons/settings.svg" alt="">
@@ -362,32 +361,34 @@ border-bottom-width: medium">-->
                                     <!--<div class="prev-icon-title">Schedule</div>-->
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                         <!-- item-->
-                                        <h6 class="dropdown-item-text"><?php if (count($newtasks) > 0) {
-                                    echo 'New Tasks (' . count($newtasks) . ')';
-                                } else {
-                                    echo 'No New Tasks';
-                                } ?></h6>
+                                        <h6 class="dropdown-item-text"><?php
+                                            if (count($newtasks) > 0) {
+                                                echo 'New Tasks (' . count($newtasks) . ')';
+                                            } else {
+                                                echo 'No New Tasks';
+                                            }
+                                            ?></h6>
                                         <div class="slimscroll notification-item-list">
-                                                        <?php foreach ($newtasks as $value) { ?>
-                                        <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
-                                        <?php
-                                            $date_created = date_create($value->date_created);
-                                            echo date_format($date_created, "F d, Y h:i:s");
-                                        ?></span></p>
-                                        </a>
-                                <?php } ?>
-                                        </div><!-- All-->
+                                            <?php foreach ($newtasks as $value) { ?>
+                                                <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
+                                                            <?php
+                                                            $date_created = date_create($value->date_created);
+                                                            echo date_format($date_created, "F d, Y h:i:s");
+                                                            ?></span></p>
+                                                </a>
+                                            <?php } ?>
+                                        </div><!-- All--> 
                                         <a href="<?php echo base_url('taskhub') ?>"
-                                                             class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
+                                           class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
                                     </div>
                                 </li>
 
                                 <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                                     <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="javascript:void (0)" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i>-->
-                                    <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden';  ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null;  ?><!--</span>-->
+                                    <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden';       ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null;       ?><!--</span>-->
                                     <!--                                </a>-->
                                     <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null; ?></span>
+                                        <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      ?></span>
                                         <div class="bell" id="bell-1">
                                             <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
                                             <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
@@ -396,10 +397,10 @@ border-bottom-width: medium">-->
                                     </div>
                                     <div class="prev-icon-title">Notification</div>
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-                                    <!-- item-->
-									<h6 class="dropdown-item-text">Notifications (<span id="nfcount"></span>)</h6>
-                                    <div class="slimscroll notification-item-list" id="notificationList">
-                                        <div id="autoNotifications"></div>
+                                        <!-- item-->
+                                        <h6 class="dropdown-item-text">Notifications (<span id="nfcount"></span>)</h6>
+                                        <div class="slimscroll notification-item-list" id="notificationList">
+                                            <div id="autoNotifications"></div>
                                             <?php
                                             $reorders = getReorderItemsCount();
                                             $reorders_count = 0;
@@ -442,8 +443,8 @@ border-bottom-width: medium">-->
                                         </div>
                                         <!-- All-->
                                         <a href="<?php echo site_url(); ?>timesheet/notification"
-                                        class="dropdown-item text-center text-primary">View all
-                                        <i class="fi-arrow-right"></i></a>
+                                           class="dropdown-item text-center text-primary">View all 
+                                            <i class="fi-arrow-right"></i></a>
                                     </div>
                                 </li>
                                 <?php
@@ -581,7 +582,7 @@ border-bottom-width: medium">-->
                                 }
                                 ?>
                                 <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
-                                    <!--                            <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null;  ?><!--">-->
+                                    <!--                            <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null;       ?><!--">-->
                                     <input type="hidden" id="lunchStartTime" value="<?php echo $lunch_in; ?>" data-value="<?php echo date('h:i A', $lunch_in) ?>">
                                     <input type="hidden" id="latestLunchTime" value="<?php echo $latest_lunch_in; ?>" data-value="<?php echo date('h:i A', $latest_lunch_in) ?>">
                                     <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break') ? 1 : 0; ?>">
@@ -631,8 +632,8 @@ border-bottom-width: medium">-->
                                         <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
                                             <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
                                             <?php
-                                             $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
-                                              /*if( !@getimagesize($image) ){
+                                            $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
+                                            /* if( !@getimagesize($image) ){
                                               $image = base_url('uploads/users/default.png');
                                               } */
                                             //$image = base_url('uploads/users/default.png');
@@ -644,11 +645,11 @@ border-bottom-width: medium">-->
                                             <a class="dropdown-item" href="<?php echo url('profile') ?>"><i class="mdi mdi-account-circle m-r-5"></i>Public Profile</a>
                                             <a class="dropdown-item" href="<?php echo url() ?>"><i class="mdi mdi-account-circle m-r-5"></i>nSmart Home</a>
                                             <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5"></i>Join our community</a>
-                                            <?php //if (hasPermissions('activity_log_list')):  ?>
+                                            <?php //if (hasPermissions('activity_log_list')):   ?>
                                             <a href="<?php echo url('activity_logs') ?>">
                                                 <i class="mdi mdi-account-circle m-r-5"></i><span>Activity Logs</span>
                                             </a>
-                                            <?php //endif  ?>
+                                            <?php //endif   ?>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item text-danger" href="<?php echo url('/logout') ?>"><i class="mdi mdi-power text-danger"></i> Logout</a>
                                         </div>
@@ -664,29 +665,92 @@ border-bottom-width: medium">-->
 
         </header><!-- End Navigation Bar-->
 
-<script type="text/javascript">
-    function notificationClockInOut() {
-        $.ajax({
-            type: "GET",
-            url: "/Timesheet/getNotificationsAll",
-            async: true,
-            cache: false,
-            timeout: 10000,
-            success: function (data) {
-                var obj = JSON.parse(data);
-                $('#notifyBadge').html(obj.notifyCount);
-                $('#nfcount').html(obj.notifyCount);
-                $('#autoNotifications').html(obj.autoNotifications);
-                setTimeout(notificationClockInOut,2000);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                addmsg("error", textStatus + " (" + errorThrown + ")");
-                setTimeout(notificationClockInOut,15000);
+        <div class="modal fade" id="createSMS" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addWidgets" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="exampleModalLabel">Send SMS</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center p-2">
+
+                        <small class="form-text text-muted">Enter or Search for recipient's mobile number.</small>
+                        <div class="form-group input-group">
+                            <input type="text" style="border-radius:15px 0 0 15px ;" class="form-control" id="inputMobile" placeholder="Enter mobile"> 
+                            <div class="input-group-append">
+                                <button class="btn btn-success" type="button"><i class="fa fa-search-plus fa-1x"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea onkeyup="countChar(this)" placeholder="Enter your SMS Text" class="form-control" id="inputText" rows="4"></textarea>
+                            <small class="form-text text-muted text-right"><span id='charNum'>300</span> characters</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-small btn-success float-right" onclick='sendSMS()'>Send SMS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function countChar(val) {
+                var len = val.value.length;
+                if (len >= 300) {
+                    val.value = val.value.substring(0, 300);
+                } else {
+                    $('#charNum').text(300 - len);
+                }
             }
-        });
-    };
-    $(document).ready(function () {
-        var TimeStamp = null;
-        notificationClockInOut();
-    });
-</script>
+            ;
+
+            sendSMS = function () {
+                var num = $('#inputMobile').val();
+                var msg = $('#inputText').val();
+
+                $.ajax({
+                    url: '<?php echo base_url(); ?>ring_central/sendSMS',
+                    method: 'POST',
+                    data: {to:num, message:msg},
+                    dataType:'json',
+                    statusCode: {
+                        500: function(xhr) {
+                          var obj = JSON.parse(xhr.responseText);
+                          alert(obj.msg);
+                          $('#createSMS').modal("hide");
+                        }
+                      },
+                    success: function (response) {
+                        alert(response);
+                        $('#createSMS').modal("hide");
+                    }
+                });
+            };
+
+            function notificationClockInOut() {
+                $.ajax({
+                    type: "GET",
+                    url: "/Timesheet/getNotificationsAll",
+                    async: true,
+                    cache: false,
+                    timeout: 10000,
+                    success: function (data) {
+                        var obj = JSON.parse(data);
+                        $('#notifyBadge').html(obj.notifyCount);
+                        $('#nfcount').html(obj.notifyCount);
+                        $('#autoNotifications').html(obj.autoNotifications);
+                        setTimeout(notificationClockInOut, 2000);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        addmsg("error", textStatus + " (" + errorThrown + ")");
+                        setTimeout(notificationClockInOut, 15000);
+                    }
+                });
+            }
+            ;
+            $(document).ready(function () {
+                var TimeStamp = null;
+                notificationClockInOut();
+            });
+        </script>

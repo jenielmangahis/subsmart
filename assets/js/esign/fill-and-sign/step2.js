@@ -20,6 +20,11 @@ function Step2(documentId) {
   const $downloadButton = $("#downloadDocument");
   const $container = $(".fillAndSign");
 
+  const $fontSelect = $("#fontSelect");
+  const $signatureTextInput = $(".fillAndSign__signatureInput");
+
+  const $previewContainer = $(".fillAndSign__preview");
+
   let fields = [];
   let signatures = [];
   let documentUrl = null;
@@ -55,8 +60,22 @@ function Step2(documentId) {
     return $element;
   }
 
+  async function getPagePreview({ page, ...rest }) {
+    const html = `
+      <div class="fillAndSign__previewItem">
+        <canvas></canvas>
+        <span>Page ${page}</span>
+      </div>
+    `;
+    const $element = createElementFromHTML(html);
+    const canvas = $element.find("canvas").get(0);
+
+    await renderPage({ canvas, page, ...rest });
+    return $element;
+  }
+
   function createInputField({ textType, ...rest }) {
-    const { value, unique_key } = rest;
+    const { value, unique_key, size } = rest;
 
     const styles = {
       initial: {},
@@ -88,12 +107,7 @@ function Step2(documentId) {
         $root.removeClass("ui-draggable-dragging");
         $parent.removeClass("fillAndSign__field--focused");
 
-        const position = {
-          top: parseInt($root.css("top"), 10),
-          left: parseInt($root.css("left"), 10),
-        };
-
-        await storeField(position, $parent);
+        await storeField({ $element: $parent });
       },
       onFocus: (event) => {
         const $parent = $(event.target).closest(".fillAndSign__field");
@@ -113,13 +127,15 @@ function Step2(documentId) {
       onReduceFontSize: (event) => setFontSize(event, false),
     };
 
-    const setFontSize = (event, increase = true) => {
+    const setFontSize = async (event, increase = true) => {
       event.stopPropagation();
       const $parent = $(event.target).closest(".fillAndSign__field");
       const $input = $parent.find(".fillAndSign__fieldInput");
 
-      const fontSize = parseInt($input.css("font-size"), 10);
-      $input.css({ fontSize: increase ? fontSize + 1 : fontSize - 1 });
+      const currFontSize = parseInt($input.css("font-size"), 10);
+      const fontSize = increase ? currFontSize + 1 : currFontSize - 1;
+      $input.css({ fontSize });
+      await storeField({ $element: $parent });
     };
 
     const html = `
@@ -155,28 +171,56 @@ function Step2(documentId) {
     $reduce.on("click", events.onReduceFontSize);
     $close.on("click", events.onDelete);
 
-    $element.css(styles[textType]);
+    const fontSize = parseInt(size, 10) || 16;
+    $input.css({ ...styles[textType], fontSize });
     return $element;
   }
 
-  function createSignature({ value, unique_key, onDelete }) {
+  function createSignature({ value, unique_key, size = null, ...rest }) {
+    const events = {
+      onDelete: async (event) => {
+        const $parent = $(event.target).closest(".ui-draggable");
+        const $signature = $parent.find(".fillAndSign__signatureDraw");
+        const uniqueKey = $signature.data("key");
+
+        const endpoint = `${prefixURL}/FillAndSign/deleteSignature/${uniqueKey}`;
+        await fetch(endpoint, { method: "DELETE" });
+
+        $parent.remove();
+      },
+    };
+
+    let created_at = moment();
+    if (rest.created_at) {
+      created_at = moment(rest.created_at);
+    }
+
     // prettier-ignore
     const html = `
-    <div class="fillAndSign__signatureContainer">
-      <img class="fillAndSign__signatureDraw" data-key=${unique_key || Date.now()} src="${value}"/>
-      <div class="fillAndSign__signatureClose"><i class="fa fa-times"></i></div>
-    </div>
+      <div class="fillAndSign__signatureContainer">
+        <img class="fillAndSign__signatureDraw" data-key=${unique_key || Date.now()} src="${value}"/>
+        <span class="fillAndSign__signatureTime">${created_at.format('MMMM Do YYYY, h:mm:ss A')}</span>
+        <div class="fillAndSign__signatureOptions">
+          <div class="fillAndSign__signatureClose">
+            <i class="fa fa-times"></i>
+          </div>
+        </div>
+      </div>
     `;
 
     const $element = createElementFromHTML(html);
 
     $close = $element.find(".fillAndSign__signatureClose");
-    $close.on("click", onDelete);
+    $close.on("click", events.onDelete);
+
+    if (size && size.width > 0) {
+      $element.css({ width: size.width });
+    }
 
     return $element;
   }
 
-  async function storeField(position, $element) {
+  async function storeField({ position, $element }) {
     if (isStoring) {
       return;
     }
@@ -190,10 +234,19 @@ function Step2(documentId) {
 
     const $parent = $root.closest(".fillAndSign__canvasContainer");
     const $field = $root.find(".fillAndSign__field");
+    const $input = $root.find(".fillAndSign__fieldInput");
     const key = $field.data("key");
     const value = $field.text().trim();
     const documentPage = $parent.data("page");
     const textType = $root.data("text-type");
+    const fontSize = parseInt($input.css("font-size"), 10);
+
+    if (!position) {
+      position = {
+        top: parseInt($root.css("top"), 10),
+        left: parseInt($root.css("left"), 10),
+      };
+    }
 
     const payload = {
       coordinates: position,
@@ -202,6 +255,7 @@ function Step2(documentId) {
       unique_key: key,
       text_type: textType,
       value,
+      size: fontSize,
     };
 
     const endpoint = `${prefixURL}/FillAndSign/storeField`;
@@ -247,7 +301,9 @@ function Step2(documentId) {
       const currentFields = fields.filter(({ document_page }) => document_page == index); // prettier-ignore
       const currentSignatures = signatures.filter(({ document_page }) => document_page == index); // prettier-ignore
 
-      const $page = await getPage({ page: index, document });
+      const params = { page: index, document };
+      const $page = await getPage(params);
+      const $pagePreview = await getPagePreview(params);
 
       const $fields = currentFields.map((field) => {
         const { top, left } = JSON.parse(field.coordinates);
@@ -270,7 +326,7 @@ function Step2(documentId) {
           containment: ".ui-droppable",
           appendTo: ".ui-droppable",
           stop: (_, ui) => {
-            storeField(ui.position, $(ui.helper));
+            storeField({ position: ui.position, $element: $(ui.helper) });
           },
         });
 
@@ -278,14 +334,11 @@ function Step2(documentId) {
       });
 
       const $signatures = currentSignatures.map((signature) => {
-        const { coordinates, unique_key, value } = signature;
+        const { coordinates } = signature;
         const { top, left } = JSON.parse(coordinates);
+        const size = JSON.parse(signature.size);
 
-        $item = createSignature({
-          value,
-          unique_key,
-          onDelete: onDeleteSignature,
-        });
+        $item = createSignature({ ...signature, size });
 
         $item.css({
           position: "absolute",
@@ -293,11 +346,18 @@ function Step2(documentId) {
           left: `${left}px`,
         });
 
+        $item.resizable({
+          handles: "e",
+          stop: (_, ui) => {
+            storeSignature({ $element: $(ui.helper) });
+          },
+        });
+
         $item.draggable({
           containment: ".ui-droppable",
           appendTo: ".ui-droppable",
           stop: (_, ui) => {
-            storeSignature(ui.position, $(ui.helper));
+            storeSignature({ position: ui.position, $element: $(ui.helper) });
           },
         });
 
@@ -325,34 +385,52 @@ function Step2(documentId) {
           $(this).append($item);
           $item.find(".fillAndSign__fieldInput").focus();
 
-          storeField(ui.position, $item);
+          storeField({ position: ui.position, $element: $item });
           $item.draggable({
             containment: ".ui-droppable",
             appendTo: ".ui-droppable",
-            stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+            stop: (_, ui) =>
+              storeField({ position: ui.position, $element: $(ui.helper) }),
           });
         },
       });
 
       $documentContainer.append($page);
+      $previewContainer.append($pagePreview);
     }
   }
 
-  async function storeSignature(position, $element) {
+  async function storeSignature({ position, size, $element }) {
     if (isStoring) {
       return;
     }
 
     isStoring = true;
+    $root = $element;
 
-    if (!$element.hasClass("fillAndSign__signatureDraw")) {
-      $element = $element.find(".fillAndSign__signatureDraw");
+    if (!$element.hasClass("ui-draggable")) {
+      $root = $element.closest(".ui-draggable");
     }
 
     const $parent = $element.closest(".fillAndSign__canvasContainer");
-    const value = $element.attr("src");
+    const $image = $root.find(".fillAndSign__signatureDraw");
+    const value = $image.attr("src");
     const documentPage = $parent.data("page");
-    const uniqueKey = $element.data("key");
+    const uniqueKey = $image.data("key");
+
+    if (!position) {
+      position = {
+        top: parseInt($root.css("top"), 10),
+        left: parseInt($root.css("left"), 10),
+      };
+    }
+
+    if (!size) {
+      size = {
+        width: parseInt($image.css("width"), 10),
+        height: parseInt($image.css("height"), 10),
+      };
+    }
 
     const payload = {
       coordinates: position,
@@ -360,6 +438,7 @@ function Step2(documentId) {
       document_id: documentId,
       value,
       unique_key: uniqueKey,
+      size,
     };
 
     const endpoint = `${prefixURL}/FillAndSign/storeSignature`;
@@ -373,17 +452,6 @@ function Step2(documentId) {
     });
 
     isStoring = false;
-  }
-
-  async function onDeleteSignature(event) {
-    const $parent = $(event.target).closest(".ui-draggable");
-    const $signature = $parent.find(".fillAndSign__signatureDraw");
-    const uniqueKey = $signature.data("key");
-
-    const endpoint = `${prefixURL}/FillAndSign/deleteSignature/${uniqueKey}`;
-    await fetch(endpoint, { method: "DELETE" });
-
-    $parent.remove();
   }
 
   function attachEventHandlers() {
@@ -419,7 +487,10 @@ function Step2(documentId) {
       signaturePad.clear();
     });
 
-    $signatureApplyButton.on("click", async () => {
+    $signatureApplyButton.on("click", async function () {
+      $(this).attr("disabled", true);
+      $(this).find(".spinner-border").removeClass("d-none");
+
       const $activeTab = $(".tab-pane.active");
       const signatureType = $activeTab.data("signature-type");
 
@@ -428,16 +499,20 @@ function Step2(documentId) {
       const canvas = $signaturePadCanvas.get(0);
 
       if (signatureType === "type") {
-        const $input = $(".fillAndSign__signatureInput");
-        const signature = $input.val();
+        const signature = $signatureTextInput.val();
+        const fontSize = $signatureTextInput.css("font-size");
+        const fontFamily = $signatureTextInput.css("font-family");
+        const fontWeight = $signatureTextInput.css("font-weight");
 
         if (isEmptyOrSpaces(signature)) {
           return;
         }
 
+        signaturePad.clear();
         const clonedCanvas = cloneCanvas(canvas);
         const context = clonedCanvas.getContext("2d");
-        context.font = "bold 100px Southam";
+
+        context.font = `${fontWeight} ${fontSize} ${fontFamily}`;
         const textWidth = context.measureText(signature).width;
         context.fillText(signature, clonedCanvas.width / 2 - textWidth / 2, 100); // prettier-ignore
 
@@ -453,22 +528,29 @@ function Step2(documentId) {
         signatureDataUrl = clonedCanvas.toDataURL("image/png");
       }
 
-      $element = createSignature({
-        value: signatureDataUrl,
-        onDelete: onDeleteSignature,
-      });
+      $element = createSignature({ value: signatureDataUrl });
 
       $(".ui-droppable").append($element);
       const position = { top: 0, left: 0 };
       $element.css({ position: "absolute", ...position });
+
+      $element.resizable({
+        handles: "e",
+        stop: (_, ui) => storeSignature({ $element: $(ui.helper) }),
+      });
+
       $element.draggable({
         containment: ".ui-droppable",
         appendTo: ".ui-droppable",
-        stop: (_, ui) => storeSignature(ui.position, $(ui.helper)),
+        stop: (_, ui) =>
+          storeSignature({ position: ui.position, $element: $(ui.helper) }),
       });
 
-      await storeSignature(position, $element);
+      await storeSignature({ position, $element });
       $signatureModal.hide();
+
+      $(this).attr("disabled", false);
+      $(this).find(".spinner-border").addClass("d-none");
     });
 
     $copyLink.on("click", async (event) => {
@@ -528,6 +610,18 @@ function Step2(documentId) {
       const documentLink = `${window.location.origin}${prefixURL}/uploads/fillandsign/out/${link.hash}.pdf`;
       $container.addClass("fillAndSign--readonly");
       downloadURI(documentLink);
+    });
+
+    const $fontItems = $fontSelect.find(".dropdown-item");
+    const $fontItemText = $fontSelect.find(".dropdown-toggle");
+    $fontItems.on("click", (event) => {
+      event.stopPropagation();
+      const $target = $(event.target);
+      const font = $target.data("font");
+
+      $fontItemText.text($target.text().trim());
+      $signatureTextInput.attr("data-font", font);
+      $fontSelect.removeClass("open");
     });
   }
 
@@ -642,7 +736,7 @@ async function generatePDF(documentId) {
       const context = canvas.getContext("2d");
 
       currentFields.forEach((field) => {
-        const { coordinates, textType, value } = field;
+        const { coordinates, textType, value, size } = field;
 
         const fontStyle = {
           initial: "",
@@ -652,15 +746,15 @@ async function generatePDF(documentId) {
           strikethrough: "",
         };
 
-        // manual adjustments in px to position correctly :D
-        const adjustments = { top: 20, left: 8 };
+        const fontSize = parseFloat(size, 10) || 16;
+        const adjustments = { top: fontSize * 1.25, left: 8 };
 
         const coords = JSON.parse(coordinates);
         const x = coords.left + adjustments.left;
         const y = coords.top + adjustments.top;
         const color = "black";
 
-        context.font = `${fontStyle[textType]} 14px monospace`;
+        context.font = `${fontStyle[textType]} ${fontSize}px monospace`;
         context.fillStyle = color;
         context.fillText(value, x, y);
 
@@ -670,7 +764,7 @@ async function generatePDF(documentId) {
           color,
           context,
           text: value,
-          textSize: 14,
+          textSize: fontSize,
         };
 
         if (textType === "underline") {
@@ -681,10 +775,34 @@ async function generatePDF(documentId) {
       });
 
       currentSignatures.forEach((signature) => {
-        const { top, left } = JSON.parse(signature.coordinates);
-        const image = new Image();
-        image.src = signature.value;
-        context.drawImage(image, left, top);
+        const { coordinates, size: _size, value, created_at } = signature;
+        const { top, left } = JSON.parse(coordinates);
+        const size = JSON.parse(_size);
+
+        const image = new Image(size.width, size.height);
+        image.src = value;
+        context.drawImage(image, left, top, image.width, image.height);
+
+        if (created_at) {
+          const date = moment(created_at).format("MMMM Do YYYY, h:mm:ss A");
+          const fontSize = 10;
+          const marginTop = 12;
+
+          context.font = `${fontSize}px Verdana`;
+          const width = context.measureText(date).width;
+
+          const topDate = top + image.height + marginTop;
+          const topBg = topDate - 10; // adjust if needed
+          const leftBg = left - 2; // 2px padding left
+          const widthBg = width + 4; // 2px padding right
+          const heightBg = fontSize + 2; // base on fontsize
+
+          context.fillStyle = "#333";
+          context.fillRect(leftBg, topBg, widthBg, heightBg);
+
+          context.fillStyle = "#fff";
+          context.fillText(date, left, topDate);
+        }
       });
 
       // $(window.document.body).append($page);
@@ -884,7 +1002,7 @@ var textUnderline = function ({
   // to size of text. You can change as per your need
   var startY = y + parseInt(textSize) / 15;
   if (strikethrough) {
-    startY = y - 3; // adjust if needed :D
+    startY = y - (textSize / 2 - textSize * 0.2); // adjust if needed :D
   }
 
   //var to store the end position of text (X-axis)
