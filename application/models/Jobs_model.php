@@ -299,6 +299,21 @@ class Jobs_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAllJobsByUserId($user_id)
+    {
+        $cid=logged('company_id');
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,acs_profile.*');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
+        $this->db->where("jobs.employee_id", $user_id);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file JobType_model.php */

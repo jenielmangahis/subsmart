@@ -25,6 +25,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <label>Event Type Name</label> <span class="form-required">*</span>
                               <input type="text" name="event_type_name" value=""  class="form-control" required="" autocomplete="off" />
                           </div>
+                          <div class="form-group">
+                              <img src="" />
+                              <label>Icon / Marker</label> <span class="form-required">*</span>
+                              <input type="file" name="image" value=""  class="form-control" required="" autocomplete="off" />
+                          </div>
                           <div class="col-md-">
                             <a class="btn btn-default" href="<?php echo base_url('event_types/index'); ?>">Cancel</a>
                             <button type="submit" class="btn btn-primary">Submit</button>
