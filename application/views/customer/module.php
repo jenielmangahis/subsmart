@@ -168,12 +168,14 @@ add_css(array(
                                 <div class="indata sortable2" id="sorting">
                                     <?php
                                     $modules = explode(",", $module_sort->ams_values);
-                                    if($module_sort->ams_values!=""):
+                                    if($module_sort->ams_values!="" && count($modules) > 0):
                                         foreach ($modules as $m):
                                             $view = $this->wizardlib->getModuleById($m);
                                             //echo $view;
                                             $data['id'] = $view->ac_id;
-                                            $this->load->view($view->ac_view_link, $data);
+                                            if($view->ac_view_link != ""){
+                                                $this->load->view($view->ac_view_link, $data);
+                                            }
                                         endforeach;
                                     endif;
                                     $datas['module_sort'] = $module_sort;

@@ -8,6 +8,16 @@ class Ring_central extends MY_Controller {
         parent::__construct();
         $this->checkLogin();
         $this->load->library('Ringcentral');
+        
+         
+        add_header_js(array(
+            
+            'assets/ringcentral/config.js',
+            'assets/ringcentral/es6-promise.auto.js',
+            'assets/ringcentral/fetch.umd.js',
+            'assets/ringcentral/pubnub.4.20.1.js',
+            'assets/ringcentral/ringcentral.js'
+        ));
     }
 
     public function index() {
@@ -32,7 +42,7 @@ class Ring_central extends MY_Controller {
         endif;
     }
     
-    public function fetchSMS($to)
+    public function fetchSMS($direction=NULL,$to=NULL)
     {
         $platform = $this->ringcentral->getPlatform();
          
@@ -41,23 +51,44 @@ class Ring_central extends MY_Controller {
             if ($platform->loggedIn()) {
                 
                 $queryParams = array(
-                    
+                    'availability' => array('Alive'),
+                    'dateFrom'  =>'2021-02-22',
+                    'direction' => $direction==NULL?array('Inbound'):"",
+                    'messageType' => array('SMS'),
+                    'phoneNumber' => $to!=NULL?$to:""
                 );
                 
                 $r = $platform->get("/account/~/extension/~/message-store", $queryParams);
                 
                 $jsonResponse = json_decode($r->text());
                 //print_r($jsonResponse->records);
-                
+                $msgs = array();
                 foreach ($jsonResponse->records as $r):
-                    echo $r->subject.'<br />';
+                    //echo $r->subject.'<br />';
+                    $fromNum = $r->from->phoneNumber;
+                    if(!in_array($fromNum, $msgs)):
+                        ?>
+                        <a href="#" class="float-left col-lg-12 no-padding mt-3" style="border-bottom: 1px solid #ccc;">
+                            <img class="img-sm rounded-circle float-left" width="43" src="<?= base_url('uploads/users/default.png'); ?>" alt="profile">
+                            <div class="messages float-left ml-4 col-lg-8">
+                                <h6 class="no-margin" style="font-weight: bold; width: auto;"><?= $r->from->phoneNumber ?> &nbsp;&nbsp;<small class="muted" style="color:#ccc;"><?= date('Y-m-d G:i:s', strtotime($r->lastModifiedTime)) ?></small></h6>
+                                <p style="color:gray;" ><?= $r->subject ?></p>
+                            </div>
+                            <div class="ml-auto float-right mt-3">
+                                <i class="fa fa-reply" aria-hidden="true"></i>
+                            </div>
+                        </a>
+                        <?php
+                        array_push($msgs, $fromNum);
+                    endif;    
                 endforeach;
                     
             } else {
                 echo 'something went wrong';
             }
         }else{
-            echo json_encode(array('msg'=>'Your are not Logged In to Ring Central or your Session has expired', 'status'=>false));
+            //echo json_encode(array('msg'=>'Your are not Logged In to Ring Central or your Session has expired', 'status'=>false));
+            echo 'Your are not Logged In to Ring Central or your Session has expired';
         }
         
     }
@@ -77,7 +108,8 @@ class Ring_central extends MY_Controller {
                     ),
                     'text' => $message,
                     ));
-                   print_r("Message status: " . $apiResponse->json()->messageStatus . PHP_EOL);
+                   //print_r("Message status: " . $apiResponse->json()->messageStatus . PHP_EOL);
+                   echo json_encode(array('msg'=>'Successfully Sent', 'status'=>true));
 //                try{
 //                    $apiResponse = $platform->post('/account/~/extension/~/sms', array(
 //                    'from' => array('phoneNumber' => '+16505691634'),
@@ -123,44 +155,9 @@ class Ring_central extends MY_Controller {
             $platform->login($qs);
             $this->session->set_userdata(array('rcData' => $platform->auth()->data(), 'isRCLogin' => true));
             //$this->sendSMS($platform);
-            header("Location: http://localhost/projects/nsmartrac/ring_central");
+            //header("Location: http://localhost/projects/nsmartrac/ring_central");
         }
 
-//        if (!isset($_SESSION['sessionAccessToken'])) {
-//            //header("Location: http://localhost/projects/nsmartrac/dashboard/ringCentral");
-//            //exit();
-//            echo 'something is wrong in fetching session';
-//        } else {
-//            $platform->auth()->setData((array) $_SESSION['sessionAccessToken']);
-//            if (!$platform->loggedIn()) {
-//               // header("Location: http://localhost/projects/nsmartrac/dashboard/ringCentral");
-//               echo 'not successfully logged in';
-//                exit();
-//            }
-//            if (isset($_REQUEST['logout'])) {
-//                unset($_SESSION['sessionAccessToken']);
-//                $platform->logout();
-//                header("Location: http://localhost/projects/nsmartrac/ring_central");
-//                exit();
-//            } elseif (isset($_REQUEST['api'])) {
-//                if ($_REQUEST['api'] == "extension") {
-//                    $endpoint = "/restapi/v1.0/account/~/extension";
-//                    callGetRequest($endpoint, null);
-//                } elseif ($_REQUEST['api'] == "extension-call-log") {
-//                    $endpoint = "/restapi/v1.0/account/~/extension/~/call-log";
-//                    $params = array(
-//                        'fromDate' => '2018-12-01T00:00:00.000Z',
-//                    );
-//                    callGetRequest($endpoint, $params);
-//                } elseif ($_REQUEST['api'] == "account-call-log") {
-//                    $endpoint = "/restapi/v1.0/account/~/call-log";
-//                    $params = array(
-//                        'fromDate' => '2018-12-01T00:00:00.000Z',
-//                    );
-//                    callGetRequest($endpoint, $params);
-//                }
-//            }
-//        }
     }
 
     function callGetRequest($endpoint, $params) {

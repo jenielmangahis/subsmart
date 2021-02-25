@@ -65,7 +65,7 @@ time.icon-calendar-live em
 }
 time.icon-calendar-live span
 {
-    font-size: 2.8em;
+    font-size: 2.8em !important;
     letter-spacing: -0.05em;
     padding-top: 0.8em;
     color: #2f2f2f;

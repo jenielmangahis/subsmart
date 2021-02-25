@@ -32,6 +32,7 @@ class Accounting extends MY_Controller {
         $this->load->model('account_model');
         $this->load->model('accounting_attachments_model');
         $this->load->model('accounting_payment_methods_model');
+        $this->load->model('accounting_expense_name_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -337,7 +338,15 @@ class Accounting extends MY_Controller {
         $post = json_decode(file_get_contents('php://input'), true);
         $order = $post['order'][0]['dir'];
 
-        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods($order);
+        $status = [
+            1
+        ];
+
+        if($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods($order, $status);
 
         $data = [];
         $search = $post['columns'][0]['search']['value'];
@@ -349,14 +358,16 @@ class Accounting extends MY_Controller {
                         $data[] = [
                             'id' => $method['id'],
                             'name' => $method['name'],
-                            'credit_card' => $method['credit_card']
+                            'credit_card' => $method['credit_card'],
+                            'status' => $method['status']
                         ];
                     }
                 } else {
                     $data[] = [
                         'id' => $method['id'],
                         'name' => $method['name'],
-                        'credit_card' => $method['credit_card']
+                        'credit_card' => $method['credit_card'],
+                        'status' => $method['status']
                     ];
                 }
             }
@@ -370,6 +381,40 @@ class Accounting extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+
+    public function delete_payment_method($id) {
+        $result = [];
+
+        $delete = $this->accounting_payment_methods_model->delete($id);
+        $result['success'] = $delete;
+        $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
+
+        echo json_encode($result);
+        exit;
+    }
+
+    public function activate_payment_method($id) {
+        $result = [];
+
+        $activate = $this->accounting_payment_methods_model->activate($id);
+        $result['success'] = $activate;
+        $result['message'] = $activate ? 'Successfully Activated' : 'Failed to activate';
+
+        echo json_encode($result);
+        exit;
+    }
+
+    public function recurring_transactions()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/recurring_transactions', $this->page_data);
+    }
+
+    public function terms()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/terms', $this->page_data);
     }
 
     public function my_accountant()
@@ -4322,6 +4367,25 @@ class Accounting extends MY_Controller {
         $user_id = logged('id');
         // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         $this->load->view('tickets/list', $this->page_data);
+    }
+
+    public function addexpensename(){
+        $data = [
+            'category_name' => $this->input->post('name'),
+            'display_name' => $this->input->post('credit_card'),
+            'type' => $this->input->post('type'),
+            'sub_account' => $this->input->post('sub_account'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'status' => 1,
+        ];
+
+        $expense= $this->accounting_expense_name_model->getexpensename($data);
+
+        $return = [
+            'data' => $expense,
+            'success' => $expense ? true : false,
+            'message' => $expense ? 'Success!' : 'Error!'
+        ];
     }
 
 }

@@ -10,7 +10,7 @@ use RingCentral\SDK\Http\HttpException;
 use RingCentral\SDK\Http\ApiResponse;
 use RingCentral\SDK\SDK;
 
-class RingCentral {
+class Ringcentral {
 
     function __construct() {
         

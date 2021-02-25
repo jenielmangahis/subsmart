@@ -129,9 +129,9 @@
                                  <div id="" style="display:;">
                                     <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
                                        <option></option>
-                                       <option>Fixed Cost</option>
-                                       <option>Variable Cost</option>
-                                       <option>Periodic Cost</option>
+                                       <option value="1">Fixed Cost</option>
+                                       <option value="2">Variable Cost</option>
+                                       <option value="3">Periodic Cost</option>
                                     </select>
                                  </div>
                               </td>
@@ -160,9 +160,9 @@
                                  <div id="" style="display:;">
                                     <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
                                        <option></option>
-                                       <option>Fixed Cost</option>
-                                       <option>Variable Cost</option>
-                                       <option>Periodic Cost</option>
+                                       <option value="1">Fixed Cost</option>
+                                       <option value="2">Variable Cost</option>
+                                       <option value="3">Periodic Cost</option>
                                     </select>
                                  </div>
                               </td>
