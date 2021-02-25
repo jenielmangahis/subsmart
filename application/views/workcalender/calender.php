@@ -814,8 +814,8 @@ a.top-1 {
                 <button type="button" class="btn btn-danger btn-event-delete" id="delete_schedule">Delete</button>
                 <button type="button" class="btn btn-primary btn-event-edit" id="edit_schedule" style="display: none">Edit Schedule
                 </button>
-                <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
-                </button>
+                <!-- <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
+                </button> -->
             </div>
         </div>
 
@@ -1091,7 +1091,7 @@ a.top-1 {
                     apiUrl = base_url + 'event/modal_details/' + arg.event._def.extendedProps.eventId;
 
                     $("#edit_schedule").show();
-                    $("#edit_workorder").hide();
+                    //$("#edit_workorder").hide();
 
                     $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);
                 }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
@@ -1108,9 +1108,9 @@ a.top-1 {
                     apiUrl = base_url + 'workcalender/short_details/' + arg.event._def.extendedProps.wordOrderId;
 
                     $("#edit_schedule").hide();
-                    $("#edit_workorder").show();
+                    //$("#edit_workorder").show();
 
-                    $("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
+                    //$("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
                 }
 
                 if( isGet == 1 ){

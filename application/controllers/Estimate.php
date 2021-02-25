@@ -743,4 +743,8 @@ class Estimate extends MY_Controller
             redirect('estimate');
         }
     }
+
+    public function estimate_settings(){
+        $this->load->view('estimate/settings', $this->page_data);
+    }
 }

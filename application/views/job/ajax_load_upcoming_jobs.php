@@ -18,7 +18,7 @@
                 </span>
             </div>
             <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
-                <a href="<?php echo base_url('job/preview/' . $jb->id); ?>">
+                <a href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
                     <h6 style="font-weight:700; margin:0;"><?php echo strtoupper($jb->job_type . ' - ' . $jb->job_description); ?></h6>                                
                     <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($jb->job_name); ?></p>
                     <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($jb->job_location)); ?></p>

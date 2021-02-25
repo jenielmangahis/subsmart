@@ -28,6 +28,6 @@
         <!-- <li class="submenus <?php if($this->uri->uri_string() == 'items') { echo 'active'; }?>"><a href="<?php echo base_url('items') ?>" title="Services"><span class="fa fa-list"></span>Items</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'dashboard/blank') { echo 'active'; }?>"><a href="<?php echo base_url('dashboard/blank/?page=Item Vendors') ?>" title="Item Vendors"><span class="fa fa-cube"></span>Item Vendors</a></li> -->
         <li class="submenus <?php if($this->uri->uri_string() == 'plans') { echo 'active'; }?>"><a href="<?php echo base_url('plans') ?>" title="Plans"><span class="fa fa-cubes"></span>Plans</a></li>
-        <li class="submenus <?php if($this->uri->uri_string() == '') { echo 'active'; }?>"><a href="<?php echo base_url('dashboard/blank/?page=Settings') ?>" title="Settings"><span class="fa fa-gear"></span>Settings</a></li>
+        <li class="submenus <?php if($this->uri->uri_string() == 'estimate/settings') { echo 'active'; }?>"><a href="<?php echo base_url('estimate/settings') ?>" title="Settings"><span class="fa fa-gear"></span>Settings</a></li>
     </ul>
 </nav>

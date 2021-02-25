@@ -1538,6 +1538,7 @@ class Workcalender extends MY_Controller
         foreach( $upcoming_events as $u ){
             $events[$u->start_date][] = [
                 'event_id' => $u->id,
+                'type' => 'events',
                 'event_title' => get_customer_by_id($u->customer_id)->contact_name,
                 'event_description' => $u->event_description,
                 'start_date' => date('F j, Y', strtotime($u->start_date)),
@@ -1554,6 +1555,7 @@ class Workcalender extends MY_Controller
             $start_date = date("Y-m-d", strtotime($g['start']));
             $events[$start_date][] = [
                 'event_id' => $g['geventID'],
+                'type' => 'g-events',
                 'event_title' => $g['title'],
                 'event_description' => $g['description'],
                 'start_date' => date('F j, Y', strtotime($g['start'])),
