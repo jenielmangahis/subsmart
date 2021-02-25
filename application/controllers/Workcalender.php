@@ -1537,24 +1537,32 @@ class Workcalender extends MY_Controller
         $events = array();
         foreach( $upcoming_events as $u ){
             $events[$u->start_date][] = [
+                'event_id' => $u->id,
                 'event_title' => get_customer_by_id($u->customer_id)->contact_name,
                 'event_description' => $u->event_description,
                 'start_date' => date('F j, Y', strtotime($u->start_date)),
                 'end_date' => date('F j, Y', strtotime($u->end_date)),
                 'start_time' => $u->start_time,
-                'end_time' => $u->end_time
+                'end_time' => $u->end_time,
+                'what_of_even' => $u->what_of_even,
+                'event_color' => $u->event_color,
+                'address' => $u->event_address . ' ' . $u->event_state
             ];
         }
 
         foreach( $google_events as $g ){
             $start_date = date("Y-m-d", strtotime($g['start']));
             $events[$start_date][] = [
+                'event_id' => $g['geventID'],
                 'event_title' => $g['title'],
                 'event_description' => $g['description'],
                 'start_date' => date('F j, Y', strtotime($g['start'])),
                 'end_date' => date('F j, Y', strtotime($g['end'])),
                 'start_time' => date('H:i:s', strtotime($g['start'])),
-                'end_time' => date('H:i:s', strtotime($g['end']))
+                'end_time' => date('H:i:s', strtotime($g['end'])),
+                'event_color' => '#4cb052',
+                'what_of_even' => 'Google Calendar',
+                'address' => ''
             ];
         }
 
