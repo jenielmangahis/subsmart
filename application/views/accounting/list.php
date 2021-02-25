@@ -37,11 +37,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5><a href="#" class="text-info">Recurring Transactions</a></h5>
+                                    <h5><a href="/accounting/recurring-transactions" class="text-info">Recurring Transactions</a></h5>
                                     <p>Displays a list of transactions that have been saved for reuse. From here, you can schedule transactions to occur either automatically or with reminders. You can also save unscheduled transactions to use at any time.</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <h5><a href="#" class="text-info">Terms</a></h5>
+                                    <h5><a href="/accounting/terms" class="text-info">Terms</a></h5>
                                     <p>Displays the list of terms that determine the due dates for payments from customers, or payments to vendors. Terms can also specify discounts for early payment. From here, you can add or edit terms.</p>
                                 </div>
                             </div>

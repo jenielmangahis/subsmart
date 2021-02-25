@@ -125,10 +125,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <div class="alert alert-warning col-md-12 mt-4" role="alert">
-                                        <span style="color:black;">
-                                            A great process of managing interactions with existing as well as past and potential customers is to have one powerful platform that can provide an immediate response to your customer needs.
-                                            Try our quick action icons to create invoices, scheduling, communicating and more with all your customers.
-                                        </span>
+                            <span style="color:black;">
+                                A customer group is a way of aggregating customers that are similar in some way.  For example, you may
+                                use them to distinguish between retail and wholesale customers or between company employees and external customers etc. ...
+                                For example, a customer may have registered through the application as a wholesale customer.
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -61,7 +61,7 @@ position: absolute;
                                 </div>
                                 <div class="col-sm-12 p-0">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                        <span style="color:black;">Reconciliation summary message</span>
+                                        <span style="color:black;">If you are having mismatched figures and they don't tally with your bank then reconciliation will be the only option left. In order to print your reconciliation summary report, you first need to create one.</span>
                                     </div>
                                 </div>
                             </div>

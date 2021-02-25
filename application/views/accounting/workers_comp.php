@@ -6,6 +6,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
            <div wrapper__section>
         <div class="container-fluid">
 			<div class="page-title-box mx-4">
+					<div class="col-lg-6 px-0">
+						<h3>Workers' Comp</h3>
+					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+                        This is Workers' comp gold band 
+                    </div>
+					<br>
 				<div class="row pb-2">
 					<div class="col-md-12 banking-tab-container">
 						<a href="<?php echo url('/accounting/payroll-overview')?>" class="banking-tab ">Overview</a>

@@ -290,6 +290,12 @@ $route['accounting/load-chart-of-accounts']['post'] = 'accounting/load_chart_of_
 $route['accounting/payment-methods'] = 'accounting/payment_methods';
 $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting/load_payment_methods';
 $route['accounting/payment-methods/add']['post'] = 'accounting/add_payment_method';
+$route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting/delete_payment_method/$1";
+$route['accounting/payment-methods/activate/(:any)'] = "accounting/activate_payment_method/$1";
+
+$route['accounting/recurring-transactions'] = "accounting/recurring_transactions";
+
+$route['accounting/terms'] = "accounting/terms";
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
