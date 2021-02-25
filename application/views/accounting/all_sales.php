@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3>Sales Transactions</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Sales Transactions gold band 
+                    The Sales page gives you a great at-a-glance view of the status of sales transactions, open invoices, and paid invoices. 
                     </div>
 					<!-- <br> -->
 				<!-- <div class="row pb-2"> -->

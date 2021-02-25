@@ -13,20 +13,20 @@
     <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>esign/css/responsive.css" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="<?=$url->assets?>plugins/select2/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="<?= $url->assets ?>plugins/select2/dist/css/select2.min.css" />
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    
+
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/css/toastr.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/js/toastr.js"></script>
-    
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/css/toastr.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/1.3.1/js/toastr.js"></script>
-    
+
     <title>Add Category</title>
 </head>
 
@@ -146,54 +146,54 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="<?=base_url('esign/categoryList')?>">Back To Category List</a>
+                    <a href="<?= base_url('esign/categoryList') ?>">Back To Category List</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <?=form_open_multipart('', ['id' => 'createCategory']); ?>
-                        <div class="form-group">
-                            <label for="">Category Name</label>
-                            <input required type="text" class="form-control" name="categoryName" id="">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Category Library</label>
-                            <br>
-                            <select required class="selectLibrary" name="fk_esignLibraryMaster" id="">
-                                <?php foreach($libraries AS $library){?>
-                                    <option value="<?=$library['pk_esignLibraryMaster']?>"><?=$library['libraryName']?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="form-control btn btn-primary">Submit</button>
-                        </div>
-                    <?=form_close(); ?>
+                    <?= form_open_multipart('', ['id' => 'createCategory']); ?>
+                    <div class="form-group">
+                        <label for="">Category Name</label>
+                        <input required type="text" class="form-control" name="categoryName" id="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Category Library</label>
+                        <br>
+                        <select required class="selectLibrary" name="fk_esignLibraryMaster" id="">
+                            <?php foreach ($libraries as $library) { ?>
+                                <option value="<?= $library['pk_esignLibraryMaster'] ?>"><?= $library['libraryName'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="form-control btn btn-primary">Submit</button>
+                    </div>
+                    <?= form_close(); ?>
                 </div>
             </div>
-        </div>    
+        </div>
     </section>
-    <script src="<?=$url->assets?>plugins/select2/dist/js/select2.full.min.js"></script>
+    <script src="<?= $url->assets ?>plugins/select2/dist/js/select2.full.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.selectLibrary').select2()
 
-            $("#createCategory").submit(function(e){
+            $("#createCategory").submit(function(e) {
                 e.preventDefault();
                 $.ajax({
-                    url: '<?=base_url('esign/createCategory') ?>',
+                    url: '<?= base_url('esign/createCategory') ?>',
                     type: 'post',
-                    data : $("#createCategory").serialize(),
+                    data: $("#createCategory").serialize(),
                     success: function(res, status) {
                         try {
                             res = JSON.parse(res);
-                            if(status != "success" || !res.status){
+                            if (status != "success" || !res.status) {
                                 throw "errr";
                             }
                             $('#createCategory')[0].reset();
                             toastr.success("Data Has Been added Successfully");
                         } catch (error) {
-                            console.error('Execption Generated : ',error)
+                            console.error('Execption Generated : ', error)
                             toastr.warning('Something Went Wrong Please Try Again');
                         }
                     }
@@ -202,5 +202,5 @@
         });
     </script>
 </body>
+
 </html>
-        

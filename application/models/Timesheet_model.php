@@ -368,9 +368,9 @@ class Timesheet_model extends MY_Model {
         $total_user = $this->users_model->getTotalUsers();
         $this->db->or_where('DATE(date_created)',date('Y-m-d'));
         $query = $this->db->get_where('timesheet_attendance',array('status' => 0))->num_rows();
-        return $total_user - $query;
+        return $query;
     }
-
+ 
     public function getAttendanceByDay($day){
         $this->db->or_where('DATE(date_created)',$day);
         $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
@@ -688,6 +688,23 @@ class Timesheet_model extends MY_Model {
         }else{
             return false;
         }
+    }
+
+    public function getLeaveList($date,$status_request){
+        if($status_request==="pending"){
+            $status=0; 
+        }elseif($status_request==="approved"){
+            $status=1;
+        }else{
+            $status=2; //unapproved
+        }
+        $this->db->select('*');
+        $this->db->from('timesheet_leave');
+        $this->db->join('timesheet_leave_date', 'timesheet_leave_date.leave_id = timesheet_leave.id');
+        $this->db->where("timesheet_leave_date.date",$date);
+        $this->db->where("timesheet_leave.status",$status);
+        $query = $this->db->get();
+        return $query->result();
     }
 
 }

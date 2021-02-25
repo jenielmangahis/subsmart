@@ -18,32 +18,75 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    
-    $(document).ready(function(){
-        
-        fetchSMS();
-        
-    });
-    
-        fetchSMS = function () {
-            var num = $('#inputMobile').val();
-            var msg = $('#inputText').val();
+<div class="modal fade" id="viewSMSLogs" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center align-content-center pb-0">
+                <div class="float-left col-lg-12 no-padding text-center pointer">
+                    <img class="img-sm rounded-circle" style="width:43px; margin:0 auto;" width="43" src="<?= base_url('uploads/users/default.png'); ?>" alt="profile">
+                    <p id="smsLogName" class="mb-1"></p>
+                </div>
+            </div>
+            <div class="modal-body text-center p-2" id="personalMsgsBody">
+                Fetching...
+            </div>
+            <div class="modal-footer">
+                <div class="form-group input-group">
+                  <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                  <div class="input-group-append">
+                      <button class="btn btn-success" type="button">SEND</i></button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            $.ajax({
-                url: '<?php echo base_url(); ?>ring_central/fetchSMS',
-                method: 'GET',
-                data: {to:num, message:msg},
-                //dataType:'json',
-                statusCode: {
-                    500: function(xhr) {
-                      $('#msgs_body').html(xhr.responseText)
-                    }
-                  },
-                success: function (response) {
-                    alert(response);
-                    $('#createSMS').modal("hide");
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        fetchSMS();
+
+    });
+
+    fetchSMS = function () {
+        var num = $('#inputMobile').val();
+        var msg = $('#inputText').val();
+
+        $.ajax({
+            url: '<?php echo base_url(); ?>ring_central/fetchSMS',
+            method: 'GET',
+            data: {to: num, message: msg},
+            //dataType:'json',
+            statusCode: {
+                500: function (xhr) {
+                    $('#msgs_body').html(xhr.responseText)
                 }
-            });
-        };
+            },
+            success: function (response) {
+                $('#msgs_body').html(response);
+            }
+        });
+    };
+    
+    fetchPersonalSMS = function (no) {
+        $.ajax({
+            url: '<?php echo base_url(); ?>ring_central/fetchPersonalSMS/'+no,
+            method: 'GET',
+            data: {},
+            //dataType:'json',
+            beforeSend: function(){
+                $('#personalMsgsBody').html('Fetching SMS');
+            },
+            statusCode: {
+                500: function (xhr) {
+                    $('#personalMsgsBody').html(xhr.responseText);
+                }
+            },
+            success: function (response) {
+                $('#personalMsgsBody').html(response);
+            }
+        });
+    };
 </script>    

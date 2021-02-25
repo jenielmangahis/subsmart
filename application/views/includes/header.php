@@ -1,269 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
-        <title>Home</title>
-        <meta content="Admin Dashboard" name="description">
-        <link rel="shortcut icon" href="#">
-        <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
-        <!--Morris Chart CSS -->
-        <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
-        <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
-        <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
-        <!-- DataTables -->
-        <!--<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />-->
-        <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
-        <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
-        <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
-        <link rel="stylesheet" href="<?php echo $url->assets ?>css/jquery.signaturepad.css" >
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
-        <!--<script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
-        <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet"> -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
+    <title>Home</title>
+    <meta content="Admin Dashboard" name="description">
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
+    <!--Morris Chart CSS -->
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
+    <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
-        <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
-        <link href="<?php echo $url->assets ?>css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
+    <!-- DataTables -->
+    <!--<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />-->
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+    <link rel="stylesheet" href="<?php echo $url->assets ?>css/jquery.signaturepad.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
+    <!--<script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
+    <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet"> -->
 
-        <script src="<?php echo $url->assets ?>push_notification/push.min.js"></script>
-        <script src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+    <link href="<?php echo $url->assets ?>css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 
-
-        <!-- taxes page -->
-        <link href="<?php echo $url->assets ?>dashboard/css/responsive.css" rel="stylesheet" type="text/css">
-        <link href="<?php echo $url->assets ?>dashboard/css/slick.min.css" rel="stylesheet" type="text/css">
-        <link href="<?php echo $url->assets ?>dashboard/css/slick-theme.min.css" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-        <!-- taxes page -->
-        <!--    Clock CSS-->
-        <link href="<?php echo $url->assets ?>css/timesheet/clock.css" rel="stylesheet" type="text/css">
-        <link href="<?php echo $url->assets ?>css/notification/notification.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
-        <!--    ICONS CSS-->
-        <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css" rel="stylesheet" type="text/css">
+    <script src="<?php echo $url->assets ?>push_notification/push.min.js"></script>
+    <script src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js"></script>
 
 
-        <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
-        <!-- dynamic assets goes  -->
-        <?php echo put_header_assets(); ?>
-        <style type="text/css">
-            #signature{
-                width: 100%;
-                height: 200px;
-                border: 1px solid black;
-            }
-            #topnav {
-                font-family: "Ubuntu","Trebuchet MS",sans-serif !important;
-            }
+    <!-- taxes page -->
+    <link href="<?php echo $url->assets ?>dashboard/css/responsive.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>dashboard/css/slick.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>dashboard/css/slick-theme.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- taxes page -->
+    <!--    Clock CSS-->
+    <link href="<?php echo $url->assets ?>css/timesheet/clock.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>css/notification/notification.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
+    <!--    ICONS CSS-->
+    <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css" rel="stylesheet" type="text/css">
 
-            #division{
-                padding:20px !important;
-                margin-right:2%;
-                border: solid black 2px;
-            }
-            .progress-bar-success{
-                background-color: #5cb85c;
-            }
-            .progress-bar-info{
-                background-color: rgb(0, 166, 164);
-            }
-            .modaldivision{
-                padding:10px;
-                border: solid gray 2px;
-                border-radius: 15px;
-            }
-            .card-pricing.popular {
-                z-index: 1;
-                border: 3px solid #007bff;
-            }
-            .card-pricing .list-unstyled li {
-                padding: .5rem 0;
-                color: #6c757d;
-            }
-            .file-upload {
-                background-color: #ffffff;
-                width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-            }
 
-            .file-upload-btn {
-                /* width: 100%; */
-                margin: 0;
-                color: #00;
-                background: white;
-                border: none;
-                padding: 10px;
-                border-radius: 4px;
-                border-bottom: 4px solid #15824B;
-                transition: all .2s ease;
-                outline: none;
-                /* text-transform: uppercase; */
-                font-weight: 10;
-                text-align: left;
+    <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
+    <!-- dynamic assets goes  -->
+    <?php echo put_header_assets(); ?>
+    <style type="text/css">
+        #signature {
+            width: 100%;
+            height: 200px;
+            border: 1px solid black;
+        }
 
-            }
+        #topnav {
+            font-family: "Ubuntu", "Trebuchet MS", sans-serif !important;
+        }
 
-            .file-upload-btn:hover {
-                background: #1AA059;
-                color: #ffffff;
-                transition: all .2s ease;
-                cursor: pointer;
-            }
+        #division {
+            padding: 20px !important;
+            margin-right: 2%;
+            border: solid black 2px;
+        }
 
-            .file-upload-btn:active {
-                border: 0;
-                transition: all .2s ease;
-            }
+        .progress-bar-success {
+            background-color: #5cb85c;
+        }
 
-            .file-upload-content {
-                display: none;
-                text-align: center;
-            }
+        .progress-bar-info {
+            background-color: rgb(0, 166, 164);
+        }
 
-            .file-upload-input {
-                position: absolute;
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                outline: none;
-                opacity: 0;
-                cursor: pointer;
-            }
+        .modaldivision {
+            padding: 10px;
+            border: solid gray 2px;
+            border-radius: 15px;
+        }
 
-            .image-upload-wrap {
-                margin-top: 20px;
-                border: 4px dashed #EAF3EE;
-                position: relative;
-                padding:20px;
-            }
+        .card-pricing.popular {
+            z-index: 1;
+            border: 3px solid #007bff;
+        }
 
-            .image-dropping,
-            .image-upload-wrap:hover {
-                background-color: #EAF3EE;
-                border: 4px dashed #ffffff;
-            }
+        .card-pricing .list-unstyled li {
+            padding: .5rem 0;
+            color: #6c757d;
+        }
 
-            .image-title-wrap {
-                padding: 0 15px 15px 15px;
-                color: #222;
-            }
+        .file-upload {
+            background-color: #ffffff;
+            width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-            .drag-text {
-                text-align: center;
-            }
+        .file-upload-btn {
+            /* width: 100%; */
+            margin: 0;
+            color: #000;
+            background: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #15824B;
+            transition: all .2s ease;
+            outline: none;
+            /* text-transform: uppercase; */
+            font-weight: 10;
+            text-align: left;
 
-            .drag-text h3 {
-                font-weight: 100;
-                text-transform: uppercase;
-                color: #15824B;
-                padding: 60px 0;
-            }
+        }
 
-            .file-upload-image {
-                max-height: 200px;
-                max-width: 200px;
-                margin: auto;
-                padding: 20px;
-            }
+        .file-upload-btn:hover {
+            background: #1AA059;
+            color: #ffffff;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
 
-            .remove-image {
-                width: 200px;
-                margin: 0;
-                color: #fff;
-                background: #cd4535;
-                border: none;
-                padding: 10px;
-                border-radius: 4px;
-                border-bottom: 4px solid #b02818;
-                transition: all .2s ease;
-                outline: none;
-                text-transform: uppercase;
-                font-weight: 700;
-            }
+        .file-upload-btn:active {
+            border: 0;
+            transition: all .2s ease;
+        }
 
-            .remove-image:hover {
-                background: #c13b2a;
-                color: #ffffff;
-                transition: all .2s ease;
-                cursor: pointer;
-            }
+        .file-upload-content {
+            display: none;
+            text-align: center;
+        }
 
-            .remove-image:active {
-                border: 0;
-                transition: all .2s ease;
-            }
+        .file-upload-input {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            opacity: 0;
+            cursor: pointer;
+        }
 
-            .stepwizard-step p {
-                margin-top: 10px;    
-            }
+        .image-upload-wrap {
+            margin-top: 20px;
+            border: 4px dashed #EAF3EE;
+            position: relative;
+            padding: 20px;
+        }
 
-            .stepwizard-row {
-                display: table-row;
-            }
+        .image-dropping,
+        .image-upload-wrap:hover {
+            background-color: #EAF3EE;
+            border: 4px dashed #ffffff;
+        }
 
-            .stepwizard {
-                display: table;     
-                width: 100%;
-                position: relative;
-            }
+        .image-title-wrap {
+            padding: 0 15px 15px 15px;
+            color: #222;
+        }
 
-            .stepwizard-step button[disabled] {
-                opacity: 1 !important;
-                filter: alpha(opacity=100) !important;
-            }
+        .drag-text {
+            text-align: center;
+        }
 
-            .stepwizard-row:before {
-                top: 14px;
-                bottom: 0;
-                position: absolute;
-                content: " ";
-                width: 100%;
-                height: 1px;
-                background-color: #ccc;
-                z-order: 0;
+        .drag-text h3 {
+            font-weight: 100;
+            text-transform: uppercase;
+            color: #15824B;
+            padding: 60px 0;
+        }
 
-            }
+        .file-upload-image {
+            max-height: 200px;
+            max-width: 200px;
+            margin: auto;
+            padding: 20px;
+        }
 
-            .stepwizard-step {    
-                display: table-cell;
-                text-align: center;
-                position: relative;
-            }
+        .remove-image {
+            width: 200px;
+            margin: 0;
+            color: #fff;
+            background: #cd4535;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #b02818;
+            transition: all .2s ease;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
 
-            .btn-circle {
-                width: 30px;
-                height: 30px;
-                text-align: center;
-                padding: 6px 0;
-                font-size: 12px;
-                line-height: 1.428571429;
-                border-radius: 15px;
-            }
-            label { display: inline-block }
-            label > input { /* HIDE RADIO */
-                visibility: hidden; /* Makes input not-clickable */
-                position: absolute; /* Remove input from document flow */
-            }
-            label > input + img { /* IMAGE STYLES */
-                cursor:pointer;
-                border:2px solid transparent;
-            }
-            label > input:checked + img { /* (RADIO CHECKED) IMAGE STYLES */
-                border:2px solid #f00;
-            }
-        </style>
-    </head>
+        .remove-image:hover {
+            background: #c13b2a;
+            color: #ffffff;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
 
-    <body style="background:white !important;">
-        <!-- Navigation Bar-->
-        <header id="topnav">
-            <input type="hidden" id="siteurl" value="<?php echo url(); ?>"> <!-- for js programing -->
-            <!--            <div class="topbar-main"style="background: #c4daeb;
+        .remove-image:active {
+            border: 0;
+            transition: all .2s ease;
+        }
+
+        .stepwizard-step p {
+            margin-top: 10px;
+        }
+
+        .stepwizard-row {
+            display: table-row;
+        }
+
+        .stepwizard {
+            display: table;
+            width: 100%;
+            position: relative;
+        }
+
+        .stepwizard-step button[disabled] {
+            opacity: 1 !important;
+            filter: alpha(opacity=100) !important;
+        }
+
+        .stepwizard-row:before {
+            top: 14px;
+            bottom: 0;
+            position: absolute;
+            content: " ";
+            width: 100%;
+            height: 1px;
+            background-color: #ccc;
+            z-order: 0;
+
+        }
+
+        .stepwizard-step {
+            display: table-cell;
+            text-align: center;
+            position: relative;
+        }
+
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 15px;
+        }
+
+        label {
+            display: inline-block
+        }
+
+        label>input {
+            /* HIDE RADIO */
+            visibility: hidden;
+            /* Makes input not-clickable */
+            position: absolute;
+            /* Remove input from document flow */
+        }
+
+        label>input+img {
+            /* IMAGE STYLES */
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        label>input:checked+img {
+            /* (RADIO CHECKED) IMAGE STYLES */
+            border: 2px solid #f00;
+        }
+    </style>
+</head>
+
+<body style="background:white !important;">
+    <!-- Navigation Bar-->
+    <header id="topnav">
+        <input type="hidden" id="siteurl" value="<?php echo url(); ?>"> <!-- for js programing -->
+        <!--            <div class="topbar-main"style="background: #c4daeb;
             background: linear-gradient(to top, #c4daeb, #F0F8FF);
             background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253));
             background: linear-gradient(to right, #6FB1FC, #0052D4, #6FB1FC);
@@ -274,26 +293,26 @@
             border-bottom-color: currentcolor;
             border-bottom-style: none;
             border-bottom-width: medium">-->
-            <div style="background:white; box-shadow: 5px 0px 10px 4px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12); padding: 7px 0;">
-                <div class="container-fluid">
-                    <div class="row">
-                        <!-- Logo container-->
-                        <div class="logo col-lg-3"><a style="position:absolute; top:50%; margin-top:-20px;" href="<?php echo url('dashboard'); ?>">
-                                <img width="200" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a>
-                        </div><!-- End Logo container-->
-                        <!-- MENU Start -->
-                        <div class="col-lg-6">
-                            <?php include viewPath('includes/nav'); ?>
-                        </div>
-                        <div class="menu-extras topbar-custom col-lg-3 justify-content-end">
-                            <ul class="navbar-right list-inline float-right mb-0" style="position:absolute; top:50%; margin-top:-20px;">
-                                <li class="menu-item list-inline-item">
-                                    <a class="navbar-toggle nav-link">
-                                        <div class="lines"><span></span> <span></span> <span></span></div>
-                                    </a>
-                                </li>
-                                <li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img class="icon-logo-nav" width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a></li>
-                                <!--                                <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+        <div style="background:white; box-shadow: 5px 0px 10px 4px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12); padding: 7px 0;">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Logo container-->
+                    <div class="logo col-lg-3"><a style="position:absolute; top:25%; margin-top:-20px; left:5%;" href="<?php echo url('dashboard'); ?>">
+                            <img width="200" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""> </a>
+                    </div><!-- End Logo container-->
+                    <!-- MENU Start -->
+                    <div class="col-lg-6">
+                        <?php include viewPath('includes/nav'); ?>
+                    </div>
+                    <div class="menu-extras topbar-custom col-lg-3 justify-content-end">
+                        <ul class="navbar-right list-inline float-right mb-0" style="position:absolute; top:25%; margin-top:-20px;">
+                            <li class="menu-item list-inline-item">
+                                <a class="navbar-toggle nav-link">
+                                    <div class="lines"><span></span> <span></span> <span></span></div>
+                                </a>
+                            </li>
+                            <li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img class="icon-logo-nav" width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""> </a></li>
+                            <!--                                <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                                                                                                 <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
                                                                     <div class="plus-icon-container">
                                                                         <a href="javascript:void (0)">
@@ -302,455 +321,468 @@
                                                                         </a>
                                                                     </div>
                                                                 </li>-->
-                                <li title="SMS" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                    <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <a href="#" onclick="$('#createSMS').modal('show')" >
-                                            <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
-                                            <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
-                                        </a>
-                                        <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
-                                        <!--                                    -->
-                                        <!--                                </a>-->
-                                    </div>
-                                </li>
-                                <li title="Call" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                    <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <a href="javascript:void (0)">
-                                            <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/support.svg" alt="">
-                                            <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/support.svg" alt="">
-                                        </a>
-                                        <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
-                                        <!--                                    -->
-                                        <!--                                </a>-->
-                                    </div>
-                                </li>
-
-
-                                <li title="Activity" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                    <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <a href="javascript:void (0)">
-                                            <img class="growth-icon-static" src="<?php echo $url->assets; ?>/css/icons/activity.svg" alt="">
-                                            <img class="growth-icon-hover" src="<?php echo $url->assets; ?>/css/icons/activity.svg" alt="">
-                                        </a>
-                                        <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
-                                        <!--                                    -->
-                                        <!--                                </a>-->
-                                    </div>
-                                </li>
-                                <li title="Settings" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                    <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates')       ?><!--">-->
-                                    <div class="settings-icon-container">
-                                        <a href="<?php echo base_url('settings/email_templates') ?>">
-                                            <img class="settings-icon-static" src="<?php echo $url->assets; ?>/css/icons/settings.svg" alt="">
-                                            <img class="settings-icon-hover" src="<?php echo $url->assets; ?>/css/icons/settings.svg" alt="">
-                                        </a>
-                                    </div>
-                                    <!--<div class="prev-icon-title">Settings</div>-->
-                                    <!--                                <img src="/assets/css/icons/images/479-4794569_settings-cog-gear-optimization-icon-hd-png-download.png" aria-hidden="true" class="icon-settings-navbar" alt="">-->
-                                    <!--                            </a>-->
-                                </li>
-                                <?php //$newtasks = getNewTasks();?>
-                                <?php $newtasks = getTasks(); ?>
-                                <li title="Tasks" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
-                                    <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0) ? 'visible' : 'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0) ? count($newtasks) : null; ?></span>
-
-                                        <img class="schedule-icon-static" src="<?php echo $url->assets; ?>/css/icons/tasks.svg" alt="">
-                                        <img class="schedule-icon-hover" src="<?php echo $url->assets; ?>/css/icons/tasks.svg" alt="">
-                                    </div>
-                                    <!--<div class="prev-icon-title">Schedule</div>-->
-                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-                                        <!-- item-->
-                                        <h6 class="dropdown-item-text"><?php
-                                            if (count($newtasks) > 0) {
-                                                echo 'New Tasks (' . count($newtasks) . ')';
-                                            } else {
-                                                echo 'No New Tasks';
-                                            }
-                                            ?></h6>
-                                        <div class="slimscroll notification-item-list">
-                                            <?php foreach ($newtasks as $value) { ?>
-                                                <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
-                                                            <?php
-                                                            $date_created = date_create($value->date_created);
-                                                            echo date_format($date_created, "F d, Y h:i:s");
-                                                            ?></span></p>
-                                                </a>
-                                            <?php } ?>
-                                        </div><!-- All--> 
-                                        <a href="<?php echo base_url('taskhub') ?>"
-                                           class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
-                                    </div>
-                                </li>
-
-                                <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                    <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="javascript:void (0)" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i>-->
-                                    <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden';       ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null;       ?><!--</span>-->
+                            <li title="SMS" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                                <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <a href="#" onclick="$('#createSMS').modal('show')">
+                                        <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
+                                        <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
+                                    </a>
+                                    <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
+                                    <!--                                    -->
                                     <!--                                </a>-->
-                                    <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      ?></span>
-                                        <div class="bell" id="bell-1">
-                                            <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
-                                            <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
-                                            <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
-                                        </div>
+                                </div>
+                            </li>
+                            <li title="Call" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                                <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <a href="javascript:void (0)">
+                                        <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/support.svg" alt="">
+                                        <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/support.svg" alt="">
+                                    </a>
+                                    <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
+                                    <!--                                    -->
+                                    <!--                                </a>-->
+                                </div>
+                            </li>
+
+
+                            <li title="Activity" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                                <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <a href="javascript:void (0)">
+                                        <img class="growth-icon-static" src="<?php echo $url->assets; ?>/css/icons/activity.svg" alt="">
+                                        <img class="growth-icon-hover" src="<?php echo $url->assets; ?>/css/icons/activity.svg" alt="">
+                                    </a>
+                                    <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
+                                    <!--                                    -->
+                                    <!--                                </a>-->
+                                </div>
+                            </li>
+                            <li title="Settings" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                                <!--                            <a class="nav-link dropdown-toggle arrow-none" href="--><?php //echo base_url('settings/email_templates')       
+                                                                                                                        ?>
+                                <!--">-->
+                                <div class="settings-icon-container">
+                                    <a href="<?php echo base_url('settings/email_templates') ?>">
+                                        <img class="settings-icon-static" src="<?php echo $url->assets; ?>/css/icons/settings.svg" alt="">
+                                        <img class="settings-icon-hover" src="<?php echo $url->assets; ?>/css/icons/settings.svg" alt="">
+                                    </a>
+                                </div>
+                                <!--<div class="prev-icon-title">Settings</div>-->
+                                <!--                                <img src="/assets/css/icons/images/479-4794569_settings-cog-gear-optimization-icon-hd-png-download.png" aria-hidden="true" class="icon-settings-navbar" alt="">-->
+                                <!--                            </a>-->
+                            </li>
+                            <?php //$newtasks = getNewTasks();
+                            ?>
+                            <?php $newtasks = getTasks(); ?>
+                            <li title="Tasks" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;">
+                                <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (count($newtasks) > 0) ? 'visible' : 'hidden'; ?>;z-index: 20;top: 1px;right: 0;" id="scheduleBadge"><?php echo (count($newtasks) != 0) ? count($newtasks) : null; ?></span>
+
+                                    <img class="schedule-icon-static" src="<?php echo $url->assets; ?>/css/icons/tasks.svg" alt="">
+                                    <img class="schedule-icon-hover" src="<?php echo $url->assets; ?>/css/icons/tasks.svg" alt="">
+                                </div>
+                                <!--<div class="prev-icon-title">Schedule</div>-->
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
+                                    <!-- item-->
+                                    <h6 class="dropdown-item-text"><?php
+                                                                    if (count($newtasks) > 0) {
+                                                                        echo 'New Tasks (' . count($newtasks) . ')';
+                                                                    } else {
+                                                                        echo 'No New Tasks';
+                                                                    }
+                                                                    ?></h6>
+                                    <div class="slimscroll notification-item-list">
+                                        <?php foreach ($newtasks as $value) { ?>
+                                            <a href="<?php echo base_url('taskhub/view/' . $value->task_id); ?>" class="dropdown-item notify-item active">
+                                                <div class="notify-icon bg-success"></div>
+                                                <p class="notify-details"><?php echo $value->subject; ?><span class="text-muted">
+                                                        <?php
+                                                        $date_created = date_create($value->date_created);
+                                                        echo date_format($date_created, "F d, Y h:i:s");
+                                                        ?></span></p>
+                                            </a>
+                                        <?php } ?>
+                                    </div><!-- All-->
+                                    <a href="<?php echo base_url('taskhub') ?>" class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
+                                </div>
+                            </li>
+
+                            <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                                <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="javascript:void (0)" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i>-->
+                                <!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden';       
+                                                                                                                                                            ?>
+                                <!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null;       
+                                                            ?>
+                                <!--</span>-->
+                                <!--                                </a>-->
+                                <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
+                                                                                                                                                                                                                                                            ?></span>
+                                    <div class="bell" id="bell-1">
+                                        <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
+                                        <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
+                                        <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
                                     </div>
-                                    <div class="prev-icon-title">Notification</div>
-                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
-                                        <!-- item-->
-                                        <h6 class="dropdown-item-text">Notifications (<span id="nfcount"></span>)</h6>
-                                        <div class="slimscroll notification-item-list" id="notificationList">
-                                            <div id="autoNotifications"></div>
-                                            <?php
-                                            $reorders = getReorderItemsCount();
-                                            $reorders_count = 0;
-                                            if ($reorders) {
-                                                foreach ($reorders as $key => $reorder) {
-                                                    if (!is_null($reorder['total_count'])) {
-                                                        if ($reorder['reorder_point'] > $reorder['total_count']) {
-                                                            $reorders_count++;
-                                                        }
+                                </div>
+                                <div class="prev-icon-title">Notification</div>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
+                                    <!-- item-->
+                                    <h6 class="dropdown-item-text">Notifications (<span id="nfcount"></span>)</h6>
+                                    <div class="slimscroll notification-item-list" id="notificationList">
+                                        <div id="autoNotifications"></div>
+                                        <?php
+                                        $reorders = getReorderItemsCount();
+                                        $reorders_count = 0;
+                                        if ($reorders) {
+                                            foreach ($reorders as $key => $reorder) {
+                                                if (!is_null($reorder['total_count'])) {
+                                                    if ($reorder['reorder_point'] > $reorder['total_count']) {
+                                                        $reorders_count++;
                                                     }
                                                 }
                                             }
-                                            ?>
-                                            <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                                                <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
-                                                <p class="notify-details">Item needs to reorder (<?php echo $reorders_count; ?>)<span class="text-muted">Please replenish immediately.</span></p>
-                                            </a>
+                                        }
+                                        ?>
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                                            <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
+                                            <p class="notify-details">Item needs to reorder (<?php echo $reorders_count; ?>)<span class="text-muted">Please replenish immediately.</span></p>
+                                        </a>
 
 
-                                            <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                                                <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
-                                                <p class="notify-details">Your order is placed<span class="text-muted">Dummytext of the printing and typesetting industry.</span></p>
-                                            </a>
-                                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                                <div class="notify-icon bg-warning"><i class="mdi mdi-message-text-outline"></i></div>
-                                                <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
-                                            </a>
-                                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                                <div class="notify-icon bg-info"><i class="mdi mdi-glass-cocktail"></i></div>
-                                                <p class="notify-details">Your item is shipped<span class="text-muted">It is a long established fact that a reader will</span></p>
-                                            </a> <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                                <div class="notify-icon bg-primary"><i class="mdi mdi-cart-outline"></i></div>
-                                                <p class="notify-details">Your order is placed<span class="text-muted">Dummy
-                                                        text of the printing and typesetting industry.</span></p>
-                                            </a>  <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                                <div class="notify-icon bg-danger"><i class="mdi mdi-message-text-outline"></i>
-                                                </div>
-                                                <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
-                                            </a>
-                                        </div>
-                                        <!-- All-->
-                                        <a href="<?php echo site_url(); ?>timesheet/notification"
-                                           class="dropdown-item text-center text-primary">View all 
-                                            <i class="fi-arrow-right"></i></a>
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                                            <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
+                                            <p class="notify-details">Your order is placed<span class="text-muted">Dummytext of the printing and typesetting industry.</span></p>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <div class="notify-icon bg-warning"><i class="mdi mdi-message-text-outline"></i></div>
+                                            <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <div class="notify-icon bg-info"><i class="mdi mdi-glass-cocktail"></i></div>
+                                            <p class="notify-details">Your item is shipped<span class="text-muted">It is a long established fact that a reader will</span></p>
+                                        </a> <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <div class="notify-icon bg-primary"><i class="mdi mdi-cart-outline"></i></div>
+                                            <p class="notify-details">Your order is placed<span class="text-muted">Dummy
+                                                    text of the printing and typesetting industry.</span></p>
+                                        </a> <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <div class="notify-icon bg-danger"><i class="mdi mdi-message-text-outline"></i>
+                                            </div>
+                                            <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
+                                        </a>
                                     </div>
-                                </li>
-                                <?php
-                                $clock_btn = 'clockIn';
-                                $user_id = $this->session->userdata('logged')['id'];
-                                $user_clock_in = getClockInSession();
-                                foreach ($user_clock_in as $in) {
-                                    if ($in->user_id == $user_id && $in->status == 1) {
-                                        $clock_btn = 'clockOut';
-                                    }
-                                    if ($in->user_id == $user_id && $in->status == 0) {
-                                        $clock_btn = 'clockIn';
-                                    }
+                                    <!-- All-->
+                                    <a href="<?php echo site_url(); ?>timesheet/notification" class="dropdown-item text-center text-primary">View all
+                                        <i class="fi-arrow-right"></i></a>
+                                </div>
+                            </li>
+                            <?php
+                            $clock_btn = 'clockIn';
+                            $user_id = $this->session->userdata('logged')['id'];
+                            $user_clock_in = getClockInSession();
+                            foreach ($user_clock_in as $in) {
+                                if ($in->user_id == $user_id && $in->status == 1) {
+                                    $clock_btn = 'clockOut';
                                 }
-                                //Employee display shift status
-                                $clock_in = '-';
-                                $clock_out = '-';
-                                $shift_duration = '-';
-                                $lunch_time = '00:00:00';
-                                $lunch_in = 0;
-                                $lunch_out = 0;
-                                $latest_lunch_in = 0;
-                                $attendances = getEmployeeAttendance();
-                                $ts_logs_h = getEmployeeLogs();
-                                $analog_active = null;
-                                $attn_id = null;
-                                $minutes = 0;
-                                //                        $expected_endbreak = null;
-                                $shift_end = 0;
+                                if ($in->user_id == $user_id && $in->status == 0) {
+                                    $clock_btn = 'clockIn';
+                                }
+                            }
+                            //Employee display shift status
+                            $clock_in = '-';
+                            $clock_out = '-';
+                            $shift_duration = '-';
+                            $lunch_time = '00:00:00';
+                            $lunch_in = 0;
+                            $lunch_out = 0;
+                            $latest_lunch_in = 0;
+                            $attendances = getEmployeeAttendance();
+                            $ts_logs_h = getEmployeeLogs();
+                            $analog_active = null;
+                            $attn_id = null;
+                            $minutes = 0;
+                            //                        $expected_endbreak = null;
+                            $shift_end = 0;
+                            $overtime_status = 1;
+                            foreach ($attendances as $attn) {
+                                $attn_id = $attn->id;
                                 $overtime_status = 1;
-                                foreach ($attendances as $attn) {
-                                    $attn_id = $attn->id;
-                                    $overtime_status = 1;
-                                    foreach ($ts_logs_h as $log) {
-                                        if ($log->attendance_id == $attn->id && $attn->status == 1) {
-                                            if ($log->action == 'Check in') {
-                                                $clock_in = date('h:i A', strtotime($log->date_created));
-                                                $shift_end = strtotime($log->date_created);
-                                                $hours = floor($attn->break_duration / 60);
-                                                $minutes = floor($attn->break_duration % 60);
-                                                $seconds = $attn->break_duration - (int) $attn->break_duration;
-                                                $seconds = round($seconds * 60);
-                                                $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                foreach ($ts_logs_h as $log) {
+                                    if ($log->attendance_id == $attn->id && $attn->status == 1) {
+                                        if ($log->action == 'Check in') {
+                                            $clock_in = date('h:i A', strtotime($log->date_created));
+                                            $shift_end = strtotime($log->date_created);
+                                            $hours = floor($attn->break_duration / 60);
+                                            $minutes = floor($attn->break_duration % 60);
+                                            $seconds = $attn->break_duration - (int) $attn->break_duration;
+                                            $seconds = round($seconds * 60);
+                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                            $analog_active = 'clock-active';
+                                        }
+                                        if ($log->action == 'Break in') {
+                                            $analog_active = 'clock-break';
+                                            if ($attn->break_duration > 0) {
+                                                $lunch_in = strtotime($log->date_created) - (floor($attn->break_duration * 60));
+                                                $latest_lunch_in = strtotime($log->date_created);
+                                            } else {
+                                                $lunch_in = strtotime($log->date_created);
+                                                $latest_lunch_in = 0;
+                                            }
+                                        }
+                                        if ($log->action == 'Break out') {
+                                            if ($attn->status == 1) {
                                                 $analog_active = 'clock-active';
                                             }
-                                            if ($log->action == 'Break in') {
-                                                $analog_active = 'clock-break';
-                                                if ($attn->break_duration > 0) {
-                                                    $lunch_in = strtotime($log->date_created) - (floor($attn->break_duration * 60));
-                                                    $latest_lunch_in = strtotime($log->date_created);
-                                                } else {
-                                                    $lunch_in = strtotime($log->date_created);
-                                                    $latest_lunch_in = 0;
-                                                }
-                                            }
-                                            if ($log->action == 'Break out') {
-                                                if ($attn->status == 1) {
-                                                    $analog_active = 'clock-active';
-                                                }
-                                            }
-                                        } else if ($log->attendance_id == $attn->id && $attn->status == 0) {
-                                            if ($log->action == 'Check in') {
-                                                // $clock_in = date('h:i A',strtotime($log->date_created));
-                                                // $shift_end = strtotime($log->date_created);
+                                        }
+                                    } else if ($log->attendance_id == $attn->id && $attn->status == 0) {
+                                        if ($log->action == 'Check in') {
+                                            // $clock_in = date('h:i A',strtotime($log->date_created));
+                                            // $shift_end = strtotime($log->date_created);
 
-                                                $hours = floor($attn->break_duration / 60);
-                                                $minutes = floor($attn->break_duration % 60);
-                                                $seconds = $attn->break_duration - (int) $attn->break_duration;
-                                                $seconds = round($seconds * 60);
-                                                $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
-                                            }
-                                            if ($log->action == 'Check out') {
-                                                $analog_active = null;
-                                                $shift_s = ($attn->shift_duration * 3600);
-                                                $shift_h = floor($attn->shift_duration);
-                                                $shift_s -= $shift_h * 3600;
-                                                $shift_m = floor($shift_s / 60);
-                                                $shift_s -= $minutes * 60;
-                                                if ($shift_h >= 0 && $clock_in != '-') {
-                                                    $shift_duration = str_pad($shift_h, 2, '0', STR_PAD_LEFT) . ":" . str_pad($shift_m, 2, '0', STR_PAD_LEFT);
-                                                }
+                                            $hours = floor($attn->break_duration / 60);
+                                            $minutes = floor($attn->break_duration % 60);
+                                            $seconds = $attn->break_duration - (int) $attn->break_duration;
+                                            $seconds = round($seconds * 60);
+                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                        }
+                                        if ($log->action == 'Check out') {
+                                            $analog_active = null;
+                                            $shift_s = ($attn->shift_duration * 3600);
+                                            $shift_h = floor($attn->shift_duration);
+                                            $shift_s -= $shift_h * 3600;
+                                            $shift_m = floor($shift_s / 60);
+                                            $shift_s -= $minutes * 60;
+                                            if ($shift_h >= 0 && $clock_in != '-') {
+                                                $shift_duration = str_pad($shift_h, 2, '0', STR_PAD_LEFT) . ":" . str_pad($shift_m, 2, '0', STR_PAD_LEFT);
                                             }
                                         }
                                     }
                                 }
+                            }
 
-                                $ts_settings = getEmpTSsettings();
-                                $schedule = getEmpSched();
-                                $expected_shift = 0;
+                            $ts_settings = getEmpTSsettings();
+                            $schedule = getEmpSched();
+                            $expected_shift = 0;
+                            $expected_endshift = 0;
+                            $sched_notify = 1;
+                            $over_notify = 1;
+                            $start = 0;
+                            $time_difference = 0;
+                            foreach ($ts_settings as $setting) {
+                                foreach ($schedule as $sched) {
+                                    if ($setting->id == $sched->schedule_id) {
+                                        if ($setting->timezone == null) {
+                                            $tz = date_default_timezone_get();
+                                        } else {
+                                            $tz = /* $setting->timezone */ 'America/Chicago';
+                                        }
+                                        $timestamp = time();
+                                        $dt = new DateTime("now", new DateTimeZone($tz));
+                                        $dt->setTimestamp($timestamp);
+                                        if ($sched->start_date == $dt->format('Y-m-d')) {
+                                            $expected_shift = strtotime($sched->start_date . " " . $sched->start_time);
+                                            $expected_endshift = strtotime($sched->start_date . " " . $sched->end_time);
+                                            $start = $sched->start_date;
+                                            //                                        Time Difference from server time to employee's set timezone
+                                            $time_difference = $dt->format('H') - date('H');
+                                        }
+                                        foreach ($notification as $u_notify) {
+                                            if ($u_notify->user_id == $sched->user_id) {
+                                                if ($u_notify->title == 'Your shift will begin soon.' && date('Y-m-d', strtotime($u_notify->date_created)) == $start) {
+                                                    $sched_notify = 0;
+                                                }
+                                            }
+                                            if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d', strtotime($u_notify->date_created)) == $start) {
+                                                $over_notify = 0;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (empty($expected_shift) && $shift_end > 0 && empty($expected_endshift)) {
+                                $shift_end += (28800); /* Clock-in time plus 8 hours */;
+                            } else {
+                                $shift_end = null;
+                            }
+                            if ($analog_active == null) {
+                                $shift_end = 0;
+                                $overtime_status = 2;
                                 $expected_endshift = 0;
-                                $sched_notify = 1;
-                                $over_notify = 1;
-                                $start = 0;
-                                $time_difference = 0;
-                                foreach ($ts_settings as $setting) {
-                                    foreach ($schedule as $sched) {
-                                        if ($setting->id == $sched->schedule_id) {
-                                            if ($setting->timezone == null) {
-                                                $tz = date_default_timezone_get();
-                                            } else {
-                                                $tz = /* $setting->timezone */ 'America/Chicago';
-                                            }
-                                            $timestamp = time();
-                                            $dt = new DateTime("now", new DateTimeZone($tz));
-                                            $dt->setTimestamp($timestamp);
-                                            if ($sched->start_date == $dt->format('Y-m-d')) {
-                                                $expected_shift = strtotime($sched->start_date . " " . $sched->start_time);
-                                                $expected_endshift = strtotime($sched->start_date . " " . $sched->end_time);
-                                                $start = $sched->start_date;
-//                                        Time Difference from server time to employee's set timezone
-                                                $time_difference = $dt->format('H') - date('H');
-                                            }
-                                            foreach ($notification as $u_notify) {
-                                                if ($u_notify->user_id == $sched->user_id) {
-                                                    if ($u_notify->title == 'Your shift will begin soon.' && date('Y-m-d', strtotime($u_notify->date_created)) == $start) {
-                                                        $sched_notify = 0;
-                                                    }
-                                                }
-                                                if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d', strtotime($u_notify->date_created)) == $start) {
-                                                    $over_notify = 0;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if (empty($expected_shift) && $shift_end > 0 && empty($expected_endshift)) {
-                                    $shift_end += (28800); /* Clock-in time plus 8 hours */;
-                                } else {
-                                    $shift_end = null;
-                                }
-                                if ($analog_active == null) {
-                                    $shift_end = 0;
-                                    $overtime_status = 2;
-                                    $expected_endshift = 0;
-                                }
-                                ?>
-                                <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
-                                    <!--                            <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null;       ?><!--">-->
-                                    <input type="hidden" id="lunchStartTime" value="<?php echo $lunch_in; ?>" data-value="<?php echo date('h:i A', $lunch_in) ?>">
-                                    <input type="hidden" id="latestLunchTime" value="<?php echo $latest_lunch_in; ?>" data-value="<?php echo date('h:i A', $latest_lunch_in) ?>">
-                                    <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break') ? 1 : 0; ?>">
-                                    <input type="hidden" id="attendanceId" value="<?php echo $attn_id; ?>">
-                                    <input type="hidden" id="employeeShiftStart" value="<?php echo (!empty($expected_shift)) ? $expected_shift : 0; ?>">
-                                    <input type="hidden" id="employeePingStart" value="<?php echo $sched_notify; ?>">
-                                    <input type="hidden" id="employeePingEnd" value="<?php echo $over_notify; ?>">
-                                    <input type="hidden" id="employeeOvertime" value="<?php echo $expected_endshift; ?>">
-                                    <input type="hidden" id="timeDifference" value="<?php echo $time_difference; ?>">
-                                    <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end; ?>" data-value="<?php echo date('h:i A', $shift_end) ?>">
-                                    <input type="hidden" id="autoClockOut" value="<?php echo $overtime_status; ?>">
-                                    <div class="clock-users " id="<?php echo $clock_btn ?>" >
-                                        <div class="clock <?php echo $analog_active ?>">
-                                            <div class="hour">
-                                                <div class="hr" id="hr"></div>
-                                            </div>
-                                            <div class="minute">
-                                                <div class="min" id="min"></div>
-                                            </div>
-                                            <div class="second">
-                                                <div class="sec" id="sec"></div>
-                                            </div>
+                            }
+                            ?>
+                            <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
+                                <!--                     lou       <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null;       
+                                                                                                                        ?>
+                                <!--">-->
+                                <input type="hidden" id="lunchStartTime" value="<?php echo $lunch_in; ?>" data-value="<?php echo date('h:i A', $lunch_in) ?>">
+                                <input type="hidden" id="latestLunchTime" value="<?php echo $latest_lunch_in; ?>" data-value="<?php echo date('h:i A', $latest_lunch_in) ?>">
+                                <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break') ? 1 : 0; ?>">
+                                <input type="hidden" id="attendanceId" value="<?php echo $attn_id; ?>">
+                                <input type="hidden" id="employeeShiftStart" value="<?php echo (!empty($expected_shift)) ? $expected_shift : 0; ?>">
+                                <input type="hidden" id="employeePingStart" value="<?php echo $sched_notify; ?>">
+                                <input type="hidden" id="employeePingEnd" value="<?php echo $over_notify; ?>">
+                                <input type="hidden" id="employeeOvertime" value="<?php echo $expected_endshift; ?>">
+                                <input type="hidden" id="timeDifference" value="<?php echo $time_difference; ?>">
+                                <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end; ?>" data-value="<?php echo date('h:i A', $shift_end) ?>">
+                                <input type="hidden" id="autoClockOut" value="<?php echo $overtime_status; ?>">
+                                <div class="clock-users " id="<?php echo $clock_btn ?>">
+                                    <div class="clock <?php echo $analog_active ?>">
+                                        <div class="hour">
+                                            <div class="hr" id="hr"></div>
+                                        </div>
+                                        <div class="minute">
+                                            <div class="min" id="min"></div>
+                                        </div>
+                                        <div class="second">
+                                            <div class="sec" id="sec"></div>
                                         </div>
                                     </div>
-                                    <div class="preview-clock-details">
-                                        <div class="clock-section">
-                                            <span class="clock-details-title">Clock In:</span>
-                                            <span class="clock-details-text in"><?php echo $clock_in; ?></span>
-                                        </div>
-                                        <div class="clock-section">
-                                            <span class="clock-details-title">Clock Out:</span>
-                                            <span class="clock-details-text out"><?php echo $clock_out ?></span>
-                                        </div>
-                                        <div class="clock-section">
-                                            <span class="clock-details-title">Lunch:</span>
-                                            <span class="clock-details-text"><span id="break-duration"><?php echo $lunch_time; ?></span>
-                                        </div>
-                                        <div class="clock-section">
-                                            <span class="clock-details-title">Shift Duration:</span>
-                                            <span class="clock-details-text" id="shiftDuration"><?php echo $shift_duration; ?></span>
-                                            <span style="display: block;float: right;width: 50%;color: grey; font-size: 10px">(HH:MM)</span>
-                                        </div>
+                                </div>
+                                <div class="preview-clock-details">
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Clock In:</span>
+                                        <span class="clock-details-text in"><?php echo $clock_in; ?></span>
                                     </div>
-                                </li>
-                                <li class="dropdown notification-list list-inline-item" style="vertical-align: middle">
-                                    <div class="dropdown notification-list nav-pro-img">
-                                        <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
-                                            <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
-                                            <?php
-                                            $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
-                                            /* if( !@getimagesize($image) ){
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Clock Out:</span>
+                                        <span class="clock-details-text out"><?php echo $clock_out ?></span>
+                                    </div>
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Lunch:</span>
+                                        <span class="clock-details-text"><span id="break-duration"><?php echo $lunch_time; ?></span>
+                                    </div>
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Shift Duration:</span>
+                                        <span class="clock-details-text" id="shiftDuration"><?php echo $shift_duration; ?></span>
+                                        <span style="display: block;float: right;width: 50%;color: grey; font-size: 10px">(HH:MM)</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="dropdown notification-list list-inline-item" style="vertical-align: middle">
+                                <div class="dropdown notification-list nav-pro-img">
+                                    <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
+                                        <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
+                                        <?php
+                                        $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
+                                        /* if( !@getimagesize($image) ){
                                               $image = base_url('uploads/users/default.png');
                                               } */
-                                            //$image = base_url('uploads/users/default.png');
-                                            ?>
-                                            <img src="<?php echo $image; ?>" alt="user" class="rounded-circle nav-user-img">
+                                        //$image = base_url('uploads/users/default.png');
+                                        ?>
+                                        <img src="<?php echo $image; ?>" alt="user" class="rounded-circle nav-user-img">
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">
+                                        <a class="dropdown-item" href="<?php echo url('dashboard') ?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>
+                                        <a class="dropdown-item" href="<?php echo url('profile') ?>"><i class="mdi mdi-account-circle m-r-5"></i>Public Profile</a>
+                                        <a class="dropdown-item" href="<?php echo url() ?>"><i class="mdi mdi-account-circle m-r-5"></i>nSmart Home</a>
+                                        <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5"></i>Join our community</a>
+                                        <?php //if (hasPermissions('activity_log_list')):   
+                                        ?>
+                                        <a href="<?php echo url('activity_logs') ?>">
+                                            <i class="mdi mdi-account-circle m-r-5"></i><span>Activity Logs</span>
                                         </a>
-                                        <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                                            <a class="dropdown-item" href="<?php echo url('dashboard') ?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>
-                                            <a class="dropdown-item" href="<?php echo url('profile') ?>"><i class="mdi mdi-account-circle m-r-5"></i>Public Profile</a>
-                                            <a class="dropdown-item" href="<?php echo url() ?>"><i class="mdi mdi-account-circle m-r-5"></i>nSmart Home</a>
-                                            <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5"></i>Join our community</a>
-                                            <?php //if (hasPermissions('activity_log_list')):   ?>
-                                            <a href="<?php echo url('activity_logs') ?>">
-                                                <i class="mdi mdi-account-circle m-r-5"></i><span>Activity Logs</span>
-                                            </a>
-                                            <?php //endif   ?>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item text-danger" href="<?php echo url('/logout') ?>"><i class="mdi mdi-power text-danger"></i> Logout</a>
-                                        </div>
+                                        <?php //endif   
+                                        ?>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-danger" href="<?php echo url('/logout') ?>"><i class="mdi mdi-power text-danger"></i> Logout</a>
                                     </div>
-                                </li>
+                                </div>
+                            </li>
 
-                            </ul>
-                        </div><!-- end menu-extras -->
-                        <div class="clearfix"></div>
-                    </div><!-- end container -->
+                        </ul>
+                    </div><!-- end menu-extras -->
+                    <div class="clearfix"></div>
                 </div><!-- end container -->
-            </div><!-- end topbar-main -->
+            </div><!-- end container -->
+        </div><!-- end topbar-main -->
 
-        </header><!-- End Navigation Bar-->
+    </header><!-- End Navigation Bar-->
 
-        <div class="modal fade" id="createSMS" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addWidgets" aria-hidden="true">
-            <div class="modal-dialog modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="exampleModalLabel">Send SMS</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center p-2">
+    <div class="modal fade" id="createSMS" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addWidgets" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">Send SMS</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center p-2">
 
-                        <small class="form-text text-muted">Enter or Search for recipient's mobile number.</small>
-                        <div class="form-group input-group">
-                            <input type="text" style="border-radius:15px 0 0 15px ;" class="form-control" id="inputMobile" placeholder="Enter mobile"> 
-                            <div class="input-group-append">
-                                <button class="btn btn-success" type="button"><i class="fa fa-search-plus fa-1x"></i></button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea onkeyup="countChar(this)" placeholder="Enter your SMS Text" class="form-control" id="inputText" rows="4"></textarea>
-                            <small class="form-text text-muted text-right"><span id='charNum'>300</span> characters</small>
+                    <small class="form-text text-muted">Enter or Search for recipient's mobile number.</small>
+                    <div class="form-group input-group">
+                        <input type="text" style="border-radius:15px 0 0 15px ;" class="form-control" id="inputMobile" placeholder="Enter mobile">
+                        <div class="input-group-append">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search-plus fa-1x"></i></button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-small btn-success float-right" onclick='sendSMS()'>Send SMS</button>
+                    <div class="form-group">
+                        <textarea onkeyup="countChar(this)" placeholder="Enter your SMS Text" class="form-control" id="inputText" rows="4"></textarea>
+                        <small class="form-text text-muted text-right"><span id='charNum'>300</span> characters</small>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-small btn-success float-right" onclick='sendSMS()'>Send SMS</button>
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            function countChar(val) {
-                var len = val.value.length;
-                if (len >= 300) {
-                    val.value = val.value.substring(0, 300);
-                } else {
-                    $('#charNum').text(300 - len);
-                }
+    </div>
+    <script type="text/javascript">
+        function countChar(val) {
+            var len = val.value.length;
+            if (len >= 300) {
+                val.value = val.value.substring(0, 300);
+            } else {
+                $('#charNum').text(300 - len);
             }
-            ;
+        };
 
-            sendSMS = function () {
-                var num = $('#inputMobile').val();
-                var msg = $('#inputText').val();
+        sendSMS = function() {
+            var num = $('#inputMobile').val();
+            var msg = $('#inputText').val();
 
-                $.ajax({
-                    url: '<?php echo base_url(); ?>ring_central/sendSMS',
-                    method: 'POST',
-                    data: {to:num, message:msg},
-                    dataType:'json',
-                    statusCode: {
-                        500: function(xhr) {
-                          var obj = JSON.parse(xhr.responseText);
-                          alert(obj.msg);
-                          $('#createSMS').modal("hide");
-                        }
-                      },
-                    success: function (response) {
-                        alert(response);
+            $.ajax({
+                url: '<?php echo base_url(); ?>ring_central/sendSMS',
+                method: 'POST',
+                data: {
+                    to: num,
+                    message: msg
+                },
+                dataType: 'json',
+                statusCode: {
+                    500: function(xhr) {
+                        var obj = JSON.parse(xhr.responseText);
+                        alert(obj.msg);
                         $('#createSMS').modal("hide");
                     }
-                });
-            };
-
-            function notificationClockInOut() {
-                $.ajax({
-                    type: "GET",
-                    url: "/Timesheet/getNotificationsAll",
-                    async: true,
-                    cache: false,
-                    timeout: 10000,
-                    success: function (data) {
-                        var obj = JSON.parse(data);
-                        $('#notifyBadge').html(obj.notifyCount);
-                        $('#nfcount').html(obj.notifyCount);
-                        $('#autoNotifications').html(obj.autoNotifications);
-                        setTimeout(notificationClockInOut, 2000);
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        addmsg("error", textStatus + " (" + errorThrown + ")");
-                        setTimeout(notificationClockInOut, 15000);
-                    }
-                });
-            }
-            ;
-            $(document).ready(function () {
-                var TimeStamp = null;
-                notificationClockInOut();
+                },
+                success: function(response) {
+                    alert(response);
+                    $('#createSMS').modal("hide");
+                }
             });
-        </script>
+        };
+
+        function notificationClockInOut() {
+            $.ajax({
+                type: "GET",
+                url: "/Timesheet/getNotificationsAll",
+                async: true,
+                cache: false,
+                timeout: 10000,
+                success: function(data) {
+                    var obj = JSON.parse(data);
+                    $('#notifyBadge').html(obj.notifyCount);
+                    $('#nfcount').html(obj.notifyCount);
+                    $('#autoNotifications').html(obj.autoNotifications);
+                    setTimeout(notificationClockInOut, 2000);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    addmsg("error", textStatus + " (" + errorThrown + ")");
+                    setTimeout(notificationClockInOut, 15000);
+                }
+            });
+        };
+        $(document).ready(function() {
+            var TimeStamp = null;
+            notificationClockInOut();
+        });
+    </script>

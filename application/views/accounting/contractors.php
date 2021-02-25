@@ -3,14 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
     <div class="wrapper accounting-sales" role="wrapper" >
         <!-- page wrapper start -->
-           <div wrapper__section>
+           <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
         <div class="container-fluid">
 			<div class="page-title-box mx-4">
 					<div class="col-lg-6 px-0">
 						<h3>Contractors</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Contractors gold band 
+					See how easy paying and tracking contractors can be. This accounting features makes it easy to pay contractors today & W-2 employees tomorrow.  Get started by adding a Contractor.  
                     </div>
 					<br>
 				<div class="row pb-2">

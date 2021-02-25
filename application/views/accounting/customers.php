@@ -9,7 +9,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3 style="font-family: Sarabun, sans-serif">Customers</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Customers gold band 
+					As your business grows, it's important to stay organized and keep track of your customers.  You can add customer profiles so you can quickly add them to transactions or invoices. Here's how to add customers and keep your customer list up-to-date. <br>
+					Select New Customer.<br>
+					Enter your customer’s info.<br>
+					Select Save.  <br>
                     </div>
 			<div class="page-title-box mx-4">
 				<!-- <div class="row pb-2">

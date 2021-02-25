@@ -292,10 +292,16 @@ $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting/
 $route['accounting/payment-methods/add']['post'] = 'accounting/add_payment_method';
 $route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting/delete_payment_method/$1";
 $route['accounting/payment-methods/activate/(:any)'] = "accounting/activate_payment_method/$1";
+$route['accounting/payment-methods/update']['post'] = "accounting/update_payment_method";
 
 $route['accounting/recurring-transactions'] = "accounting/recurring_transactions";
 
 $route['accounting/terms'] = "accounting/terms";
+$route['accounting/terms/add'] = "accounting/add_terms";
+$route['accounting/terms/load-terms']['post'] = 'accounting/load_terms';
+$route['accounting/terms/delete/(:any)']['DELETE'] = "accounting/delete_term/$1";
+$route['accounting/terms/activate/(:any)'] = "accounting/activate_term/$1";
+$route['accounting/terms/update']['post'] = "accounting/update_term";
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';

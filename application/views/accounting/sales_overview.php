@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3>Sales Overview</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Sales Overview gold band 
+					The Sales Overview is available for you to see and track transactions pertaining to sales.  This new screen allows you to see at a glance income over a period of time, mobile payment options, pending invoices and upcoming deposits.  Each of the areas can be clicked to view details.  From invoices to inventory it can be done here. 
                     </div>
 					<div class="row pb-2">
 						<div class="col-md-12 banking-tab-container">

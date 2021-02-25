@@ -75,7 +75,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Signature</h5>
+                <h5 class="modal-title">Create Signature</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span>&times;</span>
                 </button>
@@ -120,13 +120,20 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary d-flex align-items-center" id="signatureApplyButton">
-                    <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    Apply Signature
-                </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="signatureModalCloseButton">Close</button>
+                <div>
+                    <p>By clicking <strong>Apply Signature</strong>, I agree that the signature will be the electronic representation of my signature for all purposes when
+                        I (or my agent) use them on documents, including legally binding contracts - just the same as pen-and-paper signature.</p>
+                </div>
+
+                <div class="modal-footer__buttonContainer">
+                    <button type="button" class="btn btn-primary d-flex align-items-center" id="signatureApplyButton">
+                        <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        Apply Signature
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="signatureModalCloseButton">Close</button>
+                </div>
             </div>
         </div>
     </div>

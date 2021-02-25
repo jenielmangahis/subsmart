@@ -3,14 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
     <div class="wrapper accounting-payroll" role="wrapper" >
         <!-- page wrapper start -->
-           <div wrapper__section>
+           <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
         <div class="container-fluid">
 			<div class="page-title-box mx-4">
 					<div class="col-lg-6 px-0">
 						<h3>Workers' Comp</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Workers' comp gold band 
+					It's the law in every state except Texas. Take care of your employees if they get hurt on the job and protect your business from lawsuits and penalties.
                     </div>
 					<br>
 				<div class="row pb-2">
@@ -25,12 +25,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="row pt-3">
 					<div class="col-lg-12">
 						<h1>49 states require workers' comp insurance</h1>
-						<h5 class="font-weight-normal">It's the law in every state except Texas. Take care of your employees if they get hurt on<br>the job and protect your business from lawsuits and penalties.</h5>
+						<!-- <h5 class="font-weight-normal">It's the law in every state except Texas. Take care of your employees if they get hurt on<br>the job and protect your business from lawsuits and penalties.</h5> -->
 					</div>
 				</div>
 				<div class="row pt-3 align-items-center">
 					<div class="col-sm-3 col-xs-12">
-						<p class="mb-0 text-center"><img src="<?php echo base_url();?>assets/img/accounting/computer.png" class="img-responsive max-85" /></p>
+						<p class="mb-0 text-center"><img src="<?php echo base_url();?>assets/img/accounting/computer_2.png" class="img-responsive max-85" /></p>
 					</div>
 					<div class="col-sm-9 col-xs-12">
 						<ul class="list-unstyled">

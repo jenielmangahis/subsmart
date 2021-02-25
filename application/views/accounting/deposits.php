@@ -8,6 +8,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div style="padding-top:1%;">
 						<h3 style="font-family: Sarabun, sans-serif">Deposits from Payments</h3>
 					</div>
+                    
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;">
+                Good accounting gives businesses an easy way to manage bookkeeping with tools to record payments, deposits, costs. Deposits are recorded in your account register making it easy to reverse any errors from your company’s payment record or un-deposited funds.
+                </div>
 			<div class="page-title-box mx-4">
 				<!-- <div class="row pb-2"> -->
 					<!-- <div class="col-md-12 banking-tab-container">
@@ -33,9 +37,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <!-- <h3 style="font-family: Sarabun, sans-serif">&nbsp;Deposits from Payments</h3> -->
                 <div class="col-md-12">
 				<!-- </div> -->
-                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
-                Good accounting gives businesses an easy way to manage bookkeeping with tools to record payments, deposits, costs. Deposits are recorded in your account register making it easy to reverse any errors from your company’s payment record or un-deposited funds.
-                </div>
 				<div class="row">
 					<div class="col-lg-12 px-0">
 						<div class="bg-white p-4">
