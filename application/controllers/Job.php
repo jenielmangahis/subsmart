@@ -11,6 +11,7 @@ class Job extends MY_Controller
         $this->checkLogin();
         //$this->load->library('paypal_lib');
         $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('JobType_model');
         //$this->load->model('Invoice_model', 'invoice_model');
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
@@ -867,6 +868,127 @@ class Job extends MY_Controller
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
 
+    }
+
+    public function add_new_job_type()
+    {
+        $this->load->view('job/job_settings/add_new_job_type', $this->page_data);
+    }
+
+    public function create_job_type()
+    {
+        postAllowed();
+
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if( $post['job_type_name'] != ''){
+            if( !empty($_FILES['image']['name']) ){
+
+                $marker_icon = $this->moveUploadedFile();
+                $data_job_type = [
+                    'user_id' => $user_id,
+                    'company_id' => $comp_id,                    
+                    'title' => $post['job_type_name'],
+                    'icon_marker' => $marker_icon,
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s")
+                ];
+
+                $job_type_id = $this->JobType_model->create($data_job_type);
+                if( $job_type_id > 0 ){
+
+                    $this->session->set_flashdata('message', 'Add new job type was successful');
+                    $this->session->set_flashdata('alert_class', 'alert-success');
+
+                    redirect('job/job_types');
+
+                }else{
+                    $this->session->set_flashdata('message', 'Cannot save data.');
+                    $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                    redirect('job/add_new_job_type');
+                }
+            }else{
+                $this->session->set_flashdata('message', 'Please specify job type icon / marker image');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                redirect('job/add_new_job_type');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please specify job type name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('job/add_new_job_type');
+        }
+    }
+
+    public function edit_job_type( $job_type_id ){
+
+        $jobType = $this->JobType_model->getById($job_type_id);
+
+        $this->page_data['jobType'] = $jobType;
+        $this->load->view('job/job_settings/edit_job_type', $this->page_data);
+    }
+
+    public function update_job_type() {
+        postAllowed();
+        $post    = $this->input->post();
+
+        if( $post['job_type_name'] != '' ){
+
+            $eventType = $this->JobType_model->getById($post['eid']);
+            if( $eventType ){
+                $marker_icon = $eventType->icon_marker;
+                if( $_FILES['image']['size'] > 0 ){
+                    $marker_icon = $this->moveUploadedFile();
+                }
+
+                $data_event_type = [
+                    'title' => $post['job_type_name'],
+                    'icon_marker' => $marker_icon
+                ];
+
+                $this->JobType_model->updateJobTypeById($post['eid'], $data_event_type);
+
+                $this->session->set_flashdata('message', 'Job Type was successful updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+
+                redirect('job/job_types');
+
+            }else{
+                $this->session->set_flashdata('message', 'Record not found.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                redirect('job/job_types');
+            }
+
+        }else{
+            $this->session->set_flashdata('message', 'Please specify job type name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('job/edit_job_type/'.$post['eid']);
+
+        }
+    } 
+
+    public function moveUploadedFile() {
+        if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
+            $target_dir = "./uploads/job_types/";
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = basename($_FILES["image"]["name"]);
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
     }
 }
 
