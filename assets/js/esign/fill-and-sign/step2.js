@@ -825,6 +825,8 @@ async function generatePDF(documentId) {
 }
 
 $(document).ready(function () {
+  $(".fillAndSign").css({ marginTop: $("#topnav").height() });
+
   const urlParams = new URLSearchParams(window.location.search);
   const documentId = parseInt(urlParams.get("docid"));
 

@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3>Expense Transactions</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:10px;margin-top:5px;">
-                        This is Expense Transactions gold band 
+                    An expense is generally anything that your company spends money on to keep it up and running.   Examples of expenses are rent, phone bills, website hosting fees, office supplies, accountant fees, trash service, janitorial fees, etc.   Simply click new transaction and you will see you will see a list of options to chose from.  Once you choose the type of transactions; just enter the information and click save new.   
                     </div>
                 <div class="row" style="padding-bottom: 20px;padding-left: 20px;">
                     <div class="col-md-6 banking-tab-container">

@@ -152,8 +152,8 @@ add_css(array(
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" id="newJobTypeBtn" data-target="#newJobTypeModal">
-                                                <span class="fa fa-plus"></span> Add New Type
+                                            <a href="<?php echo base_url('job/add_new_job_type'); ?>" class="btn btn-primary btn-sm" id="">
+                                                <span class="fa fa-plus"></span> Add New Job Type
                                             </a>
                                         </div>
                                     </div>
@@ -176,7 +176,7 @@ add_css(array(
                                 <table class="table table-bordered table-striped" id="jobTypeTable">
                                     <thead>
                                     <tr>
-                                        <th scope="col"><strong>Title</strong></th>
+                                        <th scope="col" style="width:70%;"><strong>Title</strong></th>
                                         <th scope="col"><strong>Date Created</strong></th>
                                         <th scope="col"><strong>Manage</strong></th>
                                     </tr>
@@ -188,9 +188,9 @@ add_css(array(
                                                 <td class="pl-3"><?= $types->title; ?></td>
                                                 <td class="pl-3"><?= date_format(date_create($types->created_at),"m/d/Y"); ?></td>
                                                 <td class="pl-3">
-                                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#newJobTypeModal" data-id="<?php echo $types->id; ?>" data-jobtype="<?php echo $types->title; ?>" class="editJobTypeBtn btn btn-primary btn-sm">
+                                                    <a href="<?php echo base_url('job/edit_job_type/' . $types->id); ?>" class="btn btn-primary btn-sm">
                                                         <span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                    <a href="javascript:void(0)" id="<?= $types->id; ?>"  class="delete_tags btn btn-primary btn-sm">
+                                                    <a href="javascript:void(0)" id="<?= $types->id; ?>"  class="delete_job_type btn btn-primary btn-sm">
                                                         <span class="fa fa-trash"></span> Delete
                                                     </a>
                                                 </td>
@@ -279,7 +279,7 @@ add_footer_js(array(
                 }
             });
         });
-        $(".delete_tags").on( "click", function( event ) {
+        $(".delete_job_type").on( "click", function( event ) {
             var ID=this.id;
             // alert(ID);
             Swal.fire({
@@ -295,7 +295,7 @@ add_footer_js(array(
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "/job/delete_job_type",
+                        url: base_url + "/job/delete_job_type",
                         data: {type_id : ID}, // serializes the form's elements.
                         success: function(data)
                         {

@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3>Payroll Overview</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Payroll Overview gold band 
+					No Payroll History Needed. All Reports in One Spot.  Very easy shortcuts to help reduce the headaches of paying your staffs and vendors.  Let's go!
                     </div>
 					<div class="row pb-2">
 						<div class="col-md-12 banking-tab-container">

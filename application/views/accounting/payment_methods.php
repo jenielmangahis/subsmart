@@ -343,9 +343,14 @@ $('#payment-method-form').on('submit', function(e) {
     e.preventDefault();
 
     var data = new FormData(document.getElementById('payment-method-form'));
-    
+    var url = '/accounting/payment-methods/add';
+
+    if(data.has('id')) {
+        url = '/accounting/payment-methods/update'
+    }
+
     $.ajax({
-        url: '/accounting/payment-methods/add',
+        url: url,
         data: data,
         type: 'post',
         processData: false,
@@ -387,16 +392,19 @@ $(document).on('click', '#payment_methods .edit-method', function(e) {
 
     var data = e.currentTarget.dataset;
 
-    $('#payment_method_modal form').attr('id', 'update-payment-method');
-    $('#update-payment-method').prepend(`<input type="hidden" value="${data.id}" name="id">`);
-    $('#update-payment-method #name').val(data.name);
+    $('#payment-method-form').prepend(`<input type="hidden" value="${data.id}" name="id">`);
 
-    if(data.credit_card === '1' || data.credit_card === 1) {
-        $('#update-payment-method #credit_card').prop('checked', true);
-    } else {
-        $('#update-payment-method #credit_card').prop('checked', false);
+    if(data.name !== null && data.name !== "null") {
+        $('#payment-method-form #name').val(data.name);
     }
 
+    if(data.credit_card === '1' || data.credit_card === 1) {
+        $('#payment-method-form #credit_card').prop('checked', true);
+    } else {
+        $('#payment-method-form #credit_card').prop('checked', false);
+    }
+
+    $('#payment_method_modal h4.modal-title').html('Edit Payment Method');
     $('#payment_method_modal').modal('show');
 });
 
@@ -407,6 +415,7 @@ $('a[data-target="#payment_method_modal"]').on('click', function() {
     }
     $('#payment-method-form #name').val('');
     $('#payment-method-form #credit_card').prop('checked', false);
+    $('#payment_method_modal h4.modal-title').html('New Payment Method');
 });
 
 $(document).on('click', '#payment_methods .make-inactive', function(e) {

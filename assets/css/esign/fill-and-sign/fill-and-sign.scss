@@ -27,6 +27,25 @@ body {
   background-color: #fff !important;
 }
 
+#signatureModal {
+  .modal-footer {
+    flex-direction: column;
+    align-items: initial;
+    text-align: initial;
+
+    &__buttonContainer {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
+
+#selectDocumentModal {
+  .modal-body {
+    min-height: 200px;
+  }
+}
+
 .fillAndSign {
   margin-top: 80px; // height of fvcking header
   padding-top: 20px;
@@ -147,6 +166,8 @@ body {
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      outline: 0 !important;
+      box-shadow: none !important;
 
       & > span {
         padding: 5px 15px;
@@ -189,7 +210,8 @@ body {
       align-items: center;
 
       &:active,
-      &:focus {
+      &:focus,
+      &:disabled:hover {
         background-color: var(--bg-color) !important;
         border: 1px solid var(--bg-color) !important;
         color: #1e1e1e !important;
@@ -313,12 +335,6 @@ body {
 
     &Reduce {
       font-size: 9px;
-    }
-  }
-
-  #signatureModal {
-    .modal-body {
-      min-height: 200px;
     }
   }
 
@@ -608,6 +624,58 @@ body {
       font-family: monospace;
       background-color: #666;
       color: #fff;
+    }
+  }
+
+  &__vault {
+    .fa {
+      font-size: 30px;
+    }
+
+    &Item {
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #f3f3f3;
+      color: #797979;
+      border-radius: 4px;
+      font-family: "Open Sans", sans-serif;
+      cursor: pointer;
+
+      &--selected {
+        background-color: #e8f0fe;
+
+        .fillAndSign__vaultItemTitle {
+          color: #1967d2;
+        }
+      }
+
+      &Info {
+        font-size: 13px;
+      }
+
+      &Title {
+        margin-bottom: 0;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__selectFile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+
+    .custom-file {
+      max-width: 300px;
+    }
+
+    .custom-file-label__inner {
+      width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
     }
   }
 }

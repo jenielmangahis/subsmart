@@ -28,11 +28,18 @@ class Dashboard extends Widgets {
         add_header_js(array(
             'assets/barcharts/js/chart.min.js',
             'assets/barcharts/js/utils.js',
-            'assets/barcharts/js/chartjs-plugin-labels.js'
+            'assets/barcharts/js/chartjs-plugin-labels.js',
+            
         ));
         add_footer_js(array(
             //'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'assets/frontend/js/dashboard/main.js',
+            'assets/ringcentral/config.js',
+            'assets/ringcentral/es6-promise.auto.js',
+            'assets/ringcentral/fetch.umd.js',
+            'assets/ringcentral/pubnub.4.20.1.js',
+            'assets/ringcentral/ringcentral.js',
+            'assets/ringcentral/rc_authentication.js'
         ));
     }
     

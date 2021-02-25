@@ -62,16 +62,43 @@ class FillAndSign extends MY_Controller
             return;
         }
 
-        $file = $_FILES['document'];
         $filepath = './uploads/fillandsign/';
-
         if (!file_exists($filepath)) {
             mkdir($filepath, 0777, true);
         }
 
+        $fileId = $_POST['vault_file_id'] ?? NULL;
+        $file = $_FILES['document'];
         $userId = logged('id');
-        $tempName = $file['tmp_name'];
 
+        if ($fileId) {
+            // the user has select a document from the files vault
+
+            $query = <<<SQL
+            SELECT `filevault`.*, `business_profile`.`folder_name` FROM `filevault`
+            LEFT JOIN `business_profile` ON `filevault`.`company_id` = `business_profile`.`id`
+            WHERE `filevault`.`file_id` = ? AND `filevault`.`company_id` = ?
+            SQL;
+
+            $file = (array) $this->db->query($query, [$fileId, logged('company_id')])->row();
+
+            ['folder_name' => $folderName, 'file_path' => $_filePath, 'title' => $filename] = $file;
+            $currFilePath = trim($_filePath, '/');
+
+            // copy vault document with new name
+            $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
+            copy("./uploads/$folderName/$currFilePath", $filepath . $filename);
+
+            $this->db->insert('fill_and_sign_documents', [
+                'name' => $filename,
+                'user_id' => $userId,
+            ]);
+
+            echo json_encode(['document_id' => $this->db->insert_id()]);
+            return;
+        }
+
+        $tempName = $file['tmp_name'];
         $filename = $file['name'];
         $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
 
@@ -81,7 +108,6 @@ class FillAndSign extends MY_Controller
             'user_id' => $userId,
         ]);
 
-        header('content-type: application/json');
         echo json_encode(['document_id' => $this->db->insert_id()]);
     }
 
@@ -292,5 +318,20 @@ class FillAndSign extends MY_Controller
         $record = $this->db->get('fill_and_sign_documents_links')->row();
 
         echo json_encode(['link' => $record]);
+    }
+
+    public function getVaultPdfs()
+    {
+        $query = <<<SQL
+        SELECT `filevault`.*, `business_profile`.`folder_name`, `users`.`FName`, `users`.`LName` FROM `filevault`
+        LEFT JOIN `business_profile` ON `filevault`.`company_id` = `business_profile`.`id`
+        LEFT JOIN `users` ON `filevault`.`user_id` = `users`.`id`
+        WHERE `filevault`.`title` like '%.pdf' AND `filevault`.`company_id` = ?
+        SQL;
+
+        $pdfs = $this->db->query($query, [logged('company_id')])->result();
+
+        header('content-type: application/json');
+        echo json_encode(['documents' => $pdfs]);
     }
 }

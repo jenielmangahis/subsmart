@@ -147,7 +147,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="table-wrapper-settings">
                                         <table id="tsEmployeeDataTable" class="table table-hover table-to-list"></table>
                                         <div class="table-ts-loader">
-                                            <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                            <img class="ts-loader-img" src="<?=base_url();?>/assets/css/timesheet/images/ring-loader.svg" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -184,7 +184,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $('.table-ts-loader').css('display','block');
             });
             $.ajax({
-                url:"/timesheet/showEmployeeTable",
+                url:"<?=base_url()?>timesheet/showEmployeeTable",
                 type:"GET",
                 dataType:"json",
                 data:{week:week},

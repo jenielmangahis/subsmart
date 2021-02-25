@@ -14,11 +14,10 @@
     <form id="form">
         <div class="d-flex">
             <div class="fillAndSign__upload">
-                <button class="btn">
+                <button class="btn" type="button">
                     <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
                     <span>Upload</span>
                 </button>
-                <input id="fileInput" type="file" name="document" accept="application/pdf" required>
             </div>
 
             <div class="ml-3 fillAndSign__docPreview d-none">
@@ -27,7 +26,6 @@
                     <h5 class="fillAndSign__docTitle"></h5>
                     <span class="fillAndSign__docPageCount"></span>
                 </div>
-
 
                 <div class="fillAndSign__uploadProgress" width="100%">
                     <span></span>
@@ -59,5 +57,58 @@
         </div>
     </div>
 </section>
+
+<div class="modal fillAndSign__modal" id="selectDocumentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Document</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item active">
+                        <a class="nav-link" id="vault-tab" data-toggle="tab" href="#vault" role="tab" aria-controls="vault" aria-selected="false">
+                            Shared Library
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="local-tab" data-toggle="tab" href="#local" role="tab" aria-controls="type" aria-selected="true">
+                            Local
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="vault" data-upload-type="vault" role="tabpanel" aria-labelledby="vault-tab">
+                        <div>
+                            <ul class="fillAndSign__vault"></ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="local" data-upload-type="local" role="tabpanel" aria-labelledby="local-tab">
+                        <div class="fillAndSign__selectFile">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="fileInput">
+                                <label class="custom-file-label" for="customFile">
+                                    <span class="custom-file-label__inner">Select Document</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary d-flex align-items-center" id="selectDocumentButton">
+                    <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Select Document
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="selectDocumentCloseButton">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php include viewPath('includes/footer'); ?>

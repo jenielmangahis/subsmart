@@ -173,6 +173,30 @@ a.top-1 {
     margin-top: 0;
     margin-bottom: 0;
   }
+  div.no-data {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 20px;
+      color: #6b6b6b;
+  }
+  .job-caption {
+    display: block;
+    margin-bottom: 14px !important;
+  }
+  img.rounded-circle.nav-user-img.vertical-center.jobs {
+    max-width: 100px;
+    position: relative;
+    bottom: 11px;
+    float: right;
+    box-shadow: rgb(0 0 0 / 28%) 0 1px 3px;
+  }
+  img.rounded-circle.nav-user-img.vertical-center.events {
+    max-width: 100px;
+    position: relative;
+    top: 10px;
+    float: right;
+    box-shadow: rgb(0 0 0 / 28%) 0 1px 3px;
+  }
   .calendar-tooltip .popper[x-placement^="bottom"],
   .calendar-tooltip .tooltip[x-placement^="bottom"] {
     margin-top: 5px;
@@ -211,6 +235,9 @@ a.top-1 {
     font-family: Sarabun, sans-serif !important;
     font-size: 1.75rem !important;
     font-weight: 600 !important;
+  }
+  .col-20 {
+    width: 20%;
   }
   .calendar-tooltip .popper[x-placement^="left"] .popper__arrow,
   .calendar-tooltip .tooltip[x-placement^="left"] .tooltip-arrow {
@@ -488,10 +515,26 @@ a.top-1 {
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
                                       <div class="margin-bottom">
-                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
-                                          <div id="upcoming-jobs-container"></div>
-                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
-                                          <div id="upcoming-events-container"></div>
+                                          <div><h3 class="left-header" style="background-color: #4eb245;"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
+
+                                          <div class="row d-none d-lg-flex">
+                                              <div class="col-md-12">
+                                                  <div class="cus-dashboard-div">
+                                                      <div id="upcoming-jobs-container"></div>
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                          <div><h3 class="left-header" style="background-color: #9775fa;"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
+
+                                          <div class="row d-none d-lg-flex">
+                                              <div class="col-md-12">
+                                                  <div class="cus-dashboard-div">
+                                                      <div id="upcoming-events-container"></div>
+                                                  </div>
+                                              </div>
+                                          </div>
+
                                           <div><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
                                           <div id="scheduled-estimates-container"></div>
                                       </div>
@@ -798,8 +841,8 @@ a.top-1 {
                 <button type="button" class="btn btn-danger btn-event-delete" id="delete_schedule">Delete</button>
                 <button type="button" class="btn btn-primary btn-event-edit" id="edit_schedule" style="display: none">Edit Schedule
                 </button>
-                <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
-                </button>
+                <!-- <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
+                </button> -->
             </div>
         </div>
 
@@ -1075,7 +1118,7 @@ a.top-1 {
                     apiUrl = base_url + 'event/modal_details/' + arg.event._def.extendedProps.eventId;
 
                     $("#edit_schedule").show();
-                    $("#edit_workorder").hide();
+                    //$("#edit_workorder").hide();
 
                     $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);
                 }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
@@ -1092,9 +1135,9 @@ a.top-1 {
                     apiUrl = base_url + 'workcalender/short_details/' + arg.event._def.extendedProps.wordOrderId;
 
                     $("#edit_schedule").hide();
-                    $("#edit_workorder").show();
+                    //$("#edit_workorder").show();
 
-                    $("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
+                    //$("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
                 }
 
                 if( isGet == 1 ){

@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3>Vendors</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Vendors gold band 
+                    Vendors are people or companies that you owe money to or subcontractors that work for you.  You can use the vendors tab to add and track them.  Here's how.  Select Expenses, then Vendors.  Select New Vendor.  Complete the fields in the Vendor Information window.  Select Save and close. 
                     </div>
                 <div class="row pb-2">
                     <div class="col-md-12 banking-tab-container">

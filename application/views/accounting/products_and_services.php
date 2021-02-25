@@ -8,6 +8,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div style="padding-top:1%;">
 						<h3 style="font-family: Sarabun, sans-serif">Products and Services</h3>
 					</div>
+					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+					If you are not enrolled in our inventory management system, you may want to consider this feature.  With this powerful feature means being able to track the products you sell and the services you provide per location.  This feature means less shrinkage and more profitability. 
+                    </div>
 			<div class="page-title-box mx-4">
 				<div class="row pb-2">
 					<div class="col-md-12 banking-tab-container">

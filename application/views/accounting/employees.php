@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3>Employees</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                        This is employee gold band 
+					Here you will get a detailed summary of pay rate, payment method, pay schedule and the status of each of your employee.  With this report, you will be able to forecast a better budget for future weeks.  
                     </div>
 				<div class="row pb-2">
 					<div class="col-md-8 banking-tab-container">

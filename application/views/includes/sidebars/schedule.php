@@ -45,7 +45,7 @@
                 <span class="fa fa-book"></span><span class="total-online-booking left-sidebar-badge"></span>Online Booking
             </a>
         </li>
-        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'priority' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/priority/') ?>" title="Credentials"><span class="fa fa-cube"></span>Priority List</a></li>
+        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'priority' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/priority/') ?>" title="Credentials"><span class="fa fa-cube"></span>Priority</a></li>
         <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'map' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/map') ?>" title="Services"><span class="fa fa-users"></span>Bird Eye View</a></li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'event_types')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('event_types/index') ?>" title="Event Types">

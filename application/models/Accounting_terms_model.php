@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Accounting_payment_methods_model extends MY_Model {
+class Accounting_terms_model extends MY_Model {
 
-    public $table = 'accounting_payment_methods';
+    public $table = 'accounting_terms';
 	
 	public function __construct()
 	{
@@ -16,7 +16,7 @@ class Accounting_payment_methods_model extends MY_Model {
 	    return $this->db->insert_id();
 	}
 
-    function getCompanyPaymentMethods($order, $status)
+    function getCompanyTerms($order, $status)
 	{
 		return $this->db->where('company_id', getLoggedCompanyID())->where_in('status', $status)->order_by('name', $order)->get($this->table)->result_array();
 	}
@@ -31,7 +31,7 @@ class Accounting_payment_methods_model extends MY_Model {
                 ->update($this->table, ['status' => 1, 'updated_at' => date('Y-m-d h:i:s')]);
     }
 
-	public function updatePaymentMethod($id, $data) {
+	public function updateTerm($id, $data) {
 		$this->db->where('company_id', getLoggedCompanyID());
 		$this->db->where('id', $id);
 		$update = $this->db->update($this->table, $data);

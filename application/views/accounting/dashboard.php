@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section style="padding-left:1%;">
         <div class="container-fluid" style="background-color:white;">
                     <div style="padding-top:1%;">
-						<h3 style="font-family: Sarabun, sans-serif">Dashboard</h3>
+						<h3 style="font-family: Sarabun, sans-serif">Accounting Dashboard</h3>
 					</div>
             <div class="page-title-box">
                 <div class="row">

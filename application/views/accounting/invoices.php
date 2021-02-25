@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h3>Invoice</h3>
 					</div>
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Invoice gold band 
+					When an invoice is created in our CRM,  a statement summary of your customer's account listing recent invoices will display here for you to view.  The statement shows per invoice not per items. 
                     </div>
 					<br>
 				<div class="row pb-2">

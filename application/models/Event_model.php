@@ -68,8 +68,8 @@ class Event_model extends MY_Model
         $this->db->select('
                 events.id, company_id, customer_id, employee_id, 
                 workorder_id, description, event_description, 
-                start_date, start_time, end_date, end_time, event_color, 
-                notify_at, instructions, is_recurring, status'
+                start_date, start_time, end_date, end_time, event_color,what_of_even,
+                event_address, event_state, notify_at, instructions, is_recurring, status'
             );
 
         $this->db->from($this->table);
@@ -95,8 +95,8 @@ class Event_model extends MY_Model
         $this->db->select('
                 events.id, company_id, customer_id, employee_id, 
                 workorder_id, description, event_description, 
-                start_date, start_time, end_date, end_time, event_color, 
-                notify_at, instructions, is_recurring, status'
+                start_date, start_time, end_date, end_time, event_color,what_of_even, 
+                event_address, event_state, notify_at, instructions, is_recurring, status'
             );
 
         $this->db->from($this->table);

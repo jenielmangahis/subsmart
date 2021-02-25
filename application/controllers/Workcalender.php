@@ -68,21 +68,21 @@ class Workcalender extends MY_Controller
 
             foreach ($events as $key => $event) {
 
-                $customer = get_customer_by_id($event->customer_id);
+                $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
 
                 // label of the event
                 if (!empty($customer)) {
 
                     if (!empty($calender_settings)) {
 
-                        $title = make_calender_event_label($calender_settings, $event, $customer);
+                        $title = acs_prof_make_calender_event_label($calender_settings, $event, $customer);
 
                     } else {
 
                         $date = date('a', strtotime($event->start_time));
                         $date = substr($date, -2, 1);
                         $title = date('g', strtotime($event->start_time)) . $date;
-                        $title .= ' ' . $customer->contact_name . ', ' . $customer->mobile;
+                        $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
                     }
                 }
 
@@ -1537,24 +1537,34 @@ class Workcalender extends MY_Controller
         $events = array();
         foreach( $upcoming_events as $u ){
             $events[$u->start_date][] = [
+                'event_id' => $u->id,
+                'type' => 'events',
                 'event_title' => get_customer_by_id($u->customer_id)->contact_name,
                 'event_description' => $u->event_description,
                 'start_date' => date('F j, Y', strtotime($u->start_date)),
                 'end_date' => date('F j, Y', strtotime($u->end_date)),
                 'start_time' => $u->start_time,
-                'end_time' => $u->end_time
+                'end_time' => $u->end_time,
+                'what_of_even' => $u->what_of_even,
+                'event_color' => $u->event_color,
+                'address' => $u->event_address . ' ' . $u->event_state
             ];
         }
 
         foreach( $google_events as $g ){
             $start_date = date("Y-m-d", strtotime($g['start']));
             $events[$start_date][] = [
+                'event_id' => $g['geventID'],
+                'type' => 'g-events',
                 'event_title' => $g['title'],
                 'event_description' => $g['description'],
                 'start_date' => date('F j, Y', strtotime($g['start'])),
                 'end_date' => date('F j, Y', strtotime($g['end'])),
                 'start_time' => date('H:i:s', strtotime($g['start'])),
-                'end_time' => date('H:i:s', strtotime($g['end']))
+                'end_time' => date('H:i:s', strtotime($g['end'])),
+                'event_color' => '#4cb052',
+                'what_of_even' => 'Google Calendar',
+                'address' => ''
             ];
         }
 

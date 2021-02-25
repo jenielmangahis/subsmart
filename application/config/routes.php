@@ -292,10 +292,16 @@ $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting/
 $route['accounting/payment-methods/add']['post'] = 'accounting/add_payment_method';
 $route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting/delete_payment_method/$1";
 $route['accounting/payment-methods/activate/(:any)'] = "accounting/activate_payment_method/$1";
+$route['accounting/payment-methods/update']['post'] = "accounting/update_payment_method";
 
 $route['accounting/recurring-transactions'] = "accounting/recurring_transactions";
 
 $route['accounting/terms'] = "accounting/terms";
+$route['accounting/terms/add'] = "accounting/add_terms";
+$route['accounting/terms/load-terms']['post'] = 'accounting/load_terms';
+$route['accounting/terms/delete/(:any)']['DELETE'] = "accounting/delete_term/$1";
+$route['accounting/terms/activate/(:any)'] = "accounting/activate_term/$1";
+$route['accounting/terms/update']['post'] = "accounting/update_term";
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -581,6 +587,7 @@ $route['estimate/_load_scheduled_estimates'] = 'Estimate/ajax_load_scheduled_est
 $route['estimate/view/(:any)'] = 'Estimate/view/$1';
 $route['estimate/view_pdf/(:num)'] = 'Estimate/pdf_estimate/$1';
 $route['estimate/print/(:num)'] = 'Estimate/print_estimate/$1';
+$route['estimate/settings'] = 'Estimate/estimate_settings';
 
 //Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
@@ -612,3 +619,10 @@ $route['event_types/delete'] = 'Event_Types/delete_event_type';
 
 //Esign
 $route['esignmain'] = 'Esign_Main/index';
+
+//Job Types
+$route['job/add_new_job_type'] = 'Job/add_new_job_type';
+$route['job/save_job_type'] = 'Job/create_job_type';
+$route['job/edit_job_type/(:num)'] = 'Job/edit_job_type/$1';
+$route['job/update_job_type'] = 'Job/update_job_type';
+$route['job/delete_job_type'] = 'Job/delete_job_type';

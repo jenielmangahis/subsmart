@@ -29,6 +29,6 @@
         
         <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'settings' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/settings') ?>" title="Credentials"><span class="fa fa-cube"></span>Settings</a></li>
         <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'checklists' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/checklists') ?>" title="Checklists"><span class="fa fa-list"></span>Checklist</a></li>
-        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'workstatus' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workstatus') ?>" title="Credentials"><span class="fa fa-cube"></span>Status</a></li>
+        <!-- <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'workstatus' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workstatus') ?>" title="Credentials"><span class="fa fa-cube"></span>Status</a></li> -->
     </ul>
 </nav>

@@ -16,7 +16,7 @@
             <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimate') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
         </div>
         <div class="margin-bottom" style="width:60%;">
-            <div class="help help-sm">Customers can select all or only certain options</div>
+            <div class="help help-sm">Customers can select all <br>or only certain options</div>
             <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimateOptions?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
         </div>
         <div  class="margin-bottom" style="width:60%;">
