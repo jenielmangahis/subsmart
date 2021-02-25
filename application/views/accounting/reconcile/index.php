@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-sm-12 p-0">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                        <span style="color:black;">Reconcile message</span>
+                                        <span style="color:black;">Account reconciliation is the process of matching transactions entered into our software against your bank or credit card statements. Simply, match transactions to your bank statement and check them off one by one.</span>
                                     </div>
                                 </div>
                             </div>

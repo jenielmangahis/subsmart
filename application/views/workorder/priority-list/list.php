@@ -10,7 +10,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .pr-b10 {
   position: relative;
-  bottom: 10px;
+  bottom: 15px;
+}
+.page-title-box {
+    padding-bottom: 2px !important;
+    padding-top: 10px !important;
+}
+.float-right.d-none.d-md-block {
+    position: relative;
+    bottom: 10px;
 }
 .p-40 {
   padding-top: 40px !important;
@@ -24,6 +32,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 @media only screen and (max-width: 600px) {
   .p-40 {
     padding-top: 0px !important;
+  }
+  .float-right.d-none.d-md-block {
+      position: relative;
+      bottom: 0px;
   }
   .pr-b10 {
     position: relative;
@@ -41,10 +53,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h3 class="page-title">Priority List</h3>
+                            <h3 class="page-title">Priority</h3>
+                            <!--
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item active">Manage work order priority list.</li>
                             </ol>
+                            -->
                         </div>
                         <div class="col-sm-6">
                             <div class="float-right d-none d-md-block">
@@ -52,19 +66,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <?php ////if (hasPermissions('add_plan')): ?>
                                     <a href="<?php echo url('workorder/priority/add') ?>" class="btn btn-primary"><i
                                                 class="fa fa-plus"></i> New Priority</a>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="pl-3 pr-3 mt-0 row">
+                  <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Priority scheduling is a method of scheduling processes based on priority. In this method, the scheduler chooses the tasks to work as per the list of priority. Priority scheduling involves priority assignment to every process in events or jobs.</span>
+                  </div>
+                </div>
                 <!-- end row -->
                 <section class="content">
                     <!-- Default box -->
                     <div class="box">
+                        <!--
                         <div class="box-header with-border">
                             <h3 class="box-title">List of Priority</h3>
-                        </div>
+                        </div> -->
                         <div class="box-body">
                             <table id="dataTable1" class="table table-bordered table-striped">
                                 <thead>

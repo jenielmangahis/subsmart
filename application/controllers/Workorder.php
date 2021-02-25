@@ -678,6 +678,20 @@ class Workorder extends MY_Controller
     public function map()
     {
         $this->load->model('Event_model');
+        $this->load->model('Users_model');
+
+        add_css(array(
+            'assets/css/daterange/daterangepicker.css'
+        ));
+        
+        add_footer_js(array(
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
+            'https://maps.googleapis.com/maps/api/js?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&callback=initMap',
+            //'https://maps.googleapis.com/maps/api/js?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&callback=initMap',
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js',
+            'assets/js/daterange/daterangepicker.js'
+        ));
 
         $is_allowed = $this->isAllowedModuleAccess(25);
         if( !$is_allowed ){
@@ -686,29 +700,166 @@ class Workorder extends MY_Controller
             die();
         }
 
-        $events = $this->Event_model->getAllEventsWithAddress();
-        $locations = array();
+        $company_id   = logged('company_id');
+        $companyUsers = $this->Users_model->getCompanyUsers($company_id);
+        $this->page_data['companyUsers'] = $companyUsers;
+        $this->load->view('workorder/bird-eye-view', $this->page_data);
+    }
+
+    /**
+     *
+     */
+    public function ajax_load_map_routes()
+    {
+        set_time_limit (120);
+
+        $this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Users_model');
+
+        $user_id    = logged('id');  
+        $locations  = array();
         $center_lat = '';
         $center_lng = '';
         $counter = 1;
-        foreach($events as $e){
-            $address = urlencode($e->event_address . " " . $e->event_state);
-            $gdata = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".$address."&sensor=false");
-            if($gdata){
-                $json = json_decode($gdata, true);   
-                if($center_lng == '' && $center_lat == ''){
-                    $center_lng = $json['results'][0]['geometry']['location']['lng'];
-                    $center_lat = $json['results'][0]['geometry']['location']['lat'];
+
+        $post = $this->input->post();
+        if( $post['user'] == 'all' ){
+            $users    = $this->Users_model->getAll();
+            foreach( $users as $user ){
+                //Set Center Map
+                $pointA  = $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
+                $gdata   = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
+                if($gdata){
+                    $json = json_decode($gdata, true);
+                    if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                        $center_lng = $json['results'][0]['geometry']['location']['lng'];
+                        $center_lat = $json['results'][0]['geometry']['location']['lat'];
+                    }
                 }
-                $locations[] = "['".$json['results'][0]['formatted_address']."',".$json['results'][0]['geometry']['location']['lat'].",".$json['results'][0]['geometry']['location']['lng'].",".$counter."]";
+
+                //Events
+                $events  = $this->Event_model->getAllUserEventsWithAddress($user->id);
+                foreach($events as $e){
+                    if( $e->event_address != '' ){
+                        $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
+                        $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
+                        $json   = json_decode($gdata, true);   
+                        if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                            $locations[] = [
+                                'title' => $pointA,
+                                'lat' => $center_lat,
+                                'lng' => $center_lng,
+                                'description' => $pointA,
+                            ];
+                            $locations[] = [
+                                'title' => $pointB,
+                                'lat' => $json['results'][0]['geometry']['location']['lat'],
+                                'lng' => $json['results'][0]['geometry']['location']['lng'],
+                                'description' => $e->event_description,
+                            ];  
+                        }
+                    }
+                    $counter++;    
+                } 
+
+                //Jobs
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user']);
+                /*foreach($jobs as $j){
+                    if( $j->job_location != '' ){
+                        $pointB = $j->job_location; 
+                        $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
+                        $json   = json_decode($gdata, true); 
+                        if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                           $locations[] = [
+                                'title' => $pointA,
+                                'lat' => $center_lat,
+                                'lng' => $center_lng,
+                                'description' => $pointA,
+                            ];
+                            $locations[] = [
+                                'title' => $pointB,
+                                'lat' => $json['results'][0]['geometry']['location']['lat'],
+                                'lng' => $json['results'][0]['geometry']['location']['lng'],
+                                'description' => $j->job_number . " - " . $j->job_name,
+                            ];    
+                        }    
+                    }
+                }*/
+            } 
+        }else{
+            if( $post['user'] > 0 ){
+                $user    = $this->Users_model->getUser($post['user']);
+                $events  = $this->Event_model->getAllUserEventsWithAddress($post['user']);
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user']);
+            }else{
+                $user    = $this->Users_model->getUser($user_id);
+                $events  = $this->Event_model->getAllUserEventsWithAddress($user_id);
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($user_id);
             }
-            $counter++;    
+
+            //Set Center Map
+            $pointA  = $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
+            $gdata   = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
+            if($gdata){
+                $json = json_decode($gdata, true);
+                $center_lng = $json['results'][0]['geometry']['location']['lng'];
+                $center_lat = $json['results'][0]['geometry']['location']['lat'];
+            }
+
+            //Events
+            foreach($events as $e){
+                if( $e->event_address != '' ){
+                    $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
+                    $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
+                    $json   = json_decode($gdata, true);   
+                    if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                        $locations[] = [
+                            'title' => $pointA,
+                            'lat' => $center_lat,
+                            'lng' => $center_lng,
+                            'description' => $pointA,
+                        ];
+                        $locations[] = [
+                            'title' => $pointB,
+                            'lat' => $json['results'][0]['geometry']['location']['lat'],
+                            'lng' => $json['results'][0]['geometry']['location']['lng'],
+                            'description' => $e->event_description,
+                        ]; 
+                    } 
+                }
+                $counter++;    
+            }
+
+            //Jobs
+            /*foreach($jobs as $j){
+                if( $j->job_location != '' ){
+                    $pointB = $j->job_location; 
+                    $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
+                    $json   = json_decode($gdata, true);  
+                    if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                        $locations[] = [
+                            'title' => $pointA,
+                            'lat' => $center_lat,
+                            'lng' => $center_lng,
+                            'description' => $pointA,
+                        ];
+                        $locations[] = [
+                            'title' => $pointB,
+                            'lat' => $json['results'][0]['geometry']['location']['lat'],
+                            'lng' => $json['results'][0]['geometry']['location']['lng'],
+                            'description' => $j->job_number . " - " . $j->job_name,
+                        ];    
+                    } 
+                      
+                }
+            }*/
         }
 
         $this->page_data['center_lng'] = $center_lng;
         $this->page_data['center_lat'] = $center_lat;
         $this->page_data['locations'] = $locations;
-        $this->load->view('workorder/bird-eye-view', $this->page_data);
+        $this->load->view('workorder/ajax_load_map_routes', $this->page_data);
     }
 
 

@@ -42,34 +42,42 @@ class Event_Types extends MY_Controller {
         $post    = $this->input->post();
 
         if( $post['event_type_name'] != ''){
-            $data_event_type = [
-                'user_id' => $user_id,
-                'event_type_name' => $post['event_type_name'],
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s")
-            ];
+            if( !empty($_FILES['image']['name']) ){
 
-            $event_type_id = $this->EventType_model->create($data_event_type);
-            if( $event_type_id > 0 ){
+                $marker_icon = $this->moveUploadedFile();
+                $data_event_type = [
+                    'user_id' => $user_id,
+                    'event_type_name' => $post['event_type_name'],
+                    'icon_marker' => $marker_icon,
+                    'created' => date("Y-m-d H:i:s"),
+                    'modified' => date("Y-m-d H:i:s")
+                ];
 
-                $this->session->set_flashdata('message', 'Add new event type was successful');
-                $this->session->set_flashdata('alert_class', 'alert-success');
+                $event_type_id = $this->EventType_model->create($data_event_type);
+                if( $event_type_id > 0 ){
 
-                redirect('event_types/index');
+                    $this->session->set_flashdata('message', 'Add new event type was successful');
+                    $this->session->set_flashdata('alert_class', 'alert-success');
 
+                    redirect('event_types/index');
+
+                }else{
+                    $this->session->set_flashdata('message', 'Cannot save data.');
+                    $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                    redirect('event_types/add_new');
+                }
             }else{
-                $this->session->set_flashdata('message', 'Cannot save data.');
+                $this->session->set_flashdata('message', 'Please specify event icon / marker image');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
 
                 redirect('event_types/add_new');
             }
-
         }else{
             $this->session->set_flashdata('message', 'Please specify event type name');
             $this->session->set_flashdata('alert_class', 'alert-danger');
 
             redirect('event_types/add_new');
-
         }
     }
 
@@ -89,8 +97,14 @@ class Event_Types extends MY_Controller {
 
             $eventType = $this->EventType_model->getById($post['eid']);
             if( $eventType ){
+                $marker_icon = $eventType->icon_marker;
+                if( $_FILES['image']['size'] > 0 ){
+                    $marker_icon = $this->moveUploadedFile();
+                }
+
                 $data_event_type = [
                     'event_type_name' => $post['event_type_name'],
+                    'icon_marker' => $marker_icon,
                     'modified' => date("Y-m-d H:i:s")
                 ];
 
@@ -125,6 +139,24 @@ class Event_Types extends MY_Controller {
 
 		redirect('event_types/index');
 	}
+
+    public function moveUploadedFile() {
+        if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
+            $target_dir = "./uploads/event_types/";
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = basename($_FILES["image"]["name"]);
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
+    }
 }
 
 

@@ -290,6 +290,12 @@ $route['accounting/load-chart-of-accounts']['post'] = 'accounting/load_chart_of_
 $route['accounting/payment-methods'] = 'accounting/payment_methods';
 $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting/load_payment_methods';
 $route['accounting/payment-methods/add']['post'] = 'accounting/add_payment_method';
+$route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting/delete_payment_method/$1";
+$route['accounting/payment-methods/activate/(:any)'] = "accounting/activate_payment_method/$1";
+
+$route['accounting/recurring-transactions'] = "accounting/recurring_transactions";
+
+$route['accounting/terms'] = "accounting/terms";
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -510,6 +516,7 @@ $route['workorder/_create_checklist_item'] = 'Workorder/ajax_create_checklist_it
 $route['workorder/_delete_checklist_items'] = 'Workorder/ajax_delete_checklist_items';
 $route['workorder/_update_checklist_item'] = 'Workorder/ajax_update_checklist_item';
 $route['workorder/update_checklist'] = 'Workorder/update_checklist';
+$route['workorder/_load_map_routes'] = 'Workorder/ajax_load_map_routes';
 
 //Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';

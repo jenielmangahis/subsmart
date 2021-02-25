@@ -855,8 +855,6 @@ class Users extends MY_Controller {
                 'max_width' => '0',
                 'encrypt_name' => true
             );
-            print_r($_FILES);
-            exit;
             $config = $this->uploadlib->initialize($config);
             $this->load->library('upload',$config);
             if ($this->upload->do_upload("file")){

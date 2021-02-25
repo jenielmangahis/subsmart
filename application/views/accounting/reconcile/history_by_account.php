@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-sm-12 p-0">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                        <span style="color:black;">History by account message</span>
+                                        <span style="color:black;">When you open your chart of accounts, you'll see a long list of accounts. These are known as account histories. Each account has its own account history.</span>
                                     </div>
                                 </div>
                             </div>

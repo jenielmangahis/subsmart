@@ -1,6 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.marker-icon{
+  height: 100px;
+  margin: 30px 0px;
+} 
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
     <!-- page wrapper start -->
@@ -24,6 +30,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <div class="form-group">
                               <label>Name</label> <span class="form-required">*</span>
                               <input type="text" name="event_type_name" value="<?= $eventType->event_type_name; ?>"  class="form-control" required="" autocomplete="off" />
+                          </div>
+                          <div class="form-group">
+                              <?php 
+                                if( $eventType->icon_marker != '' ){
+                                  $url = base_url('uploads/event_types/' . $eventType->icon_marker);
+                                }else{
+                                  $url = base_url('uploads/event_types/no_file.png');
+                                }
+                              ?>
+                              
+                              <label>Icon / Marker</label> <span class="form-required"></span>
+                              <img src="<?= $url; ?>" class="marker-icon" />
+                              <input type="file" name="image" value=""  class="form-control"  autocomplete="off" />
                           </div>
                           <div class="col-md-">
                             <a class="btn btn-default" href="<?php echo base_url('event_types/index'); ?>">Cancel</a>

@@ -81,6 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/sidebars/schedule'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
+        <form id="map-filter">
         <div class="container-fluid p-40">
             <!-- end row -->
             <div class="row">
@@ -96,12 +97,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           </div>
                         </div>
                         <div class="filter-container mb-3">
-                            
-                            <!-- <select class="form-control">
-                                <option value="all">All Types</option>
-                                <option value="residential">Residential (R)</option>
-                                <option value="coommercial">Commercial (C)</option>
-                            </select>
+                            <input type="text" id="date-range-picker" class="form-control">                            
                             <select class="form-control">
                                 <option value="all">All Statuses</option>
                                 <option value="new">New</option>
@@ -110,95 +106,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <option value="paused">Paused</option>
                                 <option value="completed">Completed</option>
                             </select>
-                            <select class="form-control">
+                            <!-- <select class="form-control" name="user" id="filter-user">
+                                <option value="">- Select Employee -</option>
                                 <option value="all">All Employees</option>
-                                <option value="alarm_direct">Alarm Direct</option>
-                                <option value="Brannon Nguyen">Brannon Nguyen</option>
+                                <?php foreach($companyUsers as $u){ ?>
+                                  <option value="<?= $u->id; ?>"><?= $u->FName . ' ' . $u->LName; ?></option>
+                                <?php } ?>
                             </select> -->
                         </div>
-
-                        <div class="map-container">
-                            <style>#map-canvas {width: 100%;height: 50vh;}</style>
-                            <div id="map-canvas"></div>
-                            <script>
-                                function initMap() {
-                                  /*var myLatLng = {lat: 1.523208409167528, lng: 103.67841453967287};
-
-                                  // Create a map object and specify the DOM element for display.
-                                  var map = new google.maps.Map(document.getElementById('map-canvas'), {
-                                    center: myLatLng,
-                                    // scrollwheel: false,
-                                    zoom: 16
-                                  });
-
-                                  // Create a marker and set its position.
-                                  var marker = new google.maps.Marker({
-                                    map: map,
-                                    position: myLatLng,
-                                    title: 'Regalia large and amazing room!'
-                                  });*/
-                                  /*var locations = [
-                                      ['Bondi Beach', 121.1125667, 14.2885935, 4],
-                                      ['Coogee Beach', -33.923036, 151.259052, 5],
-                                      ['Cronulla Beach', -34.028249, 151.157507, 3],
-                                      ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-                                      ['Maroubra Beach', -33.950198, 151.259302, 1]
-                                    ];*/
-                                 /*var locations = [
-                                    ['test abc', 121.1125667, 14.2885935, 4],
-                                    ['Sample Event', 121.1067332, 14.2935521, 3],
-                                    ['TEST ABC 1', 121.0781493, 14.3036345, 2],
-                                    ['EVENT LOCATION B', 121.0458348, 14.3528609, 1]
-                                ];*/
-                                var locations = [<?= implode(",", $locations); ?>];
-
-                                    var map = new google.maps.Map(document.getElementById('map-canvas'), {
-                                      zoom: 10,
-                                      center: new google.maps.LatLng(<?php echo $center_lat; ?>, <?php echo $center_lng; ?>),
-                                      mapTypeId: google.maps.MapTypeId.ROADMAP
-                                    });
-
-                                    var infowindow = new google.maps.InfoWindow();
-
-                                    var marker, i;
-
-                                    for (i = 0; i < locations.length; i++) {
-                                      marker = new google.maps.Marker({
-                                        text: 'Test',
-                                        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                                        map: map,
-                                        /*icon: {
-                                          url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-                                          labelOrigin: new google.maps.Point(75, 32),
-                                          size: new google.maps.Size(32,32),
-                                          anchor: new google.maps.Point(16,32)
-                                        },
-                                        label: {
-                                          text: locations[i][0],
-                                          color: "#C70E20",
-                                          fontWeight: "bold"
-                                        }*/
-                                      });
-
-                                      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                                        return function() {
-                                          infowindow.setContent(locations[i][0]);
-                                          infowindow.open(map, marker);
-                                        }
-                                      })(marker, i));
-                                    }
-                                }
-                            </script>
-                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&callback=initMap"></script>
-                        </div>
-
+                        <div class="map-container"></div>
                     </div>
                     <!-- end card -->
                 </div>
             </div>
             <!-- end row -->
         </div>
+        </form>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+    $('#date-range-picker').daterangepicker({
+        "timePicker": false
+    }, function(start, end, label) {
+      //console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+    });
+
+    load_map_route();
+
+    function load_map_route(){
+        var msg = '<div class="alert alert-info" role="alert"><img style="display:inline-block;" src="'+base_url+'/assets/img/spinner.gif" /> Loading map...</div>';
+        var url = base_url + '/workorder/_load_map_routes';
+
+        $(".map-container").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: $("#map-filter").serialize(),
+               success: function(o)
+               {
+                  $(".map-container").html(o);
+               }
+            });
+        }, 1000);
+    }
+
+    $("#filter-user").change(function(){
+      load_map_route();
+    });
+});
+</script>

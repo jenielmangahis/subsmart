@@ -8,11 +8,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">New Invoice</h1>
+                        <h3 style="font-family: Sarabun, sans-serif">New Invoice</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Complete the fields below to create a new invoice.</li>
                         </ol>
@@ -41,7 +41,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row" style="background-color:white;">
                                 <div class="col-md-5 form-group">
                                     <label for="invoice_customer">Customer</label>
                                     <select id="invoice_customer" name="customer_id"
@@ -52,8 +52,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-5 form-group">
                                     <p>&nbsp;</p>
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                       data-target="#modalNewCustomer"><span
-                                                class="fa fa-plus fa-margin-right"></span>New Customer</a>
+                                       data-target="#modalNewCustomer" style="color:#02A32C;"><span
+                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="invoice_job_location">Job Location <small class="help help-sm">(optional, select or add new one)</small></label>
@@ -65,16 +65,75 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-5 form-group">
                                     <p>&nbsp;</p>
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                       data-target="#modalNewLocationAddress"><span
-                                                class="fa fa-plus fa-margin-right"></span>New Location Address</a>
+                                       data-target="#modalNewLocationAddress" style="color:#02A32C;"><span
+                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Location Address</a>
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" name="job_name" id="job_name" required/>
                                 </div>
                             </div>
-                            
-                            <div class="row">
+
+                            <div class="row" style="background-color:white;">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>Customer email</label>
+                                            <input type="email" class="form-control" name="customer_email">
+                                            <p><input type="checkbox"> Send later </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                        <label>Location of sale</label>
+                                        <input type="text" class="form-control" style="width:200px;" name="location_scale">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                        <label>Billing address</label>
+                                            <textarea class="form-control" style="height:100px;width:100%;" name="billing_address"></textarea>
+                                        </div>
+                                        <div class="col-md-3">
+                                        <label>Terms</label>
+                                            <select class="form-control" name="terms" id="addNewTerms1">
+                                                <option></option>
+                                                <!-- <option>Add New</option>
+                                                <option>John Doe</option>-->
+                                                <option value="0">Add New</option>
+                                                <?php foreach($terms as $term) : ?>
+                                                <option value="<?php echo $term->id; ?>"><?php echo $term->description . ' ' . $term->day; ?></option>
+                                                <?php endforeach; ?>
+                                            </select><br><br>
+                                            <label>Ship via</label><br>
+                                            <input type="text" class="form-control" name="ship_via">
+                                        </div>
+                                        <div class="col-md-3">
+                                        <label>Shipping date</label><br>
+                                            <input type="text" class="form-control" name="shipping_date" id="datepickerinv2"><br>
+                                            <label>Tracking no.</label><br>
+                                            <input type="text" class="form-control" name="tracking_number">
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                        <label>Shipping to</label>
+                                            <textarea class="form-control" style="height:100px;width:100%;" name="shipping_to_address"></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                        <label>Tags</label> <a href="#" style="float:right;color:blue;">Manage tags</a>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row" style="background-color:white;">
                                 <div class="col-md-3 form-group">
                                     <label for="estimate_date">Invoice Type <span style="color:red;">*</span></label>
                                     <select name="invoice_type" class="form-control">
@@ -87,7 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
                                 <div class="col-md-3 form-group">
-                                    <label for="work_order">Work Order# <small class="help help-sm">(optional)</small></label>
+                                    <label for="work_order">Job# <small class="help help-sm">(optional)</small></label>
                                     <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Field is auto-populated on create Invoice from a Work Order." data-original-title="" title=""></span>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="work_order" name="work_order" id="work_order">
@@ -100,14 +159,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input type="text" class="form-control" name="purchase_order" id="purchase_order">
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3 form-group">
                                 </div>
 
                                 <div class="col-md-3 form-group">
                                     <label for="invoice_number">Invoice#</label>
-                                    <input type="text" class="form-control" name="invoice_number"
+                                    <!-- <input type="text" class="form-control" name="invoice_number"
                                            id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
+                                           autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
+                                    <input type="text" class="form-control" name="invoice_number"
+                                           id="invoice_number" value="INV-00000001" required placeholder="Enter Invoice#"
                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
 
@@ -123,11 +185,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-3 form-group">
                                     <label for="status">Status</label><br/>
-                                    <label class="pt-2">Draft</label>
+                                    <input type="text" value="Draft" class="form-control" readonly>
                                 </div>
                             </div>
 
-                            <div class="row" id="plansItemDiv">
+                            <div class="row" id="plansItemDiv" style="background-color:white;">
                                 <div class="col-md-10 pt-2">
                                     <label for="">Manage invoice items</label>
                                 </div>
@@ -144,17 +206,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead>
-                                        <tr>
-                                            <th>Item</th>
-                                            <th>Type</th>
-                                            <th width="100px" id="qty_type_value">Quantity</th>
-                                            <th width="100px">Price</th>
-                                            <th width="100px">Discount</th>
-                                            <th>Tax(%)</th>
-                                            <th>Total</th>
+                                        <tr style="background-color:#E8E9E8;">
+                                            <th><b>Item</b></th>
+                                            <th><b>Type</th>
+                                            <th width="100px" id="qty_type_value"><b>Quantity</b></th>
+                                            <th width="100px"><b>Price</b></th>
+                                            <th width="100px"><b>Discount</b></th>
+                                            <th><b>Tax(%)</b></th>
+                                            <th><b>Total</b></th>
                                         </tr>
                                         </thead>
-                                        <tbody id="table_body">
+                                        <tbody id="table_body_new">
                                         <tr>
                                             <td><input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="item[]">
@@ -182,8 +244,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tbody>
                                     </table>
                                     <div class="row">
-                                        <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice"><span
-                                                    class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                        <!-- <a class="link-modal-open pt-1 pl-2" href="#" id="add_another_new_invoice" style="color:#02A32C;"><span
+                                                    class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
+                                        <a href="#" id="add_another_new_invoice" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
                                         <hr style="display:inline-block; width:91%">
                                     </div>
                                     <div class="row">
@@ -230,7 +293,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
 
-                            <div class="row">
+
+                            <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
                                     <h5>Request a Deposit</h5>
                                     <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
@@ -249,12 +313,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" style="background-color:white;">
+                                <div class="col-md-12">
+                                    <h5>Payment Schedule</h5>
+                                    <span class="help help-sm help-block">Split the balance into multiple payment milestones.</span>
+                                    <p><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Manage payment schedule </a></p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
                                     <h5>Accepted payment methods</h5>
                                     <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
                                         <input type="checkbox" name="credit_card_payments" value="1"
                                                 checked id="credit_card_payments">
@@ -264,9 +336,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
                                 </div>
                                 <div class="col-md-12">
-                                    <span class="help help-sm help-block">Your payment processor is not set up 
+                                    <span class="help help-sm help-block">Your payment processor is not set up
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalNewCustomer">setup payment</a></span>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                        <input type="checkbox" name="bank_transfer" value="1"
+                                                checked id="bank_transfer">
+                                        <label for="bank_transfer"><span>Bank Transfer</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                        <input type="checkbox" name="instapay" value="1"
+                                                checked id="instapay">
+                                        <label for="instapay"><span>Instapay</span></label>
+                                    </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
@@ -288,24 +374,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 checked id="deposit">
                                         <label for="deposit"><span>Deposit</span></label>
                                     </div>
-                                </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
+                            <br><br>
+                            <div class="row" style="background-color:white;">
+                                <div class="col-md-12">
                                     <h5>Message to Customer</h5>
                                     <span class="help help-sm help-block">Add a message that will be displayed on the invoice.</span>
                                     <textarea name="message" cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
                                 </div>
-                                <div class="col-sm-6">
+                                <br>
+                                <div class="col-md-12">
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
                                     <textarea name="terms" cols="40" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
+                            </div>
 
-                            <div class="row">
-                                <div class="col-sm-6">
+                            <div class="row" style="background-color:white;">
+                                <div class="col-md-12">
                                     <h5>Attachments</h5>
                                     <div class="help help-sm help-block margin-bottom-sec">Optionally attach files to this invoice. Allowed type: pdf, doc, docx, png, jpg, gif.</div>
 
@@ -329,13 +416,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <button class="btn btn-default margin-right" data-action="update">Save as Draft</button>
-                                    <button class="btn btn-primary margin-right" data-action="send">Preview</button>
-                                    <a class="a-ter" href="<?php echo url('invoice') ?>">cancel this</a>
+                            <div class="row" style="background-color:white;">
+                                <div class="col-md-12 form-group">
+                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save as Draft</button>
+                                    <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
+                                    <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <!-- end card -->
@@ -399,8 +487,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="validation-error" style="display: none;"></div>
                                 <div class="form-group">
                                     <label>Source Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control"
-                                           autocomplete="off">
+                                    <input type="text" name="title" value="" class="form-control" autocomplete="off">
                                 </div>
                             </form>
                         </div>
@@ -418,7 +505,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
-
 <script>
 
     document.getElementById('contact_mobile').addEventListener('input', function (e) {

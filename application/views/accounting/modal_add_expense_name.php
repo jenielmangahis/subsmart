@@ -9,6 +9,7 @@
         </button>
       </div>
       <div class="modal-body">
+      <form action="<?php echo site_url()?>accounting/addexpensename" method="post">
         <table class="table">
             <tr>
                 <td>Expense Name</td>
@@ -23,9 +24,9 @@
                 <td>
                     <select class="form-control">
                         <option>---</option>
-                        <option>Fixed Cost</option>
-                        <option>Variable Cost</option>
-                        <option>Periodic Cost</option>
+                        <option value="1">Fixed Cost</option>
+                        <option value="2">Variable Cost</option>
+                        <option value="3">Periodic Cost</option>
                     </select>
                 </td>
             </tr>
@@ -34,13 +35,14 @@
                 <td>
                     <select class="form-control">
                         <option>---</option>
-                        <option>Assets</option>
-                        <option>Liability</option>
-                        <option>Equity</option>
+                        <option value="Assets">Assets</option>
+                        <option value="Liability">Liability</option>
+                        <option value="Equity">Equity</option>
                     </select>
                 </td>
             </tr>
         </table>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -252,9 +252,6 @@ class Customer extends MY_Controller
 //        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
 //        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         $this->page_data['users'] = $this->users_model->getUsers();
-        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
-        $this->load->model('Activity_model','activity');
-        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
         $this->load->view('customer/module', $this->page_data);
     }
@@ -1831,6 +1828,7 @@ class Customer extends MY_Controller
         if ($input) {
             $input['user_id'] = logged('id');
             $input['date_added'] = date("d-m-Y h:i A");
+            $input['company_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, "customer_groups")) {
                 redirect(base_url('customer/group'));
             }
