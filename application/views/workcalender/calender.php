@@ -173,6 +173,30 @@ a.top-1 {
     margin-top: 0;
     margin-bottom: 0;
   }
+  div.no-data {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 20px;
+      color: #6b6b6b;
+  }
+  .job-caption {
+    display: block;
+    margin-bottom: 14px !important;
+  }
+  img.rounded-circle.nav-user-img.vertical-center.jobs {
+    max-width: 100px;
+    position: relative;
+    bottom: 11px;
+    float: right;
+    box-shadow: rgb(0 0 0 / 28%) 0 1px 3px;
+  }
+  img.rounded-circle.nav-user-img.vertical-center.events {
+    max-width: 100px;
+    position: relative;
+    top: 10px;
+    float: right;
+    box-shadow: rgb(0 0 0 / 28%) 0 1px 3px;
+  }
   .calendar-tooltip .popper[x-placement^="bottom"],
   .calendar-tooltip .tooltip[x-placement^="bottom"] {
     margin-top: 5px;
@@ -211,6 +235,9 @@ a.top-1 {
     font-family: Sarabun, sans-serif !important;
     font-size: 1.75rem !important;
     font-weight: 600 !important;
+  }
+  .col-20 {
+    width: 20%;
   }
   .calendar-tooltip .popper[x-placement^="left"] .popper__arrow,
   .calendar-tooltip .tooltip[x-placement^="left"] .tooltip-arrow {
@@ -492,7 +519,7 @@ a.top-1 {
 
                                           <div class="row d-none d-lg-flex">
                                               <div class="col-md-12">
-                                                  <div class="row cus-dashboard-div">
+                                                  <div class="cus-dashboard-div">
                                                       <div id="upcoming-jobs-container"></div>
                                                   </div>
                                               </div>
@@ -502,7 +529,7 @@ a.top-1 {
 
                                           <div class="row d-none d-lg-flex">
                                               <div class="col-md-12">
-                                                  <div class="row cus-dashboard-div">
+                                                  <div class="cus-dashboard-div">
                                                       <div id="upcoming-events-container"></div>
                                                   </div>
                                               </div>

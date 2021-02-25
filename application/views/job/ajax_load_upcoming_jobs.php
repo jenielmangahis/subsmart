@@ -1,9 +1,9 @@
-<div class="row" style="height: 250px; overflow-y: scroll">
-  <div class="col-lg-10 col-md-10 col-sm-12">
+<div class="row" style="height: 180px; overflow-y: auto;">
+  <div class="col-lg-12 col-md-12 col-sm-12">
     <?php if ( !empty($upcomingJobs) ) { ?>
       <?php foreach($upcomingJobs as $jb){ ?>
-        <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer">
-            <div class="col-lg-3 float-left no-padding text-center" style="border-right:1px solid #ccc; padding-right:5px;">
+        <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: -1px; cursor: pointer">
+            <div class="col-20 float-left no-padding text-center" style="border-right:1px solid #ccc; padding-right:5px;">
                 <a href="<?php echo base_url('workcalender/'); ?>">
                 <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
                     <em><?= date('D', strtotime($jb->start_date)) ?></em>
@@ -19,18 +19,18 @@
             </div>
             <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
                 <a href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
-                    <h6 style="font-weight:700; margin:0;"><?php echo strtoupper($jb->job_type . ' - ' . $jb->job_description); ?></h6>                                
+                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo strtoupper($jb->job_type . ' - ' . $jb->job_description); ?></h6>
                     <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($jb->job_name); ?></p>
                     <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($jb->job_location)); ?></p>
                 </a>
             </div>
             <div class="col-lg-2 float-right" style="margin-top:40px !important; ">
-                <img src="<?= base_url() ?>uploads/users/default.png" alt="user" class="rounded-circle nav-user-img vertical-center">
+                <img src="<?= base_url() ?>uploads/users/default.png" alt="user" class="rounded-circle nav-user-img vertical-center jobs">
             </div>
         </div>
       <?php } ?>
     <?php }else{ ?>
-      <div class="cue-event-name">NO UPCOMING JOBS</div>
+      <div class="cue-event-name no-data">NO UPCOMING JOBS</div>
     <?php } ?>
   </div>
 </div>
