@@ -990,6 +990,16 @@ class Job extends MY_Controller
             return $name;
         }
     }
+
+    public function job_settings(){
+        $this->load->model('JobSettings_model');
+
+        $company_id = logged('company_id');
+        $setting = $this->JobSettings_model->getJobSettingByCompanyId($company_id);
+
+        $this->page_data['setting'] = $setting;
+        $this->load->view('job/settings', $this->page_data);
+    }
 }
 
 /* End of file Job.php */

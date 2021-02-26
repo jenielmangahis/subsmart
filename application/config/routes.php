@@ -577,6 +577,7 @@ $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
 $route['job/_load_upcoming_jobs'] = 'Job/ajax_load_upcoming_jobs';
+$route['job/settings'] = 'Job/job_settings';
 
 //Estimates
 $route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';
@@ -616,6 +617,7 @@ $route['event_types/save'] = 'Event_Types/create_event_type';
 $route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
 $route['event_types/update'] = 'Event_Types/update_event_type';
 $route['event_types/delete'] = 'Event_Types/delete_event_type';
+$route['events/event_types'] = 'Event_Types/index';
 
 //Esign
 $route['esignmain'] = 'Esign_Main/index';

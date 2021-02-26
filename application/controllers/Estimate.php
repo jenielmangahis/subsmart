@@ -745,6 +745,56 @@ class Estimate extends MY_Controller
     }
 
     public function estimate_settings(){
+        $this->load->model('EstimateSettings_model');
+
+        $company_id = logged('company_id');
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+
+        $this->page_data['setting'] = $setting;
         $this->load->view('estimate/settings', $this->page_data);
+    }
+
+    public function save_setting(){
+        $post = $this->input->post();
+
+        $this->load->model('EstimateSettings_model');
+
+        $company_id = logged('company_id');
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+
+        if( $setting ){
+            $is_residential_default = 0;
+            if( isset($post['is_residential_default']) ){
+                $is_residential_default = 1;
+            }
+            $data = [
+                'estimate_num_prefix' => $post['prefix'],
+                'estimate_num_next' => $post['base'],
+                'residential_message' => $post['residential_message'],
+                'residential_terms_and_conditions' => $post['residential_terms'],
+                'commercial_message' => $post['message_commercial'],
+                'commercial_terms_and_conditions' => $post['terms_commercial'],
+                'is_residential_message_default' => $is_residential_default
+            ];  
+            $this->EstimateSettings_model->update($setting->id, $data);
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'estimate_num_prefix' => $post['prefix'],
+                'estimate_num_next' => $post['base'],
+                'residential_message' => $post['residential_message'],
+                'residential_terms_and_conditions' => $post['residential_terms'],
+                'commercial_message' => $post['message_commercial'],
+                'commercial_terms_and_conditions' => $post['terms_commercial'],
+                'is_residential_message_default' => $is_residential_default
+            ];  
+            $this->EstimateSettings_model->create($data);
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Settings was successfully updated');
+        
+        redirect('estimate/settings');
+
     }
 }

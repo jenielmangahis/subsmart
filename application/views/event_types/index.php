@@ -40,9 +40,13 @@ table.table tbody tr td:first-child {
     bottom: 0px;
   }
 }
+.event-marker{
+  width: 40%;
+  border: 1px solid #dee2e6;
+}
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/schedule'); ?>
+    <?php include viewPath('includes/sidebars/events'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -68,14 +72,25 @@ table.table tbody tr td:first-child {
                         <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
-                                    <th style="width: 80%;">Event Type Name</th>
+                                    <th style="width: 75% !important;">Event Type Name</th>
+                                    <th style="width: 10%;"></th>
                                     <th style="width: 10%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($eventTypes as $et){ ?>
                                     <tr>
-                                        <td><?= $et->event_type_name; ?></td>
+                                        <td style="width: 70% !important;"><?= $et->title; ?></td>
+                                        <td>
+                                          <?php 
+                                            if( $et->icon_marker != '' ){
+                                              $image = base_url('uploads/event_types/' . $et->icon_marker);
+                                            }else{
+                                              $image = base_url('uploads/event_types/no_file.png');
+                                            }
+                                          ?>
+                                          <img src="<?= $image ?>" class="event-marker" />
+                                        </td>
                                         <td>
                                             <a class="btn btn-info btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
                                             <a class="btn btn-sm btn-danger btn-delete-event-type" href="javascript:void(0);" data-id="<?= $et->id; ?>"><i class="fa fa-trash"></i> Delete</a>
