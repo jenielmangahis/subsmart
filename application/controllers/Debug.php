@@ -135,6 +135,36 @@
                 
             $this->load->view('debug/pdf_sample', $data);
         }
+
+        public function readDirFiles()
+        {
+            $this->load->model('Icons_model');
+
+            $dir  = new DirectoryIterator("./uploads/icons/");
+            $icon_counter = 1; 
+            foreach ($dir as $fileinfo) {
+                if (strpos($fileinfo->getFilename(), '.png') !== false) {
+                    $icon_name = preg_replace('/[0-9]+/', '', $fileinfo->getFilename());
+                    $icon_name = str_replace("px", "", $icon_name);
+                    $icon_name = str_replace("_", " ", $icon_name);
+                    $icon_name = str_replace(".png", " ", $icon_name);
+                    $icon_name = ucwords($icon_name);
+                    echo $icon_name . "<br/ >";
+                    $data = [
+                        'name' => $icon_name,
+                        'image' => $fileinfo->getFilename()
+                    ];
+
+                    $this->Icons_model->create($data);
+
+                    $icon_counter++;
+                }
+                //echo $fileinfo->getFilename() . "<br />";
+             }
+            
+            echo "Total icons : " . $icon_counter;
+            exit;            
+        }
     }
 
 

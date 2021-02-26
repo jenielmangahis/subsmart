@@ -314,7 +314,7 @@ class Job extends MY_Controller
         $this->load->view('job/job_settings/job_tags', $this->page_data);
     }
 
-    public function job_types() {
+    public function job_types() {        
         $get_job_types = array(
             'where' => array(
                 'company_id' => logged('company_id'),
@@ -999,6 +999,126 @@ class Job extends MY_Controller
 
         $this->page_data['setting'] = $setting;
         $this->load->view('job/settings', $this->page_data);
+    }
+
+    public function save_setting($id = null)
+    {
+        $this->load->model('JobSettings_model');
+        
+        postAllowed();
+        $user = (object)$this->session->userdata('logged');
+        $config = array(
+            'upload_path' => "./uploads/",
+            'allowed_types' => "gif|jpg|png|jpeg",
+            'overwrite' => TRUE,
+            'max_size' => "2048000",
+            'max_height' => "768",
+            'max_width' => "1024"
+        );
+        
+        $this->load->library('upload', $config);
+        
+        if($this->upload->do_upload()) {
+            $draftlogo = array('upload_data' => $this->upload->data());
+            $logo = $draftlogo['upload_data']['file_name'];
+        } else {
+            if ($id) {
+                $logo = post('img_setting');
+            } else {
+                $logo = '';
+            }
+        }
+
+        $payment_methods = array(
+            'cc' => post('payment_cc'),
+            'check' => post('payment_check'),
+            'cash' => post('payment_cash'),
+            'deposit' => post('payment_deposit')
+        );
+
+        $invoice_number = array(
+            'prefix' => post('prefix'),
+            'base' => post('base'),
+        );
+
+        $residential = array(
+            'default_msg' => post('message'),
+            'default_terms' => post('terms'),
+        );
+
+        $commercial = array(
+            'default_msg' => post('message_commercial'),
+            'default_terms' => post('terms_commercial'),
+        );
+        
+        $payment_fee = array(
+            'percent' => post('payment_fee_percent'),
+            'amount' => post('payment_fee_amount'),
+        );
+
+        $invoice_template = array(
+            'item_price' => post('hide_item_price'),
+            'item_qty' => post('hide_item_qty'),
+            'item_tax' => post('hide_item_tax'),
+            'item_discount' => post('hide_item_discount'),
+            'item_total' => post('hide_item_total'),
+            'from_email' => post('hide_from_email'),
+            'item_subtotal' => post('show_item_type_subtotal')
+        );
+
+        $invoice_from = array(
+            'business_phone' => post('from_phone_show'),
+            'office_phone' => post('from_office_phone_show'),
+        );
+
+        $comp_id = logged('company_id');
+        if (!$id) {
+            $this->JobSettings_model->create([
+                'user_id' => $user->id,
+                'company_id' => $comp_id,
+                'invoice_number' => serialize($invoice_number),
+                'residential' => serialize($residential),
+                'commercial' => serialize($commercial),
+                'logo' => $logo,
+                'payable_to' => post('payment_to'),
+                'due_terms' => post('due_terms'),
+                'invoice_type' => post('invoice_type'),
+                'payment_fee' => serialize($payment_fee),
+                'invoice_template' => serialize($invoice_template),
+                'invoice_from' => serialize($invoice_from),
+                'recurring' => post('recurring_on_add_child'),
+                'payment_method' => serialize($payment_methods),
+                'mobile_payment' => post('payment_mobile_status'),
+                'invoice_tip' => post('tip_status'),
+                'autoconvert_work_order' => post('autoconvert_work_order')
+            ]);
+        } else {
+            $this->JobSettings_model->update($id, [
+                'user_id' => $user->id,
+                'company_id' => $comp_id,
+                'invoice_number' => serialize($invoice_number),
+                'residential' => serialize($residential),
+                'commercial' => serialize($commercial),
+                'logo' => $logo,
+                'payable_to' => post('payment_to'),
+                'due_terms' => post('due_terms'),
+                'invoice_type' => post('invoice_type'),
+                'payment_fee' => serialize($payment_fee),
+                'invoice_template' => serialize($invoice_template),
+                'invoice_from' => serialize($invoice_from),
+                'recurring' => post('recurring_on_add_child'),
+                'payment_method' => serialize($payment_methods),
+                'mobile_payment' => post('payment_mobile_status'),
+                'invoice_tip' => post('tip_status'),
+                'autoconvert_work_order' => post('autoconvert_work_order')
+            ]);
+        }
+            
+        $this->activity_model->add('Update Invoice Settings $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Invoice Settings Saved Successfully');
+
+        redirect('invoice/settings');
     }
 }
 

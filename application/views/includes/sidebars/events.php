@@ -54,7 +54,7 @@
         <li class="submenus <?= $this->uri->segment(2) == 'new_event' || $this->uri->segment(2) == '' ? "active" : "";  ?>">
             <a href="<?= base_url('events') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Events</a>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'event_types/index') ? "active" : "";  ?>">
+        <li class="submenus <?= ($this->uri->uri_string() == 'events/event_types') ? "active" : "";  ?>">
             <a href="<?= base_url('events/event_types') ?>" title="Job Types"><span class="fa fa-book"></span>Events Types</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'events/event_tags') ? "active" : "";  ?>">

@@ -122,6 +122,11 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
+.job-marker{
+  height: 57px;
+  width: 100px;
+  border: 1px solid #dee2e6;
+}
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -175,18 +180,27 @@ add_css(array(
                                 <hr>
                                 <table class="table table-bordered table-striped" id="jobTypeTable">
                                     <thead>
-                                    <tr>
-                                        <th scope="col" style="width:70%;"><strong>Title</strong></th>
-                                        <th scope="col"><strong>Date Created</strong></th>
-                                        <th scope="col"><strong>Manage</strong></th>
+                                    <tr>                                        
+                                        <th></th>
+                                        <th>Job Type Name</th>
+                                        <th>Manage</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php if(!empty($job_types)): ?>
                                         <?php foreach($job_types as $types) : ?>
                                             <tr>
-                                                <td class="pl-3"><?= $types->title; ?></td>
-                                                <td class="pl-3"><?= date_format(date_create($types->created_at),"m/d/Y"); ?></td>
+                                                <td>
+                                                  <?php 
+                                                    if( $types->icon_marker != '' ){
+                                                      $image = base_url('uploads/job_types/' . $types->icon_marker);
+                                                    }else{
+                                                      $image = base_url('uploads/job_types/default_no_image.jpg');
+                                                    }
+                                                  ?>
+                                                  <img src="<?= $image ?>" class="job-marker" />
+                                                </td>
+                                                <td><?= $types->title; ?></td>                                                
                                                 <td class="pl-3">
                                                     <a href="<?php echo base_url('job/edit_job_type/' . $types->id); ?>" class="btn btn-primary btn-sm">
                                                         <span class="fa fa-pencil"></span> Edit</a>&nbsp;
@@ -260,6 +274,11 @@ add_footer_js(array(
             "searching" : false,
             "pageLength": 10,
             "order": [],
+            "aoColumnDefs": [
+              { "sWidth": "8%", "aTargets": [ 0 ] },
+              { "sWidth": "80%", "aTargets": [ 1 ] },
+              { "sWidth": "15%", "aTargets": [ 2 ] }
+            ]
         });
         $("#form_add_tag").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
