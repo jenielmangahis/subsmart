@@ -78,9 +78,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-                <div class="pl-3 pr-3 mt-2 row">
+                <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
                   <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing all credit notes.</span>
+                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Give your customer a credit or refund in our Desktop for Windows. From the Customers menu, select Create Credit Notes/Refunds.  From the Customer:  Job drop-down, select your customer.  Enter the items you're giving a credit for, then select Save & Close.</span>
                   </div>
                 </div>
                 <div class="tabs mt-2">
