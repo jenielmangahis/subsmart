@@ -756,6 +756,7 @@ class Users extends MY_Controller {
         $username = $this->input->post('values[username]');
         $password = $this->input->post('values[password]');
         $address = $this->input->post('values[address]');
+        $user_type = $this->input->post('values[user_type]');
         $role = $this->input->post('values[role]');
         $status = $this->input->post('values[status]');
         $web_access = $this->input->post('values[web_access]');
@@ -772,6 +773,7 @@ class Users extends MY_Controller {
             'password' => hash("sha256",$password),
             'password_plain' => $password,
             'role' => $role,
+            'user_type' => $user_type,
             'status' => $status,
             'company_id' => $cid,
             'profile_img' => $profile_img,

@@ -3284,3 +3284,27 @@ function statesList(){
 
     return $states;
 }
+
+function getUserType($id){
+    $types = userTypes();
+    if( isset($types[$id]) ){
+        $type = $types[$id];
+    }else{
+        $type = 'Standard User';
+    }
+
+    return $type;
+}
+
+function userTypes(){
+    $types = [
+        1 => 'Office Manager',
+        2 => 'Partner',
+        3 => 'Team Leader',
+        4 => 'Standard User',
+        5 => 'Field Sales',
+        6 => 'Field Tech'
+    ];
+
+    return $types;
+}

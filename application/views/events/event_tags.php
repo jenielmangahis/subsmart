@@ -122,15 +122,11 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
-.card{
-    box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
-}
-.job-marker{
+.event-marker{
   height: 50px;
   width: 50px;
   border: 1px solid #dee2e6;
 }
-
 </style>
 <?php
     defined('BASEPATH') or exit('No direct script access allowed');
@@ -145,7 +141,7 @@ a.btn-primary.btn-md {
 ?>
 <?php include viewPath('includes/header'); ?>
     <div class="wrapper" role="wrapper">
-        <?php include viewPath('includes/sidebars/job'); ?>
+        <?php include viewPath('includes/sidebars/events'); ?>
         <!-- page wrapper start -->
         <div wrapper__section>
             <?php include viewPath('includes/notifications'); ?>
@@ -154,15 +150,15 @@ a.btn-primary.btn-md {
                     <div class="col-xl-12">
                         <div class="card">
                             <div class="card-body hid-desk pt-0" style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
-                                <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0;">
+                                <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0px;">
                                     <div class="col-auto pl-0">
-                                        <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Job Tags</h5>
+                                        <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Event Tags</h5>
                                     </div>
                                     <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                         <div class="float-right d-md-block">
                                             <div class="dropdown">
-                                                <a href="<?= base_url("job/add_new_job_tag") ?>" class="btn btn-primary btn-sm">
-                                                    <span class="fa fa-plus"></span> Add New Tag
+                                                <a href="<?= base_url('events/add_new_event_tag'); ?>" class="btn btn-primary btn-sm">
+                                                    <span class="fa fa-plus"></span> Add New Event Tag
                                                 </a>
                                             </div>
                                         </div>
@@ -173,14 +169,17 @@ a.btn-primary.btn-md {
                             </div>
                             <div class="pl-3 pr-3 mt-0 row">
                               <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">A job tag identifies similar jobs or job templates.  Use job tags to easily search and filter jobs and job templates when viewing them in the Jobs view.
-                                      Tags will also help you to see the growth direction of your product, service, source and more.</span>
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                      While categories are broader designations that are typically assigned one per event, tags are short but specific,
+                                      and each event can be assigned as many tags as you'd like. It's a great way to use keywords or other important
+                                      phrases to help you locate events that are most relevant to your interests.
+                                  </span>
                               </div>
                             </div>
                             <div class="tab-content">
                                 <div class="tab-pan" id="tab1">
                                     <hr>
-                                    <table class="table table-bordered table-striped" id="jobTypeTable">
+                                    <table class="table table-bordered table-striped" id="eventTagsTable">
                                         <thead>
                                         <tr>
                                             <th scope="col"></th>
@@ -189,8 +188,8 @@ a.btn-primary.btn-md {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if(!empty($job_tags)): ?>
-                                                <?php foreach($job_tags as $tags) : ?>
+                                            <?php if(!empty($event_tags)): ?>
+                                                <?php foreach($event_tags as $tags) : ?>
                                                     <tr>
                                                         <td>
                                                             <?php
@@ -198,17 +197,17 @@ a.btn-primary.btn-md {
                                                                     if($tags->is_marker_icon_default_list == 1){
                                                                         $marker = base_url("uploads/icons/" . $tags->marker_icon);
                                                                     }else{
-                                                                        $marker = base_url("uploads/job_tags/" . $tags->company_id . "/" . $tags->marker_icon);
+                                                                        $marker = base_url("uploads/event_tags/" . $tags->company_id . "/" . $tags->marker_icon);
                                                                     }
                                                                 }else{
-                                                                    $marker = base_url("uploads/job_tags/default_no_image.jpg");
+                                                                    $marker = base_url("uploads/event_tags/default_no_image.jpg");
                                                                 }                                                                
                                                             ?>
-                                                            <img src="<?= $marker; ?>" class="job-marker">
+                                                            <img src="<?= $marker; ?>" class="event-marker">
                                                         </td>
                                                         <td class="pl-3"><?= $tags->name; ?></td>
                                                         <td class="pl-3">
-                                                            <a href="<?= base_url("job/edit_job_tag/" . $tags->id); ?>" class="editJobTypeBtn btn btn-primary btn-sm">
+                                                            <a href="<?= base_url("events/edit_event_tags/" . $tags->id); ?>" class="editJobTypeBtn btn btn-primary btn-sm">
                                                                 <span class="fa fa-edit"></span> Edit</a>&nbsp;
                                                             <a href="javascript:void(0)" id="<?= $tags->id; ?>"  class="delete_tags btn btn-primary btn-sm">
                                                                 <span class="fa fa-trash"></span> Delete
@@ -276,7 +275,7 @@ a.btn-primary.btn-md {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     $(document).ready(function () {
-        $('#jobTypeTable').DataTable({
+        $('#eventTagsTable').DataTable({
             "lengthChange": true,
             "searching" : false,
             "pageLength": 10,
@@ -287,13 +286,14 @@ a.btn-primary.btn-md {
             ],
             "order": [],
         });
+
         $("#form_add_tag").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: base_url + "job/add_tag",
+                url: "<?= base_url(); ?>events/add_tag",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
@@ -321,7 +321,7 @@ a.btn-primary.btn-md {
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: base_url + "job/delete_tag",
+                        url: "<?= base_url(); ?>/events/delete_tag",
                         data: {tag_id : ID}, // serializes the form's elements.
                         success: function(data)
                         {

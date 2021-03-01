@@ -116,7 +116,7 @@
   google.maps.event.addDomListener(window, "load", initialize);
   </script>
 <?php }else{ ?>
-  <style>#map-canvas {width: 100%;height: 300px;}</style>
+  <style>#map-canvas {width: 100%;height: 100vh;}</style>
   <div id="map-canvas"></div>
   <script>
       function initMap() {

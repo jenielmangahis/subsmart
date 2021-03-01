@@ -99,8 +99,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           </div>
                         </div>
                         <div class="filter-container mb-3">
-                          <div class="col-md-4 pl-0 left">
-                            <input type="text" id="date-range-picker" class="form-control">
+                          <div class="col-md-2 pl-0 left">
+                            <input type="text" id="" class="form-control single-datepicker" placeholder="Date From">
+                          </div>
+                          <div class="col-md-2 pl-0 left">
+                            <input type="text" id="" class="form-control single-datepicker" placeholder="Date To">
                           </div>
                           <div class="col-md-4 left">
                             <select class="form-control">
@@ -135,11 +138,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-$(function(){
+$(function(){    
     $('#date-range-picker').daterangepicker({
         "timePicker": false
     }, function(start, end, label) {
       //console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+    });
+
+    $('.single-datepicker').daterangepicker({
+      singleDatePicker: true,
+      showDropdowns: true,
+      minYear: 1901,
+      maxYear: parseInt(moment().format('YYYY'),10)
+    }, function(start, end, label) {
+      var years = moment().diff(start, 'years');
+      //alert("You are " + years + " years old!");
     });
 
     load_map_route();

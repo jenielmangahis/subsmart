@@ -759,7 +759,7 @@ class Workorder extends MY_Controller
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
                                 'description' => $pointA,
-                                'marker' => $marker
+                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];
                             $locations[] = [
                                 'title' => $pointB,
@@ -834,7 +834,7 @@ class Workorder extends MY_Controller
                             'lat' => $center_lat,
                             'lng' => $center_lng,
                             'description' => $pointA,
-                            'marker' => $marker
+                            'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                         ];
                         $locations[] = [
                             'title' => $pointB,

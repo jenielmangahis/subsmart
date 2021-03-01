@@ -220,6 +220,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th>
+                                            <th>Rights</th>
                                             <th>Last Login</th>
                                             <th>Status</th>
                                             <th>App Access</th>
@@ -252,6 +253,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td class="center"><?php echo $row->email ?></td>
                                                 <td class="center"><?php echo $row->password_plain ?></td>
                                                 <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
+                                                <td class="center"><?php echo getUserType($row->user_type); ?></td>
                                                 <td class="center"><?php echo date('M d,Y')?></td>
                                                 <td class="center">
                                                     <?php //if (logged('id') !== $row->id): ?>
@@ -267,8 +269,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
                                                 <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
                                                 <td class="center">
-                                                    <?php //if (hasPermissions('users_edit')): ?>
-                                                    <!--                                                        <a href="--><?php //echo url('users/edit/' . $row->id) ?><!--"  title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>-->
+                                                    <?php //if (hasPermissions('users_edit')){ ?>
+                                                    <!-- <a href="<?php echo url('users/edit/' . $row->id); ?>" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a> -->
+                                                    <?php //} ?>
                                                     <a href="javascript:void(0)" data-id="<?php echo $row->id?>" id="editEmployee"  title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
                                                     <a href="javascript:void(0)" data-name="<?php echo $row->FName.' '.$row->LName; ?>" data-id="<?php echo $row->id?>" id="changePassword"  title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
                                                     <?php //endif ?>
@@ -562,7 +565,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="help help-sm help-block">Select employee role</div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="1" id="role_1">
+                                        <input type="radio" name="user_type" value="1" id="role_1">
                                         <label for="role_1"><span>Office Manager</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
@@ -571,7 +574,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="2" id="role_2">
+                                        <input type="radio" name="user_type" value="2" id="role_2">
                                         <label for="role_2"><span>Partner</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
@@ -580,7 +583,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="3" id="role_3">
+                                        <input type="radio" name="user_type" value="3" id="role_3">
                                         <label for="role_3"><span>Team Leader</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
@@ -589,7 +592,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="4" id="role_4">
+                                        <input type="radio" name="user_type" value="4" id="role_4">
                                         <label for="role_4"><span>Standard User</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
@@ -598,7 +601,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="5" id="role_5">
+                                        <input type="radio" name="user_type" value="5" id="role_5">
                                         <label for="role_5"><span>Field Sales</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
@@ -607,7 +610,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="role" value="6" id="role_6">
+                                        <input type="radio" name="user_type" value="6" id="role_6">
                                         <label for="role_6"><span>Field Tech</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
@@ -651,7 +654,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
     $(document).ready(function () {
-        $('#employeeTable').DataTable({"sort":false});
+        $('#employeeTable').DataTable({
+            "searching" : false,
+            "sort":false
+        });
 
         $("#shareEmployeeForm").click(function(){
         	$("#modalShareAddEmployee").modal("show");

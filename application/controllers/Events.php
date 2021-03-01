@@ -310,7 +310,7 @@ class Events extends MY_Controller
             ),
         );
         $this->page_data['event_tags'] = $this->general->get_data_with_param($get_job_settings);
-        $this->load->view('events/job_settings/job_tags', $this->page_data);
+        $this->load->view('events/event_tags', $this->page_data);
     }
 
     public function event_types() {
@@ -865,6 +865,133 @@ class Events extends MY_Controller
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
 
+    }
+
+    public function add_new_event_tag()
+    {
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
+
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['icons'] = $icons;
+        $this->load->view('events/add_new_event_tag', $this->page_data);
+    }
+
+    public function edit_event_tags($id)
+    {
+        $this->load->model('Icons_model');
+        $this->load->model('EventTags_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
+
+        $eventTag = $this->EventTags_model->getById($id);
+        $icons    = $this->Icons_model->getAll();
+
+        $this->page_data['eventTag'] = $eventTag;
+        $this->page_data['icons'] = $icons;
+        $this->load->view('events/edit_event_tag', $this->page_data);
+    }
+
+    public function create_new_event_tag()
+    {
+        $this->load->model('EventTags_model');
+        $this->load->model('Icons_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( isset($post['is_default_icon']) ){
+            $icon = $this->Icons_model->getById($post['default_icon_id']);
+            $marker_icon = $icon->image;
+            $data = [
+                'name' => $post['event_tag_name'],
+                'company_id' => $company_id,
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 1
+            ];
+
+            $this->EventTags_model->create($data);
+        }else{
+            $marker_icon = $this->moveUploadedFile();
+            if( $marker_icon != '' ){
+                $data = [
+                    'name' => $post['event_tag_name'],
+                    'company_id' => $company_id,
+                    'marker_icon' => $marker_icon,
+                    'is_marker_icon_default_list' => 0
+                ];
+
+                $this->EventTags_model->create($data);
+            }else{
+                $this->session->set_flashdata('message', 'Cannot update event tag');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+            
+        }
+
+        $this->session->set_flashdata('message', 'Add new event tag was successful');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('events/event_tags');
+    }
+
+    public function update_event_tag(){
+        $this->load->model('EventTags_model');
+        $this->load->model('Icons_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( isset($post['is_default_icon']) ){
+            $icon = $this->Icons_model->getById($post['default_icon_id']);
+            $marker_icon = $icon->image;
+            $data = [
+                'name' => $post['event_tag_name'],
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 1
+            ];
+
+            $this->EventTags_model->update($post['tid'],$data);
+        }else{
+            $marker_icon = $this->moveUploadedFile();
+            $data = [
+                'name' => $post['event_tag_name'],
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 0
+            ];
+
+            $this->EventTags_model->update($post['tid'],$data);
+        }
+
+        $this->session->set_flashdata('message', 'Update event tag was successful');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('events/event_tags');
+    }
+
+    public function moveUploadedFile() {
+        if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
+            $company_id = logged('company_id');
+            $target_dir = "./uploads/event_tags/" . $company_id . "/";
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = basename($_FILES["image"]["name"]);
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
     }
 }
 
