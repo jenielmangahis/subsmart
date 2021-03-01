@@ -1394,6 +1394,7 @@ function get_customer_by_id($customer_id, $key = '')
  */
 function acs_prof_get_customer_by_prof_id($customer_id)
 {
+    
     $CI =& get_instance();
     $CI->load->model('AcsProfile_model');
 
