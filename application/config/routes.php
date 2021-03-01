@@ -295,6 +295,7 @@ $route['accounting/payment-methods/activate/(:any)'] = "accounting/activate_paym
 $route['accounting/payment-methods/update']['post'] = "accounting/update_payment_method";
 
 $route['accounting/recurring-transactions'] = "accounting/recurring_transactions";
+$route['accounting/recurring-transactions/load-recurring-transactions'] = "accounting/load_recurring_transactions";
 
 $route['accounting/terms'] = "accounting/terms";
 $route['accounting/terms/add'] = "accounting/add_terms";

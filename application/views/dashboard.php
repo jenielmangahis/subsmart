@@ -68,7 +68,8 @@
 </style>
 <div class="wrapper" style="padding: 80px 14px;">
     <div class="bg-white" style=" border-radius: 30px 30px 0 0;margin-top: 15px;">
-        <div class="container-fluid">
+        <?php $this->load->view('includes/sidebars/dashboard', $sidebar); ?>
+        <div id="main" class="container-fluid">
             <div class="page-title-box">
                 <div class="row col-12 align-items-center d-flex">
                     <div class="col-sm-2 col-lg-3">
@@ -178,7 +179,7 @@
             </div>
             <!-- end row -->
             <div class="row-tablet-mobile mb-fix">
-                <div class="row d-none d-lg-flex">
+                <div class="row d-none d-lg-flex" style="width:99%">
                     <?php //$this->load->view('widgets/quick_start', $quick_start_data); ?>
                     <div class="col-md-12">
                         <div class="row cus-dashboard-div">

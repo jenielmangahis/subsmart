@@ -339,8 +339,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                      <div class="col-sm-12">
-                          <h3 class="page-title left">Notification</h3>
+                      <div class="col-sm-12 "> 
+                          <h3 class="page-title left">Notification</h3> 
                       </div>
                       <!--<div class="pl-4 pr-4 row">
                         <div class="col mb-4 left alert alert-warning mt-0 mb-2">
@@ -362,6 +362,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="card-body">
                             <div class="today-date">
+                            <?php date_default_timezone_set($getTimeZone->geoplugin_timezone);?>
                                <center> <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y')." ".date_default_timezone_get();?></span></h6></center>
                             </div>
                             <?php if ($this->session->userdata('logged')['role'] < 5):?>
@@ -403,7 +404,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </td>
                                         <td class="tbl-status">
                                             <center>
-                                                <a href="<?php echo site_url(); ?>'timesheet/attendance" 
+                                                <a href="<?php echo site_url(); ?>timesheet/notification" 
                                                 id="notificationDP" 
                                                 data-id="<?php echo $notify->id; ?>" title="" data-toggle="tooltip" 
                                                 data-original-title="Notification Not Viewed ">
@@ -470,7 +471,7 @@ $(document).ready(function(){
     type:"POST",
     async: true,
     cache: false,
-    url: base_url + 'timesheet/removeNotification',
+    url: base_url + '/timesheet/removeNotification',
     data:{notificationid:id},
      success:function()
      {

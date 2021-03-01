@@ -258,6 +258,7 @@ class Timesheet extends MY_Controller
 
     public function showEmployeeTable()
     {
+        date_default_timezone_set('UTC');
         $week = $this->input->get('week');
         $week_convert = date('Y-m-d', strtotime($week));
         
@@ -283,14 +284,14 @@ class Timesheet extends MY_Controller
 
         $users = $this->users_model->getUsers();
         $user_roles = $this->users_model->getRoles();
-        $ts_logs = $this->timesheet_model->getTSByDate($week_check);
+        // $ts_logs = $this->timesheet_model->getTSByDate($week_check);
         $attendance = $this->timesheet_model->employeeAttendance();
         $week_duration = $this->timesheet_model->getLastWeekTotalDuration();
 
         $name = null;
         $role = null;
         $bg_color = '#f71111bf';
-        $status = 'LOA';
+        $status = '';
         $mon_duration = null;
         $tue_duration = null;
         $wed_duration = null;
@@ -323,21 +324,64 @@ class Timesheet extends MY_Controller
                     $role = $roles->title;
                 }
             }
-            foreach ($ts_logs as $log) {
-                if ($log->action == 'Check in' && $log->user_id == $user->id) {
-                    $bg_color = 'greenyellow';
-                    $status = 'In';
-                } elseif ($log->action == 'Check out' && $log->user_id == $user->id) {
-                    $status = 'Out';
-                    $bg_color = '#f71111bf';
-                } elseif ($log->action == 'Break in' && $log->user_id == $user->id) {
-                    $status = 'On Lunch';
-                    $bg_color = '#ffc859';
-                } elseif ($log->action == 'Break out' && $log->user_id == $user->id) {
-                    $status = 'In';
-                    $bg_color = 'greenyellow';
+
+            $leaves= $this->timesheet_model->gethis_leaveType($user->id,date('Y-m-d'),"approved");
+            foreach($leaves as $row){
+                $status = $row->name;
+                $bg_color = 'background-color: #90A4AE;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: white;';
+            }
+            if($status===""){
+                $current_status = $this->timesheet_model->getUser_current_status($user->id,date('Y-m-d'));
+                
+                foreach($current_status as $log){
+                    if ($log->action == 'Check in') {
+                        $bg_color = 'background-color: #51B448;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        border-radius: 10px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        color: white;';
+                        $status = 'In';
+                    } elseif ($log->action == 'Check out' ) {
+                        $status = 'Out';
+                        $bg_color = 'background-color: #f71111bf;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        border-radius: 10px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        color: white;';
+                    } elseif ($log->action == 'Break in') {
+                        $status = 'On Lunch';
+                        $bg_color = 'background-color: #FF9800;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        border-radius: 10px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        color: white;';
+                    } elseif ($log->action == 'Break out') {
+                        $status = 'In';
+                        $bg_color = 'background-color: #51B448;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        border-radius: 10px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        color: white;';
+                    }
                 }
             }
+            
+
+            
             foreach ($attendance as $attn) {
                 if ($attn->user_id == $user->id && $attn->shift_duration > 0) {
                     for ($x = 0; $x < count($week_check); $x++) {
@@ -377,7 +421,8 @@ class Timesheet extends MY_Controller
             //            }
             $display .= '<tr>';
             $display .= '<td><span class="tbl-emp-name">' . $name . '</span><span class="tbl-emp-role">' . $role . '</span></td>';
-            $display .= '<td class="center" style="background-color:' . $bg_color . '"><span class="tbl-emp-status">' . $status . '</span></td>';
+            // $display .= '<td class="center" style="background-color:' . $bg_color . '"><span class="tbl-emp-status">' . $status . '</span></td>';
+            $display .= '<td class="center" ><span class="tbl-emp-status" style="' . $bg_color . '">' . $status . '</span></td>';
             $display .= '<td class="center">' . $mon_duration . '</td>';
             $display .= '<td class="center">' . $tue_duration . '</td>';
             $display .= '<td class="center">' . $wed_duration . '</td>';
@@ -1109,6 +1154,8 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
+        
+        date_default_timezone_set('UTC');
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
@@ -1135,11 +1182,13 @@ class Timesheet extends MY_Controller
         $this->page_data['on_leave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"approved");
         $this->page_data['on_unapprovedleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"unapproved");
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"pending");
+        $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"pending");
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
 
     public function inNow()
     {
+        date_default_timezone_set('UTC');
         $this->db->or_where('DATE(date_created)', date('Y-m-d'));
         //	    $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
         $query = $this->db->get_where('timesheet_attendance', array('status' => 1));
@@ -1206,12 +1255,13 @@ class Timesheet extends MY_Controller
     }
     public function breakOut()
     {
+        date_default_timezone_set('UTC');
         $user_id = $this->input->post('id');
         $company_id = $this->input->post('company_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
         $query = $this->timesheet_model->breakOut($user_id, $entry, $approved_by, $company_id);
-        if ($query != 0) {
+        if ($query != null) {
             echo json_encode(date('h:i A', $query));
         } else {
             echo json_encode(0);
@@ -1676,14 +1726,18 @@ class Timesheet extends MY_Controller
 
         $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         $getTimeZone = json_decode($ipInfo);
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
-        $clock_in = time();
+        $user_timezone = $getTimeZone->geoplugin_timezone;
+        // date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        // $clock_in = time();
         $user_id = $this->session->userdata('logged')['id'];
-
+        // date_default_timezone_set('UTC');
+        $clock_in = date('Y-m-d H:i:s');
+        // echo $clock_in;
         $attendance = array(
             'user_id' => $user_id,
             'status' => 1,
-            'date_created' => date('Y-m-d H:i:s', $clock_in),
+            'overtime_status' => 0,
+            'date_created' => $clock_in,
         );
         $this->db->insert('timesheet_attendance', $attendance);
         $attn_id = $this->db->insert_id();
@@ -1693,8 +1747,8 @@ class Timesheet extends MY_Controller
             $clock_in_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock In',
-                'content' => 'Clock In ' . date('d M Y H:i:s', $clock_in),
-                'date_created' => date('Y-m-d H:i:s', $clock_in),
+                'content' => 'Clock In ' . $clock_in,
+                'date_created' => $clock_in,
                 'status' => 1,
             );
             $this->db->insert('user_notification', $clock_in_notify);
@@ -1706,7 +1760,7 @@ class Timesheet extends MY_Controller
                 'action' => 'Check in',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
                 'user_location_address' => $this->employeeAddress(),
-                'date_created' => date('Y-m-d H:i:s', $clock_in),
+                'date_created' => $clock_in,
                 'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
             );
@@ -1726,7 +1780,8 @@ class Timesheet extends MY_Controller
             $getUserDetail = $query->row();
 
             $data = new stdClass();
-            $data->clock_in_time = date('h:i A', $clock_in);
+            date_default_timezone_set($getTimeZone->geoplugin_timezone);
+            $data->clock_in_time =  time();
             $data->clock_out_time = 'Pending...';
             $data->attendance_id = $attn_id;
             $data->FName = $getUserDetail->FName;
@@ -1735,7 +1790,38 @@ class Timesheet extends MY_Controller
             echo json_encode($data);
         }
     }
-
+    public function clockOut_validation(){
+        $attn_id = $this->input->post('attn_id');
+        $logs = $this->timesheet_model->getattendance_logs($attn_id);
+        $count_lunchin=0;
+        $count_lunchout=0;
+        foreach($logs as $log){
+            if($log->action == "Break in"){
+                $count_lunchin++;
+            }elseif($log->action == "Break out"){
+                $count_lunchout++;
+            }
+        }
+        $onLunch = false;
+        $noLunch = false;
+        $doneLunch = false;
+        if($count_lunchin > 0 && $count_lunchout < 1){
+            $onLunch = true;
+        }
+        if($count_lunchout > 0){
+            $doneLunch = true;
+        }
+        if($count_lunchin == 0){
+            $noLunch = true;
+        }
+        $data = array(
+            'onLunch' =>   $onLunch,
+            'noLunch' => $noLunch,
+            'doneLunch' => $doneLunch
+        );
+        
+         echo json_encode($data);
+    }
     public function getClockInOutNotification()
     {
         $qry = $this->db->query("SELECT * FROM (SELECT count(DISTINCT user_id) as ClockIn FROM
@@ -1837,14 +1923,30 @@ class Timesheet extends MY_Controller
         echo json_encode($notificationListArray);
     }
 
+    
+    public function statusChecker($id,$date)
+    {
+        $last_log ="";
+        $current_status = $this->timesheet_model->is_BreakIn($attn_id, $date);
+        foreach($current_status as $row){
+            $last_log = $row->action;
+        }
+        return $last_log;
+    }
+
     public function clockOutEmployee()
     {
-
-
         $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         $getTimeZone = json_decode($ipInfo);
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        // date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        date_default_timezone_set('UTC');
         $attn_id = $this->input->post('attn_id');
+
+        // $current_status = statusChecker($attn_id,date('Y-m-d'));
+        // if($lastcurrent_status == "Break in"){
+            
+        // }
+
         $clock_out = 0;
         $sched_clockOut = $this->input->post('time');
         if ($sched_clockOut == 0 || $sched_clockOut == null) {
@@ -1852,7 +1954,6 @@ class Timesheet extends MY_Controller
         } else {
             $clock_out = ($sched_clockOut / 1000);
         }
-
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
         if ($check_attn->num_rows() == 1) {
@@ -1900,8 +2001,13 @@ class Timesheet extends MY_Controller
                 $query = $this->db->get();
                 $getUserDetail = $query->row();
 
+                $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+                $getTimeZone = json_decode($ipInfo);
+                $user_timezone = $getTimeZone->geoplugin_timezone;
+                date_default_timezone_set($getTimeZone->geoplugin_timezone);
+
                 $data = new stdClass();
-                $data->clock_out_time = date('h:i A', $clock_out);
+                $data->clock_out_time = date('h:i A');
                 $data->attendance_id = $attn_id;
                 $data->shift_duration = $shift_duration;
                 $data->FName = $getUserDetail->FName;
@@ -1916,6 +2022,7 @@ class Timesheet extends MY_Controller
     {
         //	    $end_break = $this->input->post('end_of_break');
         $attn_id = $this->input->post('attn_id');
+        date_default_timezone_set('UTC');
         $lunch_in = time();
         $timestamp = 0;
         $latest_in = 0;
@@ -1941,8 +2048,14 @@ class Timesheet extends MY_Controller
             }
         }
 
+        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        $getTimeZone = json_decode($ipInfo);
+        $user_timezone = $getTimeZone->geoplugin_timezone;
+        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+
+        
         $data = new stdClass();
-        $data->lunch_in = date('h:i A', $lunch_in);
+        $data->lunch_in =  date('h:i A',time());
         $data->timestamp = $timestamp;
         $data->latest_in = $latest_in;
         echo json_encode($data);
@@ -1952,6 +2065,7 @@ class Timesheet extends MY_Controller
     {
         $attn_id = $this->input->post('attn_id');
         $pause_time = $this->input->post('pause_time');
+        date_default_timezone_set('UTC');
         $lunch_out = time();
         $user_id = $this->session->userdata('logged')['id'];
         //        $check = $this->db->get_where('timesheet_logs',array('attendance_id'=>$attn_id,'action'=>'Break out'));
@@ -1977,8 +2091,14 @@ class Timesheet extends MY_Controller
             $this->db->where('id', $attn_id)->update('timesheet_attendance');
         }
 
+        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        $getTimeZone = json_decode($ipInfo);
+        $user_timezone = $getTimeZone->geoplugin_timezone;
+        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+
         $data = new stdClass();
-        $data->lunch_time = date('h:i A', $lunch_out);
+        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        $data->lunch_time =  date('h:i A',time());
 
         echo json_encode($data);
     }
@@ -1995,7 +2115,6 @@ class Timesheet extends MY_Controller
         $address = ($status == "OK") ? $output->results[1]->formatted_address : 'Address not found';
         return $address;
     }
-
     public function overtimeApproval()
     {
         $status = $this->input->post('status');
@@ -2084,9 +2203,75 @@ class Timesheet extends MY_Controller
         }
         return $notification;
     }
+    public function servere_timezone(){
+        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        $getTimeZone = json_decode($ipInfo);
+        $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
+        var_dump($UserTimeZone);
+        $utz="";
+        
+        echo $utz;
+        // echo date('Y-m-d H:i:sP');
+        $date =  new DateTime('2021-02-28 17:23:26+01:00');
+        // $date->setTimezone(new DateTimeZone($UserTimeZone)); // +04
+        // echo $date->format('Y-m-d H:i:sP');
+        // echo date('Y-m-d H:i:sP')."=::::";
+        // echo date_format($date, 'Y-m-d H:i:sP');
+        date_default_timezone_set('UTC');
+        $date =  date('Y-m-d H:i:s');
+        $datetime = new DateTime($date);
+        // echo "UTC: ".$datetime->format('Y-m-d H:i:s') . "<br>";
+        $ManilaZone = new DateTimeZone('Asia/Manila');
+        $datetime->setTimezone($ManilaZone);
+        // echo "Asia/Manila".$datetime->format('Y-m-d H:i:s');  
+        // var_dump(timezone_identifiers_list());
+        // echo  "server_timezone: ".date_default_timezone_get ();
+    }
+    public function worked_hourschecker(){
+        date_default_timezone_set('UTC');
+        $user_id = $this->session->userdata('logged')['id'];
+        $user_logs = $this->timesheet_model->getAllLogsToday($user_id,date('Y-m-d'));
+        // var_dump($user_logs);
+        $count_of_checkins = 0;
+        $check_in = "";
+        $total_hours = 0;
+        foreach($user_logs as $row){
+            if($row->action == "Check in"){
+                $count_of_checkins++;
+                if($count_of_checkins == 1){
+                    $check_in = $row->date_created;
+                }
+            }elseif($row->action == "Check out" && $count_of_checkins > 0){
+                $start = new DateTime($check_in);
+                $end = new DateTime($row->date_created);
+                $interval = $start->diff($end);
+                $total_hours = $total_hours + $interval->format("%H");
+            }
+        }
+        if($count_of_checkins % 2 != 0){
+            $start = new DateTime($check_in);
+            $end =  new DateTime(date('Y-m-d H:i:s'));
+            $interval = $start->diff($end);
+            $total_hours = $total_hours + $interval->format("%H");
+        }
+         if($total_hours >= 8){
+            $action = true;
+         }else{
+            $action = false;
+         }
+
+        $data = array(
+            'user_id' => $user_id,
+            'action' => $action,
+            'total_hours' => $total_hours,
+            'count_of_checkins' => $count_of_checkins
+        );
+        echo json_encode($data);
+    }
 
     public function readNotification()
     {
+
         $id = $this->input->post('id');
         $query = $this->db->get_where('user_notification', array('id' => $id));
         if ($query->num_rows() == 1) {

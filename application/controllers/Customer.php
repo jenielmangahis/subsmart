@@ -323,7 +323,6 @@ class Customer extends MY_Controller
     }
 
     public function add_data_sheet(){
-  
         $user_id = logged('id');
         $cid = logged('company_id');
         $input = $this->input->post();

@@ -30,6 +30,9 @@ add_css(array(
         border-color: #e0e0e0 !important;
         border: 1px solid;
     }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -110,9 +113,9 @@ add_css(array(
                             <?php endif; ?>
                             <div class="form-group label-width d-flex align-items-center">
                                 <label>From</label>
-                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>
+                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>&nbsp;&nbsp;
                                 <select id="inputState" name="start_time" class="form-control" required>
-                                    <option selected="">Start time</option>
+                                    <option value="">Start time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                     <?php } ?>
@@ -122,14 +125,14 @@ add_css(array(
                                 <label >To</label>
                                 <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
                                 <select id="inputState" name="end_time" class="form-control" required>
-                                    <option selected="">End time</option>
+                                    <option value="">End time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option <?= isset($jobs_data) && strtolower($jobs_data->end_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
                             <select id="employee_id" name="employee_id" class="form-control">
-                                <option selected="">Select Employee</option>
+                                <option value="">Select Employee</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
                                         <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
@@ -170,11 +173,11 @@ add_css(array(
                             </select>
                             <h6>Time Zone</h6>
                             <select id="inputState" name="timezone" class="form-control">
-                                <option selected="">Central Time (UTC -5)</option>
+                                <option value="utc5">Central Time (UTC -5)</option>
                             </select>
                             <h6>Select Job Type</h6>
-                            <select id="job_type_option" name="jobtypes" class="form-control">
-                                <option value="">Select Tag</option>
+                            <select id="job_type_option" name="jobtypes" class="form-control" required>
+                                <option value="">Select Type</option>
                                 <?php if(!empty($job_types)): ?>
                                     <?php foreach ($job_types as $type): ?>
                                         <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
@@ -183,7 +186,8 @@ add_css(array(
                             </select>
 
                             <h6>Select Job Tag</h6>
-                            <select id="job_tags" name="tags" class="form-control">
+                            <select id="job_tags" name="tags" class="form-control" required>
+                                <option value="">Select Tags</option>
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
                                         <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
@@ -195,16 +199,6 @@ add_css(array(
                         </div>
                         <br>
                     </div>
-                    <!--<div class="card">
-                        <div class="card-body">
-                            <h6 class="page-title">
-                                Map
-                            </h6>
-
-                            <br>
-                        </div>
-                    </div>-->
-
                     <div class="card" id="notes_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header">
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -295,7 +289,7 @@ add_css(array(
 
                         </div>
                     </div>
-                    <div class="card" id="pd_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
+                    <div class="card" id="pd_left_card" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
                         <div class="card-header">
 
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="payment">
@@ -530,7 +524,7 @@ add_css(array(
                             </div>
                         </div>
                     </div>
-                    <div class="card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
+                    <div class="card" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
                         <div class="card-header">
                             <button  style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="fill-eSign">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
@@ -552,7 +546,7 @@ add_css(array(
                             </div>
                         </div>
                     </div>
-                    <div class="card" id="approval_card_left" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
+                    <div class="card" id="approval_card_left" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
                         <div class="card-header" id="headingOne">
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="approval">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
@@ -587,18 +581,13 @@ add_css(array(
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="prev-btn float-right">
-                       <button type="button" class="btn btn-primary">Preview</button>
-                    </div> -->
-
                 </div>
                 <div class="col-md-8">
-
                     <div class="card table-custom">
                         <div class="card-body">
                             <div class="row">
                                 <div style="display: flex; margin: 0;margin-right: auto;" >
-                                    <b>Created By: </b> <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
+                                    <b>Created By: </b>&nbsp;&nbsp; <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
                                 </div>
                                 <a  class="add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
                                     <span class="fa fa-plus-square"></span> Add New Customer
@@ -987,8 +976,9 @@ add_css(array(
                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
                             <div class="col-sm-12">
                                 <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
-                                <button type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</button>
-
+                                <?php if(isset($jobs_data)): ?>
+                                <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>" type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

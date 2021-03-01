@@ -122,6 +122,9 @@
             bottom: 0px;
         }
     }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -151,13 +154,7 @@ add_css(array(
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
-                                        <div class="dropdown">
-                                            <a class="btn btn-primary btn-md" href="<?= base_url('job/new_job1') ?>">
-                                                <span class="fa fa-plus"></span> New Job
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="float-right d-md-block">
+                                            <a class="btn btn-primary btn-sm" href="<?= base_url('job/new_job1') ?>"><span class="fa fa-plus"></span> New Job</a>
                                     </div>
                                 </div>
                             </div>
@@ -225,22 +222,24 @@ add_css(array(
                                         <tbody>
                                         <?php foreach($jobs as $job) : ?>
                                             <tr>
-                                                <!--<td class="text-center"><input type="checkbox" class="jobCheckboxTd" data-id="<?php echo $job->id; ?>" value=""></td>-->
                                                 <td class="pl-3"><?= $job->job_number; ?></td>
                                                 <td class="pl-3"><?php echo date_format(date_create($job->date_created),"m/d/Y"); ?></td>
                                                 <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
                                                 <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
                                                 <td class="pl-3"><?= $job->status; ?></td>
-                                                <td class="pl-3">$<?= $job->amount; ?></td>
+                                                <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',''); ?></td>
                                                 <td class="pl-3"><?php echo $job->job_type; ?></td>
                                                 <td class="pl-3"><?php echo $job->name; ?></td>
-
                                                 <td class="pl-3"><?=$job->priority; ?></td>
                                                 <td class="pl-3">
-                                                    <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-primary btn-sm">
-                                                        <span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-primary btn-sm">
+                                                    <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
+                                                        <span class="fa fa-pencil"></span> Edit
+                                                    </a>&nbsp;
+                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
                                                         <span class="fa fa-trash"></span> Delete
+                                                    </a>
+                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
+                                                        <span class="fa fa-search-plus"></span> Preview
                                                     </a>
                                                 </td>
                                             </tr>

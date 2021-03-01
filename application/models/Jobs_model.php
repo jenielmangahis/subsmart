@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Jobs_model extends MY_Model
 {
     public $table = 'jobs';
+    public $table_items = 'job_items';
     public $table_job_settings = 'job_settings';
     public $table_jobs_has_address = 'jobs_has_address';
     public $table_jobs_has_customers = 'jobs_has_customers';
@@ -38,7 +39,10 @@ class Jobs_model extends MY_Model
     {
         $cid=logged('company_id');
         $this->db->from($this->table);
-        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.*');
+        $this->db->select('jobs.*,LName,FName,
+        acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email,
+        job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.*');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
         $this->db->join('users', 'users.id = jobs.employee_id','left');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
@@ -48,6 +52,16 @@ class Jobs_model extends MY_Model
         $this->db->where("jobs.id", $id);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function get_specific_job_items($id)
+    {
+        $this->db->from($this->table_items);
+        $this->db->select('items.title,items.price,job_items.qty');
+        $this->db->join('items', 'items.id = job_items.items_id','left');
+        $this->db->where("job_items.job_id", $id);
+        $query = $this->db->get();
+        return $query->result();
     }
 
     /**

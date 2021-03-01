@@ -1,6 +1,7 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 ob_start();
+date_default_timezone_set('UTC');
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -23,7 +24,10 @@ ob_start();
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
+
+
+
+$config['base_url'] = 'https://www.nsmartrac.com/';
 $config['base_url'] = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
 $config['base_url'] .= "://" . $_SERVER['HTTP_HOST'];
 $config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);

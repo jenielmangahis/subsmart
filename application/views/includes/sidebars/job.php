@@ -51,7 +51,7 @@
             </svg>
         </span>
         <li class="nav-header">JOBS</li>
-        <li class="submenus <?= $this->uri->segment(2) == 'new_job1' || $this->uri->segment(2) == '' ? "active" : "";  ?>">
+        <li class="submenus <?= $this->uri->segment(2) == 'new_job1' || $this->uri->segment(2) == '' || $this->uri->segment(2) == 'job_preview' ? "active" : "";  ?>">
             <a href="<?= base_url('job') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Jobs</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">

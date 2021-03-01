@@ -8,7 +8,8 @@
     <title>Home</title>
     <meta content="Admin Dashboard" name="description">
     <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="<?php echo $url->assets ?>fa-5/css/all.min.css">
     <!--Morris Chart CSS -->
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
     <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -55,6 +56,9 @@
             width: 100%;
             height: 200px;
             border: 1px solid black;
+        }
+        div#notificationList{
+            height: auto!important;
         }
 
         #topnav {
@@ -415,7 +419,7 @@
                                 <!--</span>-->
                                 <!--                                </a>-->
                                 <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;width:auto; top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
                                                                                                                                                                                                                                                             ?></span>
                                     <div class="bell" id="bell-1">
                                         <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
@@ -502,13 +506,25 @@
                             //                        $expected_endbreak = null;
                             $shift_end = 0;
                             $overtime_status = 1;
+                            $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+                            $getTimeZone = json_decode($ipInfo);
+                            $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
                             foreach ($attendances as $attn) {
                                 $attn_id = $attn->id;
-                                $overtime_status = 1;
+                                if($attn->overtime_status == 1){
+                                    $overtime_status = 2;
+                                }else{
+                                    $overtime_status = 1;
+                                }
                                 foreach ($ts_logs_h as $log) {
                                     if ($log->attendance_id == $attn->id && $attn->status == 1) {
                                         if ($log->action == 'Check in') {
-                                            $clock_in = date('h:i A', strtotime($log->date_created));
+                                            $date_created = $log->date_created;
+                                            date_default_timezone_set('UTC');
+                                            $datetime_defaultTimeZone = new DateTime($date_created);
+                                            $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                                            $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
+                                            $clock_in = date('h:i A', strtotime($userZone_date_created));
                                             $shift_end = strtotime($log->date_created);
                                             $hours = floor($attn->break_duration / 60);
                                             $minutes = floor($attn->break_duration % 60);
@@ -519,9 +535,10 @@
                                         }
                                         if ($log->action == 'Break in') {
                                             $analog_active = 'clock-break';
+                                            
                                             if ($attn->break_duration > 0) {
                                                 $lunch_in = strtotime($log->date_created) - (floor($attn->break_duration * 60));
-                                                $latest_lunch_in = strtotime($log->date_created);
+                                                $latest_lunch_in = strtotime($userZone_date_created);
                                             } else {
                                                 $lunch_in = strtotime($log->date_created);
                                                 $latest_lunch_in = 0;
@@ -566,6 +583,7 @@
                             $over_notify = 1;
                             $start = 0;
                             $time_difference = 0;
+                            $notification = getNotification($user_id);
                             foreach ($ts_settings as $setting) {
                                 foreach ($schedule as $sched) {
                                     if ($setting->id == $sched->schedule_id) {
@@ -607,6 +625,7 @@
                                 $overtime_status = 2;
                                 $expected_endshift = 0;
                             }
+                            
                             ?>
                             <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                                 <!--                     lou       <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null;       
@@ -760,11 +779,15 @@
                 }
             });
         };
+        var baseURL=window.location.origin;
 
+        if(baseURL=="https://www.nsmartrac.local"){
+            baseURL=window.location.origin+"/nsmartrac";
+        }
         function notificationClockInOut() {
             $.ajax({
                 type: "GET",
-                url: "/Timesheet/getNotificationsAll",
+                url: baseURL+"/Timesheet/getNotificationsAll",
                 async: true,
                 cache: false,
                 timeout: 10000,

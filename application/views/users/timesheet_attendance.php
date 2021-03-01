@@ -2,6 +2,13 @@
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style type="text/css">
+    span.clock-in-time.gray, span.break-in-time.gray, span.break-out-time.gray, span.clock-out-time.gray{
+        background-color: #E9ECEF;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 10px;
+        font-size: 12px;
+    }
     th {
         text-align: center;
     }
@@ -457,6 +464,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                         <div class="card-body">
                             <div class="today-date">
+                            <?php 
+                            // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+                            // $getTimeZone = json_decode($ipInfo);
+                            date_default_timezone_set($getTimeZone->geoplugin_timezone);
+
+                            ?>
                                 <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " . date_default_timezone_get(); ?></span></h6>
                             </div>
                             <?php if ($this->session->userdata('logged')['role'] < 5) : ?>
@@ -568,7 +581,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span><?=count($on_leave)?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave)/$total_users) * 100, 2) . '%'; ?>;">
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave)/$total_users) * 100, 2) . '%'; ?>;">
                                                                     <?php echo round(100 * (count($on_leave)/$total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
@@ -591,7 +604,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span><?=count($on_unapprovedleave)?></span>
                                                             </div>
                                                             <div class="progress">
-                                                            <div id="progressNotLoggedIn" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_unapprovedleave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_unapprovedleave)/$total_users) * 100, 2) . '%'; ?>;">
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-gray progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_unapprovedleave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_unapprovedleave)/$total_users) * 100, 2) . '%'; ?>;">
                                                                     <?php echo round(100 * (count($on_unapprovedleave)/$total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
@@ -611,11 +624,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span>Pending Leave</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span>0</span>
+                                                                <span><?=count($on_pendingleave)?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0;">
-                                                                    0%
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_pendingleave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_pendingleave)/$total_users) * 100, 2) . '%'; ?>;">
+                                                                    <?php echo round(100 * (count($on_pendingleave)/$total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -692,7 +705,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 $out_count = 0;
                                                 $in_count = 0;
                                                 $company_id = 0;
+                                                // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+                                                // $getTimeZone = json_decode($ipInfo);
+                                                $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
                                                 ?>
+                                                
                                                 <?php foreach ($users as $cnt => $user) : ?>
                                                     <?php
                                                     $user_photo = userProfileImage($user->id);
@@ -707,12 +724,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             if ($user->id == $attn->user_id) {
                                                                 $attn_id = $attn->id;
                                                                 if ($attn_id == $log->attendance_id) {
+                                                                    // var_dump("<br>".date('Y-m-d', strtotime($log->date_created)));
+                                                                    date_default_timezone_set('UTC');
+                                                                    // var_dump(date('Y-m-d', strtotime('yesterday')));
+                                                                    
+                                                                    if (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d', strtotime('yesterday'))) {
+                                                                        $yesterday_in = "(Yesterday)";
+                                                                    } else {
+                                                                        $yesterday_in = null;
+                                                                    }
+                                                                    $date_created = $log->date_created;
+                                                                    date_default_timezone_set('UTC');
+                                                                    $datetime_defaultTimeZone = new DateTime($date_created);
+                                                                    $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                                                                    $log->date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
+                                                                    date_default_timezone_set($getTimeZone->geoplugin_timezone);
                                                                     if ($log->action == 'Check in') {
-                                                                        if (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d', strtotime('yesterday'))) {
-                                                                            $yesterday_in = "(Yesterday)";
-                                                                        } else {
-                                                                            $yesterday_in = null;
-                                                                        }
                                                                         $time_in = date('h:i A', strtotime($log->date_created));
                                                                         $time_out = null;
                                                                         $break_in = null;
@@ -781,16 +808,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             <span class="tbl-emp-role"><?php echo $u_role; ?></span>
                                                         </td>
                                                         <td class="tbl-chk-in" data-count="<?php echo $in_count ?>">
-                                                            <div class="red-indicator" style="<?php echo $indicator_in ?>"></div> <span class="clock-in-time"><?php echo $time_in ?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in; ?></span>
+                                                            <div class="red-indicator" style="<?php echo $indicator_in ?>"></div> <span class="clock-in-time <?php if($time_in!=""){echo "gray";}?>"><?php echo $time_in ?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in; ?></span>
                                                         </td>
                                                         <td class="tbl-chk-out" data-count="<?php echo $time_out ?>">
-                                                            <div class="red-indicator" style="<?php echo $indicator_out ?>"></div> <span class="clock-out-time"><?php echo $time_out ?></span>
+                                                            <div class="red-indicator" style="<?php echo $indicator_out ?>"></div> <span class="clock-out-time <?php if($time_out!=""){echo "gray";}?>"><?php echo $time_out ?></span>
                                                         </td>
                                                         <td class="tbl-lunch-in">
-                                                            <div class="red-indicator" style="<?php echo $indicator_in_break ?>"></div> <span class="break-in-time"><?php echo $break_in; ?></span>
+                                                            <div class="red-indicator" style="<?php echo $indicator_in_break ?>"></div> <span class="break-in-time <?php if($break_in!=""){echo "gray";}?>"><?php echo $break_in; ?></span>
                                                         </td>
                                                         <td class="tbl-lunch-out">
-                                                            <div class="red-indicator" style="<?php echo $indicator_out_break ?>"></div> <span class="break-out-time"><?php echo $break_out; ?></span>
+                                                            <div class="red-indicator" style="<?php echo $indicator_out_break ?>"></div> <span class="break-out-time <?php if($break_out!=""){echo "gray";}?>"><?php echo $break_out; ?></span>
                                                         </td>
                                                         <td class="tbl-emp-action">
                                                             <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" id="<?php echo $break_id ?>" <?php echo $break; ?> data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-coffee fa-lg"></i></a>
@@ -860,7 +887,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <div class="inner-container">
                                                 <div class="tileContent">
                                                     <div class="clear">
-                                                        <div class="inner-content" style="padding-top: 0">
+                                                        <div class="inner-content" >
                                                             <div class="card-title user-card-title">
                                                                 <div class="row">
                                                                     <div class="col-md-7" style="display: flex;">
@@ -885,35 +912,43 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             $lunch_out = '-';
                                                             $shift = '-';
                                                             $yesterday_note = null;
+                                                            $getTimeZone = json_decode($ipInfo);
+                                                            $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
                                                             foreach ($emp_attendance as $attn) {
                                                                 foreach ($emp_logs as $log) {
                                                                     if ($log->attendance_id == $attn->id) {
+                                                                        $date_created = $log->date_created;
+                                                                        date_default_timezone_set('UTC');
+                                                                        $datetime_defaultTimeZone = new DateTime($date_created);
+                                                                        $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                                                                        $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
+                                                                        $date_created = date('h:i A', strtotime($userZone_date_created));
                                                                         if ($attn->status == 1) {
                                                                             if ($log->action == 'Check in') {
-                                                                                if (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d', strtotime('yesterday'))) {
-                                                                                    $clock_in = date('h:i A', strtotime($log->date_created));
+                                                                                if (date('Y-m-d', strtotime($date_created)) == date('Y-m-d', strtotime('yesterday'))) {
+                                                                                    $clock_in = date('h:i A', strtotime($userZone_date_created));
                                                                                     $yesterday_note = '(Yesterday)';
                                                                                     $shift = '-';
-                                                                                } elseif (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d')) {
-                                                                                    $clock_in = date('h:i A', strtotime($log->date_created));
+                                                                                } elseif (date('Y-m-d', strtotime($date_created)) == date('Y-m-d')) {
+                                                                                    $clock_in = date('h:i A', strtotime($date_created));
                                                                                     $yesterday_note = null;
                                                                                 }
                                                                             } elseif ($log->action == 'Break in') {
-                                                                                $lunch_in = date('h:i A', strtotime($log->date_created));
+                                                                                $lunch_in = date('h:i A', strtotime($date_created));
                                                                                 $lunch_out = null;
                                                                             } elseif ($log->action == 'Break out') {
-                                                                                $lunch_out = date('h:i A', strtotime($log->date_created));
+                                                                                $lunch_out = date('h:i A', strtotime($date_created));
                                                                             }
                                                                         } else {
                                                                             if ($log->action == 'Check in') {
-                                                                                $clock_in = date('h:i A', strtotime($log->date_created));
-                                                                                if (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d', strtotime('yesterday'))) {
+                                                                                $clock_in = date('h:i A', strtotime($date_created));
+                                                                                if (date('Y-m-d', strtotime($date_created)) == date('Y-m-d', strtotime('yesterday'))) {
                                                                                     $yesterday_note = '(Yesterday)';
-                                                                                } elseif (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d')) {
+                                                                                } elseif (date('Y-m-d', strtotime($date_created)) == date('Y-m-d')) {
                                                                                     $yesterday_note = null;
                                                                                 }
                                                                             } elseif ($log->action == 'Check out') {
-                                                                                $clock_out = date('h:i A', strtotime($log->date_created));
+                                                                                $clock_out = date('h:i A', strtotime($date_created));
                                                                                 $seconds = ($attn->shift_duration * 3600);
                                                                                 $hours = floor($attn->shift_duration);
                                                                                 $seconds -= $hours * 3600;
@@ -921,9 +956,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                                 $seconds -= $minutes * 60;
                                                                                 $shift =  str_pad($hours, 2, '0', STR_PAD_LEFT) . ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT);
                                                                             } elseif ($log->action == 'Break in') {
-                                                                                $lunch_in = date('h:i A', strtotime($log->date_created));
+                                                                                $lunch_in = date('h:i A', strtotime($date_created));
                                                                             } elseif ($log->action == 'Break out') {
-                                                                                $lunch_out = date('h:i A', strtotime($log->date_created));
+                                                                                $lunch_out = date('h:i A', strtotime($date_created));
                                                                             }
                                                                         }
                                                                     }
@@ -1046,8 +1081,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <div class="user-logs-section" style="vertical-align: top">
                                                                     <div class="user-clock-in" style="height: 35px">
                                                                         <a href="javascript:void (0)" class="employeeLeaveBtn" id="btn-leave-emp" style="float: right;margin-top: -12px">
-                                                                            <img src="/assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
-                                                                            <img src="/assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
+                                                                            <img src="<?=base_url()?>assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
+                                                                            <img src="<?=base_url()?>assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
                                                                         </a>
                                                                         <span class="employeeLeaveTooltip">Request for leave</span>
                                                                     </div>
@@ -1353,7 +1388,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '/timesheet/breakIn',
+                        url: '<?=base_url()?>/timesheet/breakIn',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1417,7 +1452,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '/timesheet/breakOut',
+                        url: '<?=base_url()?>/timesheet/breakOut',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1473,7 +1508,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             placeholder: 'Select type',
             width: 'resolve',
             ajax: {
-                url: '/timesheet/getPTOList',
+                url: baseURL+'/timesheet/getPTOList',
                 type: "GET",
                 dataType: "json",
                 delay: 250,
@@ -1514,7 +1549,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '/timesheet/employeeRequestLeave',
+                        url: baseURL+'/timesheet/employeeRequestLeave',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1535,10 +1570,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
     function waitForClockInOutattendance() {
         var total_users = "<?php echo $total_users; ?>";
-
+        var baseURL=window.location.origin;
+        if(baseURL=="https://www.nsmartrac.local"){
+            baseURL=window.location.origin+"/nsmartrac";
+        }
         $.ajax({
             type: "GET",
-            url: "/Timesheet/getClockInOutNotification",
+            url: baseUrl+"/Timesheet/getClockInOutNotification",
             async: true,
             cache: false,
             timeout: 10000,

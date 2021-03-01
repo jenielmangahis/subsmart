@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="text-center">
-                <a class="text-info" href="<?= base_url() ?>">SEE ALL MESSAGES</a>
+                <a class="text-info" href="<?= base_url('ring_central') ?>">SEE ALL MESSAGES</a>
             </div>
 
         </div>
@@ -27,7 +27,7 @@
                     <p id="smsLogName" class="mb-1"></p>
                 </div>
             </div>
-            <div class="modal-body text-center p-2" id="personalMsgsBody">
+            <div class="modal-body text-center p-2" id="personalMsgsBody" style="height:350px; overflow-y: scroll;">
                 Fetching...
             </div>
             <div class="modal-footer">
@@ -61,11 +61,13 @@
             //dataType:'json',
             statusCode: {
                 500: function (xhr) {
-                    $('#msgs_body').html(xhr.responseText)
+                    $('#msgs_body').html(xhr.responseText);
+                    timeago.render(document.querySelectorAll('.timestamp'));    
                 }
             },
             success: function (response) {
                 $('#msgs_body').html(response);
+                timeago.render(document.querySelectorAll('.timestamp'));
             }
         });
     };
@@ -82,10 +84,15 @@
             statusCode: {
                 500: function (xhr) {
                     $('#personalMsgsBody').html(xhr.responseText);
+                    timeago.render(document.querySelectorAll('.timestamp'));
+                    document.getElementById('personalMsgsBody').scrollTop =  document.getElementById('personalMsgsBody').scrollHeight
                 }
             },
             success: function (response) {
                 $('#personalMsgsBody').html(response);
+                timeago.render(document.querySelectorAll('.timestamp'));
+                    window.scrollTo(0,document.querySelector("#personalMsgsBody").scrollHeight)
+                    document.getElementById('personalMsgsBody').scrollTop =  document.getElementById('personalMsgsBody').scrollHeight
             }
         });
     };

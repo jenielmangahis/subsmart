@@ -142,8 +142,117 @@ class Job extends MY_Controller
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
         $this->load->view('job/job_new', $this->page_data);
+    }
+
+    public function job_preview($id=null) {
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        // get all employees
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+
+        // get all job tags
+        $get_job_tags = array(
+            'table' => 'job_tags',
+            'select' => 'id,name',
+        );
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
+        //echo logged('company_id');
+
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
+
+        $get_job_types = array(
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'is_active' => 1,
+            ),
+            'table' => 'items',
+            'select' => 'id,title,price',
+        );
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        // get estimates
+        $get_estimates = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'estimates',
+            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
+        );
+        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
+
+        // get workorder
+        $get_workorder = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'work_orders',
+            'select' => 'id,work_order_number,start_date,job_name,customer_id',
+        );
+        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
+
+        // get invoices
+        $get_invoices = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'invoices',
+            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+        );
+        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        }
+        $this->load->view('job/job_preview', $this->page_data);
     }
 
     public function new_job_edit($id) {
@@ -469,7 +578,7 @@ class Job extends MY_Controller
             ),
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'000'.$job_settings[0]->job_num_next;
+        $job_number = $job_settings[0]->job_num_prefix.'-000'.$job_settings[0]->job_num_next;
 
         $jobs_data = array(
             'job_number' => $job_number,
@@ -496,8 +605,21 @@ class Job extends MY_Controller
             'notes' => $input['notes'],
             'attachment' => $input['attachment'],
             'tax_rate' => $input['tax_rate'],
+            'job_type' => $input['job_type'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+        if(isset($input['item_id'])){
+            $devices = count($input['item_id']);
+            for($xx=0;$xx<$devices;$xx++){
+                $job_items_data = array();
+                $job_items_data['job_id'] = $jobs_id;
+                $job_items_data['items_id'] = $input['item_id'][$xx];
+                $job_items_data['qty'] = $input['item_qty'][$xx];
+                $this->general->add_($job_items_data, 'job_items');
+                unset($job_items_data);
+            }
+        }
 
         $jobs_links_data = array(
             'link' => $input['link'],
@@ -566,9 +688,9 @@ class Job extends MY_Controller
             'event_color' => $jobs_id,
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'company_id' => $comp_id,
-            'description' => $jobs_id,
-            'tags' => $jobs_id,
-            'notify_at' => $jobs_id,
+            //'description' => $jobs_id,
+            //'tags' => $jobs_id,
+            'notify_at' => $input['customer_reminder_notification'],
         );
         $this->general->add_($events_data, 'events');
 

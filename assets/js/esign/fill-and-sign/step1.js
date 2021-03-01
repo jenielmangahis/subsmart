@@ -5,6 +5,7 @@ function Step1() {
   const $docPreview = $(".fillAndSign__docPreview");
   const $docModal = $("#documentModal");
   const $progress = $(".fillAndSign__uploadProgress");
+  const $progressCheck = $(".fillAndSign__uploadProgressCheck");
   const $submitButton = $("#formSubmit");
   const $uploadButton = $(".fillAndSign__upload");
 
@@ -47,11 +48,9 @@ function Step1() {
     context.clearRect(0, 0, $canvas.width, $canvas.height);
     $docPreview.removeClass("fillAndSign__docPreview--completed");
     $progress.removeClass("fillAndSign__uploadProgress--completed");
+    $progressCheck.removeClass("fillAndSign__uploadProgressCheck--completed");
 
     await sleep(1000);
-
-    $docPreview.addClass("fillAndSign__docPreview--completed");
-    $progress.addClass("fillAndSign__uploadProgress--completed");
 
     const document = await PDFJS.getDocument({ url: documentUrl });
     const documentPage = await document.getPage(1);
@@ -68,6 +67,14 @@ function Step1() {
     };
 
     await documentPage.render(canvasContext);
+
+    $docPreview.addClass("fillAndSign__docPreview--completed");
+    $progress.addClass("fillAndSign__uploadProgress--completed");
+
+    await sleep(500);
+
+    $progress.removeClass("fillAndSign__uploadProgress--completed");
+    $progressCheck.addClass("fillAndSign__uploadProgressCheck--completed");
 
     $submitButton.attr("disabled", false);
     $submitButton.addClass("btn-success");
@@ -180,7 +187,11 @@ function Step1() {
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
 
-      await previewDocument({ file, fileId });
+      try {
+        await previewDocument({ file, fileId });
+      } catch (error) {
+        alert(error);
+      }
     });
 
     $fileInput.on("change", function () {

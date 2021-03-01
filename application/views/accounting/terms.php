@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-sm-12 p-0">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                        <span style="color:black;">Terms message</span>
+                                        <span style="color:black;">Every freelancer or small business owner has been there. You complete a project, send out the invoice, and get back nothing but silence. Maybe your invoice is sitting forgotten in your client's inbox. Or, perhaps, they've chosen to skip out on paying you for your work. Fortunately, carefully crafting your invoice wording for immediate payment can help you separate the former from the latter. You can do that here.</span>
                                     </div>
                                 </div>
                             </div>
@@ -264,7 +264,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
-$('#inc_inactive').on('change', function() {
+$('#table_rows, #inc_inactive').on('change', function() {
+    $('#terms_table').DataTable().ajax.reload();
+});
+
+$('.dropdown-menu').on('click', function(e) {
+    e.stopPropagation();
+});
+
+$('#search').on('keyup', function() {
     $('#terms_table').DataTable().ajax.reload();
 });
 

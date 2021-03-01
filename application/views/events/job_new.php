@@ -30,6 +30,9 @@ add_css(array(
         border-color: #e0e0e0 !important;
         border: 1px solid;
     }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
