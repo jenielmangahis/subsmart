@@ -73,6 +73,34 @@
                                     </div>
                                 </li>
 
+                                <li class="addon-li">
+                                    <div class="group-name">Payments Infrastructure</div>
+                                    <div class="addon">
+                                        <div class="addon__on"></div>
+                                        <div class="addon__img">
+                                            <img src="<?= base_url() ?>/assets/img/api-tools/stripe-logo.png">
+                                        </div>
+                                        <div class="addon__name">
+                                            Stripe</div>
+                                        <div class="addon__description text-ter">
+                                          Payments infrastructure for the internet with Stripe.com. <br>
+                                            <a class="a-sec" data-toggle="popover" title="Stripe" data-content="Millions of companies of all sizes—from startups to Fortune 500s—use Stripe’s software and APIs to accept payments, send payouts, and manage their businesses online.  Here you can use this connector to set up with Stripe to start processing your payments from your customers and grow your business." href="#">more...</a>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="addon_price">
+                                                    Free
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a href="<?php echo base_url('tools/quickbooks'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+                                            </div>
+                                        </div>
+                                        <div class="addon__switch">
+                                        </div>
+                                    </div>
+                                </li>
+
 
                                 <li class="addon-li">
                                     <div class="group-name">Review Connectors</div>
@@ -82,7 +110,7 @@
                                             <img src="<?= base_url() ?>/assets/img/api-tools/thumb_nicejob.png">
                                         </div>
                                         <div class="addon__name">
-                                            NiceJob                                    
+                                            NiceJob
                                         </div>
                                         <div class="addon__description text-ter">
                                             NiceJob is the easiest way to get more reviews, referrals and sales.<br><a class="a-sec" data-toggle="popover" title="NiceJob" data-content="Nicejob makes it easy to get more reviews, build your reputation, and spread your customer stories to new potential customers through social media channels." href="#">more...</a>
@@ -116,7 +144,7 @@
                                             <img src="<?= base_url() ?>/assets/img/api-tools/thumb_zapier.png">
                                         </div>
                                         <div class="addon__name">
-                                            Zapier                                    
+                                            Zapier
                                         </div>
                                         <div class="addon__description text-ter">
                                             Zapier lets you connect Markate to hundreds of other web services.<br><a class="a-sec" data-toggle="popover" title="Zapier" data-content="Automated connections called Zaps, set up in minutes with no coding, can automate your day-to-day tasks and build workflows between apps. Each Zap has one app as the Trigger, where your information comes from and which causes one or more Actions in other apps, where your data gets sent automatically." href="#">more...</a>
@@ -150,7 +178,7 @@
                                             <img src="<?= base_url() ?>/assets/img/api-tools/thumb_mailchimp.png">
                                         </div>
                                         <div class="addon__name">
-                                            Mailchimp                                    
+                                            Mailchimp
                                         </div>
                                         <div class="addon__description text-ter">
                                             Get the Tools You Need to Grow Your Business and Automate Your Marketing. Mailchimp Makes It Easy to Find New Audiences and Reach People When It Matters Most.
@@ -184,7 +212,7 @@
                                             <img src="<?= base_url() ?>/assets/img/api-tools/thumb_active_campaign.png">
                                         </div>
                                         <div class="addon__name">
-                                            Active Campaign                                    
+                                            Active Campaign
                                         </div>
                                         <div class="addon__description text-ter">
                                             Create Simple Emails That Deliver & Convert
@@ -218,10 +246,10 @@
                                             <img src="<?= base_url() ?>/assets/img/api-tools/thumb_api.png">
                                         </div>
                                         <div class="addon__name">
-                                            API Integration                              
+                                            API Integration
                                         </div>
                                         <div class="addon__description text-ter">
-                                            Our API Integration allows you to combine, with other popular brands so you can be more connected.  
+                                            Our API Integration allows you to combine, with other popular brands so you can be more connected.
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
@@ -252,11 +280,11 @@
                                             <img src="<?php echo base_url('assets/img/api-tools/') . 'zillow.jpg' ?>">
                                         </div>
                                         <div class="addon__name">
-                                            MLS Listings                         
+                                            MLS Listings
                                         </div>
                                         <div class="addon__description text-ter">
 
-                                            The Bridge Listing Output platform allows brokers and developers to access MLS listing data via a modern RESTful API. 
+                                            The Bridge Listing Output platform allows brokers and developers to access MLS listing data via a modern RESTful API.
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">

@@ -71,7 +71,9 @@
     -ms-user-select: none;
     user-select: none;
 }
-
+.left {
+  float: left;
+}
 </style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
@@ -97,7 +99,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           </div>
                         </div>
                         <div class="filter-container mb-3">
-                            <input type="text" id="date-range-picker" class="form-control">                            
+                          <div class="col-md-4 pl-0 left">
+                            <input type="text" id="date-range-picker" class="form-control">
+                          </div>
+                          <div class="col-md-4 left">
                             <select class="form-control">
                                 <option value="all">All Statuses</option>
                                 <option value="new">New</option>
@@ -106,6 +111,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <option value="paused">Paused</option>
                                 <option value="completed">Completed</option>
                             </select>
+                          </div>
+                          <div class="col-md-4 pr-0 left">
                             <select class="form-control" name="user" id="filter-user">
                                 <option value="">- Select Employee -</option>
                                 <option value="all">All Employees</option>
@@ -113,6 +120,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <option value="<?= $u->id; ?>"><?= $u->FName . ' ' . $u->LName; ?></option>
                                 <?php } ?>
                             </select>
+                          </div>
                         </div>
                         <div class="map-container"></div>
                     </div>
