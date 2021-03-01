@@ -153,7 +153,7 @@ class Event_model extends MY_Model
     public function getAllCompanyEventsWithAddress($company_id)
     {
 
-        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, events.event_type_id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
         $this->db->from($this->table);
 
         $this->db->where('events.event_address !=', '');
@@ -166,7 +166,7 @@ class Event_model extends MY_Model
     public function getAllUserEventsWithAddress($employee_id)
     {
 
-        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, events.event_type_id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
         $this->db->from($this->table);
 
         $this->db->where('events.event_address !=', '');

@@ -162,9 +162,9 @@ input#datepicker_startdate {
                     <option value="">Select type of event</option>
                     <?php foreach($eventTypes as $e){ ?>
                       <?php if (!empty($event)) { ?>
-                        <option <?= $event->what_of_even == $e->title ? 'selected="selected"' : ''; ?> value="<?= $e->title; ?>"><?= $e->title; ?></option>
+                        <option <?= $event->what_of_even == $e->title ? 'selected="selected"' : ''; ?> value="<?= $e->id; ?>"><?= $e->title; ?></option>
                       <?php }else{ ?>
-                        <option value="<?= $e->title; ?>"><?= $e->title; ?></option>
+                        <option value="<?= $e->id; ?>"><?= $e->title; ?></option>
                       <?php } ?>
                     <?php } ?>
                 </select>

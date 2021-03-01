@@ -35,6 +35,7 @@ class Event extends MY_Controller
 
     public function save()
     {
+        $this->load->model('EventType_model');
         include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
 
         $company_id = logged('company_id');
@@ -56,12 +57,15 @@ class Event extends MY_Controller
             $event_state    = $post['event_state'];
         }
 
+        $eventType = $this->EventType_model->getById($post['what_of_even']);
+
         $data = array(
             'company_id' => $company_id,
             'customer_id' => $post['customer_id'],
+            'event_type_id' => $eventType->id,
             'gevent_id' => 0,
             'employee_id' => $post['user_id'][0],
-            'what_of_even' => ($post['what_of_even']) ? $post['what_of_even'] : '',
+            'what_of_even' => ($post['what_of_even']) ? $eventType->title : '',
             'description' => $post['description'],
             'start_date' => date('Y-m-d', strtotime($post['start_date'])),
             'start_time' => $post['start_time'],
