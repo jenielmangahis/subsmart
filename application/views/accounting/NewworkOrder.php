@@ -44,7 +44,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate' ]); ?>  
 
             <div class="row" style="margin-top:-30px;">
                 <div class="col-xl-12">
@@ -107,7 +107,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input
                                         id="autocomplete"
                                         placeholder="Enter Location"
-                                        onFocus="geolocate()"
                                         type="text"
                                         class="form-control"
                                     />
@@ -822,7 +821,7 @@ $(function () {
     });
 });
 </script>
-
+<!-- 
 <script>
       // This sample uses the Autocomplete widget to help the user select a
       // place, then it retrieves the address components associated with that
@@ -895,6 +894,44 @@ $(function () {
           });
         }
       }
-    </script>
+    </script> -->
     
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM&callback=initAutocomplete&libraries=places&v=weekly" async ></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM&callback=initAutocomplete&libraries=places&v=weekly" ></script>
+
+<script>
+    var placeSearch, autocomplete;
+
+function initialize() {
+    // Create the autocomplete object, restricting the search
+    // to geographical location types.
+    autocomplete = new google.maps.places.Autocomplete(
+    /** @type {HTMLInputElement} */
+    (document.getElementById('autocomplete')), {
+        types: ['geocode']
+    });
+
+    google.maps.event.addDomListener(document.getElementById('autocomplete'), 'focus', geolocate);
+}
+
+function geolocate() {
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+
+            var geolocation = new google.maps.LatLng(
+            position.coords.latitude, position.coords.longitude);
+            var circle = new google.maps.Circle({
+                center: geolocation,
+                radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+
+            // Log autocomplete bounds here
+            console.log(autocomplete.getBounds());
+        });
+    }
+}
+
+initialize();
+    </script>

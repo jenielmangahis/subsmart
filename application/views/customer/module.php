@@ -180,7 +180,9 @@ add_css(array(
                                     endif;
                                     $datas['module_sort'] = $module_sort;
                                     $this->load->view('customer/adv_cust_modules/add_module', $datas);
+                                   $this->load->view('customer/adv_cust_modules/alarm-com', $datas);
                                     ?>
+
                                     <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />
                                 </div>
                             </div>

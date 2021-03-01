@@ -1,7 +1,75 @@
-var baseURL=window.location.origin+"/nsmartrac";
+var baseURL=window.location.origin;
 
-
+if(baseURL=="https://www.nsmartrac.local"){
+    baseURL=window.location.origin+"/nsmartrac";
+}
 $(document).ready(function () {
+
+    // $.ajax({
+    //     url:baseURL+"/timesheet/worked_hourschecker",
+    //     type:"POST",
+    //     dataType:'json',
+    //     success:function (data) {
+    //         console.log(data.action);
+    //         if(data.action){
+    //             Swal.fire({
+    //                 title: "You're online for 8:00 Hours now.",
+    //                 html: "Do you still need more time?",
+    //                 imageUrl:baseURL+"/assets/img/timesheet/clock-out.png",
+    //                 showCancelButton: true,
+    //                 confirmButtonColor: '#2ca01c',
+    //                 cancelButtonColor: '#d33',
+    //                 confirmButtonText: 'I want to Clock out now!',
+    //                 cancelButtonText: 'Yes, I need more Time!',
+    //                 timer: 30000
+    //             }).then((result) => { 
+    //                 let selected = this;
+    //                 let attn_id = $('#attendanceId').val();
+    //                 if (result.value) {
+    //                 $.ajax({
+    //                     url:baseURL+'/timesheet/clockOutEmployee',
+    //                     type:"POST",
+    //                     dataType:'json',
+    //                     data:{attn_id:attn_id},
+    //                     success:function (data) {
+    //                         if (data != null){
+    //                             $(selected).attr('id',null);
+    //                             $('.clock').removeClass('clock-active');
+    //                             $('.out').text(data.clock_out_time);
+    //                             $('#userClockOut').text(data.clock_out_time);
+    //                             $('#shiftDuration').text(data.shift_duration);
+    //                             $('#userShiftDuration').text(data.shift_duration);
+    //                             $('.employeeLunch').attr('id',null).attr('disabled',true);
+    //                             $('#unScheduledShift').val(0);
+    //                             $('#autoClockOut').val(2);
+    //                             Swal.fire(
+    //                                 {
+    //                                     showConfirmButton: false,
+    //                                     timer: 2000,
+    //                                     title: 'Success',
+    //                                     html: "You are now Clock-out",
+    //                                     icon: 'success'
+    //                                 });
+        
+    //                             Push.Permission.GRANTED; // 'granted'
+    //                             Push.create("Clock Out", {
+    //                                 body: "User : "+data.FName+" "+data.LName,
+    //                                 icon: baseURL+'/uploads/users/user-profile/'+data.profile_img,
+    //                                 timeout: 20000,
+    //                                     onClick: function () {
+    //                                         window.focus();
+    //                                         this.close();
+    //                                     }
+    //                                 });
+    //                             }
+    //                         }   
+    //                     });
+    //                 }
+    //             });
+    //         }
+    //     }
+    //  });
+
     let counter;
     let break_content = $('#break-duration').text();
     let hours=parseInt(break_content.slice(0,1)),minutes=parseInt(break_content.slice(4,5)),seconds=parseInt(break_content.slice(7,8));
@@ -11,7 +79,7 @@ $(document).ready(function () {
     let lunch_s = 0;
     let difference = 0,latest_diff = 0;
 
-    async function notificationRing() {
+    async function notificationRing() { 
         const audio = new Audio();
         audio.src = '../assets/css/notification/notification_tone2.mp3';
         audio.muted = false;
@@ -93,107 +161,8 @@ $(document).ready(function () {
         }
     });
     });
-    $(document).on('click','#clockOut',function () {
-        let selected = this;
-        let attn_id = $('#attendanceId').val();
-        Swal.fire({
-            title: 'Clock out?',
-            html: "Are you sure you want to Clock-out?",
-            imageUrl:baseURL+"/assets/img/timesheet/clock-out.png",
-            showCancelButton: true,
-            confirmButtonColor: '#2ca01c',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, I want to Clock-out!'
-        }).then((result) => { console.log(result);
-            if (result.value) {
-            $.ajax({
-                url:baseURL+'/timesheet/clockOutEmployee',
-                type:"POST",
-                dataType:'json',
-                data:{attn_id:attn_id},
-                success:function (data) {
-                    if (data != null){
-                        $(selected).attr('id',null);
-                        $('.clock').removeClass('clock-active');
-                        $('.out').text(data.clock_out_time);
-                        $('#userClockOut').text(data.clock_out_time);
-                        $('#shiftDuration').text(data.shift_duration);
-                        $('#userShiftDuration').text(data.shift_duration);
-                        $('.employeeLunch').attr('id',null).attr('disabled',true);
-                        $('#unScheduledShift').val(0);
-                        $('#autoClockOut').val(2);
-                        Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                html: "You are now Clock-out",
-                                icon: 'success'
-                            });
 
-                        Push.Permission.GRANTED; // 'granted'
-                        Push.create("Clock Out", {
-                            body: "User : "+data.FName+" "+data.LName,
-                            icon: '/uploads/users/user-profile/'+data.profile_img,
-                            timeout: 20000,
-                                onClick: function () {
-                                    window.focus();
-                                    this.close();
-                                }
-                            });
-                        }
-                }
-            });
-        }
-    });
-    });
-    $(document).on('click','#lunchIn',function () {
-        let selected = this;
-        let attn_id = $('#attendanceId').val();
-        Swal.fire({
-            title: 'Lunch in?',
-            html: "Are you sure you want to Lunch-in?",
-            imageUrl:baseURL+"/assets/img/timesheet/lunch.png",
-            showCancelButton: true,
-            confirmButtonColor: '#2ca01c',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, I want to Lunch-in!'
-        }).then((result) => {
-            if (result.value) {
-            $.ajax({
-                url:baseURL+'/timesheet/lunchInEmployee',
-                type:"POST",
-                dataType:'json',
-                data:{attn_id:attn_id},
-                success:function (data) {
-                    if (data != null){
-                        console.log('clock-out')
-                        $(selected).attr('id','lunchOut');
-                        $('.clock').removeClass('clock-active').addClass('clock-break');
-                        $('#userLunchIn').text(data.lunch_in);
-                        $('#userLunchOut').text(null);
-                        $('#lunchStartTime').val(data.timestamp);
-                        $('#latestLunchTime').val(data.latest_in);
-                        $(selected).children('.btn-lunch').attr('src','/assets/css/timesheet/images/coffee-active.svg');
-                        $('#clock-status').val(1);
-                        $('#autoClockOut').val(0);
-                        // break_end_time = data.end_break;
-                        // $('#clock-end-time').val(break_end_time);
-                        breakTime();
-                        Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                html: "You are now Lunch-in",
-                                icon: 'success'
-                            });
-                    }
-                }
-            });
-        }
-    });
-    });
+
     function breakTime() {
         let latest_lunch = $('#latestLunchTime').val();
         let start = $('#lunchStartTime').val();
@@ -233,45 +202,6 @@ $(document).ready(function () {
         }
         return output;
     }
-    $(document).on('click','#lunchOut',function () {
-        let selected = this;
-        let attn_id = $('#attendanceId').val();
-        Swal.fire({
-            title: 'Lunch out?',
-            html: "Are you sure you want to Lunch-out?",
-            imageUrl:baseURL+"/assets/img/timesheet/work.png",
-            showCancelButton: true,
-            confirmButtonColor: '#2ca01c',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, I want to Lunch-out!'
-        }).then((result) => {
-            if (result.value) {
-            $.ajax({
-                url:baseURL+'/timesheet/lunchOutEmployee',
-                type:"POST",
-                dataType:'json',
-                data:{attn_id:attn_id,pause_time:pause_time},
-                success:function (data) {
-                    if (data != null){
-                        $(selected).attr('id','lunchIn');
-                        $('.clock').removeClass('clock-break').addClass('clock-active');
-                        $('#userLunchOut').text(data.lunch_time);
-                        $(selected).children('.btn-lunch').attr('src','/assets/css/timesheet/images/coffee-static.svg');
-                        clearTimeout(counter);
-                        Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                html: "You are now Lunch-out",
-                                icon: 'success'
-                            });
-                    }
-                }
-            });
-        }
-    });
-    });
     let start_sched = (function() {
         let executed = false;
         return function() {
@@ -331,6 +261,7 @@ $(document).ready(function () {
     let overtimeTimer = (function() {
         let executed = false;
         return function() {
+            // alert(executed);
             if (!executed) {
                 executed = true;
                 let attn_id = $('#attendanceId').val();
@@ -347,13 +278,14 @@ $(document).ready(function () {
                 }
                 Swal.fire({
                     title: 'Do you want to overtime?',
-                    icon:'question',
+                    // icon:'question',
                     html:'Auto close after <strong></strong> seconds',
+                    imageUrl:baseURL+"/assets/img/timesheet/clock-out.png",
                     showDenyButton: true,
-                    confirmButtonText: `Yes,I want to`,
-                    denyButtonText: `Let's call it a day`,
+                    confirmButtonText: `Yes,I want`,
+                    denyButtonText: `Clock out now`,
                     allowOutsideClick: false,
-                    timer: difference,
+                    timer: 10000,
                     timerProgressBar: true,
                     willOpen: () => {
                         const content = Swal.getContent();
@@ -393,26 +325,27 @@ $(document).ready(function () {
                             }
                         });
                     } else if (result.isDenied) {
-                        status = 0;
-                        $.ajax({
-                            url:baseURL+"/timesheet/overtimeApproval",
-                            type:"POST",
-                            dataType:"json",
-                            data:{attn_id:attn_id,status:status},
-                            success:function (data) {
-                                if (data == 1){
-                                    $('#autoClockOut').val(0);
-                                    Swal.fire(
-                                        {
-                                            showConfirmButton: false,
-                                            timer: 2000,
-                                            title: 'Success',
-                                            html: "You will automatically Clock-out once the end of shift comes.",
-                                            icon: 'success'
-                                        });
-                                }
-                            }
-                        });
+                        // status = 0;
+                        // $.ajax({
+                        //     url:baseURL+"/timesheet/overtimeApproval",
+                        //     type:"POST",
+                        //     dataType:"json",
+                        //     data:{attn_id:attn_id,status:status},
+                        //     success:function (data) {
+                        //         if (data == 1){
+                        //             $('#autoClockOut').val(0);
+                        //             Swal.fire(
+                        //                 {
+                        //                     showConfirmButton: false,
+                        //                     timer: 3000,
+                        //                     title: 'Success',
+                        //                     html: "You will automatically Clock-out once the end of shift comes.",
+                        //                     icon: 'success'
+                        //                 });
+                        //         }
+                        //     }
+                        // });
+                        autoClockOut(); 
                     }
                     if (result.dismiss === Swal.DismissReason.timer) { 
                         autoClockOut(); 
@@ -420,6 +353,186 @@ $(document).ready(function () {
                 });
             }
         };
+    })();
+
+
+
+    
+    $(document).on('click','#clockOut',function () {
+        let attn_id = $('#attendanceId').val();
+        // alert(attn_id);
+            $.ajax({
+                url:baseURL+'/timesheet/clockOut_validation',
+                type:"POST",
+                dataType:'json',
+                data:{attn_id:attn_id},
+                success:function (data) {
+                    // alert(data);
+                    if(data.noLunch){
+                        confirmLunchin();
+                    }else if(data.onLunch){
+                        confirmLunchOut();
+                    }else{
+                        confirmClockOut();
+                    }
+                }
+            });
+    });
+    let confirmLunchin = (function() {
+        let executed = false;
+        return function () {
+            let selected = this;
+            let attn_id = $('#attendanceId').val();
+            Swal.fire({
+                title: 'Lunch-in',
+                html: "Are you sure you want to take your lunch?",
+                imageUrl:baseURL+"/assets/img/timesheet/lunch-icon-23.png",
+                showDenyButton: true,
+                confirmButtonColor: '#2ca01c',
+                denyButtonColor: '#d33',
+                confirmButtonText: 'Yes, I want to Lunch-in!',
+                denyButtonText: "I'm done for today."
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url:baseURL+'/timesheet/lunchInEmployee',
+                        type:"POST",
+                        dataType:'json',
+                        data:{attn_id:attn_id},
+                        success:function (data) {
+                            if (data != null){
+                                console.log('clock-out')
+                                $(selected).attr('id','lunchOut');
+                                $('.clock').removeClass('clock-active').addClass('clock-break');
+                                $('#userLunchIn').text(data.lunch_in);
+                                $('#userLunchOut').text(null);
+                                $('#lunchStartTime').val(data.timestamp);
+                                $('#latestLunchTime').val(data.latest_in);
+                                $(selected).children('.btn-lunch').attr('src','/assets/css/timesheet/images/coffee-active.svg');
+                                $('#clock-status').val(1);
+                                $('#autoClockOut').val(0);
+                                // break_end_time = data.end_break;
+                                // $('#clock-end-time').val(break_end_time);
+                                breakTime();
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        html: "You are now on Lunch break",
+                                        icon: 'success'
+                                    });
+                            }
+                        }
+                    });
+                }else if (result.isDenied) {
+                    confirmClockOut();
+                }
+        });
+        }
+    })();
+
+    
+    let confirmLunchOut = (function() {
+        let executed = false;
+        return function () {
+            let selected = this;
+            let attn_id = $('#attendanceId').val();
+            Swal.fire({
+                title: 'Lunch-out',
+                html: "Done taking your Lunch?",
+                imageUrl:baseURL+"/assets/img/timesheet/work.png",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Back to work!'
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:baseURL+'/timesheet/lunchOutEmployee',
+                    type:"POST",
+                    dataType:'json',
+                    data:{attn_id:attn_id,pause_time:pause_time},
+                    success:function (data) {
+                        if (data != null){
+                            $(selected).attr('id','lunchIn');
+                            $('.clock').removeClass('clock-break').addClass('clock-active');
+                            $('#userLunchOut').text(data.lunch_time);
+                            $(selected).children('.btn-lunch').attr('src',baseURL+'/assets/css/timesheet/images/coffee-static.svg');
+                            clearTimeout(counter);
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    html: "You are now Lunch-out",
+                                    icon: 'success'
+                                });
+                        }
+                    }
+                });
+            }
+        });
+        }
+    })();
+
+    let confirmClockOut = (function() {
+        let executed = false;
+        return function () {
+            let selected = this;
+            let attn_id = $('#attendanceId').val();
+            Swal.fire({
+                title: 'Clock out?',
+                html: "Are you sure you want to Clock-out?",
+                imageUrl:baseURL+"/assets/img/timesheet/clock-out.png",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, I want to Clock-out!'
+            }).then((result) => { 
+                console.log(result);
+                if (result.value) {
+                $.ajax({
+                    url:baseURL+'/timesheet/clockOutEmployee',
+                    type:"POST",
+                    dataType:'json',
+                    data:{attn_id:attn_id},
+                    success:function (data) {
+                        if (data != null){
+                            $(selected).attr('id',null);
+                            $('.clock').removeClass('clock-active');
+                            $('.out').text(data.clock_out_time);
+                            $('#userClockOut').text(data.clock_out_time);
+                            $('#shiftDuration').text(data.shift_duration);
+                            $('#userShiftDuration').text(data.shift_duration);
+                            $('.employeeLunch').attr('id',null).attr('disabled',true);
+                            $('#unScheduledShift').val(0);
+                            $('#autoClockOut').val(2);
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    html: "You are now Clock-out",
+                                    icon: 'success'
+                                });
+
+                            Push.Permission.GRANTED; // 'granted'
+                            Push.create("Clock Out", {
+                                body: "User : "+data.FName+" "+data.LName,
+                                icon: '/uploads/users/user-profile/'+data.profile_img,
+                                timeout: 20000,
+                                    onClick: function () {
+                                        window.focus();
+                                        this.close();
+                                    }
+                                });
+                            }
+                    }
+                });
+            }
+        });
+        }
     })();
     //Auto clock out
     let autoClockOut = (function() {
@@ -524,6 +637,7 @@ $(document).ready(function () {
         //Employee without schedule
             let shift_end = $('#unScheduledShift').val();
         if (overtime_status == 1 && shift_end > 0){
+            // alert("Employee without schedule");
             let f = new Date(shift_end * 1000);
             f.setMinutes(f.getMinutes() - 10);
             let g = f.setHours(f.getHours() - (time_diff));

@@ -107,7 +107,7 @@ if(isset($jobs_data)){
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
                     console.log(data);
-                    sucess_add_job();
+                    sucess_add_job(data);
                 }
             });
         });
@@ -175,7 +175,7 @@ if(isset($jobs_data)){
             total = '$' + withCommas + '.00';
             console.log(total);
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ></td>\n" +
+                "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
                 "<td width=\"10%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
                 "<td width=\"10%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +

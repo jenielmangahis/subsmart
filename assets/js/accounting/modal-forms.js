@@ -725,8 +725,8 @@ $(function() {
                 <span>&nbsp; days before the transaction date</span>
             `);
 
-            if($('div.modal div.modal-body select#recurringMode').length === 0) {
-                if($('form#modal-form').next().attr('id') === 'depositModal') {
+            if($('form#modal-form div.modal div.modal-body select#recurringinterval').length === 0) {
+                if($('form#modal-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
                 } else {
@@ -757,8 +757,8 @@ $(function() {
                 <span>&nbsp; days in advance</span>
             `);
 
-            if($('div.modal div.modal-body select#recurringMode').length === 0) {
-                if($('form#modal-form').next().attr('id') === 'depositModal') {
+            if($('form#modal-form div.modal div.modal-body select#recurringinterval').length === 0) {
+                if($('form#modal-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
                 } else {
@@ -794,12 +794,12 @@ $(function() {
             $(this).parent().next().remove();
             $(this).parent().parent().append(`
                 <div class="col-md-2 form-group">
-                    <label for="endBy">End date</label>
-                    <input type="text" class="form-control date" name="recurring_end_by" id="endBy"/>
+                    <label for="endDate">End date</label>
+                    <input type="text" class="form-control date" name="end_date" id="endDate"/>
                 </div>
             `);
 
-            $(`div.modal input#endBy`).datepicker({
+            $(`div.modal input#endDate`).datepicker({
                 uiLibrary: 'bootstrap'
             });
         } else if($(this).val() === 'after') {
@@ -808,7 +808,7 @@ $(function() {
                 <div class="col-md-2 form-group">
                     <div class="row m-0 h-100 d-flex">
                         <div class="align-self-end d-flex align-items-center">
-                            <input type="number" name="recurring_max_occurence" id="maxOccurence" class="form-control" style="width: 50%">
+                            <input type="number" name="max_occurence" id="maxOccurence" class="form-control" style="width: 50%">
                             <span>&nbsp; occurrences</span>
                         </div>
                     </div>

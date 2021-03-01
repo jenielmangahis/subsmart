@@ -199,6 +199,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         bottom: 0px;
       }
     }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
 </style>
     <div class="wrapper" role="wrapper">
         <?php include viewPath('includes/sidebars/customer'); ?>
@@ -213,7 +216,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h3 class="page-title mt-0">New Advance Customer</h3>
                             <div class="pl-3 pr-3 mt-1 row">
                               <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                      This powerful module widget will help you gather and customized each field information you like to gather from each customer.  Each fields can be group into categories to smoothly log the entries of each customer.
+                                  </span>
                               </div>
                             </div>
                             <button class="btn btn-primary btn-md" onclick="print_data_sheet()">

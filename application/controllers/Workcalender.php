@@ -897,6 +897,7 @@ class Workcalender extends MY_Controller
                     $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                     $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                     $resources_user_events[$inc]['eventId'] = $event->id;
+                    $resources_user_events[$inc]['type'] = 'events';
                     $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
                     $resources_user_events[$inc]['title'] = $event->event_description;
                     $resources_user_events[$inc]['start'] = $start_date_time;
@@ -909,6 +910,7 @@ class Workcalender extends MY_Controller
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                         $resources_user_events[$inc]['eventId'] = $event->id;
+                        $resources_user_events[$inc]['type'] = 'events';
                         $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
@@ -1028,6 +1030,7 @@ class Workcalender extends MY_Controller
 
                             if( $event->summary != '' ){
                                 $resources_user_events[$inc]['geventID'] = $event->id;
+                                $resources_user_events[$inc]['type'] = 'events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";
                                 $resources_user_events[$inc]['title'] = $event->summary;
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;

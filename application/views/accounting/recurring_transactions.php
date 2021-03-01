@@ -6,6 +6,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     {
         display: none !important;
     }
+    #filterDropdown {
+        padding: 10px 12px !important;
+    }
+    #filterDropdown:after {
+        display: none;
+    }
+    #recurring_transactions .btn-group .btn:hover, #recurring_transactions .btn-group .btn:focus {
+        color: unset;
+    }
+    #recurring_transactions .btn-group .btn {
+        padding: 10px;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -59,59 +71,67 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row pb-3">
                                 <div class="col-md-6">
-                                    <input type="text" name="search" id="search" class="form-control w-50 d-inline-block" placeholder="Filter by name">
-                                    <a href="#" class="dropopenfilter btn btn-secondary ml-3">Filter&nbsp;&nbsp;<i class="fa fa-caret-down"></i></a>
+                                    <div class="row">
+                                        <div class="col-md-6 p-0">
+                                            <input type="text" name="search" id="search" class="form-control" placeholder="Filter by name">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="dropdown d-inline-block">
+                                                <a href="#" class="dropdown-toggle btn btn-secondary" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter&nbsp;&nbsp;<i class="fa fa-caret-down"></i></a>
 
-                                    <div class="dropdown-menu p-3" style="left: auto; right: 0">
-                                        <div class="inner-filter-list">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h5>Recurring transactions</h5>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="template-type">Template Type</label>
-                                                        <select name="template_type" id="template-type" class="form-control">
-                                                            <option value="all">All</option>
-                                                            <option value="scheduled">Scheduled</option>
-                                                            <option value="reminder">Reminder</option>
-                                                            <option value="unscheduled">Unscheduled</option>
-                                                        </select>
+                                                <div class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+                                                    <div class="inner-filter-list">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5>Recurring transactions</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="template-type">Template Type</label>
+                                                                    <select name="template_type" id="template-type" class="form-control">
+                                                                        <option value="all">All</option>
+                                                                        <option value="scheduled">Scheduled</option>
+                                                                        <option value="reminder">Reminder</option>
+                                                                        <option value="unscheduled">Unscheduled</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="transaction-type">Transaction Type</label>
+                                                                    <select name="transaction_type" id="transaction-type" class="form-control">
+                                                                        <option value="all">All</option>
+                                                                        <option value="bill">Bill</option>
+                                                                        <option value="npcharge">Non-Posting Charge</option>
+                                                                        <option value="check">Check</option>
+                                                                        <option value="npcredit">Non-Posting Credit</option>
+                                                                        <option value="cccredit">Credit Card Credit</option>
+                                                                        <option value="credit-memo">Credit Memo</option>
+                                                                        <option value="deposit">Deposit</option>
+                                                                        <option value="estimate">Estimate</option>
+                                                                        <option value="expense">Expense</option>
+                                                                        <option value="invoice">Invoice</option>
+                                                                        <option value="journal-entry">Journal Entry</option>
+                                                                        <option value="refund">Refund</option>
+                                                                        <option value="sales-receipt">Sales Receipt</option>
+                                                                        <option value="transfer">Transfer</option>
+                                                                        <option value="vendor-credit">Vendor Credit</option>
+                                                                        <option value="purchase-order">Purchase Order</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group">
+                                                            <a href="#" class="btn-main" onclick="resetbtn()">Reset</a>
+                                                            <a href="#" id="" class="btn-main apply-btn btn btn-success" onclick="applybtn()">Apply</a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="transaction-type">Transaction Type</label>
-                                                        <select name="transaction_type" id="transaction-type" class="form-control">
-                                                            <option value="all">All</option>
-                                                            <option value="bill">Bill</option>
-                                                            <option value="npcharge">Non-Posting Charge</option>
-                                                            <option value="check">Check</option>
-                                                            <option value="npcredit">Non-Posting Credit</option>
-                                                            <option value="cccredit">Credit Card Credit</option>
-                                                            <option value="credit-memo">Credit Memo</option>
-                                                            <option value="deposit">Deposit</option>
-                                                            <option value="estimate">Estimate</option>
-                                                            <option value="expense">Expense</option>
-                                                            <option value="invoice">Invoice</option>
-                                                            <option value="journal-entry">Journal Entry</option>
-                                                            <option value="refund">Refund</option>
-                                                            <option value="sales-receipt">Sales Receipt</option>
-                                                            <option value="transfer">Transfer</option>
-                                                            <option value="vendor-credit">Vendor Credit</option>
-                                                            <option value="purchase-order">Purchase Order</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="btn-group">
-                                                <a href="#" class="btn-main" onclick="resetbtn()">Reset</a>
-                                                <a href="#" id="" class="btn-main apply-btn btn btn-success" onclick="applybtn()">Apply</a>
                                             </div>
                                         </div>
                                     </div>
@@ -189,7 +209,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <h4 class="modal-title">Select Transaction Type</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <form id="payment-method-form">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xl-12">
@@ -207,14 +226,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <option value="npcredit">Non-Posting Credit</option>
                                                         <option value="cccredit">Credit Card Credit</option>
                                                         <option value="credit-memo">Credit Memo</option>
-                                                        <option value="deposit">Deposit</option>
+                                                        <option value="depositModal">Deposit</option>
                                                         <option value="estimate">Estimate</option>
                                                         <option value="expense">Expense</option>
                                                         <option value="invoice">Invoice</option>
-                                                        <option value="journal-entry">Journal Entry</option>
+                                                        <option value="journalEntryModal">Journal Entry</option>
                                                         <option value="refund">Refund</option>
                                                         <option value="sales-receipt">Sales Receipt</option>
-                                                        <option value="transfer">Transfer</option>
+                                                        <option value="transferModal">Transfer</option>
                                                         <option value="vendor-credit">Vendor Credit</option>
                                                         <option value="purchase-order">Purchase Order</option>
                                                 </select>
@@ -232,10 +251,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                     </div>
                     <div class="col-sm-6">
-                        <button type="submit" class="btn btn-success btn-rounded border float-right">Save</button>
+                        <button type="button" class="btn btn-success btn-rounded border float-right">Save</button>
                     </div>
                 </div>
-                </form>
             </div>
         </div>
     </div>
@@ -243,12 +261,129 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
-$(document).on('click', '.dropopenfilter', function(){
-    $(this).next().toggleClass('show');
+function applybtn()
+{
+    $('#recurring_transactions').DataTable().ajax.reload();
+    $('.inner-filter-list').parent().toggleClass('show');
+}
+
+function resetbtn()
+{
+    $('#template-type').val('all');
+    $('#transaction-type').val('all');
+    applybtn();
+}
+
+$('#transaction_type_modal .modal-footer .btn-success').on('click', function(e) {
+    e.preventDefault();
+
+    var modal = '';
+    var modalName = $('select#type').val();
+    $(`a[data-target="#${modalName}"]`).trigger('click');
+
+    if(modalName === 'depositModal') {
+        modal = 'bank_deposit';
+    } else if(modalName === 'journalEntryModal') {
+        modal = 'journal_entry';
+    } else if(modalName === 'transferModal') {
+        modal = 'transfer';
+    }
+
+    makeRecurring(modal);
+
+    $('#transaction_type_modal').modal('hide');
+});
+
+$('.dropdown-menu').on('click', function(e) {
+    e.stopPropagation();
+});
+
+$('#table_rows').on('change', function() {
+    $('#recurring_transactions').DataTable().ajax.reload();
+});
+
+$('#search').on('keyup', function() {
+    $('#payment_methods').DataTable().ajax.reload();
 });
 
 $('#recurring_transactions').DataTable({
+    autoWidth: false,
+    searching: false,
+    processing: true,
+    serverSide: true,
     lengthChange: false,
-    searching: false
+    info: false,
+    ajax: {
+        url: 'recurring-transactions/load-recurring-transactions/',
+        dataType: 'json',
+        contentType: 'application/json', 
+        type: 'POST',
+        data: function(d) {
+            d.type = $('#template-type').val();
+            d.transaction_type = $('#transaction-type').val();
+            d.length = $('#table_rows').val();
+            d.columns[0].search.value = $('input#search').val();
+            return JSON.stringify(d);
+        },
+        pagingType: 'full_numbers',
+    },
+    columns: [
+        {
+            data: 'template_name',
+            name: 'template_name'
+        },
+        {
+            data: 'recurring_type',
+            name: 'recurring_type'
+        },
+        {
+            data: 'txn_type',
+            name: 'txn_type'
+        },
+        {
+            data: 'recurring_interval',
+            name: 'recurring_interval'
+        },
+        {
+            data: 'previous_date',
+            name: 'previous_date'
+        },
+        {
+            data: 'next_date',
+            name: 'next_date'
+        },
+        {
+            data: 'customer_vendor',
+            name: 'customer_vendor'
+        },
+        {
+            data: 'amount',
+            name: 'amount'
+        },
+        {
+            data: null,
+            name: 'actions',
+            orderable: false,
+            searchable: false,
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).html(`
+                <div class="btn-group float-right">
+                    <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+
+                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Use</a>
+                        <a class="dropdown-item" href="#">Duplicate</a>
+                        <a class="dropdown-item" href="#">Pause</a>
+                        <a class="dropdown-item" href="#">Skip next date</a>
+                        <a class="dropdown-item" href="#">Delete</a>
+                    </div>
+                </div>
+                `);
+            }
+        }
+    ]
 });
 </script>

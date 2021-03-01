@@ -29,6 +29,7 @@ class Dashboard extends Widgets {
             'assets/barcharts/js/chart.min.js',
             'assets/barcharts/js/utils.js',
             'assets/barcharts/js/chartjs-plugin-labels.js',
+            'assets/js/timeago/dist/timeago.min.js',
             
         ));
         add_footer_js(array(

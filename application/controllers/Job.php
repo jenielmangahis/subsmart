@@ -142,8 +142,117 @@ class Job extends MY_Controller
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
         $this->load->view('job/job_new', $this->page_data);
+    }
+
+    public function job_preview($id=null) {
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        // get all employees
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+
+        // get all job tags
+        $get_job_tags = array(
+            'table' => 'job_tags',
+            'select' => 'id,name',
+        );
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
+        //echo logged('company_id');
+
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
+
+        $get_job_types = array(
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'is_active' => 1,
+            ),
+            'table' => 'items',
+            'select' => 'id,title,price',
+        );
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        // get estimates
+        $get_estimates = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'estimates',
+            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
+        );
+        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
+
+        // get workorder
+        $get_workorder = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'work_orders',
+            'select' => 'id,work_order_number,start_date,job_name,customer_id',
+        );
+        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
+
+        // get invoices
+        $get_invoices = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'invoices',
+            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+        );
+        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        }
+        $this->load->view('job/job_preview', $this->page_data);
     }
 
     public function new_job_edit($id) {
@@ -314,7 +423,7 @@ class Job extends MY_Controller
         $this->load->view('job/job_settings/job_tags', $this->page_data);
     }
 
-    public function job_types() {
+    public function job_types() {        
         $get_job_types = array(
             'where' => array(
                 'company_id' => logged('company_id'),
@@ -469,7 +578,7 @@ class Job extends MY_Controller
             ),
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'000'.$job_settings[0]->job_num_next;
+        $job_number = $job_settings[0]->job_num_prefix.'-000'.$job_settings[0]->job_num_next;
 
         $jobs_data = array(
             'job_number' => $job_number,
@@ -496,8 +605,21 @@ class Job extends MY_Controller
             'notes' => $input['notes'],
             'attachment' => $input['attachment'],
             'tax_rate' => $input['tax_rate'],
+            'job_type' => $input['job_type'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+        if(isset($input['item_id'])){
+            $devices = count($input['item_id']);
+            for($xx=0;$xx<$devices;$xx++){
+                $job_items_data = array();
+                $job_items_data['job_id'] = $jobs_id;
+                $job_items_data['items_id'] = $input['item_id'][$xx];
+                $job_items_data['qty'] = $input['item_qty'][$xx];
+                $this->general->add_($job_items_data, 'job_items');
+                unset($job_items_data);
+            }
+        }
 
         $jobs_links_data = array(
             'link' => $input['link'],
@@ -566,9 +688,9 @@ class Job extends MY_Controller
             'event_color' => $jobs_id,
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'company_id' => $comp_id,
-            'description' => $jobs_id,
-            'tags' => $jobs_id,
-            'notify_at' => $jobs_id,
+            //'description' => $jobs_id,
+            //'tags' => $jobs_id,
+            'notify_at' => $input['customer_reminder_notification'],
         );
         $this->general->add_($events_data, 'events');
 
@@ -989,6 +1111,136 @@ class Job extends MY_Controller
 
             return $name;
         }
+    }
+
+    public function job_settings(){
+        $this->load->model('JobSettings_model');
+
+        $company_id = logged('company_id');
+        $setting = $this->JobSettings_model->getJobSettingByCompanyId($company_id);
+
+        $this->page_data['setting'] = $setting;
+        $this->load->view('job/settings', $this->page_data);
+    }
+
+    public function save_setting($id = null)
+    {
+        $this->load->model('JobSettings_model');
+        
+        postAllowed();
+        $user = (object)$this->session->userdata('logged');
+        $config = array(
+            'upload_path' => "./uploads/",
+            'allowed_types' => "gif|jpg|png|jpeg",
+            'overwrite' => TRUE,
+            'max_size' => "2048000",
+            'max_height' => "768",
+            'max_width' => "1024"
+        );
+        
+        $this->load->library('upload', $config);
+        
+        if($this->upload->do_upload()) {
+            $draftlogo = array('upload_data' => $this->upload->data());
+            $logo = $draftlogo['upload_data']['file_name'];
+        } else {
+            if ($id) {
+                $logo = post('img_setting');
+            } else {
+                $logo = '';
+            }
+        }
+
+        $payment_methods = array(
+            'cc' => post('payment_cc'),
+            'check' => post('payment_check'),
+            'cash' => post('payment_cash'),
+            'deposit' => post('payment_deposit')
+        );
+
+        $invoice_number = array(
+            'prefix' => post('prefix'),
+            'base' => post('base'),
+        );
+
+        $residential = array(
+            'default_msg' => post('message'),
+            'default_terms' => post('terms'),
+        );
+
+        $commercial = array(
+            'default_msg' => post('message_commercial'),
+            'default_terms' => post('terms_commercial'),
+        );
+        
+        $payment_fee = array(
+            'percent' => post('payment_fee_percent'),
+            'amount' => post('payment_fee_amount'),
+        );
+
+        $invoice_template = array(
+            'item_price' => post('hide_item_price'),
+            'item_qty' => post('hide_item_qty'),
+            'item_tax' => post('hide_item_tax'),
+            'item_discount' => post('hide_item_discount'),
+            'item_total' => post('hide_item_total'),
+            'from_email' => post('hide_from_email'),
+            'item_subtotal' => post('show_item_type_subtotal')
+        );
+
+        $invoice_from = array(
+            'business_phone' => post('from_phone_show'),
+            'office_phone' => post('from_office_phone_show'),
+        );
+
+        $comp_id = logged('company_id');
+        if (!$id) {
+            $this->JobSettings_model->create([
+                'user_id' => $user->id,
+                'company_id' => $comp_id,
+                'invoice_number' => serialize($invoice_number),
+                'residential' => serialize($residential),
+                'commercial' => serialize($commercial),
+                'logo' => $logo,
+                'payable_to' => post('payment_to'),
+                'due_terms' => post('due_terms'),
+                'invoice_type' => post('invoice_type'),
+                'payment_fee' => serialize($payment_fee),
+                'invoice_template' => serialize($invoice_template),
+                'invoice_from' => serialize($invoice_from),
+                'recurring' => post('recurring_on_add_child'),
+                'payment_method' => serialize($payment_methods),
+                'mobile_payment' => post('payment_mobile_status'),
+                'invoice_tip' => post('tip_status'),
+                'autoconvert_work_order' => post('autoconvert_work_order')
+            ]);
+        } else {
+            $this->JobSettings_model->update($id, [
+                'user_id' => $user->id,
+                'company_id' => $comp_id,
+                'invoice_number' => serialize($invoice_number),
+                'residential' => serialize($residential),
+                'commercial' => serialize($commercial),
+                'logo' => $logo,
+                'payable_to' => post('payment_to'),
+                'due_terms' => post('due_terms'),
+                'invoice_type' => post('invoice_type'),
+                'payment_fee' => serialize($payment_fee),
+                'invoice_template' => serialize($invoice_template),
+                'invoice_from' => serialize($invoice_from),
+                'recurring' => post('recurring_on_add_child'),
+                'payment_method' => serialize($payment_methods),
+                'mobile_payment' => post('payment_mobile_status'),
+                'invoice_tip' => post('tip_status'),
+                'autoconvert_work_order' => post('autoconvert_work_order')
+            ]);
+        }
+            
+        $this->activity_model->add('Update Invoice Settings $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Invoice Settings Saved Successfully');
+
+        redirect('invoice/settings');
     }
 }
 

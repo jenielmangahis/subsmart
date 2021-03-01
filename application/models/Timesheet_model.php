@@ -28,6 +28,15 @@ class Timesheet_model extends MY_Model {
         return $qry;
 
     }
+    
+    public function getattendance_logs($attn_id){
+        $this->db->select('*');
+        $this->db->from('timesheet_logs');
+        $this->db->where('attendance_id', $attn_id);
+        $query = $this->db->get();
+        $qry = $query->result();
+        return $qry;
+    }
     public function getClockInSession(){
 //        $this->db->or_where('date_in',date('Y-m-d'));
 //        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
@@ -213,7 +222,9 @@ class Timesheet_model extends MY_Model {
 
     public function breakIn($user_id,$entry,$approved_by,$company_id){
         //Get timesheet_attendance id
+        date_default_timezone_set('UTC');
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
+        
         $time = time();
         $data = array(
             'attendance_id' => $attn_id,
@@ -232,6 +243,7 @@ class Timesheet_model extends MY_Model {
 
     public function breakOut($user_id,$entry,$approved_by,$company_id){
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
+        date_default_timezone_set('UTC');
         $time = time();
         $data = array(
             'attendance_id' => $attn_id,
@@ -244,7 +256,7 @@ class Timesheet_model extends MY_Model {
             'approved_by' => $approved_by,
             'company_id' => $company_id
         );
-        $this->db->insert($this->db_table,$data);
+        $this->db->insert("timesheet_logs",$data);
         //Update break duration
         $break = $this->updateBreakDuration($attn_id);
         if ($break == true){
@@ -347,13 +359,35 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get('timesheet_logs');
         return $qry->result();
     }
+    public function getUser_current_status($user_id,$date){
+        $this->db->select('*');
+        $this->db->from('timesheet_logs');
+        $this->db->where('user_id',$user_id);
+        $this->db->like('date_created',$date);
+        $this->db->order_by('id', "DESC")->limit(1);
+        $qry = $this->db->get();
+        return $qry->result();
+    }
+    
+
 
     public function getTotalUsersLoggedIn(){
+
         $total_users = $this->users_model->getTotalUsers();
-        $this->db->or_where('DATE(date_created)',date('Y-m-d'));
-        $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
-        $this->db->where('status',1);
-        $query =  $this->db->get('timesheet_attendance');
+        date_default_timezone_set('UTC');
+        $company_id=logged('company_id');
+        $this->db->select('*');
+        $this->db->from("users");
+        $this->db->join("timesheet_attendance", 'users.id = timesheet_attendance.user_id');
+        $this->db->where("users.company_id",$company_id);
+        $this->db->where("timesheet_attendance.status",1);
+        $this->db->like("timesheet_attendance.date_created",date('Y-m-d'));
+        $query = $this->db->get();
+        // $this->db->or_where('DATE(date_created)',date('Y-m-d'));
+        // $this->db->or_where('DATE(date_created)',date('Y-m-d',strtotime('yesterday')));
+        // $this->db->where('status',1);
+        // $query =  $this->db->get('timesheet_attendance');
+        // var_dump( $query->result());
         $logged_in = $query->num_rows();
         return $total_users - $logged_in;
     }
@@ -689,8 +723,36 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
+    public function get_attendance($user_id, $date){
+        $this->db->select('*');
+        $this->db->from('timesheet_attendance');
+        $this->db->where("user_id",$user_id);
+        $this->db->like('date_created',$date);
+        $query = $this->db->get();
+        return  $query-result();
+    }
 
     public function getLeaveList($date,$status_request){
+        if($status_request==="pending"){
+            $status=0; 
+        }elseif($status_request==="approved"){
+            $status=1;
+        }else{
+            $status=2; //unapproved
+        }
+        $company_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from('timesheet_leave');
+        $this->db->join('timesheet_leave_date', 'timesheet_leave_date.leave_id = timesheet_leave.id');
+        $this->db->join('users', 'users.id = timesheet_leave.user_id');
+        $this->db->where("timesheet_leave_date.date",$date);
+        $this->db->where("timesheet_leave.status",$status);
+        $this->db->where("users.company_id",$company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    ////Lou pinton's code starts here
+    public function gethis_leaveType($user_id,$date,$status_request){
         if($status_request==="pending"){
             $status=0; 
         }elseif($status_request==="approved"){
@@ -701,8 +763,19 @@ class Timesheet_model extends MY_Model {
         $this->db->select('*');
         $this->db->from('timesheet_leave');
         $this->db->join('timesheet_leave_date', 'timesheet_leave_date.leave_id = timesheet_leave.id');
+        $this->db->join('timesheet_pto', 'timesheet_pto.id = timesheet_leave.pto_id');
+        $this->db->where("timesheet_leave.user_id",$user_id);
         $this->db->where("timesheet_leave_date.date",$date);
         $this->db->where("timesheet_leave.status",$status);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function getAllLogsToday($user_id,$date){
+        $this->db->select('*');
+        $this->db->from('timesheet_logs');
+        $this->db->where("user_id",$user_id);
+        $this->db->like("date_created",$date);
         $query = $this->db->get();
         return $query->result();
     }

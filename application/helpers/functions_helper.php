@@ -72,4 +72,20 @@ function time_availability($index=0,$count=FALSE){
     }
     return $time[$index];
 }
+
+if (!function_exists('get_employee_name')){
+    function get_employee_name($id=null){
+        $CI = &get_instance();
+        $CI->load->model('General_model', 'general');
+        $get_employee = array(
+            'where' => array(
+                'id' => $id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+        return $CI->general->get_data_with_param($get_employee,FALSE);
+    }
+}
 ?>

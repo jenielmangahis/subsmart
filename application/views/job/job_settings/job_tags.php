@@ -122,6 +122,9 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
+.card{
+    box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+}
 </style>
 <?php
     defined('BASEPATH') or exit('No direct script access allowed');
@@ -145,7 +148,7 @@ a.btn-primary.btn-md {
                     <div class="col-xl-12">
                         <div class="card">
                             <div class="card-body hid-desk pt-0" style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
-                                <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0px;">
+                                <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0;">
                                     <div class="col-auto pl-0">
                                         <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Job Tags</h5>
                                     </div>

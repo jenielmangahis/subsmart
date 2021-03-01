@@ -1,0 +1,28 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Accounting_recurring_transactions_model extends MY_Model {
+
+    public $table = 'accounting_recurring_transactions';
+	
+	public function __construct()
+	{
+		parent::__construct();
+    }
+
+	function create($data)
+	{
+        $this->db->insert($this->table, $data);
+	    return $this->db->insert_id();
+	}
+
+    function getCompanyRecurringTransactions($where, $columnName, $order)
+	{
+		return $this->db->where($where)->order_by($columnName, $order)->get($this->table)->result_array();
+	}
+
+	public function delete($id) {
+        return $this->db->where(['company_id' => getLoggedCompanyID(), 'id' => $id])
+                ->update($this->table, ['status' => 0, 'updated_at' => date('Y-m-d h:i:s')]);
+    }
+}

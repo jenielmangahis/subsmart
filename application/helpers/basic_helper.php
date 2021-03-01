@@ -1141,6 +1141,12 @@ if (!function_exists('getEmpTSsettings')){
         return $CI->timesheet_model->getTimeSettingsByUser();
     }
 }
+if (!function_exists('getNotification')){
+    function getNotification($user_id){
+        $CI = &get_instance();
+        return $CI->timesheet_model->getNotification($user_id);
+    }
+}
 if (!function_exists('getEmpSched')){
     function getEmpSched(){
         $CI = &get_instance();

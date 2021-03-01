@@ -40,9 +40,14 @@ table.table tbody tr td:first-child {
     bottom: 0px;
   }
 }
+.event-marker{
+  height: 57px;
+  width: 100px;
+  border: 1px solid #dee2e6;
+}
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/schedule'); ?>
+    <?php include viewPath('includes/sidebars/events'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -56,7 +61,7 @@ table.table tbody tr td:first-child {
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                               <div class="text-right">
-                                  <a class="btn btn-info" href="<?php echo base_url('event_types/add_new'); ?>"><i class="fa fa-file"></i> Add New</a>
+                                  <a class="btn btn-primary btn-sm" href="<?php echo base_url('event_types/add_new'); ?>"><i class="fa fa-file"></i> Add New</a>
                               </div>
                           </div>
                         </div>
@@ -65,20 +70,31 @@ table.table tbody tr td:first-child {
                             </span>
                         </div>
                         <?php include viewPath('flash'); ?>
-                        <table class="table table-hover" data-id="coupons">
+                        <table class="" id="eventTypeTable">
                             <thead>
                                 <tr>
-                                    <th style="width: 80%;">Event Type Name</th>
-                                    <th style="width: 10%;"></th>
+                                    <th></th>
+                                    <th>Event Type Name</th>                                    
+                                    <th>Manage</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($eventTypes as $et){ ?>
                                     <tr>
-                                        <td><?= $et->event_type_name; ?></td>
                                         <td>
-                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
-                                            <a class="btn btn-sm btn-danger btn-delete-event-type" href="javascript:void(0);" data-id="<?= $et->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                                          <?php 
+                                            if( $et->icon_marker != '' ){
+                                              $image = base_url('uploads/event_types/' . $et->icon_marker);
+                                            }else{
+                                              $image = base_url('uploads/job_types/default_no_image.jpg');
+                                            }
+                                          ?>
+                                          <img src="<?= $image ?>" class="event-marker" />
+                                        </td>
+                                        <td><?= $et->title; ?></td>                                        
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a class="btn btn-primary btn-sm btn-delete-event-type" href="javascript:void(0);" data-id="<?= $et->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -123,6 +139,17 @@ table.table tbody tr td:first-child {
 
 <script type="text/javascript">
 $(function(){
+    $('#eventTypeTable').DataTable({
+        "lengthChange": true,
+        "searching" : false,
+        "pageLength": 10,
+        "order": [],
+         "aoColumnDefs": [
+          { "sWidth": "8%", "aTargets": [ 0 ] },
+          { "sWidth": "80%", "aTargets": [ 1 ] },
+          { "sWidth": "10%", "aTargets": [ 2 ] }
+        ]
+    });
     $(".btn-delete-event-type").click(function(){
         var event_type_id = $(this).attr("data-id");
         $("#eid").val(event_type_id);

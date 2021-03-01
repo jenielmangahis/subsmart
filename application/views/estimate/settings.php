@@ -151,12 +151,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-sm-1">
                                     <div class="margin-bottom-qui">Prefix</div>
-                                    <input type="text" name="prefix" class="form-control" autocomplete="off" value="<?php echo ($setting) ? $setting->invoice_num_prefix : 0 ?>">
+                                    <input type="text" name="prefix" class="form-control" autocomplete="off" value="<?php echo ($setting) ? $setting->estimate_num_prefix : 0 ?>">
                                     <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_prefix" data-formerrors-message="true"></span>
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="margin-bottom-qui">Next number</div>
-                                    <input type="text" name="base" value="<?php echo ($setting) ? $setting->invoice_num_next : ''  ?>" class="form-control" autocomplete="off">
+                                    <input type="text" name="base" value="<?php echo ($setting) ? $setting->estimate_num_next : ''  ?>" class="form-control" autocomplete="off">
                                     <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_base" data-formerrors-message="true"></span>
                                 </div>
                             </div>
@@ -184,13 +184,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="col-sm-6">
                                                     <label>Residential Invoice Default Message</label>
                                                     <div class="help help-sm help-block">Custom message that will be placed at the bottom section of the invoice.</div>
-                                                    <textarea name="message" id="message" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->message : '' ?></textarea>
+                                                    <textarea name="residential_message" id="residential_message" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential_message : '' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="message" data-formerrors-message="true"></span>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Residential Invoice Default Terms &amp; Conditions</label>
                                                     <div class="help help-sm help-block">Your T&amp;C that will appear at the bottom section of the invoice.</div>
-                                                    <textarea name="terms" id="terms" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->terms_and_conditions : '' ?></textarea>
+                                                    <textarea name="residential_terms" id="residential_terms" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential_terms_and_conditions : '' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                 </div>
                                             </div>
@@ -201,7 +201,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="checkbox checkbox-sec margin-right">
-                                                        <input type="checkbox" name="terms_message_as_residential" value="1" id="same_as_residential">
+                                                        <?php 
+                                                          $is_checked = '';
+                                                          if( $setting ){
+                                                            if( $setting->is_residential_message_default == 1 ){
+                                                              $is_checked = 'checked="checked"';
+                                                            }
+                                                          }
+                                                        ?>
+                                                        <input type="checkbox" name="is_residential_default" value="1" <?= $is_checked; ?> id="same_as_residential">
                                                         <label for="same_as_residential">Set default value as Residential</label>
                                                     </div>
                                                 </div>
@@ -229,7 +237,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <button class="btn btn-primary margin-right" data-action="save">Save Changes</button>
+                                    <button class="btn btn-primary margin-right" data-action="save" type="submit">Save Changes</button>
                                 </div>
                             </div>
                         </div>

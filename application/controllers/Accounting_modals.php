@@ -35,6 +35,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('tags_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
+        $this->load->model('accounting_recurring_transactions_model');
 		$this->load->library('form_validation');
     }
 
@@ -76,6 +77,33 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+                break;
+                case 'transfer_modal' :
+                    $accounts = $this->chart_of_accounts_model->select();
+                    $accountTypes = $this->account_model->getAccounts();
+
+                    $bankAccounts = [];
+                    $count = 1;
+                    foreach($accountTypes as $accType) {
+                        $accName = strtolower($accType->account_name);
+
+                        foreach($accounts as $account) {
+                            if($account->account_id === $accType->id) {
+                                $bankAccounts[$accType->account_name][] = [
+                                    'value' => $accName.'-'.$account->id,
+                                    'text' => $account->name,
+                                    'selected' => $count === 1 ? true : false
+                                ];
+
+                                if($count === 1) {
+                                    $selectedBalance = $account->balance;
+                                }
+                            }
+                            $count++;
+                        }
+                    }
+
+                    $this->page_data['accounts'] = $bankAccounts;
                 break;
                 case 'bank_deposit_modal':
                     $accounts = $this->chart_of_accounts_model->select();
@@ -260,6 +288,34 @@ class Accounting_modals extends MY_Controller {
             $recurringDays['last'] = 'Last';
 
             $this->page_data['recurringDays'] = $recurringDays;
+
+            if($modal === 'bank_deposit') {
+                $accounts = $this->chart_of_accounts_model->select();
+                $accountTypes = $this->account_model->getAccounts();
+
+                $bankAccounts = [];
+                $count = 1;
+                foreach($accountTypes as $accType) {
+                    $accName = strtolower($accType->account_name);
+
+                    foreach($accounts as $account) {
+                        if($account->account_id === $accType->id) {
+                            $bankAccounts[$accType->account_name][] = [
+                                'value' => $accName.'-'.$account->id,
+                                'text' => $account->name,
+                                'selected' => $count === 1 ? true : false
+                            ];
+
+                            if($count === 1) {
+                                $selectedBalance = $account->balance;
+                            }
+                        }
+                        $count++;
+                    }
+                }
+
+                $this->page_data['accounts'] = $bankAccounts;
+            }
 
             $this->load->view("accounting/recurring_".$modal."_fields", $this->page_data);
         }
@@ -971,28 +1027,28 @@ class Accounting_modals extends MY_Controller {
             $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
 
             if($data['recurring_type'] !== 'unscheduled') {
-                $this->form_validation->set_rules('day_in_advance', 'Days in advance', 'required');
-                $this->form_validation->set_rules('recurring_mode', 'Recurring mode', 'required');
+                $this->form_validation->set_rules('days_in_advance', 'Days in advance', 'required');
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
 
-                if($data['recurring_mode'] !== 'daily') {
-                    if($data['recurring_mode'] === 'monthly') {
+                if($data['recurring_interval'] !== 'daily') {
+                    if($data['recurring_interval'] === 'monthly') {
                         $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
-                    } else if($data['recurring_mode'] === 'yearly') {
+                    } else if($data['recurring_interval'] === 'yearly') {
                         $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
                     }
 
                     $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
                 }
-                if($data['recurring_mode'] !== 'yearly') {
-                    $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+                if($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
                 }
-                $this->form_validation->set_rules('recurring_start_date', 'Recurring start date', 'required');
-                $this->form_validation->set_rules('recurring_end_type', 'Recurring end type', 'required');
+                $this->form_validation->set_rules('start_date', 'Recurring start date', 'required');
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
 
-                if($data['recurring_end_type'] === 'by') {
-                    $this->form_validation->set_rules('recurring_end_by', 'Recurring end by', 'required');
-                } else if($data['recurring_end_type'] === 'after') {
-                    $this->form_validation->set_rules('recurring_max_occurence', 'Recurring max occurence', 'required');
+                if($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_by', 'Recurring end by', 'required');
+                } else if($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
                 }
             }
         }
@@ -1044,25 +1100,27 @@ class Accounting_modals extends MY_Controller {
             if($depositId > 0) {
                 if(isset($data['template_name'])) {
                     $recurringData = [
-                        'bank_deposit_id' => $depositId,
+                        'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
                         'recurring_type' => $data['recurring_type'],
-                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['day_in_advance'] : null,
-                        'recurring_mode' => $data['recurring_mode'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] : null,
+                        'txn_type' => 'deposit',
+                        'txn_id' => $depositId,
+                        'recurring_interval' => $data['recurring_interval'],
                         'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
                         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurring_interval' => $data['recurring_mode'] !== 'yearly' ? $data['recurring_interval'] : null,
-                        'recurring_start_date' => date('Y-m-d', strtotime($data['recurring_start_date'])),
-                        'recurring_end_type' => $data['recurring_end_type'],
-                        'recurring_end_by' => $data['recurring_end_type'] === 'by' ? date('Y-m-d', strtotime($data['recurring_end_by'])) : null,
-                        'recurring_max_occurences' => $data['recurring_end_type'] === 'after' ? $data['recurring_max_occurence'] : null,
+                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => date('Y-m-d', strtotime($data['recurring_start_date'])),
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
                         'status' => 1,
                         'created_at' => date('Y-m-d h:i:s'),
                         'updated_at' => date('Y-m-d h:i:s')
                     ];
     
-                    $recurringId = $this->accounting_bank_deposit_model->insertRecurringDetails($recurringData);
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
                 }
 
                 $fundsData = [];

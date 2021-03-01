@@ -34,6 +34,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('accounting_expense_name_model');
         $this->load->model('accounting_terms_model');
+        $this->load->model('accounting_recurring_transactions_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -74,7 +75,7 @@ class Accounting extends MY_Controller {
                 array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', 'credit_notes')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
-                array("",	array('#','#')),
+                array("",	array('/accounting/salesTax','/accounting/payrollTax')),
                 array('#',	array()),
                 array("",	array('/accounting/chart_of_accounts','/accounting/reconcile')),
             );
@@ -426,6 +427,88 @@ class Accounting extends MY_Controller {
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/recurring_transactions', $this->page_data);
+    }
+
+    public function load_recurring_transactions()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $column = $post['order'][0]['column'];
+        $order = $post['order'][0]['dir'];
+        $columnName = $post['columns'][$column]['name'];
+
+        $where = [
+            'company_id' => getLoggedCompanyID(),
+            'status' => 1
+        ];
+
+        if($post['type'] !== "all") {
+            $where['recurring_type'] = $post['type'];
+        }
+
+        if($post['transaction_type'] !== "all") {
+            $where['txn_type'] = $post['transaction_type'];
+        }
+
+        $items = $this->accounting_recurring_transactions_model->getCompanyRecurringTransactions($where, $columnName, $order);
+
+        $data = [];
+        $search = $post['columns'][0]['search']['value'];
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                switch ($item['recurring_interval']) {
+                    case 'daily' :
+                        $interval = 'Every Day';
+                    break;
+                    case 'weekly' :
+                        $interval = 'Every Week';
+                    break;
+                    case 'monthly' :
+                        $interval = 'Every Month';
+                    break;
+                    case 'yearly' :
+                        $interval = 'Every Year';
+                    break;
+                }
+
+                if($search !== "") {
+                    if(stripos($item['name'], $search) !== false) {
+                        $data[] = [
+                            'id' => $item['id'],
+                            'template_name' => $item['template_name'],
+                            'recurring_type' => ucfirst($item['recurring_type']),
+                            'txn_type' => ucfirst($item['txn_type']),
+                            'recurring_interval' => $interval,
+                            'previous_date' => $item['previous_date'] !== '' && $item['previous_date'] !== null ? date('m/d/Y', strtotime($item['previous_date'])) : null,
+                            'next_date' => $item['next_date'] !== '' && $item['next_date'] !== null ? date('m/d/Y', strtotime($item['next_date'])) : null,
+                            'customer_vendor' => null,
+                            'amount' => null
+                        ];
+                    }
+                } else {
+                    $data[] = [
+                        'id' => $item['id'],
+                        'template_name' => $item['template_name'],
+                        'recurring_type' => ucfirst($item['recurring_type']),
+                        'txn_type' => ucfirst($item['txn_type']),
+                        'recurring_interval' => $interval,
+                        'previous_date' => $item['previous_date'] !== '' && $item['previous_date'] !== null ? date('m/d/Y', strtotime($item['previous_date'])) : null,
+                        'next_date' => $item['next_date'] !== '' && $item['next_date'] !== null ? date('m/d/Y', strtotime($item['next_date'])) : null,
+                        'customer_vendor' => null,
+                        'amount' => null
+                    ];
+                }
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($items),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
     }
 
     public function terms()
@@ -4525,6 +4608,16 @@ class Accounting extends MY_Controller {
             'success' => $expense ? true : false,
             'message' => $expense ? 'Success!' : 'Error!'
         ];
+    }
+
+    public function salesTax(){
+        $user_id = logged('id');
+        $this->load->view('accounting/sales_tax', $this->page_data);
+    }
+
+    public function payrollTax(){
+        $user_id = logged('id');
+        $this->load->view('accounting/payrollTax', $this->page_data);
     }
 
 }

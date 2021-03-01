@@ -41,13 +41,13 @@ class Event_Types extends MY_Controller {
         $user_id = logged('id');
         $post    = $this->input->post();
 
-        if( $post['event_type_name'] != ''){
+        if( $post['title'] != ''){
             if( !empty($_FILES['image']['name']) ){
 
                 $marker_icon = $this->moveUploadedFile();
                 $data_event_type = [
                     'user_id' => $user_id,
-                    'event_type_name' => $post['event_type_name'],
+                    'title' => $post['title'],
                     'icon_marker' => $marker_icon,
                     'created' => date("Y-m-d H:i:s"),
                     'modified' => date("Y-m-d H:i:s")
@@ -93,7 +93,7 @@ class Event_Types extends MY_Controller {
         postAllowed();
         $post    = $this->input->post();
 
-        if( $post['event_type_name'] != '' ){
+        if( $post['title'] != '' ){
 
             $eventType = $this->EventType_model->getById($post['eid']);
             if( $eventType ){
@@ -103,7 +103,7 @@ class Event_Types extends MY_Controller {
                 }
 
                 $data_event_type = [
-                    'event_type_name' => $post['event_type_name'],
+                    'title' => $post['title'],
                     'icon_marker' => $marker_icon,
                     'modified' => date("Y-m-d H:i:s")
                 ];

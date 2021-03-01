@@ -107,6 +107,11 @@ class Vault extends MY_Controller {
 						]);
 
 						$file = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
+						
+						if ($file['status'] === false) {
+							echo json_encode($file);
+							return;
+						}
 
 						if($file['status']){
 							$data = array(

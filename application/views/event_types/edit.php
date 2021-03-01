@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 } 
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/schedule'); ?>
+    <?php include viewPath('includes/sidebars/events'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <input type="hidden" name="eid" value="<?= $eventType->id; ?>">
                           <div class="form-group">
                               <label>Name</label> <span class="form-required">*</span>
-                              <input type="text" name="event_type_name" value="<?= $eventType->event_type_name; ?>"  class="form-control" required="" autocomplete="off" />
+                              <input type="text" name="title" value="<?= $eventType->title; ?>"  class="form-control" required="" autocomplete="off" />
                           </div>
                           <div class="form-group">
                               <?php 
