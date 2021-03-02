@@ -41,7 +41,8 @@ body {
 }
 
 #selectDocumentModal {
-  .modal-body {
+  .modal-body,
+  .tab-content {
     min-height: 200px;
   }
 }
@@ -281,6 +282,7 @@ body {
   }
 
   &__document {
+    width: 100%;
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%),
       0 1px 5px 0 rgb(0 0 0 / 12%);
   }
@@ -680,6 +682,7 @@ body {
       &Title {
         margin-bottom: 0;
         font-weight: 600;
+        font-size: 14px;
       }
     }
   }
@@ -701,5 +704,47 @@ body {
       text-overflow: ellipsis;
       display: block;
     }
+  }
+}
+
+#fill_esign {
+  .fillandesign__step2,
+  #fillAndSignSave {
+    display: none;
+  }
+
+  &[data-current-step="2"] {
+    .fillandesign__step2,
+    #fillAndSignSave {
+      display: block;
+    }
+
+    .fillandesign__step1,
+    #fillAndSignNext {
+      display: none;
+    }
+  }
+}
+
+.fillAndSign--job {
+  margin-top: 0;
+  padding-top: 0;
+
+  .tab-content {
+    min-height: 200px;
+  }
+
+  #documentContainer {
+    min-height: 200px;
+  }
+
+  .fillAndSign__topnav {
+    position: relative !important;
+    top: 0 !important;
+  }
+
+  .fillAndSign__footer {
+    position: relative;
+    border-top: 0;
   }
 }

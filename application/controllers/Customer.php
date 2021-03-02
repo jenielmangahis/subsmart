@@ -1945,6 +1945,11 @@ class Customer extends MY_Controller
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/add', $this->page_data);
     }
+
+    public function merchant(){
+        $user_id = logged('id');
+        $this->load->view('customer/merchant', $this->page_data);
+    }
     
 
 }

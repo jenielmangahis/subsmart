@@ -144,6 +144,26 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
+
+        add_css([
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/esign/fill-and-sign/step1.js',
+            'assets/js/esign/fill-and-sign/step2.js',
+            'assets/js/esign/fill-and-sign/job/script.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
+            'https://html2canvas.hertzen.com/dist/html2canvas.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+            'assets/js/esign/fill-and-sign/step2.js',
+        ]);
+
         $this->load->view('job/job_new', $this->page_data);
     }
 

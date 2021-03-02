@@ -31,9 +31,16 @@ class Accounting_journal_entries_model extends MY_Model {
 		return $this->db->insert_id();
 	}
 
-	function insertRecurringDetails($data)
-	{
-		$this->db->insert('accounting_recurring_journal_entries', $data);
-		return $this->db->insert_id();
+	function getById($id) {
+		$this->db->where('company_id', getLoggedCompanyID());
+		$this->db->where('id', $id);
+		$this->db->where('status', 1);
+
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
+
+	function getEntries($journal_entry_id) {
+		return $this->db->where('journal_entry_id', $journal_entry_id)->get('accounting_journal_entry_items')->result();
 	}
 }

@@ -43,11 +43,15 @@ add_css(array(
         bottom: 10px;
     }
     #map{
-        height: 230px;
+        height: 190px;
     }
     .title-border{
         border-bottom: 2px solid rgba(0,0,0,.1);
         padding-bottom: 5px;
+    }
+    .icon_preview{
+        font-size: 16px;
+        color : #45a73c;
     }
 </style>
 
@@ -108,26 +112,31 @@ add_css(array(
                                         <div class="col-md-12">
                                             <h6 class="title-border">FROM :</h6>
                                             <b><?= $company_info->business_name; ?></b><br>
-                                            <span>License: <span>MS</span></span><br>
                                             <span><?= $company_info->street; ?></span><br>
                                             <span><?= $company_info->city.' '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
-                                            <span>Phone: <?= $company_info->business_phone ; ?></span>
+                                            <span> Phone: <?= $company_info->business_phone ; ?></span>
                                         </div>
                                         <div class="col-md-12">
                                             <br>
                                             <h6 class="title-border">TO :</h6>
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-5">
                                                     <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
-                                                    <span>License: <span>MS</span></span><br>
                                                     <span><?= $jobs_data->mail_add; ?></span><br>
-                                                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span><br>
-                                                    <span>Email: <?= $jobs_data->cust_email ; ?></span><br>
-                                                    <span>Phone: <?= $jobs_data->phone_h ; ?></span><br>
-                                                    <span>Mobile: <?= $jobs_data->phone_m ; ?></span>
+                                                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
+                                                    <span>Email: <?= $jobs_data->cust_email ; ?></span> <span class="fa fa-envelope icon_preview"></span><br>
+                                                    <span>Phone: <?= $jobs_data->phone_h ; ?> 090909090909</span>
+                                                    <span class="fa fa-phone icon_preview"></span>
+                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                    <br>
+                                                    <span>Mobile: <?= $jobs_data->phone_m ; ?>090909090909</span>
+                                                    <span class="fa fa-phone icon_preview"></span>
+                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                    <br>
+
                                                 </div>
                                                 <div id="map" class="col-md-3"></div>
-                                                <div id="streetViewBody" class="col-md-5"></div>
+                                                <div id="streetViewBody" class="col-md-4"></div>
                                             </div>
                                         </div>
 
@@ -152,7 +161,7 @@ add_css(array(
                                                             <td><?= $item->title; ?></td>
                                                             <td><?= $item->qty; ?></td>
                                                             <td>$<?= $item->price; ?></td>
-                                                            <td>$<?= number_format((float)$total,2,'.',''); ?></td>
+                                                            <td>$<?= number_format((float)$total,2,'.',','); ?></td>
                                                         </tr>
                                                 <?php
                                                     $subtotal = $subtotal + $total;
@@ -162,7 +171,7 @@ add_css(array(
                                             </table>
                                             <hr>
                                             <b>Sub Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',''); ?></b>
+                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
                                             <br><hr>
 
                                             <?php if($jobs_data->tax != NULL): ?>
@@ -178,7 +187,7 @@ add_css(array(
                                             <?php endif; ?>
 
                                             <b>Grand Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',''); ?></b>
+                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
                                         </div>
                                         <div class="col-md-12">
                                             <br><br>
@@ -192,7 +201,7 @@ add_css(array(
                                             <?php
                                                 $employee_date = get_employee_name($jobs_data->employee_id)
                                             ?>
-                                            <span><?= $employee_date->FName. ' '. $employee_date->LName; ?></span>
+                                            <span><?= $employee_date->FName. ' '. $employee_date->LName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span>
                                         </div>
 
                                         <div class="col-md-12">
@@ -218,7 +227,12 @@ add_css(array(
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <strong><?= $jobs_data->FName. ' '.$jobs_data->LName;  ?> will arrive between <?= $jobs_data->start_time. ' and '.$jobs_data->end_time;  ?></strong>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <center>
+                                                <strong><?= $jobs_data->FName. ' '.$jobs_data->LName;  ?> will arrive between <?= $jobs_data->start_time. ' and '.$jobs_data->end_time;  ?></strong><br>
+                                            <small style="text-align: center;">Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.</small>
+                                            </center>
                                         </div>
                                     </div>
                                 </div>

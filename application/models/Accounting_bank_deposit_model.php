@@ -22,9 +22,16 @@ class Accounting_bank_deposit_model extends MY_Model {
 		return $this->db->insert_id();
 	}
 
-	function insertRecurringDetails($data)
-	{
-		$this->db->insert('accounting_recurring_bank_deposit', $data);
-		return $this->db->insert_id();
+	function getById($id) {
+		$this->db->where('company_id', getLoggedCompanyID());
+		$this->db->where('id', $id);
+		$this->db->where('status', 1);
+
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
+
+	function getFunds($deposit_id) {
+		return $this->db->where('bank_deposit_id', $deposit_id)->get('accounting_bank_deposit_funds')->result();
 	}
 }

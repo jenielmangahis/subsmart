@@ -68,7 +68,7 @@
 </style>
 <div class="wrapper" style="padding: 80px 14px;">
     <div class="bg-white" style=" border-radius: 30px 30px 0 0;margin-top: 15px;">
-        <?php $this->load->view('includes/sidebars/dashboard', $sidebar); ?>
+        <?php $this->load->view('includes/sidebars/dashboard/dashboard', $sidebar); ?>
         <div id="main" class="container-fluid">
             <div class="page-title-box">
                 <div class="row col-12 align-items-center d-flex">
@@ -765,7 +765,7 @@
     function waitForClockInOut() {
     $.ajax({
     type: "GET",
-            url: "/Timesheet/getClockInOutNotification",
+            url: "<?= base_url() ?>/Timesheet/getClockInOutNotification",
             async: true,
             cache: false,
             timeout: 10000,

@@ -1295,24 +1295,42 @@ add_css(array(
             <div class="modal-header">
                 <h4 class="modal-title">Fill & eSign</h4>
             </div>
-            <div class="modal-body">
-                <a href="<?= base_url('esign/createTemplate'); ?>" style="float: right;" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span> Add New</a>
-                <select name="library_template" id="library_template" class="select2LibrarySelection dropdown form-control">
-                    <option>Select Library Template</option>
-                    <?php if(isset($esign_templates)) : ?>
-                        <?php foreach($esign_templates as $esign_template){ ?>
-                            <option value="<?= $esign_template->esignLibraryTemplateId; ?>"><?= $esign_template->title; ?></option>
-                        <?php } ?>
-                    <?php endif; ?>
-                </select>
-                <br>
-                <small>Template</small>
-                <hr>
-                <textarea id="summernote" name="template"></textarea>
+            <div class="modal-body pt-3">
+                <div class="d-none">
+                    <a href="<?= base_url('esign/createTemplate'); ?>" style="float: right;" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span> Add New</a>
+                    <select name="library_template" id="library_template" class="select2LibrarySelection dropdown form-control">
+                        <option>Select Library Template</option>
+                        <?php if(isset($esign_templates)) : ?>
+                            <?php foreach($esign_templates as $esign_template){ ?>
+                                <option value="<?= $esign_template->esignLibraryTemplateId; ?>"><?= $esign_template->title; ?></option>
+                            <?php } ?>
+                        <?php endif; ?>
+                    </select>
+                    <br>
+                    <small>Template</small>
+                    <hr>
+                    <textarea id="summernote" name="template"></textarea>
+                </div>
+
+                <div class="fillAndSign fillAndSign--job">
+                    <?php include viewPath('job/fillandesign/step1'); ?>
+                    <?php include viewPath('job/fillandesign/step2'); ?>
+                </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer d-none">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span> Close</button>
                 <button type="button" id="click" class="btn btn-primary save-signature"><span class="fa fa-paper-plane-o"></span> Save</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="fa fa-close"></span> Close
+                </button>
+                <button type="button" class="btn btn-primary save-signature" id="fillAndSignNext">
+                    <i class="fa fa-arrow-right"></i> Next
+                </button>
+                <button type="button" class="btn btn-primary save-signature" id="fillAndSignSave">
+                    <i class="fa fa-save"></i> Save
+                </button>
             </div>
         </div>
     </div>

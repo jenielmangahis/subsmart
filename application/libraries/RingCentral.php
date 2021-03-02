@@ -32,6 +32,20 @@ class Ringcentral {
 
         return $platform;
     }
+    
+    
+    public function getNameByPhone($num = NULL) {
+        
+        $ci = &get_instance();
+        $ci->load->model('Ringcentral_model', 'rc_model');
+        $name = $ci->rc_model->getNameByPhone($num);
+
+        if (!empty($name)):
+            return json_encode(array('firstname' => $name->first_name, 'lastname' => $name->last_name, 'hasRecord' => true));
+        else:
+            return json_encode(array('hasRecord' => false));
+        endif;
+    }
 
     function read_extension_phone_number() {
         $platform = $this->getPlatform();
