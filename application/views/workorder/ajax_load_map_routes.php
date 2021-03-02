@@ -35,13 +35,14 @@
       for (j = 0; j < markes[i].length; j++) {
         data[j] = markes[i][j];
         myLatlng[j] = new google.maps.LatLng(data[j].lat, data[j].lng);
+        markerImage = data[j].marker;
         lat_lng.push(myLatlng[j]);
         //lat_lng[j]=myLatlng[j];
         marker[j] = new google.maps.Marker({
           position: myLatlng[j],
           map: map,
-          title: data[j].title
-
+          title: data[j].title,
+          icon: markerImage
         });
 
 
@@ -115,7 +116,7 @@
   google.maps.event.addDomListener(window, "load", initialize);
   </script>
 <?php }else{ ?>
-  <style>#map-canvas {width: 100%;height: 300px;}</style>
+  <style>#map-canvas {width: 100%;height: 100vh;}</style>
   <div id="map-canvas"></div>
   <script>
       function initMap() {

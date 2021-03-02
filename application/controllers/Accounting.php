@@ -472,12 +472,12 @@ class Accounting extends MY_Controller {
                 }
 
                 if($search !== "") {
-                    if(stripos($item['name'], $search) !== false) {
+                    if(stripos($item['template_name'], $search) !== false) {
                         $data[] = [
                             'id' => $item['id'],
                             'template_name' => $item['template_name'],
                             'recurring_type' => ucfirst($item['recurring_type']),
-                            'txn_type' => ucfirst($item['txn_type']),
+                            'txn_type' => ucwords($item['txn_type']),
                             'recurring_interval' => $interval,
                             'previous_date' => $item['previous_date'] !== '' && $item['previous_date'] !== null ? date('m/d/Y', strtotime($item['previous_date'])) : null,
                             'next_date' => $item['next_date'] !== '' && $item['next_date'] !== null ? date('m/d/Y', strtotime($item['next_date'])) : null,
@@ -490,7 +490,7 @@ class Accounting extends MY_Controller {
                         'id' => $item['id'],
                         'template_name' => $item['template_name'],
                         'recurring_type' => ucfirst($item['recurring_type']),
-                        'txn_type' => ucfirst($item['txn_type']),
+                        'txn_type' => ucwords($item['txn_type']),
                         'recurring_interval' => $interval,
                         'previous_date' => $item['previous_date'] !== '' && $item['previous_date'] !== null ? date('m/d/Y', strtotime($item['previous_date'])) : null,
                         'next_date' => $item['next_date'] !== '' && $item['next_date'] !== null ? date('m/d/Y', strtotime($item['next_date'])) : null,
@@ -509,6 +509,48 @@ class Accounting extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+
+    public function delete_recurring_transaction($id) {
+        $result = [];
+
+        $delete = $this->accounting_recurring_transactions_model->delete($id);
+        $result['success'] = $delete;
+        $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
+
+        echo json_encode($result);
+        exit;
+    }
+
+    public function get_recurring_transaction($id) {
+        $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('accounting_transfer_funds_model');
+        $this->load->model('accounting_journal_entries_model');
+
+        $data = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+
+        switch($data->txn_type) {
+            case 'deposit' :
+                $data->transaction = $this->accounting_bank_deposit_model->getById($data->txn_id);
+                $data->transaction->items = $this->accounting_bank_deposit_model->getFunds($data->transaction->id);
+            break;
+            case 'transfer' :
+                $data->transaction = $this->accounting_transfer_funds_model->getById($data->txn_id);
+            break;
+            case 'journal entry' :
+                $data->transaction = $this->accounting_journal_entries_model->getById($data->txn_id);
+                $data->transaction->items = $this->accounting_journal_entries_model->getEntries($data->transaction->id);
+            break;
+        }
+
+        $result = [
+            'data' => $data,
+            'success' => $data ? true : false,
+            'message' => $data ? 'Success' : 'Error'
+        ];
+
+        echo json_encode($result);
+        exit;
     }
 
     public function terms()

@@ -144,6 +144,26 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
+
+        add_css([
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/esign/fill-and-sign/step1.js',
+            'assets/js/esign/fill-and-sign/step2.js',
+            'assets/js/esign/fill-and-sign/job/script.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
+            'https://html2canvas.hertzen.com/dist/html2canvas.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+            'assets/js/esign/fill-and-sign/step2.js',
+        ]);
+
         $this->load->view('job/job_new', $this->page_data);
     }
 
@@ -1097,7 +1117,8 @@ class Job extends MY_Controller
 
     public function moveUploadedFile() {
         if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
-            $target_dir = "./uploads/job_types/";
+            $company_id = logged('company_id');
+            $target_dir = "./uploads/job_types/" . $company_id . "/";
             if(!file_exists($target_dir)) {
                 mkdir($target_dir, 0777, true);
             }
@@ -1241,6 +1262,133 @@ class Job extends MY_Controller
         $this->session->set_flashdata('alert', 'Invoice Settings Saved Successfully');
 
         redirect('invoice/settings');
+    }
+
+    public function add_new_job_tag()
+    {
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
+
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['icons'] = $icons;
+        $this->load->view('job/add_new_job_tag', $this->page_data);
+    }
+
+    public function edit_job_tag($id)
+    {
+        $this->load->model('JobTags_model');
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
+
+        $jobTag = $this->JobTags_model->getById($id);
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['icons'] = $icons;
+        $this->page_data['jobTag'] = $jobTag;
+        $this->load->view('job/edit_job_tag', $this->page_data);
+    }
+
+    public function create_new_job_tag()
+    {
+        $this->load->model('JobTags_model');
+        $this->load->model('Icons_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( isset($post['is_default_icon']) ){
+            $icon = $this->Icons_model->getById($post['default_icon_id']);
+            $marker_icon = $icon->image;
+            $data = [
+                'name' => $post['job_tag_name'],
+                'company_id' => $company_id,
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 1
+            ];
+
+            $this->JobTags_model->create($data);
+        }else{
+            $marker_icon = $this->jobTagsMoveUploadedFile();
+            if( $marker_icon != '' ){
+                $data = [
+                    'name' => $post['job_tag_name'],
+                    'company_id' => $company_id,
+                    'marker_icon' => $marker_icon,
+                    'is_marker_icon_default_list' => 0
+                ];
+
+                $this->JobTags_model->create($data);
+            }else{
+                $this->session->set_flashdata('message', 'Cannot update job tag');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+            
+        }
+
+        $this->session->set_flashdata('message', 'Add new job tag was successful');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('job/job_tags');
+    }
+
+    public function update_job_tag(){
+        $this->load->model('JobTags_model');
+        $this->load->model('Icons_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( isset($post['is_default_icon']) ){
+            $icon = $this->Icons_model->getById($post['default_icon_id']);
+            $marker_icon = $icon->image;
+            $data = [
+                'name' => $post['job_tag_name'],
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 1
+            ];
+
+            $this->JobTags_model->update($post['jid'],$data);
+        }else{
+            $marker_icon = $this->moveUploadedFile();
+            $data = [
+                'name' => $post['job_tag_name'],
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 0
+            ];
+
+            $this->JobTags_model->update($post['jid'],$data);
+        }
+
+        $this->session->set_flashdata('message', 'Update event tag was successful');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('events/event_tags');
+    }
+
+    public function jobTagsMoveUploadedFile() {
+        if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
+            $company_id = logged('company_id');
+            $target_dir = "./uploads/job_tags/" . $company_id . "/";
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = basename($_FILES["image"]["name"]);
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
     }
 }
 

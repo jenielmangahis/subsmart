@@ -716,9 +716,11 @@ class Workorder extends MY_Controller
         $this->load->model('Event_model');
         $this->load->model('Jobs_model');
         $this->load->model('Users_model');
+        $this->load->model('EventType_model');
 
         $user_id    = logged('id');  
         $locations  = array();
+        $markers    = array();
         $center_lat = '';
         $center_lng = '';
         $counter = 1;
@@ -742,6 +744,12 @@ class Workorder extends MY_Controller
                 $events  = $this->Event_model->getAllUserEventsWithAddress($user->id);
                 foreach($events as $e){
                     if( $e->event_address != '' ){
+                        $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
+                        if( $e->event_type_id > 0 ){
+                            $eventType = $this->EventType_model->getById($e->event_type_id);
+                            $marker = 'https://staging.nsmartrac.com/uploads/event_types/' . $eventType->icon_marker;
+                        }
+                        
                         $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
                         $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
                         $json   = json_decode($gdata, true);   
@@ -751,12 +759,14 @@ class Workorder extends MY_Controller
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
                                 'description' => $pointA,
+                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];
                             $locations[] = [
                                 'title' => $pointB,
                                 'lat' => $json['results'][0]['geometry']['location']['lat'],
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
                                 'description' => $e->event_description,
+                                'marker' => $marker
                             ];  
                         }
                     }
@@ -810,6 +820,11 @@ class Workorder extends MY_Controller
             //Events
             foreach($events as $e){
                 if( $e->event_address != '' ){
+                    $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
+                    if( $e->event_type_id > 0 ){
+                        $eventType = $this->EventType_model->getById($e->event_type_id);
+                        $marker = 'https://staging.nsmartrac.com/uploads/event_types/' . $eventType->icon_marker;
+                    }
                     $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
                     $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
                     $json   = json_decode($gdata, true);   
@@ -819,12 +834,14 @@ class Workorder extends MY_Controller
                             'lat' => $center_lat,
                             'lng' => $center_lng,
                             'description' => $pointA,
+                            'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                         ];
                         $locations[] = [
                             'title' => $pointB,
                             'lat' => $json['results'][0]['geometry']['location']['lat'],
                             'lng' => $json['results'][0]['geometry']['location']['lng'],
                             'description' => $e->event_description,
+                            'marker' => $marker
                         ]; 
                     } 
                 }

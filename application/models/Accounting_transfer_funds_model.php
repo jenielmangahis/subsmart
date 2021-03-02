@@ -16,9 +16,12 @@ class Accounting_transfer_funds_model extends MY_Model {
 	    return $this->db->insert_id();
 	}
 
-	function insertRecurringDetails($data)
-	{
-		$this->db->insert('accounting_recurring_transfer', $data);
-		return $this->db->insert_id();
+	function getById($id) {
+		$this->db->where('company_id', getLoggedCompanyID());
+		$this->db->where('id', $id);
+		$this->db->where('status', 1);
+
+		$query = $this->db->get($this->table);
+		return $query->row();
 	}
 }

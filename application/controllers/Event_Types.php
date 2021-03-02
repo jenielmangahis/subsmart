@@ -142,7 +142,8 @@ class Event_Types extends MY_Controller {
 
     public function moveUploadedFile() {
         if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
-            $target_dir = "./uploads/event_types/";
+            $company_id = logged('company_id');
+            $target_dir = "./uploads/event_types/" . $company_id . "/";
             if(!file_exists($target_dir)) {
                 mkdir($target_dir, 0777, true);
             }

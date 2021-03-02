@@ -125,6 +125,12 @@ a.btn-primary.btn-md {
 .card{
     box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
 }
+.job-marker{
+  height: 50px;
+  width: 50px;
+  border: 1px solid #dee2e6;
+}
+
 </style>
 <?php
     defined('BASEPATH') or exit('No direct script access allowed');
@@ -155,7 +161,7 @@ a.btn-primary.btn-md {
                                     <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                         <div class="float-right d-md-block">
                                             <div class="dropdown">
-                                                <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" id="newJobTypeBtn" data-target="#newJobTypeModal">
+                                                <a href="<?= base_url("job/add_new_job_tag") ?>" class="btn btn-primary btn-sm">
                                                     <span class="fa fa-plus"></span> Add New Tag
                                                 </a>
                                             </div>
@@ -177,6 +183,7 @@ a.btn-primary.btn-md {
                                     <table class="table table-bordered table-striped" id="jobTypeTable">
                                         <thead>
                                         <tr>
+                                            <th scope="col"></th>
                                             <th scope="col"><strong>Name</strong></th>
                                             <th scope="col"><strong>Manage</strong></th>
                                         </tr>
@@ -185,10 +192,24 @@ a.btn-primary.btn-md {
                                             <?php if(!empty($job_tags)): ?>
                                                 <?php foreach($job_tags as $tags) : ?>
                                                     <tr>
+                                                        <td>
+                                                            <?php
+                                                                if( $tags->marker_icon != '' ){
+                                                                    if($tags->is_marker_icon_default_list == 1){
+                                                                        $marker = base_url("uploads/icons/" . $tags->marker_icon);
+                                                                    }else{
+                                                                        $marker = base_url("uploads/job_tags/" . $tags->company_id . "/" . $tags->marker_icon);
+                                                                    }
+                                                                }else{
+                                                                    $marker = base_url("uploads/job_tags/default_no_image.jpg");
+                                                                }                                                                
+                                                            ?>
+                                                            <img src="<?= $marker; ?>" class="job-marker">
+                                                        </td>
                                                         <td class="pl-3"><?= $tags->name; ?></td>
                                                         <td class="pl-3">
-                                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#newJobTypeModal" data-id="<?php echo $jobtype->id; ?>" data-jobtype="<?php echo $jobtype->value; ?>" class="editJobTypeBtn btn btn-primary btn-sm">
-                                                                <span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                            <a href="<?= base_url("job/edit_job_tag/" . $tags->id); ?>" class="editJobTypeBtn btn btn-primary btn-sm">
+                                                                <span class="fa fa-edit"></span> Edit</a>&nbsp;
                                                             <a href="javascript:void(0)" id="<?= $tags->id; ?>"  class="delete_tags btn btn-primary btn-sm">
                                                                 <span class="fa fa-trash"></span> Delete
                                                             </a>
@@ -259,6 +280,11 @@ a.btn-primary.btn-md {
             "lengthChange": true,
             "searching" : false,
             "pageLength": 10,
+            "aoColumnDefs": [
+              { "sWidth": "5%", "aTargets": [ 0 ] },
+              { "sWidth": "75%", "aTargets": [ 1 ] },
+              { "sWidth": "15%", "aTargets": [ 2 ] }
+            ],
             "order": [],
         });
         $("#form_add_tag").submit(function(e) {
@@ -267,7 +293,7 @@ a.btn-primary.btn-md {
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "/job/add_tag",
+                url: base_url + "job/add_tag",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
@@ -295,7 +321,7 @@ a.btn-primary.btn-md {
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "/job/delete_tag",
+                        url: base_url + "job/delete_tag",
                         data: {tag_id : ID}, // serializes the form's elements.
                         success: function(data)
                         {

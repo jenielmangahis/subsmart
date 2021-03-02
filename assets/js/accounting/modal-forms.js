@@ -721,11 +721,11 @@ $(function() {
 
             $(this).parent().next().children('div').children('div').html(`
                 <span>Remind &nbsp;</span>
-                <input type="number" name="day_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
+                <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
                 <span>&nbsp; days before the transaction date</span>
             `);
 
-            if($('form#modal-form div.modal div.modal-body select#recurringinterval').length === 0) {
+            if($('form#modal-form div.modal div.modal-body select#recurringInterval').length === 0) {
                 if($('form#modal-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
@@ -753,11 +753,11 @@ $(function() {
 
             $(this).parent().next().children('div').children('div').html(`
                 <span>Create &nbsp;</span>
-                <input type="number" name="day_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
+                <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
                 <span>&nbsp; days in advance</span>
             `);
 
-            if($('form#modal-form div.modal div.modal-body select#recurringinterval').length === 0) {
+            if($('form#modal-form div.modal div.modal-body select#recurringInterval').length === 0) {
                 if($('form#modal-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
@@ -819,7 +819,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', 'div.modal select#recurringMode', function(){
+    $(document).on('change', 'div.modal select#recurringInterval', function(){
         var fields = '';
         if($(this).val() === 'daily') {
             if($(this).parent().next().hasClass('col-md-4')) {
@@ -834,7 +834,7 @@ $(function() {
 
             fields = `
                 <span>&nbsp; every &nbsp;</span>
-                <input type="number" value="1" class="form-control" name="recurring_interval" style="width: 30%">
+                <input type="number" value="1" class="form-control" name="recurr_every" style="width: 30%">
                 <span>&nbsp; day(s)</span>
             `;
         } else if($(this).val() === 'weekly') {
@@ -850,7 +850,7 @@ $(function() {
 
             fields = `
                 <span>&nbsp; every &nbsp;</span>
-                <input type="number" value="1" class="form-control" name="recurring_interval" style="width: 20%">
+                <input type="number" value="1" class="form-control" name="recurr_every" style="width: 20%">
                 <span>&nbsp; week(s) on &nbsp;</span>
                 <select class="form-control" name="recurring_day" style="width: auto">
                     <option value="sunday">Sunday</option>
@@ -1624,6 +1624,7 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body div.row.bank-account-details`).remove();
         } else if(modalName === 'transfer') {
             modalId = 'transferModal';
+            $(`div#${modalId} div.modal-body #date`).parent().parent().remove();
         } else if(modalName === 'journal_entry') {
             modalId = 'journalEntryModal';
             $(`div#${modalId} div.modal-body div.row.journal-entry-details`).remove();

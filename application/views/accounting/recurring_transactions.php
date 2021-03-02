@@ -115,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <option value="estimate">Estimate</option>
                                                                         <option value="expense">Expense</option>
                                                                         <option value="invoice">Invoice</option>
-                                                                        <option value="journal-entry">Journal Entry</option>
+                                                                        <option value="journal entry">Journal Entry</option>
                                                                         <option value="refund">Refund</option>
                                                                         <option value="sales-receipt">Sales Receipt</option>
                                                                         <option value="transfer">Transfer</option>
@@ -257,6 +257,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="delete_recurring_transaction" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
+                                <div class="card-body" style="max-height: 650px;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p>Are you sure you want to delete this?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">No</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-success btn-rounded border float-right">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
 
@@ -281,12 +312,16 @@ $('#transaction_type_modal .modal-footer .btn-success').on('click', function(e) 
     var modalName = $('select#type').val();
     $(`a[data-target="#${modalName}"]`).trigger('click');
 
-    if(modalName === 'depositModal') {
-        modal = 'bank_deposit';
-    } else if(modalName === 'journalEntryModal') {
-        modal = 'journal_entry';
-    } else if(modalName === 'transferModal') {
-        modal = 'transfer';
+    switch(modalName) {
+        case 'depositModal' : 
+            modal = 'bank_deposit';
+        break;
+        case 'journalEntryModal' :
+            modal = 'journal_entry';
+        break;
+        case 'transferModal' : 
+            modal ='transfer';
+        break;
     }
 
     makeRecurring(modal);
@@ -303,10 +338,10 @@ $('#table_rows').on('change', function() {
 });
 
 $('#search').on('keyup', function() {
-    $('#payment_methods').DataTable().ajax.reload();
+    $('#recurring_transactions').DataTable().ajax.reload();
 });
 
-$('#recurring_transactions').DataTable({
+var table = $('#recurring_transactions').DataTable({
     autoWidth: false,
     searching: false,
     processing: true,
@@ -368,7 +403,7 @@ $('#recurring_transactions').DataTable({
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 $(td).html(`
                 <div class="btn-group float-right">
-                    <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+                    <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
 
                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="sr-only">Toggle Dropdown</span>
@@ -378,12 +413,52 @@ $('#recurring_transactions').DataTable({
                         <a class="dropdown-item" href="#">Duplicate</a>
                         <a class="dropdown-item" href="#">Pause</a>
                         <a class="dropdown-item" href="#">Skip next date</a>
-                        <a class="dropdown-item" href="#">Delete</a>
+                        <a class="dropdown-item delete-recurring" href="#">Delete</a>
                     </div>
                 </div>
                 `);
             }
         }
     ]
+});
+
+$(document).on('click', '#recurring_transactions .delete-recurring', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent();
+    var rowData = table.row(row).data();
+
+    $('#delete_recurring_transaction .modal-footer .btn-success').attr('data-id', rowData.id);
+
+    $('#delete_recurring_transaction').modal('show');
+});
+
+$(document).on('click', '#delete_recurring_transaction .modal-footer .btn-success', function(e) {
+    e.preventDefault();
+
+    var id = e.currentTarget.dataset.id;
+
+    $.ajax({
+        url: `/accounting/recurring-transactions/delete/${id}`,
+        type:"DELETE",
+        success:function (result) {
+            var res = JSON.parse(result);
+
+            $.toast({
+                icon: res.success ? 'success' : 'error',
+                heading: res.success ? 'Success' : 'Error',
+                text: res.message,
+                showHideTransition: 'fade',
+                hideAfter: 3000,
+                allowToastClose: true,
+                position: 'top-center',
+                stack: false,
+                loader: false,
+            });
+
+            $('#delete_recurring_transaction').modal('hide');
+
+            $('#recurring_transactions').DataTable().ajax.reload();
+        }
+    });
 });
 </script>

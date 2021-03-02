@@ -16,27 +16,14 @@
                             <div class="form-group w-50">
                                 <label for="transferFrom">Transfer Funds From</label>
                                 <select name="transfer_from" id="transferFrom" class="form-control" required>
-                                    <optgroup label="Bank">
-                                        <option value="bank-1">Cash on hand</option>
-                                    </optgroup>
-                                    <optgroup label="Other Current Assets">
-                                        <option value="ocassets-1">Inventory Asset</option>
-                                    </optgroup>
-                                    <optgroup label="Other Assets">
-                                        <option value="oassets-1">Shareholder Investment</option>
-                                    </optgroup>
-                                    <optgroup label="Credit Card">
-                                        <option value="ccard-1">Credit Card</option>
-                                    </optgroup>
-                                    <optgroup label="Other Current Liabilities">
-                                        <option value="ocliab-1">Alabama Department of Revenue Payable</option>
-                                    </optgroup>
-                                    <optgroup label="Long Term Liabilities">
-                                        <option value="ltliab-1">Notes Payable</option>
-                                    </optgroup>
-                                    <optgroup label="Equity">
-                                        <option value="equity-1">Additional Paid In Capital</option>
-                                    </optgroup>
+                                    <option value=""></option>
+                                    <?php foreach($accounts as $key => $value) : ?>
+                                        <optgroup label="<?= $key ?>">
+                                            <?php foreach($value as $account) : ?>
+                                                <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -54,27 +41,14 @@
                             <div class="form-group w-50">
                                 <label for="transferTo">Transfer Funds To</label>
                                 <select name="transfer_to" id="transferTo" class="form-control" required>
-                                    <optgroup label="Bank">
-                                        <option value="bank-1">Cash on hand</option>
-                                    </optgroup>
-                                    <optgroup label="Other Current Assets">
-                                        <option value="ocassets-1">Inventory Asset</option>
-                                    </optgroup>
-                                    <optgroup label="Other Assets">
-                                        <option value="oassets-1">Shareholder Investment</option>
-                                    </optgroup>
-                                    <optgroup label="Credit Card">
-                                        <option value="ccard-1">Credit Card</option>
-                                    </optgroup>
-                                    <optgroup label="Other Current Liabilities">
-                                        <option value="ocliab-1">Alabama Department of Revenue Payable</option>
-                                    </optgroup>
-                                    <optgroup label="Long Term Liabilities">
-                                        <option value="ltliab-1">Notes Payable</option>
-                                    </optgroup>
-                                    <optgroup label="Equity">
-                                        <option value="equity-1">Additional Paid In Capital</option>
-                                    </optgroup>
+                                    <option value=""></option>
+                                    <?php foreach($accounts as $key => $value) : ?>
+                                        <optgroup label="<?= $key ?>">
+                                            <?php foreach($value as $account) : ?>
+                                                <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>

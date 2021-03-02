@@ -227,7 +227,7 @@ add_css(array(
                                                 <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
                                                 <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
                                                 <td class="pl-3"><?= $job->status; ?></td>
-                                                <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',''); ?></td>
+                                                <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',','); ?></td>
                                                 <td class="pl-3"><?php echo $job->job_type; ?></td>
                                                 <td class="pl-3"><?php echo $job->name; ?></td>
                                                 <td class="pl-3"><?=$job->priority; ?></td>

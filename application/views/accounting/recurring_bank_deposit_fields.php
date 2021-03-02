@@ -49,7 +49,7 @@
         <div class="form-row">
             <div class="col-md-2 form-group">
                 <label>Interval</label>
-                <select class="form-control" name="recurring_interval" id="recurringinterval">
+                <select class="form-control" name="recurring_interval" id="recurringInterval">
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly" selected="">Monthly</option>

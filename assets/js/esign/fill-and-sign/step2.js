@@ -1,4 +1,4 @@
-function Step2(documentId) {
+function Step2({ documentId }) {
   const $documentContainer = $("#documentContainer");
   const $actions = $(".action--draggable");
   const $topnav = $(".fillAndSign__topnav");
@@ -6,7 +6,7 @@ function Step2(documentId) {
 
   const $signatureModal = $("#signatureModal");
   const $addSignatureButton = $("#addSignatureButton");
-  const $signatureModalCloseButton = $("[data-dismiss=modal]");
+  let $signatureModalCloseButton = $("[data-dismiss=modal]");
 
   const $signaturePad = $(".fillAndSign__signaturePad");
   const $signaturePadCanvas = $signaturePad.find("canvas");
@@ -32,6 +32,10 @@ function Step2(documentId) {
   let isStoring = false;
   let link = null;
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+  if (location.pathname.includes("new_job")) {
+    $signatureModalCloseButton = $signatureModal.find(".close-me");
+  }
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
@@ -472,7 +476,10 @@ function Step2(documentId) {
       });
     });
 
+    console.log($signatureModalCloseButton);
+
     $signatureModalCloseButton.on("click", () => {
+      console.log("hello");
       $signatureModal.hide();
     });
 
@@ -488,10 +495,7 @@ function Step2(documentId) {
     });
 
     $signatureApplyButton.on("click", async function () {
-      $(this).attr("disabled", true);
-      $(this).find(".spinner-border").removeClass("d-none");
-
-      const $activeTab = $(".tab-pane.active");
+      const $activeTab = $("#signatureModal .tab-pane.active");
       const signatureType = $activeTab.data("signature-type");
 
       let $element = null;
@@ -527,6 +531,9 @@ function Step2(documentId) {
         trimCanvas(clonedCanvas.getContext("2d"));
         signatureDataUrl = clonedCanvas.toDataURL("image/png");
       }
+
+      $(this).attr("disabled", true);
+      $(this).find(".spinner-border").removeClass("d-none");
 
       $element = createSignature({ value: signatureDataUrl });
 
@@ -615,6 +622,7 @@ function Step2(documentId) {
     const $fontItems = $fontSelect.find(".dropdown-item");
     const $fontItemText = $fontSelect.find(".dropdown-toggle");
     $fontItems.on("click", (event) => {
+      event.preventDefault();
       event.stopPropagation();
       const $target = $(event.target);
       const font = $target.data("font");
@@ -825,13 +833,13 @@ async function generatePDF(documentId) {
 }
 
 $(document).ready(function () {
-  $(".fillAndSign").css({ marginTop: $("#topnav").height() });
-
   const urlParams = new URLSearchParams(window.location.search);
   const documentId = parseInt(urlParams.get("docid"));
 
   if (Number.isInteger(documentId) && $("[data-step=2]").length !== 0) {
-    const step = new Step2(documentId);
+    $(".fillAndSign").css({ marginTop: $("#topnav").height() });
+
+    const step = new Step2({ documentId });
     step.init();
   }
 });

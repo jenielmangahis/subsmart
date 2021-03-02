@@ -71,7 +71,9 @@
     -ms-user-select: none;
     user-select: none;
 }
-
+.left {
+  float: left;
+}
 </style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
@@ -97,7 +99,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           </div>
                         </div>
                         <div class="filter-container mb-3">
-                            <input type="text" id="date-range-picker" class="form-control">                            
+                          <div class="col-md-2 pl-0 left">
+                            <input type="text" id="" class="form-control single-datepicker" placeholder="Date From">
+                          </div>
+                          <div class="col-md-2 pl-0 left">
+                            <input type="text" id="" class="form-control single-datepicker" placeholder="Date To">
+                          </div>
+                          <div class="col-md-4 left">
                             <select class="form-control">
                                 <option value="all">All Statuses</option>
                                 <option value="new">New</option>
@@ -106,6 +114,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <option value="paused">Paused</option>
                                 <option value="completed">Completed</option>
                             </select>
+                          </div>
+                          <div class="col-md-4 pr-0 left">
                             <select class="form-control" name="user" id="filter-user">
                                 <option value="">- Select Employee -</option>
                                 <option value="all">All Employees</option>
@@ -113,6 +123,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <option value="<?= $u->id; ?>"><?= $u->FName . ' ' . $u->LName; ?></option>
                                 <?php } ?>
                             </select>
+                          </div>
                         </div>
                         <div class="map-container"></div>
                     </div>
@@ -127,11 +138,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-$(function(){
+$(function(){    
     $('#date-range-picker').daterangepicker({
         "timePicker": false
     }, function(start, end, label) {
       //console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+    });
+
+    $('.single-datepicker').daterangepicker({
+      singleDatePicker: true,
+      showDropdowns: true,
+      minYear: 1901,
+      maxYear: parseInt(moment().format('YYYY'),10)
+    }, function(start, end, label) {
+      var years = moment().diff(start, 'years');
+      //alert("You are " + years + " years old!");
     });
 
     load_map_route();

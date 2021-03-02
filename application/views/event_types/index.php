@@ -84,7 +84,7 @@ table.table tbody tr td:first-child {
                                         <td>
                                           <?php 
                                             if( $et->icon_marker != '' ){
-                                              $image = base_url('uploads/event_types/' . $et->icon_marker);
+                                              $image = base_url('uploads/event_types/' . $et->company_id . "/" . $et->icon_marker);
                                             }else{
                                               $image = base_url('uploads/job_types/default_no_image.jpg');
                                             }
@@ -93,7 +93,7 @@ table.table tbody tr td:first-child {
                                         </td>
                                         <td><?= $et->title; ?></td>                                        
                                         <td>
-                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-edit"></i> Edit</a>
                                             <a class="btn btn-primary btn-sm btn-delete-event-type" href="javascript:void(0);" data-id="<?= $et->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>

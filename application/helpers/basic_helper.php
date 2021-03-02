@@ -1389,6 +1389,18 @@ function get_customer_by_id($customer_id, $key = '')
     return $CI->customer->getCustomer($customer_id);
 }
 
+/**
+ * return customer acs_profile details based on ID
+ */
+function acs_prof_get_customer_by_prof_id($customer_id)
+{
+    
+    $CI =& get_instance();
+    $CI->load->model('AcsProfile_model');
+
+    return $CI->AcsProfile_model->getByProfId($customer_id);
+}
+
 
 /**
  * all customers based on company or user id
@@ -1738,6 +1750,34 @@ function make_calender_event_label($settings, $event, $customer)
 
     if (!empty($settings['work_order_show_customer'])) {
         $title .= ' ' . $customer->contact_name . ', ' . $customer->mobile;
+    }
+
+    if (!empty($settings['work_order_show_details'])) {
+        $title .= ', ' . $event->description;
+    }
+
+    if (!empty($settings['work_order_show_price'])) {
+        $title .= ', $0.00';
+    }
+
+    return $title;
+}
+
+/**
+ * @param $settings
+ * @param $event
+ * @param $customer
+ * @return string
+ */
+function acs_prof_make_calender_event_label($settings, $event, $customer)
+{
+    $settings = unserialize($settings);
+    $date = date('a', strtotime($event->start_time));
+    $date = substr($date, -2, 1);
+    $title = date('g', strtotime($event->start_time)) . $date;
+
+    if (!empty($settings['work_order_show_customer'])) {
+        $title .= ' ' . $customer->first_name . " " . $customer->last_name . ', ' . $customer->phone_m;
     }
 
     if (!empty($settings['work_order_show_details'])) {
@@ -3243,4 +3283,28 @@ function statesList(){
     ];
 
     return $states;
+}
+
+function getUserType($id){
+    $types = userTypes();
+    if( isset($types[$id]) ){
+        $type = $types[$id];
+    }else{
+        $type = 'Standard User';
+    }
+
+    return $type;
+}
+
+function userTypes(){
+    $types = [
+        1 => 'Office Manager',
+        2 => 'Partner',
+        3 => 'Team Leader',
+        4 => 'Standard User',
+        5 => 'Field Sales',
+        6 => 'Field Tech'
+    ];
+
+    return $types;
 }

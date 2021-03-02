@@ -1,4 +1,4 @@
-function Step1() {
+function Step1(params = {}) {
   const validFileExtensions = ["pdf"];
 
   const $form = $("#form");
@@ -18,12 +18,17 @@ function Step1() {
   let vaultDocuments = [];
   let documentObj = null;
   let documentUrl = null;
+  let onSelect = params.onSelect || (() => {});
 
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
+  function getVaultDocumentById(id) {
+    return vaultDocuments.find(({ file_id }) => file_id == id);
+  }
+
   async function previewDocument({ file, fileId = null }) {
     if (fileId) {
-      const currFile = vaultDocuments.find(({ file_id }) => file_id == fileId);
+      const currFile = getVaultDocumentById(fileId);
       const { title, folder_name, file_path } = currFile;
       documentUrl = `${prefixURL}/uploads/${folder_name}${file_path}`;
       file = { name: title };
@@ -194,9 +199,10 @@ function Step1() {
       }
     });
 
-    $fileInput.on("change", function () {
+    $fileInput.on("change", function (event) {
       const fileName = $(this).val();
       $fileInputName.html(fileName);
+      onSelect(event);
     });
   }
 
@@ -248,6 +254,7 @@ function Step1() {
         }
 
         $target.addClass("fillAndSign__vaultItem--selected");
+        onSelect(event);
       });
 
       return $element;
@@ -264,13 +271,13 @@ function Step1() {
     attachEventHandlers();
   }
 
-  return { init };
+  return { init, getVaultDocumentById };
 }
 
 $(document).ready(function () {
-  $(".fillAndSign").css({ marginTop: $("#topnav").height() });
-
   if ($("[data-step=1]").length !== 0) {
+    $(".fillAndSign").css({ marginTop: $("#topnav").height() });
+
     const step = new Step1();
     step.init();
   }

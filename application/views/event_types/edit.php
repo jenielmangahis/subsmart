@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title"><i class="fa fa-plus"></i> Edit Event Type</h1>
+                        <h1 class="page-title"><i class="fa fa-edit"></i> Edit Event Type</h1>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <div class="form-group">
                               <?php 
                                 if( $eventType->icon_marker != '' ){
-                                  $url = base_url('uploads/event_types/' . $eventType->icon_marker);
+                                  $url = base_url('uploads/event_types/' . $eventType->company_id . '/' . $eventType->icon_marker);
                                 }else{
                                   $url = base_url('uploads/event_types/no_file.png');
                                 }

@@ -9,8 +9,9 @@ class EventType_model extends MY_Model
     {
         $id = logged('id');
 
-        $this->db->select('*');
+        $this->db->select('event_types.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
+        $this->db->join('users', 'event_types.user_id = users.id', 'INNER'); 
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
@@ -29,7 +30,7 @@ class EventType_model extends MY_Model
 
         $this->db->select('event_types.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
-        $this->db->join('users', 'event_types.user_id = users.id', 'LEFT'); 
+        $this->db->join('users', 'event_types.user_id = users.id', 'INNER'); 
         $this->db->where('users.company_id', $company_id);
 
         $query = $this->db->get();
@@ -40,10 +41,11 @@ class EventType_model extends MY_Model
     {
         $user_id = logged('id');
 
-        $this->db->select('*');
+        $this->db->select('event_types.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
+        $this->db->join('users', 'event_types.user_id = users.id', 'INNER'); 
 
-        $this->db->where('id', $id);
+        $this->db->where('event_types.id', $id);
 
         $query = $this->db->get()->row();
         return $query;
