@@ -1393,14 +1393,12 @@ function get_customer_by_id($customer_id, $key = '')
  * return customer acs_profile details based on ID
  */
 function acs_prof_get_customer_by_prof_id($customer_id)
-{
-    
+{   
+    //Get Customer data
     $CI =& get_instance();
     $CI->load->model('AcsProfile_model');
-
     return $CI->AcsProfile_model->getByProfId($customer_id);
 }
-
 
 /**
  * all customers based on company or user id

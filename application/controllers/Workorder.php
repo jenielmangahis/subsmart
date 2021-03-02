@@ -726,6 +726,7 @@ class Workorder extends MY_Controller
         $counter = 1;
 
         $post = $this->input->post();
+        $date_range = ['date_from' => date("Y-m-d",strtotime($post['date_from'])), 'date_to' => date("Y-m-d",strtotime($post['date_to']))];
         if( $post['user'] == 'all' ){
             $users    = $this->Users_model->getAll();
             foreach( $users as $user ){
@@ -741,7 +742,7 @@ class Workorder extends MY_Controller
                 }
 
                 //Events
-                $events  = $this->Event_model->getAllUserEventsWithAddress($user->id);
+                $events  = $this->Event_model->getAllUserEventsWithAddress($user->id, $date_range);
                 foreach($events as $e){
                     if( $e->event_address != '' ){
                         $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
@@ -786,6 +787,7 @@ class Workorder extends MY_Controller
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
                                 'description' => $pointA,
+                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];
                             $locations[] = [
                                 'title' => $pointB,
@@ -800,11 +802,11 @@ class Workorder extends MY_Controller
         }else{
             if( $post['user'] > 0 ){
                 $user    = $this->Users_model->getUser($post['user']);
-                $events  = $this->Event_model->getAllUserEventsWithAddress($post['user']);
+                $events  = $this->Event_model->getAllUserEventsWithAddress($post['user'],$date_range);
                 $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user']);
             }else{
                 $user    = $this->Users_model->getUser($user_id);
-                $events  = $this->Event_model->getAllUserEventsWithAddress($user_id);
+                $events  = $this->Event_model->getAllUserEventsWithAddress($user_id,$date_range);
                 $jobs    = $this->Jobs_model->getAllJobsByUserId($user_id);
             }
 
@@ -860,6 +862,7 @@ class Workorder extends MY_Controller
                             'lat' => $center_lat,
                             'lng' => $center_lng,
                             'description' => $pointA,
+                            'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                         ];
                         $locations[] = [
                             'title' => $pointB,

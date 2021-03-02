@@ -163,13 +163,18 @@ class Event_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllUserEventsWithAddress($employee_id)
+    public function getAllUserEventsWithAddress($employee_id, $date_range = array())
     {
 
         $this->db->select('events.id, events.event_type_id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
         $this->db->from($this->table);
 
         $this->db->where('events.event_address !=', '');
+        if( !empty($date_range) ){
+            $start_date = $date_range['date_from'];
+            $end_date   = $date_range['date_to'];
+            $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        }
         $this->db->where('employee_id', $employee_id);
 
         $query = $this->db->get();
