@@ -332,7 +332,7 @@
                                     <div class="addon">
                                         <div class="addon__on"></div>
                                         <div class="addon__img" style="margin: 23px 0; height: 100px;">
-                                            <img class="img-responsive" style="height: 87px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
+                                            <img class="img-responsive" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
                                         </div>
                                         <div class="addon__name">PayPal</div>
                                         <div class="addon__description text-ter">
@@ -384,7 +384,7 @@
                                     <div class="addon">
                                         <div class="addon__on"></div>
                                         <div class="addon__img" style="margin: 23px 0; height: 100px;">
-                                            <img class="img-responsive" style="max-width: 200px;position: relative;top: 20px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/wepay-logo.png">
+                                            <img class="img-responsive" style="max-width: 160px;position: relative;top: 28px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/wepay-logo.png">
                                         </div>
                                         <div class="addon__name">WEPAY</div>
                                         <div class="addon__description text-ter">
@@ -410,7 +410,7 @@
                                     <div class="addon">
                                         <div class="addon__on"></div>
                                         <div class="addon__img" style="margin: 23px 0; height: 100px;">
-                                            <img class="img-responsive" style="max-width: 200px;position: relative;top: 5px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/stripe-logo.png">
+                                            <img class="img-responsive" style="max-width: 151px;position: relative;top: 10px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/stripe-logo.png">
                                         </div>
                                         <div class="addon__name">Stripe</div>
                                         <div class="addon__description text-ter">
