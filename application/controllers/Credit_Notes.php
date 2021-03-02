@@ -442,10 +442,10 @@ class Credit_Notes extends MY_Controller
             $mail->From = $from; 
             $mail->FromName = 'NsmarTrac';
 
-            $mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');            
-            /*foreach( $post['customer_id'] as $value ){
+            //$mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');            
+            foreach( $post['customer_id'] as $value ){
                 $mail->addAddress($value, $value);  
-            }*/
+            }
             if( isset($post['email_bcc']) ){
                if( count($post['email_bcc']) > 0 ){
                     $bcc = implode(",", $post['email_bcc']);

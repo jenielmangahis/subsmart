@@ -1947,9 +1947,167 @@ class Customer extends MY_Controller
     }
 
     public function merchant(){
+        $this->load->model('Users_model');
+        $this->load->model('Clients_model');
+        $this->load->model('ConvergeMerchant_model');
+
         $user_id = logged('id');
+        $company_id = logged('company_id');
+
+        $user     = $this->Users_model->getUser($user_id);
+        $company  = $this->Clients_model->getById($company_id);
+        $merchant = $this->ConvergeMerchant_model->getByCompanyId($company_id);
+
+        $this->page_data['merchant'] = $merchant;
+        $this->page_data['user'] = $user;
+        $this->page_data['company'] = $company;
         $this->load->view('customer/merchant', $this->page_data);
     }
-    
+
+    public function send_merchant_details(){
+        $this->load->model('ConvergeMerchant_model');
+
+        $post = $this->input->post();
+
+        $company_id = logged('company_id');        
+        $merchant   = $this->ConvergeMerchant_model->getByCompanyId($company_id);
+
+        $is_mailing = 0;
+        if( isset($post['is_mailing']) ){
+            $is_mailing = 1;
+        }
+
+        $is_shipping = 0;
+        if( isset($post['is_shipping']) ){
+            $is_shipping = 1;
+        }
+
+        $is_see_special_instructions = 0;
+        if( isset($post['is_see_special_instructions']) ){
+            $is_see_special_instructions = 1;
+        }
+
+        $is_beneficial_owner = 0;
+        if( isset($post['is_beneficial_owner']) ){
+            $is_beneficial_owner = 1;
+        }
+
+        $is_authorized_signer = 0;
+        if( isset($post['is_authorized_signer']) ){
+            $is_authorized_signer = 1;
+        }
+
+        $is_sole_proprietor = 0;
+        if( isset($post['is_sole_proprietor']) ){
+            $is_sole_proprietor = 1;
+        }
+
+        $post['is_mailing']  = $is_mailing;
+        $post['is_shipping'] = $is_shipping;
+        $post['is_see_special_instructions'] = $is_see_special_instructions;
+        $post['is_beneficial_owner']  = $is_beneficial_owner;
+        $post['is_authorized_signer'] = $is_authorized_signer;
+        $post['is_sole_proprietor']   = $is_sole_proprietor;
+
+        if( $merchant ){
+            $this->ConvergeMerchant_model->update($merchant->id, $post);
+        }else{
+            $post['company_id'] = $company_id;
+            $this->ConvergeMerchant_model->create($post);
+        }
+
+        //Send Email        
+        $message = "<table>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;'>COMPANY INFORMATION</h5></td></tr>";
+            $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
+            $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
+            $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
+            $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
+            $message .= "<tr><td>DBA ADDRESS 2</td><td>".$post['dba_address_2']."</td></tr>";
+            $message .= "<tr><td>CITY</td><td>".$post['city']."</td></tr>";
+            $message .= "<tr><td>STATE</td><td>".$post['state']."</td></tr>";
+            $message .= "<tr><td>ZIP CODE</td><td>".$post['zip_code']."</td></tr>";
+            $message .= "<tr><td>DBA PHONE NO.</td><td>".$post['dba_phone_no']."</td></tr>";
+            $message .= "<tr><td>EMAIL ADDRESS</td><td>".$post['email_address']."</td></tr>";
+            $message .= "<tr><td>MOBILE PHONE NO.</td><td>".$post['mobile_phone_no']."</td></tr>";
+            $message .= "<tr><td>YEAR ESTABLISHED</td><td>".$post['years_established']."</td></tr>";
+            $message .= "<tr><td>LENGTH OF CURRENT OWNERSHIP</td><td>".$post['length_ownership']."</td></tr>";
+            $message .= "<tr><td>YEARS</td><td>".$post['ownership_years']."</td></tr>";
+            $message .= "<tr><td>MONTHS</td><td>".$post['ownership_months']."</td></tr>";
+
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;'>OTHER ADDRESS (IF DIFFERENT FROM ABOVE)<h5></td></tr>";
+            $message .= "<tr><td>MAILING</td><td>".$post['is_mailing'] == 1 ? 'YES' : 'NO'."</td></tr>";
+            $message .= "<tr><td>SHIPPING</td><td>".$post['is_shipping'] == 1 ? 'YES' : 'NO'."</td></tr>";
+            $message .= "<tr><td>SEE ALSO SPECIAL INSTRUCTIONS</td><td>".$post['is_see_special_instructions'] == 1 ? 'YES' : 'NO'."</td></tr>";
+            $message .= "<tr><td>LOCATION NAME</td><td>".$post['other_address_location_name']."</td></tr>";
+            $message .= "<tr><td>PHONE NO.</td><td>".$post['other_address_phone_no']."</td></tr>";
+            $message .= "<tr><td>CONTACT NO.</td><td>".$post['other_address_contact_no']."</td></tr>";
+            $message .= "<tr><td>BEST CONTACT NO.</td><td>".$post['other_address_best_contact_no']."</td></tr>";
+            $message .= "<tr><td>BEST TIME TO CALL</td><td>".$post['other_address_best_time_call_from']."-".$post['other_address_best_time_call_to']."</td></tr>";
+            $message .= "<tr><td>FAX NO.</td><td>".$post['other_address_fax_no']."</td></tr>";
+            $message .= "<tr><td>ADDRESS</td><td>".$post['other_address_address']."</td></tr>";
+            $message .= "<tr><td>CITY</td><td>".$post['other_address_city']."</td></tr>";
+            $message .= "<tr><td>STATE</td><td>".$post['other_address_state']."</td></tr>";
+            $message .= "<tr><td>ZIP CODE</td><td>".$post['other_address_zipcode']."</td></tr>";
+
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;'>PRINCIPAL 1 INFORMATION (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)<h5></td></tr>";
+            $message .= "<tr><td>BENEFICIAL OWNER</td><td>".$post['is_beneficial_owner'] == 1 ? 'YES' : 'NO'."</td></tr>";
+            $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
+            $message .= "<tr><td>AUTHORIZED SIGNER</td><td>".$post['is_authorized_signer'] == 1 ? 'YES' : 'NO'."</td></tr>";
+            $message .= "<tr><td>SOLE PROPRIETOR</td><td>".$post['is_sole_proprietor'] == 1 ? 'YES' : 'NO'."</td></tr>";
+            $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
+            $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
+            $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
+            $message .= "<tr><td>ADDRESS (NO PO BOX)</td><td>".$post['principal_address']."</td></tr>";
+            $message .= "<tr><td>PHONE NO</td><td>".$post['principal_phone_no']."</td></tr>";
+            $message .= "<tr><td>CITY</td><td>".$post['principal_city']."</td></tr>";
+            $message .= "<tr><td>STATE/PROVINCE</td><td>".$post['principal_state_province']."</td></tr>";
+            $message .= "<tr><td>ZIP/POSTAL CODE</td><td>".$post['principal_zip_postal_code']."</td></tr>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;'>PREVIOUS ADDRESS IF CURRENT ADDRESS IS LESS THAN 2 YEARS<h5></td></tr>";
+            $message .= "<tr><td>HOME ADDRESS</td><td>".$post['principal_home_address']."</td></tr>";
+            $message .= "<tr><td>CITY</td><td>".$post['principal_city_1']."</td></tr>";
+            $message .= "<tr><td>STATE</td><td>".$post['principal_state_1']."</td></tr>";
+            $message .= "<tr><td>ZIP CODE</td><td>".$post['principal_zip_code_1']."</td></tr>";
+        $message .= "</table>";
+        
+        //Email Sending     
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $server    = MAIL_SERVER;
+        $port      = MAIL_PORT ;
+        $username  = MAIL_USERNAME;
+        $password  = MAIL_PASSWORD;
+        $from      = MAIL_FROM;     
+        $subject   = 'NSmartrac : Merchant Data';
+        $mail = new PHPMailer;
+        //$mail->SMTPDebug = 4;                         
+        $mail->isSMTP();                                     
+        $mail->Host = $server; 
+        $mail->SMTPAuth = true;    
+        $mail->Username   = $username; 
+        $mail->Password   = $password;
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->SMTPSecure = 'ssl';    
+        $mail->Timeout    =   10; // set the timeout (seconds)
+        $mail->Port = $port;
+        $mail->From = $from; 
+        $mail->FromName = 'NsmarTrac';
+
+        $mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');    
+        $mail->isHTML(true);                          
+        $mail->Subject = $subject;
+        $mail->Body    = $message;
+
+        if(!$mail->Send()) {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            exit;
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Customer Merchant has been successfully updated');
+
+        redirect('customer/merchant');
+
+    }
 
 }
