@@ -32,23 +32,37 @@ class Event_Types extends MY_Controller {
 	}
 
     public function add_new_event_type(){
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
+
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['icons'] = $icons;
         $this->load->view('event_types/add_new', $this->page_data);
     }
 
     public function create_event_type(){
         postAllowed();
 
+        $this->load->model('Icons_model');
+
         $user_id = logged('id');
+        $company_id = logged('company_id');
         $post    = $this->input->post();
 
         if( $post['title'] != ''){
-            if( !empty($_FILES['image']['name']) ){
-
-                $marker_icon = $this->moveUploadedFile();
+            if( isset($post['is_default_icon']) ){
+                $icon = $this->Icons_model->getById($post['default_icon_id']);
+                $marker_icon = $icon->image;
                 $data_event_type = [
+                    'company_id' => $company_id,
                     'user_id' => $user_id,
                     'title' => $post['title'],
                     'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => 1,
                     'created' => date("Y-m-d H:i:s"),
                     'modified' => date("Y-m-d H:i:s")
                 ];
@@ -59,7 +73,7 @@ class Event_Types extends MY_Controller {
                     $this->session->set_flashdata('message', 'Add new event type was successful');
                     $this->session->set_flashdata('alert_class', 'alert-success');
 
-                    redirect('event_types/index');
+                    redirect('events/event_types');
 
                 }else{
                     $this->session->set_flashdata('message', 'Cannot save data.');
@@ -68,11 +82,42 @@ class Event_Types extends MY_Controller {
                     redirect('event_types/add_new');
                 }
             }else{
-                $this->session->set_flashdata('message', 'Please specify event icon / marker image');
-                $this->session->set_flashdata('alert_class', 'alert-danger');
+                if( !empty($_FILES['image']['name']) ){
 
-                redirect('event_types/add_new');
+                    $marker_icon = $this->moveUploadedFile();
+                    $data_event_type = [
+                        'company_id' => $company_id,
+                        'user_id' => $user_id,
+                        'title' => $post['title'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 0,
+                        'created' => date("Y-m-d H:i:s"),
+                        'modified' => date("Y-m-d H:i:s")
+                    ];
+
+                    $event_type_id = $this->EventType_model->create($data_event_type);
+                    if( $event_type_id > 0 ){
+
+                        $this->session->set_flashdata('message', 'Add new event type was successful');
+                        $this->session->set_flashdata('alert_class', 'alert-success');
+
+                        redirect('events/event_types');
+
+                    }else{
+                        $this->session->set_flashdata('message', 'Cannot save data.');
+                        $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                        redirect('event_types/add_new');
+                    }
+                }else{
+                    $this->session->set_flashdata('message', 'Please specify event icon / marker image');
+                    $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                    redirect('event_types/add_new');
+                }
             }
+
+            
         }else{
             $this->session->set_flashdata('message', 'Please specify event type name');
             $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -82,44 +127,68 @@ class Event_Types extends MY_Controller {
     }
 
     public function edit_event_type( $event_type_id ){
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
 
         $eventType = $this->EventType_model->getById($event_type_id);
+        $icons    = $this->Icons_model->getAll();
 
         $this->page_data['eventType'] = $eventType;
+        $this->page_data['icons'] = $icons;
         $this->load->view('event_types/edit', $this->page_data);
     }
 
     public function update_event_type() {
         postAllowed();
+
+        $this->load->model('Icons_model');
+
         $post    = $this->input->post();
 
         if( $post['title'] != '' ){
 
             $eventType = $this->EventType_model->getById($post['eid']);
             if( $eventType ){
-                $marker_icon = $eventType->icon_marker;
-                if( $_FILES['image']['size'] > 0 ){
-                    $marker_icon = $this->moveUploadedFile();
+                if( isset($post['is_default_icon']) ){
+                    $icon = $this->Icons_model->getById($post['default_icon_id']);
+                    $marker_icon = $icon->image;
+                    $data_event_type = [
+                        'title' => $post['title'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 1,
+                        'modified' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
+                }else{
+                    $marker_icon = $eventType->icon_marker;
+                    if( $_FILES['image']['size'] > 0 ){
+                        $marker_icon = $this->moveUploadedFile();
+                    }
+
+                    $data_event_type = [
+                        'title' => $post['title'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 0,
+                        'modified' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
                 }
-
-                $data_event_type = [
-                    'title' => $post['title'],
-                    'icon_marker' => $marker_icon,
-                    'modified' => date("Y-m-d H:i:s")
-                ];
-
-                $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
 
                 $this->session->set_flashdata('message', 'Event Type was successful updated');
                 $this->session->set_flashdata('alert_class', 'alert-success');
 
-                redirect('event_types/index');
+                redirect('events/event_types');
 
             }else{
                 $this->session->set_flashdata('message', 'Record not found.');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
 
-                redirect('event_types/index');
+                redirect('events/event_types');
             }
 
         }else{
@@ -137,7 +206,7 @@ class Event_Types extends MY_Controller {
 		$this->session->set_flashdata('message', 'Event Type has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
-		redirect('event_types/index');
+		redirect('events/event_types');
 	}
 
     public function moveUploadedFile() {

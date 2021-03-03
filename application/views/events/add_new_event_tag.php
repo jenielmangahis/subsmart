@@ -88,31 +88,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                     <div class="modal fade" id="modalIconList" tabindex="-1" role="dialog" aria-labelledby="modalIconListLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
-                          <form id="form_add_tag">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel">Icon List</h5>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                      </button>
-                                  </div>
-                                  <div class="modal-body">
-                                      <div class="col-md-12">
-                                          <div class="row">
-                                              <ul class="list-icon">
-                                                <?php foreach($icons as $i){ ?>
-                                                  <li>
-                                                    <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
-                                                      <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon">
-                                                    </a>
-                                                  </li>
-                                                <?php } ?>
-                                              </ul>
-                                          </div>
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Icon List</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                              <div class="modal-body">
+                                  <div class="col-md-12">
+                                      <div class="row">
+                                          <ul class="list-icon">
+                                            <?php foreach($icons as $i){ ?>
+                                              <li>
+                                                <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
+                                                  <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon">
+                                                </a>
+                                              </li>
+                                            <?php } ?>
+                                          </ul>
                                       </div>
                                   </div>
                               </div>
-                          </form>
+                          </div>
                       </div>
                   </div>
                 </div>

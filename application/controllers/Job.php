@@ -1061,6 +1061,15 @@ class Job extends MY_Controller
 
     public function add_new_job_type()
     {
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
+
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['icons'] = $icons;
         $this->load->view('job/job_settings/add_new_job_type', $this->page_data);
     }
 
@@ -1068,19 +1077,22 @@ class Job extends MY_Controller
     {
         postAllowed();
 
+        $this->load->model('Icons_model');
+
         $comp_id = logged('company_id');
         $user_id = logged('id');
         $post    = $this->input->post();
 
         if( $post['job_type_name'] != ''){
-            if( !empty($_FILES['image']['name']) ){
-
-                $marker_icon = $this->moveUploadedFile();
+            if( isset($post['is_default_icon']) ){
+                $icon = $this->Icons_model->getById($post['default_icon_id']);
+                $marker_icon = $icon->image;
                 $data_job_type = [
                     'user_id' => $user_id,
                     'company_id' => $comp_id,                    
                     'title' => $post['job_type_name'],
                     'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => 1,
                     'status' => 1,
                     'created_at' => date("Y-m-d H:i:s")
                 ];
@@ -1100,10 +1112,39 @@ class Job extends MY_Controller
                     redirect('job/add_new_job_type');
                 }
             }else{
-                $this->session->set_flashdata('message', 'Please specify job type icon / marker image');
-                $this->session->set_flashdata('alert_class', 'alert-danger');
+                if( !empty($_FILES['image']['name']) ){
 
-                redirect('job/add_new_job_type');
+                    $marker_icon = $this->moveUploadedFile();
+                    $data_job_type = [
+                        'user_id' => $user_id,
+                        'company_id' => $comp_id,                    
+                        'title' => $post['job_type_name'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 0,
+                        'status' => 1,
+                        'created_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $job_type_id = $this->JobType_model->create($data_job_type);
+                    if( $job_type_id > 0 ){
+
+                        $this->session->set_flashdata('message', 'Add new job type was successful');
+                        $this->session->set_flashdata('alert_class', 'alert-success');
+
+                        redirect('job/job_types');
+
+                    }else{
+                        $this->session->set_flashdata('message', 'Cannot save data.');
+                        $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                        redirect('job/add_new_job_type');
+                    }
+                }else{
+                    $this->session->set_flashdata('message', 'Please specify job type icon / marker image');
+                    $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                    redirect('job/add_new_job_type');
+                }
             }
         }else{
             $this->session->set_flashdata('message', 'Please specify job type name');

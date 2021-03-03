@@ -82,14 +82,18 @@ table.table tbody tr td:first-child {
                                 <?php foreach($eventTypes as $et){ ?>
                                     <tr>
                                         <td>
-                                          <?php 
-                                            if( $et->icon_marker != '' ){
-                                              $image = base_url('uploads/event_types/' . $et->company_id . "/" . $et->icon_marker);
-                                            }else{
-                                              $image = base_url('uploads/job_types/default_no_image.jpg');
-                                            }
+                                          <?php
+                                              if( $et->icon_marker != '' ){
+                                                  if($et->is_marker_icon_default_list == 1){
+                                                      $marker = base_url("uploads/icons/" . $et->icon_marker);
+                                                  }else{
+                                                      $marker = base_url("uploads/event_types/" . $et->company_id . "/" . $et->icon_marker);
+                                                  }
+                                              }else{
+                                                  $marker = base_url("uploads/event_types/default_no_image.jpg");
+                                              }                                                                
                                           ?>
-                                          <img src="<?= $image ?>" class="event-marker" />
+                                          <img src="<?= $marker; ?>" class="event-marker">
                                         </td>
                                         <td><?= $et->title; ?></td>                                        
                                         <td>

@@ -20,6 +20,22 @@
     bottom: 0px;
   }
 }
+.list-icon{
+  list-style: none;
+  height: 400px;
+  overflow: auto;
+  padding: 6px;
+}
+.list-icon li{
+  display: inline-block;
+  /*width: 30%;*/
+  height:100px;
+  margin: 3px;
+}
+.icon-image{
+  height: 50px;
+  width: 50px;
+}
 </style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
@@ -45,15 +61,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <hr />
                         <?php include viewPath('flash'); ?>
                         <?php echo form_open_multipart('job/save_job_type', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-
+                          <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
                           <div class="form-group">
-                              <label>Event Type Name</label> <span class="form-required">*</span>
+                              <label>Job Type Name</label> <span class="form-required">*</span>
                               <input type="text" name="job_type_name" value=""  class="form-control" required="" autocomplete="off" />
                           </div>
                           <div class="form-group">
-                              <img src="" />
-                              <label>Icon / Marker</label> <span class="form-required">*</span>
-                              <input type="file" name="image" value=""  class="form-control" required="" autocomplete="off" />
+                              <label>Icon / Marker</label> <span class="form-required">*</span><br />
+                              <input type="file" name="image" value=""  class="form-control" id="input-upload-image" style="width: 20%;display: inline-block;" autocomplete="off" />
+                              <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="width: 20%;display: inline-block;" id="icon-pick-name"><br />
+                              <div class="form-check" style="margin-top: 10px;">
+                                <input class="form-check-input" type="checkbox" name="is_default_icon" value="1" id="iconList">
+                                <label class="form-check-label" for="iconList">
+                                  Pick from list
+                                </label>
+                              </div>
                           </div>
                           <div class="col-md-">
                             <a class="btn btn-default" href="<?php echo base_url('job/job_types'); ?>">Cancel</a>
@@ -63,6 +85,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <?php echo form_close(); ?>
                     </div>
                     <!-- end card -->
+
+                    <div class="modal fade" id="modalIconList" tabindex="-1" role="dialog" aria-labelledby="modalIconListLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Icon List</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                              <div class="modal-body">
+                                  <div class="col-md-12">
+                                      <div class="row">
+                                          <ul class="list-icon">
+                                            <?php foreach($icons as $i){ ?>
+                                              <li>
+                                                <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
+                                                  <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon">
+                                                </a>
+                                              </li>
+                                            <?php } ?>
+                                          </ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
                 </div>
             </div>
             <!-- end row -->
@@ -72,3 +123,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+  $("#icon-pick-name").hide();
+  $(".a-icon").click(function(){
+    var icon_name = $(this).attr("data-name");
+    var icon_id   = $(this).attr("data-id");
+
+    $("#input-upload-image").hide();
+    $("#icon-pick-name").show();
+    $("#icon-pick-name").val(icon_name);
+    $("#modalIconList").modal('hide');
+    $("#default-icon-id").val(icon_id);
+  });
+
+  $("#iconList").change(function(){
+    if ($(this).is(':checked')) {
+      $("#modalIconList").modal('show');
+    }else{
+      $("#input-upload-image").show();
+      $("#icon-pick-name").hide();
+      $("#default-icon-id").val("");
+    }
+  });
+});
+</script>

@@ -195,14 +195,18 @@ add_css(array(
                                         <?php foreach($job_types as $types) : ?>
                                             <tr>
                                                 <td>
-                                                  <?php 
-                                                    if( $types->icon_marker != '' ){
-                                                      $image = base_url('uploads/job_types/' . $types->icon_marker);
-                                                    }else{
-                                                      $image = base_url('uploads/job_types/default_no_image.jpg');
-                                                    }
-                                                  ?>
-                                                  <img src="<?= $image ?>" class="job-marker" />
+                                                  <?php
+                                                        if( $types->icon_marker != '' ){
+                                                            if($types->is_marker_icon_default_list == 1){
+                                                                $marker = base_url("uploads/icons/" . $types->icon_marker);
+                                                            }else{
+                                                                $marker = base_url("uploads/job_types/" . $types->company_id . "/" . $types->icon_marker);
+                                                            }
+                                                        }else{
+                                                            $marker = base_url("uploads/job_types/default_no_image.jpg");
+                                                        }                                                                
+                                                    ?>
+                                                    <img src="<?= $marker; ?>" class="job-marker">
                                                 </td>
                                                 <td><?= $types->title; ?></td>                                                
                                                 <td class="pl-3">
