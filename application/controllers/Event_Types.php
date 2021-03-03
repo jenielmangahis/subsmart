@@ -152,32 +152,31 @@ class Event_Types extends MY_Controller {
 
             $eventType = $this->EventType_model->getById($post['eid']);
             if( $eventType ){
+                $marker_icon = $eventType->icon_marker;
+                $is_marker_icon_default_list = $eventType->is_marker_icon_default_list;
                 if( isset($post['is_default_icon']) ){
-                    $icon = $this->Icons_model->getById($post['default_icon_id']);
-                    $marker_icon = $icon->image;
-                    $data_event_type = [
-                        'title' => $post['title'],
-                        'icon_marker' => $marker_icon,
-                        'is_marker_icon_default_list' => 1,
-                        'modified' => date("Y-m-d H:i:s")
-                    ];
-
-                    $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
-                }else{
-                    $marker_icon = $eventType->icon_marker;
-                    if( $_FILES['image']['size'] > 0 ){
-                        $marker_icon = $this->moveUploadedFile();
+                    if( $post['default_icon_id'] > 0 ){
+                        $icon = $this->Icons_model->getById($post['default_icon_id']);
+                        $marker_icon = $icon->image;         
+                        $is_marker_icon_default_list = 1;               
                     }
-
-                    $data_event_type = [
-                        'title' => $post['title'],
-                        'icon_marker' => $marker_icon,
-                        'is_marker_icon_default_list' => 0,
-                        'modified' => date("Y-m-d H:i:s")
-                    ];
-
-                    $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
+                }else{                    
+                    if( $_FILES['image']['size'] > 0 ){
+                        if( $_FILES['image']['size'] > 0 ){
+                            $marker_icon = $this->moveUploadedFile();
+                            $is_marker_icon_default_list = 0;        
+                        }
+                    }
                 }
+
+                $data_event_type = [
+                    'title' => $post['title'],
+                    'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => 1,
+                    'is_marker_icon_default_list' => $is_marker_icon_default_list,
+                    'modified' => date("Y-m-d H:i:s")
+                ];    
+                $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
 
                 $this->session->set_flashdata('message', 'Event Type was successful updated');
                 $this->session->set_flashdata('alert_class', 'alert-success');
