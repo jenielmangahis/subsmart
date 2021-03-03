@@ -1149,7 +1149,8 @@ class Timesheet extends MY_Controller
     {
 
         $this->load->model('timesheet_model');
-        $this->page_data['notification'] = $this->timesheet_model->getTSNotification();
+        $this->page_data['allnotification'] = $this->timesheet_model->getTSNotification();
+        // var_dump($this->page_data['allnotification']);
         $this->load->view('users/timesheet_notification_list', $this->page_data);
     }
     public function attendance()
@@ -1168,24 +1169,28 @@ class Timesheet extends MY_Controller
         $this->page_data['total_users'] = $this->users_model->getTotalUsers();
         $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
         $this->page_data['in_now'] = $this->timesheet_model->getInNow();
-        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
+        $this->page_data['clockout_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['logs'] = $this->timesheet_model->getTimesheetLogs();
+        $this->page_data['on_lunch'] = $this->timesheet_model->get_on_lunch(date('Y-m-d'),logged('company_id'));
+        $this->page_data['manual_checkins'] = $this->timesheet_model->get_manual_checkins(date('Y-m-d'),logged('company_id'));
         //        $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
         $this->page_data['schedules'] = $this->timesheet_model->getTimeSheetSettings();
         $this->page_data['tasks'] = $this->timesheet_model->getTimeSheetDay();
         //Employee's attendance
         $this->page_data['emp_attendance'] = $this->timesheet_model->getUserAttendance();
-        $this->page_data['emp_logs'] = $this->timesheet_model->getUserLogs();
+        // $this->page_data['emp_logs'] = $this->timesheet_model->getUserLogs();
         //PTO
         $this->page_data['pto'] = $this->timesheet_model->getPTO();
         $this->page_data['on_leave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"approved");
         $this->page_data['on_unapprovedleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"unapproved");
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"pending");
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'),"pending");
+        
+        // var_dump($this->page_data['out_now']);
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
-
+    
     public function inNow()
     {
         date_default_timezone_set('UTC');
@@ -1196,9 +1201,8 @@ class Timesheet extends MY_Controller
     }
     public function outNow()
     {
-        $total_user = $this->users_model->getTotalUsers();
-        $query = $this->db->get_where('timesheet_attendance', array('status' => 0, 'DATE(date_created)' => date('Y-m-d')));
-        echo json_encode($total_user - $query->num_rows());
+        // $total_user = $this->users_model->getTotalUsers();
+        echo json_encode($this->timesheet_model->getOutNow());
     }
     public function loggedInToday()
     {
@@ -1742,12 +1746,14 @@ class Timesheet extends MY_Controller
         $this->db->insert('timesheet_attendance', $attendance);
         $attn_id = $this->db->insert_id();
         $check_attendance = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
+        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        $content_notification = 'Clocked In ' . date('Y-m-d h:i A')." ".date_default_timezone_get();
         if ($check_attendance->num_rows() == 1) {
             // insert to user_notification
             $clock_in_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock In',
-                'content' => 'Clock In ' . $clock_in,
+                'content' => $content_notification,
                 'date_created' => $clock_in,
                 'status' => 1,
             );
@@ -1781,14 +1787,76 @@ class Timesheet extends MY_Controller
 
             $data = new stdClass();
             date_default_timezone_set($getTimeZone->geoplugin_timezone);
-            $data->clock_in_time =  time();
+
+            $data->clock_in_time =  date('h:i A',time());
             $data->clock_out_time = 'Pending...';
             $data->attendance_id = $attn_id;
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
+            $data->body = $getUserDetail->FName . " ". $getUserDetail->LName . " ". $content_notification;
+            $data->device_type =  $getUserDetail->device_type;
+            $data->company_id = getLoggedCompanyID();
+            $data->token = $getUserDetail->device_token;
+            $data->title = "Clock in";
             echo json_encode($data);
         }
+    }
+    public function app_notification(){
+        //User App notification
+        $body = $this->input->post('body');
+        $title = $this->input->post('title');
+        $device_type = $this->input->post('device_type');
+        $token = $this->input->post('token');
+        $under_company_id = $this->input->post('company_id');
+        $data = "body:".$body." title:".$title." Device:".$device_type." Company ID:".$under_company_id;
+        $ios_tokens = array();
+        $android_tokens = array();
+        $ios_token_ctr = 0;
+        $android_token_ctr = 0;
+        if($device_type == "Android"){
+            send_android_push($tokens, $body, $title);
+            $android_tokens[$token_ctr] = $token;
+            $android_token_ctr++;
+        }elseif($device_type == "iOS"){
+            send_ios_push($tokens, $body, $title);
+            $ios_tokens[$token_ctr] = $token;
+            $ios_token_ctr++;
+        }
+
+        // ////Admin App notification
+        
+        // $data=$under_company_id;
+        $company_admins = $this->timesheet_model->get_company_admins($under_company_id);
+        foreach($company_admins as $admin){
+            $device_type = $admin->device_type;
+            if($device_type == "Android"){
+                $data = $data. " Admin_device : android";
+                $android_tokens[$token_ctr] = $admin->device_token;
+                $android_token_ctr++;
+            }elseif($device_type == "iOS"){ 
+                $data = $data. " Admin_device : iOS";
+                $ios_tokens[$token_ctr] = $admin->device_token;
+                $ios_token_ctr++;
+            }
+        }
+        
+        if($android_token_ctr > 0){
+            send_android_push($android_token, $body, $title);
+            $data = $data." send_android_push";
+        }
+        if($ios_token_ctr > 0){
+            send_ios_push($ios_tokens, $body, $title);
+            $data = $data." send_ios_push";
+        }
+        $return = array(
+            "data"=> $data,
+            "ios_token" => $ios_tokens,
+            "android_token" => $android_tokens,
+            "ios_token_array" => count($ios_tokens),
+            "ios_token_ctr" => $ios_token_ctr,
+        );
+        echo json_encode($return);
     }
     public function clockOut_validation(){
         $attn_id = $this->input->post('attn_id');
@@ -1894,10 +1962,9 @@ class Timesheet extends MY_Controller
     {
 
         $userid = $this->session->userdata('logged')['id'];
-        $notification = getTimesheetNotification();
+        $notification = $this->timesheet_model->get_unreadNotification();
         $notifyCount = count($notification);
         $html = '';
-
         if ($notification != null) {
             foreach ($notification as $notify) {
                 if ($notify->status == 1) {
@@ -1907,11 +1974,15 @@ class Timesheet extends MY_Controller
                 }
 
                 $userprofile = userProfileImage($userid);
+                $image = base_url().'/uploads/users/user-profile/' . $notify->profile_img;
+                if( !@getimagesize($image) ){
+                    $image = base_url('uploads/users/default.png'); 
+                }
                 $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
             data-id=' . $notify->id . '" class="dropdown-item notify-item active"
             style="background-color:' . $bg . '">
-            <img style="width:30px;border-radius: 11px;margin-bottom:-20px" class="profile-user-img img-responsive img-circle" src="' . $userprofile . '" alt="User profile picture" />
-            <p class="notify-details">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
+            <img style="width:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="'.$image.'" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
             </a>';
             }
         }
@@ -1933,12 +2004,14 @@ class Timesheet extends MY_Controller
         }
         return $last_log;
     }
-
+    public function get_overtime_sample(){
+        var_dump($this->timesheet_model->calculateShiftDuration_and_overtime(518));
+    }
     public function clockOutEmployee()
     {
         $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         $getTimeZone = json_decode($ipInfo);
-        // date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        date_default_timezone_set($getTimeZone->geoplugin_timezone);
         date_default_timezone_set('UTC');
         $attn_id = $this->input->post('attn_id');
 
@@ -1950,45 +2023,45 @@ class Timesheet extends MY_Controller
         $clock_out = 0;
         $sched_clockOut = $this->input->post('time');
         if ($sched_clockOut == 0 || $sched_clockOut == null) {
-            $clock_out = time();
+            $clock_out = date('Y-m-d H:i:s');
         } else {
             $clock_out = ($sched_clockOut / 1000);
         }
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
         if ($check_attn->num_rows() == 1) {
-
+            date_default_timezone_set($getTimeZone->geoplugin_timezone);
+            $content_notification = 'Clocked out ' . date('Y-m-d h:i A')." ".date_default_timezone_get();
             $clock_out_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock Out',
-                'content' => 'Clock Out ' . date('d M Y H:i:s', $clock_out),
-                'date_created' => date('Y-m-d H:i:s', $clock_out),
+                'content' => $content_notification,
+                'date_created' => date('Y-m-d H:i:s'),
                 'status' => 1,
             );
             $this->db->insert('user_notification', $clock_out_notify);
-
+            date_default_timezone_set('UTC');
             $out = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
                 'user_location_address' => $this->employeeAddress(),
-                'date_created' => date('Y-m-d H:i:s', $clock_out),
                 'entry_type' => 'Normal',
+                'date_created' => date('Y-m-d H:i:s'),
                 'company_id' => getLoggedCompanyID()
             );
             $this->db->insert('timesheet_logs', $out);
-            $shift_duration = $this->timesheet_model->calculateShiftDuration($attn_id);
-            //            $break_duration = $this->timesheet_model->calculateBreakDuration($attn_id);
-            $overtime = $this->timesheet_model->calculateOvertime($user_id, $attn_id);
+
+            $hours_worked = $this->timesheet_model->calculateShiftDuration_and_overtime($attn_id);
             $update = array(
-                'shift_duration' => $shift_duration,
+                'shift_duration' => round($hours_worked[0],2),
                 //                'break_duration' => $break_duration,
-                'overtime' => $overtime,
+                'overtime' => round($hours_worked[1],2),
                 //                'date_out' => date('Y-m-d'),
                 'status' => 0
             );
-            $this->db->where('id', $attn_id);
+            $this->db->where('user_id', $user_id);
             $this->db->update('timesheet_attendance', $update);
             $affected_row = $this->db->affected_rows();
 
@@ -2001,9 +2074,6 @@ class Timesheet extends MY_Controller
                 $query = $this->db->get();
                 $getUserDetail = $query->row();
 
-                $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-                $getTimeZone = json_decode($ipInfo);
-                $user_timezone = $getTimeZone->geoplugin_timezone;
                 date_default_timezone_set($getTimeZone->geoplugin_timezone);
 
                 $data = new stdClass();
@@ -2013,6 +2083,11 @@ class Timesheet extends MY_Controller
                 $data->FName = $getUserDetail->FName;
                 $data->LName = $getUserDetail->LName;
                 $data->profile_img = $getUserDetail->profile_img;
+                $data->body = $getUserDetail->FName . " ". $getUserDetail->LName . " ". $content_notification;
+                $data->device_type =  $getUserDetail->device_type;
+                $data->company_id = getLoggedCompanyID();
+                $data->token = $getUserDetail->device_token;
+                $data->title = "Clock in";
                 echo json_encode($data);
             }
         }
@@ -2076,20 +2151,18 @@ class Timesheet extends MY_Controller
             'action' => 'Break out',
             'user_location' => $this->timesheet_model->employeeCoordinates(),
             'user_location_address' => $this->employeeAddress(),
-            'date_created' => date('Y-m-d H:i:s', $lunch_out),
             'entry_type' => 'Normal',
+            'date_created' => date('Y-m-d H:i:s'),
             'company_id' => getLoggedCompanyID()
         );
         $this->db->insert('timesheet_logs', $lunch);
         //        }
         //Update break duration
-        $update = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
-        if ($update->num_rows() == 1) {
-            $timeArr = explode(':', $pause_time);
-            $decTime = ($timeArr[0] * 60) + ($timeArr[1]) + ($timeArr[2] / 60);
-            $this->db->set('break_duration', 'break_duration+' . $decTime, FALSE);
-            $this->db->where('id', $attn_id)->update('timesheet_attendance');
-        }
+        $update = array(
+            'break_duration' => round($this->timesheet_model->calculateBreakDuration($attn_id),2)
+        );
+        $this->db->where('id', $attn_id);
+        $this->db->update('timesheet_attendance', $update);
 
         $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         $getTimeZone = json_decode($ipInfo);
@@ -2097,7 +2170,6 @@ class Timesheet extends MY_Controller
         date_default_timezone_set($getTimeZone->geoplugin_timezone);
 
         $data = new stdClass();
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
         $data->lunch_time =  date('h:i A',time());
 
         echo json_encode($data);
@@ -2226,6 +2298,15 @@ class Timesheet extends MY_Controller
         // echo "Asia/Manila".$datetime->format('Y-m-d H:i:s');  
         // var_dump(timezone_identifiers_list());
         // echo  "server_timezone: ".date_default_timezone_get ();
+    }
+    
+    public function subtract_dates(){
+
+        echo logged("role")."::::";
+
+        $date=date_create(date("Y-m-d H:i:s"));
+        date_sub($date,date_interval_create_from_date_string("2 days"));
+        echo date_format($date,"Y-m-d H:i:s");
     }
     public function worked_hourschecker(){
         date_default_timezone_set('UTC');

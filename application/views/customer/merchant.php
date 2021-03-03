@@ -71,7 +71,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
   transform: translate(-50%, -50%) rotate(180deg);
 }
     </style>
-<?php echo form_open_multipart('customer/send_merchant_details', ['id' => 'frm-merchant', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -90,11 +89,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <br>
+            <form action="<?php echo base_url('accounting/sendmerchantEmail'); ?>" method="post">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA NAME</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="dba_name" value="<?= $merchant ? $merchant->dba_name : $company->business_name; ?>" id="dba_name">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -102,7 +102,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-6">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CONTANCT NAME</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" value="<?= $merchant ? $merchant->contact_name : $company->first_name . ' ' . $company->last_name; ?>" name="contact_name" id="contact_name">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -110,19 +110,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA ADDRESS TYPE</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" value="<?= $merchant ? $merchant->dba_address_type : ''; ?>" name="dba_address_type" id="dba_address_type">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA ADDRESS 1</b> <i>(NO PO BOX)</i></label>
-                        <input type="text" class="form-control" value="<?= $merchant ? $merchant->dba_address_1 : $company->business_address; ?>" name="dba_address_1" id="dba_address_1">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA ADDRESS 2</b></label>
-                        <input type="text" class="form-control" value="<?= $merchant ? $merchant->dba_address_2 : ''; ?>" name="dba_address_2" id="dba_address_2">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -130,19 +130,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CITY</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->city : $user->city; ?>" class="form-control" name="city" id="city">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>STATE</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->state : $user->state; ?>" class="form-control" name="state" id="state">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>ZIP CODE</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->zip_code : $user->postal_code; ?>" class="form-control" name="zip_code" id="zip_code">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -150,19 +150,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA PHONE NO.</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->dba_phone_no : $company->phone_number; ?>" class="form-control" name="dba_phone_no" id="dba_phone_no">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>EMAIL ADDRESS</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->email_address : $company->email_address; ?>" class="form-control" name="email_address" id="email_address">
+                        <input type="email" class="form-control" name="email" id="email" required>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>MOBILE PHONE NO.</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->mobile_phone_no : $user->mobile; ?>" class="form-control" name="mobile_phone_no" id="mobile_phone_no">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -170,25 +170,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>YEAR ESTABLISHED</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->years_established : ''; ?>" class="form-control" name="years_established" id="years_established">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>LENGTH OF CURRENT OWNERSHIP</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->length_ownership : ''; ?>" class="form-control" name="length_ownership" id="length_ownership">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>YEARS</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->ownership_years : ''; ?>" class="form-control" name="ownership_years" id="ownership_years">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>MONTHS</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->ownership_months : ''; ?>" class="form-control" name="ownership_months" id="ownership_months">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -204,16 +204,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="form-group" id="customer_type_group">
                         <!-- <input type="checkbox">
                         <label for=""><b>MAILING</b></label> -->
-                        <?php 
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_mailing == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
                         <label class="checkboxcontainer"> MAILING
-                        <input type="checkbox" <?= $is_checked ?> name="is_mailing" value="1">
+                        <input type="checkbox">
                         <span class="checkmark"></span>
                         </label>
                     </div>
@@ -222,16 +214,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="form-group" id="customer_type_group">
                         <!-- <input type="checkbox">
                         <label for=""><b>SHIPPING</b></label> -->
-                        <?php 
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_shipping == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
                         <label class="checkboxcontainer"> SHIPPING
-                        <input type="checkbox" <?= $is_checked ?> name="is_shipping" value="1">
+                        <input type="checkbox">
                         <span class="checkmark"></span>
                         </label>
                     </div>
@@ -240,16 +224,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="form-group" id="customer_type_group">
                         <!-- <input type="checkbox">
                         <label for=""><b>SEE ALSO SPECIAL INSTRUCTIONS</b> <i>(MORE THAN ONE OPTION MAY BE SELECTED)</i></label> -->
-                        <?php 
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_see_special_instructions == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
                         <label class="checkboxcontainer"> <b>SEE ALSO SPECIAL INSTRUCTIONS</b> <i>(MORE THAN ONE OPTION MAY BE SELECTED)</i>
-                        <input type="checkbox" <?= $is_checked ?> name="is_see_special_instructions" value="1">
+                        <input type="checkbox">
                         <span class="checkmark"></span>
                         </label>
                     </div>
@@ -259,19 +235,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-6">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>LOCATION NAME</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_location_name : ''; ?>" class="form-control" name="other_address_location_name" id="other_address_location_name">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>PHONE NO.</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_phone_no : ''; ?>" class="form-control" name="other_address_phone_no" id="other_address_phone_no">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CONTACT NO.</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_contact_no : ''; ?>" class="form-control" name="other_address_contact_no" id="other_address_contact_no">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -279,7 +255,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>BEST CONTACT NO.</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_best_contact_no : ''; ?>" class="form-control" name="other_address_best_contact_no" id="other_address_best_contact_no">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -288,13 +264,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <!-- <input type="text" class="form-control" name="name" id="name"> -->
                         <div class="row">
                             <div class="col-md-5">
-                                <input type="text" value="<?= $merchant ? $merchant->other_address_best_time_call_from : ''; ?>" class="form-control" name="other_address_best_time_call_from" id="other_address_best_time_call_from" placeholder="From">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="From">
                             </div>
                             <div class="col-md-1" style="margin-top:10px;">
                                 <i class="fa fa-arrows-h" aria-hidden="true"></i>
                             </div>
                             <div class="col-md-5">
-                                <input type="text" value="<?= $merchant ? $merchant->other_address_best_time_call_to : ''; ?>" class="form-control" name="other_address_best_time_call_to" id="other_address_best_time_call_to" placeholder="To">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="To">
                             </div>
                         </div>
                     </div>
@@ -302,7 +278,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>FAX NO.</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_fax_no : ''; ?>" class="form-control" name="other_address_fax_no" id="other_address_fax_no">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -310,25 +286,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-5">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>ADDRESS</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_address : ''; ?>" class="form-control" name="other_address_address" id="other_address_address">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CITY</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_city : ''; ?>" class="form-control" name="other_address_city" id="other_address_city">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>STATE</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_state : ''; ?>" class="form-control" name="other_address_state" id="other_address_state">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>ZIP CODE</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->other_address_zipcode : ''; ?>" class="form-control" name="other_address_zipcode" id="other_address_zipcode">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -344,19 +320,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="form-group" id="customer_type_group">
                         <!-- <input type="checkbox">
                         <label for=""><b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b></label> -->
-                        <?php 
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_beneficial_owner == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
                         <label class="checkboxcontainer"> <b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b>
-                        <input type="checkbox" <?= $is_checked; ?> name="is_beneficial_owner" id="is_beneficial_owner" value="1">
+                        <input type="checkbox">
                         <span class="checkmark"></span>
                         </label>
-                        <input type="text" value="<?= $merchant ? $merchant->percentage_ownership : ''; ?>" name="percentage_ownership" id="percentage_ownership" style="padding: 12px 20px;
+                        <input type="text" name="name" id="name" style="padding: 12px 20px;
                                                                         margin: 8px 0;
                                                                         box-sizing: border-box;
                                                                         border-radius: 4px;"> <label for=""><b> %</b></label>
@@ -367,16 +335,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <br>
                         <!-- <input type="checkbox">
                         <label for=""><b>AUTHORIZED SIGNER</b></label> -->
-                        <?php 
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_authorized_signer == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
                         <label class="checkboxcontainer"> <b>AUTHORIZED SIGNER</b>
-                        <input type="checkbox" <?= $is_checked; ?> name="is_authorized_signer" id="is_authorized_signer" value="1">
+                        <input type="checkbox">
                         <span class="checkmark"></span>
                     </div>
                 </div>
@@ -385,16 +345,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <br>
                         <!-- <input type="checkbox">
                         <label for=""><b>SOLE PROPRIETOR</b></label> -->
-                        <?php 
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_sole_proprietor == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
                         <label class="checkboxcontainer"> <b>SOLE PROPRIETOR</b>
-                        <input type="checkbox" <?= $is_checked; ?> name="is_sole_proprietor" id="is_sole_proprietor" value="1">
+                        <input type="checkbox">
                         <span class="checkmark"></span>
                     </div>
                 </div>
@@ -403,19 +355,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>FIRST NAME</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_firstname : $company->first_name; ?>" class="form-control" name="principal_firstname" id="principal_firstname">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>MIDDLE NAME</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_middlename : ''; ?>" class="form-control" name="principal_middlename" id="principal_middlename">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>LAST NAME</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_lastname : $company->last_name; ?>" class="form-control" name="principal_lastname" id="principal_lastname">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -423,13 +375,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-6">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>ADDRESS</b></label> <i>(NO PO BOX)</i>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_address : $company->business_address; ?>" class="form-control" name="principal_address" id="principal_address">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>PHONE NO</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_phone_no : $company->phone_number; ?>"  class="form-control" name="principal_phone_no" id="principal_phone_no">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -437,19 +389,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CITY</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_city : $user->city; ?>" class="form-control" name="principal_city" id="principal_city">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>STATE/PROVINCE</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_state_province : $user->state; ?>" class="form-control" name="principal_state_province" id="principal_state_province">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>ZIP/POSTAL CODE</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_zip_postal_code : $user->postal_code; ?>" class="form-control" name="principal_zip_postal_code" id="principal_zip_postal_code">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -464,25 +416,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-5">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>HOME ADDRESS</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_home_address : $user->address1; ?>" class="form-control" name="principal_home_address" id="principal_home_address">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CITY</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_city_1 : $user->city; ?>" class="form-control" name="principal_city_1" id="principal_city_1">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>STATE</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_state_1 : $user->state; ?>" class="form-control" name="principal_state_1" id="principal_state_1">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>ZIP CODE</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_zip_code_1 : $user->postal_code; ?>" class="form-control" name="principal_zip_code_1" id="principal_zip_code_1">
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                 </div>
             </div>
@@ -513,26 +465,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <br><br>
                             <div class="row">
                                 <div class=" col-md-12">
-                                    <a href="javascript:void(0);" class="btn btn-primary btn-submit">Proceed</a> <i>By clicking "Proceed", you will be confirming that you have read and agreed to the terms herein and in the Important Legal Notices.</i>
+                                    <!-- <a href="#" class="btn btn-primary">Proceed</a>  -->
+                                    <input type="submit" value="Proceed" class="btn btn-primary">
+                                    <i>By clicking "Proceed", you will be confirming that you have read and agreed to the terms herein and in the Important Legal Notices.</i>
                                 </div>
                             </div>
+            </form>
             <!-- end card -->
             </div>
-        </div>        
+
+
+
+
+        </div>
+
+        <style>
+
+        </style>
+        <?php echo form_close(); ?>
     </div>
-    <?php echo form_close(); ?>
     <!-- end container-fluid -->
 </div>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
-    /*$("#date_of_birth").datetimepicker({
+    $("#date_of_birth").datetimepicker({
         format: "L",
         //minDate: new Date(),
-    });*/
-
-    $(".btn-submit").click(function(){
-        $("#frm-merchant").submit();
     });
 
     $(function () {

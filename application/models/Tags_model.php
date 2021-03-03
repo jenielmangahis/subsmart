@@ -92,4 +92,8 @@ class Tags_model extends MY_Model
 
         return $group;
     }
+
+    public function getTagById($id) {
+        return $this->db->where(['company_id' => getLoggedCompanyID(), 'status' => 1, 'id' => $id])->get('job_tags')->row();
+    }
 }

@@ -1124,7 +1124,7 @@ class Accounting_modals extends MY_Controller {
                         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => date('Y-m-d', strtotime($data['start_date'])),
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,

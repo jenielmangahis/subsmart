@@ -386,14 +386,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <tbody id="notifytd">
                                             <?php  
                                             $i=0; 
-                                            foreach ($notification as $cnt => $notify){
+                                            // var_dump($allnotification);
+                                            foreach ($allnotification as $notify){
                                             if($notify->title == 'Clock In'){$color='green';}else{$color='red';}
                                             ?>
                                         <tr id="<?php echo $notify->id; ?>">
                                         <td class="tbl-id-number"><?php echo ++$i; ?></td>
                                         <td>
                                             <center>
-                                                <span class="tbl-employee-name"><?php echo $notify->FName; ?></span> 
+                                                <span class="tbl-employee-name"><?php echo $notify->FName;?></span> 
                                                 <span class="tbl-employee-name"><?php echo $notify->LName; ?></span>
                                             </center>
                                         </td>

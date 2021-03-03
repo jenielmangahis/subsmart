@@ -246,15 +246,15 @@ $(function() {
         $.get(GET_OTHER_MODAL_URL+view, function(res) {
             if ($('div#modal-container').length > 0) {
                 $('div#modal-container').html(res);
-                $(modal_element).modal('show');
             } else {
                 $('body').append(`
                     <div id="modal-container"> 
                         ${res}
                     </div>
                 `);
-                $(modal_element).modal('show');
             }
+            $(modal_element).modal('show');
+            $(document).off('shown', modal_element);
 
             if($('div#modal-container table').length > 0) {
                 rowCount = $('div#modal-container table tbody tr').length;
@@ -725,8 +725,8 @@ $(function() {
                 <span>&nbsp; days before the transaction date</span>
             `);
 
-            if($('form#modal-form div.modal div.modal-body select#recurringInterval').length === 0) {
-                if($('form#modal-form').children('.modal').attr('id') === 'depositModal') {
+            if($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
+                if($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
                 } else {
@@ -757,8 +757,8 @@ $(function() {
                 <span>&nbsp; days in advance</span>
             `);
 
-            if($('form#modal-form div.modal div.modal-body select#recurringInterval').length === 0) {
-                if($('form#modal-form').children('.modal').attr('id') === 'depositModal') {
+            if($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
+                if($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
                 } else {

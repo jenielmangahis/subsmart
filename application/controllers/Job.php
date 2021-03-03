@@ -103,11 +103,16 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'items.company_id' => logged('company_id'),
                 'is_active' => 1,
             ),
             'table' => 'items',
-            'select' => 'id,title,price',
+//            'join' => array(
+//                'table' => 'items_has_storage_loc',
+//                'statement' => 'items.id=items_has_storage_loc.item_id',
+//                'join_as' => 'left',
+//            ),
+            'select' => 'items.id,title,price',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 
@@ -140,10 +145,21 @@ class Job extends MY_Controller
             'select' => 'id,invoice_number,date_issued,job_name,customer_id',
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
+
+        $get_settings= array(
+            'table' => 'job_tax_rates',
+            'select' => '*',
+        );
+        $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
+
 
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
@@ -362,6 +378,21 @@ class Job extends MY_Controller
         $this->load->view('job/job_new', $this->page_data);
     }
 
+    public function update_jobs_status(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if($input){
+            $id = $input['id'];
+            unset($input['id']);
+            $input['company_id'] = logged('company_id'); ;
+            if ($this->general->update_with_key($input,$id ,"jobs")) {
+                echo "Success";
+            } else {
+                echo "Error";
+            }
+        }
+    }
+
     public function get_customer_selected(){
         $id = $_POST['id'];
         $get_customer = array(
@@ -490,6 +521,18 @@ class Job extends MY_Controller
         }
     }
 
+    public function delete_tax_rate() {
+        $remove_tax_rate = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'job_tax_rates'
+        );
+        if($this->general->delete_($remove_tax_rate)){
+            echo '1';
+        }
+    }
+
     public function delete_job() {
         $remove_job = array(
             'where' => array(
@@ -502,17 +545,19 @@ class Job extends MY_Controller
         }
     }
 
-    public function add_tag() {
+    public function add_tag()
+    {
         $input = $this->input->post();
         $input['company_id'] =  logged('company_id');
         if($this->general->add_($input,"job_tags")){
             echo "1";
-        }else{
+        } else{
             echo "0";
         }
     }
 
-    public function add_job_type() {
+    public function add_job_type()
+    {
         $input = $this->input->post();
         $input['company_id'] =  logged('company_id');
         $input['status'] =  1;
@@ -524,12 +569,22 @@ class Job extends MY_Controller
         }
     }
 
-    public function add_job_attachments(){
+    public function add_tax_rate()
+    {
+        $input = $this->input->post();
+        $input['datetime'] =  date('Y-m-d H:i:s');
+        if($this->general->add_($input,"job_tax_rates")){
+            echo "1";
+        }else{
+            echo "0";
+        }
+    }
 
+    public function add_job_attachments()
+    {
         if ( 0 < $_FILES['file']['error'] ) {
             echo 'Error: ' . $_FILES['file']['error'] . '<br>';
-        }
-        else {
+        } else {
             $uniquesavename=time().uniqid(rand());
             $path = $_FILES['file']['name'];
             $ext = pathinfo($path, PATHINFO_EXTENSION);
@@ -539,36 +594,28 @@ class Job extends MY_Controller
             //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
             echo $destination;
         }
-
     }
 
     public function settings() {
-        $get = $this->input->get();
-        $this->page_data['items'] = $this->items_model->get();
-        $comp_id = logged('company_id');
-        $this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
-        
-        if (empty($get['job_num'])) {
-            $comp = array(
+
+         $comp_id = logged('company_id');
+        //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
+        $get_job_settings = array(
+            'where' => array(
                 'company_id' => $comp_id
-            );
-        } else { 
-            $comp = array(
-                'company_id' => $comp_id,
-                'job_number' => $get['job_num']
-            );
-        }
-        $this->page_data['job_settings'] = $this->db->get_where($this->jobs_model->table_job_settings, array('company_id' => $comp_id))->result();
-        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, array('company_id' => $comp_id))->result();
-        $job_num_query = $this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row();
-        if ($job_num_query && empty($get['job_num'])) {
-            $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
-        } else {
-           $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
-           $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
-           $this->page_data['job_data'] = $job_num_query;
-        }
-        $this->load->view('job/job_settings/prefix', $this->page_data);
+            ),
+            'table' => 'job_settings',
+            'select' => '*',
+        );
+        $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings);
+
+        $get_job_tax = array(
+            'table' => 'job_tax_rates',
+            'select' => '*',
+        );
+        $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_job_tax);
+
+        $this->load->view('job/settings', $this->page_data);
     }
 
     public function job_time_settings() {

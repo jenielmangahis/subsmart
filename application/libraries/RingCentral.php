@@ -32,6 +32,23 @@ class Ringcentral {
 
         return $platform;
     }
+
+    public function getRCSDK() {
+        $RINGCENTRAL_CLIENTID = 'G7hO3YZ8RcaDm1tg15P1rg';
+        $RINGCENTRAL_CLIENTSECRET = '3F2ripB5QHSa2gLPN-WF1AY5eRTFd0RSSddW2OWfYLjg';
+        $RINGCENTRAL_SERVER = 'https://platform.devtest.ringcentral.com';
+
+        $RINGCENTRAL_USERNAME = '+16505691634';
+        $RINGCENTRAL_PASSWORD = 'nSmarTrac2020!';
+        $RINGCENTRAL_EXTENSION = '101';
+
+
+        $rcsdk = new RingCentral\SDK\SDK($RINGCENTRAL_CLIENTID, $RINGCENTRAL_CLIENTSECRET, RingCentral\SDK\SDK::SERVER_SANDBOX);
+
+        return $rcsdk;
+    }
+    
+    
     
     
     public function getNameByPhone($num = NULL) {
@@ -77,7 +94,7 @@ class Ringcentral {
                     return true;
                     
                 } catch (ApiException $ex) {
-                        print '  Message: ' . $e->apiResponse->response()->error() . PHP_EOL;
+                        print '  Message: ' . $ex->apiResponse->response()->error() . PHP_EOL;
                    //return false;
                 }
             } else {
@@ -91,7 +108,7 @@ class Ringcentral {
     function getEngine() {
         
         $platform = $this->getPlatform();
-        $RINGCENTRAL_REDIRECT_URL = "http://localhost/projects/nsmartrac/dashboard/ringcentral";
+        $RINGCENTRAL_REDIRECT_URL = base_url()."/dashboard/ringcentral";
         
         if (isset($_REQUEST['oauth2callback'])) {
             if (!isset($_GET['code'])) {
@@ -102,11 +119,11 @@ class Ringcentral {
 
             $platform->login($qs);
             $_SESSION['sessionAccessToken'] = $platform->auth()->data();
-            header("Location: http://localhost/projects/nsmartrac/dashboard/ringcentral");
+            header("Location: ".base_url()."/dashboard/ringcentral");
         }
 
         if (!isset($_SESSION['sessionAccessToken'])) {
-            header("Location: http://localhost/projects/nsmartrac/dashboard");
+            header("Location: ".base_url()."/dashboard");
             exit();
         } else {
             $platform->auth()->setData((array) $_SESSION['sessionAccessToken']);

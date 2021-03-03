@@ -13,6 +13,11 @@ function Step2({ documentId }) {
   const $signaturePadClear = $signaturePad.find("a");
   const $signatureApplyButton = $("#signatureApplyButton");
 
+  const $generateLinkAndEmail = $("#generateLinkAndEmail");
+  const $sendEmailModal = $("#sendEmail");
+  const $addEmailInput = $sendEmailModal.find("#sendEmailAddMore");
+  const $sendEmailButton = $sendEmailModal.find("#sendEmailSendButton");
+
   const $copyLink = $("#copyLink");
   const $linkPreview = $(".fillAndSign__shareLink");
   const $copyLinkButton = $linkPreview.find(".btn");
@@ -458,6 +463,25 @@ function Step2({ documentId }) {
     isStoring = false;
   }
 
+  async function createLink(docId) {
+    const pdfDoc = await generatePDF(docId);
+    const formData = new FormData();
+    formData.append("document", pdfDoc.output("blob"));
+
+    const endpoint = `${prefixURL}/FillAndSign/createLink/${docId}`;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+      headers: {
+        accepts: "application/json",
+      },
+    });
+
+    const { link, ...rest } = await response.json();
+    const documentLink = `${window.location.origin}${prefixURL}/uploads/fillandsign/out/${link.hash}.pdf`;
+    return { ...rest, documentLink };
+  }
+
   function attachEventHandlers() {
     const headerHeight = $header.height();
 
@@ -476,11 +500,8 @@ function Step2({ documentId }) {
       });
     });
 
-    console.log($signatureModalCloseButton);
-
-    $signatureModalCloseButton.on("click", () => {
-      console.log("hello");
-      $signatureModal.hide();
+    $signatureModalCloseButton.on("click", (event) => {
+      $(event.target).closest(".modal").hide();
     });
 
     $addSignatureButton.on("click", () => {
@@ -563,21 +584,7 @@ function Step2({ documentId }) {
     $copyLink.on("click", async (event) => {
       event.preventDefault();
 
-      const pdfDoc = await generatePDF(documentId);
-      const formData = new FormData();
-      formData.append("document", pdfDoc.output("blob"));
-
-      const endpoint = `${prefixURL}/FillAndSign/createLink/${documentId}`;
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: formData,
-        headers: {
-          accepts: "application/json",
-        },
-      });
-
-      const { link } = await response.json();
-      const documentLink = `${window.location.origin}${prefixURL}/uploads/fillandsign/out/${link.hash}.pdf`;
+      const { documentLink } = await createLink(documentId);
       $container.addClass("fillAndSign--readonly");
 
       $copyLinkButton.on("click", () => {
@@ -600,23 +607,68 @@ function Step2({ documentId }) {
     $downloadButton.on("click", async (event) => {
       event.preventDefault();
 
+      const { documentLink } = await createLink(documentId);
+      $container.addClass("fillAndSign--readonly");
+      downloadURI(documentLink);
+    });
+
+    $generateLinkAndEmail.on("click", async (event) => {
+      event.preventDefault();
+      $sendEmailModal.show();
+    });
+
+    $addEmailInput.on("click", (event) => {
+      event.preventDefault();
+      const $inputGroup = $sendEmailModal.find(".form-group");
+      $inputGroup.append(
+        `<input type="email" class="form-control mb-3" placeholder="Enter email">`
+      );
+    });
+
+    $sendEmailButton.on("click", async function () {
+      $(this).attr("disabled", true);
+      $(this).find(".spinner-border").removeClass("d-none");
+
+      let emails = [];
+      const $inputs = $sendEmailModal.find("input");
+
+      for (let index = 0; index < $inputs.length; index++) {
+        const $input = $($inputs[index]);
+        const email = $input.val();
+
+        if (!isValidEmail(email)) {
+          $(this).attr("disabled", false);
+          $(this).find(".spinner-border").addClass("d-none");
+
+          alert("Invalid email address");
+          return;
+        }
+
+        emails.push(email);
+      }
+
       const pdfDoc = await generatePDF(documentId);
       const formData = new FormData();
-      formData.append("document", pdfDoc.output("blob"));
 
-      const endpoint = `${prefixURL}/FillAndSign/createLink/${documentId}`;
+      formData.append("document", pdfDoc.output("blob"));
+      emails.forEach(email => {
+        formData.append('emails[]', email);
+      });
+
+      const endpoint = `${prefixURL}/FillAndSign/emailDocument/${documentId}`;
       const response = await fetch(endpoint, {
         method: "POST",
         body: formData,
-        headers: {
-          accepts: "application/json",
-        },
+        headers: { accepts: "application/json" },
       });
 
-      const { link } = await response.json();
-      const documentLink = `${window.location.origin}${prefixURL}/uploads/fillandsign/out/${link.hash}.pdf`;
+      await response.json();
+
       $container.addClass("fillAndSign--readonly");
-      downloadURI(documentLink);
+      $(this).attr("disabled", false);
+      $(this).find(".spinner-border").addClass("d-none");
+
+      $sendEmailModal.hide();
     });
 
     const $fontItems = $fontSelect.find(".dropdown-item");
@@ -1051,3 +1103,9 @@ var textUnderline = function ({
   context.lineTo(endX, endY);
   context.stroke();
 };
+
+// https://stackoverflow.com/a/46181/8062659
+function isValidEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}

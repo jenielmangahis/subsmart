@@ -865,6 +865,13 @@ if (!function_exists('getCompany')){
         return $CI->db->query('select * from business_profile where id = ' . $company_id);
     }
 }
+if (!function_exists('convertDecimal_to_Time')){
+    function convertDecimal_to_Time($dec,$requet){
+        $CI = &get_instance();
+
+        return $CI->timesheet_model->convertDecimal_to_Time($dec,$requet);
+    }
+}
 
 if (!function_exists('getCompanyFolder')){
     function getCompanyFolder(){
@@ -1123,10 +1130,10 @@ if (!function_exists('getClockInSession')){
     }
 }
 if (!function_exists('getEmployeeLogs')){
-    function getEmployeeLogs(){
+    function getEmployeeLogs($attendance_id){
         $CI = &get_instance();
 //        return $CI->timesheet_model->getTSLogsByUser();
-        return $CI->timesheet_model->getUserLogs();
+        return $CI->timesheet_model->getUserLogs($attendance_id);
     }
 }
 if (!function_exists('getEmployeeAttendance')){

@@ -295,7 +295,10 @@ $route['accounting/payment-methods/activate/(:any)'] = "accounting/activate_paym
 $route['accounting/payment-methods/update']['post'] = "accounting/update_payment_method";
 
 $route['accounting/recurring-transactions'] = "accounting/recurring_transactions";
-$route['accounting/recurring-transactions/load-recurring-transactions'] = "accounting/load_recurring_transactions";
+$route['accounting/recurring-transactions/load-recurring-transactions']['post'] = "accounting/load_recurring_transactions";
+$route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = "accounting/delete_recurring_transaction/$1";
+$route['accounting/recurring-transactions/get-details/(:any)'] = "accounting/get_recurring_transaction/$1";
+$route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "accounting/update_recurring_transaction/$1/$2";
 
 $route['accounting/terms'] = "accounting/terms";
 $route['accounting/terms/add'] = "accounting/add_terms";
@@ -578,7 +581,6 @@ $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
 $route['job/_load_upcoming_jobs'] = 'Job/ajax_load_upcoming_jobs';
-$route['job/settings'] = 'Job/job_settings';
 
 //Estimates
 $route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';

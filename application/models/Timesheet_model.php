@@ -18,15 +18,57 @@ class Timesheet_model extends MY_Model {
     }
     public function getTSNotification(){
 		$user_id = $this->session->userdata('logged')['id'];
-        $this->db->select('n.*,u.FName,u.LName');
-        $this->db->from('user_notification n');
-        $this->db->join('users u', 'n.user_id = u.id', 'left');
-        $this->db->where('n.status =', 1);
-        $this->db->order_by('n.id',"desc");
-        $query = $this->db->get();
-        $qry = $query->result();
-        return $qry;
+		$company_id = logged('company_id');
+        // $this->db->select('n.*,u.FName,u.LName');
+        // $this->db->from('user_notification n');
+        // $this->db->join('users u', 'n.user_id = u.id', 'left');
+        // $this->db->where('n.status =', 1);
+        // $this->db->order_by('n.id',"desc");
+        // $query = $this->db->get();
+        // $qry = $query->result();
+        // var_dump($company_id);
+        $this->db->reset_query();
+        if(logged('role')!=1){
+            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = ".$company_id." order by user_notification.date_created Desc");
+        }else{
+            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = ".$company_id." and u.id = ".$user_id." order by user_notification.date_created Desc");
+        }
+        
+        // $query = $this->db->get();
+        // var_dump(query);
+        // $qry = $query->result();
+        return $query->result();
+    }
+    public function get_unreadNotification(){
+        $user_id = $this->session->userdata('logged')['id'];
+		$company_id = logged('company_id');
+        // $this->db->select('n.*,u.FName,u.LName');
+        // $this->db->from('user_notification n');
+        // $this->db->join('users u', 'n.user_id = u.id', 'left');
+        // $this->db->where('n.status =', 1);
+        // $this->db->order_by('n.id',"desc");
+        // $query = $this->db->get();
+        // $qry = $query->result();
+        // var_dump($company_id);
+        $this->db->reset_query();
+        $date=date_create(date("Y-m-d H:i:s"));
+        date_sub($date,date_interval_create_from_date_string("2 days"));
+        $date_2days_ago = date_format($date,"Y-m-d H:i:s");
+        if(logged('role') > 0 ){
+            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = ".$company_id." and user_notification.status = 1 and user_notification.date_created >= '".$date_2days_ago."' order by user_notification.date_created Desc");
+        }else{
+            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = ".$company_id." and user_notification.user_id = ".$user_id." and user_notification.status = 1 and user_notification.date_created >= '".$date_2days_ago."' order by user_notification.date_created Desc");
+        }
+        
+        // $query = $this->db->get();
+        // var_dump(query);
+        // $qry = $query->result();
+        return $query->result();
+    }
 
+    public function get_company_admins($company_id){
+        $query = $this->db->query("SELECT * From users where company_id = ".$company_id." and role = 1 ");
+        return $query->result();
     }
     
     public function getattendance_logs($attn_id){
@@ -40,7 +82,8 @@ class Timesheet_model extends MY_Model {
     public function getClockInSession(){
 //        $this->db->or_where('date_in',date('Y-m-d'));
 //        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
-        $qry = $this->db->get_where($this->attn_tbl,array('status'=>1))->result();
+        $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->query("SELECT * from timesheet_attendance WHERE user_id=".$user_id." AND status=1")->result();
         return $qry;
     }
     public function getNotification($user_id){
@@ -68,12 +111,37 @@ class Timesheet_model extends MY_Model {
         $query = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id));
         return $query->result();
     }
-    public function getUserLogs(){
-        $user_id = $this->session->userdata('logged')['id'];
-        $query = $this->db->get_where($this->db_table,array('user_id' => $user_id));
+    public function getUserLogs($attendance_id){
+        $this->db->where('attendance_id',$attendance_id);
+        $query = $this->db->get($this->db_table);
         return $query->result();
     }
+    public function convertDecimal_to_Time($dec,$requet)
+    {
+        // start by converting to seconds
+        $seconds = ($dec * 3600);
+        // we're given hours, so let's get those the easy way
+        $hours = floor($dec);
+        // since we've "calculated" hours, let's remove them from the seconds variable
+        $seconds -= $hours * 3600;
+        // calculate minutes left
+        $minutes = floor($seconds / 60);
+        // remove those from seconds as well
+        $seconds -= $minutes * 60;
+        // return the time formatted HH:MM:SS
+        
+        $ws = $this->leading_zero($hours).":".$this->leading_zero($minutes)."";
+        if($requet=="lunch"){
+            $ws .= ":".$this->leading_zero($seconds);
+        }
+        return  $ws;
+    }
 
+    // lz = leading zero
+    public function leading_zero($num)
+    {
+        return (strlen($num) < 2) ? "0{$num}" : $num;
+    }
     public function getLastWeekTotalDuration(){
 //        $qry = $this->db->get('ts_weekly_total_shift');
 //        return $qry->result();
@@ -137,7 +205,9 @@ class Timesheet_model extends MY_Model {
         }
     }
     public function checkingOutEmployee($user_id,$attn_id,$entry,$approved_by,$company_id){
+
         $qry = $this->db->get_where($this->db_table,array('attendance_id'=> $attn_id,'action' => 'Check in'));
+        
         if ($qry->num_rows() == 1){
             $data = array(
                 'attendance_id' => $attn_id,
@@ -166,37 +236,78 @@ class Timesheet_model extends MY_Model {
         }
     }
 
-    public function calculateShiftDuration($attn_id){
-        $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
-        $start_time = 0;
-        $end_time = 0;
-        foreach ($qry as $time){
-            if ($time->action == 'Check in'){
-                $start_time = strtotime($time->date_created);
-            }elseif($time->action == 'Check out'){
-                $end_time = strtotime($time->date_created);
+    public function calculateShiftDuration_and_overtime($attn_id){
+        
+        date_default_timezone_set('UTC');
+        $user_id = $this->session->userdata('logged')['id'];
+        $user_logs = $this->timesheet_model->getAllLogsToday($user_id,date('Y-m-d'));
+        // var_dump($user_logs);
+        $count_of_checkins = 0;
+        $check_in = "";
+        $total_hours = 0;
+        $total_minutes = 0;
+        foreach($user_logs as $row){
+            if($row->action == "Check in"){
+                $count_of_checkins++;
+                if($count_of_checkins == 1){
+                    $check_in = $row->date_created;
+                }
+            }elseif($row->action == "Check out" && $count_of_checkins > 1){
+                $start = new DateTime($check_in);
+                $end = new DateTime($row->date_created);
+                $interval = $start->diff($end);
+                $total_hours = $total_hours + $interval->format("%H");
+                $total_minutes = $total_minutes + $interval->format("%i");
             }
         }
-        $diff = ($end_time - $start_time)/3600;
-        return round($diff,2);
+        
+        if($count_of_checkins % 2 != 0){
+            $start = new DateTime($check_in);
+            $end =  new DateTime(date('Y-m-d H:i:s'));
+            $interval = $start->diff($end);
+            $total_hours = $total_hours + $interval->format("%H");
+            $total_minutes = $total_minutes + $interval->format("%i");
+        }
+        $total_worked_hours = ( $total_minutes + ($total_hours*60))/60;
+
+        if($total_worked_hours > 8){
+            $shift_duration = 8;
+            $over_time = $total_worked_hours-8;
+        }else{
+            $shift_duration = $total_worked_hours;
+            $over_time = 0;
+        }
+        
+
+        $data = array($shift_duration,$over_time);
+        return $data;
     }
     public function calculateBreakDuration($attn_id){
-        $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
-        $start_time = 0;
-        $end_time = 0;
-        foreach ($qry as $time){
-            if ($time->action == 'Break in'){
-                $start_time = strtotime($time->date_created);
-            }elseif($time->action == 'Break out'){
-                $end_time = strtotime($time->date_created);
+        
+        date_default_timezone_set('UTC');
+        $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id = ".$attn_id);
+        $user_logs = $qry->result();
+        // var_dump($user_logs);
+        $break_in = "";
+        $total_hours = 0;
+        $total_minutes = 0;
+        $total_seconds = 0;
+        foreach($user_logs as $row){
+            if($row->action == "Break in"){
+                $break_in = $row->date_created;
+            }elseif($row->action == "Break out"){
+                $start = new DateTime($break_in);
+                $end = new DateTime($row->date_created);
+                $interval = $start->diff($end);
+                $total_hours = $total_hours + $interval->format("%H");
+                $total_minutes = $total_minutes + $interval->format("%i");
+                $total_seconds = $total_seconds + $interval->format("%i");
             }
         }
-        $diff = ($end_time - $start_time)/3600;
-        if ($diff > 0){
-            $result = round($diff,2);
-        }else{
-            $result = 0;
-        }
+        
+        $result = round((((($total_hours*60)*60)+($total_minutes*60)+$total_seconds)/60)/60,2);
+        
         return $result;
     }
 
@@ -399,10 +510,12 @@ class Timesheet_model extends MY_Model {
         return $query->num_rows();
     }
     public function getOutNow(){
-        $total_user = $this->users_model->getTotalUsers();
-        $this->db->or_where('DATE(date_created)',date('Y-m-d'));
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 0))->num_rows();
-        return $query;
+        // $total_user = $this->users_model->getTotalUsers();
+        $this->db->like('date_created',date('Y-m-d'));
+        $this->db->where('status', 0);
+        $query = $this->db->get('timesheet_attendance');
+        $qry=$query->result();
+        return count($qry);
     }
  
     public function getAttendanceByDay($day){
@@ -445,6 +558,14 @@ class Timesheet_model extends MY_Model {
     public function getTimeSheetDayById($timesheet_id){
         $qry = $this->db->get_where('ts_schedule_day',array('schedule_id'=>$timesheet_id));
         return $qry->result();
+    }
+    public function get_on_lunch($date, $company_id){
+        $qry = $this->db->query("SELECT * from timesheet_logs JOIN users as u ON u.id = timesheet_logs.user_id JOIN timesheet_attendance on u.id=timesheet_attendance.user_id where u.company_id = ".$company_id." AND timesheet_logs.action = 'Break in'  AND u.role > 1 AND timesheet_attendance.status = 1");
+        return $qry->num_rows();
+    }
+    public function get_manual_checkins($date, $company_id){
+        $qry = $this->db->query("SELECT * from timesheet_logs JOIN users as u ON u.id = timesheet_logs.user_id where u.company_id = ".$company_id." AND timesheet_logs.action = 'Check in' AND timesheet_logs.date_created LIKE '".$date."%' AND timesheet_logs.entry_type = 'Manual'");
+        return $qry->num_rows();
     }
 
     public function addingProjects($data){

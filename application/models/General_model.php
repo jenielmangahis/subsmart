@@ -69,6 +69,34 @@ class General_model extends MY_Model {
         }
     }
 
+    public function get_column_sum($params = array())
+    {
+
+        if(array_key_exists("table",$params) && $params['table'] != NULL ){
+            $this->db->from($params['table']);
+        }else{
+            return FALSE;
+        }
+
+        if(array_key_exists("select",$params) && $params['select'] != NULL ){
+            $this->db->select($params['select']);
+        }else{
+            $this->db->select('*');
+        }
+
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+
+        //$this->db->select('SUM(qty) as total_qty');
+        //$this->db->from($this->table_has_location);
+        //$this->db->where('item_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function delete_($params = array()) {
         if(array_key_exists("where", $params)){
             foreach($params['where'] as $key => $val){
