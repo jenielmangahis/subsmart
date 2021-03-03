@@ -138,8 +138,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="row" style="background-color:white;"> -->
                                     <div class="col-md-3">
                                         <label for="zip" class="required"><b>Estimate Status</b></label>
-                                        <input type="text" class="form-control" name="zip" id="zip" required
-                                            placeholder="Enter Estimate Status"/>
+                                        <!-- <input type="text" class="form-control" name="zip" id="zip" required
+                                            placeholder="Enter Estimate Status"/> -->
+                                            <select name="status" class="form-control">
+                                                    <option value="product">Draft</option>
+                                                    <option value="material">Submitted</option>
+                                                    <option value="service">Approved</option>
+                                                    <option value="service">Declined</option>
+                                                    <option value="service">Schedule</option>
+                                                </select>
                                     </div>
                             </div>
 
@@ -419,7 +426,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <?php echo $file_selection; ?>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer'); ?>
 
 <script>
     function validatecard() {

@@ -88,4 +88,20 @@ if (!function_exists('get_employee_name')){
         return $CI->general->get_data_with_param($get_employee,FALSE);
     }
 }
+
+if (!function_exists('get_total_item_qty')){
+    function get_total_item_qty($id=null){
+        $CI = &get_instance();
+        $CI->load->model('General_model', 'general');
+        $get_item_qty_total = array(
+            'where' => array(
+                'item_id' => $id
+            ),
+            'table' => 'items_has_storage_loc',
+            'select' => 'id,SUM(qty) as total_qty',
+        );
+        //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+        return $CI->general->get_column_sum($get_item_qty_total);
+    }
+}
 ?>

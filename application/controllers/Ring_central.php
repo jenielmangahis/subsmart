@@ -90,8 +90,18 @@ class Ring_central extends MY_Controller {
                     </div>
                     <?php
                 endforeach;
+                ?>
+                <div class="col-lg-12" style="position: fixed;bottom: 41px;width: 1080px;">
+                    <div class="input-group">
+                        <input type="text" name="replyMessage" id="replyMessage" placeholder="Type Message ..." class="form-control">
+                        <span class="input-group-append">
+                            <button id="btnReply" type="button" onclick="sendReply()" class="btn btn-primary">Send</button>
+                        </span>
+                    </div>
+                </div>
+                <?php
             } else {
-                echo 'session is expired';
+                echo 'Something went wrong, Please Try Again';
             }
         }
     }
@@ -116,11 +126,11 @@ class Ring_central extends MY_Controller {
                 $r = $platform->get("/account/~/extension/~/message-store", $queryParams);
 
                 $jsonResponse = json_decode($r->text());
-                
+
                 $this->data['jsonResponse'] = $jsonResponse;
                 $this->load->view('ringcentral/inboundSMS', $this->data);
             } else {
-                echo 'something went wrong';
+                echo 'Something went wrong, Please Try Again';
             }
         } else {
             //echo json_encode(array('msg'=>'Your are not Logged In to Ring Central or your Session has expired', 'status'=>false));
@@ -144,7 +154,7 @@ class Ring_central extends MY_Controller {
                     'text' => $message,
                 ));
                 //print_r("Message status: " . $apiResponse->json()->messageStatus . PHP_EOL);
-                echo json_encode(array('msg' => 'Successfully Sent', 'status' => true));
+                echo json_encode(array('msg' => 'Successfully Sent', 'status' => true, 'number' => base64_encode($to)));
 //                try{
 //                    $apiResponse = $platform->post('/account/~/extension/~/sms', array(
 //                    'from' => array('phoneNumber' => '+16505691634'),
@@ -171,7 +181,7 @@ class Ring_central extends MY_Controller {
         $this->session->unset_userdata('rcData');
         $this->session->set_userdata('isRCLogin', false);
 
-        header("Location: " . base_url() . "/ring_central");
+        header("Location: " . base_url());
         //exit();
     }
 

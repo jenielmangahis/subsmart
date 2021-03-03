@@ -865,6 +865,13 @@ if (!function_exists('getCompany')){
         return $CI->db->query('select * from business_profile where id = ' . $company_id);
     }
 }
+if (!function_exists('convertDecimal_to_Time')){
+    function convertDecimal_to_Time($dec,$requet){
+        $CI = &get_instance();
+
+        return $CI->timesheet_model->convertDecimal_to_Time($dec,$requet);
+    }
+}
 
 if (!function_exists('getCompanyFolder')){
     function getCompanyFolder(){
@@ -1123,10 +1130,10 @@ if (!function_exists('getClockInSession')){
     }
 }
 if (!function_exists('getEmployeeLogs')){
-    function getEmployeeLogs(){
+    function getEmployeeLogs($attendance_id){
         $CI = &get_instance();
 //        return $CI->timesheet_model->getTSLogsByUser();
-        return $CI->timesheet_model->getUserLogs();
+        return $CI->timesheet_model->getUserLogs($attendance_id);
     }
 }
 if (!function_exists('getEmployeeAttendance')){
@@ -1393,14 +1400,12 @@ function get_customer_by_id($customer_id, $key = '')
  * return customer acs_profile details based on ID
  */
 function acs_prof_get_customer_by_prof_id($customer_id)
-{
-    
+{   
+    //Get Customer data
     $CI =& get_instance();
     $CI->load->model('AcsProfile_model');
-
     return $CI->AcsProfile_model->getByProfId($customer_id);
 }
-
 
 /**
  * all customers based on company or user id

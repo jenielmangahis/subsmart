@@ -176,10 +176,10 @@ if(isset($jobs_data)){
             console.log(total);
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-                "<td width=\"10%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                "<td width=\"20%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
+                "<td width=\"20%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
                 "</tr>";
             tableBody = $("#jobs_items_table_body");
@@ -221,13 +221,15 @@ if(isset($jobs_data)){
             }
             var withCommas = Number(total).toLocaleString('en');
             if(tax_total < 1){
-                $('#invoice_sub_total').html('$' + withCommas);
+                $('#invoice_sub_total').html('$' + formatNumber(total));
             }
-            $('#invoice_overall_total').html('$' + withCommas);
+            $('#invoice_overall_total').html('$' + formatNumber(total));
             $('#pay_amount').val(withCommas);
         }
         //$(".color-scheme").on( 'click', function () {});
-
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         }
@@ -239,7 +241,7 @@ if(isset($jobs_data)){
             var cost = $('#price'+id).val();
             var new_sub_total = Number(qty) * Number(cost);
             $('#sub_total'+id).data('subtotal',new_sub_total);
-            $('#sub_total'+id).text('$' + numberWithCommas(new_sub_total) + '.00');
+            $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
             calculate_subtotal();
         });
 
@@ -316,6 +318,19 @@ if(isset($jobs_data)){
                     //console.log(data);
                 }
             });
+        });
+
+        $("#start_time").on( 'change', function () {
+            var tag_id = this.value;
+            console.log(tag_id);
+            var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
+
+            if(end_time === 'Invalid date') {
+                $('#end_time').val("");
+            }else{
+               $('#end_time').val(end_time);
+            }
+            console.log(end_time);
         });
 
         $("#job_type_option").on( 'change', function () {
@@ -577,6 +592,30 @@ if(isset($jobs_data)){
                 }
             });
         });
+
+        $("#update_status_to_omw").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/update_jobs_status",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        //window.location.reload();
+                        sucess_add('Job Status Updated!',1);
+                    }else {
+                        warning('There is an error adding Customer. Contact Administrator!');
+                        console.log(data);
+                    }
+                }
+            });
+        });
+
+
         function sucess_add(information,is_reload){
             Swal.fire({
                 title: 'Good job!',

@@ -34,4 +34,19 @@ class Accounting_bank_deposit_model extends MY_Model {
 	function getFunds($deposit_id) {
 		return $this->db->where('bank_deposit_id', $deposit_id)->get('accounting_bank_deposit_funds')->result();
 	}
+
+	function update($id, $data) {
+		$this->db->where('company_id', getLoggedCompanyID());
+		$this->db->where('id', $id);
+		$update = $this->db->update($this->table, $data);
+		if($update) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function deleteFunds($deposit_id) {
+		return $this->db->where('bank_deposit_id', $deposit_id)->delete('accounting_bank_deposit_funds');
+	}
 }

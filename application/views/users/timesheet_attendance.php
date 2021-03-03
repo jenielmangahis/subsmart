@@ -504,14 +504,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title">
-                                                                <span>Out Now</span>
+                                                                <span>On Lunch</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-out-now"><?=$out_now?></span>
+                                                                <span id="employee-out-now"><?=$on_lunch?></span>
                                                             </div>
                                                             <div class="progress" id="progressOutNow">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-default progress-bar-striped progress-bar-gray active" role="progressbar" aria-valuenow="<?php echo $out_now; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 * ($out_now / $total_users), 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * ($out_now / $total_users), 2) . '%'; ?>
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-default progress-bar-striped progress-bar-gray active" role="progressbar" aria-valuenow="<?php echo $on_lunch; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 * ($on_lunch / $total_users), 2) . '%'; ?>;">
+                                                                    <?php echo round(100 * ($on_lunch / $total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -575,7 +575,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title">
-                                                                <span>Approved Leaves</span>
+                                                                <span>Manual Check ins</span>
+                                                            </div>
+                                                            <div class="card-data">
+                                                                <span><?=$manual_checkins?></span>
+                                                            </div>
+                                                            <div class="progress">
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-gray progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $manual_checkins; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(($manual_checkins/$total_users) * 100, 2) . '%'; ?>;">
+                                                                    <?php echo round(100 * ($manual_checkins/$total_users), 2) . '%'; ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title">
+                                                                <span>Late Check ins</span>
                                                             </div>
                                                             <div class="card-data">
                                                                 <span><?=count($on_leave)?></span>
@@ -598,14 +621,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title">
-                                                                <span>Unapproved Leave</span>
+                                                                <span>On Leave</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span><?=count($on_unapprovedleave)?></span>
+                                                                <span><?=count($on_leave)?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-gray progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_unapprovedleave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_unapprovedleave)/$total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * (count($on_unapprovedleave)/$total_users), 2) . '%'; ?>
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave)/$total_users) * 100, 2) . '%'; ?>;">
+                                                                    <?php echo round(100 * (count($on_leave)/$total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -614,6 +637,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-3">
                                         <div class="tile-container">
                                             <div class="inner-container">
@@ -621,30 +645,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title">
-                                                                <span>Pending Leave</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span><?=count($on_pendingleave)?></span>
-                                                            </div>
-                                                            <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_pendingleave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_pendingleave)/$total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * (count($on_pendingleave)/$total_users), 2) . '%'; ?>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>On Business Travel</span>
+                                                                <span>Contractors</span>
                                                             </div>
                                                             <div class="card-data" style="vertical-align: top">
                                                                 <span>0</span>
@@ -1155,6 +1156,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     });
     //Real-time capture of time
     let real_time;
+    
+    let total_users = "<?php echo $total_users; ?>";
+    // let baseURL=window.location.origin;
+    // if(baseURL=="https://www.nsmartrac.local"){
+    //     baseURL=window.location.origin+"/nsmartrac";
+    // }
 
     function serverTime() {
         let datetime = null;
@@ -1222,7 +1229,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 }
             });
         }
-
         // Checking IN
         $(document).on('click', '#employeeCheckIn', function() {
             let id = $(this).attr('data-id');
@@ -1243,7 +1249,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '/timesheet/checkingInEmployee',
+                        url: '<?=base_url()?>/timesheet/checkingInEmployee',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1569,14 +1575,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     });
 
     function waitForClockInOutattendance() {
-        var total_users = "<?php echo $total_users; ?>";
-        var baseURL=window.location.origin;
-        if(baseURL=="https://www.nsmartrac.local"){
-            baseURL=window.location.origin+"/nsmartrac";
-        }
         $.ajax({
             type: "GET",
-            url: baseUrl+"/Timesheet/getClockInOutNotification",
+            url: baseURL+"/Timesheet/getClockInOutNotification",
             async: true,
             cache: false,
             timeout: 10000,
@@ -1607,6 +1608,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
     $(document).ready(function() {
         var TimeStamp = null;
-        waitForClockInOutattendance();
+        // waitForClockInOutattendance();
     });
 </script>

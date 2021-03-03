@@ -35,6 +35,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_expense_name_model');
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('accounting_bank_deposit_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -532,6 +533,16 @@ class Accounting extends MY_Controller {
         switch($data->txn_type) {
             case 'deposit' :
                 $data->transaction = $this->accounting_bank_deposit_model->getById($data->txn_id);
+
+                $tags = [];
+                foreach(json_decode($data->transaction->tags, true) as $tag) {
+                    $t = $this->tags_model->getTagById($tag);
+                    $tags[] = [
+                        'id' => $tag,
+                        'name' => $t->name
+                    ];
+                }
+                $data->transaction->tags = json_encode($tags);
                 $data->transaction->items = $this->accounting_bank_deposit_model->getFunds($data->transaction->id);
             break;
             case 'transfer' :
@@ -551,6 +562,136 @@ class Accounting extends MY_Controller {
 
         echo json_encode($result);
         exit;
+    }
+
+    public function update_recurring_transaction($type, $id) {
+        $data = $this->input->post();
+        
+        switch($type) {
+            case 'deposit' :
+                $this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
+
+                if($data['cash_back_amount'] !== "") {
+                    $this->form_validation->set_rules('cash_back_target', 'Cash back account', 'required|differs[bank_account]');
+                }
+
+                $this->form_validation->set_rules('account[]', 'Account', 'required');
+                $this->form_validation->set_rules('amount[]', 'Amount', 'required');
+            break;
+        }
+
+        $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+        $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+        if($data['recurring_type'] !== 'unscheduled') {
+            $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+            if($data['recurring_interval'] !== 'daily') {
+                if($data['recurring_interval'] === 'monthly') {
+                    $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                } else if($data['recurring_interval'] === 'yearly') {
+                    $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                }
+
+                $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+            }
+            if($data['recurring_interval'] !== 'yearly') {
+                $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+            }
+            $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+            if($data['end_type'] === 'by') {
+                $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+            } else if($data['end_type'] === 'after') {
+                $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+            }
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $recurringData = [
+                'template_name' => $data['template_name'],
+                'recurring_type' => $data['recurring_type'],
+                'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                'recurring_interval' => $data['recurring_interval'],
+                'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                'start_date' => $data['recurring_type'] !== 'unscheduled' ? $data['start_date'] !== "" ? date('Y-m-d', strtotime($data['start_date'])) : null : null,
+                'end_type' => $data['end_type'],
+                'end_date' => $data['end_type'] === 'by' ? $data['end_date'] !== "" ? date('Y-m-d', strtotime($data['end_date'])) : null : null,
+                'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
+
+            $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransaction($id, $recurringData);
+
+            if($recurringUpdate) {
+                $recurringData = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+
+                switch($type) {
+                    case 'deposit' :
+                        $bankAccount = explode('-', $data['bank_account']);
+                        $cashBackTarget = explode('-', $data['cash_back_target']);
+
+                        $totalAmount = array_sum(array_map(function($item) {
+                            return floatval($item);
+                        }, $data['amount']));
+
+                        $totalAmount = $totalAmount - floatval($data['cash_back_amount']);
+
+                        $depositData = [
+                            'account_key' => $bankAccount[0],
+                            'account_id' => $bankAccount[1],
+                            'tags' => json_encode($data['tags']),
+                            'total_amount' => number_format($totalAmount, 2, '.', ','),
+                            'cash_back_account_key' => $cashBackTarget[0],
+                            'cash_back_account_id' => $cashBackTarget[1],
+                            'cash_back_memo' => $data['cash_back_memo'],
+                            'cash_back_amount' => $data['cash_back_amount'],
+                            'memo' => $data['memo'],
+                            'recurring' => isset($data['template_name']) ? 1 : 0,
+                            'updated_at' => date('Y-m-d h:i:s')
+                        ];
+
+                        $transactionUpdate = $this->accounting_bank_deposit_model->update($recurringData->txn_id, $depositData);
+
+                        $deleteFunds = $this->accounting_bank_deposit_model->deleteFunds($recurringData->txn_id);
+
+                        $fundsData = [];
+                        foreach($data['account'] as $key => $value) {
+                            $account = explode('-', $value);
+                            $receivedFrom = explode('-', $data['received_from'][$key]);
+
+                            $fundsData[] =[
+                                'bank_deposit_id' => $recurringData->txn_id,
+                                'received_from_key' => $receivedFrom[0],
+                                'received_from_id' => $receivedFrom[1],
+                                'received_from_account_key' => $account[0],
+                                'received_from_account_id' => $account[1],
+                                'description' => $data['description'][$key],
+                                'payment_method' => $data['payment_method'][$key],
+                                'ref_no' => $data['reference_no'][$key],
+                                'amount' => $data['amount'][$key],
+                            ];
+                        }
+
+                        $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
+                    break;
+                }
+            }
+
+            $return['success'] = $recurringUpdate ? true : false;
+            $return['message'] =  $recurringUpdate ? 'Update Successful!' : 'An unexpected error occured!';
+        }
+
+        echo json_encode($return);
     }
 
     public function terms()
@@ -4660,6 +4801,441 @@ class Accounting extends MY_Controller {
     public function payrollTax(){
         $user_id = logged('id');
         $this->load->view('accounting/payrollTax', $this->page_data);
+    }
+
+    // public function sendmerchantEmail()
+    // {
+    //     $email = 'emploucelle@gmail.com';
+    //     $data = array(
+    //         'name' => '$name',
+    //         'link' => '$code'
+    //     );
+    //     //Load email library
+    //     $this->load->library('email');
+    //     $config = array(
+    //         'smtp_crypto' => 'ssl',
+    //         'protocol' => 'smtp',
+    //         'smtp_host' => 'mail.nsmartrac.com',
+    //         'smtp_port' => 465,
+    //         'smtp_user' => 'no-reply@nsmartrac.com',
+    //         'smtp_pass' => 'g0[05_rEa3?%',
+    //         'mailtype'  => 'html',
+    //         'charset'   => 'utf-8',
+    //     );
+    //     $this->email->initialize($config);
+    //     $this->email->set_newline("\r\n");
+
+    //     $this->email->from('no-reply@nsmartrac.com', 'nSmartrac');
+    //     $this->email->to($email);
+    //     $this->email->subject('nSmartrac invitation');
+    //     $message = $this->load->view('users/invite_link_template', $data, TRUE);
+    //     $this->email->message($message);
+    //     //Send mail
+    //     $this->email->send();
+    //     return true;
+    // }
+
+    public function sendmerchantEmail($id=null)
+    {
+        $this->load->library('email');
+
+        $config['protocol']    = 'smtp';
+        $config['smtp_host']    = 'smtp.googlemail.com';
+        $config['smtp_port']    = '587';
+        $config['smtp_timeout'] = '7';
+        $config['smtp_user']    = 'smartrac.noreply@gmail.com';
+        $config['smtp_pass']    = 'smartrac123';
+        $config['charset']    = 'utf-8';
+        $config['newline']    = "\r\n";
+        $config['mailtype'] = 'html';
+        $config['validation'] = TRUE;  
+
+        $this->email->initialize($config);
+
+        $subject =  '
+        <div wrapper__section>
+        <div class="container-fluid p-40">
+          <div class="card">
+              <div class="page-title-box pt-1 pb-0">
+                  <div class="row align-items-center">
+                      <div class="col-sm-12">
+                          <h3 style="font-family: Sarabun, sans-serif">MERCHANT ACCOUNT APPLICATION</h3>
+                      </div>
+                  </div>
+              </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>COMPANY INFORMATION</h6>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>DBA NAME</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>CONTANCT NAME</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>DBA ADDRESS TYPE</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>DBA ADDRESS 1</b> <i>(NO PO BOX)</i></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>DBA ADDRESS 2</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>CITY</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>STATE</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>ZIP CODE</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>DBA PHONE NO.</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>EMAIL ADDRESS</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>MOBILE PHONE NO.</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>YEAR ESTABLISHED</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>LENGTH OF CURRENT OWNERSHIP</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>YEARS</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>MONTHS</b><span class="required_field">*</span></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>OTHER ADDRESS <i> (IF DIFFERENT FROM ABOVE)</i></h6>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group" id="customer_type_group">
+                        <!-- <input type="checkbox">
+                        <label for=""><b>MAILING</b></label> -->
+                        <label class="checkboxcontainer"> MAILING
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" id="customer_type_group">
+                        <!-- <input type="checkbox">
+                        <label for=""><b>SHIPPING</b></label> -->
+                        <label class="checkboxcontainer"> SHIPPING
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
+                        <!-- <input type="checkbox">
+                        <label for=""><b>SEE ALSO SPECIAL INSTRUCTIONS</b> <i>(MORE THAN ONE OPTION MAY BE SELECTED)</i></label> -->
+                        <label class="checkboxcontainer"> <b>SEE ALSO SPECIAL INSTRUCTIONS</b> <i>(MORE THAN ONE OPTION MAY BE SELECTED)</i>
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>LOCATION NAME</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>PHONE NO.</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>CONTACT NO.</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>BEST CONTACT NO.</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>BEST TIME TO CALL</b></label>
+                        <!-- <input type="text" class="form-control" name="name" id="name"> -->
+                        <div class="row">
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="From">
+                            </div>
+                            <div class="col-md-1" style="margin-top:10px;">
+                                <i class="fa fa-arrows-h" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="To">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>FAX NO.</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>ADDRESS</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>CITY</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>STATE</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>ZIP CODE</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>PRINCIPAL 1 INFORMATION <i> (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</i></h6>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
+                        <!-- <input type="checkbox">
+                        <label for=""><b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b></label> -->
+                        <label class="checkboxcontainer"> <b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b>
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                        </label>
+                        <input type="text" name="name" id="name" style="padding: 12px 20px;
+                                                                        margin: 8px 0;
+                                                                        box-sizing: border-box;
+                                                                        border-radius: 4px;"> <label for=""><b> %</b></label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                    <br>
+                        <!-- <input type="checkbox">
+                        <label for=""><b>AUTHORIZED SIGNER</b></label> -->
+                        <label class="checkboxcontainer"> <b>AUTHORIZED SIGNER</b>
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                    <br>
+                        <!-- <input type="checkbox">
+                        <label for=""><b>SOLE PROPRIETOR</b></label> -->
+                        <label class="checkboxcontainer"> <b>SOLE PROPRIETOR</b>
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>FIRST NAME</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>MIDDLE NAME</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>LAST NAME</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>ADDRESS</b></label> <i>(NO PO BOX)</i>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>PHONE NO</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>CITY</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>STATE/PROVINCE</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>ZIP/POSTAL CODE</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" id="customer_type_group" style="background-color:#E8E8E9;padding:2px;">
+                        <label for=""> <i><b> PREVIOUS ADDRESS IF CURRENT ADDRESS IS LESS THAN 2 YEARS </b></i></label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>HOME ADDRESS</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>CITY</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>STATE</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>ZIP CODE</b></label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                </div>
+            </div>
+        ';
+        
+        // $email = 'emploucelle@gmail.com';
+        $email = $this->input->post('email');
+        $header_message = "<html><head><title>".$subject."</title></head><body>";
+        $footer_message = "</body></html>";
+        $input_msg = $this->input->post('contact_reply');
+        $msg = $header_message.$footer_message;
+
+        $this->email->from('smartrac.noreply@gmail.com', 'NSMARTRAC');
+        $this->email->to($email); 
+        $this->email->subject('NSMARTRAC - Merchant application');
+        $this->email->message($subject);  
+
+        $this->email->send();
+
+        // echo $this->email->print_debugger();
+        echo "Successfully sent to your email";
     }
 
 }

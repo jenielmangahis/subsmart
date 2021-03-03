@@ -89,6 +89,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <br>
+            <form action="<?php echo base_url('accounting/sendmerchantEmail'); ?>" method="post">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group" id="customer_type_group">
@@ -155,7 +156,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>EMAIL ADDRESS</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
+                        <input type="email" class="form-control" name="email" id="email" required>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -464,9 +465,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <br><br>
                             <div class="row">
                                 <div class=" col-md-12">
-                                    <a href="#" class="btn btn-primary">Proceed</a> <i>By clicking "Proceed", you will be confirming that you have read and agreed to the terms herein and in the Important Legal Notices.</i>
+                                    <!-- <a href="#" class="btn btn-primary">Proceed</a>  -->
+                                    <input type="submit" value="Proceed" class="btn btn-primary">
+                                    <i>By clicking "Proceed", you will be confirming that you have read and agreed to the terms herein and in the Important Legal Notices.</i>
                                 </div>
                             </div>
+            </form>
             <!-- end card -->
             </div>
 

@@ -286,17 +286,6 @@
     <!-- Navigation Bar-->
     <header id="topnav">
         <input type="hidden" id="siteurl" value="<?php echo url(); ?>"> <!-- for js programing -->
-        <!--            <div class="topbar-main"style="background: #c4daeb;
-            background: linear-gradient(to top, #c4daeb, #F0F8FF);
-            background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253));
-            background: linear-gradient(to right, #6FB1FC, #0052D4, #6FB1FC);
-            border: none;
-            border-bottom-color: currentcolor;
-            border-bottom-style: none;
-            border-bottom-width: medium;
-            border-bottom-color: currentcolor;
-            border-bottom-style: none;
-            border-bottom-width: medium">-->
         <div style="background:white; box-shadow: 5px 0px 10px 4px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12); padding: 7px 0;">
             <div class="container-fluid">
                 <div class="row">
@@ -309,7 +298,7 @@
                         <?php include viewPath('includes/nav'); ?>
                     </div>
                     <div class="menu-extras topbar-custom col-lg-3 justify-content-end">
-                        <ul class="navbar-right list-inline float-right mb-0" style="position:absolute; top:25%; margin-top:-20px;">
+                        <ul class="navbar-right list-inline float-right mb-0" style="position:absolute; top:25%; margin-top:-10px; right:10px;">
                             <li class="menu-item list-inline-item">
                                 <a class="navbar-toggle nav-link">
                                     <div class="lines"><span></span> <span></span> <span></span></div>
@@ -325,15 +314,15 @@
                                                                         </a>
                                                                     </div>
                                                                 </li>-->
-                            <li title="SMS" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+<!--                            <li title="SMS" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                                 <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                     <a href="#" onclick="$('#createSMS').modal('show')">
                                         <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
                                         <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
                                     </a>
-                                    <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
-                                    <!--                                    -->
-                                    <!--                                </a>-->
+                                                                    <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
+                                                                        
+                                                                    </a>
                                 </div>
                             </li>
                             <li title="Call" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
@@ -342,11 +331,11 @@
                                         <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/support.svg" alt="">
                                         <img class="conversation-icon-hover" src="<?php echo $url->assets; ?>/css/icons/support.svg" alt="">
                                     </a>
-                                    <!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">-->
-                                    <!--                                    -->
-                                    <!--                                </a>-->
+                                                                    <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
+                                                                        
+                                                                    </a>
                                 </div>
-                            </li>
+                            </li>-->
 
 
                             <li title="Activity" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
@@ -452,7 +441,7 @@
                                         </a>
 
 
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                                        <!-- <a href="javascript:void(0);" class="dropdown-item notify-item active">
                                             <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
                                             <p class="notify-details">Your order is placed<span class="text-muted">Dummytext of the printing and typesetting industry.</span></p>
                                         </a>
@@ -471,7 +460,7 @@
                                             <div class="notify-icon bg-danger"><i class="mdi mdi-message-text-outline"></i>
                                             </div>
                                             <p class="notify-details">New Message received<span class="text-muted">You have 87 unread messages</span></p>
-                                        </a>
+                                        </a> -->
                                     </div>
                                     <!-- All-->
                                     <a href="<?php echo site_url(); ?>timesheet/notification" class="dropdown-item text-center text-primary">View all
@@ -479,15 +468,20 @@
                                 </div>
                             </li>
                             <?php
-                            $clock_btn = 'clockIn';
+                            $clock_btn = 'clockIn'; 
                             $user_id = $this->session->userdata('logged')['id'];
                             $user_clock_in = getClockInSession();
+                            $attendance_id = 0;
+                            $analog_active = '';
                             foreach ($user_clock_in as $in) {
                                 if ($in->user_id == $user_id && $in->status == 1) {
                                     $clock_btn = 'clockOut';
+                                    $attendance_id = $in->id;
+                                    $analog_active = 'clock-active';
                                 }
                                 if ($in->user_id == $user_id && $in->status == 0) {
                                     $clock_btn = 'clockIn';
+                                    $attendance_id = $in->id;
                                 }
                             }
                             //Employee display shift status
@@ -499,8 +493,12 @@
                             $lunch_out = 0;
                             $latest_lunch_in = 0;
                             $attendances = getEmployeeAttendance();
-                            $ts_logs_h = getEmployeeLogs();
-                            $analog_active = null;
+                            foreach ($attendances as $attn) {
+                                $attendance_id = $attn->id;
+                                break;
+                            }
+                            $ts_logs_h = getEmployeeLogs($attendance_id);
+                            
                             $attn_id = null;
                             $minutes = 0;
                             //                        $expected_endbreak = null;
@@ -509,6 +507,7 @@
                             $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
                             $getTimeZone = json_decode($ipInfo);
                             $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
+                            
                             foreach ($attendances as $attn) {
                                 $attn_id = $attn->id;
                                 if($attn->overtime_status == 1){
@@ -516,6 +515,8 @@
                                 }else{
                                     $overtime_status = 1;
                                 }
+                                
+                                
                                 foreach ($ts_logs_h as $log) {
                                     if ($log->attendance_id == $attn->id && $attn->status == 1) {
                                         if ($log->action == 'Check in') {
@@ -547,34 +548,35 @@
                                         if ($log->action == 'Break out') {
                                             if ($attn->status == 1) {
                                                 $analog_active = 'clock-active';
+                                                $lunch_time = convertDecimal_to_Time($attn->break_duration, "lunch");
                                             }
                                         }
+                                        
                                     } else if ($log->attendance_id == $attn->id && $attn->status == 0) {
-                                        if ($log->action == 'Check in') {
-                                            // $clock_in = date('h:i A',strtotime($log->date_created));
-                                            // $shift_end = strtotime($log->date_created);
 
-                                            $hours = floor($attn->break_duration / 60);
-                                            $minutes = floor($attn->break_duration % 60);
-                                            $seconds = $attn->break_duration - (int) $attn->break_duration;
-                                            $seconds = round($seconds * 60);
-                                            $lunch_time = str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT) . ":" . str_pad($seconds, 2, "0", STR_PAD_LEFT);
+                                        $lunch_time = convertDecimal_to_Time($attn->break_duration, "lunch");
+                                        $shift_duration = convertDecimal_to_Time($attn->shift_duration, "shift diration");
+                                        // var_dump($attendance_id);
+                                        if($log->action == "Check in"){
+                                            $date_created = $log->date_created;
+                                            date_default_timezone_set('UTC');
+                                            $datetime_defaultTimeZone = new DateTime($date_created);
+                                            $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                                            $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
+                                            $clock_in = date('h:i A', strtotime($userZone_date_created));
+                                        }elseif($log->action == "Check out"){
+                                            $date_created = $log->date_created;
+                                            date_default_timezone_set('UTC');
+                                            $datetime_defaultTimeZone = new DateTime($date_created);
+                                            $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                                            $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
+                                            $clock_out = date('h:i A', strtotime($userZone_date_created));
                                         }
-                                        if ($log->action == 'Check out') {
-                                            $analog_active = null;
-                                            $shift_s = ($attn->shift_duration * 3600);
-                                            $shift_h = floor($attn->shift_duration);
-                                            $shift_s -= $shift_h * 3600;
-                                            $shift_m = floor($shift_s / 60);
-                                            $shift_s -= $minutes * 60;
-                                            if ($shift_h >= 0 && $clock_in != '-') {
-                                                $shift_duration = str_pad($shift_h, 2, '0', STR_PAD_LEFT) . ":" . str_pad($shift_m, 2, '0', STR_PAD_LEFT);
-                                            }
-                                        }
+                                        
                                     }
                                 }
+                                
                             }
-
                             $ts_settings = getEmpTSsettings();
                             $schedule = getEmpSched();
                             $expected_shift = 0;
@@ -681,10 +683,10 @@
                                         <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
                                         <?php
                                         $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
-                                        /* if( !@getimagesize($image) ){
+                                         if( !@getimagesize($image) ){
                                               $image = base_url('uploads/users/default.png');
-                                              } */
-                                        //$image = base_url('uploads/users/default.png');
+                                        } 
+                                        // $image = base_url('uploads/users/default.png');
                                         ?>
                                         <img src="<?php echo $image; ?>" alt="user" class="rounded-circle nav-user-img">
                                     </a>
@@ -715,36 +717,8 @@
 
     </header><!-- End Navigation Bar-->
 
-    <div class="modal fade" id="createSMS" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addWidgets" aria-hidden="true">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel">Send SMS</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center p-2">
-
-                    <small class="form-text text-muted">Enter or Search for recipient's mobile number.</small>
-                    <div class="form-group input-group">
-                        <input type="text" style="border-radius:15px 0 0 15px ;" class="form-control" id="inputMobile" placeholder="Enter mobile">
-                        <div class="input-group-append">
-                            <button class="btn btn-success" type="button"><i class="fa fa-search-plus fa-1x"></i></button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <textarea onkeyup="countChar(this)" placeholder="Enter your SMS Text" class="form-control" id="inputText" rows="4"></textarea>
-                        <small class="form-text text-muted text-right"><span id='charNum'>300</span> characters</small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-small btn-success float-right" onclick='sendSMS()'>Send SMS</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script type="text/javascript">
+    var notification_badge_value = 0;
         function countChar(val) {
             var len = val.value.length;
             if (len >= 300) {
@@ -754,31 +728,6 @@
             }
         };
 
-        sendSMS = function() {
-            var num = $('#inputMobile').val();
-            var msg = $('#inputText').val();
-
-            $.ajax({
-                url: '<?php echo base_url(); ?>ring_central/sendSMS',
-                method: 'POST',
-                data: {
-                    to: num,
-                    message: msg
-                },
-                dataType: 'json',
-                statusCode: {
-                    500: function(xhr) {
-                        var obj = JSON.parse(xhr.responseText);
-                        alert(obj.msg);
-                        $('#createSMS').modal("hide");
-                    }
-                },
-                success: function(response) {
-                    alert(response);
-                    $('#createSMS').modal("hide");
-                }
-            });
-        };
         var baseURL=window.location.origin;
 
         if(baseURL=="https://www.nsmartrac.local"){
@@ -793,13 +742,18 @@
                 timeout: 10000,
                 success: function(data) {
                     var obj = JSON.parse(data);
-                    $('#notifyBadge').html(obj.notifyCount);
-                    $('#nfcount').html(obj.notifyCount);
-                    $('#autoNotifications').html(obj.autoNotifications);
+                    // console.log(notification_badge_value);
+                    // console.log(obj.notifyCount);
+                    if(notification_badge_value != obj.notifyCount){
+                        notification_badge_value = obj.notifyCount;
+                        $('#notifyBadge').html(obj.notifyCount);
+                        $('#nfcount').html(obj.notifyCount);
+                        $('#autoNotifications').html(obj.autoNotifications);
+                    }
                     setTimeout(notificationClockInOut, 2000);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    addmsg("error", textStatus + " (" + errorThrown + ")");
+                    // addmsg("error", textStatus + " (" + errorThrown + ")");
                     setTimeout(notificationClockInOut, 15000);
                 }
             });

@@ -81,7 +81,7 @@ $(document).ready(function () {
 
     async function notificationRing() { 
         const audio = new Audio();
-        audio.src = '../assets/css/notification/notification_tone2.mp3';
+        audio.src = baseURL+'../assets/css/notification/notification_tone2.mp3';
         audio.muted = false;
         try {
            await audio.play();
@@ -134,7 +134,7 @@ $(document).ready(function () {
                         $('#userLunchOut').text('-');
                         $('#shiftDuration').text('-');
                         $('#userShiftDuration').text('-');
-                        $('#break-duration').text('60:00');
+                        $('#break-duration').text('00:00:00');
                         $('.employeeLunch').attr('id','lunchIn').attr('disabled',false);
                         Swal.fire(
                             {
@@ -144,24 +144,46 @@ $(document).ready(function () {
                                 html: "You are now Clock-in",
                                 icon: 'success'
                             });
-                
+                        
+                        if(data.profile_img==""){
+                            data.profile_img="/uploads/users/default.png";
+                        }else{
+                            // data.profile_img="/uploads/users/user-profile/"+data.profile_img;
+                            data.profile_img="/uploads/users/default.png";
+                        }
+
                         Push.Permission.GRANTED; // 'granted'
                         Push.create("Clock In", {
                             body: "User : "+data.FName+" "+data.LName,
-                            icon: '/users/user-profile/'+data.profile_img,
+                            icon: baseURL+data.profile_img,
                             timeout: 20000,
                                 onClick: function () {
                                     window.focus();
                                     this.close();
                                 }
                             });
-                        }
+                            // console.log(data.company_id);
+                        app_notification(data.token,data.body,data.device_type,data.company_id,data.title);
+                    }
                } 
             });
         }
     });
     });
-
+function app_notification(token,body,device_type,company_id,title) {
+    // console.log("Requesting App notification.....");
+    $.ajax({
+        url:baseURL+"/timesheet/app_notification",
+        type:"POST",
+        dataType:"json",
+        data:{body:body,device_type:device_type,company_id:company_id,token:token,title:title},
+        success:function (data) {
+            
+            console.log(data);
+            console.log("App notification success!");
+        }
+    });
+}
 
     function breakTime() {
         let latest_lunch = $('#latestLunchTime').val();
@@ -180,8 +202,9 @@ $(document).ready(function () {
             lunch_m =  Math.floor((latest_diff % (1000 * 60 * 60)) / (1000 * 60));
             lunch_s = Math.floor((latest_diff % (1000 * 60)) / 1000);
         }
-
+        
         $('#break-duration').text(remainTwoDigit(hours,2)+":"+remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
+        
         if (latest_lunch > 0){
             pause_time = remainTwoDigit(lunch_h,2)+":"+remainTwoDigit(lunch_m,2)+":"+remainTwoDigit(lunch_s,2);
         }else{
@@ -520,14 +543,16 @@ $(document).ready(function () {
                             Push.Permission.GRANTED; // 'granted'
                             Push.create("Clock Out", {
                                 body: "User : "+data.FName+" "+data.LName,
-                                icon: '/uploads/users/user-profile/'+data.profile_img,
+                                icon: baseURL+'/uploads/users/user-profile/'+data.profile_img,
                                 timeout: 20000,
                                     onClick: function () {
                                         window.focus();
                                         this.close();
                                     }
                                 });
+
                             }
+                        app_notification(data.token,data.body,data.device_type,data.company_id,data.title);
                     }
                 });
             }
@@ -572,6 +597,8 @@ $(document).ready(function () {
                                     html: "You are now Clock-out",
                                     icon: 'success'
                                 });
+                            
+                            app_notification(data.token,data.body,data.device_type,data.company_id,data.title);
                         }else{
                             Swal.fire(
                                 {
@@ -648,19 +675,19 @@ $(document).ready(function () {
         }
 
         //Auto Clock out
-            if (shift_end > 0 && overtime_status < 1){
-               let end_shift = new Date(shift_end * 1000);
-               let end_of_shift = end_shift.setHours(end_shift.getHours());
-               if (end_of_shift <=  current_time){
-                    autoClockOut();
-               }
-            }else if(emp_overtime > 0 && overtime_status < 1){
-                let end_shift = new Date(emp_overtime * 1000);
-                let end_of_shift = end_shift.setHours(end_shift.getHours() - (time_diff));
-                if (end_of_shift <= current_time){
-                    autoClockOut();
-                }
-            }
+            // if (shift_end > 0 && overtime_status < 1){
+            //    let end_shift = new Date(shift_end * 1000);
+            //    let end_of_shift = end_shift.setHours(end_shift.getHours());
+            //    if (end_of_shift <=  current_time){
+            //         autoClockOut();
+            //    }
+            // }else if(emp_overtime > 0 && overtime_status < 1){
+            //     let end_shift = new Date(emp_overtime * 1000);
+            //     let end_of_shift = end_shift.setHours(end_shift.getHours() - (time_diff));
+            //     if (end_of_shift <= current_time){
+            //         autoClockOut();
+            //     }
+            // }
 
         });
     }

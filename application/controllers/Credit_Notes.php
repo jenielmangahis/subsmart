@@ -133,9 +133,9 @@ class Credit_Notes extends MY_Controller
         $company_id = logged('company_id');
         $role = logged('role');
         if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();  
         }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
         
         $this->load->view('credit_notes/add', $this->page_data);
@@ -221,9 +221,9 @@ class Credit_Notes extends MY_Controller
         if( $creditNote ){
             $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
             if( $role == 1 || $role == 2 ){
-                $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-            }else{
                 $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            }else{
+                $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             }
 
             $this->page_data['creditNote'] = $creditNote;
@@ -442,10 +442,10 @@ class Credit_Notes extends MY_Controller
             $mail->From = $from; 
             $mail->FromName = 'NsmarTrac';
 
-            $mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');            
-            /*foreach( $post['customer_id'] as $value ){
+            //$mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');            
+            foreach( $post['customer_id'] as $value ){
                 $mail->addAddress($value, $value);  
-            }*/
+            }
             if( isset($post['email_bcc']) ){
                if( count($post['email_bcc']) > 0 ){
                     $bcc = implode(",", $post['email_bcc']);

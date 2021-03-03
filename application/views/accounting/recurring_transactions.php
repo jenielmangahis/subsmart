@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-sm-12 p-0">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                        <span style="color:black;">Recurring transactions message</span>
+                                        <span style="color:black;">A recurring transaction is an agreement between a cardholder and a company providing goods/services that essentially authorizes the charging of periodic, automatic payments during a set amount of time.  The transaction can be charged on a weekly, monthly, or yearly basis.</span>
                                     </div>
                                 </div>
                             </div>
@@ -456,6 +456,232 @@ $(document).on('click', '#delete_recurring_transaction .modal-footer .btn-succes
             });
 
             $('#delete_recurring_transaction').modal('hide');
+
+            $('#recurring_transactions').DataTable().ajax.reload();
+        }
+    });
+});
+
+$(document).on('click', '#recurring_transactions .edit-recurring', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent();
+    var rowData = table.row(row).data();
+    var modal = '';
+    var modalName = '';
+    var view = '';
+
+    switch(rowData.txn_type) {
+        case 'Deposit' :
+            modal = 'bank_deposit';
+            modalName = 'depositModal';
+            view = 'bank_deposit_modal';
+        break;
+        case 'Journal Entry' :
+            modal = 'journal_entry';
+            modalName = 'journalEntryModal';
+            view = 'journal_entry_modal';
+        break;
+        case 'Transfer' :
+            modal = 'transfer';
+            modalName = 'transferModal';
+            view = 'transfer_modal';
+        break;
+    }
+
+    append_modal(view, modalName, modal);
+
+    $.get(`/accounting/recurring-transactions/get-details/${rowData.id}`, function(res) {
+        var result = JSON.parse(res);
+
+        if(result.success === false) {
+            $.toast({
+                icon: result.success ? 'success' : 'error',
+                heading: result.success ? 'Success' : 'Error',
+                text: result.message,
+                showHideTransition: 'fade',
+                hideAfter: 3000,
+                allowToastClose: true,
+                position: 'top-center',
+                stack: false,
+                loader: false,
+            });
+        } else {
+            var data = result.data;
+
+            set_modal_data(data, modalName);
+
+            $(`#${modalName}`).modal('show');
+        }
+    });
+});
+
+function append_modal(view, modalName, modal) {
+    $.get(GET_OTHER_MODAL_URL+view, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        if($('div#modal-container table').length > 0) {
+            rowCount = $('div#modal-container table tbody tr').length;
+            rowInputs = $('div#modal-container table tbody tr:first-child()').html();
+            blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+
+            $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);
+            $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
+        }
+
+        if(modalName === 'depositModal') {
+            $('div#depositModal select#tags').select2({
+                placeholder: 'Start typing to add a tag',
+                allowClear: true,
+                ajax: {
+                    url: '/accounting/get-job-tags',
+                    dataType: 'json'
+                }
+            });
+        }
+
+        makeRecurring(modal);
+
+        if($(`#${modalName} .date`).length > 0) {
+            $(`#${modalName} .date`).each(function(){
+                $(this).datepicker({
+                    uiLibrary: 'bootstrap'
+                });
+            });
+        }
+    });
+}
+
+function set_modal_data(data, modalName) {
+    switch(modalName) {
+        case 'depositModal' :
+            $(`#depositModal`).parent('form').removeAttr('onsubmit').attr('id', 'update-recurring-form').addClass(`update-recurring-${data.txn_type}-${data.id}`);
+            $(`#depositModal #bankAccount`).val(`${data.transaction.account_key}-${+data.transaction.account_id}`);
+            $(`#depositModal #memo`).val(data.transaction.memo);
+            $(`#depositModal #cashBackTarget`).val(data.transaction.cash_back_account_key+'-'+data.transaction.cash_back_account_id);
+            $(`#depositModal #cashBackMemo`).val(data.transaction.cash_back_memo);
+
+            if(data.transaction.cash_back_amount !== 0 && data.transaction.cash_back_amount !== "0") {
+                $(`#depositModal #cashBackAmount`).val(data.transaction.cash_back_amount).trigger('change');
+            }
+
+            var tags = JSON.parse(data.transaction.tags);
+
+            for(i in tags) {
+                $(`#depositModal #tags`).append(`<option value="${tags[i]['id']}" selected>${tags[i]['name']}</option>`);
+            }
+
+            var items = data.transaction.items;
+            for(i in items) {
+                if($($(`#depositModal #bank-deposit-table tbody tr`)[i]).length === 0) {
+                    $(`#depositModal #bank-deposit-table tbody`).append(`
+                        <tr>
+                            <td></td>
+                            <td>${parseInt(i)+1}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    `)
+                }
+
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).trigger('click');
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="received_from[]"]').val(items[i].received_from_key+'-'+items[i].received_from_id);
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="account[]"]').val(items[i].received_from_account_key+'-'+items[i].received_from_account_id);
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="description[]"]').val(items[i].description);
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="payment_method[]"]').val(items[i].payment_method);
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="reference_no[]"]').val(items[i].ref_no);
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="amount[]"]').val(items[i].amount).trigger('change');
+            }
+        break;
+    }
+
+    $(document).on('shown.bs.modal', `#${modalName}`, function(e) {
+        $(`#${modalName} #templateName`).val(data.template_name);
+        $(`#${modalName} #recurringType`).val(data.recurring_type).trigger('change');
+
+        if(data.recurring_interval !== null) {
+            $(`#${modalName} #recurringInterval`).val(data.recurring_interval).trigger('change');
+        }
+
+        if(data.recurring_week !== null) {
+            $(`#${modalName} select[name="recurring_week"]`).val(data.recurring_week).trigger('change');
+        }
+
+        if(data.recurring_day !== null) {
+            $(`#${modalName} select[name="recurring_day"]`).val(data.recurring_day);
+        }
+
+        if(data.recurring_month !== null) {
+            $(`#${modalName} select[name="recurring_month"]`).val(data.recurring_month);
+        }
+
+        if(data.recurr_every !== null) {
+            $(`#${modalName} input[name="recurr_every"]`).val(data.recurr_every);
+        }
+
+        if(data.start_date !== null || data.start_date !== "") {
+            var start_date = new Date(data.start_date);
+            $(`#${modalName} #startDate`).val(`${start_date.getMonth() + 1}/${start_date.getDate()}/${start_date.getFullYear()}`);
+        }
+
+        if(data.end_type !== null & data.end_type !== "none") {
+            $(`#${modalName} #endType`).val(data.end_type).trigger('change');
+        }
+
+        if(data.end_by !== null && data.end_type === 'by') {
+            var end_date = new Date(data.end_date);
+            $(`#${modalName} #endDate`).val(`${end_date.getMonth() + 1}/${end_date.getDate()}/${end_date.getFullYear()}`);
+        }
+
+        if(data.max_occurences !== null && data.end_type === 'after') {
+            $(`#${modalName} #maxOccurence`).val(data.max_occurences);
+        }
+    });
+}
+
+$(document).on('submit', '#update-recurring-form', function(e) {
+    e.preventDefault();
+
+    var c = this.className;
+    var split = c.split("-");
+    var id = split[split.length - 1];
+    var type = split[split.length - 2];
+
+    var data = new FormData(this);
+
+    $.ajax({
+        url: `recurring-transactions/update/${type}/${id}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            var result = JSON.parse(res);
+            $('.modal').modal('hide');
+
+            $.toast({
+                icon: result.success ? 'success' : 'error',
+                heading: result.success ? 'Success' : 'Error',
+                text: result.message,
+                showHideTransition: 'fade',
+                hideAfter: 3000,
+                allowToastClose: true,
+                position: 'top-center',
+                stack: false,
+                loader: false,
+            });
 
             $('#recurring_transactions').DataTable().ajax.reload();
         }

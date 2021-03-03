@@ -61,23 +61,24 @@ add_css(array(
                                             <p class=""><small>Schedule</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-2" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'On My Way'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'On My Way'  ? 'btn-success' : 'btn-default' ; ?>">
+                                                <span style="font-size: 24px;" class="fa fa-ship"></span></a>
                                             <p><small>OMW</small></p>
                                         </div> &nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-3" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
+                                            <a href="#step-3" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
                                             <p><small>Start</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-4" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Completed'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-check-circle-o"></span></a>
+                                            <a href="#step-4" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Completed'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-check-circle-o"></span></a>
                                             <p><small>Approved</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-5" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Finished'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
+                                            <a href="#step-5" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Finished'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
                                             <p><small>Finish</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-6" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'btn-success' : 'btn-default' ; ?>"" disabled="disabled"><span style="font-size: 24px;" class="fa fa-paper-plane"></span></a>
+                                            <a href="#step-6" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-paper-plane"></span></a>
                                             <p><small>Invoice</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
@@ -114,7 +115,7 @@ add_css(array(
                             <div class="form-group label-width d-flex align-items-center">
                                 <label>From</label>
                                 <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>&nbsp;&nbsp;
-                                <select id="inputState" name="start_time" class="form-control" required>
+                                <select id="start_time" name="start_time" class="form-control" required>
                                     <option value="">Start time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
@@ -124,7 +125,7 @@ add_css(array(
                             <div class="form-group label-width d-flex align-items-center">
                                 <label >To</label>
                                 <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
-                                <select id="inputState" name="end_time" class="form-control" required>
+                                <select id="end_time" name="end_time" class="form-control" required>
                                     <option value="">End time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option <?= isset($jobs_data) && strtolower($jobs_data->end_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
@@ -241,9 +242,9 @@ add_css(array(
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#photos_attachment" aria-expanded="true" aria-controls="photos_attachment">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-image"></span>&nbsp; &nbsp;Photos / Attachments</h6>
                             </button>
-                            <a href="javascript:void(0);" id="attach_left_btn_column">
+                            <!--<a href="javascript:void(0);" id="attach_left_btn_column">
                                 <span class="fa fa-columns card_plus_sign"></span>
-                            </a>
+                            </a>-->
                         </div>
                         <div class="card-body">
                             <div id="photos_attachment" class="collapse" aria-labelledby="headingTwo" data-parent="#photos_attachment">
@@ -664,6 +665,35 @@ add_css(array(
                                 <td>
                                 </td>
                             </tr>
+                            <?php if(isset($jobs_data)): ?>
+                                <?php
+                                    $subtotal = 0.00;
+                                    foreach ($jobs_data_items as $item):
+                                    $total = $item->price * $item->qty;
+                                ?>
+                                    <tr id=ss>
+                                        <td width="35%"><small>Item name</small>
+                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" >
+                                            <input type="hidden" value='"+idd+"' name="item_id[]">
+                                        </td>
+                                        <td width="20%"><small>Qty</small>
+                                            <input data-itemid='"+idd+"'  id='"+idd+"' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                        </td>
+                                        <td width="20%"><small>Unit Price</small>
+                                            <input id='price"+idd+"' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>
+                                        <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
+                                        <td style="text-align: center" class="d-flex" width="15%">
+                                            <b data-subtotal='"+total_+"' id='sub_total"+idd+"' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
+                                            <a href="javascript:void(0)" class="remove_item_row"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                                        </td>
+                                    </tr>
+                                <?php
+                                    $subtotal = $subtotal + $total;
+                                    endforeach;
+                                ?>
+                            <?php endif; ?>
                             </tbody>
                         </table>
                         <div class="col-sm-12">
@@ -689,10 +719,8 @@ add_css(array(
                                                     <?php else: ?>
                                                         <p>Thumbnail</p>
                                                         <p class="or-text">Or</p>
-                                                        <p>PDF</p>
-                                                        <p class="or-text">Or</p>
                                                         <p>URL Link</p>
-                                                        <p>To see import source</p>
+                                                        <i style="color: #0b0b0b;">Upload on Photos/Attachments Box</i>
                                                     <?php endif; ?>
                                                     <!-- <p class="or-text">Or</p>
                                                     <label>Choose File</label> -->
@@ -708,7 +736,7 @@ add_css(array(
                                         <label style="padding: 0 .75rem;">Subtotal</label>
                                     </div>
                                     <div class="col-sm-6 text-right pr-3">
-                                        <label id="invoice_sub_total">$0.00</label>
+                                        <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                     </div>
                                     <div class="col-sm-12">
@@ -716,9 +744,12 @@ add_css(array(
                                     </div>
                                     <div class="col-sm-6">
                                         <small>Tax Rate</small>
+                                        <a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>
                                         <select id="tax_rate" name="tax_rate" class="form-control">
                                             <option value="">None</option>
-                                            <option value="0.075">FL Tax(7.5%)</option>
+                                            <?php foreach ($tax_rates as $rate) : ?>
+                                                <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-sm-6 text-right pr-3">
@@ -747,7 +778,7 @@ add_css(array(
                                         <label style="padding: 0 .75rem;">Total</label>
                                     </div>
                                     <div class="col-sm-6 text-right pr-3">
-                                        <label id="invoice_overall_total">$0.00</label>
+                                        <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                     </div>
                                 </div>
@@ -756,13 +787,17 @@ add_css(array(
                                 </div>
                                 <div class="col-sm-12" id="approval_card_right" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                     <div style="float: right;">
+                                        <?php if(isset($jobs_data) && $jobs_data->signature_link != '') : ?>
                                         <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+
                                         <center>
                                             <img width="150" id="customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
                                         </center>
+
                                         <center><span id="appoval_name_right"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span></center><br>
                                         <span>-----------------------------</span><br>
                                         <center><small>Approved By</small></center><br>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <br>
@@ -975,9 +1010,11 @@ add_css(array(
                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
                             <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
+                                <?php if(isset($jobs_data) && ($jobs_data->status == 'Scheduled' || $jobs_data->status == 'Draft')) : ?>
+                                    <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
+                                <?php endif; ?>
                                 <?php if(isset($jobs_data)): ?>
-                                <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>" type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</a>
+                                    <a href="<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>" type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</a>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -1222,10 +1259,10 @@ add_css(array(
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Location</label>
-                                            <button class="btn btn-default" type="button" data-id="<?php echo $item[3]; ?>" id="seeLocation" data-toggle="dropdown" aria-expanded="true">
+                                            <button class="btn btn-default" type="button" data-id="" id="seeLocation" data-toggle="dropdown" aria-expanded="true">
                                                 <span class="btn-label">See Location <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-right" id="<?php echo 'locQtyList' . $item[3]; ?>" style="width:300px;" role="menu" aria-labelledby="dropdown-edit">
+                                            <ul class="dropdown-menu dropdown-menu-right" id="" style="width:300px;" role="menu" aria-labelledby="dropdown-edit">
                                                 <li role="presentation" style="background-color:#D3D3D3;">
                                                     <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"><span style="padding-right:150px;">
                                                             <strong>Location</strong></span><span style="border-left:1px solid black;"> <strong>Qty</strong></span>
@@ -1361,11 +1398,16 @@ add_css(array(
                             <tbody>
                             <?php if(!empty($items)): ?>
                                 <?php foreach ($items as $item): ?>
+                                    <?php $item_qty = get_total_item_qty($item->id); ?>
                                     <tr>
                                         <td><?= $item->title; ?></td>
-                                        <td><?= $item->units; ?></td>
+                                        <td><?= $item_qty->total_qty > 0 ? $item_qty->total_qty : 0; ?></td>
                                         <td><?= $item->price; ?></td>
-                                        <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item"><span class="fa fa-plus"></span></button></td>
+                                        <td>
+                                            <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
@@ -1536,7 +1578,6 @@ add_css(array(
     </div>
 </div>
 
-
 <!-- Signature Modal -->
 <div class="modal fade" id="share_job_modal" role="dialog">
     <div class="close-modal" data-dismiss="modal">&times;</div>
@@ -1588,6 +1629,39 @@ add_css(array(
     </div>
 </div>
 
+<!-- On My Way Modal -->
+<div class="modal fade" id="omw_modal" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">On My Way</h4>
+            </div>
+            <form id="update_status_to_omw">
+            <div class="modal-body">
+                <p>This will start travel duration tracking.</p>
+                <p>On my way at:</p>
+                <input type="date" name="omw_date" id="omw_date" class="form-control" required>
+                <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                <input type="hidden" name="status" id="status" value="On My Way">
+                <select id="omw_time" name="omw_time" class="form-control" required>
+                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                        <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">
+                    <span class="fa fa-paper-plane-o"></span> Save
+                </button>
+                <button type="button" id="" class="btn btn-default" data-dismiss="modal">
+                    <span class="fa fa-remove"></span> Close
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php
 add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
@@ -1603,6 +1677,7 @@ include viewPath('includes/footer');
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
 <?php include viewPath('job/js/job_new_js'); ?>
 

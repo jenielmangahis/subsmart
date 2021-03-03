@@ -26,5 +26,6 @@
         <li class="nav-header">Affiliate </li>
         <li class="submenus <?php if($this->uri->uri_string() == 'affiliates') { echo 'active'; }?>"><a href="<?php echo base_url('affiliate') ?>" title="My Affiliates "><span
                         class="fa fa-user"></span>My Affiliates </a></li>
+        <li class="submenus <?php if($this->uri->uri_string() == 'affiliates-dashboard') { echo 'active'; }?>"><a href="#" title="My Affiliates "><span class="fa fa-user"></span>Affiliates Stats Dashboard</a></li>
     </ul>
 </nav>

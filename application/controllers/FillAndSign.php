@@ -281,16 +281,7 @@ class FillAndSign extends MY_Controller
         echo json_encode(['link' => $record]);
     }
 
-    public function createLink($documentId)
-    {
-        header('content-type: application/json');
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode(['success' => false]);
-            return;
-        }
-
-        $file = $_FILES['document'];
+    private function _createLink($file, $documentId) {
         $filepath = './uploads/fillandsign/out/';
 
         if (!file_exists($filepath)) {
@@ -301,8 +292,7 @@ class FillAndSign extends MY_Controller
         $record = $this->db->get('fill_and_sign_documents_links')->row();
 
         if (!is_null($record)) {
-            echo json_encode(['link' => $record]);
-            return;
+            return $record;
         }
 
         $hash = md5(uniqid($documentId, true));
@@ -316,7 +306,20 @@ class FillAndSign extends MY_Controller
 
         $this->db->where('id', $this->db->insert_id());
         $record = $this->db->get('fill_and_sign_documents_links')->row();
+        return $record;
+    }
 
+    public function createLink($documentId)
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $file = $_FILES['document'];
+        $record = $this->_createLink($file, $documentId);
         echo json_encode(['link' => $record]);
     }
 
@@ -333,5 +336,74 @@ class FillAndSign extends MY_Controller
 
         header('content-type: application/json');
         echo json_encode(['documents' => $pdfs]);
+    }
+
+    function emailDocument($documentId) {
+        // header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $file = $_FILES['document'];
+        $document = $this->_createLink($file, $documentId);
+	    $emails = $this->input->post('emails');
+
+	    $this->db->where('id', logged('id'));
+        $currentUser = $this->db->get('users')->row();
+	    $currentUserName = implode(' ', [$currentUser->FName, $currentUser->LName]);
+
+        $this->load->library('email');
+
+        $config = [
+            // 'protocol' => 'smtp',
+            // 'smtp_host' => 'ssl://smtp.gmail.com',
+            // 'smtp_port' => 465,
+            // 'smtp_user' => 'nsmartrac@gmail.com',
+            // 'smtp_pass' => 'nSmarTrac2020',
+            // 'mailtype' => 'html',
+            // 'charset' => 'utf-8',
+
+            'smtp_crypto' => 'ssl',
+            'protocol' => 'smtp',
+            'smtp_host' => 'mail.nsmartrac.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'smartrac.noreply@gmail.com',
+            'smtp_pass' => 'smartrac123',
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8',
+            // 'validation' => true,
+            // 'newline' => "\r\n",
+            // 'smtp_timeout' => 7,
+        ];
+
+        $this->email->initialize($config);
+        $this->email->set_newline("\r\n");
+        $this->email->from('no-reply@nsmartrac.com', 'nSmarTrac');
+        $this->email->subject('Fill & eSign');
+        $this->email->message($currentUserName . ' shared you a document.');
+
+        $documentPath = $_SERVER["DOCUMENT_ROOT"] . '/uploads/fillandsign/out/' . $document->hash . '.pdf';
+        if ($this->isLocalhost()) {
+            $documentPath = $_SERVER["DOCUMENT_ROOT"] . '/nsmartrac/uploads/fillandsign/out/' . $document->hash . '.pdf';
+        }
+
+        $this->email->attach($documentPath);
+
+        foreach($emails as $email) {
+            $this->email->to($email);
+
+            if (!$this->email->send(false)) {
+                echo json_encode(['success' => false]);
+                return;
+            }
+        }
+
+        echo json_encode(['success' => true]);
+    }
+
+    private function isLocalhost($whitelist = ['127.0.0.1', '::1']) {
+        return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
     }
 }

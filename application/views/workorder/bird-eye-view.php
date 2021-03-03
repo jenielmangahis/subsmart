@@ -100,10 +100,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="filter-container mb-3">
                           <div class="col-md-2 pl-0 left">
-                            <input type="text" id="" class="form-control single-datepicker" placeholder="Date From">
+                            <input type="text" id="" name="date_from" class="form-control single-datepicker" placeholder="Date From">
                           </div>
                           <div class="col-md-2 pl-0 left">
-                            <input type="text" id="" class="form-control single-datepicker" placeholder="Date To">
+                            <input type="text" id="" name="date_to" class="form-control single-datepicker" placeholder="Date To">
                           </div>
                           <div class="col-md-4 left">
                             <select class="form-control">
@@ -142,6 +142,7 @@ $(function(){
     $('#date-range-picker').daterangepicker({
         "timePicker": false
     }, function(start, end, label) {
+      //load_map_route();
       //console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
     });
 
@@ -152,6 +153,7 @@ $(function(){
       maxYear: parseInt(moment().format('YYYY'),10)
     }, function(start, end, label) {
       var years = moment().diff(start, 'years');
+      load_map_route();
       //alert("You are " + years + " years old!");
     });
 

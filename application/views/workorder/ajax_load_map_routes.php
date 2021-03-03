@@ -21,11 +21,7 @@
 
     var latlngbounds = new google.maps.LatLngBounds();
 
-
-
     //Creating Markers
-
-
     var data = [];
     var myLatlng = [];
     var marker = [];
@@ -64,8 +60,6 @@
 
 
     //Initialize the Path Array
-
-
     //Initialize the Direction Service
     //Set the Path Stroke Color
     var color = ['#F0280E', '#FF0000', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#000000', 'FFFFFF'];
@@ -107,7 +101,7 @@
                   bounds.extend(result.routes[0].overview_path[k]);
                   map.fitBounds(bounds);
                 }
-              } else alert("Directions Service failed:" + status);
+              } //else alert("Directions Service failed:" + status);
             }
           }(color[t])))
       };

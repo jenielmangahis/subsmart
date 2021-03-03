@@ -140,7 +140,7 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-    
+
     public function saveNewItemLocation($data = array()) {
         if(!empty($data)){     
             $insert = $this->db->insert($this->table_has_location, $data);

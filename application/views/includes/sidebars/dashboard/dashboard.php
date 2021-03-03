@@ -102,7 +102,7 @@
                     $('.sidebar a.links').attr('style','text-align:left;');
                     sidebar.addClass('open');
                     document.getElementById("mySidebar").style.width = "200px";
-                    document.getElementById("dashOverlay").style.marginLeft = "200px";
+                    $('#dashOverlay').attr('style','margin-left:180px; position:fixed; z-index:1000;')
                     $('#dashOverlay').show();
                     $('.a-title').show();
                 }
