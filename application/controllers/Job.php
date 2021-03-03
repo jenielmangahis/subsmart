@@ -1155,32 +1155,53 @@ class Job extends MY_Controller
     }
 
     public function edit_job_type( $job_type_id ){
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
 
         $jobType = $this->JobType_model->getById($job_type_id);
+        $icons   = $this->Icons_model->getAll();
 
         $this->page_data['jobType'] = $jobType;
+        $this->page_data['icons'] = $icons;
         $this->load->view('job/job_settings/edit_job_type', $this->page_data);
     }
 
     public function update_job_type() {
         postAllowed();
+
+        $this->load->model('Icons_model');
+        
         $post    = $this->input->post();
 
         if( $post['job_type_name'] != '' ){
 
             $eventType = $this->JobType_model->getById($post['eid']);
             if( $eventType ){
-                $marker_icon = $eventType->icon_marker;
-                if( $_FILES['image']['size'] > 0 ){
-                    $marker_icon = $this->moveUploadedFile();
+                if( isset($post['is_default_icon']) ){
+                    $icon = $this->Icons_model->getById($post['default_icon_id']);
+                    $marker_icon = $icon->image;
+                    $data_job_type = [
+                        'title' => $post['job_type_name'],
+                        'icon_marker' => $marker_icon
+                    ];
+
+                    $this->JobType_model->updateJobTypeById($post['eid'], $data_job_type);
+                }else{
+                    $marker_icon = $eventType->icon_marker;
+                    if( $_FILES['image']['size'] > 0 ){
+                        $marker_icon = $this->moveUploadedFile();
+                    }
+
+                    $data_job_type = [
+                        'title' => $post['job_type_name'],
+                        'icon_marker' => $marker_icon
+                    ];
+
+                    $this->JobType_model->updateJobTypeById($post['eid'], $data_job_type);
                 }
-
-                $data_event_type = [
-                    'title' => $post['job_type_name'],
-                    'icon_marker' => $marker_icon
-                ];
-
-                $this->JobType_model->updateJobTypeById($post['eid'], $data_event_type);
 
                 $this->session->set_flashdata('message', 'Job Type was successful updated');
                 $this->session->set_flashdata('alert_class', 'alert-success');

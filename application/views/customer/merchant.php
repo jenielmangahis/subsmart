@@ -531,8 +531,42 @@ defined('BASEPATH') or exit('No direct script access allowed');
         //minDate: new Date(),
     });*/
 
-    $(".btn-submit").click(function(){
+    /*$(".btn-submit").click(function(){
         $("#frm-merchant").submit();
+    });*/
+
+    $(".btn-submit").on( "click", function( event ) {
+        var eid = $(this).attr("data-id");
+        Swal.fire({
+            title: 'Are all entries correct?',
+            text: "Data will be sent to Elavon account manager.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "/customer/send_merchant_details",
+                    data: $("#frm-merchant").serialize(),
+                    success: function(data)
+                    {
+                        if( data.is_success == 1 ){
+                            window.location.reload();    
+                        }else{
+                            Swal.fire(
+                              'Cannot send data',
+                              'Please try again later.',
+                              'error'
+                            );
+                        }
+                    }
+                });
+            }
+        });
     });
 
     $(function () {

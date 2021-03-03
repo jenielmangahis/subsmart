@@ -206,7 +206,9 @@ class Event_Types extends MY_Controller {
 		$this->session->set_flashdata('message', 'Event Type has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
-		redirect('events/event_types');
+        $json_data['is_success'] = 1;
+        echo json_encode($json_data);
+		//redirect('events/event_types');
 	}
 
     public function moveUploadedFile() {

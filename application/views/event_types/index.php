@@ -41,8 +41,8 @@ table.table tbody tr td:first-child {
   }
 }
 .event-marker{
-  height: 57px;
-  width: 100px;
+  height: 50px;
+  width: 50px;
   border: 1px solid #dee2e6;
 }
 </style>
@@ -149,16 +149,47 @@ $(function(){
         "pageLength": 10,
         "order": [],
          "aoColumnDefs": [
-          { "sWidth": "8%", "aTargets": [ 0 ] },
+          { "sWidth": "5%", "aTargets": [ 0 ] },
           { "sWidth": "80%", "aTargets": [ 1 ] },
           { "sWidth": "10%", "aTargets": [ 2 ] }
         ]
     });
-    $(".btn-delete-event-type").click(function(){
+    /*$(".btn-delete-event-type").click(function(){
         var event_type_id = $(this).attr("data-id");
         $("#eid").val(event_type_id);
 
         $("#modalDeleteEventType").modal("show");
+    });*/
+
+    $(".btn-delete-event-type").on( "click", function( event ) {
+        var eid = $(this).attr("data-id");
+        Swal.fire({
+            title: 'Delete selected Event Type?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "/event_types/delete",
+                    data: {eid : eid}, // serializes the form's elements.
+                    success: function(data)
+                    {
+                        /*Swal.fire(
+                          'Deleted!',
+                          'Your file has been deleted.',
+                          'success'
+                        );*/
+                        window.location.reload();
+                    }
+                });
+            }
+        });
     });
 });
 </script>

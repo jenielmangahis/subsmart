@@ -123,8 +123,8 @@ a.btn-primary.btn-md {
   }
 }
 .job-marker{
-  height: 57px;
-  width: 100px;
+  height: 50px;
+  width: 50px;
   border: 1px solid #dee2e6;
 }
 .card{
@@ -283,7 +283,7 @@ add_footer_js(array(
             "pageLength": 10,
             "order": [],
             "aoColumnDefs": [
-              { "sWidth": "8%", "aTargets": [ 0 ] },
+              { "sWidth": "5%", "aTargets": [ 0 ] },
               { "sWidth": "80%", "aTargets": [ 1 ] },
               { "sWidth": "15%", "aTargets": [ 2 ] }
             ]
