@@ -1,10 +1,34 @@
+<style>
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+</style>
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
-<div class="wrapper">
+<div class="wrapper" style="margin-top:60px;">
    <?php include viewPath('includes/notifications'); ?>
-   <div class="container-fluid">  
+   <div class="container-fluid">
+     <!--
       <div class="page-title-box">
          <div class="row align-items-center">
             <div class="col-sm-12">
@@ -14,14 +38,14 @@
                </ol>
             </div>
            </div>
-      </div>   
+      </div>
+    -->
 
-   
       <section class="content">
 
 <div class="row">
 
-  <div class="col-md-3">
+  <div class="col-md-3" style="margin-top: 34px;">
 
 
 
@@ -31,7 +55,7 @@
 
       <div class="box-body box-profile text-center">
 
-        <img style="width:30%;" class="profile-user-img img-responsive img-circle" src="<?php echo userProfileImage($user->id) ?>" alt="User profile picture" />
+        <img style="width:30%;margin:0 auto;" class="profile-user-img img-responsive img-circle" src="<?php echo userProfileImage($user->id) ?>" alt="User profile picture" />
 
 
 
@@ -87,9 +111,15 @@
     <div class="row">
       <div class="col-xl-12">
           <div class="card">
+              <h1 class="page-title mb-0">Profile Edit</h1>
+              <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
+                <div class="col mb-0 left alert alert-warning mt-0">
+                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Edit Profile</span>
+                </div>
+              </div>
               <div class="card-body hid-desk" style="padding-bottom:0px;">
                   <div class="row align-items-center pt-3 bg-white">
-                      <div class="col-md-12">
+                      <div class="col-md-12 pl-0">
                           <!-- Nav tabs -->
                           <div class="banking-tab-container">
                               <div class="rb-01">
@@ -165,7 +195,7 @@
                                       <h3 class="page-title">Edit</h3>
                                   </div>
                                   <div class="<?php echo $activeTab=='edit'?'active':'' ?> tab-pane" id="editProfile">
-                                  <?php echo form_open('/profile/updateProfile', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate']); ?> 
+                                  <?php echo form_open('/profile/updateProfile', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate']); ?>
                                     <div class="form-group">
                                       <label for="inputName" class="col-sm-2 control-label">First Name</label>
                                       <div class="col-sm-10">
@@ -187,7 +217,7 @@
                                     <div class="form-group">
                                       <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                                       <div class="col-sm-10">
-                                        <input type="email" name="email" required 
+                                        <input type="email" name="email" required
                                         data-rule-remote="<?php echo url('users/check?notId='.$user->id) ?>" data-msg-remote="Email Already Exists"
                                         class="form-control" id="inputEmail" placeholder="Email" value="<?php echo $user->email ?>">
                                       </div>
@@ -230,13 +260,13 @@
                                       <h3 class="page-title">Change Profile Image</h3>
                                   </div>
                                   <div class="<?php echo $activeTab=='change_profile_pic'?'active':'' ?> tab-pane" id="editUserProfilePic">
-                                  <?php echo form_open('/profile/updateUserProfilePic', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate', 'enctype' => 'multipart/form-data']); ?> 
+                                  <?php echo form_open('/profile/updateUserProfilePic', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate', 'enctype' => 'multipart/form-data']); ?>
                                   <div class="form-group">
                                     <label for="formUser-Image" class="col-sm-2 control-label">User Profile Image</label>
                                     <div class="col-sm-10">
                                       <input type="file" class="form-control" name="file" id="formUser-Image" placeholder="Upload Image" required accept="image/*" onchange="previewImage(this, '#imagePreview')">
                                     </div>
-                                  </div>       
+                                  </div>
                                   <div class="form-group" id="imagePreview">
                                     <label for="formUser-Preview" class="col-sm-2 control-label">Preview</label>
                                     <div class="col-sm-10">
@@ -257,7 +287,7 @@
                                     <h3 class="page-title">Change Password</h3>
                                 </div>
                                 <div class="<?php echo $activeTab=='change_password'?'active':'' ?> tab-pane" id="changePassword">
-                                <?php echo form_open('/profile/updatePassword', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate']); ?> 
+                                <?php echo form_open('/profile/updatePassword', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate']); ?>
                                   <div class="alert alert-warning" role="alert">
                                     You will need to login again after password is changed !
                                   </div>
@@ -299,19 +329,19 @@
                                 <?php echo form_close(); ?>
                                 </div>
                               </div>
-                              
+
                               <div class="tab-pane standard-accordion" id="compProfImg">
                                   <div class="col-sm-6">
                                       <h3 class="page-title">Change Company Profile Image</h3>
                                   </div>
                                   <div class="<?php echo $activeTab=='change_pic'?'active':'' ?> tab-pane" id="editCompanyProfileImage">
-                                  <?php echo form_open('/profile/updateProfilePic', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate', 'enctype' => 'multipart/form-data']); ?> 
+                                  <?php echo form_open('/profile/updateProfilePic', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate', 'enctype' => 'multipart/form-data']); ?>
                                   <div class="form-group">
                                     <label for="formAdmin-Image" class="col-sm-2 control-label">Company Image</label>
                                     <div class="col-sm-10">
                                       <input type="file" class="form-control" name="image" id="formAdmin-Image" placeholder="Upload Image" required accept="image/*" onchange="previewImage(this, '#imagePreview')">
                                     </div>
-                                  </div>       
+                                  </div>
                                   <div class="form-group" id="imagePreview">
                                     <label for="formAdmin-Preview" class="col-sm-2 control-label">Preview</label>
                                     <div class="col-sm-10">
@@ -326,10 +356,10 @@
                                 <?php echo form_close(); ?>
                                 </div>
                               </div>
-                                                            
+
                               <div class="tab-pane standard-accordion" id="signatureDiv">
                                   <div class="<?php echo $activeTab=='signature'?'active':'' ?> tab-pane" id="editSignature">
-                                  <?php echo form_open('/profile/updateUserProfilePic', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate', 'enctype' => 'multipart/form-data']); ?> 
+                                  <?php echo form_open('/profile/updateUserProfilePic', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate', 'enctype' => 'multipart/form-data']); ?>
                                     <h4>Signature</h4>
                                       <p>This is your signature, update any time.</p>
                                       <div class="row">
@@ -483,13 +513,13 @@
           <button type="button" class="btn btn-primary save-signature">Save Signature</button>
         </div>
       </div>
-      
+
     </div>
   </div>
 
 
 </section>
-      <!-- end row -->           
+      <!-- end row -->
    </div>
    <!-- end container-fluid -->
 </div>
@@ -544,7 +574,7 @@
 
 
   }
-  
+
 
 </script>
 
