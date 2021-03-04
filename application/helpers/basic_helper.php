@@ -1136,6 +1136,13 @@ if (!function_exists('getEmployeeLogs')){
         return $CI->timesheet_model->getUserLogs($attendance_id);
     }
 }
+if (!function_exists('getUserLogs')){
+    function getUserLogs($attendance_id){
+        $CI = &get_instance();
+//        return $CI->timesheet_model->getTSLogsByUser();
+        return $CI->timesheet_model->getUserLogs($attendance_id);
+    }
+}
 if (!function_exists('getEmployeeAttendance')){
     function getEmployeeAttendance(){
         $CI = &get_instance();

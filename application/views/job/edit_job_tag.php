@@ -2,6 +2,27 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
 .list-icon{
   list-style: none;
   height: 400px;
@@ -18,23 +39,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   height: 50px;
   width: 50px;
 }
+.marker-icon{
+  height: 100px;
+  margin: 30px 0px;
+  border: 1px solid #363636;
+  padding: 10px;
+} 
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
+            <!-- <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title"><i class="fa fa-edit"></i> Edit Job Tag</h1>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card" style="min-height: 400px !important;">
+                    <div class="card p-20" style="min-height: 400px !important;">
+                        <h3 class="page-title mb-0"><i class="fa fa-edit"></i> Edit Job Tag</h3>
                         <hr />
                         <?php include viewPath('flash'); ?>
                         <?php echo form_open_multipart('job/update_job_tag', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
@@ -42,13 +70,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <input type="hidden" name="jid" value="<?= $jobTag->id; ?>">
                           <div class="form-group">
                               <label>Job Tag Name</label> <span class="form-required">*</span>
-                              <input type="text" name="event_tag_name" value="<?= $jobTag->name; ?>"  class="form-control" required="" autocomplete="off" />
+                              <input type="text" name="job_tag_name" value="<?= $jobTag->name; ?>"  class="form-control" required="" autocomplete="off" />
                           </div>
                           <div class="form-group">
                               <label>Icon / Marker</label> <span class="form-required">*</span><br />
                               <?php 
-
+                                if( $jobTag->marker_icon != '' ){
+                                  if( $jobTag->is_marker_icon_default_list == 1 ){
+                                    $image_url = base_url('uploads/icons/'. $jobTag->marker_icon);
+                                  }else{
+                                    $image_url = base_url('uploads/job_tags/' . $jobTag->company_id . '/' . $jobTag->marker_icon);
+                                  }
+                                }else{
+                                  $image_url = base_url('uploads/job_tags/no_file.png');
+                                }
                               ?>
+                              <img src="<?= $image_url; ?>" class="marker-icon" />
+
                               <input type="file" name="image" value=""  class="form-control" id="input-upload-image" style="width: 20%;display: inline-block;" autocomplete="off" />
                               <input type="text" name="default-icon-name" disabled="" value="<?= $jobTag->marker_icon; ?>" class="form-control" style="width: 20%;display: inline-block;" id="icon-pick-name"><br />
                               <div class="form-check" style="margin-top: 10px;">

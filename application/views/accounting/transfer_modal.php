@@ -31,7 +31,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="transferFromBalance">Balance</label>
-                                <h3 id="transferFromBalance">$ -695.00</h3>
+                                <h3 id="transferFromBalance"></h3>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="transferToBalance">Balance</label>
-                                <h3 id="transferToBalance">$ -695.00</h3>
+                                <h3 id="transferToBalance"></h3>
                             </div>
                         </div>
                     </div>

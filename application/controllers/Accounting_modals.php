@@ -680,7 +680,7 @@ class Accounting_modals extends MY_Controller {
 
     private function transfer_funds($data, $files) {
         $this->form_validation->set_rules('transfer_from', 'Transfer From Account', 'required');
-        $this->form_validation->set_rules('transfer_to', 'Transfer To Account', 'required');
+        $this->form_validation->set_rules('transfer_to', 'Transfer To Account', 'required|differs[transfer_from]');
         $this->form_validation->set_rules('transfer_amount', 'Amount', 'required');
 
         if(isset($data['template_name'])) {
@@ -702,7 +702,6 @@ class Accounting_modals extends MY_Controller {
                 if($data['recurring_interval'] !== 'yearly') {
                     $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
                 }
-                $this->form_validation->set_rules('start_date', 'Recurring start date', 'required');
                 $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
 
                 if($data['end_type'] === 'by') {
@@ -734,7 +733,7 @@ class Accounting_modals extends MY_Controller {
                 'transfer_to_account_key' => $transferTo[0],
                 'transfer_to_account_id' => $transferTo[1],
                 'transfer_amount' => $data['transfer_amount'],
-                'transfer_date' => date('Y-m-d', strtotime($data['date'])),
+                'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
                 'transfer_memo' => $data['memo'],
                 'transfer_attachments' => json_encode($filenames),
                 'recurring' => isset($data['template_name']) ? 1 : 0,
@@ -759,7 +758,7 @@ class Accounting_modals extends MY_Controller {
                     'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
                     'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
                     'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
-                    'start_date' => date('Y-m-d', strtotime($data['start_date'])),
+                    'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                     'end_type' => $data['end_type'],
                     'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                     'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
@@ -772,7 +771,7 @@ class Accounting_modals extends MY_Controller {
 
                 $return['data'] = $transferId;
                 $return['success'] = $transferId && $recurringId ? true : false;
-                $return['message'] = $transferId && $recurringId ? 'Transfer Successfully!' : 'An unexpected error occured!';
+                $return['message'] = $transferId && $recurringId ? 'Template saved!' : 'An unexpected error occured!';
             } else {
                 $return['data'] = $transferId;
                 $return['success'] = $transferId ? true : false;
@@ -915,7 +914,6 @@ class Accounting_modals extends MY_Controller {
                 if($data['recurring_interval'] !== 'yearly') {
                     $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
                 }
-                $this->form_validation->set_rules('start_date', 'Recurring start date', 'required');
                 $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
 
                 if($data['end_type'] === 'by') {
@@ -982,7 +980,7 @@ class Accounting_modals extends MY_Controller {
                         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => date('Y-m-d', strtotime($data['start_date'])),
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
@@ -1005,7 +1003,7 @@ class Accounting_modals extends MY_Controller {
                         'account_id' => $account[1],
                         'debit' => $data['debits'][$key],
                         'credit' => $data['credits'][$key],
-                        'description' => $data['description'][$key],
+                        'description' => $data['descriptions'][$key],
                         'name_key' => $name[0],
                         'name_id' => $name[1]
                     ];
@@ -1055,7 +1053,6 @@ class Accounting_modals extends MY_Controller {
                 if($data['recurring_interval'] !== 'yearly') {
                     $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
                 }
-                $this->form_validation->set_rules('start_date', 'Recurring start date', 'required');
                 $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
 
                 if($data['end_type'] === 'by') {
@@ -1093,7 +1090,7 @@ class Accounting_modals extends MY_Controller {
                 'account_key' => $bankAccount[0],
                 'account_id' => $bankAccount[1],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
-                'tags' => json_encode($data['tags']),
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'total_amount' => number_format($totalAmount, 2, '.', ','),
                 'cash_back_account_key' => $cashBackTarget[0],
                 'cash_back_account_id' => $cashBackTarget[1],

@@ -139,6 +139,9 @@ class Events extends MY_Controller
             'select' => 'id,invoice_number,date_issued,job_name,customer_id',
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
         }
@@ -947,30 +950,37 @@ class Events extends MY_Controller
 
         $post = $this->input->post();
         $company_id = logged('company_id');
+        $eventTag = $this->EventTags_model->getById($post['tid']);
+        if( $eventTag ){
+            $marker_icon = $eventTag->marker_icon;
+            $is_marker_icon_default_list = $eventTag->is_marker_icon_default_list;
+            if( isset($post['is_default_icon']) ){
+                if( $post['default_icon_id'] > 0 ){
+                    $icon = $this->Icons_model->getById($post['default_icon_id']);
+                    $marker_icon = $icon->image;
+                    $is_marker_icon_default_list = 1;
+                }
+            }else{
+                if( $_FILES['image']['size'] > 0 ){
+                    $marker_icon = $this->moveUploadedFile();
+                    $is_marker_icon_default_list = 0;
+                }
+            }
 
-        if( isset($post['is_default_icon']) ){
-            $icon = $this->Icons_model->getById($post['default_icon_id']);
-            $marker_icon = $icon->image;
             $data = [
                 'name' => $post['event_tag_name'],
                 'marker_icon' => $marker_icon,
-                'is_marker_icon_default_list' => 1
+                'is_marker_icon_default_list' => $is_marker_icon_default_list
             ];
-
             $this->EventTags_model->update($post['tid'],$data);
+
+            $this->session->set_flashdata('message', 'Update event tag was successful');
+            $this->session->set_flashdata('alert_class', 'alert-success');
         }else{
-            $marker_icon = $this->moveUploadedFile();
-            $data = [
-                'name' => $post['event_tag_name'],
-                'marker_icon' => $marker_icon,
-                'is_marker_icon_default_list' => 0
-            ];
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
 
-            $this->EventTags_model->update($post['tid'],$data);
-        }
-
-        $this->session->set_flashdata('message', 'Update event tag was successful');
-        $this->session->set_flashdata('alert_class', 'alert-success');
+        }        
 
         redirect('events/event_tags');
     }

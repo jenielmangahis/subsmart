@@ -123,13 +123,14 @@ a.btn-primary.btn-md {
   }
 }
 .job-marker{
-  height: 57px;
-  width: 100px;
+  height: 50px;
+  width: 50px;
   border: 1px solid #dee2e6;
 }
 .card{
     box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
 }
+
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -194,14 +195,18 @@ add_css(array(
                                         <?php foreach($job_types as $types) : ?>
                                             <tr>
                                                 <td>
-                                                  <?php 
-                                                    if( $types->icon_marker != '' ){
-                                                      $image = base_url('uploads/job_types/' . $types->icon_marker);
-                                                    }else{
-                                                      $image = base_url('uploads/job_types/default_no_image.jpg');
-                                                    }
-                                                  ?>
-                                                  <img src="<?= $image ?>" class="job-marker" />
+                                                  <?php
+                                                        if( $types->icon_marker != '' ){
+                                                            if($types->is_marker_icon_default_list == 1){
+                                                                $marker = base_url("uploads/icons/" . $types->icon_marker);
+                                                            }else{
+                                                                $marker = base_url("uploads/job_types/" . $types->company_id . "/" . $types->icon_marker);
+                                                            }
+                                                        }else{
+                                                            $marker = base_url("uploads/job_types/default_no_image.jpg");
+                                                        }                                                                
+                                                    ?>
+                                                    <img src="<?= $marker; ?>" class="job-marker">
                                                 </td>
                                                 <td><?= $types->title; ?></td>                                                
                                                 <td class="pl-3">
@@ -278,7 +283,7 @@ add_footer_js(array(
             "pageLength": 10,
             "order": [],
             "aoColumnDefs": [
-              { "sWidth": "8%", "aTargets": [ 0 ] },
+              { "sWidth": "5%", "aTargets": [ 0 ] },
               { "sWidth": "80%", "aTargets": [ 1 ] },
               { "sWidth": "15%", "aTargets": [ 2 ] }
             ]

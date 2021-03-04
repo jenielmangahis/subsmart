@@ -1061,6 +1061,15 @@ class Job extends MY_Controller
 
     public function add_new_job_type()
     {
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
+
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['icons'] = $icons;
         $this->load->view('job/job_settings/add_new_job_type', $this->page_data);
     }
 
@@ -1068,19 +1077,22 @@ class Job extends MY_Controller
     {
         postAllowed();
 
+        $this->load->model('Icons_model');
+
         $comp_id = logged('company_id');
         $user_id = logged('id');
         $post    = $this->input->post();
 
         if( $post['job_type_name'] != ''){
-            if( !empty($_FILES['image']['name']) ){
-
-                $marker_icon = $this->moveUploadedFile();
+            if( isset($post['is_default_icon']) ){
+                $icon = $this->Icons_model->getById($post['default_icon_id']);
+                $marker_icon = $icon->image;
                 $data_job_type = [
                     'user_id' => $user_id,
                     'company_id' => $comp_id,                    
                     'title' => $post['job_type_name'],
                     'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => 1,
                     'status' => 1,
                     'created_at' => date("Y-m-d H:i:s")
                 ];
@@ -1100,10 +1112,39 @@ class Job extends MY_Controller
                     redirect('job/add_new_job_type');
                 }
             }else{
-                $this->session->set_flashdata('message', 'Please specify job type icon / marker image');
-                $this->session->set_flashdata('alert_class', 'alert-danger');
+                if( !empty($_FILES['image']['name']) ){
 
-                redirect('job/add_new_job_type');
+                    $marker_icon = $this->moveUploadedFile();
+                    $data_job_type = [
+                        'user_id' => $user_id,
+                        'company_id' => $comp_id,                    
+                        'title' => $post['job_type_name'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 0,
+                        'status' => 1,
+                        'created_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $job_type_id = $this->JobType_model->create($data_job_type);
+                    if( $job_type_id > 0 ){
+
+                        $this->session->set_flashdata('message', 'Add new job type was successful');
+                        $this->session->set_flashdata('alert_class', 'alert-success');
+
+                        redirect('job/job_types');
+
+                    }else{
+                        $this->session->set_flashdata('message', 'Cannot save data.');
+                        $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                        redirect('job/add_new_job_type');
+                    }
+                }else{
+                    $this->session->set_flashdata('message', 'Please specify job type icon / marker image');
+                    $this->session->set_flashdata('alert_class', 'alert-danger');
+
+                    redirect('job/add_new_job_type');
+                }
             }
         }else{
             $this->session->set_flashdata('message', 'Please specify job type name');
@@ -1114,32 +1155,53 @@ class Job extends MY_Controller
     }
 
     public function edit_job_type( $job_type_id ){
+        $this->load->model('Icons_model');
+
+        add_css(array(            
+            'assets/css/hover.css'
+        ));
 
         $jobType = $this->JobType_model->getById($job_type_id);
+        $icons   = $this->Icons_model->getAll();
 
         $this->page_data['jobType'] = $jobType;
+        $this->page_data['icons'] = $icons;
         $this->load->view('job/job_settings/edit_job_type', $this->page_data);
     }
 
     public function update_job_type() {
         postAllowed();
+
+        $this->load->model('Icons_model');
+
         $post    = $this->input->post();
 
         if( $post['job_type_name'] != '' ){
 
-            $eventType = $this->JobType_model->getById($post['eid']);
-            if( $eventType ){
-                $marker_icon = $eventType->icon_marker;
-                if( $_FILES['image']['size'] > 0 ){
-                    $marker_icon = $this->moveUploadedFile();
+            $jobType = $this->JobType_model->getById($post['eid']);
+            if( $jobType ){
+                $marker_icon = $jobType->icon_marker;
+                $is_marker_icon_default_list = $jobType->is_marker_icon_default_list;
+                if( isset($post['is_default_icon']) ){
+                    if( $post['default_icon_id'] > 0 ){
+                        $icon = $this->Icons_model->getById($post['default_icon_id']);
+                        $marker_icon = $icon->image;
+                        $is_marker_icon_default_list = 1;
+                    }   
+                }else{
+                    if( $_FILES['image']['size'] > 0 ){
+                        $marker_icon = $this->moveUploadedFile();
+                        $is_marker_icon_default_list = 0;
+                    }
                 }
 
-                $data_event_type = [
+                $data_job_type = [
                     'title' => $post['job_type_name'],
-                    'icon_marker' => $marker_icon
+                    'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => $is_marker_icon_default_list
                 ];
-
-                $this->JobType_model->updateJobTypeById($post['eid'], $data_event_type);
+                
+                $this->JobType_model->updateJobTypeById($post['eid'], $data_job_type);
 
                 $this->session->set_flashdata('message', 'Job Type was successful updated');
                 $this->session->set_flashdata('alert_class', 'alert-success');
@@ -1166,6 +1228,25 @@ class Job extends MY_Controller
         if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
             $company_id = logged('company_id');
             $target_dir = "./uploads/job_types/" . $company_id . "/";
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = basename($_FILES["image"]["name"]);
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
+    }
+
+    public function jobTagMoveUploadedFile() {
+        if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
+            $company_id = logged('company_id');
+            $target_dir = "./uploads/job_tags/" . $company_id . "/";
             if(!file_exists($target_dir)) {
                 mkdir($target_dir, 0777, true);
             }
@@ -1392,31 +1473,40 @@ class Job extends MY_Controller
         $post = $this->input->post();
         $company_id = logged('company_id');
 
-        if( isset($post['is_default_icon']) ){
-            $icon = $this->Icons_model->getById($post['default_icon_id']);
-            $marker_icon = $icon->image;
+        $jobTag = $this->JobTags_model->getById($post['jid']);
+        if( $jobTag ){
+            $marker_icon = $jobTag->marker_icon;
+            $is_marker_icon_default_list = $jobTag->is_marker_icon_default_list;
+            if( isset($post['is_default_icon']) ){
+                if( $post['default_icon_id'] > 0 ){
+                    $icon = $this->Icons_model->getById($post['default_icon_id']);
+                    $marker_icon = $icon->image;
+                    $is_marker_icon_default_list = 1;
+                }                
+                
+            }else{
+                if( $_FILES['image']['size'] > 0 ){
+                    $marker_icon = $this->jobTagMoveUploadedFile();
+                    $is_marker_icon_default_list = 0;
+                }
+            }
+
             $data = [
                 'name' => $post['job_tag_name'],
                 'marker_icon' => $marker_icon,
-                'is_marker_icon_default_list' => 1
+                'is_marker_icon_default_list' => $is_marker_icon_default_list
             ];
 
             $this->JobTags_model->update($post['jid'],$data);
+
+            $this->session->set_flashdata('message', 'Update job tag was successful');
+            $this->session->set_flashdata('alert_class', 'alert-success');
         }else{
-            $marker_icon = $this->moveUploadedFile();
-            $data = [
-                'name' => $post['job_tag_name'],
-                'marker_icon' => $marker_icon,
-                'is_marker_icon_default_list' => 0
-            ];
-
-            $this->JobTags_model->update($post['jid'],$data);
+            $this->session->set_flashdata('message', 'Record not found');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
         }
 
-        $this->session->set_flashdata('message', 'Update event tag was successful');
-        $this->session->set_flashdata('alert_class', 'alert-success');
-
-        redirect('events/event_tags');
+        redirect('job/job_tags');
     }
 
     public function jobTagsMoveUploadedFile() {

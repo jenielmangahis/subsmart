@@ -35,7 +35,8 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_expense_name_model');
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_recurring_transactions_model');
-        $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('Estimate_model', 'estimate_model');
+        $this->load->model('Jobs_model', 'jobs_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -535,13 +536,16 @@ class Accounting extends MY_Controller {
                 $data->transaction = $this->accounting_bank_deposit_model->getById($data->txn_id);
 
                 $tags = [];
-                foreach(json_decode($data->transaction->tags, true) as $tag) {
-                    $t = $this->tags_model->getTagById($tag);
-                    $tags[] = [
-                        'id' => $tag,
-                        'name' => $t->name
-                    ];
+                if($data->transaction->tags !== null) {
+                    foreach(json_decode($data->transaction->tags, true) as $tag) {
+                        $t = $this->tags_model->getTagById($tag);
+                        $tags[] = [
+                            'id' => $tag,
+                            'name' => $t->name
+                        ];
+                    }
                 }
+
                 $data->transaction->tags = json_encode($tags);
                 $data->transaction->items = $this->accounting_bank_deposit_model->getFunds($data->transaction->id);
             break;
@@ -577,6 +581,11 @@ class Accounting extends MY_Controller {
 
                 $this->form_validation->set_rules('account[]', 'Account', 'required');
                 $this->form_validation->set_rules('amount[]', 'Amount', 'required');
+            break;
+            case 'transfer' :
+                $this->form_validation->set_rules('transfer_from', 'Transfer From Account', 'required');
+                $this->form_validation->set_rules('transfer_to', 'Transfer To Account', 'required|differs[transfer_from]');
+                $this->form_validation->set_rules('transfer_amount', 'Amount', 'required');
             break;
         }
 
@@ -614,15 +623,41 @@ class Accounting extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
+            if($type === 'journal_entry') {
+                $totalDebit = array_sum(array_map(function($item) { 
+                    return $item;
+                }, $data['debits']));
+        
+                $totalCredit = array_sum(array_map(function($item) { 
+                    return $item;
+                }, $data['credits']));
+
+                if(isset($data['accounts']) && count($data['accounts']) < 2 || !isset($data['accounts'])) {
+                    $return['data'] = null;
+                    $return['success'] = false;
+                    $return['message'] = 'You must fill out at least two detail lines.';
+
+                    echo json_encode($return);
+                    exit;
+                } else if($totalDebit !== $totalCredit) {
+                    $return['data'] = null;
+                    $return['success'] = false;
+                    $return['message'] = 'Please balance debits and credits.';
+
+                    echo json_encode($return);
+                    exit;
+                }
+            }
+
             $recurringData = [
                 'template_name' => $data['template_name'],
                 'recurring_type' => $data['recurring_type'],
                 'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
                 'recurring_interval' => $data['recurring_interval'],
-                'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                 'start_date' => $data['recurring_type'] !== 'unscheduled' ? $data['start_date'] !== "" ? date('Y-m-d', strtotime($data['start_date'])) : null : null,
                 'end_type' => $data['end_type'],
                 'end_date' => $data['end_type'] === 'by' ? $data['end_date'] !== "" ? date('Y-m-d', strtotime($data['end_date'])) : null : null,
@@ -637,6 +672,7 @@ class Accounting extends MY_Controller {
 
                 switch($type) {
                     case 'deposit' :
+                        $this->load->model('accounting_bank_deposit_model');
                         $bankAccount = explode('-', $data['bank_account']);
                         $cashBackTarget = explode('-', $data['cash_back_target']);
 
@@ -649,14 +685,13 @@ class Accounting extends MY_Controller {
                         $depositData = [
                             'account_key' => $bankAccount[0],
                             'account_id' => $bankAccount[1],
-                            'tags' => json_encode($data['tags']),
+                            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                             'total_amount' => number_format($totalAmount, 2, '.', ','),
                             'cash_back_account_key' => $cashBackTarget[0],
                             'cash_back_account_id' => $cashBackTarget[1],
                             'cash_back_memo' => $data['cash_back_memo'],
                             'cash_back_amount' => $data['cash_back_amount'],
                             'memo' => $data['memo'],
-                            'recurring' => isset($data['template_name']) ? 1 : 0,
                             'updated_at' => date('Y-m-d h:i:s')
                         ];
 
@@ -684,11 +719,58 @@ class Accounting extends MY_Controller {
 
                         $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
                     break;
+                    case 'transfer' :
+                        $this->load->model('accounting_transfer_funds_model');
+                        $transferFrom = explode('-', $data['transfer_from']);
+                        $transferTo = explode('-', $data['transfer_to']);
+
+                        $transferData = [
+                            'transfer_from_account_key' => $transferFrom[0],
+                            'transfer_from_account_id' => $transferFrom[1],
+                            'transfer_to_account_key' => $transferTo[0],
+                            'transfer_to_account_id' => $transferTo[1],
+                            'transfer_amount' => $data['transfer_amount'],
+                            'transfer_memo' => $data['memo'],
+                            'updated_at' => date('Y-m-d h:i:s')
+                        ];
+
+                        $transactionUpdate = $this->accounting_transfer_funds_model->update($recurringData->txn_id, $transferData);
+                    break;
+                    case 'journal_entry' :
+                        $this->load->model('accounting_journal_entries_model');
+                        $entryData = [
+                            'memo' => $data['memo'],
+                            'updated_at' => date('Y-m-d h:i:s')
+                        ];
+
+                        $transactionUpdate = $this->accounting_journal_entries_model->update($recurringData->txn_id, $entryData);
+
+                        $deleteEntries = $this->accounting_journal_entries_model->deleteEntries($recurringData->txn_id);
+
+                        $entryItems = [];
+                        foreach ($data['accounts'] as $key => $value) {
+                            $name = explode('-', $data['names'][$key]);
+                            $account = explode('-', $value);
+            
+                            $entryItems[] = [
+                                'journal_entry_id' => $recurringData->txn_id,
+                                'account_key' => $account[0],
+                                'account_id' => $account[1],
+                                'debit' => $data['debits'][$key],
+                                'credit' => $data['credits'][$key],
+                                'description' => $data['descriptions'][$key],
+                                'name_key' => $name[0],
+                                'name_id' => $name[1]
+                            ];
+                        }
+
+                        $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
+                    break;
                 }
             }
 
-            $return['success'] = $recurringUpdate ? true : false;
-            $return['message'] =  $recurringUpdate ? 'Update Successful!' : 'An unexpected error occured!';
+            $return['success'] = $recurringUpdate && $transactionUpdate ? true : false;
+            $return['message'] =  $recurringUpdate && $transactionUpdate ? 'Update Successful!' : 'An unexpected error occured!';
         }
 
         echo json_encode($return);
@@ -3260,6 +3342,89 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
+
+    public function savenewestimate()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'job_location' => $this->input->post('job_location'),
+            'job_name' => $this->input->post('job_name'),
+            'estimate_number' => $this->input->post('estimate_number'),
+            // 'email' => $this->input->post('email'),
+            // 'billing_address' => $this->input->post('billing_address'),
+            'estimate_date' => $this->input->post('estimate_date'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'estimate_type' => 'Standard',
+            // 'ship_via' => $this->input->post('ship_via'),
+            // 'ship_date' => $this->input->post('ship_date'),
+            // 'tracking_no' => $this->input->post('tracking_no'),
+            // 'ship_to' => $this->input->post('ship_to'),
+            // 'tags' => $this->input->post('tags'),
+            'attachments' => 'testing',
+            // 'message_invoice' => $this->input->post('message_invoice'),
+            // 'message_statement' => $this->input->post('message_statement'),
+            'status' => $this->input->post('status'),
+            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_amount' => $this->input->post('deposit_amount'),
+            'customer_message' => $this->input->post('customer_message'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'instructions' => $this->input->post('instructions'),
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            // 'created_by' => logged('id'),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+        if($addQuery > 0){
+        //     $new_data2 = array(
+        //         'product_services' => $this->input->post('prod'),
+        //         'description' => $this->input->post('desc'),
+        //         'qty' => $this->input->post('qty'),
+        //         'rate' => $this->input->post('rate'),
+        //         'amount' => $this->input->post('amount'),
+        //         'tax' => $this->input->post('tax'),
+        //         'type' => '1',
+        //         'type_id' => $addQuery,
+        //         'status' => '1',
+        //         'created_at' => date("Y-m-d H:i:s"),
+        //         'updated_at' => date("Y-m-d H:i:s")
+        //     );
+        //     $a = $this->input->post('prod');
+        //     $b = $this->input->post('desc');
+        //     $c = $this->input->post('qty');
+        //     $d = $this->input->post('rate');
+        //     $e = $this->input->post('amount');
+        //     $f = $this->input->post('tax');
+
+        //     $i = 0;
+        //     foreach($a as $row){
+        //         $data['product_services'] = $a[$i];
+        //         $data['description'] = $b[$i];
+        //         $data['qty'] = $c[$i];
+        //         $data['rate'] = $d[$i];
+        //         $data['amount'] = $e[$i];
+        //         $data['tax'] = $f[$i];
+        //         $data['type'] = '2';
+        //         $data['type_id'] = $addQuery;
+        //         $data['status'] = '1';
+        //         $data['created_at'] = date("Y-m-d H:i:s");
+        //         $data['updated_at'] = date("Y-m-d H:i:s");
+        //         $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+        //         $i++;
+        //     }
+    
+            redirect('accounting/banking');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
 	
     public function addSalesReceipt()
     {
@@ -4640,9 +4805,54 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/work_order_list', $this->page_data);
     }
 
-    public function newEstimateList(){
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Estimate Lists";
+    public function newEstimateList($tab = ''){
+        $is_allowed = $this->isAllowedModuleAccess(18);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'estimate';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+        $role = logged('role');
+        if ($role == 2 || $role == 3 || $role == 1) {
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere([]);
+        }else{
+            $company_id = logged('company_id');
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);   
+        }
+            
+        if (!empty($tab)) {
+            $query_tab = $tab;
+            if( $tab == 'declined%20by%20customer' ){
+                $query_tab = 'Declined By Customer';
+            }
+            $this->page_data['tab'] = $tab;
+            $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => lcfirst($query_tab)), $company_id, $role);
+        } else {
+
+            // search
+            if (!empty(get('search'))) {
+
+                $this->page_data['search'] = get('search');
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
+            } elseif (!empty(get('order'))) {
+
+                $this->page_data['search'] = get('search');
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
+
+            } else {
+                if( $role == 1 || $role == 2 ){
+                    $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
+                }else{
+                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
+                }
+            }
+        }
+
+        $this->page_data['role'] = $role;
+        $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
+
+        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->page_data['page_title'] = "Estimate Lists";
         // print_r($this->page_data);
         $this->load->view('accounting/estimatesList', $this->page_data);
     }
@@ -4853,374 +5063,9 @@ class Accounting extends MY_Controller {
         $this->email->initialize($config);
 
         $subject =  '
-        <div wrapper__section>
-        <div class="container-fluid p-40">
-          <div class="card">
-              <div class="page-title-box pt-1 pb-0">
-                  <div class="row align-items-center">
-                      <div class="col-sm-12">
-                          <h3 style="font-family: Sarabun, sans-serif">MERCHANT ACCOUNT APPLICATION</h3>
-                      </div>
-                  </div>
-              </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
-                    <h6>COMPANY INFORMATION</h6>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>DBA NAME</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>CONTANCT NAME</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>DBA ADDRESS TYPE</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>DBA ADDRESS 1</b> <i>(NO PO BOX)</i></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>DBA ADDRESS 2</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>CITY</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>STATE</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>ZIP CODE</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>DBA PHONE NO.</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>EMAIL ADDRESS</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>MOBILE PHONE NO.</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>YEAR ESTABLISHED</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>LENGTH OF CURRENT OWNERSHIP</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>YEARS</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>MONTHS</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
-                    <h6>OTHER ADDRESS <i> (IF DIFFERENT FROM ABOVE)</i></h6>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="form-group" id="customer_type_group">
-                        <!-- <input type="checkbox">
-                        <label for=""><b>MAILING</b></label> -->
-                        <label class="checkboxcontainer"> MAILING
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group" id="customer_type_group">
-                        <!-- <input type="checkbox">
-                        <label for=""><b>SHIPPING</b></label> -->
-                        <label class="checkboxcontainer"> SHIPPING
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group" id="customer_type_group">
-                        <!-- <input type="checkbox">
-                        <label for=""><b>SEE ALSO SPECIAL INSTRUCTIONS</b> <i>(MORE THAN ONE OPTION MAY BE SELECTED)</i></label> -->
-                        <label class="checkboxcontainer"> <b>SEE ALSO SPECIAL INSTRUCTIONS</b> <i>(MORE THAN ONE OPTION MAY BE SELECTED)</i>
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>LOCATION NAME</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>PHONE NO.</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>CONTACT NO.</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>BEST CONTACT NO.</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>BEST TIME TO CALL</b></label>
-                        <!-- <input type="text" class="form-control" name="name" id="name"> -->
-                        <div class="row">
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" name="name" id="name" placeholder="From">
-                            </div>
-                            <div class="col-md-1" style="margin-top:10px;">
-                                <i class="fa fa-arrows-h" aria-hidden="true"></i>
-                            </div>
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" name="name" id="name" placeholder="To">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>FAX NO.</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>ADDRESS</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>CITY</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>STATE</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>ZIP CODE</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
-                    <h6>PRINCIPAL 1 INFORMATION <i> (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</i></h6>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" id="customer_type_group">
-                        <!-- <input type="checkbox">
-                        <label for=""><b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b></label> -->
-                        <label class="checkboxcontainer"> <b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b>
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                        </label>
-                        <input type="text" name="name" id="name" style="padding: 12px 20px;
-                                                                        margin: 8px 0;
-                                                                        box-sizing: border-box;
-                                                                        border-radius: 4px;"> <label for=""><b> %</b></label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                    <br>
-                        <!-- <input type="checkbox">
-                        <label for=""><b>AUTHORIZED SIGNER</b></label> -->
-                        <label class="checkboxcontainer"> <b>AUTHORIZED SIGNER</b>
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                    <br>
-                        <!-- <input type="checkbox">
-                        <label for=""><b>SOLE PROPRIETOR</b></label> -->
-                        <label class="checkboxcontainer"> <b>SOLE PROPRIETOR</b>
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>FIRST NAME</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>MIDDLE NAME</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>LAST NAME</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>ADDRESS</b></label> <i>(NO PO BOX)</i>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>PHONE NO</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>CITY</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>STATE/PROVINCE</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>ZIP/POSTAL CODE</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group" id="customer_type_group" style="background-color:#E8E8E9;padding:2px;">
-                        <label for=""> <i><b> PREVIOUS ADDRESS IF CURRENT ADDRESS IS LESS THAN 2 YEARS </b></i></label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>HOME ADDRESS</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>CITY</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>STATE</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>ZIP CODE</b></label>
-                        <input type="text" class="form-control" name="name" id="name">
-                    </div>
-                </div>
-            </div>
+        <table></table>
         ';
         
-        // $email = 'emploucelle@gmail.com';
         $email = $this->input->post('email');
         $header_message = "<html><head><title>".$subject."</title></head><body>";
         $footer_message = "</body></html>";

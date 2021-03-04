@@ -748,7 +748,11 @@ class Workorder extends MY_Controller
                         $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
                         if( $e->event_type_id > 0 ){
                             $eventType = $this->EventType_model->getById($e->event_type_id);
-                            $marker = 'https://staging.nsmartrac.com/uploads/event_types/' . $eventType->icon_marker;
+                            if( $eventType->is_marker_icon_default_list == 1 ){
+                                $marker = base_url('/uploads/icons/' . $eventType->icon_marker);
+                            }else{
+                                $marker = base_url('/uploads/event_types/' . $eventType->company_id . "/" . $eventType->icon_marker);
+                            }
                         }
                         
                         $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
@@ -825,7 +829,12 @@ class Workorder extends MY_Controller
                     $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
                     if( $e->event_type_id > 0 ){
                         $eventType = $this->EventType_model->getById($e->event_type_id);
-                        $marker = 'https://staging.nsmartrac.com/uploads/event_types/' . $eventType->icon_marker;
+                        if( $eventType->is_marker_icon_default_list == 1 ){
+                            $marker = base_url('/uploads/icons/' . $eventType->icon_marker);
+                        }else{
+                            $marker = base_url('/uploads/event_types/' . $eventType->company_id . "/" . $eventType->icon_marker);
+                        }
+                        
                     }
                     $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
                     $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");

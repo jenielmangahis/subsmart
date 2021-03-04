@@ -235,7 +235,7 @@ class Estimate_model extends MY_Model
     }
 
     public function save_estimate($data){
-		$vendor = $this->db->insert('accounting_estimate', $data);
+		$vendor = $this->db->insert('estimates', $data);
 	    $insert = $this->db->insert_id();
 		return  $insert;
 	}

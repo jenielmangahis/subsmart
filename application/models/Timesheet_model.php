@@ -39,7 +39,8 @@ class Timesheet_model extends MY_Model {
         // $qry = $query->result();
         return $query->result();
     }
-    public function get_unreadNotification(){
+    
+    public function get_unreadNotification($current_notif_count,$action){
         $user_id = $this->session->userdata('logged')['id'];
 		$company_id = logged('company_id');
         // $this->db->select('n.*,u.FName,u.LName');
@@ -59,11 +60,21 @@ class Timesheet_model extends MY_Model {
         }else{
             $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = ".$company_id." and user_notification.user_id = ".$user_id." and user_notification.status = 1 and user_notification.date_created >= '".$date_2days_ago."' order by user_notification.date_created Desc");
         }
+        if($action === "counter"){
+            return $query->num_rows();
+        }else{
+            if($query->num_rows() != $current_notif_count){
+                return $query->result();
+            }else{
+                return null;
+            }
+        }
         
+
         // $query = $this->db->get();
         // var_dump(query);
         // $qry = $query->result();
-        return $query->result();
+        
     }
 
     public function get_company_admins($company_id){
@@ -184,10 +195,9 @@ class Timesheet_model extends MY_Model {
     }
 
     public function checkInEmployee($user_id,$entry,$approved_by,$company_id){
-        $attn_id = $this->attendance($user_id,1,0,null,null,null);
+        // $attn_id = $this->attendance($user_id,1,0,null,null,null);
         $qry = $this->db->get_where($this->db_table,array('attendance_id'=>$attn_id,'action' => 'Check in'));
-        if ($qry->num_rows() == 0){
-            $data = array(
+        $data = array(
                 'attendance_id'=> $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check in',
@@ -197,36 +207,43 @@ class Timesheet_model extends MY_Model {
                 'entry_type' => $entry,
                 'approved_by' => $approved_by,
                 'company_id' => $company_id
-            );
-            $this->db->insert($this->db_table,$data);
-            return $attn_id;
-        }else{
-            return false;
-        }
+        );
+        $this->db->insert($this->db_table,$data);
+        return $attn_id;
     }
     public function checkingOutEmployee($user_id,$attn_id,$entry,$approved_by,$company_id){
 
         $qry = $this->db->get_where($this->db_table,array('attendance_id'=> $attn_id,'action' => 'Check in'));
-        
-        if ($qry->num_rows() == 1){
+        date_default_timezone_set('UTC');
+        $date_created = date('Y-m-d H:i:s');
+        if ($qry->num_rows() >= 1){
             $data = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'user_location' => $this->employeeCoordinates(),
                 'user_location_address' => $this->employeeAddress(),
-                'date_created' => date('Y-m-d H:i:s'),
                 'entry_type' => $entry,
                 'approved_by' => $approved_by,
-                'company_id' => $company_id
+                'company_id' => $company_id,
+                'date_created' => $date_created
             );
             $this->db->insert($this->db_table,$data);
-            $shift = $this->calculateShiftDuration($attn_id);
+            $ShiftDuration_and_overtime = $this->calculateShiftDuration_and_overtime($attn_id);
             $break = $this->calculateBreakDuration($attn_id);
-            $overtime = $this->calculateOvertime($user_id,$attn_id);
+            $update = array(
+                'shift_duration' => round($ShiftDuration_and_overtime[0],2),
+                //                'break_duration' => $break_duration,
+                'overtime' => round($ShiftDuration_and_overtime[1],2),
+                //                'date_out' => date('Y-m-d'),
+                'break_duration' => round($break,2),
+                'status' => 0
+            );
+            $this->db->where('user_id', $user_id);
+            $this->db->update('timesheet_attendance', $update);
+            $affected_row = $this->db->affected_rows();
 
-            $attendance = $this->attendance($user_id,0,$attn_id,$shift,$break,$overtime);
-            if ($attendance == true){
+            if (4 > 0){
                 return true;
             }else{
                 return false;
@@ -240,6 +257,11 @@ class Timesheet_model extends MY_Model {
         
         date_default_timezone_set('UTC');
         $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->get_where('timesheet_attendance',array('id'=> $attn_id));
+        foreach($qry->result() as $att){
+            $user_id = $att->user_id;
+            break;
+        }
         $user_logs = $this->timesheet_model->getAllLogsToday($user_id,date('Y-m-d'));
         // var_dump($user_logs);
         $count_of_checkins = 0;
@@ -286,6 +308,7 @@ class Timesheet_model extends MY_Model {
         
         date_default_timezone_set('UTC');
         $user_id = $this->session->userdata('logged')['id'];
+        
         $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id = ".$attn_id);
         $user_logs = $qry->result();
         // var_dump($user_logs);

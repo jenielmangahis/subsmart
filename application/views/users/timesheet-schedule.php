@@ -117,7 +117,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <div class="table-wrapper-settings">
-                                        <table id="ts_schedule_tbl" class="table table-hover table-striped"></table>
+                                        <table id="ts_schedule_tbl" class="table table-hover table-striped dataTable no-footer" style="width: 100%;" role="grid" aria-describedby="ts_schedule_tbl_info"><thead><tr role="row"><td class="sorting_disabled" rowspan="1" colspan="1" style="width: 112px;">Dept</td><td class="sorting_disabled" rowspan="1" colspan="1" style="width: 316px;">Employee</td><td class="sorting_disabled" rowspan="1" colspan="1" style="width: 75px;">Status</td><td class="day sorting_disabled" rowspan="1" colspan="1" style="width: 82px;"><span class="week-day">Mon</span><span class="week-date">Mar 01</span></td><td class="day sorting_disabled" rowspan="1" colspan="1" style="width: 82px;"><span class="week-day">Tue</span><span class="week-date">Mar 02</span></td><td class="day sorting_disabled" rowspan="1" colspan="1" style="width: 82px;"><span class="week-day">Wed</span><span class="week-date">Mar 03</span></td><td class="day sorting_disabled" rowspan="1" colspan="1" style="width: 83px;"><span class="week-day">Thu</span><span class="week-date">Mar 04</span></td><td class="day sorting_disabled" rowspan="1" colspan="1" style="width: 83px;"><span class="week-day">Fri</span><span class="week-date">Mar 05</span></td><td class="day sorting_disabled" rowspan="1" colspan="1" style="width: 83px;"><span class="week-day">Sat</span><span class="week-date">Mar 06</span></td><td class="day sorting_disabled" rowspan="1" colspan="1" style="width: 83px;"><span class="week-day">Sun</span><span class="week-date">Mar 07</span></td><td class="sorting_disabled" rowspan="1" colspan="1" style="width: 75px;">Hours</td></tr></thead><tbody><tr role="row" class="odd"><td class="center">Owner</td><td><span class="employee-name">Jonah  Pacas-Abanil</span><span class="sub-text">Owner</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="even"><td class="center">IT</td><td><span class="employee-name">Loucelle Emperio</span><span class="sub-text">IT</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="odd"><td class="center">NSmart- Tech</td><td><span class="employee-name">Willbert Farinas</span><span class="sub-text">NSmart- Tech</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="even"><td class="center">Owner</td><td><span class="employee-name">Genesis Rufino</span><span class="sub-text">Owner</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="odd"><td class="center">Owner</td><td><span class="employee-name">Herbert Verdida</span><span class="sub-text">Owner</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="even"><td class="center">NSmart- Tech</td><td><span class="employee-name">Welyelf  Hisula</span><span class="sub-text">NSmart- Tech</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="odd"><td class="center">NSmart- Tech</td><td><span class="employee-name">Bryann Revina</span><span class="sub-text">NSmart- Tech</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="even"><td class="center">Manager</td><td><span class="employee-name">SAMPLE BRYANN SAMPLE BRYANN</span><span class="sub-text">Manager</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="odd"><td class="center">NSmart-Admin</td><td><span class="employee-name">Lauren Williams</span><span class="sub-text">NSmart-Admin</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr><tr role="row" class="even"><td class="center">NSmart- Tech</td><td><span class="employee-name">Lou Pinton</span><span class="sub-text">NSmart- Tech</span></td><td class="center">Fulltime</td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td><td class="center"></td></tr></tbody></table>
                                         <div class="table-ts-loader">
                                             <img class="ts-loader-img" src="/assets/css/timesheet/images/ring-loader.svg" alt="">
                                         </div>
@@ -138,39 +138,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $(document).ready(function () {
+    // $(document).ready(function () {
 
-        //Datepicker
-        $(".ts_schedule").datepicker();
+    //     //Datepicker
+    //     $(".ts_schedule").datepicker();
 
-        let selected_week = $('#scheduleWeek').val();
-        $('#ts_schedule_tbl').ready(showScheduleTable(selected_week));
-        $(document).on('change','#scheduleWeek',function () {
-            let week = $(this).val();
-            $("#ts_schedule_tbl").DataTable().destroy();
-            showScheduleTable(week);
-        });
-        function showScheduleTable(week) {
-            $('#ts_schedule_tbl_wrapper').css('display','none');
-            $('#ts_schedule_tbl').css('display','none');
-            $(".table-ts-loader").fadeIn('fast',function(){
-                $('.table-ts-loader').css('display','block');
-            });
-            if(week != null){
-                $.ajax({
-                    url: "/timesheet/showScheduleTable",
-                    type:"GET",
-                    data:{week:week},
-                    dataType:"json",
-                    success:function (data) {
-                        $(".table-ts-loader").fadeOut('fast',function(){
-                            $('#ts_schedule_tbl').html(data).removeAttr('style').css('width','100%').DataTable({"sort": false});
-                            $('#ts_schedule_tbl_wrapper').css('display','block');
-                            $('.table-ts-loader').css('display','none');
-                        });
-                    }
-                });
-            }
-        }
-    });
+    //     let selected_week = $('#scheduleWeek').val();
+    //     $('#ts_schedule_tbl').ready(showScheduleTable(selected_week));
+    //     $(document).on('change','#scheduleWeek',function () {
+    //         let week = $(this).val();
+    //         $("#ts_schedule_tbl").DataTable().destroy();
+    //         showScheduleTable(week);
+    //     });
+    //     function showScheduleTable(week) {
+    //         $('#ts_schedule_tbl_wrapper').css('display','none');
+    //         $('#ts_schedule_tbl').css('display','none');
+    //         $(".table-ts-loader").fadeIn('fast',function(){
+    //             $('.table-ts-loader').css('display','block');
+    //         });
+    //         if(week != null){
+    //             $.ajax({
+    //                 url: baseURL+"/timesheet/showScheduleTable",
+    //                 type:"GET",
+    //                 data:{week:week},
+    //                 dataType:"json",
+    //                 success:function (data) {
+    //                     $(".table-ts-loader").fadeOut('fast',function(){
+    //                         $('#ts_schedule_tbl').html(data).removeAttr('style').css('width','100%').DataTable({"sort": false});
+    //                         $('#ts_schedule_tbl_wrapper').css('display','block');
+    //                         $('.table-ts-loader').css('display','none');
+    //                     });
+    //                 }
+    //             });
+    //         }
+    //     }
+    // });
 </script>

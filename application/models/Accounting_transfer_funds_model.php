@@ -24,4 +24,15 @@ class Accounting_transfer_funds_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->row();
 	}
+
+	function update($id, $data) {
+		$this->db->where('company_id', getLoggedCompanyID());
+		$this->db->where('id', $id);
+		$update = $this->db->update($this->table, $data);
+		if($update) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
