@@ -55,7 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('estimate/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('accounting/savenewestimate', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <style>
 
             </style>
@@ -136,29 +136,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <!-- </div>
                                 <div class="row" style="background-color:white;"> -->
                                     <div class="col-md-3">
-                                        <label for="zip" class="required"><b>Estimate Status</b></label>
-                                        <input type="text" class="form-control" name="zip" id="zip" required
-                                            placeholder="Enter Estimate Status"/>
+                                        <label for="status" class="required"><b>Estimate Status</b></label>
+                                        <!-- <input type="text" class="form-control" name="zip" id="zip" required
+                                            placeholder="Enter Estimate Status"/> -->
+                                            <select name="status" class="form-control">
+                                                    <option value="Draft">Draft</option>
+                                                    <option value="Submitted">Submitted</option>
+                                                    <option value="Approved">Approved</option>
+                                                    <option value="Declined">Declined</option>
+                                                    <option value="Schedule">Schedule</option>
+                                                </select>
                                     </div>
                             </div>
 
-                            <!-- <div class="row">
-                                <div class="col-md-12 form-group mt-3">
-                                    <label for="street_address"> Plan Type:</label>
-                                    <div class="c__custom c__custom_width  ">
-                                        <?php if (count($plans) > 0) { ?>
-                                            <?php foreach ($plans as $pn) { ?>
-                                                <div class="checkbox checkbox-sec margin-right mr-4">
-                                                    <input onClick="getplanItems(<?= $pn->id; ?>)" type="radio"
-                                                           name="plan_id" value="<?= $pn->id; ?>"
-                                                           id="radio_credit_card<?= $pn->id; ?>">
-                                                    <label for="radio_credit_card<?= $pn->id; ?>"><span><?= $pn->plan_name; ?></span></label>
-                                                </div>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
                                     <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
@@ -251,68 +241,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
 
-                            <!-- <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <td>Equipment Cost</td>
-                                            <td class="d-flex align-items-center">$ &nbsp;&nbsp;<input type="text"
-                                                                                                       value="0.00"
-                                                                                                       name="eqpt_cost"
-                                                                                                       id="eqpt_cost"
-                                                                                                       readonly
-                                                                                                       class="form-control">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sales Tax</td>
-                                            <td class="d-flex align-items-center">$ &nbsp;&nbsp; <input type="text"
-                                                                                                        value="0.00"
-                                                                                                        name="sales_tax"
-                                                                                                        id="sales_tax"
-                                                                                                        readonly
-                                                                                                        class="form-control">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Installation Cost</td>
-                                            <td class="d-flex align-items-center">$ &nbsp;&nbsp; <input type="text"
-                                                                                                        value="0.00"
-                                                                                                        name="inst_cost"
-                                                                                                        id="inst_cost"
-                                                                                                        onfocusout="cal_total_due()"
-                                                                                                        class="form-control">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>One time P/Dated <br/>Program and Setup</td>
-                                            <td class="d-flex align-items-center">$ &nbsp;&nbsp; <input type="text"
-                                                                                                        value="0.00"
-                                                                                                        name="one_time"
-                                                                                                        id="one_time"
-                                                                                                        onfocusout="cal_total_due()"
-                                                                                                        class="form-control">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Monthly Monitoring</td>
-                                            <td class="d-flex align-items-center">$ &nbsp;&nbsp; <input type="text"
-                                                                                                        value="0.00"
-                                                                                                        name="m_monitoring"
-                                                                                                        id="m_monitoring"
-                                                                                                        onfocusout="cal_total_due()"
-                                                                                                        class="form-control">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Due</td>
-                                            <td class="d-flex align-items-center">$ &nbsp;&nbsp; <span id="total_due">0.00</span>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div> -->
-
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
                                     <h6>Request a Deposit</h6>
@@ -351,13 +279,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                 </div>
 
-                                <!-- <div class="col-md-12">
-                                    <label>Attachments</label>
-                                    <div class="help help-sm help-block margin-bottom-sec">Optionally attach files to this invoice. Allowed type: pdf, doc, docx, png, jpg, gif</div>
-
-
-                                    <span class="btn btn-default btn-md fileinput-button vertical-top"><span class="fa fa-upload"></span> Upload File <input data-fileupload="attachment-file" name="attachment-file" type="file"></span>
-                                </div> -->
                             </div>
 
                             
@@ -368,22 +289,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                   <input type="file" name="est_contract_upload" id="est_contract_upload"
                                          class="form-control"/>
                               </div>
-                              <!-- <div class="col-md-1">
-                                <label for="or_separator"></label>
-                                <h5 name="or_separator" id="or_separator" class="text-center"> OR </h5>
-                              </div> -->
-                              <!-- <div class="col-md-7">
-                                <label for="title">File<small> Select document from file vault</small></label>
-                                <div class="input-group">
-                                  <input type="text" class="form-control" name="fs_selected_file_text" id="fs_selected_file_text" placeholder="Selected File" disabled>
-                                  <input type="number" class="form-control" name="fs_selected_file" id="fs_selected_file" hidden>
-                                  <div class="input-group-btn">
-                                    <button class="btn btn-default" type="button" id="btn-fileVault-SelectFile">
-                                      <i class="fa fa-folder-open-o"></i>
-                                    </button>
-                                  </div>
-                                </div> 
-                              </div>-->
                             </div>
 
                             <div class="row" style="background-color:white;">
@@ -395,22 +300,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="form-group">
-                                        <label>Proposal Kit Template</label> <span class="help help-sm help-block">Apply a proposal template to this estimate to create a proposal.</span>
-                                        <textarea name="message" cols="40" rows="2" class="form-control"></textarea>
-                                    </div>
-                                </div>
-                            </div> -->
-
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
                                     <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
-                                    <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
+                                    <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn but-red">Cancel this</a>
                                 </div>
                             </div>
                         </div>

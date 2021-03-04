@@ -103,7 +103,7 @@ add_css(array(
                             <div class="form-group label-width d-flex align-items-center">
                                 <label>From</label>
                                 <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>
-                                <select id="inputState" name="start_time" class="form-control" required>
+                                <select id="start_time" name="start_time" class="form-control" required>
                                     <option selected="">Start time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
@@ -113,7 +113,7 @@ add_css(array(
                             <div class="form-group label-width d-flex align-items-center">
                                 <label >To</label>
                                 <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
-                                <select id="inputState" name="end_time" class="form-control" required>
+                                <select id="end_time" name="end_time" class="form-control" required>
                                     <option selected="">End time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option <?= isset($jobs_data) && strtolower($jobs_data->end_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
@@ -166,7 +166,7 @@ add_css(array(
                             </select>
                             <h6>Select Event Type</h6>
                             <select id="job_type_option" name="jobtypes" class="form-control">
-                                <option value="">Select Tag</option>
+                                <option value="">Select Event Type</option>
                                 <?php if(!empty($job_types)): ?>
                                     <?php foreach ($job_types as $type): ?>
                                         <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
@@ -176,6 +176,7 @@ add_css(array(
 
                             <h6>Select Event Tag</h6>
                             <select id="job_tags" name="tags" class="form-control">
+                                <option value="">Select Event Tag</option>
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
                                         <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
@@ -967,9 +968,10 @@ add_css(array(
                             <tbody>
                             <?php if(!empty($items)): ?>
                                 <?php foreach ($items as $item): ?>
+                                    <?php $item_qty = get_total_item_qty($item->id); ?>
                                     <tr>
                                         <td><?= $item->title; ?></td>
-                                        <td><?= $item->units; ?></td>
+                                        <td><?= $item_qty->total_qty > 0 ? $item_qty->total_qty : 0; ?></td>
                                         <td><?= $item->price; ?></td>
                                         <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item"><span class="fa fa-plus"></span></button></td>
                                     </tr>
@@ -1209,8 +1211,9 @@ include viewPath('includes/footer');
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
-<?php include viewPath('job/js/job_new_js'); ?>
+<?php include viewPath('events/js/job_new_js'); ?>
 
 <script>
     var geocoder;

@@ -560,10 +560,10 @@ function append_modal(view, modalName, modal) {
 }
 
 function set_modal_data(data, modalName) {
+    var txnType = data.txn_type.replace(" ", "_");
+    $(`#${modalName}`).parent('form').removeAttr('onsubmit').attr('id', 'update-recurring-form').addClass(`update-recurring-${txnType}-${data.id}`);
     switch(modalName) {
         case 'depositModal' :
-            $(`#depositModal`).parent('form').removeAttr('onsubmit').attr('id', 'update-recurring-form').addClass(`update-recurring-${data.txn_type}-${data.id}`);
-            $(`#depositModal #bankAccount`).val(`${data.transaction.account_key}-${+data.transaction.account_id}`);
             $(`#depositModal #memo`).val(data.transaction.memo);
             $(`#depositModal #cashBackTarget`).val(data.transaction.cash_back_account_key+'-'+data.transaction.cash_back_account_id);
             $(`#depositModal #cashBackMemo`).val(data.transaction.cash_back_memo);
@@ -605,11 +605,56 @@ function set_modal_data(data, modalName) {
                 $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="amount[]"]').val(items[i].amount).trigger('change');
             }
         break;
+        case 'transferModal' :
+            $(`#transferModal #transferFrom`).val(data.transaction.transfer_from_account_key+'-'+data.transaction.transfer_from_account_id).trigger('change');
+            $(`#transferModal #transferTo`).val(data.transaction.transfer_to_account_key+'-'+data.transaction.transfer_to_account_id).trigger('change');
+            $(`#transferModal #transferAmount`).val(data.transaction.transfer_amount).trigger('change');
+            $(`#transferModal #memo`).val(data.transaction.transfer_memo);
+        break;
+        case 'journalEntryModal' :
+            $(`#journalEntryModal #memo`).val(data.transaction.memo);
+
+            var items = data.transaction.items;
+            for(i in items) {
+                if($($(`#journalEntryModal #bank-deposit-table tbody tr`)[i]).length === 0) {
+                    $(`#journalEntryModal #journal-table tbody`).append(`
+                        <tr>
+                            <td></td>
+                            <td>${parseInt(i)+1}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    `);
+                }
+
+                $($(`#journalEntryModal #journal-table tbody tr`)[i]).trigger('click');
+                $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="accounts[]"]').val(`${items[i].account_key}-${items[i].account_id}`);
+
+                if(items[i].debit !== null & items[i].debit !== "" && items[i].debit !== 0 && items[i].debit !== "0") {
+                    $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="debits[]"]').val(items[i].debit).trigger('change');
+                }
+
+                if(items[i].credit !== null & items[i].credit !== "" && items[i].credit !== 0 && items[i].credit !== "0") {
+                    $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="credits[]"]').val(items[i].credit).trigger('change');
+                }
+                $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="descriptions[]"]').val(items[i].description);
+
+                if(items[i].name_id !== null) {
+                    $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="names[]"]').val(`${items[i].name_key}-${items[i].name_id}`);
+                }
+            }
+        break;
     }
 
     $(document).on('shown.bs.modal', `#${modalName}`, function(e) {
+        $(`#${modalName} .recurring-bank-account #bankAccount`).val(`${data.transaction.account_key}-${+data.transaction.account_id}`);
         $(`#${modalName} #templateName`).val(data.template_name);
         $(`#${modalName} #recurringType`).val(data.recurring_type).trigger('change');
+        $(`#${modalName} #dayInAdvance`).val(data.days_in_advance);
 
         if(data.recurring_interval !== null) {
             $(`#${modalName} #recurringInterval`).val(data.recurring_interval).trigger('change');
@@ -631,18 +676,18 @@ function set_modal_data(data, modalName) {
             $(`#${modalName} input[name="recurr_every"]`).val(data.recurr_every);
         }
 
-        if(data.start_date !== null || data.start_date !== "") {
+        if(data.start_date !== null && data.start_date !== "") {
             var start_date = new Date(data.start_date);
-            $(`#${modalName} #startDate`).val(`${start_date.getMonth() + 1}/${start_date.getDate()}/${start_date.getFullYear()}`);
+            $(`#${modalName} #startDate`).val(`${String(start_date.getMonth() + 1).padStart(2, '0')}/${String(start_date.getDate()).padStart(2, '0')}/${start_date.getFullYear()}`);
         }
 
-        if(data.end_type !== null & data.end_type !== "none") {
+        if(data.end_type !== null) {
             $(`#${modalName} #endType`).val(data.end_type).trigger('change');
         }
 
         if(data.end_by !== null && data.end_type === 'by') {
             var end_date = new Date(data.end_date);
-            $(`#${modalName} #endDate`).val(`${end_date.getMonth() + 1}/${end_date.getDate()}/${end_date.getFullYear()}`);
+            $(`#${modalName} #endDate`).val(`${String(end_date.getMonth() + 1).padStart(2, '0')}/${String(end_date.getDate()).padStart(2, '0')}/${end_date.getFullYear()}`);
         }
 
         if(data.max_occurences !== null && data.end_type === 'after') {

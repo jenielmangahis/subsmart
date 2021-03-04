@@ -306,7 +306,19 @@ $(function() {
 
             $('div#depositModal span#account-balance').html(result.balance);
         });
-    })
+    });
+
+    $(document).on('change', 'div#transferModal select#transferFrom, div#transferModal select#transferTo', function() {
+        var value = $(this).val();
+        var split = value.split('-');
+        var id = $(this).attr('id');
+
+        $.get('/accounting/get-account-balance/'+split[1], function(res) {
+            var result = JSON.parse(res);
+
+            $(`div#transferModal h3#${id}Balance`).html(result.balance);
+        });
+    });
 
     $(document).on('click', 'div#depositModal a#open-tags-modal', function(e) {
         e.preventDefault();
@@ -1634,6 +1646,7 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body`).prepend(res);
         }
         $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
+        $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" type="submit">Save template</button>');
 
         recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
         recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();

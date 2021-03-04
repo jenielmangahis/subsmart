@@ -127,7 +127,7 @@
     <div class="col-md-11 float-left">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">SMS </h3>
+                <h3 class="box-title">SMS / MMS</h3>
                 <button style="height:30px;" id="btnSend" onclick="createNewMessage()" class="btn btn-success link float-right">Create New</button>
                 <input type="hidden" id="replyTo" value="0" />
                 <input type="hidden" id="replyToBase6" value="0" />

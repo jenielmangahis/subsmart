@@ -281,6 +281,11 @@
         }
     </style>
 </head>
+<script>
+var baseURL='<?=base_url()?>';
+
+</script>
+
 
 <body style="background:white !important;">
     <!-- Navigation Bar-->
@@ -408,20 +413,25 @@
                                 <!--</span>-->
                                 <!--                                </a>-->
                                 <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;width:auto; top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
-                                                                                                                                                                                                                                                            ?></span>
-                                    <div class="bell" id="bell-1">
-                                        <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
-                                        <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
-                                        <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
-                                    </div>
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;width:auto; top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      ?></span>
+                                    
+                                        <div class="bell" id="bell-1">
+                                            <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
+                                            <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
+                                            <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
+                                        </div>
                                 </div>
                                 <div class="prev-icon-title">Notification</div>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                     <!-- item-->
                                     <h6 class="dropdown-item-text">Notifications (<span id="nfcount"></span>)</h6>
                                     <div class="slimscroll notification-item-list" id="notificationList">
-                                        <div id="autoNotifications"></div>
+                                        <div id="autoNotifications">
+                                            <a href="#" id="notificationDP" data-id="416&quot;" class="dropdown-item notify-item active" style="background-color:#e6e3e3">
+                                                    <!-- <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="https://www.nsmartrac.local/nsmartrac/uploads/users/default.png" alt="User profile picture"> -->
+                                                <p class="notify-details" style="margin-left: 50px;">Loading...</span></p>
+                                            </a>
+                                        </div>
                                         <?php
                                         $reorders = getReorderItemsCount();
                                         $reorders_count = 0;
@@ -718,6 +728,7 @@
     </header><!-- End Navigation Bar-->
 
     <script type="text/javascript">
+    var all_notifications_html = '';
     var notification_badge_value = 0;
         function countChar(val) {
             var len = val.value.length;
@@ -728,38 +739,81 @@
             }
         };
 
-        var baseURL=window.location.origin;
-
-        if(baseURL=="https://www.nsmartrac.local"){
-            baseURL=window.location.origin+"/nsmartrac";
-        }
-        function notificationClockInOut() {
-            $.ajax({
-                type: "GET",
-                url: baseURL+"/Timesheet/getNotificationsAll",
-                async: true,
-                cache: false,
-                timeout: 10000,
-                success: function(data) {
-                    var obj = JSON.parse(data);
-                    // console.log(notification_badge_value);
-                    // console.log(obj.notifyCount);
-                    if(notification_badge_value != obj.notifyCount){
-                        notification_badge_value = obj.notifyCount;
-                        $('#notifyBadge').html(obj.notifyCount);
-                        $('#nfcount').html(obj.notifyCount);
-                        $('#autoNotifications').html(obj.autoNotifications);
+        let notificationClockInOut = (function() {
+            return function () {
+                $.ajax({
+                url:baseURL+"/Timesheet/getCount_NotificationsAll",
+                type:"POST",
+                dataType:"json",
+                data:{notifycount:notification_badge_value},
+                success:function (data) {
+                    // console.log(data);
+                    if(notification_badge_value != data.notifyCount){
+                        notification_badge_value = data.notifyCount;
+                        $('#notifyBadge').html(notification_badge_value);
+                        $('#nfcount').html(data.notifyCount);
                     }
-                    setTimeout(notificationClockInOut, 2000);
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    // addmsg("error", textStatus + " (" + errorThrown + ")");
-                    setTimeout(notificationClockInOut, 15000);
+                    setTimeout(notificationClockInOut, 5000);
                 }
             });
-        };
+            }
+        })();
+        // function notificationClockInOut() {
+            
+                
+        //     // $.ajax({
+        //     //     type: "POST",
+        //     //     url: baseURL+"/Timesheet/getNotificationsAll",
+        //     //     async: true,
+        //     //     cache: false,
+        //     //     timeout: 10000,
+        //     //     data:
+        //     //     success: function(data) {
+        //     //         var obj = JSON.parse(data);
+        //     //         // console.log(notification_badge_value);
+        //     //         // console.log(obj.notifyCount);
+        //     //         if(notification_badge_value != obj.notifyCount){
+        //     //             notification_badge_value = obj.notifyCount;
+        //     //             $('#notifyBadge').html(obj.notifyCount);
+        //     //             $('#nfcount').html(obj.notifyCount);
+        //     //             $('#autoNotifications').html(obj.autoNotifications);
+        //     //         }
+        //     //         setTimeout(notificationClockInOut, 2000);
+        //     //     },
+        //     //     error: function(XMLHttpRequest, textStatus, errorThrown) {
+        //     //         // addmsg("error", textStatus + " (" + errorThrown + ")");
+        //     //         setTimeout(notificationClockInOut, 15000);
+        //     //     }
+        //     // });
+        // };
         $(document).ready(function() {
             var TimeStamp = null;
             notificationClockInOut();
+
+            $.ajax({
+                url:baseURL+"/Timesheet/getNotificationsAll",
+                type:"POST",
+                dataType:"json",
+                data:{notifycount:notification_html_holder_ctr},
+                success:function (data) {
+                    if(notification_html_holder_ctr != data.notifyCount){
+                        $('#notifyBadge').html(data.notifyCount);
+                        $('#nfcount').html(data.notifyCount);
+                        $('#autoNotifications').html(data.autoNotifications);
+                        notification_html_holder_ctr = data.notifyCount;
+                    }
+                    // console.log(data.notifyCount+0);
+                    // setTimeout(notificationClockInOut, 5000);
+                }
+            });
+            $.ajax({
+                url:baseURL+"/Timesheet/tester",
+                type:"POST",
+                dataType:"json",
+                data:{usertimezone:Intl.DateTimeFormat().resolvedOptions().timeZone},
+                success:function (data) {
+                    console.log(data);
+                }
+            });
         });
     </script>

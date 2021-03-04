@@ -1,74 +1,7 @@
-var baseURL=window.location.origin;
+var notification_html_holder_ctr=0;
 
-if(baseURL=="https://www.nsmartrac.local"){
-    baseURL=window.location.origin+"/nsmartrac";
-}
+
 $(document).ready(function () {
-
-    // $.ajax({
-    //     url:baseURL+"/timesheet/worked_hourschecker",
-    //     type:"POST",
-    //     dataType:'json',
-    //     success:function (data) {
-    //         console.log(data.action);
-    //         if(data.action){
-    //             Swal.fire({
-    //                 title: "You're online for 8:00 Hours now.",
-    //                 html: "Do you still need more time?",
-    //                 imageUrl:baseURL+"/assets/img/timesheet/clock-out.png",
-    //                 showCancelButton: true,
-    //                 confirmButtonColor: '#2ca01c',
-    //                 cancelButtonColor: '#d33',
-    //                 confirmButtonText: 'I want to Clock out now!',
-    //                 cancelButtonText: 'Yes, I need more Time!',
-    //                 timer: 30000
-    //             }).then((result) => { 
-    //                 let selected = this;
-    //                 let attn_id = $('#attendanceId').val();
-    //                 if (result.value) {
-    //                 $.ajax({
-    //                     url:baseURL+'/timesheet/clockOutEmployee',
-    //                     type:"POST",
-    //                     dataType:'json',
-    //                     data:{attn_id:attn_id},
-    //                     success:function (data) {
-    //                         if (data != null){
-    //                             $(selected).attr('id',null);
-    //                             $('.clock').removeClass('clock-active');
-    //                             $('.out').text(data.clock_out_time);
-    //                             $('#userClockOut').text(data.clock_out_time);
-    //                             $('#shiftDuration').text(data.shift_duration);
-    //                             $('#userShiftDuration').text(data.shift_duration);
-    //                             $('.employeeLunch').attr('id',null).attr('disabled',true);
-    //                             $('#unScheduledShift').val(0);
-    //                             $('#autoClockOut').val(2);
-    //                             Swal.fire(
-    //                                 {
-    //                                     showConfirmButton: false,
-    //                                     timer: 2000,
-    //                                     title: 'Success',
-    //                                     html: "You are now Clock-out",
-    //                                     icon: 'success'
-    //                                 });
-        
-    //                             Push.Permission.GRANTED; // 'granted'
-    //                             Push.create("Clock Out", {
-    //                                 body: "User : "+data.FName+" "+data.LName,
-    //                                 icon: baseURL+'/uploads/users/user-profile/'+data.profile_img,
-    //                                 timeout: 20000,
-    //                                     onClick: function () {
-    //                                         window.focus();
-    //                                         this.close();
-    //                                     }
-    //                                 });
-    //                             }
-    //                         }   
-    //                     });
-    //                 }
-    //             });
-    //         }
-    //     }
-    //  });
 
     let counter;
     let break_content = $('#break-duration').text();
@@ -377,9 +310,30 @@ function app_notification(token,body,device_type,company_id,title) {
             }
         };
     })();
+   
 
+    
+    $(document).on('click','#bell-1',function () {
+        // alert(notification_html_holder_ctr);
 
+        $.ajax({
+            url:baseURL+"/Timesheet/getNotificationsAll",
+            type:"POST",
+            dataType:"json",
+            data:{notifycount:notification_html_holder_ctr},
+            success:function (data) {
+                if(notification_html_holder_ctr != data.notifyCount){
+                    $('#notifyBadge').html(data.notifyCount);
+                    $('#nfcount').html(data.notifyCount);
+                    $('#autoNotifications').html(data.autoNotifications);
+                    notification_html_holder_ctr = data.notifyCount;
+                }
+                // console.log(data.notifyCount+0);
+                // setTimeout(notificationClockInOut, 5000);
+            }
+        });
 
+    });
     
     $(document).on('click','#clockOut',function () {
         let attn_id = $('#attendanceId').val();
@@ -401,6 +355,7 @@ function app_notification(token,body,device_type,company_id,title) {
                 }
             });
     });
+    
     let confirmLunchin = (function() {
         let executed = false;
         return function () {

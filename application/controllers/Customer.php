@@ -1946,6 +1946,45 @@ class Customer extends MY_Controller
         $this->load->view('tickets/add', $this->page_data);
     }
 
+    public function sendmerchantEmail($id=null)
+    {
+        $this->load->library('email');
+
+        $config['protocol']    = 'smtp';
+        $config['smtp_host']    = 'smtp.googlemail.com';
+        $config['smtp_port']    = '587';
+        $config['smtp_timeout'] = '7';
+        $config['smtp_user']    = 'smartrac.noreply@gmail.com';
+        $config['smtp_pass']    = 'smartrac123';
+        $config['charset']    = 'utf-8';
+        $config['newline']    = "\r\n";
+        $config['mailtype'] = 'html';
+        $config['validation'] = TRUE;  
+
+        $this->email->initialize($config);
+
+        $subject =  '
+        <table></table>
+        ';
+        
+        $email = $this->input->post('email');
+        $header_message = "<html><head><title>".$subject."</title></head><body>";
+        $footer_message = "</body></html>";
+        $input_msg = $this->input->post('contact_reply');
+        $msg = $header_message.$footer_message;
+
+        $this->email->from('smartrac.noreply@gmail.com', 'NSMARTRAC');
+        $this->email->to($email); 
+        $this->email->subject('NSMARTRAC - Merchant application');
+        $this->email->message($msg);  
+        $this->email->message($subject);  
+
+        $this->email->send();
+
+        // echo $this->email->print_debugger();
+        echo "Successfully sent to your email";
+    }
+
     public function merchant(){
         $this->load->model('Users_model');
         $this->load->model('Clients_model');

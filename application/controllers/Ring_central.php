@@ -66,8 +66,23 @@ class Ring_central extends MY_Controller {
                 );
                 $r = $platform->get("/account/~/extension/~/message-store", $queryParams);
                 $jsonResponse = json_decode($r->text());
-                foreach (array_reverse($jsonResponse->records) as $r):
+                //print_r($jsonResponse->records);
 
+                foreach (array_reverse($jsonResponse->records) as $r):
+                    $attachments = $r->attachments;
+                    $hasAttachment = false;
+                    $attach_id = 0;
+                    $msg_id = 0;
+                    foreach ($attachments as $attach):
+                        if ($attach->type == "MmsAttachment"):
+                            $hasAttachment = true;
+                            $attach_id = $attach->id;
+                            $msg_id = $r->id;
+                        endif;
+                    endforeach;
+
+                    //$image_data = $this->fetchAttachments($r->id, $attachments[1]->id);
+                    //echo $r->id;
                     $msgItem = explode('-', $r->subject);
                     if ($r->direction == "Inbound"):
                         $align = "float-left text-left";
@@ -81,11 +96,21 @@ class Ring_central extends MY_Controller {
                     ?>
 
                     <div class="col-lg-12 mb-3 float-left">
+                        <?php if(trim($msgItem[1])!=""): ?>
                         <div style="<?= $style; ?>" class="alert alert-success <?= $align ?> col-md-10 mt-1 mb-1" role="alert">
                             <span style="<?= $color ?>" class="<?= $align; ?>">
                                 <?= trim($msgItem[1]); ?>
                             </span>
                         </div>
+                        <?php endif; ?>
+                        <?php
+                        if ($hasAttachment):
+                            $image_data = $this->fetchAttachments($msg_id, $attach_id);
+                            ?>
+                            <img class="<?= $align ?>" style="width:30%" src="data:image/png;base64,<?php echo $image_data ?>">
+                            <?php
+                        endif;
+                        ?>
                         <small class="muted timestamp col-lg-12 <?= $align ?>" datetime="<?= $r->lastModifiedTime; ?>" style="color:#868e96;"><?= date('Y-m-d G:i:s', strtotime($r->lastModifiedTime)) ?></small>
                     </div>
                     <?php
@@ -136,6 +161,58 @@ class Ring_central extends MY_Controller {
             //echo json_encode(array('msg'=>'Your are not Logged In to Ring Central or your Session has expired', 'status'=>false));
             echo 'Your are not Logged In to Ring Central or your Session has expired. <br /><br /><a class="btn btn-primary btn-small" onclick="oauth.loginPopup()" href="#">Login RingCentral Account</a>';
         }
+    }
+
+    public function fetchAttachments($id = NULL, $attachment_id = NULL) {
+        $platform = $this->ringcentral->getPlatform();
+
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                $queryParams = array(
+                        //  'contentDisposition' => 'Inline', 9138346004, 2290591004
+                );
+                $r = $platform->get("/account/~/extension/~/message-store/$id/content/$attachment_id", $queryParams);
+                $imageData = base64_encode($r->text());
+                //echo $r->text();
+                return $imageData;
+            }
+        }
+    }
+
+    public function sendMMS() {
+        $this->load->helper('file');
+        $rcsdk = $this->ringcentral->getRCSDK();
+        $platform = $rcsdk->platform();
+        $to = post('to');
+        $message = post('message');
+
+        $file_path = 'assets/img/';
+        if (is_dir($file_path)):
+            $file = 'logo.png';
+
+        else:
+            echo 'not a directory';
+        endif;
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                $body = array(
+                    'from' => array('phoneNumber' => '+16505691634'),
+                    'to' => array(array('phoneNumber' => $to)),
+                    'text' => $message
+                );
+
+                $request = $rcsdk->createMultipartBuilder()
+                        ->setBody($body)
+                        ->add(fopen($file_path . DIRECTORY_SEPARATOR . $file, 'r'))
+                        ->request('/account/~/extension/~/sms');
+                $r = $platform->sendRequest($request);
+                //print_r($r->json()->messageStatus);
+                echo json_encode(array('msg' => 'Successfully Sent', 'status' => true, 'number' => base64_encode($to)));
+            }
+        }
+
     }
 
     public function sendSMS($to = NULL, $message = NULL) {

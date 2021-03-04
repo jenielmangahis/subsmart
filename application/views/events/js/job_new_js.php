@@ -320,6 +320,7 @@ if(isset($jobs_data)){
 
         $("#job_type_option").on( 'change', function () {
             var type = this.value;
+            console.log(type);
             $('#job_type').val(type);
         });
 
@@ -328,114 +329,6 @@ if(isset($jobs_data)){
             placeholder: 'Type Here ... ',
             tabsize: 2,
             height: 250,
-        });
-        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
-        $('#click').click(function(e){
-            e.preventDefault();
-            var data = signaturePad.toDataURL('image/png');
-            $('#output').val(data);
-            var url = '<?= base_url() ?>/job/save_esign';
-            $.ajax({
-                url: url,
-                type: "POST",
-                data:{base64: data}
-            }).done(function(e){
-                //$('#updateSignature').modal('hide');
-                var name = $('#authorizer_name').val();
-                $('#authorizer').html(name);
-                $('#appoval_name_right').html(name);
-                $('#date_signed').html(e);
-                $('#datetime_signed').val(e);
-                $('#name').val(name);
-                $('#signature_link').val(data);
-                $("#customer-signature").attr("src",data);
-                $("#customer_signature_right").attr("src",data);
-                //location.reload();
-            });
-        });
-
-        $('#clear-signature').click(function(e){
-            signaturePad.clear();
-        });
-
-
-        document.getElementById('check_form').style.display = "none";
-        document.getElementById('cash_form').style.display = "none";
-        document.getElementById('ach_form').style.display = "none";
-        document.getElementById('others_warranty_form').style.display = "none";
-        document.getElementById('svp_form').style.display = "none";
-
-        $("#pay_method").on( 'change', function () {
-            var method = this.value;
-            if(method === 'CHECK'){
-                document.getElementById('check_form').style.display = "block";
-                document.getElementById('credit_card_form').style.display = "none";
-                document.getElementById('cash_form').style.display = "none";
-                document.getElementById('ach_form').style.display = "none";
-                document.getElementById('others_warranty_form').style.display = "none";
-                document.getElementById('svp_form').style.display = "none";
-            }else if(method === 'CC'|| method === 'OCCP'){
-                document.getElementById('check_form').style.display = "none";
-                document.getElementById('credit_card_form').style.display = "block";
-                document.getElementById('cash_form').style.display = "none";
-                document.getElementById('ach_form').style.display = "none";
-                document.getElementById('others_warranty_form').style.display = "none";
-                document.getElementById('svp_form').style.display = "none";
-            }else if(method === 'CASH'){
-                document.getElementById('check_form').style.display = "none";
-                document.getElementById('credit_card_form').style.display = "none";
-                document.getElementById('cash_form').style.display = "block";
-                document.getElementById('ach_form').style.display = "none";
-                document.getElementById('others_warranty_form').style.display = "none";
-                document.getElementById('svp_form').style.display = "none";
-            }
-            else if(method === 'ACH'){
-                document.getElementById('check_form').style.display = "none";
-                document.getElementById('credit_card_form').style.display = "none";
-                document.getElementById('cash_form').style.display = "none";
-                document.getElementById('ach_form').style.display = "block";
-                document.getElementById('others_warranty_form').style.display = "none";
-                document.getElementById('svp_form').style.display = "none";
-            }else if(method === 'OPT' || method === 'WW'){
-                document.getElementById('check_form').style.display = "none";
-                document.getElementById('credit_card_form').style.display = "none";
-                document.getElementById('cash_form').style.display = "none";
-                document.getElementById('ach_form').style.display = "none";
-                document.getElementById('others_warranty_form').style.display = "block";
-                document.getElementById('svp_form').style.display = "none";
-            }
-            else if(method === 'SQ' || method === 'PP' || method === 'VENMO'){
-                document.getElementById('check_form').style.display = "none";
-                document.getElementById('credit_card_form').style.display = "none";
-                document.getElementById('cash_form').style.display = "none";
-                document.getElementById('ach_form').style.display = "none";
-                document.getElementById('others_warranty_form').style.display = "none";
-                document.getElementById('svp_form').style.display = "block";
-            }
-        });
-
-        $("#save_payment").on( "click", function( event ) {
-            $('#pay_method_right').html($('#pay_method').val());
-            $('#pay_amount_right').html($('#pay_amount').val());
-        });
-        $("#approval_btn_left").on( "click", function( event ) {
-            document.getElementById('approval_card_right').style.display = "block";
-            document.getElementById('approval_card_left').style.display = "none";
-        });
-
-        $("#approval_btn_right").on( "click", function( event ) {
-            document.getElementById('approval_card_left').style.display = "block";
-            document.getElementById('approval_card_right').style.display = "none";
-        });
-
-        $("#pd_left").on( "click", function( event ) {
-            document.getElementById('pd_right_card').style.display = "block";
-            document.getElementById('pd_left_card').style.display = "none";
-        });
-
-        $("#pd_right").on( "click", function( event ) {
-            document.getElementById('pd_left_card').style.display = "block";
-            document.getElementById('pd_right_card').style.display = "none";
         });
 
         $("#notes_edit_btn_right").on( "click", function( event ) {
@@ -527,6 +420,19 @@ if(isset($jobs_data)){
                     // $("#btnSubmit").prop("disabled", false);
                 }
             });
+        });
+
+        $("#start_time").on( 'change', function () {
+            var tag_id = this.value;
+            console.log(tag_id);
+            var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
+
+            if(end_time === 'Invalid date') {
+                $('#end_time').val("");
+            }else{
+                $('#end_time').val(end_time);
+            }
+            console.log(end_time);
         });
 
         $("#save_memo").on( "click", function( event ) {
