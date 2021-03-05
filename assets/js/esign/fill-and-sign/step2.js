@@ -1,4 +1,6 @@
 function Step2({ documentId }) {
+  const $closeModalButtons = $(".fillAndSign__modal .close-me");
+
   const $documentContainer = $("#documentContainer");
   const $actions = $(".action--draggable");
   const $topnav = $(".fillAndSign__topnav");
@@ -6,7 +8,6 @@ function Step2({ documentId }) {
 
   const $signatureModal = $("#signatureModal");
   const $addSignatureButton = $("#addSignatureButton");
-  let $signatureModalCloseButton = $("[data-dismiss=modal]");
 
   const $signaturePad = $(".fillAndSign__signaturePad");
   const $signaturePadCanvas = $signaturePad.find("canvas");
@@ -29,6 +30,7 @@ function Step2({ documentId }) {
   const $signatureTextInput = $(".fillAndSign__signatureInput");
 
   const $previewContainer = $(".fillAndSign__preview");
+  const $doneButton = $("#doneButton");
 
   let fields = [];
   let signatures = [];
@@ -37,10 +39,6 @@ function Step2({ documentId }) {
   let isStoring = false;
   let link = null;
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-
-  if (location.pathname.includes("new_job")) {
-    $signatureModalCloseButton = $signatureModal.find(".close-me");
-  }
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
@@ -500,8 +498,13 @@ function Step2({ documentId }) {
       });
     });
 
-    $signatureModalCloseButton.on("click", (event) => {
-      $(event.target).closest(".modal").hide();
+    $doneButton.on("click", () => {
+      window.location = `${prefixURL}/esignmain`;
+    });
+
+    $closeModalButtons.on("click", (event) => {
+      event.preventDefault();
+      $(event.target).closest(".fillAndSign__modal").hide();
     });
 
     $addSignatureButton.on("click", () => {
@@ -626,9 +629,6 @@ function Step2({ documentId }) {
     });
 
     $sendEmailButton.on("click", async function () {
-      $(this).attr("disabled", true);
-      $(this).find(".spinner-border").removeClass("d-none");
-
       let emails = [];
       const $inputs = $sendEmailModal.find("input");
 
@@ -636,10 +636,11 @@ function Step2({ documentId }) {
         const $input = $($inputs[index]);
         const email = $input.val();
 
-        if (!isValidEmail(email)) {
-          $(this).attr("disabled", false);
-          $(this).find(".spinner-border").addClass("d-none");
+        if (isEmptyOrSpaces(email)) {
+          continue;
+        }
 
+        if (!isValidEmail(email)) {
           alert("Invalid email address");
           return;
         }
@@ -647,12 +648,19 @@ function Step2({ documentId }) {
         emails.push(email);
       }
 
+      if (!emails.length) {
+        return;
+      }
+
+      $(this).attr("disabled", true);
+      $(this).find(".spinner-border").removeClass("d-none");
+
       const pdfDoc = await generatePDF(documentId);
       const formData = new FormData();
 
       formData.append("document", pdfDoc.output("blob"));
-      emails.forEach(email => {
-        formData.append('emails[]', email);
+      emails.forEach((email) => {
+        formData.append("emails[]", email);
       });
 
       const endpoint = `${prefixURL}/FillAndSign/emailDocument/${documentId}`;
@@ -693,6 +701,10 @@ function Step2({ documentId }) {
       },
     });
 
+    if (response.status !== 200) {
+      return new Promise((_, reject) => reject(response));
+    }
+
     const { document } = await response.json();
     documentUrl = `${prefixURL}/uploads/fillandsign/${document.name}`;
   }
@@ -707,7 +719,18 @@ function Step2({ documentId }) {
       $container.addClass("fillAndSign--readonly");
     }
 
-    await fetchDocument();
+    try {
+      await fetchDocument();
+    } catch (error) {
+      if (error.status === 404) {
+        const message = '<h1 style="color: white;">Document Not Found</h1>';
+        $documentContainer.append(message);
+        $(".fillAndSign__footer").hide();
+        $topnav.hide();
+        return;
+      }
+    }
+
     await fetchFields();
     await fetchSignatures();
     await renderPDF();

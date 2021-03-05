@@ -51,6 +51,7 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="#" id="copyLink">Get a link</a>
+                <a class="dropdown-item" href="#" id="generateLinkAndEmail">Send email</a>
                 <a class="dropdown-item" href="#" id="downloadDocument">Download a copy</a>
             </div>
         </div>
@@ -119,6 +120,37 @@
                         </button>
                         <button type="button" class="btn btn-secondary ml-2 close-me" id="signatureModalCloseButton">Close</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fillAndSign__modal" id="sendEmail" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Email Document</h5>
+                    <button type="button" class="close close-me" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group mb-1">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control mb-3" placeholder="Enter email">
+                        </div>
+                        <a href="#" id="sendEmailAddMore">+ Add more</a>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary d-flex align-items-center" id="sendEmailSendButton">
+                        <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        Send
+                    </button>
+                    <button type="button" class="btn btn-secondary close-me" id="sendEmailCloseButton">Close</button>
                 </div>
             </div>
         </div>

@@ -96,3 +96,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- /.login-box -->
 
 <?php include 'includes/footer.php' ?>
+<script>
+
+    $(document).ready(function() {
+
+       $.ajax({
+          url:"<?=base_url()?>/login/timezonesetter",
+          type:"POST",
+          dataType:"json",
+          data:{usertimezone:Intl.DateTimeFormat().resolvedOptions().timeZone},
+          success:function (data) {
+              console.log(data);
+              }
+      });    
+    });
+</script>

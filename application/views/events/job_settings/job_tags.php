@@ -122,6 +122,9 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
+.card{
+    box-shadow: 0 0 13px 0 rgb(116 116 117) !important;
+}
 </style>
 <?php
     defined('BASEPATH') or exit('No direct script access allowed');

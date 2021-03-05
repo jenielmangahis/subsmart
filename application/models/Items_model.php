@@ -14,6 +14,14 @@ class Items_model extends MY_Model
         parent::__construct();
     }
 
+    public function getItemCategories($order = "asc")
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->order_by('name', $order);
+        $query = $this->db->get($this->table_categories);
+        return $query->result();
+    }
+
     public function filterBy($filters = array(), $company_id, $type)
     {
 

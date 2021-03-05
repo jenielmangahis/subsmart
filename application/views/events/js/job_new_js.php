@@ -96,14 +96,14 @@ if(isset($jobs_data)){
 
     $(document).ready(function() {
 
-        $("#jobs_form").submit(function(e) {
+        $("#events_form").submit(function(e) {
             //alert("asf");
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>/job/save_job",
+                url: "<?= base_url() ?>/events/save_event",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
                     console.log(data);
@@ -114,7 +114,7 @@ if(isset($jobs_data)){
         function sucess_add_job($id){
             Swal.fire({
                 title: 'Nice!',
-                text: 'Job has been added!',
+                text: 'Event has been added!',
                 icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#32243d',
@@ -122,7 +122,7 @@ if(isset($jobs_data)){
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href='<?= base_url(); ?>job/new_job1/'+$id;
+                    window.location.href='<?= base_url(); ?>events/';
                 }
             });
         }
@@ -221,13 +221,15 @@ if(isset($jobs_data)){
             }
             var withCommas = Number(total).toLocaleString('en');
             if(tax_total < 1){
-                $('#invoice_sub_total').html('$' + withCommas);
+                $('#invoice_sub_total').html('$' + formatNumber(total));
             }
-            $('#invoice_overall_total').html('$' + withCommas);
+            $('#invoice_overall_total').html('$' + formatNumber(total));
             $('#pay_amount').val(withCommas);
         }
         //$(".color-scheme").on( 'click', function () {});
-
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         }
@@ -239,7 +241,7 @@ if(isset($jobs_data)){
             var cost = $('#price'+id).val();
             var new_sub_total = Number(qty) * Number(cost);
             $('#sub_total'+id).data('subtotal',new_sub_total);
-            $('#sub_total'+id).text('$' + numberWithCommas(new_sub_total) + '.00');
+            $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
             calculate_subtotal();
         });
 
@@ -253,7 +255,7 @@ if(isset($jobs_data)){
 
         $("body").delegate(".color-scheme", "click", function(){
             var id = this.id;
-            $('[id="job_color_id"]').val(id);
+            $('[id="job_color_id"]').val($(this).data('color'));
             console.log(id);
             $( "#"+id ).append( "<i class=\"fa fa-check calendar_button\" aria-hidden=\"true\"></i>" );
             remove_others(id);
@@ -307,7 +309,7 @@ if(isset($jobs_data)){
             var tag_id = this.value;
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>/job/get_tag_selected",
+                url: "<?= base_url() ?>/events/get_tag_selected",
                 data: {id : tag_id}, // serializes the form's elements.
                 success: function(data)
                 {

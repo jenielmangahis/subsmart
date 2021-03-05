@@ -118,6 +118,10 @@ class Ring_central extends MY_Controller {
                 ?>
                 <div class="col-lg-12" style="position: fixed;bottom: 41px;width: 1080px;">
                     <div class="input-group">
+                        <span class="input-group-prepend ">
+                            <button type="button" class="btn btn-default"><i class="fas fa-photo-video fa-fw"></i></button>
+                            <button type="button" class="btn btn-default"><i class="fas fa-microphone fa-fw"></i></button>
+                        </span>
                         <input type="text" name="replyMessage" id="replyMessage" placeholder="Type Message ..." class="form-control">
                         <span class="input-group-append">
                             <button id="btnReply" type="button" onclick="sendReply()" class="btn btn-primary">Send</button>

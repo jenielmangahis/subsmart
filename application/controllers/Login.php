@@ -31,7 +31,22 @@ class Login extends CI_Controller {
 		$this->load->view('account/login', $this->data, FALSE);
 	}
 
-
+	public function timezonesetter()
+    {
+        $date_before = date('Y-m-d h:i:s A');
+        $usertimezone = $this->input->post("usertimezone");
+        date_default_timezone_set($usertimezone);
+        $date_after = date('Y-m-d h:i:s A');
+        $_SESSION['usertimezone'] = $usertimezone;
+        $display =array(
+            "usertimezone" => $usertimezone,
+            "newphptimezone" => date_default_timezone_get(),
+            "date_before" => $date_before,
+            "date_after" => $date_after,
+            "session_timezone" => $this->session->userdata('usertimezone')
+        );
+        echo json_encode($display);
+    }
 	public function check()
 	{
 

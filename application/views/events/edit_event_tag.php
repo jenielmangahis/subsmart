@@ -39,12 +39,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   height: 50px;
   width: 50px;
 }
+.card{
+    box-shadow: 0 0 13px 0 rgb(116 116 117) !important;
+}
 .marker-icon{
   height: 100px;
   margin: 30px 0px;
   border: 1px solid #363636;
   padding: 10px;
 } 
+
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/events'); ?>
