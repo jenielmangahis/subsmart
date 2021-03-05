@@ -80,7 +80,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                   <div class="row align-items-center">
                       <div class="col-sm-12">
                           <h3 style="font-family: Sarabun, sans-serif;float: left;">MERCHANT ACCOUNT APPLICATION</h3>
-                          <!-- <a class="btn btn-primary btn-share-merchant-info" href="javascript:void(0);" style="float: right;"><i class="fa fa-envelope" style="margin-right: 8px;"></i> SHARE</a> -->
+                          <a class="btn btn-primary btn-share-merchant-info" href="javascript:void(0);" style="float: right;"><i class="fa fa-envelope" style="margin-right: 8px;"></i> SHARE</a>
                       </div>
                   </div>
               </div>
