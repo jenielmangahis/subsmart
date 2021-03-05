@@ -1108,20 +1108,28 @@ a.top-1 {
             eventClick: function (arg) {
                 //console.log(arg.event._def.extendedProps);
 
-                $("#modalEventDetails").modal('show');
-                $('#modalEventDetails .modal-body').html("loading...");
+                /*$("#modalEventDetails").modal('show');
+                $('#modalEventDetails .modal-body').html("loading...");*/
 
                 var apiUrl = '';
                 var isGet  = 1;
                 if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
-
-                    apiUrl = base_url + 'event/modal_details/' + arg.event._def.extendedProps.eventId;
+                    //alert(arg.event._def.extendedProps.eventType);
+                    if( arg.event._def.extendedProps.eventType == 'jobs'){
+                        location.href = base_url + 'job/job_preview/' + arg.event._def.extendedProps.eventId;
+                    }else{
+                        location.href = base_url + 'events/event_preview/' + arg.event._def.extendedProps.eventId;
+                    }
+                    /*apiUrl = base_url + 'event/modal_details/' + arg.event._def.extendedProps.eventId;
 
                     $("#edit_schedule").show();
                     //$("#edit_workorder").hide();
 
-                    $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);
+                    $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);*/
                 }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
+                  $("#modalEventDetails").modal('show');
+                  $('#modalEventDetails .modal-body').html("loading...");
+                  
                     apiUrl = base_url + 'workcalender/modal_gevent_details';
                     isGet = 0;
                     var gData = {

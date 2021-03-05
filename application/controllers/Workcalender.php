@@ -854,6 +854,7 @@ class Workcalender extends MY_Controller
     public function main_calendar_events()
     {
         $this->load->model('Event_model', 'event_model');
+        $this->load->model('Jobs_model');
         $this->load->model('GoogleAccounts_model');
 
         $post = $this->input->post();
@@ -897,7 +898,7 @@ class Workcalender extends MY_Controller
                     $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                     $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                     $resources_user_events[$inc]['eventId'] = $event->id;
-                    $resources_user_events[$inc]['type'] = 'events';
+                    $resources_user_events[$inc]['eventType'] = 'events';
                     $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
                     $resources_user_events[$inc]['title'] = $event->event_description;
                     $resources_user_events[$inc]['start'] = $start_date_time;
@@ -910,7 +911,7 @@ class Workcalender extends MY_Controller
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                         $resources_user_events[$inc]['eventId'] = $event->id;
-                        $resources_user_events[$inc]['type'] = 'events';
+                        $resources_user_events[$inc]['eventType'] = 'events';
                         $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
@@ -1030,7 +1031,7 @@ class Workcalender extends MY_Controller
 
                             if( $event->summary != '' ){
                                 $resources_user_events[$inc]['geventID'] = $event->id;
-                                $resources_user_events[$inc]['type'] = 'events';
+                                $resources_user_events[$inc]['eventType'] = 'events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";
                                 $resources_user_events[$inc]['title'] = $event->summary;
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
@@ -1044,6 +1045,30 @@ class Workcalender extends MY_Controller
                     }
                 }
             }
+        }
+
+        //Jobs
+        $jobs = $this->Jobs_model->get_all_jobs();
+        foreach( $jobs as $j ){
+            if( $j->job_description != '' ){
+                $start_date_time = date('Y-m-d',strtotime($j->start_date . " " . $j->start_time));
+                $start_date_end  = date('Y-m-d',strtotime($j->end_date . " " . $j->end_time));
+                $backgroundColor = "#38a4f8";
+
+                if($j->event_color != ''){
+                    $backgroundColor = $j->event_color;
+                }
+
+                $resources_user_events[$inc]['eventId'] = $j->id;
+                $resources_user_events[$inc]['eventType'] = 'jobs';
+                $resources_user_events[$inc]['resourceId'] = 'job' . $j->employee_id;
+                $resources_user_events[$inc]['title'] = $j->job_description;
+                $resources_user_events[$inc]['start'] = $start_date_time;
+                $resources_user_events[$inc]['end'] = $start_date_end;
+                $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+                $inc++;
+            } 
         }
 
         echo json_encode($resources_user_events);

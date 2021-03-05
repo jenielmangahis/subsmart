@@ -306,6 +306,8 @@ class Jobs_model extends MY_Model
 
         $start_date = date('Y-m-d');
         $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
+
+        //echo $start_date . "/" . $end_date;exit;
         
         $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
         $this->db->order_by('jobs.id', 'DESC');
