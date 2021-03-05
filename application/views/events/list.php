@@ -13,11 +13,6 @@
     .form-line{
         padding-bottom: 1px;
     }
-    .btn {
-        font-size: 12px !important;
-        background-repeat: no-repeat;
-        padding: 6px 12px;
-    }
     .input_select{
         color: #363636;
         border: 2px solid #e0e0e0;
@@ -122,6 +117,9 @@
             bottom: 0px;
         }
     }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117) !important;
+    }
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -180,9 +178,6 @@ add_css(array(
                                         <a class="nav-link active"  href="#"  aria-controls="tab1" aria-selected="true">All (0)</a>
                                     </li>
                                     <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">New (0)</a>
-                                    </li>
-                                    <li>
                                         <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Scheduled 0)</a>
                                     </li>
                                     <li>
@@ -203,15 +198,7 @@ add_css(array(
                                 </ul>
                             </div>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <?php if (!empty($jobs)) { ?>
-                                    <!--<div class="dropdown" style="position: relative;display: inline-block;margin-bottom:10px;">
-                                        <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" aria-expanded="false">
-                                            Batch actions&nbsp;<i class="fa fa-angle-down fa-lg" style="margin-left:10px;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(200px, 46px, 0px);">
-                                            <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
-                                        </ul>
-                                    </div>-->
+                                <?php if (!empty($events)) { ?>
                                     <table class="table table-hover table-bordered table-striped" id="jobListTable">
                                         <thead>
                                         <tr>
@@ -220,33 +207,30 @@ add_css(array(
                                             <th scope="col"><strong>Date</strong></th>
                                             <th scope="col"><strong>Customer</strong></th>
                                             <th scope="col"><strong>Employee</strong></th>
-                                            <th scope="col"><strong>Status</strong></th>
                                             <th scope="col"><strong>Amount</strong></th>
-                                            <th scope="col"><strong>Job Types</strong></th>
-                                            <th scope="col"><strong>Job Tags</strong></th>
-                                            <th scope="col"><strong>Priority</strong></th>
+                                            <th scope="col"><strong>Event Type</strong></th>
+                                            <th scope="col"><strong>Event Tag</strong></th>
                                             <th scope="col"><strong>Manage</strong></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach($jobs as $job) : ?>
+                                        <?php foreach($events as $event) : ?>
                                             <tr>
-                                                <!--<td class="text-center"><input type="checkbox" class="jobCheckboxTd" data-id="<?php echo $job->id; ?>" value=""></td>-->
-                                                <td class="pl-3"><?= $job->job_number; ?></td>
-                                                <td class="pl-3"><?php echo date_format(date_create($job->date_created),"m/d/Y"); ?></td>
-                                                <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
-                                                <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
-                                                <td class="pl-3"><?= $job->status; ?></td>
-                                                <td class="pl-3">$<?= $job->amount; ?></td>
-                                                <td class="pl-3"><?php echo $job->job_type; ?></td>
-                                                <td class="pl-3"><?php echo $job->name; ?></td>
-
-                                                <td class="pl-3"><?=$job->priority; ?></td>
+                                                <td class="pl-3"><?= $event->event_number; ?></td>
+                                                <td class="pl-3"><?php echo date_format(date_create($event->date_created),"m/d/Y"); ?></td>
+                                                <td class="pl-3"><?= $event->first_name.' '.$event->last_name ; ?></td>
+                                                <td class="pl-3"><?= $event->FName.' '.$event->LName ; ?></td>
+                                                <td class="pl-3">$0.00<?= $event->amount; ?></td>
+                                                <td class="pl-3"><?= $event->event_type; ?></td>
+                                                <td class="pl-3"><?= $event->event_tag; ?></td>
                                                 <td class="pl-3">
-                                                    <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-primary btn-sm">
+                                                    <a href="<?= base_url('job/new_job1/').$event->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
                                                         <span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-primary btn-sm">
+                                                    <a href="javascript:void(0)" id="<?= $event->id; ?>"  class="delete_event btn btn-default btn-sm">
                                                         <span class="fa fa-trash"></span> Delete
+                                                    </a>
+                                                    <a href="<?= base_url('events/event_preview/').$event->id; ?>"  class=" btn btn-default btn-sm">
+                                                        <span class="fa fa-search-plus"></span> Preview
                                                     </a>
                                                 </td>
                                             </tr>
@@ -292,11 +276,11 @@ add_footer_js(array(
             "order": [],
         });
 
-        $(".delete_job").on( "click", function( event ) {
+        $(".delete_event").on( "click", function( event ) {
             var ID=this.id;
             // alert(ID);
             Swal.fire({
-                title: 'Continue to REMOVE this Job?',
+                title: 'Continue to REMOVE this Event?',
                 text: "",
                 icon: 'warning',
                 showCancelButton: true,
@@ -308,7 +292,7 @@ add_footer_js(array(
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "/job/delete_job",
+                        url: "<?= base_url('events/delete_event') ?>",
                         data: {job_id : ID}, // serializes the form's elements.
                         success: function(data)
                         {

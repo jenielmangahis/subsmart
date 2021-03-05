@@ -8,8 +8,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-color: #32243D;
         border: 1px solid #32243D;
     }
-    .p-padding{
-        padding-left: 10%;
+    #charts_of_account_table .btn-group .btn:hover, #charts_of_account_table .btn-group .btn:focus {
+        color: unset;
+    }
+    #charts_of_account_table .btn-group .btn {
+        padding: 10px;
     }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -83,36 +86,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <?php echo form_open_multipart('accounting/chart_of_accounts', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
                                 <div class="row my-3">
-									<div class="col-md-10"></div>
-									 <div class="col-md-2">
-                                        <div class="dropdown">
-											<a href="#" class="editbtn"><i class="fa fa-edit"></i></a>
-											<a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a>
-										    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											    <i class="fa fa-cog"></i>
-										    </a>
-										    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-											    Columns<br/>
-											    <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type"> Type</p>
-											    <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
-											    <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
-											    <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance"> Balance</p>
-											    <br/>
-											    <p class="p-padding"><input type="checkbox" name="chk_other" id="chk_other"> Other</p>
-										    </div>
-										</div>
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <input type="text" name="search" id="search" class="form-control" placeholder="Filter by name">
+                                            </div>
+                                            <div class="col-3">
+                                                <select name="" id="" class="form-control">
+                                                    <option value="all">All</option>
+                                                    <option value="ctl">Counts toward limits</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="action-bar h-100 d-flex align-items-center">
+                                            <ul class="ml-auto">
+                                                <li><a href="#" class="editbtn"><i class="fa fa-edit"></i></a></li>
+                                                <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
+                                                <li>
+                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="fa fa-cog"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
+                                                        <p class="m-0">Columns</p>
+                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type"> Type</p>
+                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
+                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
+                                                        <p><input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance"> Balance</p>
+											            <p class="m-0">Other</p>
+                                                        <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
+                                                        <p class="m-0">Rows</p>
+                                                        <p class="m-0">
+                                                            <select name="table_rows" id="table_rows" class="form-control">
+                                                                <option value="50">50</option>
+                                                                <option value="75">75</option>
+                                                                <option value="100">100</option>
+                                                                <option value="150" selected>150</option>
+                                                                <option value="300">300</option>
+                                                            </select>
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <table id="charts_of_account_table" class="table table-striped table-bordered" style="width:100%">
 									<thead>
                                         <tr>
-                                            <th></th>
                                             <th>NAME</th>
-                                            <th class='type'>TYPE</th>
-                                            <th class='detailtype'>DETAIL TYPE</th>
-                                            <th class='nbalance'>NSMARTRAC BALANCE</th>
-                                            <th class='balance'>BANK BALANCE</th>
-                                            <th>Action</th>
+                                            <th class="type">TYPE</th>
+                                            <th class="detailtype">DETAIL TYPE</th>
+                                            <th class="nbalance">NSMARTRAC BALANCE</th>
+                                            <th class="balance">BANK BALANCE</th>
+                                            <th class="text-right" width="10%">ACTION</th>
                                         </tr>
 									</thead>
 									<tbody id="customer_data">
@@ -129,7 +158,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
             <!-- add account modal -->
             <div class="modal fade" id="modalAddAccount" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document">
                     <div class="modal-content">
                         <?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
                             <div class="modal-header">
@@ -246,56 +275,136 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     $(document).ready(function() {
+        $('#modalAddAccount').on('show.bs.modal', function() {
+            var detail_type = $(this).find('#detail_type option:selected').text();
+
+            $(this).find('#name').val(detail_type);
+        });
+        $('#search').on('keyup', function() {
+            $('#charts_of_account_table').DataTable().ajax.reload();
+        });
+        $('#table_rows, #inc_inactive').on('change', function() {
+            $('#charts_of_account_table').DataTable().ajax.reload();
+        });
+        $('.dropdown-menu').on('click', function(e) {
+            e.stopPropagation();
+        });
         $('#charts_of_account_table').DataTable({
             autoWidth: false,
             searching: false,
             processing: true,
             serverSide: true,
-            ordering: false,
+            lengthChange: false,
             info: false,
+            order: [[1, 'asc']],
             ajax: {
                 url: 'load-chart-of-accounts/',
                 dataType: 'json',
                 contentType: 'application/json',
                 type: 'POST',
                 data: function(d) {
+                    d.inactive = $('#inc_inactive').prop('checked') === true ? 1 : 0;
+                    d.length = $('#table_rows').val();
+                    d.columns[0].search.value = $('input#search').val();
                     return JSON.stringify(d);
                 },
                 pagingType: 'full_numbers'
             },
             columns: [
                 {
-                    data: 'id',
-                    name: 'id',
+                    data: 'name',
+                    name: 'name',
                     fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(`<input type="checkbox">`);
+                        if(rowData.status === 1 || rowData.status === "1") {
+                            $(td).html(cellData);
+                        } else {
+                            $(td).html(cellData+' (deleted)');
+                        }
                     }
                 },
                 {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
                     data: 'type',
-                    name: 'type'
+                    name: 'type',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('type');
+                    }
                 },
                 {
+                    orderable: false,
                     data: 'detail_type',
-                    name: 'detail_type'
+                    name: 'detail_type',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('detailtype');
+                    }
                 },
                 {
                     data: 'nsmartrac_balance',
-                    name: 'nsmartrac_balance'
+                    name: 'nsmartrac_balance',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('nbalance');
+                    }
                 },
                 {
                     data: 'bank_balance',
-                    name: 'bank_balance'
+                    name: 'bank_balance',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('balance');
+                    }
                 },
                 {
-                    data: 'action',
-                    name: 'action'
+                    orderable: false,
+                    data: null,
+                    name: 'action',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        if(rowData.status === 0 || rowData.status === "0") {
+                            $(td).html(`
+                            <div class="btn-group float-right">
+                                <a href="#" class="btn text-primary d-flex align-items-center justify-content-center make-active">Make active</a>
+
+                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Run Report</a>
+                                </div>
+                            </div>
+                            `);
+                        } else {
+                            $(td).html(`
+                            <div class="btn-group float-right">
+                                <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">View Register</a>
+
+                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);" data-href="/accounting/chart_of_accounts/edit/${rowData.id}" id="editAccount" data-id="${rowData.id}">Edit</a>
+                                    <a class="dropdown-item" href="#" onclick="make_inactive(${rowData.id})">Make Inactive (Reduce usage)</a>
+                                    <a class="dropdown-item" href="#">Run Report</a>
+                                </div>
+                            </div>
+                            `);
+                        }
+                    }
                 }
             ]
+        });
+
+        $(document).on('click', '#charts_of_account_table .make-active', function(e) {
+            e.preventDefault();
+            var row = $(this).parent().parent().parent();
+            var rowData = $('#charts_of_account_table').DataTable().row(row).data();
+
+            $.ajax({
+                url:`chart_of_accounts/active/${rowData.id}`,
+                success: function(res) {
+                    var result = JSON.parse(res);
+
+                    toast(result.success, result.message, 'top-center');
+
+                    $('#charts_of_account_table').DataTable().ajax.reload();
+                }
+            });
         });
     } );
 
@@ -397,11 +506,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       function make_inactive(id)
       {
       	$.ajax({
-			     url:'<?php echo base_url(); ?>accounting/chart_of_accounts/inactive',
-			     method: 'post',
-			     data: {id: id},
-			     dataType: 'json',
-			   });
+            url:'<?php echo base_url(); ?>accounting/chart_of_accounts/inactive',
+            method: 'post',
+            data: {id: id},
+            dataType: 'json',
+            success: function(res) {
+                var result = JSON.parse(res);
+
+                toast(result.success, result.message, 'top-center');
+
+                $('#charts_of_account_table').DataTable().ajax.reload();
+            }
+        });
       }
 
 

@@ -280,6 +280,8 @@ if(isset($jobs_data)){
             calculate_subtotal(tax);
         });
 
+        // get the tax value and deduct it to subtotal then display over all total
+
         function remove_others (color_id){
             $('.color-scheme').each(function(index) {
                 var idd = this.id;
@@ -661,14 +663,37 @@ if(isset($jobs_data)){
             }
         });
 
+        function get_employee_name($this){
+            //console.log($this.value);
+            $.ajax({
+                type: "POST",
+                data: {id : $this.value},
+                url: "<?= base_url() ?>/events/get_employee_selected",
+                success: function(data){
+                    var emp_data = JSON.parse(data);
+                    if($this.id === 'employee2' ){
+                        $('#emp2_id').val(emp_data.FName + emp_data.LName);
+                    }else if($this.id === 'employee3' ){
+                        $('#emp3_id').val(emp_data.FName + emp_data.LName);
+                    }else if($this.id === 'employee4' ){
+                        $('#emp4_id').val(emp_data.FName + emp_data.LName);
+                    }
+                    console.log(emp_data);
+                }
+            });
+        }
+
         $("#employee2").on( 'change', function () {
             $('#employee2_id').val(this.value);
+            console.log(get_employee_name(this));
         });
         $("#employee3").on( 'change', function () {
             $('#employee3_id').val(this.value);
+            console.log(get_employee_name(this));
         });
         $("#employee4").on( 'change', function () {
             $('#employee4_id').val(this.value);
+            console.log(get_employee_name(this));
         });
 
         $("#start_date").on("change", function(){

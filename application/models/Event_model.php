@@ -5,6 +5,43 @@ class Event_model extends MY_Model
 {
 
     public $table = 'events';
+    public $table_items = 'event_items';
+
+    public function get_all_events()
+    {
+        $cid=logged('company_id');
+        $this->db->from($this->table);
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','left');
+        $this->db->where("events.company_id", $cid);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_specific_event($id)
+    {
+        $this->db->from($this->table);
+        $this->db->select('events.*,events.id as job_unique_id,LName,FName,
+        acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','left');
+        $this->db->where("events.id", $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function get_specific_event_items($id)
+    {
+        $this->db->from($this->table_items);
+        $this->db->select('items.title,items.price,event_items.qty');
+        $this->db->join('items', 'items.id = event_items.items_id','left');
+        $this->db->where("event_items.event_id", $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getAllByCompany($company_id, $user_id=0)
     {

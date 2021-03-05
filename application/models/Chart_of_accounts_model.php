@@ -41,6 +41,28 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getFilteredAccounts($status, $order, $orderColumn)
+	{
+		$this->db->where('accounting_chart_of_accounts.company_id', logged('company_id'));
+		$this->db->where_in('accounting_chart_of_accounts.active', $status);
+
+		switch($orderColumn) {
+			case 'nsmartrac_balance' :
+				$this->db->order_by('balance', $order);
+			break;
+			case 'name' :
+				$this->db->order_by('name', $order);
+			break;
+			default :
+				$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
+				$this->db->order_by('account.account_name', $order);
+			break;
+		}
+
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
 	public function updateBalance($data)
 	{
 		$this->db->where('id', $data['id']);
@@ -88,5 +110,12 @@ class Chart_of_accounts_model extends MY_Model {
         foreach ($result as $row) {
 		    return $row->balance;
 		}
+	}
+
+	public function makeActive($id)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		return $this->db->update($this->table, ['active' => 1]);
 	}
 }

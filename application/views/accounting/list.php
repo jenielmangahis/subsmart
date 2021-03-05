@@ -57,7 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5 class="ml-5"><a href="#" class="text-info">Product Categories</a></h5>
+                                    <h5 class="ml-5"><a href="/accounting/product-categories" class="text-info">Product Categories</a></h5>
                                     <p class="ml-5">A means of classifying items that you sell to customers. Provide a way for you to quickly organize what you sell, and save you time when completing sales transaction forms.</p>
                                 </div>
                                 <div class="col-md-6">

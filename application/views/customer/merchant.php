@@ -79,7 +79,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
               <div class="page-title-box pt-1 pb-0">
                   <div class="row align-items-center">
                       <div class="col-sm-12">
-                          <h3 style="font-family: Sarabun, sans-serif">MERCHANT ACCOUNT APPLICATION</h3>
+                          <h3 style="font-family: Sarabun, sans-serif;float: left;">MERCHANT ACCOUNT APPLICATION</h3>
+                          <!-- <a class="btn btn-primary btn-share-merchant-info" href="javascript:void(0);" style="float: right;"><i class="fa fa-envelope" style="margin-right: 8px;"></i> SHARE</a> -->
                       </div>
                   </div>
               </div>
@@ -517,10 +518,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
             <!-- end card -->
+
+            <div class="modal fade" id="sendMerchantDataModal" tabindex="-1" role="dialog" aria-labelledby="sendMerchantDataModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Send Merchant Data</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body send-merchant-data-message">
+                            <p>Are all entries correct? Data will be sent to Elavon account manager.</p>
+                        </div>
+                        <div class="modal-footer send-merchant-data-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary btn-send-merchant-data" >Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>        
     </div>
     <?php echo form_close(); ?>
+
+    <div class="modal fade" id="shareMerchantDataModal" tabindex="-1" role="dialog" aria-labelledby="shareMerchantDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Share Merchant Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="frm-share-merchant">
+                    <div class="modal-body">
+                        <div class="share-modal-form">
+                            <input type="email" class="form-control" placeholder="Enter Email" name="share_email" id="share_email" required="">
+                        </div>
+                        <div class="share-modal-message"></div>
+                    </div>
+                    <div class="modal-footer share-merchant-data-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" >Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- end container-fluid -->
 </div>
 
@@ -534,39 +581,64 @@ defined('BASEPATH') or exit('No direct script access allowed');
     /*$(".btn-submit").click(function(){
         $("#frm-merchant").submit();
     });*/
+    $(".btn-share-merchant-info").click(function(){
+        $("#shareMerchantDataModal").modal("show");
+        $(".share-modal-form").show();
+        $(".share-modal-message").hide();
+        $(".share-modal-message").html('');
+        $(".share-merchant-data-footer").show();
+        $("#share_email").val("");
+    });
 
-    $(".btn-submit").on( "click", function( event ) {
-        var eid = $(this).attr("data-id");
-        Swal.fire({
-            title: 'Are all entries correct?',
-            text: "Data will be sent to Elavon account manager.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#32243d',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: "POST",
-                    url: base_url + "/customer/send_merchant_details",
-                    data: $("#frm-merchant").serialize(),
-                    success: function(data)
-                    {
-                        if( data.is_success == 1 ){
-                            window.location.reload();    
-                        }else{
-                            Swal.fire(
-                              'Cannot send data',
-                              'Please try again later.',
-                              'error'
-                            );
-                        }
-                    }
-                });
+    $("#frm-share-merchant").submit(function(e){
+        e.preventDefault();
+        var message = '<div class="alert alert-info" role="alert"><img style="display:inline-block;" src="'+base_url+'/assets/img/spinner.gif" /> Sending...</div>';
+        $(".share-modal-form").hide();
+        $(".share-modal-message").show();
+        $(".share-modal-message").html(message);
+        $(".share-merchant-data-footer").hide();
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: base_url + "/customer/share_merchant_data",
+            data: $("#frm-share-merchant").serialize(),
+            success: function(data)
+            {
+                if( data.is_success == 1 ){
+                    $(".share-modal-message").html('<div class="alert alert-success" role="alert">Email was successfully sent</div>');
+                }else{
+                    $(".share-modal-message").html('<div class="alert alert-danger" role="alert">Cannot send data</div>');
+                }
             }
         });
+    });
+    
+
+    $(".btn-send-merchant-data").click(function(){
+        var message = '<div class="alert alert-info" role="alert"><img style="display:inline-block;" src="'+base_url+'/assets/img/spinner.gif" /> Sending...</div>';
+        $(".send-merchant-data-message").html(message);
+        $(".send-merchant-data-footer").hide();
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: base_url + "/customer/send_merchant_details",
+            data: $("#frm-merchant").serialize(),
+            success: function(data)
+            {
+                if( data.is_success == 1 ){
+                    $(".send-merchant-data-message").html('<div class="alert alert-success" role="alert">Merchant data was succesfully sent</div>');
+                    //$(".send-merchant-data-footer").show();
+                }else{
+                    $(".send-merchant-data-message").html('<div class="alert alert-danger" role="alert">Cannot send data</div>');
+                }
+            }
+        });
+    });
+    $(".btn-submit").on( "click", function( event ) {
+        $("#sendMerchantDataModal").modal("show");
+        $(".send-merchant-data-footer").show();
+        $(".send-merchant-data-message").html('<p>Are all entries correct? Data will be sent to Elavon account manager.</p>');
     });
 
     $(function () {

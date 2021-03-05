@@ -117,6 +117,10 @@ class FillAndSign extends MY_Controller
         $this->db->where('id', $documentId);
         $record = $this->db->get('fill_and_sign_documents')->row();
 
+        if (is_null($record)) {
+            $this->output->set_status_header('404');
+        }
+
         header('content-type: application/json');
         echo json_encode(['document' => $record]);
     }
@@ -354,50 +358,39 @@ class FillAndSign extends MY_Controller
         $currentUser = $this->db->get('users')->row();
 	    $currentUserName = implode(' ', [$currentUser->FName, $currentUser->LName]);
 
-        $this->load->library('email');
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT ;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+        $subject = 'nSmarTrac: Fill & eSign';
 
-        $config = [
-            // 'protocol' => 'smtp',
-            // 'smtp_host' => 'ssl://smtp.gmail.com',
-            // 'smtp_port' => 465,
-            // 'smtp_user' => 'nsmartrac@gmail.com',
-            // 'smtp_pass' => 'nSmarTrac2020',
-            // 'mailtype' => 'html',
-            // 'charset' => 'utf-8',
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+        $mail->Body = $currentUserName . ' shared you a document.';
 
-            'smtp_crypto' => 'ssl',
-            'protocol' => 'smtp',
-            'smtp_host' => 'mail.nsmartrac.com',
-            'smtp_port' => 465,
-            'smtp_user' => 'smartrac.noreply@gmail.com',
-            'smtp_pass' => 'smartrac123',
-            'mailtype'  => 'html',
-            'charset'   => 'utf-8',
-            // 'validation' => true,
-            // 'newline' => "\r\n",
-            // 'smtp_timeout' => 7,
-        ];
-
-        $this->email->initialize($config);
-        $this->email->set_newline("\r\n");
-        $this->email->from('no-reply@nsmartrac.com', 'nSmarTrac');
-        $this->email->subject('Fill & eSign');
-        $this->email->message($currentUserName . ' shared you a document.');
-
-        $documentPath = $_SERVER["DOCUMENT_ROOT"] . '/uploads/fillandsign/out/' . $document->hash . '.pdf';
-        if ($this->isLocalhost()) {
-            $documentPath = $_SERVER["DOCUMENT_ROOT"] . '/nsmartrac/uploads/fillandsign/out/' . $document->hash . '.pdf';
-        }
-
-        $this->email->attach($documentPath);
+        $documentPath = realpath(APPPATH . '../uploads/fillandsign/out/' . $document->hash . '.pdf');
+        $mail->addAttachment($documentPath);
 
         foreach($emails as $email) {
-            $this->email->to($email);
+            $mail->addAddress($email);
+        }
 
-            if (!$this->email->send(false)) {
-                echo json_encode(['success' => false]);
-                return;
-            }
+        if(!$mail->send()) {
+            echo json_encode(['success' => false]);
+            return;
         }
 
         echo json_encode(['success' => true]);
@@ -405,5 +398,22 @@ class FillAndSign extends MY_Controller
 
     private function isLocalhost($whitelist = ['127.0.0.1', '::1']) {
         return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
+    }
+
+
+    public function getRecents() {
+        $query = <<<SQL
+        SELECT `fill_and_sign_documents`.* FROM `fill_and_sign_documents`
+        LEFT JOIN `fill_and_sign_documents_links` ON `fill_and_sign_documents`.`id` = `fill_and_sign_documents_links`.`document_id`
+        WHERE `fill_and_sign_documents_links`.`hash` IS NULL AND
+        `fill_and_sign_documents`.`user_id` = ?
+        ORDER BY `fill_and_sign_documents`.`id` DESC
+        LIMIT 5
+        SQL;
+
+        $results = $this->db->query($query, [logged('id')])->result();
+
+        header('content-type: application/json');
+        echo json_encode(['documents' => $results]);
     }
 }

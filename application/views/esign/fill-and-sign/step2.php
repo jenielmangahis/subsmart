@@ -1,5 +1,5 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php defined('BASEPATH') or exit('No direct script access allowed');?>
+<?php include viewPath('includes/header');?>
 
 <section class="container-fluid fillAndSign fillAndSign--step2" data-step="2">
     <div class="fillAndSign__topnav">
@@ -58,6 +58,11 @@
     </div>
 
     <div class="fillAndSign__footer">
+
+        <button type="button" class="btn btn-primary mr-3" id="doneButton">
+            Done
+        </button>
+
         <div class="btn-group dropup">
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Share
@@ -77,7 +82,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Signature</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close close-me" aria-label="Close">
                     <span>&times;</span>
                 </button>
             </div>
@@ -133,7 +138,7 @@
                         </div>
                         Apply Signature
                     </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="signatureModalCloseButton">Close</button>
+                    <button type="button" class="btn btn-secondary close-me" id="signatureModalCloseButton">Close</button>
                 </div>
             </div>
         </div>
@@ -145,7 +150,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Email Document</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close close-me" aria-label="Close">
                     <span>&times;</span>
                 </button>
             </div>
@@ -165,7 +170,7 @@
                     </div>
                     Send
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sendEmailCloseButton">Close</button>
+                <button type="button" class="btn btn-secondary close-me" id="sendEmailCloseButton">Close</button>
             </div>
         </div>
     </div>

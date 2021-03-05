@@ -19,7 +19,7 @@ $(document).ready(function () {
         try {
            await audio.play();
         } catch(err) {
-            console.log('error');
+            // console.log('error');
         }
     }
     if($('#clock-status').val() == 1){
@@ -54,7 +54,7 @@ $(document).ready(function () {
                dataType:'json',
                // data:{clock_in:clock_in},
                success:function (data) {
-                   console.log('test');
+                //    console.log('test');
                     if (data != null){
                         $(selected).attr('id','clockOut');
                         $('.clock').addClass('clock-active');
@@ -106,7 +106,7 @@ $(document).ready(function () {
 function app_notification(token,body,device_type,company_id,title) {
     // console.log("Requesting App notification.....");
     $.ajax({
-        url:baseURL+"/timesheet/app_notification",
+        url:baseURL+"timesheet/app_notification",
         type:"POST",
         dataType:"json",
         data:{body:body,device_type:device_type,company_id:company_id,token:token,title:title},
@@ -313,27 +313,7 @@ function app_notification(token,body,device_type,company_id,title) {
    
 
     
-    $(document).on('click','#bell-1',function () {
-        // alert(notification_html_holder_ctr);
-
-        $.ajax({
-            url:baseURL+"/Timesheet/getNotificationsAll",
-            type:"POST",
-            dataType:"json",
-            data:{notifycount:notification_html_holder_ctr},
-            success:function (data) {
-                if(notification_html_holder_ctr != data.notifyCount){
-                    $('#notifyBadge').html(data.notifyCount);
-                    $('#nfcount').html(data.notifyCount);
-                    $('#autoNotifications').html(data.autoNotifications);
-                    notification_html_holder_ctr = data.notifyCount;
-                }
-                // console.log(data.notifyCount+0);
-                // setTimeout(notificationClockInOut, 5000);
-            }
-        });
-
-    });
+    
     
     $(document).on('click','#clockOut',function () {
         let attn_id = $('#attendanceId').val();
@@ -379,7 +359,7 @@ function app_notification(token,body,device_type,company_id,title) {
                         data:{attn_id:attn_id},
                         success:function (data) {
                             if (data != null){
-                                console.log('clock-out')
+                                // console.log('clock-out')
                                 $(selected).attr('id','lunchOut');
                                 $('.clock').removeClass('clock-active').addClass('clock-break');
                                 $('#userLunchIn').text(data.lunch_in);
@@ -468,7 +448,7 @@ function app_notification(token,body,device_type,company_id,title) {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, I want to Clock-out!'
             }).then((result) => { 
-                console.log(result);
+                // console.log(result);
                 if (result.value) {
                 $.ajax({
                     url:baseURL+'/timesheet/clockOutEmployee',
@@ -498,7 +478,7 @@ function app_notification(token,body,device_type,company_id,title) {
                             Push.Permission.GRANTED; // 'granted'
                             Push.create("Clock Out", {
                                 body: "User : "+data.FName+" "+data.LName,
-                                icon: baseURL+'/uploads/users/user-profile/'+data.profile_img,
+                                icon: baseURL+'uploads/users/user-profile/'+data.profile_img,
                                 timeout: 20000,
                                     onClick: function () {
                                         window.focus();

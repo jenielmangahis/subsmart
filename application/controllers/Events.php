@@ -10,7 +10,7 @@ class Events extends MY_Controller
         parent::__construct();
         $this->checkLogin();
         //$this->load->library('paypal_lib');
-        $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('Event_model', 'event_model');
         //$this->load->model('Invoice_model', 'invoice_model');
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
@@ -32,16 +32,36 @@ class Events extends MY_Controller
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-        $this->page_data['events'] = $this->jobs_model->get_all_jobs();
-        $this->page_data['title'] = 'Jobs';
+        $this->page_data['events'] = $this->event_model->get_all_events();
+        $this->page_data['title'] = 'Events';
         $this->load->view('events/list', $this->page_data);
     }
 
     public function new_event($id=null) {
+
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
-        // get all employees
+
+        // check if settings has been set
+        $get_event_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'event_settings',
+            'select' => 'id',
+        );
+        $event_settings = $this->general->get_data_with_param($get_event_settings);
+        // add default event settings if not set
+        if(empty($event_settings)){
+            $event_settings_data = array(
+                'event_prefix' => 'EVENT',
+                'event_next_num' => 1,
+                'company_id' => $comp_id,
+            );
+            $this->general->add_($event_settings_data, 'event_settings');
+        }
+
         // get all job tags
         $get_login_user = array(
             'where' => array(
@@ -145,14 +165,14 @@ class Events extends MY_Controller
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
         }
-        $this->load->view('events/job_new', $this->page_data);
+        $this->load->view('events/event_new', $this->page_data);
     }
 
-    public function new_job_edit($id) {
+    public function event_preview($id=null) {
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
-
+        // get all employees
         // get all job tags
         $get_login_user = array(
             'where' => array(
@@ -163,7 +183,6 @@ class Events extends MY_Controller
         );
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
 
-        // get all employees
         $get_employee = array(
             'where' => array(
                 'company_id' => $comp_id
@@ -189,16 +208,37 @@ class Events extends MY_Controller
             'table' => 'color_settings',
             'select' => '*',
         );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
 
-        // get company info
+        $get_job_types = array(
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
         $get_company_info = array(
             'where' => array(
                 'id' => logged('company_id'),
             ),
             'table' => 'business_profile',
-            'select' => 'business_phone,business_name',
+            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'is_active' => 1,
+            ),
+            'table' => 'items',
+            'select' => 'id,title,price',
+        );
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 
         // get estimates
         $get_estimates = array(
@@ -229,10 +269,11 @@ class Events extends MY_Controller
             'select' => 'id,invoice_number,date_issued,job_name,customer_id',
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
-
-        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-
-        $this->load->view('job/job_new', $this->page_data);
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
+            $this->page_data['jobs_data_items'] = $this->event_model->get_specific_event_items($id);
+        }
+        $this->load->view('events/event_preview', $this->page_data);
     }
 
     public function get_customer_selected(){
@@ -245,6 +286,19 @@ class Events extends MY_Controller
             'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,zip_code',
         );
         echo json_encode($this->general->get_data_with_param($get_customer,FALSE),TRUE);
+    }
+
+    public function get_employee_selected(){
+        $id = $_POST['id'];
+        $get_employee = array(
+            'where' => array(
+                'id' => $id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+       echo json_encode($this->general->get_data_with_param($get_employee,FALSE),TRUE);
     }
 
     public function get_esign_selected(){
@@ -265,7 +319,7 @@ class Events extends MY_Controller
             'where' => array(
                 'id' => $id
             ),
-            'table' => 'job_tags',
+            'table' => 'event_tags',
             'select' => 'name',
         );
         echo json_encode($this->general->get_data_with_param($get_template,FALSE),TRUE);
@@ -362,14 +416,14 @@ class Events extends MY_Controller
         }
     }
 
-    public function delete_job() {
-        $remove_job = array(
+    public function delete_event() {
+        $remove_event = array(
             'where' => array(
                 'id' => $_POST['job_id']
             ),
-            'table' => 'jobs'
+            'table' => 'events'
         );
-        if($this->general->delete_($remove_job)){
+        if($this->general->delete_($remove_event)){
             echo '1';
         }
     }
@@ -454,125 +508,67 @@ class Events extends MY_Controller
         $this->load->view('job/job_settings/job_time_settings', $this->page_data);
     }
 
-    public function save_job() {
+    public function save_event() {
         $input = $this->input->post();
         $comp_id = logged('company_id');
-        $get_job_settings = array(
+        $get_event_settings = array(
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'table' => 'job_settings',
+            'table' => 'event_settings',
             'select' => '*',
             'limit' => 1,
             'order' => array(
                 'order_by' => 'id'
             ),
         );
-        $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'000'.$job_settings[0]->job_num_next;
+        $event_settings = $this->general->get_data_with_param($get_event_settings);
+        $event_number = $event_settings[0]->event_prefix.'-000'.$event_settings[0]->event_next_num;
 
-        $jobs_data = array(
-            'job_number' => $job_number,
+        $events_data = array(
+            'event_number' => $event_number,
             'customer_id' => $input['customer_id'],
             'employee_id' => $input['employee_id'],
-            'employee2_id' => $input['employee2_id'],
-            'employee3_id' => $input['employee3_id'],
-            'employee4_id' => $input['employee4_id'],
-            'job_name' => $input['job_name'],
-            'job_description' => $input['job_description'],
+            'event_description' => $input['event_description'],
             'start_date' => $input['start_date'],
             'start_time' => $input['start_time'],
             'end_date' => $input['end_date'],
             'end_time' => $input['end_time'],
+            'event_type' => $input['event_type'],
+            'event_tag' => $input['event_tag'],
             'event_color' => $input['event_color'],
             'customer_reminder_notification' => $input['customer_reminder_notification'],
+            'url_link' => $input['link'],
             //'job_type' => $this->input->post('job_type'),
-            'priority' => 'Standard',//$this->input->post('job_priority'),
-            'tags' => $input['tags'],//$this->input->post('job_priority'),
-            'status' => 'Scheduled',//$this->input->post('job_status'),
-            'message' => $input['message'],
+            'status' => 0,//$this->input->post('job_status'),
+            'description' => $input['message'],
             'company_id' => $comp_id,
-            'date_created' => date('Y-m-d H:i:s'),
+            //'date_created' => date('Y-m-d H:i:s'),
             'notes' => $input['notes'],
-            'attachment' => $input['attachment'],
-            'tax_rate' => $input['tax_rate'],
+            //'tax_rate' => $input['tax_rate'],
         );
-        $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+        $event_id = $this->general->add_return_id($events_data, 'events');
 
-        $jobs_links_data = array(
-            'link' => $input['link'],
-            'job_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_links_data, 'job_url_links');
-
-        $jobs_approval_data = array(
-            'authorize_name' => $input['authorize_name'],
-            'signature_link' => $input['signature_link'],
-            'datetime_signed' => $input['datetime_signed'],
-            'jobs_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_approval_data, 'jobs_approval');
-
-        $method = $input['method'];
-        $jobs_payments_data = array();
-        $jobs_payments_data['jobs_id'] =  $jobs_id;
-        $jobs_payments_data['method'] =  $method;
-        $jobs_payments_data['amount'] =  $input['amount'];
-
-        if($method == 'CHECK'){
-            $jobs_payments_data['route_num'] = $input['route_number'];
-            $jobs_payments_data['account_num'] = $input['account_number'];
-        }else if($method == 'CC'|| $method == 'OCCP'){
-            $jobs_payments_data['account_name'] = $input['account_holder_name'];
-            $jobs_payments_data['card_number'] = $input['card_number'];
-            $jobs_payments_data['card_mmyy'] = $input['card_expiry'];
-            $jobs_payments_data['card_cvc'] = $input['card_cvc'];
-            $jobs_payments_data['is_save_file'] = $input['onoffswitch'];
-        }else if($method === 'CASH'){
-            $jobs_payments_data['is_collected'] = $input['is_collected'];
-        }else if($method === 'ACH'){
-            $jobs_payments_data['route_num'] = $input['route_number'];
-            $jobs_payments_data['account_num'] = $input['account_number'];
-            $jobs_payments_data['day_of_month'] = $input['day_of_month'];
-        }else if($method === 'OPT' || $method === 'WW'){
-            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
-            $jobs_payments_data['acct_note'] = $input['acct_note'];
-            $jobs_payments_data['is_signed'] = $input['is_signed'];
-        }else if($method === 'SQ' || $method === 'PP' || $method === 'VENMO'){
-            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
-            $jobs_payments_data['acct_note'] = $input['acct_note'];
-            $jobs_payments_data['acct_confirm'] = $input['acct_confirm'];
-        }else{
-
+        if(isset($input['item_id'])){
+            $devices = count($input['item_id']);
+            for($xx=0;$xx<$devices;$xx++){
+                $events_items_data = array();
+                $events_items_data['event_id'] = $event_id;
+                $events_items_data['items_id'] = $input['item_id'][$xx];
+                $events_items_data['qty'] = $input['item_qty'][$xx];
+                $this->general->add_($events_items_data, 'event_items');
+                unset($events_items_data);
+            }
         }
-        $this->general->add_($jobs_payments_data, 'jobs_pay_details');
 
-        $jobs_settings_data = array(
-            'job_num_prefix' => 'JOB',
-            'job_num_next' => $job_settings[0]->job_num_next + 1,
-            'company_id' => $comp_id
-        );
-        $this->general->add_($jobs_settings_data, 'job_settings');
-
-        // add to cslendar of the new job
-        $events_data = array(
-            'customer_id' => $input['customer_id'],
-            'event_description' => $input['job_description'],
-            'employee_id' => $input['employee_id'],
-            'start_date' => $input['start_date'],
-            'start_time' => $input['start_time'],
-            'end_date' => $input['end_date'],
-            'end_time' => $input['end_time'],
-            'event_color' => $jobs_id,
-            'customer_reminder_notification' => $input['customer_reminder_notification'],
+        $event_settings_data = array(
+            'event_prefix' => 'EVENT',
+            'event_next_num' => $event_settings[0]->event_next_num + 1,
             'company_id' => $comp_id,
-            'description' => $jobs_id,
-            'tags' => $jobs_id,
-            'notify_at' => $jobs_id,
         );
-        $this->general->add_($events_data, 'events');
+        $this->general->add_($event_settings_data, 'event_settings');
 
-        echo $jobs_id;
+        echo $event_id;
     }
 
     public function delete () {

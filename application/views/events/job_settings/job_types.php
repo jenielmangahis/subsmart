@@ -122,6 +122,9 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
+.card{
+    box-shadow: 0 0 13px 0 rgb(116 116 117) !important;
+}
 </style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -179,6 +182,7 @@ add_css(array(
                                     <tr>
                                         <th scope="col"><strong>Title</strong></th>
                                         <th scope="col"><strong>Date Created</strong></th>
+                                        <th scope="col"><strong></strong></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -187,7 +191,11 @@ add_css(array(
                                             <tr>
                                                 <td class="pl-3"><?= $types->title; ?></td>
                                                 <td class="pl-3"><?= date_format(date_create($types->created_at),"m/d/Y"); ?></td>
-
+                                                <td class="pl-3">
+                                                    <a href="javascript:void(0)" id="<?= $types->id; ?>"  class="delete_type btn btn-primary btn-sm">
+                                                        <span class="fa fa-trash"></span> Delete
+                                                    </a>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -274,11 +282,11 @@ add_footer_js(array(
                 }
             });
         });
-        $(".delete_tags").on( "click", function( event ) {
+        $(".delete_type").on( "click", function( event ) {
             var ID=this.id;
             // alert(ID);
             Swal.fire({
-                title: 'Are you sure to remove this Job Type?',
+                title: 'Are you sure to remove this Event Type?',
                 text: "",
                 icon: 'warning',
                 showCancelButton: true,

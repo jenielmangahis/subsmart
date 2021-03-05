@@ -155,11 +155,15 @@
         </div>
     </div>
     <div id="sentBody" style="height:490px;">
-        
+
     </div>
 
     <div class="col-lg-12">
         <div class="input-group">
+            <span class="input-group-prepend ">
+                <button type="button" class="btn btn-default"><i class="fas fa-photo-video fa-fw"></i></button>
+                <button type="button" class="btn btn-default"><i class="fas fa-microphone fa-fw"></i></button>
+            </span>
             <input type="text" name="replyMessage" id="sentMessage" placeholder="Type Message ..." class="form-control">
             <span class="input-group-append">
                 <button id="btnReply" type="button" onclick="sendSMS()" class="btn btn-primary">Send</button>
@@ -174,17 +178,17 @@
         fetchSMS();
 
     });
-    
-    
-    createNewMessage = function(){
+
+
+    createNewMessage = function () {
         $('#msgs_body').removeClass('col-lg-12');
         $('#msgs_body').addClass('col-lg-4');
         $('#msgs_details').show();
         $('#msgs_details').html($('#sendSMSBody').html());
     };
-    
-    
-    sendSMS = function() {
+
+
+    sendSMS = function () {
         var num = $('#inputMobile').val();
         var msg = $('#sentMessage').val();
 
@@ -197,13 +201,13 @@
             },
             dataType: 'json',
             statusCode: {
-                500: function(xhr) {
+                500: function (xhr) {
                     var obj = JSON.parse(xhr.responseText);
                     alert(obj.msg);
                     fetchPersonalSMS(obj.number);
                 }
             },
-            success: function(response) {
+            success: function (response) {
                 alert(response);
             }
         });

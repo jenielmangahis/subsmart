@@ -309,7 +309,11 @@ $route['accounting/terms/update']['post'] = "accounting/update_term";
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
+
 $route['accounting/products-and-services'] = 'accounting/products_and_services';
+$route['accounting/product-categories'] = 'accounting/product_categories';
+$route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
+
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
 
@@ -322,6 +326,7 @@ $route['accounting/chart_of_accounts/update_name'] = 'Accounting/update_name';
 $route['accounting/chart_of_accounts/inactive'] = 'Accounting/inactive';
 $route['accounting/chart_of_accounts/import'] = 'Accounting/import';
 $route['accounting/chart_of_accounts/refresh'] = 'Accounting/refresh';
+$route['accounting/chart_of_accounts/active/(:any)'] = 'Accounting/make_account_active/$1';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';
 $route['accounting/reconcile/(:any)'] = 'reconcile/index/$1';
@@ -620,7 +625,6 @@ $route['event_types/save'] = 'Event_Types/create_event_type';
 $route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
 $route['event_types/update'] = 'Event_Types/update_event_type';
 $route['event_types/delete'] = 'Event_Types/delete_event_type';
-$route['events/event_types'] = 'Event_Types/index';
 
 //Esign
 $route['esignmain'] = 'Esign_Main/index';

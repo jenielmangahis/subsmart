@@ -35,7 +35,7 @@ class Clients_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
+        $user_id = logged('company_id');
 
         $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name');
         $this->db->from($this->table);
