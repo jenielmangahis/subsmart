@@ -195,7 +195,7 @@ body {
     padding: 15px;
     border-top: 1px solid #d9d9d9;
 
-    .btn {
+    .btn.dropdown-toggle {
       --bg-color: #ffce00;
       --fg-color: #1e1e1e;
 
@@ -627,7 +627,7 @@ body {
     height: 100%;
     width: 200px;
     background-color: #848484;
-    padding: 140px 35px 0 35px;
+    padding: 160px 35px 0 35px;
 
     &Item {
       position: relative;

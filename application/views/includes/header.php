@@ -30,7 +30,7 @@
     <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
     <link href="<?php echo $url->assets ?>css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 
-    <script src="<?php echo $url->assets ?>push_notification/push.min.js"></script>
+    <script src="<?php echo $url->assets ?>push_notification/push.js"></script>
     <script src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js"></script>
 
 
@@ -282,8 +282,7 @@
     </style>
 </head>
 <script>
-var baseURL='<?=base_url()?>';
-
+    var baseURL='<?=base_url()?>';
 </script>
 
 
@@ -514,9 +513,9 @@ var baseURL='<?=base_url()?>';
                             //                        $expected_endbreak = null;
                             $shift_end = 0;
                             $overtime_status = 1;
-                            $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-                            $getTimeZone = json_decode($ipInfo);
-                            $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
+                            // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+                            // $getTimeZone = json_decode($ipInfo);
+                            $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
                             
                             foreach ($attendances as $attn) {
                                 $attn_id = $attn->id;
@@ -602,7 +601,7 @@ var baseURL='<?=base_url()?>';
                                         if ($setting->timezone == null) {
                                             $tz = date_default_timezone_get();
                                         } else {
-                                            $tz = /* $setting->timezone */ 'America/Chicago';
+                                            $tz = $this->session->userdata('usertimezone');
                                         }
                                         $timestamp = time();
                                         $dt = new DateTime("now", new DateTimeZone($tz));
@@ -616,11 +615,11 @@ var baseURL='<?=base_url()?>';
                                         }
                                         foreach ($notification as $u_notify) {
                                             if ($u_notify->user_id == $sched->user_id) {
-                                                if ($u_notify->title == 'Your shift will begin soon.' && date('Y-m-d', strtotime($u_notify->date_created)) == $start) {
+                                                if ($u_notify->title == 'Your shift will begin soon.' && date('m-d-Y', strtotime($u_notify->date_created)) == $start) {
                                                     $sched_notify = 0;
                                                 }
                                             }
-                                            if ($u_notify->title == 'Your shift will end soon.' && date('Y-m-d', strtotime($u_notify->date_created)) == $start) {
+                                            if ($u_notify->title == 'Your shift will end soon.' && date('m-d-Y', strtotime($u_notify->date_created)) == $start) {
                                                 $over_notify = 0;
                                             }
                                         }
@@ -748,55 +747,29 @@ var baseURL='<?=base_url()?>';
                 data:{notifycount:notification_badge_value},
                 success:function (data) {
                     // console.log(data);
-                    if(notification_badge_value != data.notifyCount){
+                    if(notification_badge_value != data.notifyCount ){
                         notification_badge_value = data.notifyCount;
                         $('#notifyBadge').html(notification_badge_value);
                         $('#nfcount').html(data.notifyCount);
+                        // $('#autoNotifications').html(data.autoNotifications);
+                        notification_viewer();
+                        console.log(data.notifyCount);
                     }
                     setTimeout(notificationClockInOut, 5000);
                 }
             });
             }
         })();
-        // function notificationClockInOut() {
-            
-                
-        //     // $.ajax({
-        //     //     type: "POST",
-        //     //     url: baseURL+"/Timesheet/getNotificationsAll",
-        //     //     async: true,
-        //     //     cache: false,
-        //     //     timeout: 10000,
-        //     //     data:
-        //     //     success: function(data) {
-        //     //         var obj = JSON.parse(data);
-        //     //         // console.log(notification_badge_value);
-        //     //         // console.log(obj.notifyCount);
-        //     //         if(notification_badge_value != obj.notifyCount){
-        //     //             notification_badge_value = obj.notifyCount;
-        //     //             $('#notifyBadge').html(obj.notifyCount);
-        //     //             $('#nfcount').html(obj.notifyCount);
-        //     //             $('#autoNotifications').html(obj.autoNotifications);
-        //     //         }
-        //     //         setTimeout(notificationClockInOut, 2000);
-        //     //     },
-        //     //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-        //     //         // addmsg("error", textStatus + " (" + errorThrown + ")");
-        //     //         setTimeout(notificationClockInOut, 15000);
-        //     //     }
-        //     // });
-        // };
-        $(document).ready(function() {
-            var TimeStamp = null;
-            notificationClockInOut();
 
-            $.ajax({
+        let notification_viewer = (function() {
+            return function () {
+                $.ajax({
                 url:baseURL+"/Timesheet/getNotificationsAll",
                 type:"POST",
                 dataType:"json",
                 data:{notifycount:notification_html_holder_ctr},
                 success:function (data) {
-                    if(notification_html_holder_ctr != data.notifyCount){
+                    if(notification_html_holder_ctr != data.notifyCount && data.notifyCount != null){
                         $('#notifyBadge').html(data.notifyCount);
                         $('#nfcount').html(data.notifyCount);
                         $('#autoNotifications').html(data.autoNotifications);
@@ -806,14 +779,11 @@ var baseURL='<?=base_url()?>';
                     // setTimeout(notificationClockInOut, 5000);
                 }
             });
-            $.ajax({
-                url:baseURL+"/Timesheet/tester",
-                type:"POST",
-                dataType:"json",
-                data:{usertimezone:Intl.DateTimeFormat().resolvedOptions().timeZone},
-                success:function (data) {
-                    console.log(data);
-                }
-            });
+        }
+        })();
+
+        $(document).ready(function() {
+            var TimeStamp = null;
+            notificationClockInOut();
         });
     </script>

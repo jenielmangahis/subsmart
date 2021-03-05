@@ -465,12 +465,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="card-body">
                             <div class="today-date">
                             <?php 
-                            // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-                            // $getTimeZone = json_decode($ipInfo);
-                            date_default_timezone_set($getTimeZone->geoplugin_timezone);
+                            date_default_timezone_set($this->session->userdata('usertimezone'));
 
                             ?>
-                                <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " . date_default_timezone_get(); ?></span></h6>
+                                <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " ?></span></h6>
                             </div>
                             <?php if ($this->session->userdata('logged')['role'] < 5) : ?>
                                 <div class="row" style="margin-bottom: 20px">
@@ -708,7 +706,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 $company_id = 0;
                                                 // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
                                                 // $getTimeZone = json_decode($ipInfo);
-                                                $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
+                                                $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
                                                 ?>
                                                 
                                                 <?php foreach ($users as $cnt => $user) : ?>
@@ -739,7 +737,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     $datetime_defaultTimeZone = new DateTime($date_created);
                                                                     $datetime_defaultTimeZone->setTimezone($UserTimeZone);
                                                                     $log->date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
-                                                                    date_default_timezone_set($getTimeZone->geoplugin_timezone);
+                                                                    date_default_timezone_set($this->session->userdata('usertimezone'));
                                                                     if ($log->action == 'Check in') {
                                                                         $time_in = date('h:i A', strtotime($log->date_created));
                                                                         $time_out = null;
@@ -916,7 +914,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             $shift = '-';
                                                             $yesterday_note = null;
                                                             $getTimeZone = json_decode($ipInfo);
-                                                            $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
+                                                            $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
                                                             $emp_logs = getUserLogs($attendance_id);
                                                             foreach ($emp_attendance as $attn) {
                                                                 foreach ($emp_logs as $log) {

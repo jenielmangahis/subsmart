@@ -35,6 +35,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_expense_name_model');
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('items_model');
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->library('excel');
@@ -1161,6 +1162,37 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
         $this->load->view('accounting/products_and_services', $this->page_data);
+    }
+    public function product_categories()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Product Categories";
+        $this->load->view('accounting/product_categories', $this->page_data);
+    }
+    public function load_product_categories()
+    {
+        $postData = json_decode(file_get_contents('php://input'), true);
+        $order = $postData['order'][0]['dir'];
+
+        $categories = $this->items_model->getItemCategories($order);
+
+        $data = [];
+
+        foreach($categories as $category) {
+            $data[] = [
+                'id' => $category->item_categories_id,
+                'name' => $category->name
+            ];
+        }
+
+        $result = [
+            'draw' => $postData['draw'],
+            'recordsTotal' => count($categories),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
     }
     public function audit_log()
     {
@@ -2843,32 +2875,47 @@ class Accounting extends MY_Controller {
     public function load_chart_of_accounts()
     {
         $postData = json_decode(file_get_contents('php://input'), true);
+        $search = $postData['columns'][0]['search']['value'];
+        $column = $postData['order'][0]['column'];
+        $order = $postData['order'][0]['dir'];
+        $columnName = $postData['columns'][$column]['name'];
 
-        $accounts = $this->chart_of_accounts_model->select();
+        $status = [
+            1
+        ];
+
+        if($postData['inactive'] === '1' || $postData['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status, $order, $columnName);
 
         $data = [];
 
         foreach($accounts as $account) {
-            $data[] = [
-                'id' => $account->id,
-                'name' => $account->name,
-                'type' => $this->account_model->getName($account->account_id),
-                'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
-                'nsmartrac_balance' => $account->balance,
-                'bank_balance' => '',
-                'action' => "
-                <div class='dropdown show'>
-                    <a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                        View Register
-                    </a>
-
-                    <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
-                        <a class='dropdown-item' href='javascript:void(0);' data-href='/accounting/chart_of_accounts/edit/".$account->id."' id='editAccount' data-id='".$account->id."'>Edit</a>
-                        <a class='dropdown-item' href='#' onclick='make_inactive(".$account->id.")'>Make Inactive (Reduce usage)</a>
-                        <a class='dropdown-item' href='#'>Run Report</a>
-                    </div>
-                </div>"
-            ];
+            if($search !== "") {
+                if(stripos($account->name, $search) !== false) {
+                    $data[] = [
+                        'id' => $account->id,
+                        'name' => $account->name,
+                        'type' => $this->account_model->getName($account->account_id),
+                        'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
+                        'nsmartrac_balance' => $account->balance,
+                        'bank_balance' => '',
+                        'status' => $account->active
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $account->id,
+                    'name' => $account->name,
+                    'type' => $this->account_model->getName($account->account_id),
+                    'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
+                    'nsmartrac_balance' => $account->balance,
+                    'bank_balance' => '',
+                    'status' => $account->active
+                ];
+            }
         }
 
         $result = [
@@ -2879,6 +2926,16 @@ class Accounting extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+
+    public function make_account_active($id)
+    {
+        $active =  $this->chart_of_accounts_model->makeActive($id);
+
+        echo json_encode([
+            'success' => $active ? true : false,
+            'message' => $active ? 'Success' : 'Error'
+        ]);
     }
 
     public function add()
@@ -2970,7 +3027,12 @@ class Accounting extends MY_Controller {
     public function inactive()
     {
         $id = $this->input->post('id');
-        $this->chart_of_accounts_model->inactive($id);
+        $inactive = $this->chart_of_accounts_model->inactive($id);
+
+        echo json_encode([
+            'success' => $inactive ? true : false,
+            'message' => $inactive ? 'Success' : 'Error'
+        ]);
     }
 
     public function import()
@@ -4851,6 +4913,20 @@ class Accounting extends MY_Controller {
         $this->page_data['role'] = $role;
         $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
 
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Clients_model');
+        
+        $estimate = $this->estimate_model->getById($id);
+        $company_id = logged('company_id');
+
+        $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+        $client   = $this->Clients_model->getById($company_id);
+
+        $this->page_data['customer'] = $customer;
+        $this->page_data['client'] = $client;
+        $this->page_data['estimate'] = $estimate;
+
         // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->page_data['page_title'] = "Estimate Lists";
         // print_r($this->page_data);
@@ -5081,6 +5157,51 @@ class Accounting extends MY_Controller {
 
         // echo $this->email->print_debugger();
         echo "Successfully sent to your email";
+    }
+
+    public function estimateviewdetails($id)
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Clients_model');
+        
+        $estimate = $this->estimate_model->getById($id);
+        $company_id = logged('company_id');
+
+            $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            $client   = $this->Clients_model->getById($company_id);
+
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['estimate'] = $estimate;
+        // $user_id = logged('id');
+        // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
+        $this->load->view('accounting/estimateviewdetails',$this->page_data);
+    }
+
+    public function updateEstimate($id)
+    {
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $role    = logged('role');
+
+        if ($role == 1 || $role == 2) {
+            $this->page_data['users'] = $this->users_model->getAllUsers();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();  
+        } else {
+            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }
+
+
+        $this->load->model('Customer_model', 'customer_model');
+
+        $this->page_data['estimate'] = $this->estimate_model->getById($id);
+        $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->load->view('accounting/updateEstimate', $this->page_data);
     }
 
 }

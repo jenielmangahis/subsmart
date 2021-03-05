@@ -216,7 +216,36 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get_where($this->db_table,array('attendance_id'=> $attn_id,'action' => 'Check in'));
         date_default_timezone_set('UTC');
         $date_created = date('Y-m-d H:i:s');
+        $employeeCoordinates = $this->employeeCoordinates();
+        $employeeAddress = $this->employeeAddress();
         if ($qry->num_rows() >= 1){
+            $onlunch = $this->db->get_where($this->db_table,array('attendance_id'=> $attn_id));
+            $breakin = false;
+            $breakout= true;
+            foreach($onlunch->result() as $log){
+                if($log->action == "Break in"){
+                    $breakin = true;
+                    $breakout = false;
+                }elseif($log->action == "Break out"){
+                    $breakout= true;
+                }
+            }
+            if(!$breakout){
+                $data = array(
+                    'attendance_id' => $attn_id,
+                    'user_id' => $user_id,
+                    'action' => 'Break out',
+                    'user_location' => $employeeCoordinates,
+                    'user_location_address' => $employeeAddress,
+                    'entry_type' => $entry,
+                    'approved_by' => $approved_by,
+                    'company_id' => $company_id,
+                    'date_created' => $date_created
+                );
+                $this->db->insert($this->db_table,$data);
+            }
+            
+
             $data = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,

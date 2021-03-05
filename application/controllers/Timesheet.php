@@ -36,7 +36,8 @@ class Timesheet extends MY_Controller
             "assets/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.js",
             "assets/plugins/country-picker-flags/build/js/countrySelect.js",
             "assets/plugins/timezone-picker/dist/timezones.full.js",
-            "assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js",
+            "assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"
+
             //            "https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js",
             //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
@@ -79,18 +80,23 @@ class Timesheet extends MY_Controller
     
     public function tester()
     {
-        $date_before = date('Y-m-d h:i:s A');
-        $usertimezone = $this->input->post("usertimezone");
-        date_default_timezone_set($usertimezone);
-        $date_after = date('Y-m-d h:i:s A');
-        $display =array(
-            "usertimezone" => $usertimezone,
-            "newphptimezone" => date_default_timezone_get(),
-            "date_before" => $date_before,
-            "date_after" => $date_after,
-            
-        );
-        echo json_encode($display);
+        // $date_before = date('Y-m-d h:i:s A');
+        // $usertimezone = $this->input->post("usertimezone");
+        // date_default_timezone_set($usertimezone);
+        // $date_after = date('Y-m-d h:i:s A');
+        // $_SESSION['usertimezone'] = $usertimezone;
+        // $display =array(
+        //     "usertimezone" => $usertimezone,
+        //     "newphptimezone" => date_default_timezone_get(),
+        //     "date_before" => $date_before,
+        //     "date_after" => $date_after,
+        //     "session_timezone" => $this->session->userdata('usertimezone')
+        // );
+        // echo json_encode($display);
+
+        $stack = array();
+        array_push($stack, "Lou");
+        array_push($stack, "Pinton");
     }
 
     public function employee()
@@ -1249,15 +1255,16 @@ class Timesheet extends MY_Controller
         $approved_by = $this->input->post('approved_by');
         $query = $this->timesheet_model->checkingOutEmployee($user_id, $attn_id, "Manual", $approved_by, $company_id);
 
-        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-        $getTimeZone = json_decode($ipInfo);
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
-        $content_notification = 'Manually clocked out ' . date('Y-m-d h:i A')." ".date_default_timezone_get();
+        // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        // $getTimeZone = json_decode($ipInfo);
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $content_notification = 'Manually clocked out ' . date('m-d-Y h:i A')." ".date_default_timezone_get();
         date_default_timezone_set('UTC');
         $clock_out_notify = array(
             'user_id' => $user_id,
             'title' => 'Clock Out',
             'content' => $content_notification,
+            'date_created' => date('Y-m-d H:i:s'),
             'status' => 1,
         );
         $this->db->insert('user_notification', $clock_out_notify);
@@ -1299,9 +1306,9 @@ class Timesheet extends MY_Controller
     }
     public function realTime()
     {
-        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-        $getTimeZone = json_decode($ipInfo);
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        // $getTimeZone = json_decode($ipInfo);
+        date_default_timezone_set($this->session->userdata('usertimezone'));
         $hours = date('h:');
         $minutes = date('i ');
         $meridies = date('A');
@@ -1756,9 +1763,9 @@ class Timesheet extends MY_Controller
 
     public function clockInEmployee_manual($user_id,$entry_type)
     {
-        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-        $getTimeZone = json_decode($ipInfo);
-        $user_timezone = $getTimeZone->geoplugin_timezone;
+        // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        // $getTimeZone = json_decode($ipInfo);
+        $user_timezone = $this->session->userdata('usertimezone');
         // date_default_timezone_set($getTimeZone->geoplugin_timezone);
         // $clock_in = time();
         // date_default_timezone_set('UTC');
@@ -1773,11 +1780,11 @@ class Timesheet extends MY_Controller
         $this->db->insert('timesheet_attendance', $attendance);
         $attn_id = $this->db->insert_id();
         $check_attendance = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        date_default_timezone_set($this->session->userdata('usertimezone'));
         if($entry_type=="Manual"){
-            $content_notification = 'Manually clocked In ' . date('Y-m-d h:i A')." ".date_default_timezone_get();
+            $content_notification = 'Manually clocked In ' . date('m-d-Y h:i A')." ".date_default_timezone_get();
         }else{
-            $content_notification = 'Clocked In ' . date('Y-m-d h:i A')." ".date_default_timezone_get();
+            $content_notification = 'Clocked In ' . date('m-d-Y h:i A')." ".date_default_timezone_get();
         }
         
 
@@ -1820,7 +1827,7 @@ class Timesheet extends MY_Controller
             $getUserDetail = $query->row();
 
             $data = new stdClass();
-            date_default_timezone_set($getTimeZone->geoplugin_timezone);
+            date_default_timezone_set($this->session->userdata('usertimezone'));
 
             $data->clock_in_time =  date('h:i A',time());
             $data->clock_out_time = 'Pending...';
@@ -1859,12 +1866,12 @@ class Timesheet extends MY_Controller
         $ios_token_ctr = 0;
         $android_token_ctr = 0;
         if($device_type == "Android"){
-            send_android_push($tokens, $body, $title);
-            $android_tokens[$token_ctr] = $token;
+            // send_android_push($tokens, $body, $title);
+            array_push($android_tokens, $token);
             $android_token_ctr++;
         }elseif($device_type == "iOS"){
-            send_ios_push($tokens, $body, $title);
-            $ios_tokens[$token_ctr] = $token;
+            // send_ios_push($tokens, $body, $title);
+            array_push($ios_tokens, $token);
             $ios_token_ctr++;
         }
 
@@ -1876,11 +1883,11 @@ class Timesheet extends MY_Controller
             $device_type = $admin->device_type;
             if($device_type == "Android"){
                 $data = $data. " Admin_device : android";
-                $android_tokens[$token_ctr] = $admin->device_token;
+                array_push($android_tokens, $admin->device_token);
                 $android_token_ctr++;
             }elseif($device_type == "iOS"){ 
                 $data = $data. " Admin_device : iOS";
-                $ios_tokens[$token_ctr] = $admin->device_token;
+                array_push($ios_tokens, $admin->device_token);
                 $ios_token_ctr++;
             }
         }
@@ -1899,6 +1906,7 @@ class Timesheet extends MY_Controller
             "android_token" => $android_tokens,
             "ios_token_array" => count($ios_tokens),
             "ios_token_ctr" => $ios_token_ctr,
+            "ios_token_ctr" => $android_token_ctr,
         );
         echo json_encode($return);
     }
@@ -2065,8 +2073,8 @@ class Timesheet extends MY_Controller
     }
     public function clockOutEmployee()
     {
-        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-        $getTimeZone = json_decode($ipInfo);
+        // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        // $getTimeZone = json_decode($ipInfo);
         date_default_timezone_set('UTC');
         $attn_id = $this->input->post('attn_id');
 
@@ -2085,8 +2093,8 @@ class Timesheet extends MY_Controller
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
         if ($check_attn->num_rows() == 1) {
-            date_default_timezone_set($getTimeZone->geoplugin_timezone);
-            $content_notification = 'Clocked out ' . date('Y-m-d h:i A')." ".date_default_timezone_get();
+            date_default_timezone_set($this->session->userdata('usertimezone'));
+            $content_notification = 'Clocked out ' . date('m-d-Y h:i A')." ".date_default_timezone_get();
             $clock_out_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock Out',
@@ -2120,16 +2128,13 @@ class Timesheet extends MY_Controller
             $this->db->update('timesheet_attendance', $update);
             $affected_row = $this->db->affected_rows();
 
-            if ($affected_row != 1) {
-                echo json_encode(0);
-            } else {
                 $this->db->select('FName,LName,profile_img');
                 $this->db->from('users');
                 $this->db->where('id', $user_id);
                 $query = $this->db->get();
                 $getUserDetail = $query->row();
 
-                date_default_timezone_set($getTimeZone->geoplugin_timezone);
+                date_default_timezone_set($this->session->userdata('usertimezone'));
 
                 $data = new stdClass();
                 $data->clock_out_time = date('h:i A');
@@ -2144,7 +2149,7 @@ class Timesheet extends MY_Controller
                 $data->token = $getUserDetail->device_token;
                 $data->title = "Clock in";
                 echo json_encode($data);
-            }
+            
         }
     }
 
@@ -2178,10 +2183,10 @@ class Timesheet extends MY_Controller
             }
         }
 
-        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-        $getTimeZone = json_decode($ipInfo);
-        $user_timezone = $getTimeZone->geoplugin_timezone;
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        // $getTimeZone = json_decode($ipInfo);
+        $user_timezone = $this->session->userdata('usertimezone');
+        date_default_timezone_set($this->session->userdata('usertimezone'));
 
         
         $data = new stdClass();
@@ -2219,10 +2224,10 @@ class Timesheet extends MY_Controller
         $this->db->where('id', $attn_id);
         $this->db->update('timesheet_attendance', $update);
 
-        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-        $getTimeZone = json_decode($ipInfo);
-        $user_timezone = $getTimeZone->geoplugin_timezone;
-        date_default_timezone_set($getTimeZone->geoplugin_timezone);
+        // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        // $getTimeZone = json_decode($ipInfo);
+        $user_timezone = $this->session->userdata('usertimezone');
+        date_default_timezone_set($this->session->userdata('usertimezone'));
 
         $data = new stdClass();
         $data->lunch_time =  date('h:i A',time());
@@ -2331,9 +2336,9 @@ class Timesheet extends MY_Controller
         return $notification;
     }
     public function servere_timezone(){
-        $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
-        $getTimeZone = json_decode($ipInfo);
-        $UserTimeZone = new DateTimeZone($getTimeZone->geoplugin_timezone);
+        // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
+        // $getTimeZone = json_decode($ipInfo);
+        $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
         var_dump($UserTimeZone);
         $utz="";
         

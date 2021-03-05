@@ -12,12 +12,14 @@ function Step1(params = {}) {
   const $selectFileModal = $("#selectDocumentModal");
   const $selectFileModalClose = $("#selectDocumentCloseButton");
   const $vaultTab = $("#vault");
+  const $recentTab = $("#recent");
   const $selectDocumentButton = $("#selectDocumentButton");
   const $fileInput = $("#fileInput");
 
   let vaultDocuments = [];
   let documentObj = null;
   let documentUrl = null;
+  let recentDocuments = [];
   let onSelect = params.onSelect || (() => {});
 
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
@@ -26,16 +28,31 @@ function Step1(params = {}) {
     return vaultDocuments.find(({ file_id }) => file_id == id);
   }
 
-  async function previewDocument({ file, fileId = null }) {
-    if (fileId) {
+  function getRecentById(id) {
+    return recentDocuments.find(({ id: currId }) => currId == id);
+  }
+
+  async function previewDocument({
+    file = null,
+    fileId = null,
+    recentFileId = null,
+  }) {
+    if (file instanceof File) {
+      documentUrl = URL.createObjectURL(file);
+      documentObj = file;
+    } else if (fileId !== null) {
       const currFile = getVaultDocumentById(fileId);
       const { title, folder_name, file_path } = currFile;
       documentUrl = `${prefixURL}/uploads/${folder_name}${file_path}`;
       file = { name: title };
       documentObj = currFile;
+    } else if (recentFileId !== null) {
+      const currFile = getRecentById(recentFileId);
+      documentUrl = `${prefixURL}/uploads/fillandsign/${currFile.name}`;
+      file = { name: currFile.name };
+      documentObj = currFile;
     } else {
-      documentUrl = URL.createObjectURL(file);
-      documentObj = file;
+      return;
     }
 
     const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -85,6 +102,13 @@ function Step1(params = {}) {
     $submitButton.addClass("btn-success");
   }
 
+  async function fetchRecentDocuments() {
+    const endpoint = `${prefixURL}/FillAndSign/getRecents`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    recentDocuments = data.documents.map((d) => ({ ...d, isRecent: true }));
+  }
+
   async function showDocument() {
     $modalBody = $docModal.find(".modal-body");
     $modalBody.empty();
@@ -112,6 +136,11 @@ function Step1(params = {}) {
     event.preventDefault();
 
     if (documentObj === null) {
+      return;
+    }
+
+    if (documentObj.isRecent) {
+      window.location = `${prefixURL}/FillAndSign/step2?docid=${documentObj.id}`;
       return;
     }
 
@@ -168,23 +197,26 @@ function Step1(params = {}) {
 
       const $activeTab = $(".tab-pane.active");
       const uploadType = $activeTab.data("upload-type");
+      const $selected = $(".fillAndSign__vaultItem--selected");
 
       let file = null;
       let fileId = null;
+      let recentFileId = null;
 
       if (uploadType === "local") {
         const files = $fileInput.get(0).files;
         if (files.length) {
           file = files[0];
         }
-      } else {
-        const $selected = $(".fillAndSign__vaultItem--selected");
-        if ($selected.length) {
-          fileId = parseInt($selected.data("file-id"));
+      } else if ($selected.length) {
+        if (uploadType === "vault") {
+          fileId = $selected.data("file-id");
+        } else {
+          recentFileId = $selected.data("recent-id");
         }
       }
 
-      if (file === null && fileId === null) {
+      if (file === null && fileId === null && recentFileId === null) {
         return;
       }
 
@@ -193,7 +225,7 @@ function Step1(params = {}) {
       $(this).find(".spinner-border").addClass("d-none");
 
       try {
-        await previewDocument({ file, fileId });
+        await previewDocument({ file, fileId, recentFileId });
       } catch (error) {
         alert(error);
       }
@@ -220,7 +252,7 @@ function Step1(params = {}) {
 
   function displayVaultDocuments() {
     if (!vaultDocuments.length) {
-      $("#vault").append("<p>🤷‍♀️ Nothing to display here</p>");
+      $vaultTab.append("<p>🤷‍♀️ Nothing to display here</p>");
       return;
     }
 
@@ -264,14 +296,61 @@ function Step1(params = {}) {
     $vaultList.append($elements);
   }
 
+  function displayRecentDocuments() {
+    if (!recentDocuments.length) {
+      $recentTab.append("<p>🤷‍♀️ Nothing to display here</p>");
+      return;
+    }
+
+    const $elements = recentDocuments.map((document) => {
+      const { id, name, created: createdRaw } = document;
+      const created = moment(createdRaw).format("MMMM DD, YYYY");
+
+      const html = `
+        <li class="fillAndSign__vaultItem" data-recent-id=${id}>
+            <div class="media">
+                <i class="fa fa-file-pdf-o fa-2x text-danger mr-3"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 fillAndSign__vaultItemTitle">${name}</h5>
+                    <div class="fillAndSign__vaultItemInfo">
+                      Created on <span>${created}</span>
+                  </div>
+                </div>
+            </div>
+        </li>
+        `;
+
+      $element = createElementFromHTML(html);
+      $element.on("click", (event) => {
+        const $currActive = $(".fillAndSign__vaultItem--selected");
+        $currActive.removeClass("fillAndSign__vaultItem--selected");
+
+        let $target = $(event.target);
+        if (!$target.hasClass("fillAndSign__vaultItem")) {
+          $target = $target.closest(".fillAndSign__vaultItem");
+        }
+
+        $target.addClass("fillAndSign__vaultItem--selected");
+        onSelect(event);
+      });
+
+      return $element;
+    });
+
+    const $recentList = $vaultTab.find(".fillAndSign__recent");
+    $recentTab.append($elements);
+  }
+
   async function init() {
     await fetchPdfs();
+    await fetchRecentDocuments();
 
     displayVaultDocuments();
+    displayRecentDocuments();
     attachEventHandlers();
   }
 
-  return { init, getVaultDocumentById };
+  return { init, getVaultDocumentById, getRecentById };
 }
 
 $(document).ready(function () {

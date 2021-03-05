@@ -22,18 +22,33 @@ function JobFillAndEsign() {
     if (files) {
       documentObj = files[0];
     } else {
-      if (!$target.hasClass("fillAndSign__vaultItem")) {
-        $target = $target.closest(".fillAndSign__vaultItem");
-      }
+      const $activeTab = $(".tab-pane.active");
+      const uploadType = $activeTab.data("upload-type");
+      const $selected = $(".fillAndSign__vaultItem--selected");
 
-      const fileId = parseInt($target.data("file-id"));
-      documentObj = step1.getVaultDocumentById(fileId);
+      if (uploadType === "vault") {
+        fileId = $selected.data("file-id");
+        documentObj = step1.getVaultDocumentById(fileId);
+      } else {
+        recentFileId = $selected.data("recent-id");
+        documentObj = step1.getRecentById(recentFileId);
+      }
     }
   }
 
-  async function onClickNext() {
-    const formData = new FormData();
+  function initStep2(documentId) {
+    step2 = new Step2({ documentId });
+    step2.init();
+    $modal.attr("data-current-step", 2);
+  }
 
+  async function onClickNext() {
+    if (documentObj.isRecent) {
+      initStep2(documentObj.id);
+      return;
+    }
+
+    const formData = new FormData();
     if (documentObj instanceof File) {
       formData.append("document", documentObj);
     } else {
@@ -50,10 +65,7 @@ function JobFillAndEsign() {
     });
 
     const { document_id } = await response.json();
-    step2 = new Step2({ documentId: document_id });
-    step2.init();
-
-    $modal.attr("data-current-step", 2);
+    initStep2(document_id);
   }
 
   function onClickSave() {
