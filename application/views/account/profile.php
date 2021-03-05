@@ -8,8 +8,23 @@
   position: relative;
   bottom: 10px;
 }
+.pull-center {
+  text-align: center;
+  display: block;
+}
 .p-40 {
   padding-top: 40px !important;
+}
+table.account-info tbody tr td b {
+    margin-left: 20%;
+}
+table.account-info {
+    width: 100%;
+    margin-bottom: 20px;
+}
+table.account-info tbody tr td {
+    width: 50%;
+    border: 1px solid black;
 }
 @media only screen and (max-width: 600px) {
   .p-40 {
@@ -18,6 +33,21 @@
   .pr-b10 {
     position: relative;
     bottom: 0px;
+  }
+}
+@media only screen and (max-width: 1550px) {
+  table.account-info tbody tr td b {
+      margin-left: 12%;
+  }
+}
+@media only screen and (max-width: 1410px) {
+  table.account-info tbody tr td b {
+      margin-left: 10%;
+  }
+}
+@media only screen and (max-width: 1280px) {
+  table.account-info tbody tr td b {
+      margin-left: 5%;
   }
 }
 </style>
@@ -59,14 +89,28 @@
 
 
 
-        <h3 class="profile-username text-center"><?php echo ucfirst($user->FName); ?> <?php echo ucfirst($user->LName) ?></h3>
+        <h3 class="profile-username text-center mb-0"><?php echo ucfirst($user->FName); ?> <?php echo ucfirst($user->LName) ?></h3>
 
 
 
         <p class="text-muted text-center"><?php echo $user->role->title ?></p>
 
 
-
+        <table class="account-info">
+          <tr>
+            <td><b>Username</b></td>
+            <td><a class="pull-center"><?php echo $user->username ?></a></td>
+          </tr>
+          <tr>
+            <td><b>Last Login</b></td>
+            <td><a class="pull-right"><a class="pull-center"><?php echo date( setting('date_format'), strtotime($user->last_login)) ?></a></td>
+          </tr>
+          <tr>
+            <td><b>Member Since</b></td>
+            <td><a class="pull-right"><a class="pull-center"><?php echo date( setting('date_format'), strtotime($user->created_at)) ?></a></td>
+          </tr>
+        </table>
+        <!--
         <ul class="list-group list-group-unbordered">
 
           <li class="list-group-item">
@@ -88,7 +132,7 @@
           </li>
 
         </ul>
-
+      -->
 
 
         <a href="<?php echo url('profile/index/edit') ?>" class="btn btn-primary btn-block"><b> <i class="fa fa-pencil"></i> Edit Profile</b></a>
