@@ -2039,6 +2039,7 @@ class Customer extends MY_Controller
         $message .= "<table>";
             $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
             $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
+            $message .= "<tr><td>LEGAL BUSINESS NAME</td><td>".$post['legal_business_name']."</td></tr>";
             $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
             $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
             $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
@@ -2118,7 +2119,8 @@ class Customer extends MY_Controller
         $mail->From = $from; 
         $mail->FromName = 'nSmarTrac';
 
-        $mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');    
+        //$mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');    
+        $mail->addAddress('joyce.reynolds@elavon.com', 'joyce.reynolds@elavon.com');    
         $mail->isHTML(true);                          
         $mail->Subject = $subject;
         $mail->Body    = $message;
@@ -2160,6 +2162,7 @@ class Customer extends MY_Controller
             $message .= "<table>";
                 $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
                 $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
+                $message .= "<tr><td>LEGAL BUSINESS NAME</td><td>".$post['legal_business_name']."</td></tr>";
                 $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
                 $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
                 $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
