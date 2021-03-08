@@ -403,6 +403,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
+                        <label for=""><b>LLC</b></label>
+                        <input type="text" value="<?= $merchant ? $merchant->principal_llc : ''; ?>" class="form-control" name="principal_llc" id="principal_llc">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>CORPORATION</b></label>
+                        <input type="text" value="<?= $merchant ? $merchant->principal_corporation : ''; ?>" class="form-control" name="principal_corporation" id="principal_corporation">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>OTHER</b></label>
+                        <input type="text" value="<?= $merchant ? $merchant->principal_others : ''; ?>" class="form-control" name="principal_others" id="principal_others">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
                         <label for=""><b>FIRST NAME</b></label>
                         <input type="text" value="<?= $merchant ? $merchant->principal_firstname : $company->first_name; ?>" class="form-control" name="principal_firstname" id="principal_firstname">
                     </div>

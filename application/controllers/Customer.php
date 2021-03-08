@@ -2056,6 +2056,9 @@ class Customer extends MY_Controller
             $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
             $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+            $message .= "<tr><td>LLC</td><td>".$post['principal_llc']."</td></tr>";
+            $message .= "<tr><td>CORPORATION</td><td>".$post['principal_corporation']."</td></tr>";
+            $message .= "<tr><td>OTHER</td><td>".$post['principal_others']."</td></tr>";
             $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
             $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
             $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
@@ -2070,6 +2073,8 @@ class Customer extends MY_Controller
             $message .= "<tr><td>STATE</td><td>".$post['principal_state_1']."</td></tr>";
             $message .= "<tr><td>ZIP CODE</td><td>".$post['principal_zip_code_1']."</td></tr>";
         $message .= "</table>";
+        $message .= "<br /><p>Confidentiality Statement</p>
+    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
         
         //Email Sending     
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
@@ -2078,7 +2083,7 @@ class Customer extends MY_Controller
         $username  = MAIL_USERNAME;
         $password  = MAIL_PASSWORD;
         $from      = MAIL_FROM;     
-        $subject   = 'NSmartrac : Merchant Data';
+        $subject   = 'nSmarTrac: Merchant Data Application';
         $mail = new PHPMailer;
         //$mail->SMTPDebug = 4;                         
         $mail->isSMTP();                                     
@@ -2169,6 +2174,9 @@ class Customer extends MY_Controller
                 $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
                 $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
                 $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+                $message .= "<tr><td>LLC</td><td>".$post['principal_llc']."</td></tr>";
+                $message .= "<tr><td>CORPORATION</td><td>".$post['principal_corporation']."</td></tr>";
+                $message .= "<tr><td>OTHER</td><td>".$post['principal_others']."</td></tr>";
                 $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
                 $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
                 $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
@@ -2183,6 +2191,8 @@ class Customer extends MY_Controller
                 $message .= "<tr><td>STATE</td><td>".$post['principal_state_1']."</td></tr>";
                 $message .= "<tr><td>ZIP CODE</td><td>".$post['principal_zip_code_1']."</td></tr>";
             $message .= "</table>";
+            $message .= "<br /><p>Confidentiality Statement</p>
+    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
             
             //Email Sending     
             include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
@@ -2192,7 +2202,7 @@ class Customer extends MY_Controller
             $password  = MAIL_PASSWORD;
             $from      = MAIL_FROM;     
             $recipient = $post['share_email'];
-            $subject   = 'NSmartrac : Merchant Data';
+            $subject   = 'nSmarTrac: Merchant Data Application';
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;                         
             $mail->isSMTP();                                     
