@@ -386,54 +386,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <br>
             <div class="row">
                 <div class="col-md-12 mobile-brm" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
-                    <h6>PRINCIPAL 1 INFORMATION <i> (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</i></h6>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" id="customer_type_group">
-                        <!-- <input type="checkbox">
-                        <label for=""><b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b></label> -->
-                        <?php
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_beneficial_owner == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
-                        <label class="checkboxcontainer"> <b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b>
-                        <input type="checkbox" <?= $is_checked; ?> name="is_beneficial_owner" id="is_beneficial_owner" value="1">
-                        <span class="checkmark"></span>
-                        </label>
-                        <input type="text" value="<?= $merchant ? $merchant->percentage_ownership : ''; ?>" name="percentage_ownership" id="percentage_ownership" style="padding: 12px 20px;
-                                                                        margin: 8px 0;
-                                                                        box-sizing: border-box;
-                                                                        border-radius: 4px;"> <label for=""><b> %</b></label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                    <br>
-                        <!-- <input type="checkbox">
-                        <label for=""><b>AUTHORIZED SIGNER</b></label> -->
-                        <?php
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_authorized_signer == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
-                        <label class="checkboxcontainer"> <b>AUTHORIZED SIGNER</b>
-                        <input type="checkbox" <?= $is_checked; ?> name="is_authorized_signer" id="is_authorized_signer" value="1">
-                        <span class="checkmark"></span>
-                    </div>
-                </div>                
-            </div>
-            <div class="row">
-                <div class="col-md-12 mobile-brm" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
                     <h6>BUSINESS STRUCTURES</h6>
                 </div>
             </div>
@@ -512,6 +464,54 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12 mobile-brm" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>PRINCIPAL 1 INFORMATION <i> (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</i></h6>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
+                        <!-- <input type="checkbox">
+                        <label for=""><b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b></label> -->
+                        <?php
+                            $is_checked = '';
+                            if( $merchant ){
+                                if( $merchant->is_beneficial_owner == 1 ){
+                                    $is_checked = 'checked="checked"';
+                                }
+                            }
+                        ?>
+                        <label class="checkboxcontainer"> <b>BENEFICIAL OWNER: PERCENTAGE OF OWNERSHIP</b>
+                        <input type="checkbox" <?= $is_checked; ?> name="is_beneficial_owner" id="is_beneficial_owner" value="1">
+                        <span class="checkmark"></span>
+                        </label>
+                        <input type="text" value="<?= $merchant ? $merchant->percentage_ownership : ''; ?>" name="percentage_ownership" id="percentage_ownership" style="padding: 12px 20px;
+                                                                        margin: 8px 0;
+                                                                        box-sizing: border-box;
+                                                                        border-radius: 4px;"> <label for=""><b> %</b></label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                    <br>
+                        <!-- <input type="checkbox">
+                        <label for=""><b>AUTHORIZED SIGNER</b></label> -->
+                        <?php
+                            $is_checked = '';
+                            if( $merchant ){
+                                if( $merchant->is_authorized_signer == 1 ){
+                                    $is_checked = 'checked="checked"';
+                                }
+                            }
+                        ?>
+                        <label class="checkboxcontainer"> <b>AUTHORIZED SIGNER</b>
+                        <input type="checkbox" <?= $is_checked; ?> name="is_authorized_signer" id="is_authorized_signer" value="1">
+                        <span class="checkmark"></span>
+                    </div>
+                </div>                
+            </div>            
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
