@@ -230,9 +230,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody id="table_body_new">
                                         <tr>
-                                            <td><input type="text" class="form-control getItems"
+                                            <!-- <td><input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="item[]">
                                                 <ul class="suggestions"></ul>
+                                            </td> -->
+                                            <td>
+                                                <select id="s" name="items[]"  class="form-control">
+                                                    <option value="0"></option>
+                                                    <?php foreach($items as $c){ ?>
+                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="service">Service</option>

@@ -12,7 +12,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Update Standard Estimate</h1>
+                        <h1 class="page-title">Update Estimate</h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
                                 for this job.
@@ -45,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                        <option value="0">- none -</option>
+                                        <option value="0"><?php echo $estimate->customer_id; ?></option>
                                         <?php foreach($customers as $c){ ?>
                                             <?php echo "<pre>";print_r($c); ?>
                                             <option <?= $c->prof_id == $estimate->customer_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
@@ -72,7 +72,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-6">
                                     <label for="job_name"><b>Job Name</b> (optional)</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name"
-                                           placeholder="Enter Job Name" required/>
+                                           placeholder="Enter Job Name" required  value="<?php echo $estimate->job_name; ?>" />
                                 </div>
                             </div>
                             <hr>
@@ -114,7 +114,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <label for="purchase_order_number" class="required"><b>Purchase Order#</b></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
                                             id="purchase_order_number" required placeholder="Enter Purchase Order#"
-                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $estimate->purchase_order_number; ?>" />
                                     </div>
                                 <!-- </div>
                                 <div class="row" style="background-color:white;"> -->
@@ -238,7 +238,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 form-group">
                                     <div class="input-group">
                                         <!-- <div class="input-group-addon bold">$</div> -->
-                                        <input type="text" name="deposit_amount" value="0" class="form-control"
+                                        <input type="text" name="deposit_amount"  value="<?php echo $estimate->deposit_amount; ?>" class="form-control"
                                                autocomplete="off">
                                     </div>
                                 </div>
@@ -251,14 +251,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label><h6>Message to Customer</h6></label> <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
+                                        <textarea name="customer_message" cols="40" rows="2" class="form-control"><?php echo $estimate->customer_message; ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label><h6>Terms &amp; Conditions</h6></label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
                                         <textarea name="terms_conditions" cols="40" rows="2"
-                                                  class="form-control"></textarea>
+                                                  class="form-control"><?php echo $estimate->terms_conditions; ?></textarea>
                                     </div>
                                 </div>
 
@@ -279,14 +279,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="form-group">
                                         <label><h6>Instructions</h6></label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <textarea name="instructions" cols="40" rows="2"
-                                                  class="form-control"></textarea>
+                                                  class="form-control"><?php echo $estimate->instructions; ?></textarea>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
+                                    <button type="submit" class="btn btn-danger but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
                                     <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
                                     <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn but-red">Cancel this</a>
                                 </div>

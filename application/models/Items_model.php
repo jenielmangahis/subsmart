@@ -22,6 +22,59 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function getItemlist()
+    {
+        // $this->db->where('company_id', getLoggedCompanyID());
+        // // $this->db->order_by('name', $order);
+        // $query = $this->db->get($this->table);
+        // return $query->result();
+
+        $company_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function categoriesWithoutParent()
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where('parent_id', null);
+        $this->db->or_where('parent_id', 0);
+        $this->db->or_where('parent_id', '');
+        $query = $this->db->get($this->table_categories);
+
+        return $query->result();
+    }
+
+    public function insertCategory($data)
+    {
+        $insert = $this->db->insert($this->table_categories, $data);
+        return $insert ? true : false;
+    }
+    
+    public function getCategory($id)
+    {
+        return $this->db->where(['company_id' => getLoggedCompanyID(), 'item_categories_id' => $id])->get($this->table_categories)->row();
+    }
+
+    public function updateCategory($id, $data)
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where('item_categories_id', $id);
+        $update = $this->db->update($this->table_categories, $data);
+        return $update ? true : false;
+    }
+
+    public function deleteCategory($id)
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where('item_categories_id', $id);
+        $delete = $this->db->delete($this->table_categories);
+        return $delete ? true : false;
+    }
+
     public function filterBy($filters = array(), $company_id, $type)
     {
 
@@ -52,6 +105,13 @@ class Items_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
         $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getItemsWithFilter($filters = [])
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $query = $this->db->get($this->table);
         return $query->result();
     }
 

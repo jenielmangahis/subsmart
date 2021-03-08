@@ -115,6 +115,7 @@ class Accounting extends MY_Controller {
         	$this->page_data['expenses'] = $this->expenses_model->getExpense();
         	$this->page_data['list_categories'] = $this->categories_model->getCategories();
             $this->page_data['attachments'] = $this->expenses_model->getAttachment();
+            $this->page_data['items'] = $this->items_model->getItemlist();
             
         $this->load->view('accounting/dashboard', $this->page_data);
     }
@@ -232,6 +233,8 @@ class Accounting extends MY_Controller {
     public function load_attachment_files()
     {
         $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
 
         $attachments = $this->accounting_attachments_model->getCompanyAttachments();
 
@@ -256,7 +259,7 @@ class Accounting extends MY_Controller {
             'draw' => $post['draw'],
             'recordsTotal' => count($attachments),
             'recordsFiltered' => count($data),
-            'data' => $data
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);
@@ -342,6 +345,8 @@ class Accounting extends MY_Controller {
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $order = $post['order'][0]['dir'];
+        $start = $post['start'];
+        $limit = $post['length'];
 
         $status = [
             1
@@ -382,7 +387,7 @@ class Accounting extends MY_Controller {
             'draw' => $post['draw'],
             'recordsTotal' => count($paymentMethods),
             'recordsFiltered' => count($data),
-            'data' => $data
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);
@@ -438,6 +443,8 @@ class Accounting extends MY_Controller {
         $column = $post['order'][0]['column'];
         $order = $post['order'][0]['dir'];
         $columnName = $post['columns'][$column]['name'];
+        $start = $post['start'];
+        $limit = $post['length'];
 
         $where = [
             'company_id' => getLoggedCompanyID(),
@@ -508,7 +515,7 @@ class Accounting extends MY_Controller {
             'draw' => $post['draw'],
             'recordsTotal' => count($items),
             'recordsFiltered' => count($data),
-            'data' => $data
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);
@@ -812,6 +819,8 @@ class Accounting extends MY_Controller {
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $order = $post['order'][0]['dir'];
+        $start = $post['start'];
+        $limit = $post['length'];
 
         $status = [
             1
@@ -858,7 +867,7 @@ class Accounting extends MY_Controller {
             'draw' => $post['draw'],
             'recordsTotal' => count($terms),
             'recordsFiltered' => count($data),
-            'data' => $data
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);
@@ -1043,7 +1052,7 @@ class Accounting extends MY_Controller {
             'draw' => $post['draw'],
             'recordsTotal' => count($getTags),
             'recordsFiltered' => count($getTags),
-            'data' => $tags
+            'data' => array_slice($tags, 0, 50)
         ];
 
         echo json_encode($result);
@@ -1161,7 +1170,71 @@ class Accounting extends MY_Controller {
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
-        $this->load->view('accounting/products_and_services', $this->page_data);
+        $this->load->view('accounting/products', $this->page_data);
+    }
+    public function load_products_services()
+    {
+        $postData = json_decode(file_get_contents('php://input'), true);
+        $order = $postData['order'][0]['dir'];
+        $start = $postData['start'];
+        $limit = $postData['length'];
+
+        $items = $this->items_model->getByCompanyId(getLoggedCompanyID());
+
+        $data = [];
+        $search = $postData['columns'][0]['search']['value'];
+
+        foreach($items as $item) {
+            $qty = $this->items_model->countQty($item->id);
+            if($search !== "") {
+                if(stripos($item->title, $search) !== false) {
+                    $data[] = [
+                        'id' => $item->id,
+                        'name' => $item->title,
+                        'sku' => $item->model,
+                        'type' => ucfirst($item->type),
+                        'sales_desc' => $item->description,
+                        'income_account' => '',
+                        'expense_account' => '',
+                        'inventory_account' => '',
+                        'purch_desc' => '',
+                        'sales_price' => $item->price,
+                        'cost' => $item->cost,
+                        'taxable' => '',
+                        'qty_on_hand' => $qty,
+                        'qty_po' => '',
+                        'reorder_point' => $item->re_order_points
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $item->id,
+                    'name' => $item->title,
+                    'sku' => $item->model,
+                    'type' => ucfirst($item->type),
+                    'sales_desc' => $item->description,
+                    'income_account' => '',
+                    'expense_account' => '',
+                    'inventory_account' => '',
+                    'purch_desc' => '',
+                    'sales_price' => $item->price,
+                    'cost' => $item->cost,
+                    'taxable' => '',
+                    'qty_on_hand' => $qty,
+                    'qty_po' => '',
+                    'reorder_point' => $item->re_order_points
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $postData['draw'],
+            'recordsTotal' => count($items),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
     }
     public function product_categories()
     {
@@ -1169,10 +1242,75 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Product Categories";
         $this->load->view('accounting/product_categories', $this->page_data);
     }
+    public function get_categories()
+    {
+        $categories = $this->items_model->categoriesWithoutParent();
+
+        $return = [];
+
+        foreach($categories as $category) {
+            $return['results'][] = [
+                'id' => $category->item_categories_id,
+                'text' => $category->name
+            ];
+        }
+
+        echo json_encode($return);
+    }
+    public function create_item_category()
+    {
+        $data = $this->input->post();
+        $data['company_id'] = getLoggedCompanyID();
+
+        $create = $this->items_model->insertCategory($data);
+
+        if($create) {
+            $this->session->set_flashdata('success', "Category inserted successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect("accounting/product-categories");
+    }
+    public function get_category_details($id)
+    {
+        $category = $this->items_model->getCategory($id);
+        if($category->parent_id !== null && $category->parent_id !== 0 && $category->parent_id !== "") {
+            $category->parent = $this->items_model->getCategory($category->parent_id);
+        }
+        echo json_encode($category);
+    }
+    public function update_category($id)
+    {
+        $data = $this->input->post();
+        $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
+
+        $update = $this->items_model->updateCategory($id, $data);
+
+        if($update) {
+            $this->session->set_flashdata('success', "Category updated successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect("accounting/product-categories");
+    }
+    public function delete_category($id)
+    {
+        $delete = $this->items_model->deleteCategory($id);
+
+        if($delete) {
+            $this->session->set_flashdata('success', "Category deleted successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+    }
     public function load_product_categories()
     {
         $postData = json_decode(file_get_contents('php://input'), true);
         $order = $postData['order'][0]['dir'];
+        $start = $postData['start'];
+        $limit = $postData['length'];
 
         $categories = $this->items_model->getItemCategories($order);
 
@@ -1189,7 +1327,7 @@ class Accounting extends MY_Controller {
             'draw' => $postData['draw'],
             'recordsTotal' => count($categories),
             'recordsFiltered' => count($data),
-            'data' => $data
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);
@@ -2879,6 +3017,8 @@ class Accounting extends MY_Controller {
         $column = $postData['order'][0]['column'];
         $order = $postData['order'][0]['dir'];
         $columnName = $postData['columns'][$column]['name'];
+        $start = $postData['start'];
+        $limit = $postData['length'];
 
         $status = [
             1
@@ -2922,7 +3062,7 @@ class Accounting extends MY_Controller {
             'draw' => $postData['draw'],
             'recordsTotal' => count($accounts),
             'recordsFiltered' => count($data),
-            'data' => $data
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);
@@ -3444,44 +3584,219 @@ class Accounting extends MY_Controller {
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
         if($addQuery > 0){
-        //     $new_data2 = array(
-        //         'product_services' => $this->input->post('prod'),
-        //         'description' => $this->input->post('desc'),
-        //         'qty' => $this->input->post('qty'),
-        //         'rate' => $this->input->post('rate'),
-        //         'amount' => $this->input->post('amount'),
-        //         'tax' => $this->input->post('tax'),
-        //         'type' => '1',
-        //         'type_id' => $addQuery,
-        //         'status' => '1',
-        //         'created_at' => date("Y-m-d H:i:s"),
-        //         'updated_at' => date("Y-m-d H:i:s")
-        //     );
-        //     $a = $this->input->post('prod');
-        //     $b = $this->input->post('desc');
-        //     $c = $this->input->post('qty');
-        //     $d = $this->input->post('rate');
-        //     $e = $this->input->post('amount');
-        //     $f = $this->input->post('tax');
+            $new_data2 = array(
+                'item_type' => $this->input->post('type'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'location' => $this->input->post('location'),
+                'cost' => $this->input->post('cost'),
+                'discount' => $this->input->post('discount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('type');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('location');
+            $e = $this->input->post('cost');
+            $f = $this->input->post('discount');
+            $g = $this->input->post('tax');
 
-        //     $i = 0;
-        //     foreach($a as $row){
-        //         $data['product_services'] = $a[$i];
-        //         $data['description'] = $b[$i];
-        //         $data['qty'] = $c[$i];
-        //         $data['rate'] = $d[$i];
-        //         $data['amount'] = $e[$i];
-        //         $data['tax'] = $f[$i];
-        //         $data['type'] = '2';
-        //         $data['type_id'] = $addQuery;
-        //         $data['status'] = '1';
-        //         $data['created_at'] = date("Y-m-d H:i:s");
-        //         $data['updated_at'] = date("Y-m-d H:i:s");
-        //         $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
-        //         $i++;
-        //     }
+            $i = 0;
+            foreach($a as $row){
+                $data['item_type'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['location'] = $d[$i];
+                $data['cost'] = $e[$i];
+                $data['discount'] = $f[$i];
+                $data['tax'] = $g[$i];
+                $data['type'] = 'Standard Estimate';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
     
-            redirect('accounting/banking');
+            redirect('accounting/newEstimateList');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function savenewestimateOptions()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'job_location' => $this->input->post('job_location'),
+            'job_name' => $this->input->post('job_name'),
+            'estimate_number' => $this->input->post('estimate_number'),
+            // 'email' => $this->input->post('email'),
+            // 'billing_address' => $this->input->post('billing_address'),
+            'estimate_date' => $this->input->post('estimate_date'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'estimate_type' => 'Standard',
+            // 'ship_via' => $this->input->post('ship_via'),
+            // 'ship_date' => $this->input->post('ship_date'),
+            // 'tracking_no' => $this->input->post('tracking_no'),
+            // 'ship_to' => $this->input->post('ship_to'),
+            // 'tags' => $this->input->post('tags'),
+            'attachments' => 'testing',
+            // 'message_invoice' => $this->input->post('message_invoice'),
+            // 'message_statement' => $this->input->post('message_statement'),
+            'status' => $this->input->post('status'),
+            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_amount' => $this->input->post('deposit_amount'),
+            'customer_message' => $this->input->post('customer_message'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'instructions' => $this->input->post('instructions'),
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            // 'created_by' => logged('id'),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+        if($addQuery > 0){
+            $new_data2 = array(
+                'item_type' => $this->input->post('type'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'location' => $this->input->post('location'),
+                'cost' => $this->input->post('cost'),
+                'discount' => $this->input->post('discount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('type');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('location');
+            $e = $this->input->post('cost');
+            $f = $this->input->post('discount');
+            $g = $this->input->post('tax');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['item_type'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['location'] = $d[$i];
+                $data['cost'] = $e[$i];
+                $data['discount'] = $f[$i];
+                $data['tax'] = $g[$i];
+                $data['type'] = 'Options Estimate';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+    
+            redirect('accounting/newEstimateList');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function savenewestimateBundle()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'job_location' => $this->input->post('job_location'),
+            'job_name' => $this->input->post('job_name'),
+            'estimate_number' => $this->input->post('estimate_number'),
+            // 'email' => $this->input->post('email'),
+            // 'billing_address' => $this->input->post('billing_address'),
+            'estimate_date' => $this->input->post('estimate_date'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'estimate_type' => 'Standard',
+            // 'ship_via' => $this->input->post('ship_via'),
+            // 'ship_date' => $this->input->post('ship_date'),
+            // 'tracking_no' => $this->input->post('tracking_no'),
+            // 'ship_to' => $this->input->post('ship_to'),
+            // 'tags' => $this->input->post('tags'),
+            'attachments' => 'testing',
+            // 'message_invoice' => $this->input->post('message_invoice'),
+            // 'message_statement' => $this->input->post('message_statement'),
+            'status' => $this->input->post('status'),
+            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_amount' => $this->input->post('deposit_amount'),
+            'customer_message' => $this->input->post('customer_message'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'instructions' => $this->input->post('instructions'),
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            // 'created_by' => logged('id'),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+        if($addQuery > 0){
+            $new_data2 = array(
+                'item_type' => $this->input->post('type'),
+                'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('qty'),
+                'location' => $this->input->post('location'),
+                'cost' => $this->input->post('cost'),
+                'discount' => $this->input->post('discount'),
+                'tax' => $this->input->post('tax'),
+                'type' => '1',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+            $a = $this->input->post('type');
+            $b = $this->input->post('desc');
+            $c = $this->input->post('qty');
+            $d = $this->input->post('location');
+            $e = $this->input->post('cost');
+            $f = $this->input->post('discount');
+            $g = $this->input->post('tax');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['item_type'] = $a[$i];
+                $data['description'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['location'] = $d[$i];
+                $data['cost'] = $e[$i];
+                $data['discount'] = $f[$i];
+                $data['tax'] = $g[$i];
+                $data['type'] = 'Bundle Estimate';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $i++;
+            }
+    
+            redirect('accounting/newEstimateList');
         }
         else{
             echo json_encode(0);
@@ -4671,6 +4986,7 @@ class Accounting extends MY_Controller {
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
@@ -4715,6 +5031,7 @@ class Accounting extends MY_Controller {
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
@@ -4759,6 +5076,7 @@ class Accounting extends MY_Controller {
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
@@ -4767,6 +5085,7 @@ class Accounting extends MY_Controller {
 
     public function addnewInvoice(){
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['invoices'] = $this->accounting_invoices_model->getInvoices();
         $this->page_data['page_title'] = "Invoices";
         // print_r($this->page_data);
@@ -5151,7 +5470,7 @@ class Accounting extends MY_Controller {
         $this->email->from('smartrac.noreply@gmail.com', 'NSMARTRAC');
         $this->email->to($email); 
         $this->email->subject('NSMARTRAC - Merchant application');
-        $this->email->message($subject);  
+        $this->email->message($subject);
 
         $this->email->send();
 
@@ -5179,6 +5498,29 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/estimateviewdetails',$this->page_data);
     }
 
+    public function estimateviewdetailsajax()
+    {
+        $id = $this->input->post('id');
+
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Clients_model');
+        
+        $estimate = $this->estimate_model->getById($id);
+        $company_id = logged('company_id');
+
+            $customer = $this->AcsProfile_model->getByProfIdajax($estimate->customer_id);
+            $client   = $this->Clients_model->getById($company_id);
+
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['estimate'] = $estimate;
+        // $user_id = logged('id');
+        // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
+        // $this->load->view('accounting/estimateviewdetails',$this->page_data);
+        echo json_encode($this->page_data);
+    }
+
     public function updateEstimate($id)
     {
         $this->load->model('AcsProfile_model');
@@ -5202,6 +5544,31 @@ class Accounting extends MY_Controller {
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->load->view('accounting/updateEstimate', $this->page_data);
+    }
+
+    public function updateEstimateOptions($id)
+    {
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $role    = logged('role');
+
+        if ($role == 1 || $role == 2) {
+            $this->page_data['users'] = $this->users_model->getAllUsers();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();  
+        } else {
+            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }
+
+
+        $this->load->model('Customer_model', 'customer_model');
+
+        $this->page_data['estimate'] = $this->estimate_model->getById($id);
+        $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->load->view('accounting/updateEstimateOptions', $this->page_data);
     }
 
 }

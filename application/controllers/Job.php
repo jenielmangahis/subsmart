@@ -160,7 +160,6 @@ class Job extends MY_Controller
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
 
-
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
         ]);

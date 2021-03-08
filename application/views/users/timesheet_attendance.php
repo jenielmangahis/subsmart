@@ -2,13 +2,17 @@
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style type="text/css">
-    span.clock-in-time.gray, span.break-in-time.gray, span.break-out-time.gray, span.clock-out-time.gray{
+    span.clock-in-time.gray,
+    span.break-in-time.gray,
+    span.break-out-time.gray,
+    span.clock-out-time.gray {
         background-color: #E9ECEF;
         padding-left: 10px;
         padding-right: 10px;
         border-radius: 10px;
         font-size: 12px;
     }
+
     th {
         text-align: center;
     }
@@ -90,11 +94,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         text-align: center;
     }
 
-    .inner-content .progress .progress-bar-green{
+    .inner-content .progress .progress-bar-green {
         background-color: #60d562;
     }
 
-    .inner-content .progress .progress-bar-gray{
+    .inner-content .progress .progress-bar-gray {
         background-color: #90a4ae;
     }
 
@@ -169,18 +173,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         color: #ffc859;
     }
 
-    .red-indicator {
+    .in-indicator {
         display: none;
-        width: 10px;
-        height: 10px;
-        background-color: red;
-        border-radius: 50%;
-        border: 1px solid red;
+        background: url("<?= base_url() ?>assets/img/timesheet/lunch-in-min.png");
+        background-size: cover;
+        width: 25px;
+        height: 25px;
+        /* background-color: red; */
+        /* border-radius: 50%; */
+        /* border: 1px solid red; */
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 5px;
-        box-shadow: 0 2px 5px 2px rgba(0, 0, 0, 0.51);
+        /* box-shadow: 0 2px 5px 2px rgb(0 0 0 / 51%); */
     }
+
+    .out-indicator {
+        display: none;
+        background: url("<?= base_url() ?>assets/img/timesheet/clock-out1.png");
+        background-size: cover;
+        width: 25px;
+        height: 25px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 5px;
+    }
+
+    .lunch-indicator {
+        display: none;
+        background: url("<?= base_url() ?>assets/img/timesheet/lunch-in.png");
+        background-size: cover;
+        width: 25px;
+        height: 25px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 5px;
+    }
+
+
+
 
     /*Employee css*/
     .user-logs-container {
@@ -464,10 +495,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                         <div class="card-body">
                             <div class="today-date">
-                            <?php 
-                            date_default_timezone_set($this->session->userdata('usertimezone'));
+                                <?php
+                                date_default_timezone_set($this->session->userdata('usertimezone'));
 
-                            ?>
+                                ?>
                                 <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " ?></span></h6>
                             </div>
                             <?php if ($this->session->userdata('logged')['role'] < 5) : ?>
@@ -505,7 +536,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span>On Lunch</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-out-now"><?=$on_lunch?></span>
+                                                                <span id="employee-out-now"><?= $on_lunch ?></span>
                                                             </div>
                                                             <div class="progress" id="progressOutNow">
                                                                 <div id="progressNotLoggedIn" class="progress-bar progress-bar-default progress-bar-striped progress-bar-gray active" role="progressbar" aria-valuenow="<?php echo $on_lunch; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 * ($on_lunch / $total_users), 2) . '%'; ?>;">
@@ -576,11 +607,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span>Manual Check ins</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span><?=$manual_checkins?></span>
+                                                                <span><?= $manual_checkins ?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-gray progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $manual_checkins; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(($manual_checkins/$total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * ($manual_checkins/$total_users), 2) . '%'; ?>
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-gray progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $manual_checkins; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(($manual_checkins / $total_users) * 100, 2) . '%'; ?>;">
+                                                                    <?php echo round(100 * ($manual_checkins / $total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -599,11 +630,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span>Late Check ins</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span><?=count($on_leave)?></span>
+                                                                <span><?= count($on_leave) ?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave)/$total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * (count($on_leave)/$total_users), 2) . '%'; ?>
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave) / $total_users) * 100, 2) . '%'; ?>;">
+                                                                    <?php echo round(100 * (count($on_leave) / $total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -622,11 +653,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span>On Leave</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span><?=count($on_leave)?></span>
+                                                                <span><?= count($on_leave) ?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave)/$total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * (count($on_leave)/$total_users), 2) . '%'; ?>
+                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave) / $total_users) * 100, 2) . '%'; ?>;">
+                                                                    <?php echo round(100 * (count($on_leave) / $total_users), 2) . '%'; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -708,7 +739,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 // $getTimeZone = json_decode($ipInfo);
                                                 $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
                                                 ?>
-                                                
+
                                                 <?php foreach ($users as $cnt => $user) : ?>
                                                     <?php
                                                     $user_photo = userProfileImage($user->id);
@@ -726,7 +757,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     // var_dump("<br>".date('Y-m-d', strtotime($log->date_created)));
                                                                     date_default_timezone_set('UTC');
                                                                     // var_dump(date('Y-m-d', strtotime('yesterday')));
-                                                                    
+
                                                                     if (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d', strtotime('yesterday'))) {
                                                                         $yesterday_in = "(Yesterday)";
                                                                     } else {
@@ -807,21 +838,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             <span class="tbl-emp-role"><?php echo $u_role; ?></span>
                                                         </td>
                                                         <td class="tbl-chk-in" data-count="<?php echo $in_count ?>">
-                                                            <div class="red-indicator" style="<?php echo $indicator_in ?>"></div> <span class="clock-in-time <?php if($time_in!=""){echo "gray";}?>"><?php echo $time_in ?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in; ?></span>
+                                                            <div class="in-indicator" style="<?php echo $indicator_in ?>"></div> <span class="clock-in-time <?php if ($time_in != "") {
+                                                                                                                                                                echo "gray";
+                                                                                                                                                            } ?>"><?php echo $time_in ?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in; ?></span>
                                                         </td>
                                                         <td class="tbl-chk-out" data-count="<?php echo $time_out ?>">
-                                                            <div class="red-indicator" style="<?php echo $indicator_out ?>"></div> <span class="clock-out-time <?php if($time_out!=""){echo "gray";}?>"><?php echo $time_out ?></span>
+                                                            <div class="out-indicator" style="<?php echo $indicator_out ?>"></div> <span class="clock-out-time <?php if ($time_out != "") {
+                                                                                                                                                                    echo "gray";
+                                                                                                                                                                } ?>"><?php echo $time_out ?></span>
                                                         </td>
                                                         <td class="tbl-lunch-in">
-                                                            <div class="red-indicator" style="<?php echo $indicator_in_break ?>"></div> <span class="break-in-time <?php if($break_in!=""){echo "gray";}?>"><?php echo $break_in; ?></span>
+                                                            <div class="lunch-indicator" style="<?php echo $indicator_in_break ?>"></div> <span class="break-in-time <?php if ($break_in != "") {
+                                                                                                                                                                            echo "gray";
+                                                                                                                                                                        } ?>"><?php echo $break_in; ?></span>
                                                         </td>
                                                         <td class="tbl-lunch-out">
-                                                            <div class="red-indicator" style="<?php echo $indicator_out_break ?>"></div> <span class="break-out-time <?php if($break_out!=""){echo "gray";}?>"><?php echo $break_out; ?></span>
+                                                            <div class="in-indicator" style="<?php echo $indicator_out_break ?>"></div> <span class="break-out-time <?php if ($break_out != "") {
+                                                                                                                                                                        echo "gray";
+                                                                                                                                                                    } ?>"><?php echo $break_out; ?></span>
                                                         </td>
                                                         <td class="tbl-emp-action">
-                                                            <?php if($break_id!=""){ ?>
-                                                                <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" id="<?php echo $break_id ?>" <?php echo $break; ?> data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-coffee fa-lg"></i></a>
-                                                            <?php } ?>
+                                                            <center class="loading-img-action" style="display:none;"><img class="ts-loader-img" src="<?= base_url() ?>assets/css/timesheet/images/ring-loader.svg" alt="" style="height:40px;"> </center>
+                                                            <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" style="<?php if ($break_id == "") {
+                                                                                                                                                                        echo "display:none;";
+                                                                                                                                                                    } ?>" id="<?php echo $break_id ?>" data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-coffee fa-lg"></i></a>
                                                             <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled ?> id="<?php echo $btn_action; ?>" data-attn="<?php echo $attn_id; ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-sign-in fa-lg"></i></a>
                                                             <i class="fa <?php echo $status; ?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
                                                         </td>
@@ -888,7 +928,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <div class="inner-container">
                                                 <div class="tileContent">
                                                     <div class="clear">
-                                                        <div class="inner-content" >
+                                                        <div class="inner-content">
                                                             <div class="card-title user-card-title">
                                                                 <div class="row">
                                                                     <div class="col-md-7" style="display: flex;">
@@ -1083,8 +1123,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <div class="user-logs-section" style="vertical-align: top">
                                                                     <div class="user-clock-in" style="height: 35px">
                                                                         <a href="javascript:void (0)" class="employeeLeaveBtn" id="btn-leave-emp" style="float: right;margin-top: -12px">
-                                                                            <img src="<?=base_url()?>assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
-                                                                            <img src="<?=base_url()?>assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
+                                                                            <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
+                                                                            <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
                                                                         </a>
                                                                         <span class="employeeLeaveTooltip">Request for leave</span>
                                                                     </div>
@@ -1157,7 +1197,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     });
     //Real-time capture of time
     let real_time;
-    
+
     let total_users = "<?php echo $total_users; ?>";
     // let baseURL=window.location.origin;
     // if(baseURL=="https://www.nsmartrac.local"){
@@ -1167,7 +1207,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     function serverTime() {
         let datetime = null;
         $.ajax({
-            url: baseURL+"timesheet/realTime",
+            url: baseURL + "timesheet/realTime",
             dataType: "json",
             async: false,
             success: function(data) {
@@ -1249,8 +1289,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 confirmButtonText: 'Yes, Clock-in!'
             }).then((result) => {
                 if (result.value) {
+                    //show loading
+                    $(selected).parent('td').children('.loading-img-action').show();
+                    $(selected).parent('td').children('a').hide();
+                    $(selected).parent('td').children('i').hide();
+
                     $.ajax({
-                        url: '<?=base_url()?>/timesheet/checkingInEmployee',
+                        url: '<?= base_url() ?>/timesheet/checkingInEmployee',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1262,19 +1307,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         success: function(data) {
                             if (data != 0) {
                                 let time = serverTime();
-                                $(selected).attr('data-attn', data);
+                                $(selected).attr('data-attn', data.attendance_id);
+                                $(selected).prev('a').show();
                                 $(selected).next('i').removeClass('fa-times-circle-none');
                                 $(selected).next('i').addClass('fa-check');
                                 $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-time').text(time);
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-time').removeClass("gray").addClass('gray');
                                 $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-yesterday').text(null);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').show();
                                 $(selected).attr('id', 'employeeCheckOut');
                                 $(selected).prev('a').attr('disabled', null);
                                 $(selected).prev('a').attr('id', 'employeeBreakIn');
                                 $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(null);
+                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').removeClass("gray");
                                 $(selected).parent('td').prev('td').children('.break-out-time').text(null);
+                                $(selected).parent('td').prev('td').children('.break-out-time').removeClass("gray");
                                 $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(null);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').removeClass("gray");
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.out-indicator').hide();
                                 clearTimeout(real_time);
                                 Swal.fire({
                                     showConfirmButton: false,
@@ -1288,16 +1338,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: 'Failed',
-                                    text: "Something is wrong in the process",
+                                    text: "Something is wrong in the process. Please reload the page.",
                                     icon: 'warning'
                                 });
                             }
 
+                            //hide loading
+                            $(selected).parent('td').children('.loading-img-action').hide();
+                            $(selected).parent('td').children('a').show();
+                            $(selected).parent('td').children('i').show();
                         }
                     });
                 }
             });
         });
+
+
         // Checking OUT
         $(document).on('click', '#employeeCheckOut', function() {
             let id = $(this).attr('data-id');
@@ -1318,8 +1374,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 confirmButtonText: 'Yes, Clock-out!'
             }).then((result) => {
                 if (result.value) {
+                    $(selected).parent('td').children('.loading-img-action').show();
+                    $(selected).parent('td').children('a').hide();
+                    $(selected).parent('td').children('i').hide();
+
                     $.ajax({
-                        url: baseURL+'/timesheet/checkingOutEmployee',
+                        url: baseURL + '/timesheet/checkingOutEmployee',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1330,18 +1390,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             company_id: company_id
                         },
                         success: function(data) {
-                            console.log(data);
-                            if (data == 1) {
+                            // console.log(data.current_status);
+                            if (data != 0) {
                                 let time = serverTime();
+                                $(selected).prev('a').hide();
+                                $(selected).attr('id', 'employeeCheckIn');
                                 $(selected).next('i').removeClass('fa-check');
+                                $(selected).next('i').removeClass('fa-cutlery');
                                 $(selected).next('i').addClass('fa-times-circle-none');
                                 $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(time);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
-                                $(selected).parent('td').prev('td').children('.red-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.out-indicator').show();
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').addClass('gray');
+                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').hide();
+                                if (data.current_status == "on_lunch") {
+                                    // console.log(data.current_status);
+                                    $(selected).parent('td').prev('td').children('.break-out-time').text(data.lunch_out);
+                                    $(selected).parent('td').prev('td').children('.break-out-time').addClass("gray");
+                                    $(selected).parent('td').prev('td').children('.break-out-time').show();
+                                }
+                                $(selected).parent('td').prev('td').children('.in-indicator').hide();
+                                $(selected).parent('td').prev('td').children('#employeeBreakIn').hide();
 
                                 // var second_in = $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val();
                                 clearTimeout(real_time);
+
                                 // if (second_in == 0){
                                 //     $(selected).attr('id',null);
                                 //     $(selected).attr('disabled','disabled');
@@ -1368,6 +1440,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 });
                             }
 
+                            $(selected).parent('td').children('.loading-img-action').hide();
+                            $(selected).parent('td').children('a').show();
+                            $(selected).parent('td').children('i').show();
                         }
                     });
                 }
@@ -1392,8 +1467,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 confirmButtonText: 'Yes, take a lunch!'
             }).then((result) => {
                 if (result.value) {
+                    $(selected).parent('td').children('.loading-img-action').show();
+                    $(selected).parent('td').children('a').hide();
+                    $(selected).parent('td').children('i').hide();
+
                     $.ajax({
-                        url: '<?=base_url()?>/timesheet/breakIn',
+                        url: '<?= base_url() ?>/timesheet/breakIn',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1408,9 +1487,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 $(selected).next('a').next('i').removeClass('fa-check');
                                 $(selected).next('a').next('i').addClass('fa-cutlery');
                                 $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(data);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
-                                $(selected).parent('td').prev('td').prev('td').children('.red-indicator').show();
-                                $(selected).parent('td').prev('td').children('.red-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').addClass("gray");
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').show();
+                                $(selected).parent('td').prev('td').children('.in-indicator').hide();
+                                $(selected).parent('td').prev('td').children('.out-indicator').hide();
                                 $(selected).parent('td').prev('td').children('.break-out-time').hide();
                                 $(selected).attr('id', 'employeeBreakOut');
                                 // clearTimeout(real_time);
@@ -1430,7 +1511,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     icon: 'warning'
                                 });
                             }
-
+                            $(selected).parent('td').children('.loading-img-action').hide();
+                            $(selected).parent('td').children('a').show();
+                            $(selected).parent('td').children('i').show();
                         }
                     });
                 }
@@ -1456,8 +1539,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 confirmButtonText: 'Yes, back to work!'
             }).then((result) => {
                 if (result.value) {
+                    $(selected).parent('td').children('.loading-img-action').show();
+                    $(selected).parent('td').children('a').hide();
+                    $(selected).parent('td').children('i').hide();
                     $.ajax({
-                        url: '<?=base_url()?>/timesheet/breakOut',
+                        url: '<?= base_url() ?>/timesheet/breakOut',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1470,10 +1556,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             if (data != 0) {
                                 // let time = serverTime();
                                 $(selected).next('a').next('i').removeClass('fa-cutlery');
+                                $(selected).prev('a').hide();
                                 $(selected).next('a').next('i').addClass('fa-check');
                                 $(selected).parent('td').prev('td').children('.break-out-time').text(data);
-                                $(selected).parent('td').prev('td').prev('td').children('.red-indicator').hide();
-                                $(selected).parent('td').prev('td').children('.red-indicator').show();
+                                $(selected).parent('td').prev('td').children('.break-out-time').addClass("gray");
+                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').hide();
+                                $(selected).parent('td').prev('td').children('.in-indicator').show();
                                 $(selected).parent('td').prev('td').children('.break-out-time').show();
                                 $(selected).attr('id', 'employeeBreakIn');
                                 // $(selected).attr('disabled','disabled');
@@ -1494,7 +1582,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     icon: 'warning'
                                 });
                             }
-
+                            $(selected).parent('td').children('.loading-img-action').hide();
+                            $(selected).parent('td').children('a').show();
+                            $(selected).parent('td').children('i').show();
                         }
                     });
                 }
@@ -1513,7 +1603,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             placeholder: 'Select type',
             width: 'resolve',
             ajax: {
-                url: baseURL+'/timesheet/getPTOList',
+                url: baseURL + '/timesheet/getPTOList',
                 type: "GET",
                 dataType: "json",
                 delay: 250,
@@ -1554,7 +1644,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: baseURL+'/timesheet/employeeRequestLeave',
+                        url: baseURL + '/timesheet/employeeRequestLeave',
                         method: "POST",
                         dataType: "json",
                         data: {
@@ -1562,7 +1652,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             array: array
                         },
                         success: function(data) {
-                            console.log(array);
+                            // console.log(array);
                             if (data == 1) {
                                 $('#leaveRequestModal').modal('hide');
                             }
@@ -1576,7 +1666,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     function waitForClockInOutattendance() {
         $.ajax({
             type: "GET",
-            url: baseURL+"/Timesheet/getClockInOutNotification",
+            url: baseURL + "/Timesheet/getClockInOutNotification",
             async: true,
             cache: false,
             timeout: 10000,

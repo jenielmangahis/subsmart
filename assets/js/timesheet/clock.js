@@ -1,4 +1,4 @@
-var notification_html_holder_ctr=0;
+
 
 
 $(document).ready(function () {
@@ -88,7 +88,7 @@ $(document).ready(function () {
                         Push.Permission.GRANTED; // 'granted'
                         Push.create("Clock In", {
                             body: "User : "+data.FName+" "+data.LName,
-                            icon: baseURL+data.profile_img,
+                            icon: baseURL+'uploads/users/user-profile/'+data.profile_img,
                             timeout: 20000,
                                 onClick: function () {
                                     window.focus();
@@ -349,7 +349,8 @@ function app_notification(token,body,device_type,company_id,title) {
                 confirmButtonColor: '#2ca01c',
                 denyButtonColor: '#d33',
                 confirmButtonText: 'Yes, I want to Lunch-in!',
-                denyButtonText: "I'm done for today."
+                denyButtonText: "I'm done for today.",
+                
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
@@ -515,7 +516,7 @@ function app_notification(token,body,device_type,company_id,title) {
                     data:{attn_id:attn_id,time:time},
                     success:function (data) {
                         if (data != null){
-                            // $(selected).attr('id',null);
+                            // console.log(baseURL+data.profile_img);
                             $('#unScheduledShift').val(null);
                             $('.clock').removeClass('clock-active');
                             $('.out').text(data.clock_out_time);
@@ -532,8 +533,18 @@ function app_notification(token,body,device_type,company_id,title) {
                                     html: "You are now Clock-out",
                                     icon: 'success'
                                 });
-                            
+                            Push.Permission.GRANTED; // 'granted'
+                            Push.create("Clocked out", {
+                            body: "User : "+data.FName+" "+data.LName,
+                            icon: baseURL+'uploads/users/user-profile/'+data.profile_img,
+                            timeout: 20000,
+                            onClick: function () {
+                                    window.focus();
+                                    this.close();
+                                }
+                            });
                             app_notification(data.token,data.body,data.device_type,data.company_id,data.title);
+                            location.reload();
                         }else{
                             Swal.fire(
                                 {

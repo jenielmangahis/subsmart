@@ -97,8 +97,9 @@ if (!function_exists('get_total_item_qty')){
             'where' => array(
                 'item_id' => $id
             ),
+            'group_by' => 'item_id',
             'table' => 'items_has_storage_loc',
-            'select' => 'id,SUM(qty) as total_qty',
+            'select' => 'SUM(qty) as total_qty',
         );
         //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
         return $CI->general->get_column_sum($get_item_qty_total);

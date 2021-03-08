@@ -347,6 +347,7 @@ var table = $('#recurring_transactions').DataTable({
     processing: true,
     serverSide: true,
     lengthChange: false,
+    pageLength: $('#table_rows').val(),
     info: false,
     ajax: {
         url: 'recurring-transactions/load-recurring-transactions/',

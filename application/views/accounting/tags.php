@@ -277,6 +277,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             processing: true,
             serverSide: true,
             lengthChange: false,
+            pageLength: 50,
             ordering: false,
             info: false,
             paging: false,

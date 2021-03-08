@@ -64,7 +64,13 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <!-- <td><input type="text" class="form-control" name="prod[]"></td> -->
+                                    <td><select id="s" name="items[]"  class="form-control">
+                                                    <option value="0"></option>
+                                                    <?php foreach($items as $c){ ?>
+                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
+                                                    <?php } ?>
+                                                </select></td>
                                     <td><input type="text" class="form-control" name="desc[]"></td>
                                     <td><input type="text" class="form-control" name="qty[]"></td>
                                     <td><input type="text" class="form-control" name="rate[]"></td>
@@ -75,7 +81,13 @@
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
+                                    <!-- <td><input type="text" class="form-control" name="prod[]"></td> -->
+                                    <td><select id="s" name="items[]"  class="form-control">
+                                                    <option value="0"></option>
+                                                    <?php foreach($items as $c){ ?>
+                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
+                                                    <?php } ?>
+                                                </select></td>
                                     <td><input type="text" class="form-control" name="desc[]"></td>
                                     <td><input type="text" class="form-control" name="qty[]"></td>
                                     <td><input type="text" class="form-control" name="rate[]"></td>

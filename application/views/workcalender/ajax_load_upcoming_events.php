@@ -20,7 +20,12 @@
                   </span>
               </div>
               <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
-                <a href="javascript:void(0);" class="uevent-view-details" data-event-id="<?= $e['event_id']; ?>">
+                <?php if( $e['type'] == 'g-events' ){ ?>
+                  <a href="javascript:void(0);" class="uevent-view-details" data-event-id="<?= $e['event_id']; ?>">
+                <?php }else{ ?>
+                  <a href="<?= base_url("events/event_preview/" . $e['event_id']) ?>" class="">
+                <?php } ?>
+                
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-type" value="<?= $e['type']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-title" value="<?= $e['event_title']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-start-date" value="<?= $e['start_date']; ?>" />

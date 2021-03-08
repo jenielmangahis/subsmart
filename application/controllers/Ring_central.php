@@ -96,12 +96,12 @@ class Ring_central extends MY_Controller {
                     ?>
 
                     <div class="col-lg-12 mb-3 float-left">
-                        <?php if(trim($msgItem[1])!=""): ?>
-                        <div style="<?= $style; ?>" class="alert alert-success <?= $align ?> col-md-10 mt-1 mb-1" role="alert">
-                            <span style="<?= $color ?>" class="<?= $align; ?>">
-                                <?= trim($msgItem[1]); ?>
-                            </span>
-                        </div>
+                        <?php if (trim($msgItem[1]) != ""): ?>
+                            <div style="<?= $style; ?>" class="alert alert-success <?= $align ?> col-md-10 mt-1 mb-1" role="alert">
+                                <span style="<?= $color ?>" class="<?= $align; ?>">
+                                    <?= trim($msgItem[1]); ?>
+                                </span>
+                            </div>
                         <?php endif; ?>
                         <?php
                         if ($hasAttachment):
@@ -119,9 +119,12 @@ class Ring_central extends MY_Controller {
                 <div class="col-lg-12" style="position: fixed;bottom: 41px;width: 1080px;">
                     <div class="input-group">
                         <span class="input-group-prepend ">
-                            <button type="button" class="btn btn-default"><i class="fas fa-photo-video fa-fw"></i></button>
+                            <input type="file" id="inputImage" name="inputImage"  onchange="loadFile(event)" style="position:absolute; left:-1000px; display: none;">
+                            <button type="button" class="btn btn-default" onclick="openFileOption()"><i class="fas fa-photo-video fa-fw"></i></button>
                             <button type="button" class="btn btn-default"><i class="fas fa-microphone fa-fw"></i></button>
                         </span>
+
+                        <img src="" id="outputImg" style="width:100px" />
                         <input type="text" name="replyMessage" id="replyMessage" placeholder="Type Message ..." class="form-control">
                         <span class="input-group-append">
                             <button id="btnReply" type="button" onclick="sendReply()" class="btn btn-primary">Send</button>
@@ -191,32 +194,42 @@ class Ring_central extends MY_Controller {
         $to = post('to');
         $message = post('message');
 
-        $file_path = 'assets/img/';
-        if (is_dir($file_path)):
-            $file = 'logo.png';
+        $file_path = 'assets/ringcentral/tmpUpload/';
+        $config['upload_path'] = $file_path;
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = '100';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '768';
 
-        else:
-            echo 'not a directory';
-        endif;
-        if ($this->session->rcData) {
-            $platform->auth()->setData((array) $this->session->rcData);
-            if ($platform->loggedIn()) {
-                $body = array(
-                    'from' => array('phoneNumber' => '+16505691634'),
-                    'to' => array(array('phoneNumber' => $to)),
-                    'text' => $message
-                );
 
-                $request = $rcsdk->createMultipartBuilder()
-                        ->setBody($body)
-                        ->add(fopen($file_path . DIRECTORY_SEPARATOR . $file, 'r'))
-                        ->request('/account/~/extension/~/sms');
-                $r = $platform->sendRequest($request);
-                //print_r($r->json()->messageStatus);
-                echo json_encode(array('msg' => 'Successfully Sent', 'status' => true, 'number' => base64_encode($to)));
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+
+
+        if (!$this->upload->do_upload('image')) {
+            $error = array('error' => $this->upload->display_errors());
+            print_r($error);
+        } else {
+            $data = $this->upload->data();
+            if ($this->session->rcData) {
+                $platform->auth()->setData((array) $this->session->rcData);
+                if ($platform->loggedIn()) {
+                    $body = array(
+                        'from' => array('phoneNumber' => '+16505691634'),
+                        'to' => array(array('phoneNumber' => $to)),
+                        'text' => $message
+                    );
+
+                    $request = $rcsdk->createMultipartBuilder()
+                            ->setBody($body)
+                            ->add(fopen($data['full_path'], 'r'))
+                            ->request('/account/~/extension/~/sms');
+                    $r = $platform->sendRequest($request);
+                    //print_r($r->json()->messageStatus);
+                    echo json_encode(array('msg' => 'Successfully Sent', 'status' => true, 'number' => base64_encode($to)));
+                }
             }
         }
-
     }
 
     public function sendSMS($to = NULL, $message = NULL) {

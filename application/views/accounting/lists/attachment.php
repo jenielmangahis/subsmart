@@ -80,16 +80,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class="fa fa-cog"></i>
                                                         </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                            <p class="p-padding">Columns</p>
-                                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_thumbnail()" name="chk_thumbnail" id="chk_thumbnail">Thumbnail</p>
-                                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type"> Type</p>
-                                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_name()" name="chk_name" id="chk_name">Name</p>
-                                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_size()" name="chk_size" id="chk_size"> Size</p>
-                                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_uploaded()" name="chk_uploaded" id="chk_uploaded"> Uploaded</p>
-                                                            <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_links()" name="chk_links" id="chk_links"> Links</p>
-                                                            <br/>
-                                                            <p class="p-padding"><input type="checkbox" name="chk_other" id="chk_other"> Other</p>
+                                                        <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
+                                                            <p class="m-0">Columns</p>
+                                                            <p class="m-0"><input type="checkbox" id="col_size" checked="checked" onchange="col(this)"> Size</p>
+                                                            <p class="m-0"><input type="checkbox" id="col_uploaded" checked="checked" onchange="col(this)"> Uploaded</p>
+                                                            <p class="m-0"><input type="checkbox" id="col_note" checked="checked" onchange="col(this)"> Notes</p>
+                                                            <p class="m-0">Rows</p>
+                                                            <p class="m-0">
+                                                                <select name="table_rows" id="table_rows" class="form-control">
+                                                                    <option value="50">50</option>
+                                                                    <option value="75">75</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="150" selected>150</option>
+                                                                    <option value="300">300</option>
+                                                                </select>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -211,6 +216,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
+function col(el) {
+    var className = $(el).attr('id');
+    className = className.replace('col_', '');
+
+    if($(el).prop('checked') === true) {
+        $(`#attachments_table .${className}`).show();
+    } else {
+        $(`#attachments_table .${className}`).hide();
+    }
+}
 
 $(function(){
         $('.date_picker input').datepicker({
@@ -219,12 +234,21 @@ $(function(){
            language: "de"
         });
 
+        $('#table_rows').on('change', function() {
+            table.ajax.reload();
+        });
+
+        $('.action-bar .dropdown-menu').on('click', function(e) {
+            e.stopPropagation();
+        });
+
         var table = $('#attachments_table').DataTable({
             autoWidth: false,
             searching: false,
             processing: true,
             serverSide: true,
             lengthChange: false,
+            pageLength: $('#table_rows').val(),
             ordering: false,
             info: false,
             ajax: {
@@ -233,6 +257,7 @@ $(function(){
                 contentType: 'application/json', 
                 type: 'POST',
                 data: function(d) {
+                    d.length = $('#table_rows').val();
                     return JSON.stringify(d);
                 },
                 pagingType: 'full_numbers',
@@ -266,11 +291,17 @@ $(function(){
                 },
                 {
                     data: 'size',
-                    name: 'size'
+                    name: 'size',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('size');
+                    }
                 },
                 {
                     data: 'upload_date',
-                    name: 'upload_date'
+                    name: 'upload_date',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('uploaded');
+                    }
                 },
                 {
                     data: 'links',
@@ -278,7 +309,10 @@ $(function(){
                 },
                 {
                     data: 'note',
-                    name: 'note'
+                    name: 'note',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).addClass('note');
+                    }
                 },
                 {
                     data: null,

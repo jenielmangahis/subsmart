@@ -57,8 +57,13 @@
             height: 200px;
             border: 1px solid black;
         }
-        div#notificationList{
-            height: auto!important;
+
+        div#notificationList {
+            height: auto !important;
+        }
+
+        button.swal2-close {
+            display: block !important;
         }
 
         #topnav {
@@ -73,6 +78,11 @@
 
         .progress-bar-success {
             background-color: #5cb85c;
+        }
+
+        .clock {
+            background: url("<?= base_url() ?>/assets/img/timesheet/clock-face-digital-clock-alarm-clocks-clock-png-clip-art.png");
+            background-size: cover;
         }
 
         .progress-bar-info {
@@ -282,7 +292,7 @@
     </style>
 </head>
 <script>
-    var baseURL='<?=base_url()?>';
+    var baseURL = '<?= base_url() ?>';
 </script>
 
 
@@ -318,7 +328,7 @@
                                                                         </a>
                                                                     </div>
                                                                 </li>-->
-<!--                            <li title="SMS" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                            <!--                            <li title="SMS" class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
                                 <div class="conversation-icon-container dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                                     <a href="#" onclick="$('#createSMS').modal('show')">
                                         <img class="conversation-icon-static" src="<?php echo $url->assets; ?>/css/icons/sms.svg" alt="">
@@ -412,23 +422,24 @@
                                 <!--</span>-->
                                 <!--                                </a>-->
                                 <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;width:auto; top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      ?></span>
-                                    
-                                        <div class="bell" id="bell-1">
-                                            <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
-                                            <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
-                                            <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
-                                        </div>
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;width:auto; top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
+                                                                                                                                                                                                                                                                        ?></span>
+
+                                    <div class="bell" id="bell-1">
+                                        <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
+                                        <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
+                                        <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
+                                    </div>
                                 </div>
                                 <div class="prev-icon-title">Notification</div>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                     <!-- item-->
-                                    <h6 class="dropdown-item-text">Notifications (<span id="nfcount"></span>)</h6>
+                                    <h6 class="dropdown-item-text">Notifications (<span id="nfcount">0</span>)</h6>
                                     <div class="slimscroll notification-item-list" id="notificationList">
                                         <div id="autoNotifications">
                                             <a href="#" id="notificationDP" data-id="416&quot;" class="dropdown-item notify-item active" style="background-color:#e6e3e3">
-                                                    <!-- <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="https://www.nsmartrac.local/nsmartrac/uploads/users/default.png" alt="User profile picture"> -->
-                                                <p class="notify-details" style="margin-left: 50px;">Loading...</span></p>
+                                                <!-- <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="https://www.nsmartrac.local/nsmartrac/uploads/users/default.png" alt="User profile picture"> -->
+                                                <!-- <p class="notify-details" style="margin-left: 50px;">Loading...</span></p> -->
                                             </a>
                                         </div>
                                         <?php
@@ -477,7 +488,7 @@
                                 </div>
                             </li>
                             <?php
-                            $clock_btn = 'clockIn'; 
+                            $clock_btn = 'clockIn';
                             $user_id = $this->session->userdata('logged')['id'];
                             $user_clock_in = getClockInSession();
                             $attendance_id = 0;
@@ -507,7 +518,7 @@
                                 break;
                             }
                             $ts_logs_h = getEmployeeLogs($attendance_id);
-                            
+
                             $attn_id = null;
                             $minutes = 0;
                             //                        $expected_endbreak = null;
@@ -516,16 +527,16 @@
                             // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
                             // $getTimeZone = json_decode($ipInfo);
                             $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
-                            
+
                             foreach ($attendances as $attn) {
                                 $attn_id = $attn->id;
-                                if($attn->overtime_status == 1){
+                                if ($attn->overtime_status == 1) {
                                     $overtime_status = 2;
-                                }else{
+                                } else {
                                     $overtime_status = 1;
                                 }
-                                
-                                
+
+
                                 foreach ($ts_logs_h as $log) {
                                     if ($log->attendance_id == $attn->id && $attn->status == 1) {
                                         if ($log->action == 'Check in') {
@@ -545,7 +556,7 @@
                                         }
                                         if ($log->action == 'Break in') {
                                             $analog_active = 'clock-break';
-                                            
+
                                             if ($attn->break_duration > 0) {
                                                 $lunch_in = strtotime($log->date_created) - (floor($attn->break_duration * 60));
                                                 $latest_lunch_in = strtotime($userZone_date_created);
@@ -560,20 +571,19 @@
                                                 $lunch_time = convertDecimal_to_Time($attn->break_duration, "lunch");
                                             }
                                         }
-                                        
                                     } else if ($log->attendance_id == $attn->id && $attn->status == 0) {
 
                                         $lunch_time = convertDecimal_to_Time($attn->break_duration, "lunch");
                                         $shift_duration = convertDecimal_to_Time($attn->shift_duration, "shift diration");
                                         // var_dump($attendance_id);
-                                        if($log->action == "Check in"){
+                                        if ($log->action == "Check in") {
                                             $date_created = $log->date_created;
                                             date_default_timezone_set('UTC');
                                             $datetime_defaultTimeZone = new DateTime($date_created);
                                             $datetime_defaultTimeZone->setTimezone($UserTimeZone);
                                             $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
                                             $clock_in = date('h:i A', strtotime($userZone_date_created));
-                                        }elseif($log->action == "Check out"){
+                                        } elseif ($log->action == "Check out") {
                                             $date_created = $log->date_created;
                                             date_default_timezone_set('UTC');
                                             $datetime_defaultTimeZone = new DateTime($date_created);
@@ -581,10 +591,8 @@
                                             $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
                                             $clock_out = date('h:i A', strtotime($userZone_date_created));
                                         }
-                                        
                                     }
                                 }
-                                
                             }
                             $ts_settings = getEmpTSsettings();
                             $schedule = getEmpSched();
@@ -636,7 +644,7 @@
                                 $overtime_status = 2;
                                 $expected_endshift = 0;
                             }
-                            
+
                             ?>
                             <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                                 <!--                     lou       <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null;       
@@ -692,9 +700,9 @@
                                         <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
                                         <?php
                                         $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
-                                         if( !@getimagesize($image) ){
-                                              $image = base_url('uploads/users/default.png');
-                                        } 
+                                        if (!@getimagesize($image)) {
+                                            $image = base_url('uploads/users/default.png');
+                                        }
                                         // $image = base_url('uploads/users/default.png');
                                         ?>
                                         <img src="<?php echo $image; ?>" alt="user" class="rounded-circle nav-user-img">
@@ -727,8 +735,10 @@
     </header><!-- End Navigation Bar-->
 
     <script type="text/javascript">
-    var all_notifications_html = '';
-    var notification_badge_value = 0;
+        var all_notifications_html = '';
+        var notification_badge_value = 0;
+        var notification_html_holder_ctr = 0;
+
         function countChar(val) {
             var len = val.value.length;
             if (len >= 300) {
@@ -739,47 +749,54 @@
         };
 
         let notificationClockInOut = (function() {
-            return function () {
+            return function() {
                 $.ajax({
-                url:baseURL+"/Timesheet/getCount_NotificationsAll",
-                type:"POST",
-                dataType:"json",
-                data:{notifycount:notification_badge_value},
-                success:function (data) {
-                    // console.log(data);
-                    if(notification_badge_value != data.notifyCount ){
-                        notification_badge_value = data.notifyCount;
-                        $('#notifyBadge').html(notification_badge_value);
-                        $('#nfcount').html(data.notifyCount);
-                        // $('#autoNotifications').html(data.autoNotifications);
-                        notification_viewer();
-                        console.log(data.notifyCount);
+                    url: baseURL + "Timesheet/getCount_NotificationsAll",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        notifycount: notification_badge_value
+                    },
+                    success: function(data) {
+                        // console.log(data);
+                        if (notification_badge_value != data.notifyCount) {
+                            notification_badge_value = data.notifyCount;
+                            $('#notifyBadge').html(notification_badge_value);
+                            $('#nfcount').html(data.notifyCount);
+                            // $('#autoNotifications').html(data.autoNotifications);
+                            notification_viewer();
+                            // console.log(data.notifyCount);
+                        } else if (notification_badge_value == 0) {
+                            $('#nfcount').html(0);
+
+                        }
+                        setTimeout(notificationClockInOut, 5000);
                     }
-                    setTimeout(notificationClockInOut, 5000);
-                }
-            });
+                });
             }
         })();
 
         let notification_viewer = (function() {
-            return function () {
+            return function() {
                 $.ajax({
-                url:baseURL+"/Timesheet/getNotificationsAll",
-                type:"POST",
-                dataType:"json",
-                data:{notifycount:notification_html_holder_ctr},
-                success:function (data) {
-                    if(notification_html_holder_ctr != data.notifyCount && data.notifyCount != null){
-                        $('#notifyBadge').html(data.notifyCount);
-                        $('#nfcount').html(data.notifyCount);
-                        $('#autoNotifications').html(data.autoNotifications);
-                        notification_html_holder_ctr = data.notifyCount;
+                    url: baseURL + "/Timesheet/getNotificationsAll",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        notifycount: notification_html_holder_ctr
+                    },
+                    success: function(data) {
+                        if (notification_html_holder_ctr != data.notifyCount && data.notifyCount != null) {
+                            $('#notifyBadge').html(data.notifyCount);
+                            $('#nfcount').html(data.notifyCount);
+                            $('#autoNotifications').html(data.autoNotifications);
+                            notification_html_holder_ctr = data.notifyCount;
+                        }
+                        // console.log(data.notifyCount+0);
+                        // setTimeout(notificationClockInOut, 5000);
                     }
-                    // console.log(data.notifyCount+0);
-                    // setTimeout(notificationClockInOut, 5000);
-                }
-            });
-        }
+                });
+            }
         })();
 
         $(document).ready(function() {

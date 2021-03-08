@@ -34,8 +34,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-6">
                                     <h3 class="page-title" style="margin: 0 !important">Chart of Accounts List</h3>
                                 </div>
-                                <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                    <span style="color:black;">When you create your company file, our accounting software automatically customizes your chart of accounts based on your industry. You can add more accounts any time you need to track other types of transactions. It is very simple to add more accounts to your chart of accounts. Structuring and setting up the chart of accounts will eliminate the guesswork which in-turn can help run your business smoothly.</span>
+                                <div class="col-sm-12">
+                                    <div class="alert alert-warning mt-4 mb-4" role="alert">
+                                        <span style="color:black;">When you create your company file, our accounting software automatically customizes your chart of accounts based on your industry. You can add more accounts any time you need to track other types of transactions. It is very simple to add more accounts to your chart of accounts. Structuring and setting up the chart of accounts will eliminate the guesswork which in-turn can help run your business smoothly.</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row pb-3">
@@ -77,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span><strong>Success!</strong> <?php echo $this->session->flashdata('success'); ?></span>
                         </div>
                         <?php elseif($this->session->flashdata('error')) : ?>
-                        <div class="alert alert-success alert-dismissible my-4" role="alert">
+                        <div class="alert alert-danger alert-dismissible my-4" role="alert">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <span><strong>Error!</strong> <?php echo $this->session->flashdata('error'); ?></span>
                         </div>
@@ -296,6 +298,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             serverSide: true,
             lengthChange: false,
             info: false,
+            pageLength: $('#table_rows').val(),
             order: [[1, 'asc']],
             ajax: {
                 url: 'load-chart-of-accounts/',
