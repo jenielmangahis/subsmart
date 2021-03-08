@@ -14,6 +14,16 @@ class Jobs_model extends MY_Model
     public $table_employees = 'employees';
     public $table_customers = 'customers';
     public $table_address = 'address';
+
+    //Status
+    public $status_new = 'New';
+    public $status_scheduled = 'Scheduled';
+    public $status_started = 'Started';
+    public $status_paused = 'Paused';
+    public $status_invoiced = 'Invoiced';
+    public $status_withdrawn = 'Withdrawn';
+    public $status_closed = 'Closed';
+
     /**
      * @return mixed
      */
@@ -319,16 +329,44 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function getAllJobsByUserId($user_id)
+    public function getAllJobsByUserId($user_id, $date_range = array(), $filter = array())
     {
         $cid=logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,acs_profile.*');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
         $this->db->where("jobs.employee_id", $user_id);
+
+        if( !empty($date_range) ){
+            $start_date = $date_range['date_from'];
+            $end_date   = $date_range['date_to'];
+            $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        }
+
+        if( !empty($filter) ){
+            foreach($filter as $key => $value){
+                $this->db->where($key, $value);
+            }
+        }
+
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getAllStatus()
+    {
+        $status = [
+            $this->status_new => 'New',
+            $this->status_scheduled => 'Scheduled',
+            $this->status_started => 'Started',
+            $this->status_paused => 'Paused',
+            $this->status_invoiced => 'Invoiced',
+            $this->status_withdrawn => 'Withdrawn',
+            $this->status_closed => 'Closed'
+        ];
+
+        return $status;
     }
 }
 

@@ -679,6 +679,7 @@ class Workorder extends MY_Controller
     {
         $this->load->model('Event_model');
         $this->load->model('Users_model');
+        $this->load->model('Jobs_model');
 
         add_css(array(
             'assets/css/daterange/daterangepicker.css'
@@ -702,6 +703,7 @@ class Workorder extends MY_Controller
 
         $company_id   = logged('company_id');
         $companyUsers = $this->Users_model->getCompanyUsers($company_id);
+        $this->page_data['job_status'] = $this->Jobs_model->getAllStatus();
         $this->page_data['companyUsers'] = $companyUsers;
         $this->load->view('workorder/bird-eye-view', $this->page_data);
     }
@@ -727,6 +729,12 @@ class Workorder extends MY_Controller
 
         $post = $this->input->post();
         $date_range = ['date_from' => date("Y-m-d",strtotime($post['date_from'])), 'date_to' => date("Y-m-d",strtotime($post['date_to']))];
+        if( $post['job_status'] != 'all' ){
+            $criteria = ['jobs.status' => $post['job_status']];
+        }else{
+            $criteria = array();
+        }
+        
         if( $post['user'] == 'all' ){
             $users    = $this->Users_model->getAll();
             foreach( $users as $user ){
@@ -779,7 +787,7 @@ class Workorder extends MY_Controller
                 } 
 
                 //Jobs
-                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user']);
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user'],$date_range,$criteria);
                 /*foreach($jobs as $j){
                     if( $j->job_location != '' ){
                         $pointB = $j->job_location; 
@@ -807,11 +815,11 @@ class Workorder extends MY_Controller
             if( $post['user'] > 0 ){
                 $user    = $this->Users_model->getUser($post['user']);
                 $events  = $this->Event_model->getAllUserEventsWithAddress($post['user'],$date_range);
-                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user']);
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user'],$date_range,$criteria);
             }else{
                 $user    = $this->Users_model->getUser($user_id);
                 $events  = $this->Event_model->getAllUserEventsWithAddress($user_id,$date_range);
-                $jobs    = $this->Jobs_model->getAllJobsByUserId($user_id);
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($user_id,$date_range,$criteria);
             }
 
             //Set Center Map
