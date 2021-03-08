@@ -482,7 +482,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 }
                             }
                         ?>
-                        <label class="checkboxcontainer"> <b>SOLE PROPRIETOR</b>
+                        <label class="checkboxcontainer"> <b>SOLE PROPRIETORSHIP</b>
                         <input type="checkbox" <?= $is_checked; ?> name="is_sole_proprietor" id="is_sole_proprietor" value="1">
                         <span class="checkmark"></span>
                     </div>

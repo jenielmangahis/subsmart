@@ -2073,7 +2073,7 @@ class Customer extends MY_Controller
             $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
             $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+            $message .= "<tr><td>IS SOLE PROPRIETORSHIP</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
 
             $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
@@ -2194,7 +2194,7 @@ class Customer extends MY_Controller
                 $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
                 $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
                 $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+                $message .= "<tr><td>IS SOLE PROPRIETORSHIP</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
 
                 $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
                 $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
