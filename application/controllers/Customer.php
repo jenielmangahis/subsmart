@@ -2002,12 +2002,30 @@ class Customer extends MY_Controller
             $is_sole_proprietor = 1;
         }
 
+        $is_principal_llc = 0;
+        if( isset($post['principal_llc']) ){
+            $is_sole_proprietor = 1;
+        }
+
+        $is_principal_corporation = 0;
+        if( isset($post['principal_corporation']) ){
+            $is_principal_corporation = 1;
+        }
+
+        $is_principal_others = 0;
+        if( isset($post['principal_others']) ){
+            $is_principal_others = 1;
+        }
+
         $post['is_mailing']  = $is_mailing;
         $post['is_shipping'] = $is_shipping;
         $post['is_see_special_instructions'] = $is_see_special_instructions;
         $post['is_beneficial_owner']  = $is_beneficial_owner;
         $post['is_authorized_signer'] = $is_authorized_signer;
         $post['is_sole_proprietor']   = $is_sole_proprietor;
+        $post['principal_llc'] = $is_principal_llc;
+        $post['principal_corporation'] = $is_principal_corporation;
+        $post['principal_others'] = $is_principal_others;
 
         if( $merchant ){
             $this->ConvergeMerchant_model->update($merchant->id, $post);
@@ -2056,9 +2074,11 @@ class Customer extends MY_Controller
             $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
             $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>LLC</td><td>".$post['principal_llc']."</td></tr>";
-            $message .= "<tr><td>CORPORATION</td><td>".$post['principal_corporation']."</td></tr>";
-            $message .= "<tr><td>OTHER</td><td>".$post['principal_others']."</td></tr>";
+
+            $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
+            $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
+            $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";
+
             $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
             $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
             $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
@@ -2174,9 +2194,11 @@ class Customer extends MY_Controller
                 $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
                 $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
                 $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>LLC</td><td>".$post['principal_llc']."</td></tr>";
-                $message .= "<tr><td>CORPORATION</td><td>".$post['principal_corporation']."</td></tr>";
-                $message .= "<tr><td>OTHER</td><td>".$post['principal_others']."</td></tr>";
+
+                $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
+                $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
+                $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";
+
                 $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
                 $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
                 $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
