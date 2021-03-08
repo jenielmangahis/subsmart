@@ -250,6 +250,7 @@ $('#payment_methods').DataTable({
     processing: true,
     serverSide: true,
     lengthChange: false,
+    pageLength: $('#table_rows').val(),
     info: false,
     ajax: {
         url: 'payment-methods/load-payment-methods/',

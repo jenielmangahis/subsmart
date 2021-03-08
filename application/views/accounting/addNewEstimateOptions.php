@@ -60,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('estimate/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('accounting/savenewestimateOptions', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <style>
 
             </style>
@@ -176,6 +176,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Option-1 Items</b></th>
+                                            <th><b>Type</b></th>
                                             <th><b>Quantity</b></th>
                                             <th><b>Price</b></th>
                                             <th><b>Total</b></th>
@@ -183,10 +184,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody id="table_body_option1">
                                         <tr>
+                                            <td>
+                                                <select id="s" name="items[]"  class="form-control">
+                                                    <option value="0"></option>
+                                                    <?php foreach($items as $c){ ?>
+                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
                                                 </select></td>
                                             <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
@@ -237,6 +247,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Option-2 Items</b></th>
+                                            <th><b>Type</b></th>
                                             <th><b>Quantity</b></th>
                                             <th><b>Price</b></th>
                                             <th><b>Total</b></th>
@@ -244,10 +255,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody id="table_body_option2">
                                         <tr>
+                                            <td>
+                                                <select id="s" name="items[]"  class="form-control">
+                                                    <option value="0"></option>
+                                                    <?php foreach($items as $c){ ?>
+                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
                                                 </select></td>
                                             <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>

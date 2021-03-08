@@ -67,10 +67,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 				</a>
 			</div>
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
+                            
+				<a href="<?php echo base_url('dropbox') ?>">
 				<div class="shadow" style="background-color: white;text-align:center;">
 					<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/dropbox.png" height="150" width="180" title="Dropbox">
 					<button type="button" class="form-control btn btn-success">Dropbox</button>
 				</div>
+                                </a>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">

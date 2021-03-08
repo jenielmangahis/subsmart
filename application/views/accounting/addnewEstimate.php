@@ -169,6 +169,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead style="background-color:#E9E8EA;">
                                         <tr>
+                                            <th>Name</th>
                                             <th>Type</th>
                                             <th>Description</th>
                                             <th width="100px">Quantity</th>
@@ -181,10 +182,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody id="table_body">
                                         <tr>
+                                            <td width="200px">
+                                                <select id="s" name="items[]"  class="form-control">
+                                                    <option value="0"></option>
+                                                    <?php foreach($items as $c){ ?>
+                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
+                                                    <?php } ?>
+                                            </select>
+                                            </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
                                                 </select></td>
                                             <td><input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="item[]">

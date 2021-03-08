@@ -89,12 +89,12 @@ class General_model extends MY_Model {
                 $this->db->where($key, $val);
             }
         }
+        if(array_key_exists("group_by",$params) && $params['group_by'] != NULL ){
+            $this->db->group_by($params['group_by']);
+        }
 
-        //$this->db->select('SUM(qty) as total_qty');
-        //$this->db->from($this->table_has_location);
-        //$this->db->where('item_id', $id);
         $query = $this->db->get();
-        return $query->row();
+        return $query->result();
     }
 
     public function delete_($params = array()) {

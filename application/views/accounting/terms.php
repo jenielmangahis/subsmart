@@ -282,6 +282,7 @@ var table = $('#terms_table').DataTable({
     processing: true,
     serverSide: true,
     lengthChange: false,
+    pageLength: $('#table_rows').val(),
     info: false,
     ajax: {
         url: 'terms/load-terms/',
@@ -289,6 +290,7 @@ var table = $('#terms_table').DataTable({
         contentType: 'application/json', 
         type: 'POST',
         data: function(d) {
+            d.length = $('#table_rows').val();
             d.inactive = $('#inc_inactive').prop('checked') === true ? 1 : 0;
             d.columns[0].search.value = $('input#search').val();
             return JSON.stringify(d);

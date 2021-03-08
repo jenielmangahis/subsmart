@@ -786,8 +786,9 @@
     });
     };
     $(document).ready(function () {
-    var TimeStamp = null;
-    waitForClockInOut();
+        var TimeStamp = null;
+        waitForClockInOut();
+        
     });
     $('#onoff-customize').click(function() {
     if (this.checked) {

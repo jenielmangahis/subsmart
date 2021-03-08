@@ -311,8 +311,14 @@ $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 
 $route['accounting/products-and-services'] = 'accounting/products_and_services';
+$route['accounting/products-and-services/load']['post'] = 'accounting/load_products_services';
 $route['accounting/product-categories'] = 'accounting/product_categories';
 $route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
+$route['accounting/product-categories/get'] = 'accounting/get_categories';
+$route['accounting/product-categories/create']['post'] = 'accounting/create_item_category';
+$route['accounting/product-categories/get/(:any)'] = 'accounting/get_category_details/$1';
+$route['accounting/product-categories/update/(:any)']['post'] = 'accounting/update_category/$1';
+$route['accounting/product-categories/delete/(:any)']['DELETE'] = "accounting/delete_category/$1";
 
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';

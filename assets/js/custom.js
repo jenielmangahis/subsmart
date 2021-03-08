@@ -1,8 +1,8 @@
 $(document).ready(function () {
-  $("#yrMybus").datetimepicker({
-    viewMode: 'years',
-    format: 'YYYY'
-  });
+  // $("#yrMybus").datetimepicker({
+  //   viewMode: 'years',
+  //   format: 'YYYY'
+  // });
 
   $('#monHoursFromAvail').timepicker();
   $('#tueHoursFromAvail').timepicker();

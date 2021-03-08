@@ -159,9 +159,14 @@
     </div>
 
     <div class="col-lg-12">
+        <div style="width:250px;">
+            <i class="fa fa-close float-right" id="deleteOutputImage" style="cursor: pointer; display: none;"></i>
+            <img src="" id="outputImg" style="width:250px" />
+        </div>
         <div class="input-group">
             <span class="input-group-prepend ">
-                <button type="button" class="btn btn-default"><i class="fas fa-photo-video fa-fw"></i></button>
+                <input type="file" id="inputSendImage" name="files[]" value="hey" style="position:absolute; left:-2000px;display: none">
+                <button type="button" onclick="openFileSendOption()" class="btn btn-default"><i class="fas fa-photo-video fa-fw"></i></button>
                 <button type="button" class="btn btn-default"><i class="fas fa-microphone fa-fw"></i></button>
             </span>
             <input type="text" name="replyMessage" id="sentMessage" placeholder="Type Message ..." class="form-control">
@@ -174,10 +179,22 @@
 
 <script type="text/javascript">
 
+    var eventFiles = "";
     $(document).ready(function () {
         fetchSMS();
-
+        openFileSendOption = function()
+        {
+          document.getElementById("inputSendImage").click();
+        };
+        
+        
+        openFileOption = function()
+        {
+          document.getElementById("inputImage").click();
+        };
+        
     });
+    
 
 
     createNewMessage = function () {
@@ -185,32 +202,76 @@
         $('#msgs_body').addClass('col-lg-4');
         $('#msgs_details').show();
         $('#msgs_details').html($('#sendSMSBody').html());
+        
+        var input = document.getElementById('inputSendImage');
+        input.onchange = function () {
+            var output = document.getElementById('outputImg');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            
+            output.onload = function() {
+              URL.revokeObjectURL(output.src); 
+            };
+            eventFiles = event.target.files[0];
+        };
     };
-
+     function _(el){
+	return document.getElementById(el);
+    }
 
     sendSMS = function () {
         var num = $('#inputMobile').val();
         var msg = $('#sentMessage').val();
-
-        $.ajax({
-            url: '<?php echo base_url(); ?>ring_central/sendSMS',
-            method: 'POST',
-            data: {
-                to: num,
-                message: msg
-            },
-            dataType: 'json',
-            statusCode: {
-                500: function (xhr) {
-                    var obj = JSON.parse(xhr.responseText);
-                    alert(obj.msg);
-                    fetchPersonalSMS(obj.number);
+        var img = $('#outputImg').attr('src');
+        
+        if(img==""){
+            $.ajax({
+                url: '<?php echo base_url(); ?>ring_central/sendSMS',
+                method: 'POST',
+                data: {
+                    to: num,
+                    message: msg
+                    
+                },
+                dataType: 'json',
+                statusCode: {
+                    500: function (xhr) {
+                        var obj = JSON.parse(xhr.responseText);
+                        alert(obj.msg);
+                        fetchPersonalSMS(obj.number);
+                    }
+                },
+                success: function (response) {
+                    alert(response);
                 }
-            },
-            success: function (response) {
-                alert(response);
-            }
-        });
+            });
+        }else{
+            var file = _("inputSendImage").files[0];
+	
+            var formdata = new FormData();
+            formdata.append("image", file);
+            formdata.append('to',num);
+            formdata.append('message',msg);
+            
+            $.ajax({
+                url: '<?php echo base_url(); ?>ring_central/sendMMS',
+                method: 'POST',
+                data: formdata,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                statusCode: {
+                    500: function (xhr) {
+                        var obj = JSON.parse(xhr.responseText);
+                        alert(obj.msg);
+                        fetchPersonalSMS(obj.number);
+                    }
+                },
+                success: function (response) {
+                    alert(response);
+                }
+            });
+        }
     };
 
 

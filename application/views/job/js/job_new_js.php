@@ -9,7 +9,6 @@ if(isset($jobs_data)){
 <script>
     var cust_id = <?php echo $customer  ?>;
     window.onload = function() { // same as window.addEventListener('load', (event) => {
-        //alert(cust_id);
         $.ajax({
             type: "GET",
             url: "<?= base_url() ?>/job/get_customers",
@@ -31,6 +30,7 @@ if(isset($jobs_data)){
             }
         });
         if(cust_id != null && cust_id !== 0 && cust_id !== ''){
+            alert(cust_id);
             load_customer_data(cust_id);
         }
     };
@@ -375,12 +375,13 @@ if(isset($jobs_data)){
             signaturePad.clear();
         });
 
-
-        document.getElementById('check_form').style.display = "none";
-        document.getElementById('cash_form').style.display = "none";
-        document.getElementById('ach_form').style.display = "none";
-        document.getElementById('others_warranty_form').style.display = "none";
-        document.getElementById('svp_form').style.display = "none";
+        <?php if(isset($jobs_data) && $jobs_data->status == 'Started') : ?>
+            document.getElementById('check_form').style.display = "none";
+            document.getElementById('cash_form').style.display = "none";
+            document.getElementById('ach_form').style.display = "none";
+            document.getElementById('others_warranty_form').style.display = "none";
+            document.getElementById('svp_form').style.display = "none";
+        <?php endif; ?>
 
         $("#pay_method").on( 'change', function () {
             var method = this.value;
@@ -405,8 +406,7 @@ if(isset($jobs_data)){
                 document.getElementById('ach_form').style.display = "none";
                 document.getElementById('others_warranty_form').style.display = "none";
                 document.getElementById('svp_form').style.display = "none";
-            }
-            else if(method === 'ACH'){
+            }else if(method === 'ACH'){
                 document.getElementById('check_form').style.display = "none";
                 document.getElementById('credit_card_form').style.display = "none";
                 document.getElementById('cash_form').style.display = "none";

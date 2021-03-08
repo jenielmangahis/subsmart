@@ -239,7 +239,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="#" est-id="<?php echo $estimate->id;?>" data-toggle="modal" data-target="#estimateview"><span
+                                                                               href="#" est-id="<?php echo $estimate->id;?>" class="viewEstimate"><span
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('accounting/updateEstimate/' . $estimate->id) ?>"><span
@@ -308,7 +308,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </button>
       </div>
       <div class="modal-body">
-            <?php if($estimate){ ?>
                     <div class="d-block">
                         <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
                           <a class="btn btn-success" href="<?php echo base_url('estimate/send_customer/' . $estimate->id) ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
@@ -317,38 +316,38 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           <!-- <a class="btn btn-info" href="<?php echo base_url('estimate/') ?>">BACK TO ESTIMATE LIST</a> -->
                         </div>
                         <div class="col-xl-5 left" style="margin-bottom: 33px;">
-                          <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?php echo $client->business_name; ?></span></h5>
+                          <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt business_name"></span></h5>
                           <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?php echo $client->business_address; ?></span><br />
-                            <span class="">EMAIL: <?php echo $client->email_address; ?></span><br />
-                            <span class="">PHONE: <?php echo $client->phone_number; ?></span>
+                            ADDRESS: <span class="from_address"></span><br />
+                            EMAIL: <span class="from_email"></span><br />
+                            PHONE: <span class="from_phone"></span>
                           </div>
                         </div>
                         <div class="col-xl-5 right" style="float: right">
                           <div style="text-align: right;">
                             <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
-                            <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
+                            <small style="font-size: 14px;">#<span class="estimate_no"></span></small>
                           </div>
                           <div class="" style="text-align: right;margin-top: 20px;">
                             <table style="width: 100%;text-align: right;">
                               <tr>
                                 <td style="text-align: right;width: 70%;">Estimate Date :</td>
-                                <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
+                                <td><span class="estimate_date"></span></td>
                               </tr>
                               <tr>
                                 <td style="text-align: right;width: 70%;">Expiry Date :</td>
-                                <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
+                                <td><span class="expiry_date"></span></td>
                               </tr>
                             </table>
                           </div>
                         </div>
                         <div class="clear"></div>
                         <div class="col-xl-5 left">
-                          <h5><span class="fa fa-user-o fa-margin-right"></span> To <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
+                          <h5><span class="fa fa-user-o fa-margin-right"></span> To <span class="invoice-txt"></span></h5> 
                           <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?= $customer->mail_add . " " . $customer->city ?></span><br /><br />
-                            <span class="">EMAIL: <span class=""><?= $customer->email; ?></span></span><br />
-                            <span class="">PHONE: <span class=""><?= $customer->phone_w; ?></span></span><br />
+                          ADDRESS: <span class="to_address"></span><br />
+                          EMAIL: <span class="to_email"></span></span><br />
+                          PHONE: <span class="to_phone"></span></span><br />
                           </div>
                         </div>
                         <br class="clear"/>    
@@ -364,48 +363,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </tr>
                         </thead>
                         <tbody>
-                        <!-- <?php $estimateItems = unserialize($estimate->estimate_items); ?>
-                        <?php $total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
-                          <tr class="table-items__tr">
-                            <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
-                            <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
-                            <td valign="top" style="width:20%;"><?= ucwords($item['item_type']); ?></td>
-                            <td valign="top" style="width: 50px; text-align: right;"><?= $item['quantity']; ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['discount'],2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
-                          </tr>
-                        <?php 
-                          $total_amount += $item['price'];
-                          $row++;
-                        ?>
-                        <?php } ?> -->
                         <tr><td colspan="6"><hr/></td></tr>
+                        <div id="tableEstimate"></div>
                         <tr>
                           <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                          <td style="text-align: right;"><b>$<?= number_format($total_amount, 2); ?></b></td>
+                          <td style="text-align: right;"><b>$</b></td>
                         </tr>
                       </tbody>
                       </table>
                       </div>
                       <hr />
-                      <p><b>Instructions</b><br /><br /><?= $estimate->instructions; ?></p>
-                      <p><b>Message</b><br /><br /><?= $estimate->customer_message; ?></p>
-                      <p><b>Terms</b><br /><Br /><?= $estimate->terms_conditions; ?></p>
+                      <p><b>Instructions</b><br /><br /> <span class="instructions"></span></p>
+                      <p><b>Message</b><br /><br /> <span class="message"></span></p>
+                      <p><b>Terms</b><br /><Br /> <span class="terms"></span></p>
 
-                      <?php }else{ ?>
-                        <div class="alert alert-primary" role="alert">
-                          Invalid record
-                        </div>
-                      <?php } ?>
-
-                      <!-- <div class="row" style="margin-top: 30px;">
-                          <div class="col-md-4 form-group">
-                              <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary" aria-expanded="false">
-                                <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate List
-                              </a>
-                          </div>
-                      </div>
-                    </div> -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -576,6 +547,64 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             e.preventDefault();
 
             location.href = $(this).attr('data-link');
+        });
+    });
+</script>
+
+<script>
+    $('.viewEstimate').each(function(e){
+        $.ajaxSetup({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+          });
+        // e.preventDefault();
+        $(this).on('click', function(){
+            var id = $(this).attr('est-id');
+            alert(id);
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>accounting/estimateviewdetailsajax",
+                dataType:"json",
+                data : { id : id },
+                success: function(response){
+
+                  console.log('yeahhhhhhhhhhhhhhh'+response['estimate']); 
+
+                  $("#estimateview").modal('show');
+                  $(".business_name").html(response['client'].business_name);
+                  $(".from_address").html(response['client'].business_address);
+                  $(".from_email").html(response['client'].email_address);
+                  $(".from_phone").html(response['client'].phone_number);
+
+                  $(".estimate_no").html(response['estimate'].estimate_number);
+                  $(".estimate_date").html(response['estimate'].estimate_date);
+                  $(".expiry_date").html(response['estimate'].expiry_date);
+
+                  $(".to_address").html(response['customer'].city);
+                  $(".to_email").html(response['customer'].email);
+                  $(".to_phone").html(response['customer'].phone_w);
+
+                  // var objJSONconf = JSON.parse(response['items'][0].conference);
+                  //   var input_conf = "";
+                  //   $.each(objJSONconf, function (i, v) {
+                  //       input_conf += '<tr><td valign="top" style="width:45%;"> '+ response['items'].item +'</td></tr>';
+                  //   });
+                  //   $("#tableEstimate").html(input_conf);
+                  
+                  $(".instructions").html(response['estimate'].instructions);
+                  $(".message").html(response['estimate'].customer_message);
+                  $(".terms").html(response['estimate'].terms_conditions);
+
+                },
+                    error: function(response){
+                    alert('Error'+response);
+       
+                }
+
+              });
+            // location.reload();
         });
     });
 </script>

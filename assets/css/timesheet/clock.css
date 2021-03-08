@@ -1,165 +1,172 @@
 @media (max-width: 1024px) {
-    .menu-extras.topbar-custom ul li div.clock{
-        height: 40px!important;
-        width: 40px!important;
-    }
-    .menu-extras.topbar-custom ul li div.clock .hour, .hr{
-        transform: rotateZ(180deg);
-    }
-    .menu-extras.topbar-custom ul li div.clock .minute, .min{
-        transform: rotateZ(180deg);
-    }
-    .menu-extras.topbar-custom ul li div.clock .second, .sec{
-        transform: rotateZ(180deg);
-    }
+  .menu-extras.topbar-custom ul li div.clock {
+    height: 40px !important;
+    width: 40px !important;
+  }
+  .menu-extras.topbar-custom ul li div.clock .hour,
+  .hr {
+    transform: rotateZ(180deg);
+  }
+  .menu-extras.topbar-custom ul li div.clock .minute,
+  .min {
+    transform: rotateZ(180deg);
+  }
+  .menu-extras.topbar-custom ul li div.clock .second,
+  .sec {
+    transform: rotateZ(180deg);
+  }
 }
-.clock{
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: url("/assets/img/timesheet/clock-face-digital-clock-alarm-clocks-clock-png-clip-art.png");
-    background-size: cover;
-    border-radius: 50%;
-    border: 4px solid rgb(228,240,249);
-    box-shadow: inset 0 0 8px rgba(0,0,0,.1),0 10px 10px rgba(0,0,0,.2),0 0 0 4px rgb(228,240,249);
-    vertical-align: middle;
+.clock {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 4px solid rgb(228, 240, 249);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.2),
+    0 0 0 4px rgb(228, 240, 249);
+  vertical-align: middle;
 }
-.clock::before{
-    content: '';
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    background: grey;
-    border: 1px solid grey;
-    z-index: 50000;
-    border-radius: 50%;
+.clock::before {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: grey;
+  border: 1px solid grey;
+  z-index: 50000;
+  border-radius: 50%;
 }
 .hour,
 .minute,
-.second{
-    position: absolute;
+.second {
+  position: absolute;
 }
-.hour, .hr{
-    width: 20px;
-    height: 20px;
+.hour,
+.hr {
+  width: 20px;
+  height: 20px;
 }
-.minute, .min{
-    width: 30px;
-    height: 30px;
+.minute,
+.min {
+  width: 30px;
+  height: 30px;
 }
-.second, .sec{
-    width: 33px;
-    height: 33px;
+.second,
+.sec {
+  width: 33px;
+  height: 33px;
 }
-.hr, .min, .sec{
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    border-radius: 50%;
+.hr,
+.min,
+.sec {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  border-radius: 50%;
 }
-.hr::before{
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 8px;
-    background: grey;
-    z-index: 10;
-    border-radius: 6px 6px 0 0;
+.hr::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 8px;
+  background: grey;
+  z-index: 10;
+  border-radius: 6px 6px 0 0;
 }
-.min::before{
-    content: '';
-    position: absolute;
-    width: 1px;
-    height: 13px;
-    background: black;
-    z-index: 10;
-    border-radius: 6px 6px 0 0;
+.min::before {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 13px;
+  background: black;
+  z-index: 10;
+  border-radius: 6px 6px 0 0;
 }
-.sec::before{
-    content: '';
-    position: absolute;
-    width: 1px;
-    height: 14px;
-    background: red;
-    z-index: 10;
-    border-radius: 6px 6px 0 0;
+.sec::before {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 14px;
+  background: red;
+  z-index: 10;
+  border-radius: 6px 6px 0 0;
 }
 .clock:active {
-    box-shadow: none;
-    width: 45px;
-    height: 45px;
+  box-shadow: none;
+  width: 45px;
+  height: 45px;
 }
-.clock-active{
-    border-color:greenyellow!important;
+.clock-active {
+  border-color: greenyellow !important;
 }
-.clock-break{
-    border-color:yellow!important;
+.clock-break {
+  border-color: yellow !important;
 }
 /*Clock preview css*/
 .clock-users {
-    position: relative;
-    display: contents;
+  position: relative;
+  display: contents;
 }
 
 .clock-users + .preview-clock-details {
-    visibility: hidden;
-    width: 170px;
-    height: 110px;
-    background-color: #ffffff;
-    color: black;
-    text-align: center;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 20;
-    top: 125%;
-    margin-left: -60px;
-    padding: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  visibility: hidden;
+  width: 170px;
+  height: 110px;
+  background-color: #ffffff;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 20;
+  top: 125%;
+  margin-left: -60px;
+  padding: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .clock-users:hover + .preview-clock-details {
-    visibility: visible;
+  visibility: visible;
 }
-.visible{
-    visibility: visible;
+.visible {
+  visibility: visible;
 }
 
 .clock-users + .preview-clock-details::after {
-    content: " ";
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent #ffffff transparent;
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff transparent;
 }
-.clock-details-title{
-    width: 50%;
-    font-weight: bold;
-    float: left;
-    white-space: nowrap;
+.clock-details-title {
+  width: 50%;
+  font-weight: bold;
+  float: left;
+  white-space: nowrap;
 }
-.clock-details-text{
-    width: 50%;
-    color: grey;
-    float: right;
+.clock-details-text {
+  width: 50%;
+  color: grey;
+  float: right;
 }
-.clock-section{
-    display: block;
+.clock-section {
+  display: block;
 }
-#startBreak:disabled{
-    cursor: not-allowed;
+#startBreak:disabled {
+  cursor: not-allowed;
 }
-#stopBreak{
-    margin-right: 10px;
-    color:grey
+#stopBreak {
+  margin-right: 10px;
+  color: grey;
 }
 /*Sweet Alert css*/
-.swal2-image{
-    height: 120px;
-    width: 120px;
-    border-radius: 50%;
+.swal2-image {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
 }

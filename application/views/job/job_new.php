@@ -53,11 +53,11 @@ add_css(array(
                                 <div class="stepwizard">
                                     <div class="stepwizard-row setup-panel">
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-1" type="button" class="btn btn-circle <?= !isset($jobs_data) || $jobs_data->status == 'New'  ? 'btn-success' : 'btn-default' ; ?>"><i style="font-size: 24px;" class="fa fa-pencil"></i></a>
+                                            <a href="#" type="button" class="btn btn-circle <?= !isset($jobs_data) || $jobs_data->status == 'New'  ? 'btn-success' : 'btn-default' ; ?>"><i style="font-size: 24px;" class="fa fa-pencil"></i></a>
                                             <p class=""><small>Draft</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-2" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
+                                            <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
                                             <p class=""><small>Schedule</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
@@ -66,7 +66,8 @@ add_css(array(
                                             <p><small>OMW</small></p>
                                         </div> &nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-3" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'On My Way'): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>  type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                                <span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
                                             <p><small>Start</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
@@ -306,221 +307,224 @@ add_css(array(
 
                         </div>
                     </div>
-                    <div class="card" id="pd_left_card" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
-                        <div class="card-header">
 
-                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="payment">
-                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-money"></span>&nbsp;&nbsp;Payment Details</h6>
-                            </button>
+                    <?php if(isset($jobs_data) && $jobs_data->status == 'Started') : ?>
+                        <div class="card" id="pd_left_card" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
+                            <div class="card-header">
 
-                            <a href="javascript:void(0);" id="pd_left">
-                                <span class="fa fa-columns card_plus_sign"></span>
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <div id="payment" class="collapse" aria-labelledby="headingThree" data-parent="#payment">
-                                <div class="card-body">
-                                    <form role="form">
-                                        <div class="col-sm-12">
-                                            <div class="col-md-12">
-                                                <label for="">Method</label>
-                                                <select id="pay_method" name="method" class="form-control">
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CC') {echo 'selected'; } ?> value="CC">Credit Card</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CHECK') {echo 'selected'; } ?> value="CHECK">Check</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CASH') {echo 'selected'; } ?> value="CASH">Cash</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'ACH') {echo 'selected'; } ?> value="ACH">ACH</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'VENMO') {echo 'selected'; } ?> value="VENMO">Venmo</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'PP') {echo 'selected'; } ?> value="PP">Paypal</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'SQ') {echo 'selected'; } ?> value="SQ">Square</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'WW') {echo 'selected'; } ?> value="WW">Warranty Work</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'HOF') {echo 'selected'; } ?> value="HOF">Home Owner Financing</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'eT') {echo 'selected'; } ?> value="eT">e-Transfer</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OCCP') {echo 'selected'; } ?> value="OCCP">Other Credit Card Processor</option>
-                                                    <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OPT') {echo 'selected'; } ?> value="OPT">Other Payment Type</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label for="">Amount <small class="help help-sm" >(in dollar)</small></label>
-                                                <input class="form-control" id="pay_amount" value="<?= isset($jobs_data) ? $jobs_data->amount : ''; ?>" name="amount" type="text" placeholder="0.00">
-                                            </div>
-                                            <div class="col-md-12">
-                                                <h6>Payment Details</h6>
-                                                <div class="row">
-                                                    <div id="credit_card_form">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="text" name="account_holder_name" class="form-control" id="cardNumber" placeholder="Account Holder Name" />
+                                <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#payment" aria-expanded="true" aria-controls="payment">
+                                    <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-money"></span>&nbsp;&nbsp;Payment Details</h6>
+                                </button>
+
+                                <a href="javascript:void(0);" id="pd_left">
+                                    <span class="fa fa-columns card_plus_sign"></span>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div id="payment" class="collapse" aria-labelledby="headingThree" data-parent="#payment">
+                                    <div class="card-body">
+                                        <form role="form">
+                                            <div class="col-sm-12">
+                                                <div class="col-md-12">
+                                                    <label for="">Method</label>
+                                                    <select id="pay_method" name="method" class="form-control">
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CC') {echo 'selected'; } ?> value="CC">Credit Card</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CHECK') {echo 'selected'; } ?> value="CHECK">Check</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CASH') {echo 'selected'; } ?> value="CASH">Cash</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'ACH') {echo 'selected'; } ?> value="ACH">ACH</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'VENMO') {echo 'selected'; } ?> value="VENMO">Venmo</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'PP') {echo 'selected'; } ?> value="PP">Paypal</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'SQ') {echo 'selected'; } ?> value="SQ">Square</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'WW') {echo 'selected'; } ?> value="WW">Warranty Work</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'HOF') {echo 'selected'; } ?> value="HOF">Home Owner Financing</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'eT') {echo 'selected'; } ?> value="eT">e-Transfer</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OCCP') {echo 'selected'; } ?> value="OCCP">Other Credit Card Processor</option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OPT') {echo 'selected'; } ?> value="OPT">Other Payment Type</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label for="">Amount <small class="help help-sm" >(in dollar)</small></label>
+                                                    <input class="form-control" id="pay_amount" value="<?= isset($jobs_data) ? $jobs_data->amount : ''; ?>" name="amount" type="text" placeholder="0.00">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <h6>Payment Details</h6>
+                                                    <div class="row">
+                                                        <div id="credit_card_form">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="text" name="account_holder_name" class="form-control" id="cardNumber" placeholder="Account Holder Name" />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="number" name="card_number" class="form-control" id="cardNumber" placeholder="1234 1234 1234 1234" />
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="card_number" class="form-control" id="cardNumber" placeholder="1234 1234 1234 1234" />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <input type="text" name="card_expiry" class="form-control" id="expityMonth" placeholder="MM/YY" />
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input type="text" name="card_expiry" class="form-control" id="expityMonth" placeholder="MM/YY" />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <input type="number" name="card_cvc" class="form-control" id="cvCode" placeholder="CVC" />
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input type="number" name="card_cvc" class="form-control" id="cvCode" placeholder="CVC" />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-sm-12">
-                                                                    <label >Save card to file</label>
-                                                                    <div class="onoffswitch grid-onoffswitch" style="float: right;">
-                                                                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" value="1" data-customize="open" id="onoff-customize">
-                                                                        <label class="onoffswitch-label" for="onoff-customize">
-                                                                            <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                                                    <div class="col-sm-12">
+                                                                        <label >Save card to file</label>
+                                                                        <div class="onoffswitch grid-onoffswitch" style="float: right;">
+                                                                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" value="1" data-customize="open" id="onoff-customize">
+                                                                            <label class="onoffswitch-label" for="onoff-customize">
+                                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-12" style="text-align: center !important;">
-                                                                    <br>
-                                                                    <button type="button" class="btn btn-sm btn-primary">
-                                                                        <span class="fa fa-search-plus"></span> Scan Payment
-                                                                    </button>
+                                                                    <div class="col-md-12" style="text-align: center !important;">
+                                                                        <br>
+                                                                        <button type="button" class="btn btn-sm btn-primary">
+                                                                            <span class="fa fa-search-plus"></span> Scan Payment
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div id="check_form" style="display: none;">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #" />
+                                                        <div id="check_form" style="display: none;">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12" style="text-align: center !important;">
+                                                                        <br>
+                                                                        <button type="button" class="btn btn-sm btn-primary">
+                                                                            <span class="fa fa-search-plus"></span> Scan Payment
+                                                                        </button>
+                                                                        <br>
+                                                                        <div class="form-group" style="text-align: center;">
+                                                                            <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
+                                                                            <label for="notify_by_email">Payment has been collected.</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #" />
+                                                            </div>
+                                                        </div>
+                                                        <div id="ach_form" style="display: none;">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #"  />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #"  />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <select id="day_of_month_ach" name="day_of_month" class="form-control">
+                                                                                <option value="">Select Day of Month</option>
+                                                                                <?php for($x=1;$x<=31;$x++){ ?>
+                                                                                    <option value="<?= $x; ?>"><?= $x; ?></option>
+                                                                                <?php } ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12" style="text-align: center !important;">
+                                                                        <br>
+                                                                        <button type="button" class="btn btn-sm btn-primary">
+                                                                            <span class="fa fa-search-plus"></span> Scan Payment
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-12" style="text-align: center !important;">
-                                                                    <br>
-                                                                    <button type="button" class="btn btn-sm btn-primary">
-                                                                        <span class="fa fa-search-plus"></span> Scan Payment
-                                                                    </button>
-                                                                    <br>
-                                                                    <div class="form-group" style="text-align: center;">
-                                                                        <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
+                                                            </div>
+                                                        </div>
+                                                        <div id="cash_form" style="display: none;">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-12" style="text-align: center !important;">
+                                                                        <br>
+                                                                        <button type="button" class="btn btn-sm btn-primary">
+                                                                            <span class="fa fa-search-plus"></span> Scan Payment
+                                                                        </button>
+                                                                        <br>
+                                                                    </div>
+                                                                    <div class="form-group" style="text-align: center !important;">
+                                                                        <input type="checkbox" name="is_collected" value="1" id="notify_by_email">
                                                                         <label for="notify_by_email">Payment has been collected.</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div id="ach_form" style="display: none;">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #"  />
+                                                        <div id="others_warranty_form" style="display: none;">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #"  />
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <select id="day_of_month_ach" name="day_of_month" class="form-control">
-                                                                            <option value="">Select Day of Month</option>
-                                                                            <?php for($x=1;$x<=31;$x++){ ?>
-                                                                                <option value="<?= $x; ?>"><?= $x; ?></option>
-                                                                            <?php } ?>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-12" style="text-align: center !important;">
-                                                                    <br>
-                                                                    <button type="button" class="btn btn-sm btn-primary">
-                                                                        <span class="fa fa-search-plus"></span> Scan Payment
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="cash_form" style="display: none;">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-12" style="text-align: center !important;">
-                                                                    <br>
-                                                                    <button type="button" class="btn btn-sm btn-primary">
-                                                                        <span class="fa fa-search-plus"></span> Scan Payment
-                                                                    </button>
-                                                                    <br>
-                                                                </div>
-                                                                <div class="form-group" style="text-align: center !important;">
-                                                                    <input type="checkbox" name="is_collected" value="1" id="notify_by_email">
-                                                                    <label for="notify_by_email">Payment has been collected.</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="others_warranty_form" style="display: none;">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group" style="text-align: center;">
+                                                                            <input type="checkbox" name="is_signed" value="1" id="notify_by_email">
+                                                                            <label for="notify_by_email">Document Signed</label>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group" style="text-align: center;">
-                                                                        <input type="checkbox" name="is_signed" value="1" id="notify_by_email">
-                                                                        <label for="notify_by_email">Document Signed</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div id="svp_form" style="display: none;">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
+                                                        <div id="svp_form" style="display: none;">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <textarea  class="form-control" name="acct_confirm" id="cardNumber" placeholder="Confirmation"></textarea>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <textarea  class="form-control" name="acct_confirm" id="cardNumber" placeholder="Confirmation"></textarea>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -528,76 +532,78 @@ add_css(array(
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-12" style="text-align: center !important;">
+                                                    <br>
+                                                    <button type="button" id="save_payment" class="btn btn-sm btn-primary">
+                                                        <span class="fa fa-paper-plane-o"></span> Save Payment
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div class="col-md-12" style="text-align: center !important;">
-                                                <br>
-                                                <button type="button" id="save_payment" class="btn btn-sm btn-primary">
-                                                    <span class="fa fa-paper-plane-o"></span> Save Payment
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
-                        <div class="card-header">
-                            <button  style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="fill-eSign">
-                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#fill-eSign">
-                                <div class="card-body">
-                                    <a style="cursor: pointer;" id="fill_esign_btn" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
-                                        <center>
-                                            <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
-                                        </center>
-                                    </a>
-                                </div>
-                                <div style="float: right;">
-                                    <a ><span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;</a>
-                                    <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" id="approval_card_left" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
-                        <div class="card-header" id="headingOne">
-                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="approval">
-                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
-                            </button>
-                            <a href="#" id="approval_btn_left">
-                                <span class="fa fa-columns card_plus_sign"></span>
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#approval">
-                                <div class="card-body">
-                                    <div class="col-sm-12">
-                                        <div style="text-align: center;">
-                                            <center>
-                                                <img width="100" id="customer-signature" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
-                                            </center>
-                                            <span id="authorizer"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span><br>
-                                            <span>------------------------</span><br>
-                                            <span>Approved By</span><br><br>
-
-                                            <small id="date_signed"><?= isset($jobs_data->datetime_signed) ? $jobs_data->datetime_signed : '(date and time)'; ?></small>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div style="float: right;">
-                                    <a href="#" data-toggle="modal" data-target="#updateSignature" data-backdrop="static" data-keyboard="false">
-                                        <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
-                                    </a>
-                                    <!--<span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp; -->
-                                </div>
-                                <br>
                             </div>
                         </div>
-                    </div>
+                        <div class="card" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
+                            <div class="card-header">
+                                <button  style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fill-eSign" aria-expanded="true" aria-controls="fill-eSign">
+                                    <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-edit"></span>&nbsp;&nbsp;Fill & eSign</h6>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="fill-eSign" class="collapse" aria-labelledby="headingThree" data-parent="#fill-eSign">
+                                    <div class="card-body">
+                                        <a style="cursor: pointer;" id="fill_esign_btn" data-toggle="modal" data-target="#fill_esign" data-backdrop="static" data-keyboard="false">
+                                            <center>
+                                                <img width="100" id="" alt="Customer Signature" src="/assets/img/jobs/add_file.png">
+                                            </center>
+                                        </a>
+                                    </div>
+                                    <div style="float: right;">
+                                        <a ><span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;</a>
+                                        <span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" id="approval_card_left" style="display: <?= isset($jobs_data) && $jobs_data->status == 'Approved' ? 'none' : 'block' ;?>;">
+                            <div class="card-header" id="headingOne">
+                                <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#approval" aria-expanded="true" aria-controls="approval">
+                                    <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-check-circle-o"></span> Approval</h6>
+                                </button>
+                                <a href="#" id="approval_btn_left">
+                                    <span class="fa fa-columns card_plus_sign"></span>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div id="approval" class="collapse" aria-labelledby="headingThree" data-parent="#approval">
+                                    <div class="card-body">
+                                        <div class="col-sm-12">
+                                            <div style="text-align: center;">
+                                                <center>
+                                                    <img width="100" id="customer-signature" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
+                                                </center>
+                                                <span id="authorizer"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span><br>
+                                                <span>------------------------</span><br>
+                                                <span>Approved By</span><br><br>
+
+                                                <small id="date_signed"><?= isset($jobs_data->datetime_signed) ? $jobs_data->datetime_signed : '(date and time)'; ?></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float: right;">
+                                        <a href="#" data-toggle="modal" data-target="#updateSignature" data-backdrop="static" data-keyboard="false">
+                                            <span style="font-size: 20px;" class="fa fa-pencil"></span> &nbsp;
+                                        </a>
+                                        <!--<span style="font-size: 20px;" class="fa fa-ellipsis-v"></span> &nbsp; -->
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+
                 </div>
                 <div class="col-md-8">
                     <div class="card table-custom">
@@ -1063,7 +1069,7 @@ add_css(array(
 <!-- end container-fluid -->
 </div>
 
-<!-- Modal -->
+<!-- New Customer Modal -->
 <div class="modal fade" id="new_customer" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
@@ -1152,7 +1158,7 @@ add_css(array(
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Items Modal -->
 <div class="modal fade" id="new_items" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -1417,7 +1423,7 @@ add_css(array(
                                     <?php $item_qty = get_total_item_qty($item->id); ?>
                                     <tr>
                                         <td><?= $item->title; ?></td>
-                                        <td><?= $item_qty->total_qty > 0 ? $item_qty->total_qty : 0; ?></td>
+                                        <td><?= $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
                                         <td><?= $item->price; ?></td>
                                         <td>
                                             <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
@@ -1492,7 +1498,7 @@ add_css(array(
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Word Order Modal -->
 <div class="modal fade" id="workorder_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -1543,7 +1549,7 @@ add_css(array(
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Invoice Modal -->
 <div class="modal fade" id="invoice_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -1678,6 +1684,40 @@ add_css(array(
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="start_modal" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Start Job</h4>
+            </div>
+            <form id="update_status_to_started">
+                <div class="modal-body">
+                    <p>This will stop travel duration tracking and start on job duration tracking.</p>
+                    <p>Start job at:</p>
+                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
+                    <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                    <input type="hidden" name="status" id="status" value="Started">
+                    <select id="job_start_time" name="job_start_time" class="form-control" required>
+                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-paper-plane-o"></span> Save
+                    </button>
+                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
+                        <span class="fa fa-remove"></span> Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <?php
 add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
