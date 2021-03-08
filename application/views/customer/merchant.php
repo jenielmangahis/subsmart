@@ -424,26 +424,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="checkbox" <?= $is_checked; ?> name="is_authorized_signer" id="is_authorized_signer" value="1">
                         <span class="checkmark"></span>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                    <br>
-                        <!-- <input type="checkbox">
-                        <label for=""><b>SOLE PROPRIETOR</b></label> -->
-                        <?php
-                            $is_checked = '';
-                            if( $merchant ){
-                                if( $merchant->is_sole_proprietor == 1 ){
-                                    $is_checked = 'checked="checked"';
-                                }
-                            }
-                        ?>
-                        <label class="checkboxcontainer"> <b>SOLE PROPRIETOR</b>
-                        <input type="checkbox" <?= $is_checked; ?> name="is_sole_proprietor" id="is_sole_proprietor" value="1">
-                        <span class="checkmark"></span>
-                    </div>
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-12 mobile-brm" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>BUSINESS STRUCTURES</h6>
                 </div>
             </div>
+            <br>
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group" id="principal_llc">
@@ -481,7 +469,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <span class="checkmark"></span>
                     </div>
                 </div>
-
+                <div class="col-md-3">
+                    <div class="form-group" id="customer_type_group">
+                    <br>
+                        <!-- <input type="checkbox">
+                        <label for=""><b>SOLE PROPRIETOR</b></label> -->
+                        <?php
+                            $is_checked = '';
+                            if( $merchant ){
+                                if( $merchant->is_sole_proprietor == 1 ){
+                                    $is_checked = 'checked="checked"';
+                                }
+                            }
+                        ?>
+                        <label class="checkboxcontainer"> <b>SOLE PROPRIETOR</b>
+                        <input type="checkbox" <?= $is_checked; ?> name="is_sole_proprietor" id="is_sole_proprietor" value="1">
+                        <span class="checkmark"></span>
+                    </div>
+                </div>
                 <div class="col-md-3">
                     <div class="form-group" id="principal_others">
                     <br>
