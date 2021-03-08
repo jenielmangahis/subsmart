@@ -70,6 +70,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
   left: 50%;
   transform: translate(-50%, -50%) rotate(180deg);
 }
+.clear {
+  clear: both;
+}
 @media only screen and (max-width: 990px) {
   .page-title-box.pt-1.pb-0 div div h3 {
     position:relative;
