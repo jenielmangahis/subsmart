@@ -2226,8 +2226,7 @@ class Customer extends MY_Controller
             $port      = MAIL_PORT ;
             $username  = MAIL_USERNAME;
             $password  = MAIL_PASSWORD;
-            $from      = MAIL_FROM;     
-            $recipient = $post['share_email'];
+            $from      = MAIL_FROM;                 
             $subject   = 'nSmarTrac: Merchant Data Application';
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;                         
