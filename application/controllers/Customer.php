@@ -2096,7 +2096,7 @@ class Customer extends MY_Controller
         $mail->Timeout    =   10; // set the timeout (seconds)
         $mail->Port = $port;
         $mail->From = $from; 
-        $mail->FromName = 'NsmarTrac';
+        $mail->FromName = 'nSmarTrac';
 
         $mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');    
         $mail->isHTML(true);                          

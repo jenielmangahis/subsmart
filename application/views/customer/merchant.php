@@ -401,22 +401,59 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>LLC</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_llc : ''; ?>" class="form-control" name="principal_llc" id="principal_llc">
+                <div class="col-md-3">
+                    <div class="form-group" id="principal_llc">
+                    <br>
+                        <!-- <input type="checkbox">
+                        <label for=""><b>SOLE PROPRIETOR</b></label> -->
+                        <?php 
+                            $is_checked = '';
+                            if( $merchant ){
+                                if( $merchant->principal_llc == 1 ){
+                                    $is_checked = 'checked="checked"';
+                                }
+                            }
+                        ?>
+                        <label class="checkboxcontainer"> <b>LLC</b>
+                        <input type="checkbox" <?= $is_checked; ?> name="principal_llc" id="principal_llc" value="1">
+                        <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>CORPORATION</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_corporation : ''; ?>" class="form-control" name="principal_corporation" id="principal_corporation">
+                <div class="col-md-3">
+                    <div class="form-group" id="principal_corporation">
+                    <br>
+                        <!-- <input type="checkbox">
+                        <label for=""><b>SOLE PROPRIETOR</b></label> -->
+                        <?php 
+                            $is_checked = '';
+                            if( $merchant ){
+                                if( $merchant->principal_corporation == 1 ){
+                                    $is_checked = 'checked="checked"';
+                                }
+                            }
+                        ?>
+                        <label class="checkboxcontainer"> <b>CORPORATION</b>
+                        <input type="checkbox" <?= $is_checked; ?> name="principal_corporation" id="principal_corporation" value="1">
+                        <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>OTHER</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->principal_others : ''; ?>" class="form-control" name="principal_others" id="principal_others">
+
+                <div class="col-md-3">
+                    <div class="form-group" id="principal_others">
+                    <br>
+                        <!-- <input type="checkbox">
+                        <label for=""><b>SOLE PROPRIETOR</b></label> -->
+                        <?php 
+                            $is_checked = '';
+                            if( $merchant ){
+                                if( $merchant->principal_others == 1 ){
+                                    $is_checked = 'checked="checked"';
+                                }
+                            }
+                        ?>
+                        <label class="checkboxcontainer"> <b>OTHER</b>
+                        <input type="checkbox" <?= $is_checked; ?> name="principal_others" id="principal_others" value="1">
+                        <span class="checkmark"></span>
                     </div>
                 </div>
             </div>
