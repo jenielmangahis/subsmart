@@ -138,8 +138,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group" id="customer_type_group">
+                        <label for=""><b>LEGAL BUSINESS NAME</b></label>
+                        <input type="text" class="form-control" name="legal_business_name" value="<?= $merchant ? $merchant->legal_business_name : $company->legal_business_name; ?>" id="legal_business_name">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA NAME</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="dba_name" value="<?= $merchant ? $merchant->dba_name : $company->business_name; ?>" id="dba_name">
+                        <input type="text" required="" class="form-control" name="dba_name" required="" value="<?= $merchant ? $merchant->dba_name : $company->business_name; ?>" id="dba_name">
                     </div>
                 </div>
             </div>
@@ -147,7 +153,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-6">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CONTANCT NAME</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" value="<?= $merchant ? $merchant->contact_name : $company->first_name . ' ' . $company->last_name; ?>" name="contact_name" id="contact_name">
+                        <input type="text" required="" class="form-control" required="" value="<?= $merchant ? $merchant->contact_name : $company->first_name . ' ' . $company->last_name; ?>" name="contact_name" id="contact_name">
                     </div>
                 </div>
             </div>
@@ -155,7 +161,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA ADDRESS TYPE</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" value="<?= $merchant ? $merchant->dba_address_type : ''; ?>" name="dba_address_type" id="dba_address_type">
+                        <input type="text" required="" class="form-control" required="" value="<?= $merchant ? $merchant->dba_address_type : ''; ?>" name="dba_address_type" id="dba_address_type">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -175,19 +181,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>CITY</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->city : $user->city; ?>" class="form-control" name="city" id="city">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->city : $user->city; ?>" class="form-control" name="city" id="city">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>STATE</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->state : $user->state; ?>" class="form-control" name="state" id="state">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->state : $user->state; ?>" class="form-control" name="state" id="state">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>ZIP CODE</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->zip_code : $user->postal_code; ?>" class="form-control" name="zip_code" id="zip_code">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->zip_code : $user->postal_code; ?>" class="form-control" name="zip_code" id="zip_code">
                     </div>
                 </div>
             </div>
@@ -195,19 +201,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>DBA PHONE NO.</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->dba_phone_no : $company->phone_number; ?>" class="form-control" name="dba_phone_no" id="dba_phone_no">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->dba_phone_no : $company->phone_number; ?>" class="form-control" name="dba_phone_no" id="dba_phone_no">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>EMAIL ADDRESS</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->email_address : $company->email_address; ?>" class="form-control" name="email_address" id="email_address">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->email_address : $company->email_address; ?>" class="form-control" name="email_address" id="email_address">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>MOBILE PHONE NO.</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->mobile_phone_no : $user->mobile; ?>" class="form-control" name="mobile_phone_no" id="mobile_phone_no">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->mobile_phone_no : $user->mobile; ?>" class="form-control" name="mobile_phone_no" id="mobile_phone_no">
                     </div>
                 </div>
             </div>
@@ -215,13 +221,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>YEAR ESTABLISHED</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->years_established : ''; ?>" class="form-control" name="years_established" id="years_established">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->years_established : ''; ?>" class="form-control" name="years_established" id="years_established">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group" id="customer_type_group">
                         <label for=""><b>LENGTH OF CURRENT OWNERSHIP</b><span class="required_field">*</span></label>
-                        <input type="text" value="<?= $merchant ? $merchant->length_ownership : ''; ?>" class="form-control" name="length_ownership" id="length_ownership">
+                        <input type="text" required="" value="<?= $merchant ? $merchant->length_ownership : ''; ?>" class="form-control" name="length_ownership" id="length_ownership">
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -649,6 +655,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <?php echo form_close(); ?>
 
+    <div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="noticeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">Please fill up form entries</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="shareMerchantDataModal" tabindex="-1" role="dialog" aria-labelledby="shareMerchantDataModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -742,9 +764,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
         });
     });
     $(".btn-submit").on( "click", function( event ) {
-        $("#sendMerchantDataModal").modal("show");
-        $(".send-merchant-data-footer").show();
-        $(".send-merchant-data-message").html('<p>Are all entries correct? Data will be sent to Elavon account manager.</p>');
+        if ($("#frm-merchant")[0].checkValidity()){            
+            $("#sendMerchantDataModal").modal("show");
+            $(".send-merchant-data-footer").show();
+            $(".send-merchant-data-message").html('<p>Are all entries correct? Data will be sent to Elavon account manager.</p>');
+        }else{  
+            $("#noticeModal").modal('show');
+        }        
     });
 
     $(function () {
