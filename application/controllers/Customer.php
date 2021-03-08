@@ -2147,7 +2147,8 @@ class Customer extends MY_Controller
     {
         $this->load->model('ConvergeMerchant_model');
 
-        $post = $this->input->post();
+        $post       = $this->input->post();
+        $recipient  = $post['share_email'];
         $user_id    = logged('id');
         $company_id = logged('company_id');
 
