@@ -23,6 +23,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .p-40 {
   padding-top: 40px !important;
 }
+img.event-marker {
+    display: block;
+    margin: 0 auto;
+}
+tr.odd {
+    background: #f1f1f1 !important;
+}
 table.table tbody tr td {
     width: 15%;
     text-align: right;
@@ -30,6 +37,15 @@ table.table tbody tr td {
 table.table tbody tr td:first-child {
     width: 85%;
     text-align: left;
+}
+table.dataTable {
+    border-collapse: collapse;
+}
+table.dataTable thead tr th {
+    border: 1px solid black !important;
+}
+table.dataTable tbody tr td {
+    border: 1px solid black !important;
 }
 @media only screen and (max-width: 600px) {
   .p-40 {
@@ -66,7 +82,7 @@ table.table tbody tr td:first-child {
                           </div>
                         </div>
                         <div class="alert alert-warning mt-2 mb-4" role="alert">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Schedule adds the ability to create and track events in CRM; An event can be scheduled for single or multiple days; Staff, venue and equipment resources can all be schedule for a given event; The visual event calendar lets you see events by type and venue. To create a new event type. Click Add New; To edit an existing event type simply click edit.
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Event types can be separated into seminars, conference, trade show, work shop, corporate, private, or charity. Event types can also be track for categories where an invoice will not be submit like estimates, tasks, demos and reminders. With our Crm you can choose, create or delete the appropriate classification for your business model.
                             </span>
                         </div>
                         <?php include viewPath('flash'); ?>
@@ -74,14 +90,14 @@ table.table tbody tr td:first-child {
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Event Type Name</th>                                    
+                                    <th>Event Type Name</th>
                                     <th>Manage</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($eventTypes as $et){ ?>
                                     <tr>
-                                        <td>
+                                        <td width="10%">
                                           <?php
                                               if( $et->icon_marker != '' ){
                                                   if($et->is_marker_icon_default_list == 1){
@@ -91,12 +107,12 @@ table.table tbody tr td:first-child {
                                                   }
                                               }else{
                                                   $marker = base_url("uploads/event_types/default_no_image.jpg");
-                                              }                                                                
+                                              }
                                           ?>
                                           <img src="<?= $marker; ?>" class="event-marker">
                                         </td>
-                                        <td><?= $et->title; ?></td>                                        
-                                        <td>
+                                        <td width="65%"><?= $et->title; ?></td>
+                                        <td width="25%">
                                             <a class="btn btn-primary btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-edit"></i> Edit</a>
                                             <a class="btn btn-primary btn-sm btn-delete-event-type" href="javascript:void(0);" data-id="<?= $et->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
