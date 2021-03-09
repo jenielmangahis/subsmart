@@ -7,8 +7,8 @@ class Dropbox extends MY_Controller {
         parent::__construct();
         $this->checkLogin();
          
-        if(!$this->session->dBoxIsAuthenticate):
-            $this->session->set_userdata('dBoxIsAuthenticate', false);
+        if(!$this->session->dBoxIsAuthenticated):
+            $this->session->set_userdata('dBoxIsAuthenticated', false);
         endif;
 
 
@@ -16,26 +16,42 @@ class Dropbox extends MY_Controller {
             
         ));
     }
-
+    
+    
     public function index() {
         if(isset($_REQUEST['authCallBack']) || $this->session->dBoxIsAuthenticate):
             $this->page_data['db_isAuthorized'] = True;
             $dropBoxData = array(
-                'dBoxAccesssToken' => get('access_token'),
+                'dBoxAuthCode' => get('access_token'),
                 'dBoxUID'   => get('uid'),
             );
-            $this->session->set_userdata(array('dBoxData' => $dropBoxData, 'dBoxIsAuthenticate' => True));
+            $this->session->set_userdata(array('dBoxData' => $dropBoxData, 'dBoxIsAuthenticated' => True));
         else:
             $this->page_data['db_isAuthorized'] = False;
         endif;
         $this->load->view('dropbox/default', $this->page_data);
     }
 
+//    public function index() {
+//        
+//        if(!$this->session->dBoxIsAuthenticated):
+//            if(get('code')):
+//                $dropBoxData = array(
+//                    'dBoxAuthCode' => get('code'),
+//                );
+//                $this->session->set_userdata(array('dBoxData' => $dropBoxData, 'dBoxIsAuthenticated' => True));
+//            endif;
+//        endif;    
+//        $this->load->view('dropbox/default', $this->page_data);
+//    }
+
     public function logout() {
         
-        $this->session->unset_userdata('rcData');
+        $this->session->unset_userdata('dBoxData');
         
-        $this->session->set_userdata('dBoxIsAuthenticate', false);
+        $this->session->set_userdata('dBoxIsAuthenticated', false);
+        
+        redirect('dropbox');
     }
     
 

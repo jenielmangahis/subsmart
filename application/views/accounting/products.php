@@ -154,8 +154,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 																	</div>
 																	<div class="form-group">
 																		<label for="category">Category</label>
-																		<select name="category" id="category" class="form-control">
-																			<option value=""></option>
+																		<select name="category[]" id="category" class="form-control" multiple="multiple">
+																			<?php foreach($this->items_model->getItemCategories() as $category) : ?>
+																				<option value="<?=$category->item_categories_id?>" selected><?=$category->name?></option>
+																			<?php endforeach; ?>
+																			<option value="0" selected>Uncategorized</option>
 																		</select>
 																	</div>
 																	<div class="form-group">
@@ -217,7 +220,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </select>
                                                         </p>
 														<p class="m-0"><input type="checkbox" id="compact"> Compact</p>
-														<p class="m-0"><input type="checkbox" checked="checked" id="group_by_category"> Group by category</p>
+														<p class="m-0"><input type="checkbox" checked="checked" id="group_by_category" value="1"> Group by category</p>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -277,6 +280,15 @@ function col(el)
 	}
 }
 
+function applybtn()
+{
+	$('#products-services-table').DataTable().ajax.reload();
+}
+
+$('#category').select2({
+	allowClear: true,
+});
+
 $('#compact').on('change', function() {
 	if($(this).prop('checked') === false) {
 		$('#products-services-table tbody tr td:nth-child(2) div img').show();
@@ -308,11 +320,11 @@ $('.dropdown-menu').on('click', function(e) {
 });
 
 $('#search').on('keyup', function() {
-	$('#products-services-table').DataTable().ajax.reload();
+	applybtn();
 });
 
 $('#table_rows').on('change', function() {
-	$('#products-services-table').DataTable().ajax.reload();
+	applybtn();
 });
 
 $(`#products-services-table`).DataTable({
@@ -330,6 +342,11 @@ $(`#products-services-table`).DataTable({
 		type: 'POST',
 		data: function(d) {
 			// d.inactive = $('#inc_inactive').prop('checked') === true ? 1 : 0;
+			d.status = $('#status').val();
+			d.type = $('#type').val();
+			d.category = $('#category').select2('val');
+			d.stock_status = $('#stock_status').val();
+			d.group_by_category = $('#group_by_category').val();
 			d.length = $('#table_rows').val();
 			d.columns[0].search.value = $('input#search').val();
 			return JSON.stringify(d);
@@ -341,7 +358,11 @@ $(`#products-services-table`).DataTable({
 			data: null,
 			name: 'checkbox',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
-				$(td).html('<input type="checkbox">');
+				if(!rowData.hasOwnProperty('is_category')) {
+					$(td).html('<input type="checkbox">');
+				} else {
+					$(td).html('');
+				}
 			}
 		},
 		{
@@ -350,10 +371,15 @@ $(`#products-services-table`).DataTable({
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
 				$(td).html(`
 				<div class="item-name-cell d-flex align-items-center">
-					<img src="/uploads/accounting/attachments/default-item.png">
 					<span class="ml-2">${cellData}</span>
 				</div>
 				`);
+
+				if(!rowData.hasOwnProperty('is_category')) {
+					$(td).children('div').prepend('<img src="/uploads/accounting/attachments/default-item.png">');
+				} else {
+					$(td).attr('colspan', '15');
+				}
 
 				if($('#compact').prop('checked') === true) {
 					$(td).find('img').hide();
@@ -368,6 +394,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_sku').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -377,6 +407,10 @@ $(`#products-services-table`).DataTable({
 				$(td).addClass('type');
 				if($('#chk_type').prop('checked') === false) {
 					$(td).hide();
+				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
 				}
 			}
 		},
@@ -388,6 +422,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_sales_desc').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -397,6 +435,10 @@ $(`#products-services-table`).DataTable({
 				$(td).addClass('income_account');
 				if($('#chk_income_account').prop('checked') === false) {
 					$(td).hide();
+				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
 				}
 			}
 		},
@@ -408,6 +450,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_expense_account').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -417,6 +463,10 @@ $(`#products-services-table`).DataTable({
 				$(td).addClass('inventory_account');
 				if($('#chk_inventory_account').prop('checked') === false) {
 					$(td).hide();
+				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
 				}
 			}
 		},
@@ -428,6 +478,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_purch_desc').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -438,6 +492,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_sales_price').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -447,6 +505,10 @@ $(`#products-services-table`).DataTable({
 				$(td).addClass('cost');
 				if($('#chk_cost').prop('checked') === false) {
 					$(td).hide();
+				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
 				}
 			}
 		},
@@ -459,6 +521,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_taxable').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -468,6 +534,10 @@ $(`#products-services-table`).DataTable({
 				$(td).addClass('qty_on_hand');
 				if($('#chk_qty_on_hand').prop('checked') === false) {
 					$(td).hide();
+				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
 				}
 			}
 		},
@@ -479,6 +549,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_qty_po').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -489,6 +563,10 @@ $(`#products-services-table`).DataTable({
 				if($('#chk_reorder_point').prop('checked') === false) {
 					$(td).hide();
 				}
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		},
 		{
@@ -496,19 +574,23 @@ $(`#products-services-table`).DataTable({
 			name: 'action',
 			fnCreatedCell: function(td, cellData, rowData,row, col) {
 				$(td).html(`
-                <div class="btn-group float-right">
-                    <a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+				<div class="btn-group float-right">
+					<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
 
-                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Make inactive</a>
-                        <a class="dropdown-item" href="#">Run report</a>
-                        <a class="dropdown-item" href="#">Duplicate</a>
-                    </div>
-                </div>
-                `);
+					<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="sr-only">Toggle Dropdown</span>
+					</button>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="#">Make inactive</a>
+						<a class="dropdown-item" href="#">Run report</a>
+						<a class="dropdown-item" href="#">Duplicate</a>
+					</div>
+				</div>
+				`);
+
+				if(rowData.hasOwnProperty('is_category')) {
+					$(td).remove();
+				}
 			}
 		}
 	]

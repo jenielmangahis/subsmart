@@ -235,60 +235,70 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <div id="print" class="print form-group">
                                                     <form id="customer_form">
                                                         <div class="row">
-                                                            <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
+                                                            <!-- <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td align="" valign="top">
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;padding-right:-41px !important;">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_profile');
-                                                                                ?>
-                                                                            </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_billing');
-                                                                                ?>
-                                                                            </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
-                                                                                <?php
-                                                                                    include viewPath('customer/adv_module_sheets/module_alarm');
-                                                                                ?>
-                                                                            </table>
-                                                                        </td>
-                                                                        <td align="" valign="top" >
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
+                                                                        <td align="" valign="top"> -->
+                                                                        <div class="row" >
+                                                                            <div class="col-md-6">
+                                                                                <table width="" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;padding-right:-41px !important;">
+                                                                                    <?php
+                                                                                        include viewPath('customer/adv_module_sheets/module_profile');
+                                                                                    ?>
+                                                                                </table>
+                                                                                <table width="" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
+                                                                                    <?php
+                                                                                        include viewPath('customer/adv_module_sheets/module_billing');
+                                                                                    ?>
+                                                                                </table>
+                                                                                <table width="" border="0" cellspacing="0" cellpadding="0">
+                                                                                    <?php
+                                                                                        include viewPath('customer/adv_module_sheets/module_alarm');
+                                                                                    ?>
+                                                                                </table>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                        <!-- </td>
+                                                                        <td align="" valign="top" > -->
+                                                                            <table width="" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
                                                                                 <?php
                                                                                     include viewPath('customer/adv_module_sheets/module_office');
                                                                                 ?>
                                                                             </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
+                                                                            <table width="" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
                                                                                 <?php
                                                                                     include viewPath('customer/adv_module_sheets/module_access');
                                                                                 ?>
                                                                             </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
+                                                                            <table width="" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
                                                                                 <?php
                                                                                     include viewPath('customer/adv_module_sheets/module_notes');
                                                                                 ?>
-                                                                            </table>
+                                                                            <!-- </table>
                                                                         </td>
                                                                     </tr>
 
                                                                 </tbody>
-                                                            </table>
-                                                            <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td>
-                                                                        <?php
-                                                                            include viewPath('customer/adv_module_sheets/module_devices');
-                                                                        ?>
-                                                                        <table width="" border="0" cellspacing="0" cellpadding="0">
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
+                                                            </table> -->
+                                                            </div>
+                                                            </div>
+                                                            <div class="row" >
+                                                                <div class="col-md-12">
+                                                                    <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <?php
+                                                                                    include viewPath('customer/adv_module_sheets/module_devices');
+                                                                                ?>
+                                                                                <table width="" border="0" cellspacing="0" cellpadding="0">
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
                                                         <div class="col-md-12 pl-0">
@@ -392,9 +402,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 
 <script>
+$(function() {
+    $("nav:first").addClass("closed");
+});
+</script>
 
+<script>
 
     $(document).ready(function () {
+
         $('#ssn').keydown(function (e) {
             var key = e.charCode || e.keyCode || 0;
             $text = $(this);

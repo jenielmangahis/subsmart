@@ -35,7 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
               </div>
             <!-- end row -->
             <div class="row">
-                <div class="col-md-12" style="background-color:#C9AAE1;padding:1px;text-align:center;color:black;">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
                     <h5>General Information</h5>
                 </div>
             </div>
@@ -81,7 +81,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <br>
             <div class="row">
-                <div class="col-md-12" style="background-color:#C9AAE1;padding:1px;text-align:center;color:black;">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
                     <h5>Contact Information</h5>
                 </div>
             </div>
@@ -92,7 +92,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="text" class="form-control" name="firstname" id="firstname" value="<?php if(isset($leads_data)){ echo $leads_data->firstname; } ?>" required/>
                     </div>
                     <div class="col-md-3">
-                        <label for=""><b>Middle Initial </b><span class="required_field">*</span></label>
+                        <label for=""><b>Middle Initial </b></label>
                         <input type="text" class="form-control" maxlength="1" name="middle_initial" id="middle_initial" value="<?php if(isset($leads_data)){ echo $leads_data->middle_initial; } ?>"/>
                     </div>
                     <div class="col-md-3">
@@ -100,7 +100,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="text" class="form-control" name="lastname" id="lastname" value="<?php if(isset($leads_data)){ echo $leads_data->lastname; } ?>"  required/>
                     </div>
                     <div class="col-md-3">
-                        <label for=""><b>Name Suffix</b><span class="required_field">*</span></label>
+                        <label for=""><b>Name Suffix</b></label>
                         <select id="suffix" name="suffix"  class="form-control">
                         <?php
                             for ($suffix=0;$suffix<14;$suffix++){
@@ -147,7 +147,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for=""><b>Home/Panel Phone</b><span class="required_field">*</span></label>
+                        <label for=""><b>Home/Panel Phone</b></label>
                         <input type="text" class="form-control phone_number" name="phone_home" id="phone_home" maxlength="12" placeholder="xxx-xxx-xxxx" value="<?php if(isset($leads_data)){ echo $leads_data->phone_home; } ?>"/>
                     </div>
                     <div class="col-md-3">
@@ -184,7 +184,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
                 <br><br><br>
                 <div class="row">
-                    <div class="col-md-12" style="background-color:#C9AAE1;padding:1px;text-align:center;color:black;">
+                    <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
                         <h5>New Credit Report</h5>
                     </div>
                 </div>
@@ -208,7 +208,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
                 <br><br><br>
                 <div class="row">
-                    <div class="col-md-12" style="background-color:#C9AAE1;padding:1px;text-align:center;color:black;">
+                    <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
                         <h5>Report History</h5>
                     </div>
                 </div>

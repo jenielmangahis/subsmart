@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <a href="javascript:void(0);" id="moreFields" class="more_fields" style="color:#58bc4f;"><span class="fa fa-plus"></span> Add Device </a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
-            <table cellpadding="0" cellspacing="3" style="width: 860px; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px;font-size: 10px !important;">
+            <table cellpadding="0" cellspacing="3" style="width: 100%; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px;font-size: 10px !important;">
                 <thead>
                 <tr>
                     <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">

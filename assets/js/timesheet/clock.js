@@ -82,13 +82,13 @@ $(document).ready(function () {
                             data.profile_img="/uploads/users/default.png";
                         }else{
                             // data.profile_img="/uploads/users/user-profile/"+data.profile_img;
-                            data.profile_img="/uploads/users/default.png";
+                            data.profile_img='uploads/users/user-profile/'+data.profile_img;
                         }
 
                         Push.Permission.GRANTED; // 'granted'
                         Push.create("Clock In", {
                             body: "User : "+data.FName+" "+data.LName,
-                            icon: baseURL+'uploads/users/user-profile/'+data.profile_img,
+                            icon: baseURL+data.profile_img,
                             timeout: 20000,
                                 onClick: function () {
                                     window.focus();
@@ -361,7 +361,7 @@ function app_notification(token,body,device_type,company_id,title) {
                         success:function (data) {
                             if (data != null){
                                 // console.log('clock-out')
-                                $(selected).attr('id','lunchOut');
+                                // $(selected).attr('id','lunchOut');
                                 $('.clock').removeClass('clock-active').addClass('clock-break');
                                 $('#userLunchIn').text(data.lunch_in);
                                 $('#userLunchOut').text(null);
@@ -381,6 +381,7 @@ function app_notification(token,body,device_type,company_id,title) {
                                         html: "You are now on Lunch break",
                                         icon: 'success'
                                     });
+                                app_notification(data.token,data.body,data.device_type,data.company_id,data.title);
                             }
                         }
                     });
@@ -414,7 +415,7 @@ function app_notification(token,body,device_type,company_id,title) {
                     data:{attn_id:attn_id,pause_time:pause_time},
                     success:function (data) {
                         if (data != null){
-                            $(selected).attr('id','lunchIn');
+                            // $(selected).attr('id','lunchIn');
                             $('.clock').removeClass('clock-break').addClass('clock-active');
                             $('#userLunchOut').text(data.lunch_time);
                             $(selected).children('.btn-lunch').attr('src',baseURL+'/assets/css/timesheet/images/coffee-static.svg');
@@ -427,6 +428,7 @@ function app_notification(token,body,device_type,company_id,title) {
                                     html: "You are now Lunch-out",
                                     icon: 'success'
                                 });
+                            app_notification(data.token,data.body,data.device_type,data.company_id,data.title);
                         }
                     }
                 });
@@ -458,7 +460,7 @@ function app_notification(token,body,device_type,company_id,title) {
                     data:{attn_id:attn_id},
                     success:function (data) {
                         if (data != null){
-                            $(selected).attr('id',null);
+                            $("#clockOut").attr('id',null);
                             $('.clock').removeClass('clock-active');
                             $('.out').text(data.clock_out_time);
                             $('#userClockOut').text(data.clock_out_time);
@@ -544,7 +546,7 @@ function app_notification(token,body,device_type,company_id,title) {
                                 }
                             });
                             app_notification(data.token,data.body,data.device_type,data.company_id,data.title);
-                            location.reload();
+                            // location.reload();
                         }else{
                             Swal.fire(
                                 {

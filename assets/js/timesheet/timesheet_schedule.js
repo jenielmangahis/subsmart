@@ -64,6 +64,11 @@ $(document).on('change', '.shift-end-input', function() {
             i = new_shift_ends_ctr;
         }
     }
+    
+    var validate_start = $(selected).parent('td').children(".shift-start-input").val();
+    var validate_end = $(selected).val();
+    var crossover = Shift_end_validation(selected, validate_start, validate_end);
+
     if(already_edited){
         // console.log("Already Edited");
         new_shift_ends[found_index] = $(selected).val();
@@ -72,13 +77,14 @@ $(document).on('change', '.shift-end-input', function() {
     }else{
         new_shift_ends.push($(selected).val());
         new_shift_end_ids.push($(selected).attr("data-id"));
-        new_shift_end_dates.push($(selected).attr("data-date"));
+        if(crossover){
+            new_shift_end_dates.push($(selected).parent('td').next('td').children(".shift-start-input").attr("data-date"));
+        }else{
+            new_shift_end_dates.push($(selected).attr("data-date"));
+        }
         new_shift_ends_columns.push(data_column);
         new_shift_ends_ctr++;
     }
-    var validate_start = $(selected).parent('td').children(".shift-start-input").val();
-    var validate_end = $(selected).val();
-    Shift_end_validation(selected, validate_start, validate_end)
 });
 
 function Shift_end_validation(selected, validate_start, validate_end){
@@ -86,12 +92,15 @@ function Shift_end_validation(selected, validate_start, validate_end){
         var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         $(selected).parent('td').children('label').show();
         $(selected).parent('td').children('label').html(days[$(selected).parent('td').next('td').children(".shift-start-input").attr("data-column")-1]);
+        return true;
     }else{
         $(selected).parent('td').children('label').hide();
+        return false;
     }
+    
 }
 
-$(document).on('click', '#schedule_save_btn', function() {
+$(document).on('click', 'schedule_save_btn', function() {
     let selected = this;
     console.log("========SHIFT STARTS=========");
     console.log(new_shift_starts);
