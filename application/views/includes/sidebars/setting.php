@@ -58,23 +58,23 @@
                 Online Payments
             </a>
         </li> -->  
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'files_vault')  ? "active" : ""; ?>">
+        <!-- <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'files_vault')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/files_vault') ?>" title="Files Vault">
                 <span class="fa fa-folder-o"></span>
                 Files Vault
             </a>
-        </li>  
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'tax_rates')  ? "active" : ""; ?>">
+        </li> -->  
+        <!-- <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'tax_rates')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/tax_rates') ?>" title="Tax Rates">
                 <span class="fa fa-percent"></span>
                 Tax Rates
             </a>
-        </li>    
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'quick_books')  ? "active" : ""; ?>">
+        </li> -->    
+        <!-- <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'quick_books')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/quick_books') ?>" title="Quick Books">
                 <span class="fa fa-calculator"></span>
                 Quick Books
             </a>
-        </li>        
+        </li> -->        
     </ul>
 </nav>

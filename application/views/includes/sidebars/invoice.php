@@ -29,6 +29,12 @@
         <li class="submenus <?php if($this->uri->uri_string() == 'invoice' || $this->uri->uri_string() == 'invoice/add') { echo 'active'; }?>"><a href="<?php echo base_url('invoice') ?>" title="Invoices and Payments"><span
                         class="fa fa-money"></span>Invoices and Payments</a></li>
         <li class="<?php if($this->uri->uri_string() == 'invoice/recurring' || $this->uri->uri_string() == 'invoice/recurring/add' || $this->uri->uri_string() == 'invoice/recurring/tab/2' || $this->uri->uri_string() == 'invoice/recurring/tab/3') { echo 'active'; }?>"><a href="<?php echo base_url('invoice') . '/recurring' ?>" title="Recurring"><span class="fa fa-repeat"></span>Recurring Invoices</a></li>
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'tax_rates')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('settings/tax_rates') ?>" title="Tax Rates">
+                <span class="fa fa-percent"></span>
+                Tax Rates
+            </a>
+        </li>
         <li class="<?php if($this->uri->uri_string() == 'invoice/settings') { echo 'active'; }?>"><a href="<?php echo base_url('invoice') . '/settings' ?>" title="Settings"><span class="fa fa-gear"></span>Settings</a></li>
     </ul>
 </nav>
