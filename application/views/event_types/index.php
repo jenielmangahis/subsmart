@@ -40,6 +40,7 @@ table.table tbody tr td:first-child {
 }
 table.dataTable {
     border-collapse: collapse;
+    margin-top: 5px;
 }
 table.dataTable thead tr th {
     border: 1px solid black !important;
