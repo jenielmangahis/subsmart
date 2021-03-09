@@ -391,7 +391,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <br>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="principal_llc">
                     <br>
                         <!-- <input type="checkbox">
@@ -409,7 +409,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="principal_corporation">
                     <br>
                         <!-- <input type="checkbox">
@@ -427,7 +427,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="customer_type_group">
                     <br>
                         <!-- <input type="checkbox">
@@ -445,7 +445,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="principal_others">
                     <br>
                         <!-- <input type="checkbox">
@@ -461,6 +461,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label class="checkboxcontainer"> <b>OTHER</b>
                         <input type="checkbox" <?= $is_checked; ?> name="principal_others" id="principal_others" value="1">
                         <span class="checkmark"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>FEDERAL ID NUMBER</b></label>
+                        <input type="text" value="<?= $merchant ? $merchant->federal_id_number : ''; ?>" class="form-control" name="federal_id_number" id="federal_id_number">
                     </div>
                 </div>
             </div>
@@ -510,13 +516,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="checkbox" <?= $is_checked; ?> name="is_authorized_signer" id="is_authorized_signer" value="1">
                         <span class="checkmark"></span>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" id="customer_type_group">
-                        <label for=""><b>FEDERAL ID NUMBER</b></label>
-                        <input type="text" value="<?= $merchant ? $merchant->federal_id_number : ''; ?>" class="form-control" name="federal_id_number" id="federal_id_number">
-                    </div>
-                </div>                
+                </div>                                
             </div>            
             <div class="row">
                 <div class="col-md-4">
