@@ -1178,11 +1178,53 @@ class Accounting extends MY_Controller {
         $order = $postData['order'][0]['dir'];
         $start = $postData['start'];
         $limit = $postData['length'];
-
-        $items = $this->items_model->getByCompanyId(getLoggedCompanyID());
-
-        $data = [];
         $search = $postData['columns'][0]['search']['value'];
+        $data = [];
+
+        if(in_array('0', $postData['category'])) {
+            array_unshift($postData['category'], '');
+            array_unshift($postData['category'], null);
+        }
+
+        $filters = [
+            'status' => [
+                1
+            ],
+            'category' => $postData['category']
+        ];
+
+        if($postData['status'] === 'inactive') {
+            $filters['status'] = [0];
+        } else if($postData['status'] === 'all') {
+            $filters['status'] = [
+                0,
+                1
+            ];
+        }
+
+        if($postData['type'] === 'inventory') {
+            $filters['type'] = [
+                'product',
+                'Product'
+            ];
+        } else if($postData['type'] === 'non-inventory') {
+            $filters['type'] = [
+                'material',
+                'Material'
+            ];
+        } else if($postData['type'] === 'service') {
+            $filters['type'] = [
+                'service',
+                'Service'
+            ];
+        } else if($postData['type'] === 'bundle') {
+            $filters['type'] = [
+                'bundle',
+                'Bundle'
+            ];
+        }
+
+        $items = $this->items_model->getItemsWithFilter($filters);
 
         foreach($items as $item) {
             $qty = $this->items_model->countQty($item->id);
@@ -1203,7 +1245,8 @@ class Accounting extends MY_Controller {
                         'taxable' => '',
                         'qty_on_hand' => $qty,
                         'qty_po' => '',
-                        'reorder_point' => $item->re_order_points
+                        'reorder_point' => $item->re_order_points,
+                        'item_categories_id' => $item->item_categories_id
                     ];
                 }
             } else {
@@ -1222,15 +1265,80 @@ class Accounting extends MY_Controller {
                     'taxable' => '',
                     'qty_on_hand' => $qty,
                     'qty_po' => '',
-                    'reorder_point' => $item->re_order_points
+                    'reorder_point' => $item->re_order_points,
+                    'item_categories_id' => $item->item_categories_id
                 ];
             }
+        }
+
+        if($postData['stock_status'] !== 'all') {
+            $data = array_filter($data, function($item) use ($postData) {
+                if($postData['stock_status'] === 'low stock') {
+                    return $item['qty_on_hand'] <= 3;
+                } else {
+                    return $item['qty_on_hand'] === 0;
+                }
+            });
+        }
+
+        $recordsFiltered = count($data);
+
+        if($postData['group_by_category'] === "1") {
+            $uncategorized = array_filter($data, function($item) {
+                return $item['item_categories_id'] === "0" || $item['item_categories_id'] === null || $item['item_categories_id'] === "";
+            });
+
+            $categories = $this->items_model->getItemCategories();
+
+            $categorized = [];
+            foreach($categories as $category) {
+                $catItems = array_filter($data, function($item) use ($category) {
+                    return $item['item_categories_id'] === $category->item_categories_id;
+                });
+
+                if(!empty($catItems)) {
+                    $categorized[] = [
+                        'is_category' => 1,
+                        'id' => '',
+                        'name' => $category->name,
+                        'sku' => '',
+                        'type' => '',
+                        'sales_desc' => '',
+                        'income_account' => '',
+                        'expense_account' => '',
+                        'inventory_account' => '',
+                        'purch_desc' => '',
+                        'sales_price' => '',
+                        'cost' => '',
+                        'taxable' => '',
+                        'qty_on_hand' => '',
+                        'qty_po' => '',
+                        'reorder_point' => '',
+                        'item_categories_id' => ''
+                    ];
+                    foreach($catItems as $value) {
+                        $categorized[] = $value;
+                    }
+                }
+            }
+
+            $data = $uncategorized;
+
+            foreach($categorized as $itemWC) {
+                $data[] = $itemWC;
+            }
+
+            $categoryHeaderCount = count(array_filter($data, function($header) {
+                return $header['is_category'] === 1;
+            }));
+
+            $recordsFiltered = count($data) - $categoryHeaderCount;
         }
 
         $result = [
             'draw' => $postData['draw'],
             'recordsTotal' => count($items),
-            'recordsFiltered' => count($data),
+            'recordsFiltered' => $recordsFiltered,
             'data' => array_slice($data, $start, $limit)
         ];
 
@@ -3598,17 +3706,19 @@ class Accounting extends MY_Controller {
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             );
-            $a = $this->input->post('type');
+            $a = $this->input->post('items');
             $b = $this->input->post('desc');
-            $c = $this->input->post('qty');
+            $c = $this->input->post('quantity');
             $d = $this->input->post('location');
-            $e = $this->input->post('cost');
+            $e = $this->input->post('price');
             $f = $this->input->post('discount');
-            $g = $this->input->post('tax');
+            $g = $this->input->post('span_tax_0');
+            $h = $this->input->post('item_type');
 
             $i = 0;
             foreach($a as $row){
-                $data['item_type'] = $a[$i];
+                $data['item'] = $a[$i];
+                $data['item_type'] = $h[$i];
                 $data['description'] = $b[$i];
                 $data['qty'] = $c[$i];
                 $data['location'] = $d[$i];
@@ -3620,11 +3730,11 @@ class Accounting extends MY_Controller {
                 $data['status'] = '1';
                 $data['created_at'] = date("Y-m-d H:i:s");
                 $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
                 $i++;
             }
     
-            redirect('accounting/newEstimateList');
+           redirect('accounting/newEstimateList');
         }
         else{
             echo json_encode(0);

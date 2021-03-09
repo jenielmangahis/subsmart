@@ -139,6 +139,11 @@ class Accounting_invoices_model extends MY_Model {
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
+	public function additem_details($data){
+	    $vendor = $this->db->insert('item_details', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
 	public function updateInvoice($id, $data){
 	    $this->db->where('id', $id);
 		$vendor = $this->db->update('accounting_invoice', $data);

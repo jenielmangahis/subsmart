@@ -106,13 +106,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <input type="text" id="" name="date_to" class="form-control single-datepicker" placeholder="Date To">
                           </div>
                           <div class="col-md-4 left">
-                            <select class="form-control">
+                            <select class="form-control" name="job_status" id="job-status">
                                 <option value="all">All Statuses</option>
-                                <option value="new">New</option>
-                                <option value="scheduled">Scheduled</option>
-                                <option value="started">Started</option>
-                                <option value="paused">Paused</option>
-                                <option value="completed">Completed</option>
+                                <?php foreach($job_status as $key => $value){ ?>
+                                  <option value="<?= $key; ?>"><?= $value; ?></option>
+                                <?php } ?>
                             </select>
                           </div>
                           <div class="col-md-4 pr-0 left">
@@ -178,6 +176,10 @@ $(function(){
     }
 
     $("#filter-user").change(function(){
+      load_map_route();
+    });
+
+    $("#job-status").change(function(){
       load_map_route();
     });
 });

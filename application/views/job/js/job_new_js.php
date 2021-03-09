@@ -30,7 +30,7 @@ if(isset($jobs_data)){
             }
         });
         if(cust_id != null && cust_id !== 0 && cust_id !== ''){
-            alert(cust_id);
+            //alert(cust_id);
             load_customer_data(cust_id);
         }
     };
@@ -573,6 +573,34 @@ if(isset($jobs_data)){
             document.getElementById('notes_edit_btn_right').style.display = "block";
         });
 
+        $("#fillAndSignNext").on( "click", function( event ) {
+            console.log('fsdfd');
+            var formData = {
+                'status': $(this).data('status'),
+                'id': $(this).data('id'),
+            };
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/update_jobs_status",
+                data: formData, // serializes the form's elements.
+                //dataType : 'json',
+                //encode : true,
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data === "Success"){
+                        sucess_add('Job is now Approved!',1);
+                    }else {
+                        warning('There is an error adding Customer. Contact Administrator!');
+                        console.log(data);
+                    }
+                },
+                error : function(data) {
+                    console.log(data);
+                }
+            });
+        });
+
         $("#new_customer_form").submit(function(e) {
             //alert("asf");
             e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -585,7 +613,6 @@ if(isset($jobs_data)){
                 success: function(data)
                 {
                     if(data === "Success"){
-                        //window.location.reload();
                         sucess_add('Customer Added Successfully!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
@@ -617,6 +644,27 @@ if(isset($jobs_data)){
             });
         });
 
+        $("#update_status_to_started").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/update_jobs_status",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        //window.location.reload();
+                        sucess_add('Job Status Updated!',1);
+                    }else {
+                        warning('There is an error adding Customer. Contact Administrator!');
+                        console.log(data);
+                    }
+                }
+            });
+        });
 
         function sucess_add(information,is_reload){
             Swal.fire({
@@ -635,6 +683,7 @@ if(isset($jobs_data)){
                 }
             });
         }
+
         function warning(information){
             Swal.fire({
                 title: 'Warning!',

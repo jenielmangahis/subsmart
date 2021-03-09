@@ -197,17 +197,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="fee">Fee</option>
                                                 </select></td>
                                             <td><input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="item[]">
+                                                       onKeyup="getItems(this)" name="desc[]">
                                                 <ul class="suggestions"></ul>
                                             </td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
+                                            <td><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="text" class="form-control" name="location[]"></td>
                                             <td><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
                                             <td><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-                                            <td><span id="span_tax_0">0.00 (7.5%)</span></td>
+                                            <td><span id="span_tax_0">0.00 (7.5%)</span><input type="hidden" value="0.00 (7.5%)" name="span_tax_0"></td>
                                             <td><span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>

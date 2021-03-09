@@ -133,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-5" style="margin-bottom: 12px"></div>
                             <div class="col-lg-4 eft">
                                 <div class="action-btn-container">
-                                    <button id="schedule_save_btn" class="btn btn-success action-btn" id="listClockInOut" data-approved="100" disabled><i class="fa fa-floppy-o" aria-hidden="true"></i> Save changes</button>
+                                    <button id="schedule_save_btn" class="btn btn-success action-btn" id="listClockInOut" data-approved="100"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save changes</button>
                                 </div>
                             </div>
                         </div>

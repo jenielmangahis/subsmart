@@ -2002,12 +2002,30 @@ class Customer extends MY_Controller
             $is_sole_proprietor = 1;
         }
 
+        $is_principal_llc = 0;
+        if( isset($post['principal_llc']) ){
+            $is_sole_proprietor = 1;
+        }
+
+        $is_principal_corporation = 0;
+        if( isset($post['principal_corporation']) ){
+            $is_principal_corporation = 1;
+        }
+
+        $is_principal_others = 0;
+        if( isset($post['principal_others']) ){
+            $is_principal_others = 1;
+        }
+
         $post['is_mailing']  = $is_mailing;
         $post['is_shipping'] = $is_shipping;
         $post['is_see_special_instructions'] = $is_see_special_instructions;
         $post['is_beneficial_owner']  = $is_beneficial_owner;
         $post['is_authorized_signer'] = $is_authorized_signer;
         $post['is_sole_proprietor']   = $is_sole_proprietor;
+        $post['principal_llc'] = $is_principal_llc;
+        $post['principal_corporation'] = $is_principal_corporation;
+        $post['principal_others'] = $is_principal_others;
 
         if( $merchant ){
             $this->ConvergeMerchant_model->update($merchant->id, $post);
@@ -2021,6 +2039,7 @@ class Customer extends MY_Controller
         $message .= "<table>";
             $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
             $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
+            $message .= "<tr><td>LEGAL BUSINESS NAME</td><td>".$post['legal_business_name']."</td></tr>";
             $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
             $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
             $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
@@ -2055,7 +2074,12 @@ class Customer extends MY_Controller
             $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
             $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+            $message .= "<tr><td>IS SOLE PROPRIETORSHIP</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+
+            $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
+            $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
+            $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";
+
             $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
             $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
             $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
@@ -2070,6 +2094,8 @@ class Customer extends MY_Controller
             $message .= "<tr><td>STATE</td><td>".$post['principal_state_1']."</td></tr>";
             $message .= "<tr><td>ZIP CODE</td><td>".$post['principal_zip_code_1']."</td></tr>";
         $message .= "</table>";
+        $message .= "<br /><p>Confidentiality Statement</p>
+    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
         
         //Email Sending     
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
@@ -2078,7 +2104,7 @@ class Customer extends MY_Controller
         $username  = MAIL_USERNAME;
         $password  = MAIL_PASSWORD;
         $from      = MAIL_FROM;     
-        $subject   = 'NSmartrac : Merchant Data';
+        $subject   = 'nSmarTrac: Merchant Data Application';
         $mail = new PHPMailer;
         //$mail->SMTPDebug = 4;                         
         $mail->isSMTP();                                     
@@ -2091,9 +2117,10 @@ class Customer extends MY_Controller
         $mail->Timeout    =   10; // set the timeout (seconds)
         $mail->Port = $port;
         $mail->From = $from; 
-        $mail->FromName = 'NsmarTrac';
+        $mail->FromName = 'nSmarTrac';
 
-        $mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');    
+        //$mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');    
+        $mail->addAddress('joyce.reynolds@elavon.com', 'joyce.reynolds@elavon.com');    
         $mail->isHTML(true);                          
         $mail->Subject = $subject;
         $mail->Body    = $message;
@@ -2122,7 +2149,8 @@ class Customer extends MY_Controller
     {
         $this->load->model('ConvergeMerchant_model');
 
-        $post = $this->input->post();
+        $post       = $this->input->post();
+        $recipient  = $post['share_email'];
         $user_id    = logged('id');
         $company_id = logged('company_id');
 
@@ -2134,6 +2162,7 @@ class Customer extends MY_Controller
             $message .= "<table>";
                 $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
                 $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
+                $message .= "<tr><td>LEGAL BUSINESS NAME</td><td>".$post['legal_business_name']."</td></tr>";
                 $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
                 $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
                 $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
@@ -2168,7 +2197,12 @@ class Customer extends MY_Controller
                 $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
                 $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
                 $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>IS SOLE PROPRIETOR</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+                $message .= "<tr><td>IS SOLE PROPRIETORSHIP</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
+
+                $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
+                $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
+                $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";
+
                 $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
                 $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
                 $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
@@ -2183,6 +2217,8 @@ class Customer extends MY_Controller
                 $message .= "<tr><td>STATE</td><td>".$post['principal_state_1']."</td></tr>";
                 $message .= "<tr><td>ZIP CODE</td><td>".$post['principal_zip_code_1']."</td></tr>";
             $message .= "</table>";
+            $message .= "<br /><p>Confidentiality Statement</p>
+    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
             
             //Email Sending     
             include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
@@ -2190,9 +2226,8 @@ class Customer extends MY_Controller
             $port      = MAIL_PORT ;
             $username  = MAIL_USERNAME;
             $password  = MAIL_PASSWORD;
-            $from      = MAIL_FROM;     
-            $recipient = $post['share_email'];
-            $subject   = 'NSmartrac : Merchant Data';
+            $from      = MAIL_FROM;                 
+            $subject   = 'nSmarTrac: Merchant Data Application';
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;                         
             $mail->isSMTP();                                     

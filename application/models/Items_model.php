@@ -111,6 +111,11 @@ class Items_model extends MY_Model
     public function getItemsWithFilter($filters = [])
     {
         $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where_in('is_active', $filters['status']);
+        $this->db->where_in('item_categories_id', $filters['category']);
+        if(isset($filters['type'])) {
+            $this->db->where_in('type', $filters['type']);
+        }
         $query = $this->db->get($this->table);
         return $query->result();
     }

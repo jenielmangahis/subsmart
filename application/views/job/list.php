@@ -233,13 +233,13 @@ add_css(array(
                                                 <td class="pl-3"><?=$job->priority; ?></td>
                                                 <td class="pl-3">
                                                     <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                    <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                        <span class="fa fa-pencil"></span> Edit
-                                                    </a>&nbsp;
                                                     <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
                                                         <span class="fa fa-trash"></span> Delete
                                                     </a>
                                                     <?php endif; ?>
+                                                    <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
+                                                        <span class="fa fa-pencil"></span> Edit
+                                                    </a>&nbsp;
                                                     <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
                                                         <span class="fa fa-search-plus"></span> Preview
                                                     </a>

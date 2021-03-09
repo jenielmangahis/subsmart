@@ -83,7 +83,7 @@ class Timesheet_model extends MY_Model
 
     public function get_company_admins($company_id)
     {
-        $query = $this->db->query("SELECT * From users where company_id = " . $company_id . " and role = 1 ");
+        $query = $this->db->query("SELECT * From users join timesheet_team_members where timesheet_team_members.company_id = " . $company_id . " and timesheet_team_members.role = 'Admin' and users.id=timesheet_team_members.user_id");
         return $query->result();
     }
 
