@@ -233,6 +233,13 @@ class Login extends CI_Controller {
 
 	}
 
+	public function reset_password_new()
+	{
+		
+		$this->load->view('account/forget_new', $this->data, FALSE);
+
+	}
+
 	public function new_password()
 	{
 		$reset_token = !empty(get('token')) ? get('token') : false;

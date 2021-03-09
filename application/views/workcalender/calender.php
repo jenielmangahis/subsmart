@@ -488,8 +488,8 @@ a.top-1 {
                                                             <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
                                                                    data-target="#modalCreateEvent">
                                                                     Assign New Lead</a></li>
-                                                            <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                                   data-target="#modalCreateEvent">Create Event</a></li>
+                                                            <!-- <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">Create Event</a></li> -->
                                                             <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
                                                                    data-target="#modalCreateEvent">Cancel Schedule</a></li>
                                                             <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
