@@ -22,8 +22,8 @@ font-weight: 600;
 /* CSS for creating steper block before the li item*/
 content:counter(step);
 counter-increment: step;
-height:30px;
-width:30px;
+height:35px;
+width:35px;
 line-height: 30px;
 border: 2px solid #ddd;
 display:block;
@@ -43,6 +43,48 @@ top: 15px;
 left: -50%;
 z-index: -1;
 }
+.box-step-1, .box-step-2 {
+  width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+div.login-box {
+    background-color: white !important;
+    height: auto;
+    width: 650px;
+    padding-top:10px;
+    display: block;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top:15vh;
+    box-shadow: rgb(0 0 0 / 30%) 3px 0px 6px;
+}
+.clear {
+  clear: both;
+}
+.center-fix {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  margin-top: 25px;
+}
+i.fa.fa-eye.view-password.showPass {
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    bottom: 34px;
+    right: 10px;
+}
+.divider-box {
+  display: block;
+  height: 150px;
+}
 .progressbar li:first-child:after {
 content:none;
 }
@@ -55,54 +97,60 @@ border-color:#27ae60;
 .progressbar li.active + li:after{
 background-color:#27ae60;
 }
+@media only screen and (max-width: 600px) {
+  div.login-box {
+    width: 95%;
+  }
+}
 </style>
 
 <div class="login-box">
-  <div class="row">
-  <div class="col-md-6">
+
+  <div class="col-md-12 center-fix">
     <ul class="progressbar">
       <li class="step-1 active">ENTER USER ID</li>
-      <li class="step-2">SELECT PASSWORD</li>
+      <li class="step-2"><span>SELECT PASSWORD</span></li>
       <li class="step-3">LOGIN</li>
     </ul>
   </div>
-  </div>
-  <div class="box-step-1" style="position: absolute;">
-    <div class="row">
-      <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="User ID" value="">
-      </div>    
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <a class="btn btn-info btn-step1-next" href="javascript:void(0);">CONTINUE</a>
-        <a class="btn btn-info btn-cancel" href="javascript:void(0);">CANCEL</a>
+  <div class="divider-box"></div>
+  <div class="box-step-1">
+    <div style="display:block;width:70%;margin:0 auto;">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="userid" type="text" class="form-control" name="userid" placeholder="Enter your User ID">
       </div>
+    </div>
+    <br class="clear" />
+    <div style="display:block;width:70%;margin:0 auto;text-align:center;">
+      <a class="btn btn-info btn-step1-next" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CONTINUE</a>
+      <br class="clear" />
+      <a class="btn-cancel" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CANCEL</a>
     </div>
   </div>
 
   <div class="box-step-2" style="display: none;">
-    <div class="row">
-      <div class="col-md-6">
+
+      <div style="display:block;width:70%;margin:0 auto;">
           <label for="">New Password</label>
           <input type="password" name="new_password" id="newPassword" required="" class="form-control">
           <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
           <span class="old-password-error"></span>
       </div>
-      <div class="col-md-6">
+      <br class="clear" />
+      <div style="display:block;width:70%;margin:0 auto;">
           <label for="">Retype Password</label>
           <input type="password" name="re_password" id="rePassword" required="" class="form-control">
           <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <a class="btn btn-info btn-step2-next" href="javascript:void(0);">CONTINUE</a>
-        <a class="btn btn-info btn-cancel" href="javascript:void(0);">CANCEL</a>
+      <br class="clear" />
+      <div style="display:block;width:70%;margin:0 auto;text-align:center;">
+        <a class="btn btn-info btn-step2-next" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CONTINUE</a>
+        <br class="clear" />
+        <a class="btn-cancel" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CANCEL</a>
       </div>
-    </div>
   </div>
-  <br /><br />  
+  <br class="clear" /><br class="clear" />
 
 </div>
 <!-- /.login-box -->
