@@ -512,6 +512,9 @@ $route['sms_campaigns/build_sms'] = 'Sms_Campaigns/build_sms';
 $route['sms_campaigns/create_sms_message'] = 'Sms_Campaigns/create_sms_message';
 $route['sms_campaigns/preview_sms_message'] = 'Sms_Campaigns/preview_sms_message';
 $route['sms_campaigns/create_send_schedule'] = 'Sms_Campaigns/create_send_schedule';
+$route['sms_campaigns/_load_campaigns/(:any)'] = 'Sms_Campaigns/ajax_load_campaigns/$1';
+$route['sms_campaigns/_load_sms_campaign_counter'] = 'Sms_Campaigns/ajax_load_sms_campaign_counter';
+$route['sms_campaigns/_close_campaign'] = 'Sms_Campaigns/ajax_close_campaign';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';

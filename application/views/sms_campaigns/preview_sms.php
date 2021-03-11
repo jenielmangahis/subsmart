@@ -96,7 +96,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                     <div class="panel-info">
                         <form class="form" name="plan-form" data-shop="form">
-                            <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
                                   <li>1. Edit Campaign</li>
@@ -109,6 +108,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />  
 
                             <div class="margin-bottom">
+                                <div class="form-msg" style="display: none;"></div>
                                 <div>
                                     <label>Price for service: $<?= number_format($service_price, 2); ?></label>
                                 </div>
@@ -152,20 +152,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="margin-bottom">
                                 <span class="bold margin-right">Total: $<?= number_format($grand_total, 2); ?></span>
                             </div>
-                        </form>
 
+                            <div class="row margin-top">
+                                <div class="col-sm-12"></div>
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-default margin-right" href="#">&laquo; Back</a>
+                                    <button class="btn btn-primary btn-campaign-update-send-schedule" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Save &raquo;</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
             </div>
             <hr>
-            <div class="row margin-top">
-                <div class="col-sm-12"></div>
-                <div class="col-sm-12 text-right">
-                    <a class="btn btn-default margin-right" href="#">&laquo; Back</a>
-                    <button class="btn btn-primary" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Continue &raquo;</button>
-                </div>
-            </div>
+            
             <?php echo form_close(); ?>
             <!-- end row -->
         </div>
@@ -178,26 +179,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $("#campaign_send_schedule").submit(function(e){
         e.preventDefault();
+        
+        $('.form-msg').hide().html("");
+
         var url = base_url + 'sms_campaigns/create_send_schedule';
-        $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
+        $(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,    
              dataType: "json",      
-             data: $("#create_campaign_send_to").serialize(),
+             data: $("#campaign_send_schedule").serialize(),
              success: function(o)
              {
-                if( o.is_success ){
-                    $(".validation-error").hide();
-                    $(".validation-error").html('');
-                    //redirect to step2
-                    location.href = base_url + "sms_campaigns/build_sms";
+                if( o.is_success == 1 ){
+                    $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
+                    $(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
+                    setTimeout(function() {
+                        location.href = base_url + "sms_campaigns";
+                    }, 2500);
                 }else{
-                    $(".validation-error").show();
-                    $(".validation-error").html(o.err_msg);
+                    $('.form-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
+                    $(".btn-campaign-update-send-schedule").html('Save');
                 }
-                $(".btn-campaign-save-send-settings").html('Continue »');
              }
           });
         }, 1000);

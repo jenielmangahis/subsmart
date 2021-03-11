@@ -84,11 +84,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="to_type_1">All my customers with phone</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="3" id="to_type_3">
+                                            <input type="radio" name="to_type" value="2" id="to_type_3">
                                             <label for="to_type_3">To a customer group</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="2" id="to_type_2">
+                                            <input type="radio" name="to_type" value="3" id="to_type_2">
                                             <label for="to_type_2">Only to certain customers</label>
                                         </div>
                                     </div>
@@ -142,28 +142,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <th style="width:30px;"></th>
                                                 <th>Name</th>
-                                                <th>Phone</th>
-                                                <th>Subscribed</th>
+                                                <th style="width: 10%;">Phone</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach($customers as $c){ ?>
-                                                <?php if($c->mobile != ''){ ?>
+                                                <?php if($c->phone_m != ''){ ?>
                                                 <tr>
                                                     <td>
                                                         <div class="checkbox checkbox-sm">
-                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->id; ?>]" value="<?= $c->id; ?>" id="chk-customer-<?= $c->id; ?>">
-                                                            <label for="chk-customer-<?= $c->id; ?>"></label>
+                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>">
+                                                            <label for="chk-customer-<?= $c->prof_id; ?>"></label>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <?= $c->contact_name; ?>
-                                                        <div class="text-ter">
-                                                            <?= $c->customer_type; ?>
-                                                        </div>
+                                                        <?= $c->first_name . ' ' . $c->last_name; ?>
                                                     </td>
-                                                    <td><?= $c->mobile; ?></td>
-                                                    <td><span class="fa fa-check text-ter"></span></td>
+                                                    <td><?= $c->phone_m; ?></td>
                                                 </tr>
                                                 <?php } ?>
                                             <?php } ?>

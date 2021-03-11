@@ -45,6 +45,11 @@ class SmsBlastSendTo_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function deleteAllBySmsBlastId($sms_blast_id){
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('sms_blast_id' => $sms_blast_id));
+    }
 }
 
 /* End of file SmsBlastSendTo_model.php */

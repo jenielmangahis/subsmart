@@ -73,8 +73,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft">Save as Draft</button>
-                                    <a href="<?php echo url('sms_campaigns') ?>">cancel this</a>
+                                    <a class="btn btn-default" href="<?php echo url('sms_campaigns') ?>">Cancel</a>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft">Continue »</button>
                                 </div>
                             </div>
                         </div>
@@ -112,8 +112,8 @@ $(function(){
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);
+                    $(".btn-campaign-save-draft").html('Continue »');
                 }
-                $(".btn-campaign-save-draft").html('Save as Draft');
              }
           });
         }, 1000);

@@ -50,7 +50,7 @@ class Customer_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('mobile !=', '');
+        $this->db->where('phone_m !=', '');
 
         $query = $this->db->get();
         return $query->result();
