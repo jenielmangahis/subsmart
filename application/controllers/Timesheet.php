@@ -325,7 +325,11 @@ class Timesheet extends MY_Controller
         $this->attendance();
     }
 
-
+    public function notif_user_acknowledge()
+    {
+        $this->timesheet_model->notif_user_acknowledge();
+        echo json_encode("success");
+    }
     public function showEmployeeTable()
     {
         date_default_timezone_set('UTC');
@@ -1890,7 +1894,7 @@ class Timesheet extends MY_Controller
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
-            $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked In today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone');
+            $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked In today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
             $data->device_type =  $getUserDetail->device_type;
             $data->company_id = getLoggedCompanyID();
             $data->token = $getUserDetail->device_token;
@@ -2102,6 +2106,7 @@ class Timesheet extends MY_Controller
 
         $notificationListArray = array(
             'notifyCount' => $notifyCount,
+            'badgeCount' => $this->timesheet_model->get_unreadNotification($notifycount, "counter"),
             'autoNotifications' => $html,
         );
         echo json_encode($notificationListArray);
@@ -2110,10 +2115,12 @@ class Timesheet extends MY_Controller
     {
         $userid = $this->session->userdata('logged')['id'];
         $notifycount = $this->input->post('notifycount');
-        $notifycounts = $this->timesheet_model->get_unreadNotification($notifycount, "counter");
+        $notifycounts = $this->timesheet_model->get_unreadNotification($notifycount, "notifCount");
 
         $notificationListArray = array(
-            'notifyCount' => $notifycounts
+            'notifyCount' => $notifycounts,
+            'badgeCount' => $this->timesheet_model->get_unreadNotification($notifycount, "counter")
+
         );
         echo json_encode($notificationListArray);
     }
@@ -2207,7 +2214,7 @@ class Timesheet extends MY_Controller
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
-            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone');
+            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
             $data->device_type =  $getUserDetail->device_type;
             $data->company_id = getLoggedCompanyID();
             $data->token = $getUserDetail->device_token;
@@ -2268,7 +2275,7 @@ class Timesheet extends MY_Controller
         $data->FName = $getUserDetail->FName;
         $data->LName = $getUserDetail->LName;
         $data->profile_img = $getUserDetail->profile_img;
-        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is taking a Break today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone');
+        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is taking a Break today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
         $data->device_type =  $getUserDetail->device_type;
         $data->company_id = getLoggedCompanyID();
         $data->token = $getUserDetail->device_token;
@@ -2324,7 +2331,7 @@ class Timesheet extends MY_Controller
         $data->FName = $getUserDetail->FName;
         $data->LName = $getUserDetail->LName;
         $data->profile_img = $getUserDetail->profile_img;
-        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is On the Clock again today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone');
+        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is On the Clock again today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
         $data->device_type =  $getUserDetail->device_type;
         $data->company_id = getLoggedCompanyID();
         $data->token = $getUserDetail->device_token;

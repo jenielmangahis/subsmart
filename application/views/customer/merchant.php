@@ -391,7 +391,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <br>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="principal_llc">
                     <br>
                         <!-- <input type="checkbox">
@@ -409,7 +409,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="principal_corporation">
                     <br>
                         <!-- <input type="checkbox">
@@ -427,7 +427,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="customer_type_group">
                     <br>
                         <!-- <input type="checkbox">
@@ -445,7 +445,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <span class="checkmark"></span>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group" id="principal_others">
                     <br>
                         <!-- <input type="checkbox">
@@ -461,6 +461,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label class="checkboxcontainer"> <b>OTHER</b>
                         <input type="checkbox" <?= $is_checked; ?> name="principal_others" id="principal_others" value="1">
                         <span class="checkmark"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group" id="customer_type_group">
+                        <label for=""><b>FEDERAL ID NUMBER</b></label>
+                        <input type="text" value="<?= $merchant ? $merchant->federal_id_number : ''; ?>" class="form-control" name="federal_id_number" id="federal_id_number">
                     </div>
                 </div>
             </div>
@@ -510,7 +516,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="checkbox" <?= $is_checked; ?> name="is_authorized_signer" id="is_authorized_signer" value="1">
                         <span class="checkmark"></span>
                     </div>
-                </div>                
+                </div>                                
             </div>            
             <div class="row">
                 <div class="col-md-4">
@@ -599,6 +605,101 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12 mobile-brm" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>CREDIT CARD TRANSACTIONS</i></h6>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>ANNUAL REVENUE (ACH, CHECK, CREDIT CARDS)</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->annual_revenue : $user->annual_revenue; ?>" class="form-control" name="annual_revenue" id="annual_revenue">
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>MONTHLY CREDIT CARD SALES</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->monthly_cc_sales : $user->monthly_cc_sales; ?>" class="form-control" name="monthly_cc_sales" id="monthly_cc_sales">
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>AVERAGE CREDIT CARD TRANSACTIONS</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->average_cc_transcations : $user->average_cc_transcations; ?>" class="form-control" name="average_cc_transcations" id="average_cc_transcations">
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>HIGHEST CREDIT CARD TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->highest_cc_transction_years : $user->highest_cc_transction_years; ?>" class="form-control" name="highest_cc_transction_years" id="highest_cc_transction_years">
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>CARD NOT PRESENT TRANSACTION</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->card_not_present_transaction : $user->card_not_present_transaction; ?>" class="form-control" name="card_not_present_transaction" id="card_not_present_transaction">
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mobile-brm" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>ACH CHECKS</i></h6>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>ANNUAL CHECK VOLUME</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->annual_check_volume : $user->annual_check_volume; ?>" class="form-control" name="annual_check_volume" id="highest_cc_transction_years">
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>AVERAGE CHECK TRANSACTION</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->average_check_transaction : $user->average_check_transaction; ?>" class="form-control" name="average_check_transaction" id="average_check_transaction">
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>HIGHEST CHECK TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->highest_check_transaction_years : $user->highest_check_transaction_years; ?>" class="form-control" name="highest_check_transaction_years" id="highest_check_transaction_years">
+                  </div>
+              </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mobile-brm" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h6>BANK ACCOUNT</i></h6>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>BANK ACCOUNT</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->bank_account : $user->bank_account; ?>" class="form-control" name="bank_account" id="bank_account">
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>ROUTING NUMBER</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->routing_number : $user->routing_number; ?>" class="form-control" name="routing_number" id="routing_number">
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group" id="customer_type_group">
+                      <label for=""><b>BANK ACCOUNT NUMBER</b></label>
+                      <input type="text" value="<?= $merchant ? $merchant->bank_account_number : $user->bank_account_number; ?>" class="form-control" name="bank_account_number" id="bank_account_number">
+                  </div>
+              </div>
+            </div>
+
 
             <br><br>
                             <div class="row">

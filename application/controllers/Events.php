@@ -25,7 +25,6 @@ class Events extends MY_Controller
     }
 
     public function index() {
-
         $is_allowed = true; //$this->isAllowedModuleAccess(15);
         if( !$is_allowed ){
             $this->page_data['module'] = 'job';
@@ -38,7 +37,6 @@ class Events extends MY_Controller
     }
 
     public function new_event($id=null) {
-
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -130,41 +128,14 @@ class Events extends MY_Controller
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 
-        // get estimates
-        $get_estimates = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'estimates',
-            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
-        );
-        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
-
-        // get workorder
-        $get_workorder = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'work_orders',
-            'select' => 'id,work_order_number,start_date,job_name,customer_id',
-        );
-        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
-
-        // get invoices
-        $get_invoices = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'invoices',
-            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
-        );
-        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
-
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
+
         if(!$id==NULL){
-            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
+            $this->page_data['jobs_data_items'] = $this->event_model->get_specific_event_items($id);
         }
+
         $this->load->view('events/event_new', $this->page_data);
     }
 
@@ -274,6 +245,20 @@ class Events extends MY_Controller
             $this->page_data['jobs_data_items'] = $this->event_model->get_specific_event_items($id);
         }
         $this->load->view('events/event_preview', $this->page_data);
+    }
+
+    public function update_event_status(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if($input){
+            $id = $input['id'];
+            unset($input['id']);
+            if ($this->general->update_with_key($input,$id ,"events")) {
+                echo "Success";
+            } else {
+                echo "Error";
+            }
+        }
     }
 
     public function get_customer_selected(){
@@ -540,7 +525,7 @@ class Events extends MY_Controller
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
             //'job_type' => $this->input->post('job_type'),
-            'status' => 0,//$this->input->post('job_status'),
+            'status' => 1,//$this->input->post('job_status'),
             'description' => $input['message'],
             'company_id' => $comp_id,
             //'date_created' => date('Y-m-d H:i:s'),

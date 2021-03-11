@@ -257,6 +257,7 @@ class Settings extends MY_Controller {
         $taxRates = $this->TaxRates_model->getAllByCompanyId($user->company_id);
 
         $this->page_data['taxRates'] = $taxRates;
+        $this->page_data['page']->menu = 'tax_rates';
         $this->load->view('settings/tax_rates', $this->page_data);
     }
 

@@ -166,12 +166,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tbody id="table_body_bundle1">
                                         <tr>
                                             <td>
-                                                <select id="s" name="items[]"  class="form-control">
+                                                <!-- <select id="s" name="items[]"  class="form-control">
                                                     <option value="0"></option>
                                                     <?php foreach($items as $c){ ?>
                                                         <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
                                                     <?php } ?>
-                                                </select>
+                                                </select> -->
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
@@ -181,7 +184,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </select></td>
                                             <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control" name="price[]"></td>
+                                            <td><input type="text" class="form-control price" name="price[]" id="price_0"></td>
                                             <td><span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>
@@ -244,12 +247,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tbody id="table_body_bundle2">
                                         <tr>
                                             <td>
-                                                <select id="s" name="items[]"  class="form-control">
+                                                <!-- <select id="s" name="items[]"  class="form-control">
                                                     <option value="0"></option>
                                                     <?php foreach($items as $c){ ?>
                                                         <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
                                                     <?php } ?>
-                                                </select>
+                                                </select> -->
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
@@ -259,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </select></td>
                                             <td><input type="text" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control" name="price[]"></td>
+                                            <td><input type="text" class="form-control price" name="price[]" id="price_0"></td>
                                             <td><span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>

@@ -80,9 +80,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="job_location"><b>Job Location</b> (optional, select or add new one)</label>
-                                    <input type="text" class="form-control" name="job_location" id="job_location"
-                                           required placeholder="Enter address" autofocus
-                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                    <div id="locationField">
+                                    <input
+                                        id="autocomplete"
+                                        placeholder="Enter Location"
+                                        type="text"
+                                        class="form-control"
+                                    />
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a>
@@ -182,13 +187,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody id="table_body">
                                         <tr>
-                                            <td width="200px">
-                                                <select id="s" name="items[]"  class="form-control">
+                                            <td>
+                                                <!-- <select id="s" name="items[]"  class="form-control">
                                                     <option value="0"></option>
                                                     <?php foreach($items as $c){ ?>
                                                         <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
                                                     <?php } ?>
-                                            </select>
+                                            </select> -->
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
@@ -196,9 +204,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td><input type="text" class="form-control getItems"
+                                            <td>
+                                                <!-- <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="desc[]">
-                                                <ul class="suggestions"></ul>
+                                                <ul class="suggestions"></ul> -->
+                                                <input type="text" class="form-control" name="desc[]">
                                             </td>
                                             <td><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
@@ -212,7 +222,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp;
+                                    <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp;
                                     <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a>
                                     <hr>
                                 </div>
@@ -226,10 +236,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>0.00</td>
+                                            <td><span id="span_sub_total_0">0.00</span></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment"></td>
+                                            <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment" id="adjustment_amount"></td>
                                             <td style="width:150px;">
                                                 <select class="form-control">
                                                     <option>0</option>
@@ -245,7 +255,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b>0.00</b></td>
+                                            <td><b><span id="span_grand_total_0">0.00</span></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -429,3 +439,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
             .trigger("change"); //apply to select2*/
     });
 </script>
+
+<script>
+//     $( ".span_total_0" ).change(function() {
+//   alert( "Handler for .change() called." );
+// });
+// $(document).on('change','#span_total_0',function(){
+//     alert('Change Happened');
+// });
+</script>
+
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM&callback=initAutocomplete&libraries=places&v=weekly" ></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM" type="text/javascript"></script>
+
+<script>
+    var placeSearch, autocomplete;
+
+function initialize() {
+    // Create the autocomplete object, restricting the search
+    // to geographical location types.
+    autocomplete = new google.maps.places.Autocomplete(
+    /** @type {HTMLInputElement} */
+    (document.getElementById('autocomplete')), {
+        types: ['geocode']
+    });
+
+    google.maps.event.addDomListener(document.getElementById('autocomplete'), 'focus', geolocate);
+}
+
+function geolocate() {
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+
+            var geolocation = new google.maps.LatLng(
+            position.coords.latitude, position.coords.longitude);
+            var circle = new google.maps.Circle({
+                center: geolocation,
+                radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+
+            // Log autocomplete bounds here
+            console.log(autocomplete.getBounds());
+        });
+    }
+}
+
+initialize();
+    </script>

@@ -312,6 +312,7 @@ $route['accounting/all-sales'] = 'accounting/allsales';
 
 $route['accounting/products-and-services'] = 'accounting/products_and_services';
 $route['accounting/products-and-services/load']['post'] = 'accounting/load_products_services';
+$route['accounting/products-and-services/item-form/(:any)'] = 'accounting/get_item_form/$1';
 $route['accounting/product-categories'] = 'accounting/product_categories';
 $route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
 $route['accounting/product-categories/get'] = 'accounting/get_categories';

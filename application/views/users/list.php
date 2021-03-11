@@ -251,7 +251,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </td>
                                                 <td class="center"><?php echo $row->email ?></td>
-                                                <td class="center"><?php echo $row->password_plain ?></td>
+                                                <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
                                                 <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
                                                 <td class="center"><?php echo getUserType($row->user_type); ?></td>
                                                 <td class="center"><?php echo date('M d,Y')?></td>
@@ -999,6 +999,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     text: "Employee password has been Updated",
                                     icon: 'success'
                                 });
+
+                                $(".pw-row-" + $("#changePasswordUserId").val()).html(values['new_password']);
                         }else{
                             Swal.fire(
                                 {

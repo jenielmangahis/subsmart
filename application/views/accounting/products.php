@@ -17,6 +17,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #products-services-table .btn-group .btn {
         padding: 10px;
     }
+	#products-services-table img {
+		max-height: 52px;
+	}
+	.type-icon {
+		height: 100%;
+		background-position: center;
+    	border-radius: 100%;
+		background-repeat: no-repeat;
+		background-color: #0077c5;
+	}
+	#types-table.table-hover tr:hover {
+		background-color: #fff;
+	}
+	#types-table tr:last-child td {
+		border-bottom: 1px solid #dee2e6; 
+	}
+	#types-table tr td {
+		padding: 12px 30px;
+	}
+	.no-icon {
+		background-image: url('/uploads/accounting/attachments/default-item.png');
+		height: 100%;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+	.no-icon:hover {
+		cursor: pointer;
+		border-color: #8d9096 !important;
+	}
+	.preview-uploaded {
+		height: 100%;
+	}
+	.modal .modal-footer .btn-group .btn:not(:first-child) {
+		border-top-left-radius: 0 !important;
+    	border-bottom-left-radius: 0 !important;
+	}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -70,7 +106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												</div>
 											</div>
                                             <div class="btn-group float-right">
-                                                <a href="javascript:void(0);" data-toggle="modal" data-target="#modalAddAccount" class="btn btn-success d-flex align-items-center justify-content-center">
+                                                <a href="javascript:void(0);" data-toggle="modal" data-target="#type-selection-modal" class="btn btn-success d-flex align-items-center justify-content-center">
                                                     New
                                                 </a>
                                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -252,6 +288,87 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<tbody></tbody>
 								</table>
                             </div>
+
+							<!--    Modal for creating rules-->
+                            <div class="modal-right-side">
+                                <div class="modal right fade" id="type-selection-modal" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title" id="myModalLabel2" >Product/Service information</h3>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            </div>
+											<div class="modal-body p-0">
+												<table class="table table-hover cursor-pointer" id="types-table">
+													<tbody>
+														<tr data-href="inventory">
+															<td>
+																<div class="row" style="height: 117px">
+																	<div class="col-sm-3">
+																		<div class="type-icon" style="background-image: url('/assets/img/accounting/inventory.png')"></div>
+																	</div>
+																	<div class="col-sm-9 d-flex align-items-center">
+																		<div class="type-description">
+																			<h5 class="m-0">Inventory</h5>
+																			<span>Products you buy and/or sell and that you track quantities of.</span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr data-href="non-inventory">
+															<td>
+																<div class="row" style="height: 117px">
+																	<div class="col-sm-3">
+																		<div class="type-icon" style="background-image: url('/assets/img/accounting/non-inventory.png')"></div>
+																	</div>
+																	<div class="col-sm-9 d-flex align-items-center">
+																		<div class="type-description">
+																			<h5 class="m-0">Non-inventory</h5>
+																			<span>Products you buy and/or sell but don’t need to (or can’t) track quantities of, for example, nuts and bolts used in an installation.</span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr data-href="service">
+															<td>
+																<div class="row" style="height: 117px">
+																	<div class="col-sm-3">
+																		<div class="type-icon" style="background-image: url('/assets/img/accounting/service.png')"></div>
+																	</div>
+																	<div class="col-sm-9 d-flex align-items-center">
+																		<div class="type-description">
+																			<h5 class="m-0">Service</h5>
+																			<span>Services that you provide to customers, for example, landscaping or tax preparation services.</span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr data-href="bundle">
+															<td>
+																<div class="row" style="height: 117px">
+																	<div class="col-sm-3">
+																		<div class="type-icon" style="background-image: url('/assets/img/accounting/bundle.png')"></div>
+																	</div>
+																	<div class="col-sm-9 d-flex align-items-center">
+																		<div class="type-description">
+																			<h5 class="m-0">Bundle</h5>
+																			<span>A collection of products and/or services that you sell together, for example, a gift basket of fruit, cheese, and wine.</span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--    end of modal-->
                         </div>
                     </div>
                     <!-- end card -->
@@ -263,6 +380,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
 </div>
+
+<div class="modal-form-container"></div>
 
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer_accounting'); ?>
@@ -284,6 +403,27 @@ function applybtn()
 {
 	$('#products-services-table').DataTable().ajax.reload();
 }
+
+function selectType(type)
+{
+	$(`#${type}-form-modal`).modal('hide');
+	$('#type-selection-modal').modal('show');
+}
+
+$('#types-table tr').on('click', function(e) {
+	var type = e.currentTarget.dataset.href;
+	$('#type-selection-modal').modal('hide');
+
+	$.get('products-and-services/item-form/'+type, function(result) {
+		$('.modal-form-container').html(result);
+
+		$(`#${type}-form-modal .datepicker input`).datepicker({
+			uiLibrary: 'bootstrap'
+		});
+
+		$(`#${type}-form-modal`).modal('show');
+	});
+});
 
 $('#category').select2({
 	allowClear: true,
@@ -376,7 +516,11 @@ $(`#products-services-table`).DataTable({
 				`);
 
 				if(!rowData.hasOwnProperty('is_category')) {
-					$(td).children('div').prepend('<img src="/uploads/accounting/attachments/default-item.png">');
+					if(rowData.icon === null || rowData.icon === "") {
+						$(td).children('div').prepend('<img src="/uploads/accounting/attachments/default-item.png">');
+					} else {
+						$(td).children('div').prepend(`<img src="/uploads/${rowData.icon}">`);
+					}
 				} else {
 					$(td).attr('colspan', '15');
 				}

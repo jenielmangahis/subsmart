@@ -642,4 +642,8 @@ function app_notification(token,body,device_type,company_id,title) {
 
 // end of Live clock
 
+   function sample(){
+       console.log("solod");
+   }
+
 });

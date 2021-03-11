@@ -473,8 +473,7 @@ a.top-1 {
                                               <div class="stcs-3 pos-2 cs-float">
                                                 <div class="form-group margin-left-sec e-1" role="group" aria-label="...">
                                                     <div class="btn-group btn-with-dropdown">
-                                                        <button type="button" class="text-white btn btn-primary btn-md" data-toggle="modal"
-                                                                data-target="#modalCreateEvent">
+                                                        <button type="button" class="text-white btn btn-primary btn-md btn-create-event">
                                                             <span class="fa fa-plus fa-margin-right"></span>&nbsp;&nbsp;Create Event
                                                         </button>
                                                         <button type="button" class="btn btn-primary btn-md dropdown-toggle"
@@ -489,8 +488,8 @@ a.top-1 {
                                                             <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
                                                                    data-target="#modalCreateEvent">
                                                                     Assign New Lead</a></li>
-                                                            <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                                   data-target="#modalCreateEvent">Create Event</a></li>
+                                                            <!-- <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">Create Event</a></li> -->
                                                             <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
                                                                    data-target="#modalCreateEvent">Cancel Schedule</a></li>
                                                             <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
@@ -1467,6 +1466,10 @@ a.top-1 {
     }
 
     load_calendar();
+
+    $(".btn-create-event").click(function(){
+      location.href = base_url + "events/new_event";
+    });
 
     $('#gevent-start-time').datetimepicker({
        format: 'LT',

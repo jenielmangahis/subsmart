@@ -121,6 +121,10 @@ $(document).on("focusout", ".price", function () {
   calculation(counter);
 });
 
+$(document).on('change','#span_total_0',function(){
+    alert('Change Happened');
+});
+
 $(document).on("focusout", ".quantity", function () {
   var counter = $(this).data("counter");
   calculation(counter);
@@ -182,6 +186,8 @@ function calculation(counter) {
   $("#adjustment_amount_form_input").val(parseFloat(adjustment_amount));
   $("#invoice_sub_total").text(subtotal.toFixed(2));
   $("#sub_total_form_input").val(subtotal.toFixed(2));
+
+  $("#span_sub_total_0").text(subtotal.toFixed(2));
 
   var grandTotal = eval(
     $("#invoice_sub_total").text() + $("#adjustment_input").val()
@@ -323,6 +329,7 @@ function calculation(counter) {
 
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -347,6 +354,62 @@ $(document).on("click", "#add_another", function (e) {
     '" id="quantity_' +
     count +
     '" value="1">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="text" class="form-control" name="location[]">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control price" name="price[]" data-counter="' +
+    count +
+    '" id="price_' +
+    count +
+    '" min="0" value="0">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control discount" name="discount[]" data-counter="' +
+    count +
+    '" id="discount_' +
+    count +
+    '" min="0" value="0" readonly>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<span id="span_tax_' +
+    count +
+    '">0.00 (7.5%)</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<span id="span_total_' +
+    count +
+    '">0.00</span>\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
+    "</td>\n" +
+    "</tr> ";
+
+  $("#table_body").append(html);
+});
+
+$(document).on("click", "#add_another_estimate", function (e) { 
+  e.preventDefault();
+  var count = parseInt($("#count").val()) + 1;
+  $("#count").val(count);
+
+  var html =
+    "<tr>\n" +
+    "<td>\n" +
+    '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
+    "</td>\n" +    
+    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +
+    "<td>\n" +
+    '<input type="text" class="form-control quantity" name="desc[]">\n' +
+    "</td>\n" +
+    "<td>\n" +
+    '<input type="number" class="form-control quantity" name="quantity[]" data-counter="' +
+    count +
+    '" id="quantity_' +
+    count +
+    '" min="1" value="1">\n' +
     "</td>\n" +
     "<td>\n" +
     '<input type="text" class="form-control" name="location[]">\n' +

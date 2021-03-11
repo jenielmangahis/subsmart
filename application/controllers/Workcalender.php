@@ -893,33 +893,34 @@ class Workcalender extends MY_Controller
         $inc = 0;
         if(!empty($events)) {            
             foreach($events as $event) {
-
-                if($event->employee_id > 0) {
-                    $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
-                    $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
-                    $resources_user_events[$inc]['eventId'] = $event->id;
-                    $resources_user_events[$inc]['eventType'] = 'events';
-                    $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
-                    $resources_user_events[$inc]['title'] = $event->event_description;
-                    $resources_user_events[$inc]['start'] = $start_date_time;
-                    $resources_user_events[$inc]['end'] = $start_date_end;
-                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-
-                $inc++;
-                }elseif($event->employee_id == 0) {
-                    foreach($get_users as $get_user) {
+                if( $event->event_description != '' ){
+                   if($event->employee_id > 0) {
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                         $resources_user_events[$inc]['eventId'] = $event->id;
                         $resources_user_events[$inc]['eventType'] = 'events';
-                        $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
+                        $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
                         $resources_user_events[$inc]['end'] = $start_date_end;
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-                    $inc++; 
-                    }
-                   
+
+                    $inc++;
+                    }elseif($event->employee_id == 0) {
+                        foreach($get_users as $get_user) {
+                            $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
+                            $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                            $resources_user_events[$inc]['eventId'] = $event->id;
+                            $resources_user_events[$inc]['eventType'] = 'events';
+                            $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
+                            $resources_user_events[$inc]['title'] = $event->event_description;
+                            $resources_user_events[$inc]['start'] = $start_date_time;
+                            $resources_user_events[$inc]['end'] = $start_date_end;
+                            $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+                        $inc++; 
+                        }
+                       
+                    } 
                 }
             }
         }

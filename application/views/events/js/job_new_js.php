@@ -175,7 +175,7 @@ if(isset($jobs_data)){
             total = '$' + withCommas + '.00';
             console.log(total);
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ></td>\n" +
+                "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
                 "<td width=\"10%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
                 "<td width=\"10%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
@@ -485,6 +485,71 @@ if(isset($jobs_data)){
                 }
             });
         });
+
+        $("#update_status_to_omw").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/events/update_event_status",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        //window.location.reload();
+                        sucess_add('Job Status Updated to On My Way!',1);
+                    }else {
+                        warning('There is an error adding Customer. Contact Administrator!');
+                        console.log(data);
+                    }
+                }
+            });
+        });
+        $("#update_status_to_started").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/events/update_event_status",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        //window.location.reload();
+                        sucess_add('Job Status Updated to Started!',1);
+                    }else {
+                        warning('There is an error adding Customer. Contact Administrator!');
+                        console.log(data);
+                    }
+                }
+            });
+        });
+        $("#update_status_to_finished").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/events/update_event_status",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        //window.location.reload();
+                        sucess_add('Job Status Updated to Finished!',1);
+                    }else {
+                        warning('There is an error adding Customer. Contact Administrator!');
+                        console.log(data);
+                    }
+                }
+            });
+        });
+
         function sucess_add(information,is_reload){
             Swal.fire({
                 title: 'Good job!',
