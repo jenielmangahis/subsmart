@@ -265,8 +265,8 @@ $(function(){
 
     $("#create_campaign_send_to").submit(function(e){
         e.preventDefault();
-        var url = base_url + '/sms_campaigns/create_campaign_send_to';
-        $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
+        var url = base_url + 'sms_campaigns/create_campaign_send_to';
+        $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
@@ -279,7 +279,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "/sms_campaigns/build_sms";
+                    location.href = base_url + "sms_campaigns/build_sms";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);

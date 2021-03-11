@@ -94,8 +94,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $("#create_sms_blast").submit(function(e){
         e.preventDefault();
-        var url = base_url + '/sms_campaigns/save_draft_campaign';
-        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
+        var url = base_url + 'sms_campaigns/save_draft_campaign';
+        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
@@ -108,7 +108,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "/sms_campaigns/add_campaign_send_to";
+                    location.href = base_url + "sms_campaigns/add_campaign_send_to";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);

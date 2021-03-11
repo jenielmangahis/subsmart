@@ -43,7 +43,7 @@ top: 15px;
 left: -50%;
 z-index: -1;
 }
-.box-step-1, .box-step-2 {
+.box-step-1, .box-step-2, .box-step-3 {
   width: 400px;
   margin: 0 auto;
   display: block;
@@ -105,7 +105,7 @@ background-color:#27ae60;
 </style>
 
 <div class="login-box">
-
+<form id="frm-forgot-pw">
   <div class="col-md-12 center-fix">
     <ul class="progressbar">
       <li class="step-1 active">ENTER USER ID</li>
@@ -116,9 +116,15 @@ background-color:#27ae60;
   <div class="divider-box"></div>
   <div class="box-step-1">
     <div style="display:block;width:70%;margin:0 auto;">
+      <div class="stp1-msg"></div>
       <div class="input-group">
         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input id="userid" type="text" class="form-control" name="userid" placeholder="Enter your User ID">
+        <input id="user_id" type="text" class="form-control" name="user_id" placeholder="User ID">
+      </div>
+      <br />
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-map-marker"></i></span>
+        <input id="user_zipcode" type="text" class="form-control" name="user_zipcode" placeholder="Zip Code">
       </div>
     </div>
     <br class="clear" />
@@ -130,17 +136,17 @@ background-color:#27ae60;
   </div>
 
   <div class="box-step-2" style="display: none;">
-
+      <div class="stp2-msg"></div><br />
       <div style="display:block;width:70%;margin:0 auto;">
           <label for="">New Password</label>
-          <input type="password" name="new_password" id="newPassword" required="" class="form-control">
+          <input type="password" name="new_password" id="new_password" required="" class="form-control">
           <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
           <span class="old-password-error"></span>
       </div>
       <br class="clear" />
       <div style="display:block;width:70%;margin:0 auto;">
           <label for="">Retype Password</label>
-          <input type="password" name="re_password" id="rePassword" required="" class="form-control">
+          <input type="password" name="re_password" id="re_password" required="" class="form-control">
           <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
       </div>
       <br class="clear" />
@@ -150,19 +156,102 @@ background-color:#27ae60;
         <a class="btn-cancel" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CANCEL</a>
       </div>
   </div>
-  <br class="clear" /><br class="clear" />
 
+  <div class="box-step-3" style="display: none;">
+    <div style="display:block;width:70%;margin:0 auto;">
+      <div class="stp3-msg"></div>
+    </div>
+    
+  </div>
+
+  <br class="clear" /><br class="clear" />
+</form>
 </div>
 <!-- /.login-box -->
 
 <?php include 'includes/footer.php' ?>
 <script>
 $(function(){
+  var base_url = '<?= base_url() ?>';
   $(".btn-step1-next").click(function(){
-    $(".box-step-1").fadeOut();
-    $(".box-step-2").fadeIn();
+    var url = base_url + 'login/_check_user_id_exists';
+    $(".stp1-msg").html("");
 
-    $(".step-2").addClass('active');
+    if( $("#user_id").val() == '' ){
+      var msg = "<p class='alert alert-danger'>Please enter your user id</p>";
+      $('.stp1-msg').hide().html(msg).fadeIn(500);
+    }else if( $("#user_zipcode").val() == '' ){
+      var msg = "<p class='alert alert-danger'>Please enter your zip code</p>";
+      $('.stp1-msg').hide().html(msg).fadeIn(500);
+    }else{
+      $(".btn-step1-next").html('<span class="spinner-border spinner-border-sm m-0"></span>  Validating');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,    
+           dataType: "json",      
+           data: $("#frm-forgot-pw").serialize(),
+           success: function(o)
+           {
+              if( o.is_success == 1 ){
+                  $(".stp1-msg").html("");
+
+                  $(".box-step-1").css("display", "none");
+                  //$(".box-step-1").fadeOut();
+                  $(".box-step-2").fadeIn();
+
+                  $(".step-2").addClass('active');
+              }else{
+                  $('.stp1-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
+                  $(".btn-step1-next").html('CONTINUE');
+              }            
+           }
+        });
+      }, 1000);
+    }    
+  });
+
+  $(".btn-step2-next").click(function(){
+    var url = base_url + 'login/_update_user_password';
+    $(".stp2-msg").html("");
+    if( $("#new_password").val() == '' ){
+      var msg = "<p class='alert alert-danger'>Please enter your new password</p>";
+      $('.stp2-msg').hide().html(msg).fadeIn(500);
+    }else if( $("#re_password").val() == '' ){
+      var msg = "<p class='alert alert-danger'>Please retype your password</p>";
+      $('.stp2-msg').hide().html(msg).fadeIn(500);
+    }else{
+      $(".btn-step2-next").html('<span class="spinner-border spinner-border-sm m-0"></span>  Validating');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,    
+           dataType: "json",      
+           data: $("#frm-forgot-pw").serialize(),
+           success: function(o)
+           {
+              if( o.is_success == 1 ){
+                  $(".box-step-2").css("display", "none");
+                  //$(".box-step-2").fadeOut();
+                  $(".box-step-3").fadeIn();
+                  $(".step-3").addClass('active');
+
+                  $('.stp3-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
+                  setTimeout(function() {
+                    location.href = base_url + "login";
+                  }, 2500);
+              }else{
+                  $('.stp2-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
+                  $(".btn-step2-next").html('CONTINUE');
+              }            
+           }
+        });
+      }, 1000);
+    }
+  });
+
+  $(".btn-cancel").click(function(){
+    location.href = base_url + "login";
   });
 
   $('.showPass').click(function () {

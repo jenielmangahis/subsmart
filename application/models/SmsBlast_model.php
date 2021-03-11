@@ -86,6 +86,14 @@ class SmsBlast_model extends MY_Model
         $this->db->update();
     }
 
+    public function getServicePrice(){
+        return 5;
+    }
+
+    public function getPricePerSms(){
+        return 0.05;
+    }
+
 }
 
 /* End of file SmsBlast_model.php */
