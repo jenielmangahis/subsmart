@@ -1246,7 +1246,8 @@ class Accounting extends MY_Controller {
                         'qty_on_hand' => $qty,
                         'qty_po' => '',
                         'reorder_point' => $item->re_order_points,
-                        'item_categories_id' => $item->item_categories_id
+                        'item_categories_id' => $item->item_categories_id,
+                        'icon' => $item->attached_image
                     ];
                 }
             } else {
@@ -1266,7 +1267,8 @@ class Accounting extends MY_Controller {
                     'qty_on_hand' => $qty,
                     'qty_po' => '',
                     'reorder_point' => $item->re_order_points,
-                    'item_categories_id' => $item->item_categories_id
+                    'item_categories_id' => $item->item_categories_id,
+                    'icon' => $item->attached_image
                 ];
             }
         }
@@ -1343,6 +1345,12 @@ class Accounting extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+    public function get_item_form($type = "")
+    {
+        if($type) {
+            $this->load->view("accounting/products_services_modals/".$type, $this->page_data);
+        }
     }
     public function product_categories()
     {

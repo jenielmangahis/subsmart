@@ -59,12 +59,26 @@ class Timesheet_model extends MY_Model
         $date = date_create(date("Y-m-d H:i:s"));
         date_sub($date, date_interval_create_from_date_string("2 days"));
         $date_2days_ago = date_format($date, "Y-m-d H:i:s");
-        if (logged('role') > 0) {
-            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' order by user_notification.date_created Desc");
+
+        $and_query = "";
+        if ($action === "counter") {
+            $seened = $this->db->query("SELECT * from user_seen_notif where date_created >= '" . $date_2days_ago . "' and user_id = " . $user_id);
         } else {
-            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " and user_notification.user_id = " . $user_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' order by user_notification.date_created Desc");
+            $seened = $this->db->query("SELECT * from user_seen_notif where date_created >= '" . $date_2days_ago . "' and seen_status = 0 and user_id = " . $user_id);
+        }
+
+        foreach ($seened->result() as $row) {
+            $and_query = $and_query . " and user_notification.id != " . $row->notif_id;
+        }
+
+        if (logged('role') > 0) {
+            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " order by user_notification.date_created Desc");
+        } else {
+            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " and user_notification.user_id = " . $user_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " order by user_notification.date_created Desc");
         }
         if ($action === "counter") {
+            return $query->num_rows();
+        } elseif ($action === "notifCount") {
             return $query->num_rows();
         } else {
             if ($query->num_rows() != $current_notif_count) {
@@ -79,6 +93,34 @@ class Timesheet_model extends MY_Model
         // var_dump(query);
         // $qry = $query->result();
 
+    }
+    public function notif_user_acknowledge()
+    {
+        $user_id = $this->session->userdata('logged')['id'];
+        $company_id = logged('company_id');
+
+        $this->db->reset_query();
+        $date = date_create(date("Y-m-d H:i:s"));
+        date_sub($date, date_interval_create_from_date_string("2 days"));
+        $date_2days_ago = date_format($date, "Y-m-d H:i:s");
+
+        $and_query = "";
+        $seened = $this->db->query("SELECT * from user_seen_notif where user_id = " . $user_id);
+
+        foreach ($seened->result() as $row) {
+            $and_query = $and_query . " and id != " . $row->notif_id;
+        }
+
+        $query = $this->db->query("SELECT * from user_notification where company_id = " . $company_id . " and status = 1 and date_created >= '" . $date_2days_ago . "' " . $and_query . " order by user_notification.date_created Desc");
+        $seen_notif = array();
+        foreach ($query->result() as $row) {
+            $seen_notif[] = array(
+                "user_id" => $user_id,
+                "notif_id" => $row->id,
+                "seen_status" => 1
+            );
+        }
+        $this->db->insert_batch('user_seen_notif', $seen_notif);
     }
 
     public function get_company_admins($company_id)

@@ -422,10 +422,10 @@
                                 <!--</span>-->
                                 <!--                                </a>-->
                                 <div class="wrapper-bell dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0) ? 'visible' : 'hidden'; ?>; z-index: 20;width:auto; top: -4px;right: 3px" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
-                                                                                                                                                                                                                                                                        ?></span>
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: visible; z-index: 20;width:auto; top: -4px;right: 3px; display:none;" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
+                                                                                                                                                                                                                        ?></span>
 
-                                    <div class="bell" id="bell-1">
+                                    <div class="bell" onclick='sample()'>
                                         <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
                                         <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
                                         <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
@@ -748,6 +748,24 @@
             }
         };
 
+        function sample() {
+
+            console.log("solod");
+            $('#notifyBadge').hide();
+            if (notification_badge_value > 0) {
+                if (notification_badge_value > 0) {
+                    $.ajax({
+                        url: baseURL + '/timesheet/notif_user_acknowledge',
+                        type: "POST",
+                        dataType: 'json',
+                        success: function(data) {
+                            console.log("success");
+                        }
+                    });
+                }
+            }
+
+        }
         let notificationClockInOut = (function() {
             return function() {
                 $.ajax({
@@ -759,16 +777,17 @@
                     },
                     success: function(data) {
                         // console.log(data);
-                        if (notification_badge_value != data.notifyCount) {
-                            notification_badge_value = data.notifyCount;
-                            $('#notifyBadge').html(notification_badge_value);
-                            $('#nfcount').html(data.notifyCount);
+                        if (notification_badge_value != data.badgeCount) {
+                            notification_badge_value = data.badgeCount;
+                            // $('#notifyBadge').html(notification_badge_value);
+                            // $('#nfcount').html(data.notifyCount);
+                            // $('#notifyBadge').show();
                             // $('#autoNotifications').html(data.autoNotifications);
                             notification_viewer();
                             // console.log(data.notifyCount);
-                        } else if (notification_badge_value == 0) {
-                            $('#nfcount').html(0);
-
+                        }
+                        if (data.notifyCount < 1) {
+                            $('#autoNotifications').html("<div>No new notification</div>");
                         }
                         setTimeout(notificationClockInOut, 5000);
                     }
@@ -787,11 +806,21 @@
                     },
                     success: function(data) {
                         if (notification_html_holder_ctr != data.notifyCount && data.notifyCount != null) {
-                            $('#notifyBadge').html(data.notifyCount);
+                            $('#notifyBadge').html(data.badgeCount);
                             $('#nfcount').html(data.notifyCount);
                             $('#autoNotifications').html(data.autoNotifications);
                             notification_html_holder_ctr = data.notifyCount;
+                            notification_badge_value = data.badgeCount;
+
+                            if (data.badgeCount > 0) {
+                                // alert(data.badgeCount);
+                                $('#notifyBadge').show();
+                            } else {
+                                $('#notifyBadge').hide();
+                            }
+
                         }
+
                         // console.log(data.notifyCount+0);
                         // setTimeout(notificationClockInOut, 5000);
                     }
@@ -801,6 +830,7 @@
 
         $(document).ready(function() {
             var TimeStamp = null;
+            notification_viewer();
             notificationClockInOut();
         });
     </script>

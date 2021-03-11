@@ -1037,7 +1037,7 @@ add_css(array(
                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
                             <div class="col-sm-12">
-                                <?php if(!isset($jobs_data) && $jobs_data->status == 'Scheduled') : ?>
+                                <?php if(!isset($jobs_data) || $jobs_data->status == 'Scheduled') : ?>
                                     <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
                                 <?php endif; ?>
                                 <?php if(isset($jobs_data)): ?>

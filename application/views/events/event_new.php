@@ -53,29 +53,29 @@ add_css(array(
                                     <div class="stepwizard-row setup-panel">
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-1" type="button" class="btn btn-circle <?= !isset($jobs_data) || $jobs_data->status == 'New'  ? 'btn-success' : 'btn-default' ; ?>"><i style="font-size: 24px;" class="fa fa-pencil"></i></a>
+                                            <a href="#" type="button" class="btn btn-circle <?= !isset($jobs_data) || $jobs_data->status == '0'  ? 'btn-success' : 'btn-default' ; ?>"><i style="font-size: 24px;" class="fa fa-pencil"></i></a>
                                             <p class=""><small>Draft</small></p>
                                         </div>&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-2" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
+                                            <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '1'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
                                             <p class=""><small>Schedule</small></p>
                                         </div>&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-2" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'On My Way'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == '1'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '2'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
                                             <p><small>OMW</small></p>
                                         </div> &nbsp;&nbsp;&nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-3" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
-                                            <p><small>Start</small></p>
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == '2'): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '3'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
+                                            <p><small>Started</small></p>
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-5" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Finished'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
-                                            <p><small>Finish</small></p>
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == '3'): ?>data-toggle="modal" data-target="#finish_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '4'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
+                                            <p><small>Finished</small></p>
                                         </div>
 
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#step-6" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Finished'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                            <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '5'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa fa-copy"></span>
                                             </a>
                                             <p><small>Convert To Job</small></p>
@@ -135,7 +135,7 @@ add_css(array(
                                         <?php foreach ($color_settings as $color): ?>
                                             <li>
                                                 <a data-color="<?= $color->color_code; ?>" style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1">
-                                                    <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
+                                                    <?php if(isset($jobs_data) && $jobs_data->event_color == $color->color_code) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
                                                 </a>
                                             </li>
                                         <?php endforeach; ?>
@@ -169,7 +169,7 @@ add_css(array(
                                 <option value="">Select Event Type</option>
                                 <?php if(!empty($job_types)): ?>
                                     <?php foreach ($job_types as $type): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -515,80 +515,6 @@ add_css(array(
                         </div>
                         <div class="col-md-12 table-responsive">
                             <div class="row">
-                                <br>
-                                <div class="col-sm-12">
-                                    <div class="card box_right" id="notes_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
-                                        <div class="row">
-                                            <div class="col-md-12 ">
-                                                <div class="card-header">
-                                                    <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                    <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div id="notes_edit_btn_right" class="pencil" style="width:100%; height:100px;cursor: pointer;">
-                                                        <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
-                                                    </div>
-                                                    <div id="notes_input_div_right" style="display:none;">
-                                                        <div style=" height:70px;margin-bottom: 10px;">
-                                                            <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt_right" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
-                                                            <button type="button" class="btn btn-primary btn-sm" id="save_memo_right" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card-footers">
-                                                    <div style="float: right;margin-bottom: 10px;">
-                                                        <a href="javascript:void(0);" id="edit_note_right" class="fa fa-pencil box_footer_icon"></a> &nbsp;
-                                                        <?php if(isset($jobs_data)) : ?>
-                                                        <a href="#"  class="fa fa-history box_footer_icon"></a> &nbsp;
-                                                        <a href="#"  class="fa fa-trash box_footer_icon"></a> &nbsp;
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="card box_right" id="url_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
-                                        <div class="row">
-                                            <div class="col-md-12 ">
-                                                <div class="card-header">
-                                                    <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                    <h5 style="padding-left: 20px;">Url Link</h5>
-                                                </div>
-                                                <div class="card-body">
-
-                                                    <?php
-                                                    if(isset($jobs_data) && $jobs_data->link != NULL) {
-                                                        ?>
-                                                        <a target="_blank" href="<?= $jobs_data->link; ?>"><p><?= $jobs_data->link; ?></p></a>
-                                                        <?php
-                                                    }else{
-                                                        ?>
-                                                        <span class="help help-sm help-block">Enter url link or a pdf link </span>
-                                                        <?php
-                                                    } ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--<div class="col-sm-12">
-                                    <div class="card box_right" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
-                                        <div class="row">
-                                            <div class="col-md-12 ">
-                                                <div class="card-header">
-                                                    <a href="javascript:void(0);" id="attach_right_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
-                                                    <h5 style="padding-left: 20px;">Photos/Attachments</h5>
-
-                                                </div>
-                                                <div class="card-body">
-                                                    <span class="help help-sm help-block">download pdf,jpg,png</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>-->
                                 <div class="col-sm-12">
                                     <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.">
                                 </div>
@@ -886,71 +812,6 @@ add_css(array(
     </div>
 </div>
 
-<!-- Signature Modal -->
-<div class="modal fade" id="updateSignature" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Approval</h4>
-            </div>
-            <div class="modal-body">
-                <label>Authorizer Name</label>
-                <input type="text" name="authorizer_name" id="authorizer_name" class="form-control" >
-                <br>
-                <small>Signature Below</small>
-                <hr>
-                <div id="signature" style='border:none;'>
-                    <canvas id="signature-pad" class="signature-pad" width="430px" height="230px"></canvas>
-                </div>
-                <textarea style="display: none;" name="data[output]" id='output'></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="click" class="btn btn-primary save-signature" data-dismiss="modal">
-                    <span class="fa fa-paper-plane-o"></span> Save
-                </button>
-                <button type="button" id="cancel-signature" class="btn btn-default" data-dismiss="modal">
-                    <span class="fa fa-close"></span> Cancel
-                </button>
-                <button type="button" id="clear-signature" class="btn btn-default">
-                    <span class="fa fa-close"></span> Clear
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- eSgin Modal -->
-<div class="modal fade" id="fill_esign" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Fill & eSign</h4>
-            </div>
-            <div class="modal-body">
-                <a href="<?= base_url('esign/createTemplate'); ?>" style="float: right;" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span> Add New</a>
-                <select name="library_template" id="library_template" class="select2LibrarySelection dropdown form-control">
-                    <option>Select Library Template</option>
-                    <?php if(isset($esign_templates)) : ?>
-                        <?php foreach($esign_templates as $esign_template){ ?>
-                            <option value="<?= $esign_template->esignLibraryTemplateId; ?>"><?= $esign_template->title; ?></option>
-                        <?php } ?>
-                    <?php endif; ?>
-                </select>
-                <br>
-                <small>Template</small>
-                <hr>
-                <textarea id="summernote" name="template"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span> Close</button>
-                <button type="button" id="click" class="btn btn-primary save-signature"><span class="fa fa-paper-plane-o"></span> Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Modal -->
 <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -999,207 +860,104 @@ add_css(array(
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="estimates_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Select Estimate To Make a Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="estimates_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> Estimate #</td>
-                                <td> Job & Customer</td>
-                                <td> Date</td>
-                                <td> </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($estimates)): ?>
-                                <?php foreach ($estimates as $estimate): ?>
-                                    <tr>
-                                        <td><?= $estimate->estimate_number; ?></td>
-                                        <td><?= $estimate->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($estimate->estimate_date)); ?></td>
-                                        <td>
-                                            <button id="<?= $estimate->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default estimate_select">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="workorder_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Select WorkOrder To Make a Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="workorder_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> WorkOrder #</td>
-                                <td> Job Name</td>
-                                <td> Date</td>
-                                <td> </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($workorders)): ?>
-                                <?php foreach ($workorders as $workorder): ?>
-                                    <tr>
-                                        <td><?= $workorder->work_order_number; ?></td>
-                                        <td><?= $workorder->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($workorder->start_date)); ?></td>
-                                        <td>
-                                            <button id="<?= $workorder->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default workorder_select">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="invoice_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Select Invoice To Make a Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="invoices_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> Invoice #</td>
-                                <td> Job Name</td>
-                                <td> Date</td>
-                                <td> </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($invoices)): ?>
-                                <?php foreach ($invoices as $invoice): ?>
-                                    <tr>
-                                        <td><?= $invoice->invoice_number; ?></td>
-                                        <td><?= $invoice->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($invoice->date_issued)); ?></td>
-                                        <td>
-                                            <button id="<?= $invoice->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default invoice_select">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Signature Modal -->
-<div class="modal fade" id="share_job_modal" role="dialog">
+<!-- On My Way Modal -->
+<div class="modal fade" id="omw_modal" role="dialog">
     <div class="close-modal" data-dismiss="modal">&times;</div>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Share Job To Other Employee</h4>
+                <h4 class="modal-title">On My Way</h4>
             </div>
-            <div class="modal-body">
-                <label>Employee 2</label>
-                <select id="employee2" name="employee2_" class="form-control">
-                    <option value="">Select Employee</option>
-                    <?php if(!empty($employees)): ?>
-                        <?php foreach ($employees as $employee): ?>
-                            <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
+            <form id="update_status_to_omw">
+                <div class="modal-body">
+                    <p>This will start travel duration tracking.</p>
+                    <p>On my way at:</p>
+                    <input type="date" name="event_omw_date" id="event_omw_date" class="form-control" required>
+                    <input type="hidden" name="id" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                    <input type="hidden" name="status" id="status" value="2">
+                    <select id="event_omw_time" name="event_omw_time" class="form-control" required>
+                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-paper-plane-o"></span> Save
+                    </button>
+                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
+                        <span class="fa fa-remove"></span> Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                <label>Employee 3</label>
-                <select id="employee3" name="employee3_" class="form-control">
-                    <option value="">Select Employee</option>
-                    <?php if(!empty($employees)): ?>
-                        <?php foreach ($employees as $employee): ?>
-                            <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
+<!-- Start Job Modal -->
+<div class="modal fade" id="start_modal" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Start Event</h4>
+            </div>
+            <form id="update_status_to_started">
+                <div class="modal-body">
+                    <p>This will stop travel duration tracking and start on event duration tracking.</p>
+                    <p>Start event at:</p>
+                    <input type="date" name="event_start_date" id="event_start_date" class="form-control" required>
+                    <input type="hidden" name="id" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                    <input type="hidden" name="status" id="status" value="3">
+                    <select id="event_start_time" name="event_start_time" class="form-control" required>
+                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-paper-plane-o"></span> Save
+                    </button>
+                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
+                        <span class="fa fa-remove"></span> Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                <label>Employee 4</label>
-                <select id="employee4" name="employee4_" class="form-control">
-                    <option value="">Select Employee</option>
-                    <?php if(!empty($employees)): ?>
-                        <?php foreach ($employees as $employee): ?>
-                            <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
+<!-- Start Job Modal -->
+<div class="modal fade" id="finish_modal" role="dialog">
+    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Finish Event</h4>
             </div>
-            <div class="modal-footer">
-                <button type="button" id="" class="btn btn-primary">
-                    <span class="fa fa-paper-plane-o"></span> Save
-                </button>
-                <button type="button" id="" class="btn btn-default" data-dismiss="modal">
-                    <span class="fa fa-remove"></span> Close
-                </button>
-            </div>
+            <form id="update_status_to_finished">
+                <div class="modal-body">
+                    <p>This will stop travel duration tracking and start on event duration tracking.</p>
+                    <p>Start event at:</p>
+                    <input type="date" name="event_finish_date" id="event_finish_date" class="form-control" required>
+                    <input type="hidden" name="id" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                    <input type="hidden" name="status" id="status" value="4">
+                    <select id="event_finish_time" name="event_finish_time" class="form-control" required>
+                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-paper-plane-o"></span> Save
+                    </button>
+                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
+                        <span class="fa fa-remove"></span> Close
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
