@@ -63,29 +63,21 @@ class Timesheet_model extends MY_Model
         $and_query = "";
         if ($action === "counter") {
             $seened = $this->db->query("SELECT * from user_seen_notif where date_created >= '" . $date_2days_ago . "' and user_id = " . $user_id);
-        } else {
-            $seened = $this->db->query("SELECT * from user_seen_notif where date_created >= '" . $date_2days_ago . "' and seen_status = 0 and user_id = " . $user_id);
+            if($seened->num_rows() > 0){
+                foreach ($seened->result() as $row) {
+                    $and_query = $and_query . " and user_notification.id != " . $row->notif_id;
+                } 
+            }
         }
 
-        foreach ($seened->result() as $row) {
-            $and_query = $and_query . " and user_notification.id != " . $row->notif_id;
-        }
+        $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where user_notification.company_id = " . $company_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " order by user_notification.date_created Desc");
 
-        if (logged('role') > 0) {
-            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " order by user_notification.date_created Desc");
-        } else {
-            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " and user_notification.user_id = " . $user_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " order by user_notification.date_created Desc");
-        }
-        if ($action === "counter") {
+        if ($action === "counter") { 
             return $query->num_rows();
         } elseif ($action === "notifCount") {
             return $query->num_rows();
         } else {
-            if ($query->num_rows() != $current_notif_count) {
                 return $query->result();
-            } else {
-                return null;
-            }
         }
 
 

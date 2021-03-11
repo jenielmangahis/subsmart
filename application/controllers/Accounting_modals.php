@@ -43,11 +43,11 @@ class Accounting_modals extends MY_Controller {
         if ($view) {
             switch ($view) {
                 case 'pay_down_credit_card_modal':
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                 break;
                 case 'single_time_activity_modal':
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
 
                     $time = '00:00';
@@ -93,7 +93,7 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['journal_no'] = $lastJournalNo + 1;
                     $this->page_data['accounts'] = $bankAccounts;
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
                 case 'transfer_modal' :
@@ -151,7 +151,7 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['balance'] = $selectedBalance;
                     $this->page_data['accounts'] = $bankAccounts;
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
                 case 'inventory_qty_modal':
@@ -198,7 +198,7 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'weekly_timesheet_modal':
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getVendors();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
 
                     $date = date('m/d/Y');

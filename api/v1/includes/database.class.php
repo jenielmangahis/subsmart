@@ -1,5 +1,5 @@
 <?php
-define("SERVER", "gator4155.hostgator.com");
+define("SERVER", "localhost"); // gator4155.hostgator.com
 define("DB_NAME", "admintom_nsmart_companies");
 define("DB_USER", "admintom_admin");
 define("DB_PASSWORD", "SmarTrac1$!");

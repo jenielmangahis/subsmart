@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+include_once 'application/services/InvoiceCustomer.php';
+
 class Accounting extends MY_Controller {
 
     private $upload_path = "./uploads/accounting/";
@@ -38,6 +40,7 @@ class Accounting extends MY_Controller {
         $this->load->model('items_model');
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('Invoice_settings_model', 'invoice_settings_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -1349,7 +1352,45 @@ class Accounting extends MY_Controller {
     public function get_item_form($type = "")
     {
         if($type) {
+            $this->page_data['inventory_asset_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 2, 5);
+            $this->page_data['income_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 11, 86);
+            $this->page_data['expense_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 13, 98);
+            $this->page_data['tax_rates'] = $this->TaxRates_model->getAllByCompanyId(getLoggedCompanyID());
+            $this->page_data['vendors'] = $this->vendors_model->getAllByCompany();
             $this->load->view("accounting/products_services_modals/".$type, $this->page_data);
+        }
+    }
+    public function get_item_dropdown()
+    {
+        $filters = [
+            'status' => [1]
+        ];
+        $items = $this->items_model->getItemsWithFilter($filters);
+
+        $return = [];
+
+        foreach($items as $item) {
+            $name = $item->title;
+            if($item->item_categories_id !== null && $item->item_categories_id !== "" && $item->item_categories_id !== "0") {
+                $category = $this->items_model->getCategory($item->item_categories_id);
+                $name = $category->name.': '.$item->title;
+            }
+            $return['results'][] = [
+                'id' => $item->id,
+                'text' => $name
+            ];
+        }
+
+        echo json_encode($return);
+    }
+    public function inactive_item($id)
+    {
+        $inactive = $this->items_model->inactiveItem($id);
+
+        if($inactive) {
+            $this->session->set_flashdata('success', "Item is now inactive.");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
         }
     }
     public function product_categories()
@@ -5202,11 +5243,35 @@ class Accounting extends MY_Controller {
     }
 
     public function addnewInvoice(){
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['items'] = $this->items_model->getItemlist();
-        $this->page_data['invoices'] = $this->accounting_invoices_model->getInvoices();
-        $this->page_data['page_title'] = "Invoices";
-        // print_r($this->page_data);
+        // $this->load->helper('url');
+        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->page_data['items'] = $this->items_model->getItemlist();
+        // $this->page_data['invoices'] = $this->accounting_invoices_model->getInvoices();
+        // $this->page_data['page_title'] = "Invoices";
+        // // print_r($this->page_data);
+        // $this->load->view('accounting/addInvoice', $this->page_data);
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        if (!empty($setting)) {
+            foreach ($setting as $key => $value) {
+                if (is_serialized($value)) {
+                    $setting->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['setting'] = $setting;
+        }
+        
+
         $this->load->view('accounting/addInvoice', $this->page_data);
     }
 

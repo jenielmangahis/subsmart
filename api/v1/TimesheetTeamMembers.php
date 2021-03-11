@@ -117,7 +117,8 @@ function GET($id, $flag = "ALL", $status = "") {
         $data = array();
 
         // get active attendance
-        $attendance = $db->fetchAll("select * from timesheet_attendance where user_id = $user_id order by date_created desc");
+        //$attendance = $db->fetchAll("select * from timesheet_attendance where user_id = $user_id order by date_created desc");
+        $attendance = $db->fetchAll("select * from timesheet_attendance where user_id = $user_id order by id desc");
 
         // init vars
         $total_hours = 0.0;
@@ -133,6 +134,15 @@ function GET($id, $flag = "ALL", $status = "") {
             $total_hours += doubleval($item['shift_duration']);
             $total_break += doubleval($item['break_duration']);
             $total_overtime += doubleval($item['overtime']);
+
+            // get date_created from log
+            //$log = $db->fetchRow("select * from timesheet_logs where attendance_id = $attendance_id and action = 'Check in'");
+            //$item['date_created'] = $log['date_created'];
+
+            // update attendance date_created
+            //$params['date_created'] = $logs['date_created'];
+            //$update = $db->updateQuery($params,'timesheet_attendance', $attendance_id,'id');
+            //$item['date_created'] = $log['date_created'];
 
             // init logs array
             $mLogs = array();

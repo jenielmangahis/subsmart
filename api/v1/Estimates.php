@@ -123,8 +123,8 @@ function GET($id, $flag = "ALL") {
         $rows = $db->fetchAll("select *, concat('https://nsmartrac.com/', signature) as signature from estimates where id = $id");
     }
 
+    // init data array
     $data = array();
-    $items = array();
 
     foreach ($rows as $row) {
         // get customer
@@ -141,6 +141,9 @@ function GET($id, $flag = "ALL") {
             $row['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
         }
 
+        // init items array
+        $items = array();
+
         // get items
         $estimate_id = $row['id'];
         $estimate_items = $db->fetchAll("select * from estimates_items where estimates_id = $estimate_id");
@@ -151,6 +154,7 @@ function GET($id, $flag = "ALL") {
 
             $item['descriptionn']    = $item['description'];
             $item['cost_per']        = $item['cost per'];
+            $item['option_message']  = $temp['option_message'];
 
             // unset
             unset($item['description']);

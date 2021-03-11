@@ -107,6 +107,7 @@ function INSERT() {
 
     $params = json_decode(file_get_contents('php://input'),true);
     $company_id = $params['company_id'];
+    $user_id = $params['user_id'];
     $message = $params['message'];
     unset($params['message']);
 
@@ -116,13 +117,13 @@ function INSERT() {
     if($insert) {
         // check if message is not empty
         if (!empty($message)) {
-            
+
             // init array
             $iOSRegIds = array();
             $androidRegIds = array();
 
             // get admin details from team member
-            $rows = $db->fetchAll("select tm.*, u.device_token, u.device_type from timesheet_team_members tm, users u where tm.company_id = $company_id and tm.role = 'Admin' and u.id = tm.user_id");
+            $rows = $db->fetchAll("select tm.*, u.device_token, u.device_type from timesheet_team_members tm, users u where tm.company_id = $company_id and tm.role = 'Admin' and u.id = tm.user_id and u.id != $user_id");
             // iterate
             foreach ($rows as $row) {
                 // get token

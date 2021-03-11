@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		background-repeat: no-repeat;
 		background-position: center;
 	}
-	.no-icon:hover {
+	.no-icon:hover, .preview-uploaded:hover {
 		cursor: pointer;
 		border-color: #8d9096 !important;
 	}
@@ -410,6 +410,109 @@ function selectType(type)
 	$('#type-selection-modal').modal('show');
 }
 
+function removeIcon()
+{
+	$('.modal-right-side input#icon').val('').trigger('change');
+}
+
+$(document).on('click', '#products-services-table .make-inactive', function(e) {
+	e.preventDefault();
+	var row = $(this).parent().parent().parent().parent();
+	var rowData = $('#products-services-table').DataTable().row(row).data();
+
+	$.ajax({
+        url: `/accounting/products-and-services/inactive/${rowData.id}`,
+        type: 'DELETE',
+        success: function(result) {
+            location.reload();
+        }
+    });
+});
+
+$(document).on('change', '.modal-right-side input#icon', function() {
+	if($(this)[0].files && $(this)[0].files[0]) {
+		var reader = new FileReader();
+
+		reader.onload = function(e) {
+			$('img.image-prev').attr('src', e.target.result);
+		}
+
+		reader.readAsDataURL($(this)[0].files[0]);
+
+		$('img.image-prev').parent().addClass('d-flex justify-content-center');
+		$('img.image-prev').parent().removeClass('hide');
+		$('img.image-prev').parent().prev().addClass('hide');
+	} else {
+		$('img.image-prev').parent().removeClass('d-flex justify-content-center');
+		$('img.image-prev').parent().addClass('hide');
+		$('img.image-prev').parent().prev().removeClass('hide');
+	}
+});
+
+$(document).on('click', '#bundle-items-table tbody tr td:not(:last-child)', function() {
+	if($(this).parent().find('select[name="item_id[]"]').length < 1) {
+		$(this).parent().children('td:first-child').append('<select name="item_id[]" class="form-control"></select>');
+		$(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
+
+		$(this).parent().find('select[name="item_id[]"]').select2({
+			ajax: {
+				url: 'products-and-services/items-dropdown',
+				dataType: 'json'
+			}
+		});
+	}
+});
+
+$(document).on('click', '#bundle-form-modal #addBundleItem', function(e) {
+	e.preventDefault();
+	$('#bundle-form-modal #bundle-items-table tbody').append(`
+	<tr>
+		<td></td>
+		<td></td>
+		<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+	</tr>
+	`);
+});
+
+$(document).on('click', '#bundle-form-modal #bundle-items-table .deleteRow', function(e) {
+	e.preventDefault();
+
+	if($('#bundle-items-table tbody tr').length > 2) {
+		$(this).parent().parent().remove();
+	} else {
+		$(this).parent().parent().children('td:not(:last-child)').html('');
+	}
+});
+
+$(document).on('change', '.modal-right-side .modal #selling, .modal-right-side .modal #purchasing', function() {
+	if($(this).prop('checked') === false) {
+		$(this).parent().parent().parent().children('div:not(:first-child)').addClass('hide');
+
+		if($(this).attr('id') === 'selling') {
+			$(this).parent().parent().parent().parent().parent().next().addClass('hide');
+
+			if($('.modal-right-side .modal #purchasing').prop('checked') === false) {
+				$('.modal-right-side .modal #purchasing').prop('checked', true).trigger('change');
+			}
+		} else {
+			if($('.modal-right-side .modal #selling').prop('checked') === false) {
+				$('.modal-right-side .modal #selling').prop('checked', true).trigger('change');
+			}
+		}
+	} else {
+		$(this).parent().parent().parent().children('div:not(:first-child)').removeClass('hide');
+
+		if($(this).attr('id') === 'selling') {
+			$(this).parent().parent().parent().parent().parent().next().removeClass('hide');
+		}
+	}
+});
+
 $('#types-table tr').on('click', function(e) {
 	var type = e.currentTarget.dataset.href;
 	$('#type-selection-modal').modal('hide');
@@ -420,6 +523,8 @@ $('#types-table tr').on('click', function(e) {
 		$(`#${type}-form-modal .datepicker input`).datepicker({
 			uiLibrary: 'bootstrap'
 		});
+
+		$(`#${type}-form-modal select`).select2();
 
 		$(`#${type}-form-modal`).modal('show');
 	});
@@ -725,7 +830,7 @@ $(`#products-services-table`).DataTable({
 						<span class="sr-only">Toggle Dropdown</span>
 					</button>
 					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#">Make inactive</a>
+						<a class="dropdown-item make-inactive" href="#">Make inactive</a>
 						<a class="dropdown-item" href="#">Run report</a>
 						<a class="dropdown-item" href="#">Duplicate</a>
 					</div>

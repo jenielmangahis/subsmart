@@ -46,7 +46,7 @@ class Events extends MY_Controller
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'table' => 'event_settings',
+            'table' => 'event_setting',
             'select' => 'id',
         );
         $event_settings = $this->general->get_data_with_param($get_event_settings);
@@ -57,7 +57,7 @@ class Events extends MY_Controller
                 'event_next_num' => 1,
                 'company_id' => $comp_id,
             );
-            $this->general->add_($event_settings_data, 'event_settings');
+            $this->general->add_($event_settings_data, 'event_setting');
         }
 
         // get all job tags
@@ -500,7 +500,7 @@ class Events extends MY_Controller
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'table' => 'event_settings',
+            'table' => 'event_setting',
             'select' => '*',
             'limit' => 1,
             'order' => array(
@@ -524,7 +524,7 @@ class Events extends MY_Controller
             'event_color' => $input['event_color'],
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
-            //'job_type' => $this->input->post('job_type'),
+            'event_address' => $input['event_address'],
             'status' => 1,//$this->input->post('job_status'),
             'description' => $input['message'],
             'company_id' => $comp_id,
@@ -551,7 +551,7 @@ class Events extends MY_Controller
             'event_next_num' => $event_settings[0]->event_next_num + 1,
             'company_id' => $comp_id,
         );
-        $this->general->add_($event_settings_data, 'event_settings');
+        $this->general->add_($event_settings_data, 'event_setting');
 
         echo $event_id;
     }

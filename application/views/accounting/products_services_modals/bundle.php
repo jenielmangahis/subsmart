@@ -41,13 +41,14 @@
                                             <input type="file" name="icon" id="icon" class="hide">
                                             <div class="icon-preview h-75">
                                                 <div class="no-icon border" onclick="document.getElementById('icon').click()"></div>
-                                                <div class="preview-uploaded border hide">
+                                                <div class="preview-uploaded border hide" onclick="document.getElementById('icon').click()">
+                                                    <img src="" alt="Preview image" class="image-prev w-100">
                                                 </div>
                                             </div>
                                             <div class="action-bar h-25 d-flex align-items-center justify-content-center">
                                                 <ul>
                                                     <li><a href="#" onclick="document.getElementById('icon').click()"><i class="fa fa-pencil"></i></li>
-                                                    <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                                                    <li><a href="#" onclick="removeIcon()"><i class="fa fa-trash-o"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -79,15 +80,15 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <table class="table table-bordered">
+                                            <table class="table table-bordered table-hover" id="bundle-items-table">
                                                 <thead>
                                                     <tr>
-                                                        <th>PRODUCT/SERVICE</th>
+                                                        <th width="70%">PRODUCT/SERVICE</th>
                                                         <th>QTY</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody class="cursor-pointer">
                                                     <tr>
                                                         <td></td>
                                                         <td></td>
@@ -100,6 +101,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            <a href="#" class="text-info" id="addBundleItem"><i class="fa fa-plus"></i> Add lines</a>
                                         </div>
                                     </div>
                                 </td>

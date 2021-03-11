@@ -57,7 +57,7 @@ $response = "";
 function DELETE_ALL() {
 
     $db = new database_handler();
-    $delete = $db->executeQuery("delete from customers");
+    $delete = $db->executeQuery("delete from acs_profile");
 
     if($delete) {
         $response = array("Status" => "success", "Code" => "200", "Message" => "Deleting all data successful.");
@@ -75,7 +75,7 @@ function DELETE_ALL() {
 function DELETE($id) {
 
     $db = new database_handler();
-    $delete = $db->executeQuery("delete from customers where id = $id");
+    $delete = $db->executeQuery("delete from acs_profile where prof_id = $id");
 
     if($delete) {
         $response = array("Status" => "success", "Code" => "200", "Message" => "Deleting data successful.");
@@ -93,24 +93,21 @@ function DELETE($id) {
 function GET($id, $flag = "ALL") {
     // curl
     $db = new database_handler();
-    $rows = $db->fetchAll("select * from customers where company_id = $id");
+    $rows = $db->fetchAll("select *, concat(first_name, ' ', last_name) as contact_name, concat(mail_add, ', ', city, ', ', state, ' ', zip_code) as contact_address from acs_profile where company_id = $id");
 
     if ($flag == "ONE") {
-        $rows = $db->fetchAll("select * from customers where id = $id");
+        $rows = $db->fetchAll("select *, concat(first_name, ' ', last_name) as contact_name, concat(mail_add, ', ', city, ', ', state, ' ', zip_code) as contact_address from acs_profile where prof_id = $id");
     }
 
     $data = array();
 
     foreach ($rows as $row) {
         // get id
-        $customer_id = $row['id'];
-        // get customer address
-        $address = $db->fetchAll("select * from address where customer_id = $customer_id");
+        $customer_id = $row['prof_id'];
         // get contacts
         $contacts = $db->fetchAll("select * from contacts where customer_id = $customer_id");
 
         // assign
-        $row['address']         = $address;
         $row['contacts']        = $contacts;
         $row['events']          = getAllEvents($customer_id);
         $row['work_orders']     = getAllWorkOrders($customer_id);
@@ -133,9 +130,9 @@ function GET($id, $flag = "ALL") {
 function INSERT() {
 
     $params     = json_decode(file_get_contents('php://input'),true);
-    
+
     $db = new database_handler();
-    $insert = $db->insertQuery($params, "customers");
+    $insert = $db->insertQuery($params, "acs_profile");
 
     if($insert) {
         $response = array("Status" => "success", "Code" => 200, "Message" => "Adding data successful.", "Data" => $insert['inserted_id']);
@@ -155,15 +152,13 @@ function UPDATE($id, $deleteOthers = "") {
     $params     = json_decode(file_get_contents('php://input'),true);
 
     $db = new database_handler();
-    $update = $db->updateQuery($params,'customers', $id,'id');
+    $update = $db->updateQuery($params,'acs_profile', $id,'prof_id');
 
     if($update) {
         // check
         if ($deleteOthers == "DELETE_OTHERS") {
             // delete contacts
             $delete = $db->executeQuery("delete from contacts where customer_id = $id");
-            // delete addresses
-            $delete2 = $db->executeQuery("delete from address where customer_id = $id");
         }
 
         $response = array("Status" => "success", "Code" => "200", "Message" => "Updating data successful.");

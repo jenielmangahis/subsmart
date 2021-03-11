@@ -6,7 +6,7 @@
  * Time: 10:11 AM
  */
 
-define("DSN", 'mysql:dbname=admintom_nsmart_companies;host=gator4155.hostgator.com');
+define("DSN", 'mysql:dbname=admintom_nsmart_companies;host=localhost');
 define("DB_USERNAME", 'admintom_admin');
 define("DB_PASSWORD", 'SmarTrac1$!');
 define("CLIENT_ID", 'admintom_admin');

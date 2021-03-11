@@ -41,6 +41,16 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getByAccAndDetailType($status, $accTypeId, $accDetailId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('active', $status);
+		$this->db->where('account_id', $accTypeId);
+		$this->db->where('acc_detail_id', $accDetailId);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
+
 	public function getFilteredAccounts($status, $order, $orderColumn)
 	{
 		$this->db->where('accounting_chart_of_accounts.company_id', logged('company_id'));

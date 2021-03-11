@@ -27,6 +27,12 @@ $response = "";
                 GET(trim($_GET["user_id"]), trim($_GET["start_date"]), trim($_GET["end_date"]), "ONE");
             }
             break;
+        case 'POST':
+            INSERT();
+            break;
+        case 'PUT':
+            UPDATE(trim($_GET["id"]));
+            break;
         default:
             // Unauthorized Request
             header("HTTP/1.0 401 Unauthorized");
@@ -87,6 +93,12 @@ function GET($id, $startDate, $endDate, $flag = "ALL") {
             // get logs
             $logs = $db->fetchAll("select * from timesheet_logs where attendance_id = $attendance_id order by id asc");
             $item['logs'] = $logs;
+
+            // update attendance date_created
+            //$params['date_created'] = $logs[0]['date_created'];
+            //$update = $db->updateQuery($params,'timesheet_attendance', $attendance_id,'id');
+            //$item['date_created'] = $logs[0]['date_created'];
+
             array_push($data, $item);
         }
         // attendance
@@ -118,6 +130,157 @@ function GET($id, $startDate, $endDate, $flag = "ALL") {
 }
 
 function GET_CURRENT($id) {
+
+    // get team
+    $team = GET_USER_TIMESHEET($id);
+
+    $response = array("Status" => "success", "Code" => 200, "Message" => "Fetching data successful.", "Data" => $team);
+    header("HTTP/1.0 200 OK");
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+function INSERT() {
+
+    $params = json_decode(file_get_contents('php://input'),true);
+    $attendance     = $params['attendance'];
+    $log            = $params['log'];
+    $user_id        = $params['user_id'];
+    $message        = $params['message'];
+    $company_id     = $params['company_id'];
+
+
+    // insert attendance
+    $db = new database_handler();
+    $insert = $db->insertQuery($attendance, "timesheet_attendance");
+
+    if($insert) {
+        // log
+        $id = $insert['inserted_id'];
+        $log['attendance_id'] = $id;
+        // insert log
+        $insert2 = $db->insertQuery($log, "timesheet_logs");
+
+        // check
+        if($insert2) {
+            // check if message is not empty
+            if (!empty($message)) {
+
+                // init array
+                $iOSRegIds = array();
+                $androidRegIds = array();
+
+                // get admin details from team member
+                $rows = $db->fetchAll("select tm.*, u.device_token, u.device_type from timesheet_team_members tm, users u where tm.company_id = $company_id and tm.role = 'Admin' and u.id = tm.user_id and u.id != $user_id");
+                // iterate
+                foreach ($rows as $row) {
+                    // get token
+                    $token = $row['device_token'];
+
+                    // check device_type
+                    if ($row['device_type'] == 'iOS') {
+                        // add device_token
+                        array_push($iOSRegIds,  $token);
+                    } else {
+                        // add device_token
+                        array_push($androidRegIds,  $token);
+                    }
+                }
+
+                // send the push
+                $ios = send_ios_push($iOSRegIds, "Time Clock Alert", $message);
+                $android = send_android_push($androidRegIds, "Time Clock Alert", $message);
+            }
+
+            // get user timesheet
+            $userTimesheet = GET_USER_TIMESHEET($user_id);
+
+            $response = array("Status" => "success", "Code" => 200, "Message" => "Adding data successful.", "Data" => $userTimesheet);
+            header("HTTP/1.0 200 OK");
+        } else {
+            $response = array("Status" => "error", "Code" => 400, "Message" => "There was an unexpected error occur!");
+            header("HTTP/1.0 400 Bad Request");
+        }
+    } else {
+        $response = array("Status" => "error", "Code" => 400, "Message" => "Adding data failed!");
+        header("HTTP/1.0 400 Bad Request");
+    }
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+function UPDATE($id) {
+
+    $params = json_decode(file_get_contents('php://input'),true);
+    $attendance     = $params['attendance'];
+    $log            = $params['log'];
+    $user_id        = $params['user_id'];
+    $message        = $params['message'];
+    $company_id     = $params['company_id'];
+
+    $db = new database_handler();
+    $update = $db->updateQuery($attendance,'timesheet_attendance', $id,'id');
+
+    if($update) {
+        // insert log
+        $insert = $db->insertQuery($log, "timesheet_logs");
+
+        // check
+        if($insert) {
+            // check if message is not empty
+            if (!empty($message)) {
+
+                // init array
+                $iOSRegIds = array();
+                $androidRegIds = array();
+
+                // get admin details from team member
+                $rows = $db->fetchAll("select tm.*, u.device_token, u.device_type from timesheet_team_members tm, users u where tm.company_id = $company_id and tm.role = 'Admin' and u.id = tm.user_id and u.id != $user_id");
+                // iterate
+                foreach ($rows as $row) {
+                    // get token
+                    $token = $row['device_token'];
+
+                    // check device_type
+                    if ($row['device_type'] == 'iOS') {
+                        // add device_token
+                        array_push($iOSRegIds,  $token);
+                    } else {
+                        // add device_token
+                        array_push($androidRegIds,  $token);
+                    }
+                }
+
+                // send the push
+                $ios = send_ios_push($iOSRegIds, "Time Clock Alert", $message);
+                $android = send_android_push($androidRegIds, "Time Clock Alert", $message);
+            }
+
+            // get user timesheet
+            $userTimesheet = GET_USER_TIMESHEET($user_id);
+
+            $response = array("Status" => "success", "Code" => 200, "Message" => "Adding data successful.", "Data" => $userTimesheet);
+            header("HTTP/1.0 200 OK");
+        } else {
+            $response = array("Status" => "error", "Code" => 400, "Message" => "There was an unexpected error occur!");
+            header("HTTP/1.0 400 Bad Request");
+        }
+
+    } else {
+        $response = array("Status" => "error", "Code" => "400", "Message" => "Updating data failed!");
+        header("HTTP/1.0 400 Bad Request");
+    }
+
+    // return the header
+    header('Content-Type: application/json');
+    echo json_encode($response);
+}
+
+function GET_USER_TIMESHEET($id) {
     // init array
     $team = array();
 
@@ -153,8 +316,14 @@ function GET_CURRENT($id) {
             $total_overtime += doubleval($item['overtime']);
 
             // get logs
-            $logs = $db->fetchAll("select * from timesheet_logs where attendance_id = $attendance_id order by date_created asc");
+            $logs = $db->fetchAll("select * from timesheet_logs where attendance_id = $attendance_id order by id desc");
             $item['logs'] = $logs;
+
+            // update attendance date_created
+            //$params['date_created'] = $logs[0]['date_created'];
+            //$update = $db->updateQuery($params,'timesheet_attendance', $attendance_id,'id');
+            //$item['date_created'] = $logs[0]['date_created'];
+
             array_push($data, $item);
         }
         // attendance
@@ -177,12 +346,7 @@ function GET_CURRENT($id) {
         array_push($team, $row);
     }
 
-    $response = array("Status" => "success", "Code" => 200, "Message" => "Fetching data successful.", "Data" => $team);
-    header("HTTP/1.0 200 OK");
-
-    // return the header
-    header('Content-Type: application/json');
-    echo json_encode($response);
+    return $team;
 }
 
 
