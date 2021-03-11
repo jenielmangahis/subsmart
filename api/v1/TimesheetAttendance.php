@@ -108,6 +108,11 @@ function GET($id, $flag = "ALL") {
         $logs = $db->fetchAll("select * from timesheet_logs where attendance_id = $id order by id asc");
         $row['logs'] = $logs;
 
+        // update attendance date_created
+        $params['date_created'] = $logs[0]['date_created'];
+        $update = $db->updateQuery($params,'timesheet_attendance', $id,'id');
+        $row['date_created'] = $logs[0]['date_created'];
+
         array_push($data, $row);
     }
 

@@ -60,12 +60,12 @@ add_css(array(
                                             <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '1'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
                                             <p class=""><small>Schedule</small></p>
                                         </div>&nbsp;
-                                        <div class="stepwizard-step col-xs-3">
+                                        <div class="stepwizard-step col-xs-3" id="btn_omw_status" style="display:none;">
                                             <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == '1'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '2'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
                                             <p><small>OMW</small></p>
-                                        </div> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        </div> &nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == '2'): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '3'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
+                                            <a href="#" <?php if(isset($jobs_data) && ($jobs_data->status == '2' || $jobs_data->status == '1')): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '3'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
                                             <p><small>Started</small></p>
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -74,7 +74,7 @@ add_css(array(
                                             <p><small>Finished</small></p>
                                         </div>
 
-                                        <div class="stepwizard-step col-xs-3">
+                                        <div class="stepwizard-step col-xs-3" id="convert_to_job" style="display:none;">
                                             <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '5'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa fa-copy"></span>
                                             </a>
@@ -164,6 +164,17 @@ add_css(array(
                             <select id="inputState" name="timezone" class="form-control">
                                 <option selected="">Central Time (UTC -5)</option>
                             </select>
+
+                            <h6>Select Event Tag</h6>
+                            <select id="job_tags" name="tags" class="form-control">
+                                <option value="">Select Event Tag</option>
+                                <?php if(!empty($tags)): ?>
+                                    <?php foreach ($tags as $tag): ?>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->event_tag == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+
                             <h6>Select Event Type</h6>
                             <select id="job_type_option" name="jobtypes" class="form-control" required>
                                 <option value="">Select Event Type</option>
@@ -173,15 +184,11 @@ add_css(array(
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
-                            <h6>Select Event Tag</h6>
-                            <select id="job_tags" name="tags" class="form-control">
-                                <option value="">Select Event Tag</option>
-                                <?php if(!empty($tags)): ?>
-                                    <?php foreach ($tags as $tag): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
+                            <p></p>
+                            <div id="pac-container">
+                                <input id="event_address" value="<?= isset($jobs_data) ?  $jobs_data->event_address : '';  ?>" name="event_address" class="form-control" type="text" placeholder="Enter a location" />
+                            </div>
+
                             <hr>
                             <!--<a href="#" data-toggle="modal" data-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="btn btn-primary pull-right text-link">
                                 <span class="fa fa-plus"></span> Share Event</a>-->
@@ -208,7 +215,7 @@ add_css(array(
                                 </div>
                                 <div id="notes_input_div" style="display:none;">
                                     <div style=" height:70px;margin-bottom: 10px;">
-                                        <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                        <textarea name="description" cols="40" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
                                         <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                     </div>
                                 </div>
@@ -226,7 +233,7 @@ add_css(array(
                             <br>
                         </div>
                     </div>
-                    <div class="card" id="attach_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
+                    <div class="card" id="attach_left_card" style="display:none;">
                         <div class="card-header" >
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#photos_attachment" aria-expanded="true" aria-controls="photos_attachment">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-image"></span>&nbsp; &nbsp;Photos / Attachments</h6>
@@ -283,15 +290,15 @@ add_css(array(
                         <div class="card-body">
                             <div class="row">
                                 <div style="display: flex; margin: 0;margin-right: auto;" >
-                                    <b>Created By: </b> <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
+                                    <b>Created By:</b>&nbsp;&nbsp;<span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
                                 </div>
-                                <a  class="add_new_customer" href="javascript:void(0)" id="add_another_invoice" data-toggle="modal" data-target="#new_customer">
+                                <a  class="add_new_customer" href="#" id="add_another_invoice" data-toggle="modal" data-target="#new_customer" style="display: none;">
                                     <span class="fa fa-plus-square"></span> Add New Customer
                                 </a>
                                 <hr>
-                                <div class="col-md-4">
+                                <div class="col-md-4" id="customer_select" style="display: none;">
                                     <h6>Customer Info</h6>
-                                    <select id="customer_id" name="customer_id" class="form-control" required>
+                                    <select id="customer_id" name="customer_id" class="form-control">
                                         <option value="">Select Existing Customer</option>
                                     </select>
                                     <table id="customer_info" class="table">
@@ -320,7 +327,7 @@ add_css(array(
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-8" id="customer_maps" style="display: none;">
                                     <div class="col-md-12">
                                         <div id="streetViewBody" class="col-md-6 float-left no-padding" style="padding-right:15px;"></div>
                                         <div id="map" class="col-md-6 float-left"></div>
@@ -328,7 +335,7 @@ add_css(array(
                                 </div>
                             </div>
                         </div>
-                        <hr>
+
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -341,7 +348,7 @@ add_css(array(
                             <tr>
                                 <td>
                                     <small>Event Type</small>
-                                    <input type="text" id="job_type" name="event_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
+                                    <input type="text" id="job_type" name="event_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly >
                                 </td>
                                 <td>
                                 </td>
@@ -352,10 +359,7 @@ add_css(array(
                                 <td>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:"></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:"></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span></button>
+
                                 </td>
                                 <td>
                                 </td>
@@ -370,61 +374,41 @@ add_css(array(
                         <br>
                         <div class="col-sm-12">
                             <p>Description of Event (optional)</p>
-                            <textarea name="job_description" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                            <textarea name="event_description" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
                             <hr/>
                         </div>
                         <div class="col-md-12 table-responsive">
                             <div class="row">
-                                <div class="col-md-6">
-                                    &nbsp;<div class="file-upload-drag">
-                                        <div class="drop">
-                                            <div class="cont">
-                                                <div class="tit">
-                                                    <?php if(isset($jobs_data) && $jobs_data->attachment != ""): ?>
-                                                        <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/attachment/placeholder.jpg"; ?> ">
-                                                    <?php else: ?>
-                                                        <p>Thumbnail</p>
-                                                        <p class="or-text">Or</p>
-                                                        <p>URL Link</p>
-                                                        <i style="color: #0b0b0b;">Upload on Photos/Attachments Box</i>
-                                                    <?php endif; ?>
-                                                    <!-- <p class="or-text">Or</p>
-                                                    <label>Choose File</label> -->
-                                                </div>
-                                            </div>
-                                            <input id="filetoupload" name="filetoupload" type="file" />
-                                            <!-- <img id="dis_image" style="display:none;" src="#" alt="your image" /> -->
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="col-md-6 row pr-0">
-                                    <div class="col-sm-6">
-                                        <label style="padding: 0 .75rem;">Subtotal</label>
-                                    </div>
-                                    <div class="col-sm-6 text-right pr-3">
-                                        <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <hr>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <small>Tax Rate</small>
-                                        <a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>
-                                        <select id="tax_rate" name="tax_rate" class="form-control">
-                                            <option value="">None</option>
-                                            <?php foreach ($tax_rates as $rate) : ?>
-                                                <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6 text-right pr-3">
-                                        <label id="invoice_tax_total">$0.00</label>
-                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <hr>
-                                    </div>
+                                        <!--<div class="col-sm-6 ">
+                                            <label style="padding: 0 .75rem;">Subtotal</label>
+                                        </div>
+                                        <div class="col-sm-6 text-right pr-3">
+                                            <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                        </div>
+                                        <div class="col-sm-12 tax_area">
+                                            <hr>
+                                        </div>
+                                        <div class="col-sm-6 tax_area">
+                                            <small>Tax Rate</small>
+                                            <a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>
+                                            <select id="tax_rate" name="tax_rate" class="form-control">
+                                                <option value="">None</option>
+                                                <?php foreach ($tax_rates as $rate) : ?>
+                                                    <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 text-right pr-3 tax_area">
+                                            <label id="invoice_tax_total">$0.00</label>
+                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                        </div>
+                                        <div class="col-sm-12 tax_area">
+                                            <hr>
+                                        </div>-->
+
                                     <!--<div class="col-sm-6 text-right pr-3">
                                         <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
                                             <span class="fa fa-plus-square fa-margin-right"></span>Discount
@@ -462,7 +446,7 @@ add_css(array(
                                                 </div>
                                                 <div class="card-body">
                                                     <div id="notes_edit_btn_right" class="pencil" style="width:100%; height:100px;cursor: pointer;">
-                                                        <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
+                                                        <?= isset($jobs_data) ? $jobs_data->description : ''; ?>
                                                     </div>
                                                     <div id="notes_input_div_right" style="display:none;">
                                                         <div style=" height:70px;margin-bottom: 10px;">
@@ -493,11 +477,10 @@ add_css(array(
                                                     <h5 style="padding-left: 20px;">Url Link</h5>
                                                 </div>
                                                 <div class="card-body">
-
                                                     <?php
-                                                    if(isset($jobs_data) && $jobs_data->link != NULL) {
+                                                    if(isset($jobs_data) && $jobs_data->url_link != NULL) {
                                                         ?>
-                                                        <a target="_blank" href="<?= $jobs_data->link; ?>"><p><?= $jobs_data->link; ?></p></a>
+                                                        <a target="_blank" href="<?= $jobs_data->url_link; ?>"><p><?= $jobs_data->url_link; ?></p></a>
                                                         <?php
                                                     }else{
                                                         ?>
@@ -513,14 +496,14 @@ add_css(array(
                            </div>
                             <br>
                         </div>
-                        <div class="col-md-12 table-responsive">
+                        <!--<div class="col-md-12 table-responsive">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.">
                                 </div>
                             </div>
                             <br>
-                        </div>
+                        </div>-->
                         <div class="row">
                             <input id="signature_link" type="hidden" name="signature_link">
                             <input id="name" type="hidden" name="authorize_name">
@@ -840,7 +823,7 @@ add_css(array(
                                     <?php $item_qty = get_total_item_qty($item->id); ?>
                                     <tr>
                                         <td><?= $item->title; ?></td>
-                                        <td><?= $item_qty->total_qty > 0 ? $item_qty->total_qty : 0; ?></td>
+                                        <td><?= $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
                                         <td><?= $item->price; ?></td>
                                         <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item"><span class="fa fa-plus"></span></button></td>
                                     </tr>
@@ -976,30 +959,37 @@ include viewPath('includes/footer');
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+
 
 <?php include viewPath('events/js/job_new_js'); ?>
 
 <script>
     var geocoder;
     function initMap(address=null) {
+
+        var input = document.getElementById('event_address');
+        new google.maps.places.Autocomplete(input);
+
         if(address == null){
             address = '6866 Pine Forest Rd Pensacola FL 32526';
+        }else{
+            const myLatLng = { lat: -25.363, lng: 131.044 };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                height:220,
+                center: myLatLng,
+            });
+            new google.maps.Marker({
+                position: myLatLng,
+                map,
+                title: "Hello World!",
+            });
+            geocoder = new google.maps.Geocoder();
+            codeAddress(geocoder, map,address);
         }
-        const myLatLng = { lat: -25.363, lng: 131.044 };
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 12,
-            height:220,
-            center: myLatLng,
-        });
-        new google.maps.Marker({
-            position: myLatLng,
-            map,
-            title: "Hello World!",
-        });
-        geocoder = new google.maps.Geocoder();
-        codeAddress(geocoder, map,address);
+
     }
 
     function codeAddress(geocoder, map,address) {

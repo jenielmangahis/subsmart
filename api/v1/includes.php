@@ -3,7 +3,7 @@ error_reporting(E_ERROR | E_PARSE);
 include_once("includes/connection.inc.php");
 include_once("includes/database.class.php");
 
-define("SERVER", "gator4155.hostgator.com");
+define("SERVER", "localhost");
 define("DB_NAME", "admintom_nsmart_companies");
 define("DB_USER", "admintom_admin");
 define("DB_PASSWORD", "SmarTrac1$!");
@@ -202,6 +202,8 @@ function send_ios_push($registrationIds, $title, $body) {
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true);
+	curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false);
 	$response = curl_exec($ch);
 	curl_close($ch);
 }

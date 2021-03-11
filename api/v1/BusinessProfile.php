@@ -62,6 +62,10 @@ function GET($id) {
     $row['nsmart_plans_name']   = $row2['plan_name'];
     $row['nsmart_plans_price']  = $row2['price'];
 
+    // get portfolio
+    $portfolio = $db->fetchAll("select *, concat('https://nsmartrac.com/', path) as path from portfolio_pictures where company_id = $company_id");
+    $row['portfolio'] = $portfolio;
+
     $response = array("Status" => "success", "Code" => 200, "Message" => "Fetching data successful.", "Data" => $row);
     header("HTTP/1.0 200 OK");
 

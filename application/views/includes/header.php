@@ -49,6 +49,7 @@
 
 
     <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
     <style type="text/css">
@@ -425,7 +426,7 @@
                                     <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: visible; z-index: 20;width:auto; top: -4px;right: 3px; display:none;" id="notifyBadge"> <?php //echo (getNotificationCount() != 0) ? getNotificationCount() : null;      
                                                                                                                                                                                                                         ?></span>
 
-                                    <div class="bell" onclick='sample()'>
+                                    <div class="bell" onclick='bell_acknowledged()'>
                                         <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-1 5000ms infinite' : 'unset' ?>">notifications_active</div>
                                         <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-2 5000ms infinite' : 'unset' ?>">notifications</div>
                                         <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0) ? 'animation-layer-3 5000ms infinite' : 'unset' ?>">notifications</div>
@@ -735,6 +736,7 @@
     </header><!-- End Navigation Bar-->
 
     <script type="text/javascript">
+        var user_id = <?= $user_id ?>;
         var all_notifications_html = '';
         var notification_badge_value = 0;
         var notification_html_holder_ctr = 0;
@@ -748,22 +750,22 @@
             }
         };
 
-        function sample() {
+        function bell_acknowledged() {
 
-            console.log("solod");
+            // console.log("solod");
             $('#notifyBadge').hide();
             if (notification_badge_value > 0) {
-                if (notification_badge_value > 0) {
-                    $.ajax({
-                        url: baseURL + '/timesheet/notif_user_acknowledge',
-                        type: "POST",
-                        dataType: 'json',
-                        success: function(data) {
-                            console.log("success");
-                        }
-                    });
-                }
+                notification_badge_value = 0;
+                $.ajax({
+                    url: baseURL + '/timesheet/notif_user_acknowledge',
+                    type: "POST",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log("Bell Acknowledged");
+                    }
+                });
             }
+
 
         }
         let notificationClockInOut = (function() {
@@ -789,7 +791,7 @@
                         if (data.notifyCount < 1) {
                             $('#autoNotifications').html("<div>No new notification</div>");
                         }
-                        setTimeout(notificationClockInOut, 5000);
+                        // setTimeout(notificationClockInOut, 5000);
                     }
                 });
             }
@@ -802,24 +804,22 @@
                     type: "POST",
                     dataType: "json",
                     data: {
-                        notifycount: notification_html_holder_ctr
+                        badgeCount: notification_badge_value
                     },
                     success: function(data) {
-                        if (notification_html_holder_ctr != data.notifyCount && data.notifyCount != null) {
-                            $('#notifyBadge').html(data.badgeCount);
-                            $('#nfcount').html(data.notifyCount);
-                            $('#autoNotifications').html(data.autoNotifications);
-                            notification_html_holder_ctr = data.notifyCount;
-                            notification_badge_value = data.badgeCount;
-
-                            if (data.badgeCount > 0) {
-                                // alert(data.badgeCount);
-                                $('#notifyBadge').show();
-                            } else {
-                                $('#notifyBadge').hide();
-                            }
-
+                        // alert(data.badgeCount);
+                        $('#notifyBadge').html(data.badgeCount);
+                        $('#nfcount').html(data.notifyCount);
+                        $('#autoNotifications').html(data.autoNotifications);
+                        notification_badge_value = data.badgeCount;
+                        if (data.badgeCount > 0) {
+                            // alert(data.badgeCount);
+                            $('#notifyBadge').show();
+                        } else {
+                            $('#notifyBadge').hide();
                         }
+
+
 
                         // console.log(data.notifyCount+0);
                         // setTimeout(notificationClockInOut, 5000);
@@ -831,6 +831,52 @@
         $(document).ready(function() {
             var TimeStamp = null;
             notification_viewer();
-            notificationClockInOut();
+            // notificationClockInOut();
+        });
+
+        async function notificationRing() {
+            const audio = new Audio();
+            audio.src = baseURL + '/assets/css/notification/notification_tone2.mp3';
+            audio.muted = false;
+            try {
+                await audio.play();
+            } catch (err) {
+                // console.log('error');
+            }
+        }
+
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('f3c73bc6ff54c5404cc8', {
+            cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('nsmarttrac');
+        channel.bind('my-event', function(data) {
+            if (data.user_id != user_id) {
+                notificationRing();
+                // console.log("posk");
+
+                // console.log(data.profile_img);
+                Push.Permission.GRANTED; // 'granted'
+                Push.create(data.FName + " " + data.LName, {
+                    body: data.content_notification,
+                    icon: data.profile_img,
+                    timeout: 20000,
+                    onClick: function() {
+                        window.focus();
+                        this.close();
+                    }
+                });
+            }
+            if (data.notif_action_made != "Lunchin" && data.notif_action_made != "Lunchout") {
+                notification_badge_value++;
+                $('#notifyBadge').html(notification_badge_value);
+                $('#notifyBadge').show();
+                var current_notifs = $('#autoNotifications').html();
+                $('#autoNotifications').html(data.html + current_notifs);
+            }
+
+
         });
     </script>

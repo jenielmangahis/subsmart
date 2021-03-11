@@ -323,6 +323,19 @@ if(isset($jobs_data)){
         $("#job_type_option").on( 'change', function () {
             var type = this.value;
             console.log(type);
+            if(type === 'Estimate'){
+                document.getElementById('convert_to_job').style.display = "block";
+                document.getElementById('customer_select').style.display = "block";
+                document.getElementById('customer_maps').style.display = "block";
+                document.getElementById('btn_omw_status').style.display = "block";
+                document.getElementById('add_another_invoice').style.display = "block";
+            }else{
+                document.getElementById('convert_to_job').style.display = "none";
+                document.getElementById('customer_select').style.display = "none";
+                document.getElementById('customer_maps').style.display = "none";
+                document.getElementById('btn_omw_status').style.display = "none";
+                document.getElementById('add_another_invoice').style.display = "none";
+            }
             $('#job_type').val(type);
         });
 

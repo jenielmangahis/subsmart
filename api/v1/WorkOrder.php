@@ -121,14 +121,14 @@ function DELETE($id) {
 function GET($id, $flag = "ALL") {
     // curl
     $db = new database_handler();
-    $rows = $db->fetchAll("select *, concat('https://nsmartrac.com/', before_signature) as before_signature, concat('https://nsmartrac.com/', after_signature) as after_signature, concat('https://nsmartrac.com/', owner_signature) as owner_signature from work_orders where company_id = $id");
+    $rows = $db->fetchAll("select *, concat('https://nsmartrac.com/', before_signature) as before_signature, concat('https://nsmartrac.com/', after_signature) as after_signature, concat('https://nsmartrac.com/', owner_signature) as owner_signature, concat('https://nsmartrac.com/', company_representative_signature) as company_representative_signature, concat('https://nsmartrac.com/', primary_account_holder_signature) as primary_account_holder_signature, concat('https://nsmartrac.com/', secondary_account_holder_signature) as secondary_account_holder_signature from work_orders where company_id = $id");
 
     if ($flag == "ONE") {
-        $rows = $db->fetchAll("select *, concat('https://nsmartrac.com/', before_signature) as before_signature, concat('https://nsmartrac.com/', after_signature) as after_signature, concat('https://nsmartrac.com/', owner_signature) as owner_signature from work_orders where id = $id");
+        $rows = $db->fetchAll("select *, concat('https://nsmartrac.com/', before_signature) as before_signature, concat('https://nsmartrac.com/', after_signature) as after_signature, concat('https://nsmartrac.com/', owner_signature) as owner_signature, concat('https://nsmartrac.com/', company_representative_signature) as company_representative_signature, concat('https://nsmartrac.com/', primary_account_holder_signature) as primary_account_holder_signature, concat('https://nsmartrac.com/', secondary_account_holder_signature) as secondary_account_holder_signature from work_orders where id = $id");
     }
 
+    // init data array
     $data = array();
-    $items = array();
 
     foreach ($rows as $row) {
         // get employee assigned
@@ -153,6 +153,9 @@ function GET($id, $flag = "ALL") {
             $row['customer_mobile'] = $customer['mobile'];
             $row['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
         }
+
+        // init items array
+        $items = array();
 
         // get items
         $work_order_id = $row['id'];
@@ -181,6 +184,18 @@ function GET($id, $flag = "ALL") {
         // get photos
         $photos = $db->fetchAll("select *, concat('https://nsmartrac.com/', path) as path from work_orders_photo where work_order_id = $work_order_id");
         $row['photos'] = $photos;
+
+        // init links array
+        $links = array();
+
+        // get links
+        $work_order_links = $db->fetchAll("select link from work_order_url_links where work_order_id = $work_order_id");
+        // iterate
+        foreach ($work_order_links as $link) {
+            array_push($links, $link['link']);
+        }
+        // assign
+        $row['links'] = $links;
 
         array_push($data, $row);
     }
@@ -235,6 +250,8 @@ function UPDATE($id, $deleteItems = "") {
         if ($deleteItems == "DELETE_ITEMS") {
             // delete work order items
             $delete = $db->executeQuery("delete from work_orders_items where work_order_id = $id");
+            // delete work order links
+            $delete2 = $db->executeQuery("delete from work_orders_url_links where work_order_id = $id");
         }
 
         $response = array("Status" => "success", "Code" => "200", "Message" => "Updating data successful.");

@@ -115,8 +115,8 @@ function GET($id, $flag = "ALL") {
         $rows = $db->fetchAll("select *, concat('https://nsmartrac.com/', signature) as signature from invoices where id = $id");
     }
 
+    // init data array
     $data = array();
-    $items = array();
 
     foreach ($rows as $row) {
         // get customer
@@ -132,6 +132,9 @@ function GET($id, $flag = "ALL") {
             $row['customer_mobile'] = $customer['mobile'];
             $row['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
         }
+
+        // init items array
+        $items = array();
 
         // get items
         $invoice_id = $row['id'];

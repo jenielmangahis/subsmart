@@ -67,21 +67,14 @@ function authenticate_user() {
         $userSign['display_company_title']  = (bool)$userSign['display_company_title'];
         $userSign['display_address_phone']  = (bool)$userSign['display_address_phone'];
         $userSign['display_usage_history']  = (bool)$userSign['display_usage_history'];
-        // get user address
-        $address = $db->fetchAll("select * from address where user_id = $user_id");
-        // get user phones
-        $phone = $db->fetchAll("select * from phone where user_id = $user_id");
-        // iterate phones
-        foreach ($phone as $item) {
-            $phone['extensionn'] = $phone['extension'];
-            // unset
-            unset($phone['extension']);
-        }
 
         // get company_id
         $company_id = $row['company_id'];
         // get company
         $company = $db->fetchRow("select *, concat('https://nsmartrac.com/', business_logo) as business_logo, concat('https://nsmartrac.com/', business_image) as business_image from business_profile where id = $company_id");
+        // get portfolio
+        $portfolio = $db->fetchAll("select *, concat('https://nsmartrac.com/', path) as path from portfolio_pictures where company_id = $company_id");
+        $company['portfolio'] = $portfolio;
 
         // assign
         $row['address']         = $address;

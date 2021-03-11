@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Customer_model extends MY_Model
 {
 
-    public $table = 'customers';
+    public $table = 'acs_profile';
 
 
     public function getAll()
@@ -13,7 +13,7 @@ class Customer_model extends MY_Model
         
         $role = logged('role');
 
-        if ($role == 2 || $role == 3) {
+        if ($role == 2 || $role == 3 || $role == 6) {
 
             $company_id = logged('company_id');
             
@@ -36,7 +36,7 @@ class Customer_model extends MY_Model
 
             if (isset($filter['q'])) {
 
-                $this->db->like('contact_name', $filter['q'], 'both');
+                $this->db->like('first_name', $filter['q'], 'both');
             }
         }
 
@@ -77,20 +77,20 @@ class Customer_model extends MY_Model
         $this->db->from($this->table);
 
         if (!$uid) {
-            $this->db->where('user_id', $user_id);
+            $this->db->where('fk_user_id', $user_id);
         } else {
-            $this->db->where('user_id', $uid);
+            $this->db->where('fk_user_id', $uid);
         }
 
         if (!empty($filter)) {
 
             if (isset($filter['q'])) {
 
-                $this->db->like('contact_name', $filter['q'], 'both');
+                $this->db->like('first_name', $filter['q'], 'both');
             }
         }
 
-        $this->db->order_by('id', 'DESC');
+        $this->db->order_by('prof_id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
@@ -102,7 +102,7 @@ class Customer_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('id', $customer_id);
+        $this->db->where('prof_id', $customer_id);
 
         $query = $this->db->get();
         return $query->row();
@@ -328,9 +328,9 @@ class Customer_model extends MY_Model
                 $this->db->where('status', $filters['status']);
             } elseif (isset($filters['search'])) {
                 $this->db->group_start();
-                $this->db->or_like('customers.contact_name', $filters['search']);
-                $this->db->or_like('customers.contact_email', $filters['search']);
-                $this->db->or_like('customers.phone', $filters['search']);
+                $this->db->or_like('acs_profile.first_name', $filters['search']);
+                $this->db->or_like('acs_profile.email', $filters['search']);
+                $this->db->or_like('acs_profile.phone_h', $filters['search']);
                 $this->db->group_end();
             } elseif (!empty($filters['type'])) {
 
@@ -351,27 +351,27 @@ class Customer_model extends MY_Model
             switch ($filters['order']) {
 
                 case 'name-asc':
-                    $this->db->order_by('contact_name', 'asc');
+                    $this->db->order_by('first_name', 'asc');
                     break;
 
                 case 'name-desc':
-                    $this->db->order_by('contact_name', 'desc');
+                    $this->db->order_by('first_name', 'desc');
                     break;
 
                 case 'last-name-asc':
-                    $this->db->order_by("(SUBSTR(contact_name, INSTR(contact_name, ' ')))", '');
+                    $this->db->order_by("(SUBSTR(first_name, INSTR(first_name, ' ')))", '');
                     break;
 
                 case 'last-name-desc':
-                    $this->db->order_by("(SUBSTR(contact_name, INSTR(contact_name, ' '))) DESC", '');
+                    $this->db->order_by("(SUBSTR(first_name, INSTR(first_name, ' '))) DESC", '');
                     break;
 
                 case 'email-asc':
-                    $this->db->order_by('contact_email', 'asc');
+                    $this->db->order_by('email', 'asc');
                     break;
 
                 case 'email-desc':
-                    $this->db->order_by('contact_email', 'desc');
+                    $this->db->order_by('email', 'desc');
                     break;
             }
         }

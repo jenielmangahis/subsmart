@@ -12,16 +12,7 @@ $(document).ready(function () {
     let lunch_s = 0;
     let difference = 0,latest_diff = 0;
 
-    async function notificationRing() { 
-        const audio = new Audio();
-        audio.src = baseURL+'../assets/css/notification/notification_tone2.mp3';
-        audio.muted = false;
-        try {
-           await audio.play();
-        } catch(err) {
-            // console.log('error');
-        }
-    }
+    
     if($('#clock-status').val() == 1){
         breakTime();
     }
@@ -78,17 +69,13 @@ $(document).ready(function () {
                                 icon: 'success'
                             });
                         
-                        if(data.profile_img==""){
-                            data.profile_img="/uploads/users/default.png";
-                        }else{
-                            // data.profile_img="/uploads/users/user-profile/"+data.profile_img;
-                            data.profile_img='uploads/users/user-profile/'+data.profile_img;
-                        }
+                        
+                        notificationRing();
 
                         Push.Permission.GRANTED; // 'granted'
-                        Push.create("Clock In", {
-                            body: "User : "+data.FName+" "+data.LName,
-                            icon: baseURL+data.profile_img,
+                        Push.create(data.FName+" "+data.LName, {
+                            body: "You're now clocked in!",
+                            icon: data.profile_img,
                             timeout: 20000,
                                 onClick: function () {
                                     window.focus();
@@ -232,6 +219,7 @@ function app_notification(token,body,device_type,company_id,title) {
                 if (difference <= 0){
                     difference = 1000;
                 }
+                notificationRing();
                 Swal.fire({
                     title: 'Do you want to overtime?',
                     // icon:'question',
@@ -477,11 +465,11 @@ function app_notification(token,body,device_type,company_id,title) {
                                     html: "You are now Clock-out",
                                     icon: 'success'
                                 });
-
+                            notificationRing();
                             Push.Permission.GRANTED; // 'granted'
-                            Push.create("Clock Out", {
-                                body: "User : "+data.FName+" "+data.LName,
-                                icon: baseURL+'uploads/users/user-profile/'+data.profile_img,
+                            Push.create(data.FName+" "+data.LName, {
+                                body: "You are now clocked out!",
+                                icon: data.profile_img,
                                 timeout: 20000,
                                     onClick: function () {
                                         window.focus();
@@ -642,8 +630,7 @@ function app_notification(token,body,device_type,company_id,title) {
 
 // end of Live clock
 
-   function sample(){
-       console.log("solod");
-   }
+   
+   
 
 });

@@ -87,7 +87,77 @@ function GET($id) {
     $db = new database_handler();
     $rows = $db->fetchAll("select * from work_order_types where company_id = $id");
 
-    $response = array("Status" => "success", "Code" => 200, "Message" => "Fetching data successful.", "Data" => $rows);
+    $data = array();
+    $items = array();
+
+    foreach ($rows as $row) {
+        // get id
+        $type_id = $row['id'];
+
+        // get template
+        $template = $db->fetchAll("select *, concat('https://nsmartrac.com/', before_signature) as before_signature, concat('https://nsmartrac.com/', after_signature) as after_signature, concat('https://nsmartrac.com/', owner_signature) as owner_signature, concat('https://nsmartrac.com/', company_representative_signature) as company_representative_signature, concat('https://nsmartrac.com/', primary_account_holder_signature) as primary_account_holder_signature, concat('https://nsmartrac.com/', secondary_account_holder_signature) as secondary_account_holder_signature from work_order_templates where work_order_type_id = $type_id limit 1");
+
+        // check
+        if (count($template) == 1) {
+            // get employee assigned
+            $user_id = $template[0]['employee_id'];
+            // check
+            if ($user_id > 0) {
+                $employee = $db->fetchRow("select * from users where id = $user_id");
+
+                $template[0]['employee_name'] = $employee['FName'] ." ". $employee['LName'];
+            }
+
+            // get customer
+            $customer_id = $template[0]['customer_id'];
+            // check
+            if ($customer_id > 0) {
+                $customer = $db->fetchRow("select * from customers where id = $customer_id");
+                $address = $db->fetchRow("select * from address where customer_id = $customer_id");
+
+                $template[0]['customer_name'] = $customer['contact_name'];
+                $template[0]['customer_email'] = $customer['contact_email'];
+                $template[0]['customer_phone'] = $customer['phone'];
+                $template[0]['customer_mobile'] = $customer['mobile'];
+                $template[0]['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
+            }
+
+            // get items
+            $work_order_id = $row['id'];
+            $work_order_items = $db->fetchAll("select * from work_orders_items where work_order_id = $work_order_id");
+            // iterate to get real items
+            foreach ($work_order_items as $temp) {
+                $item_id = $temp['items_id'];
+                $item = $db->fetchRow("select * from items where id = $item_id");
+
+                $item['descriptionn']    = $item['description'];
+                $item['cost_per']        = $item['cost per'];
+
+                // unset
+                unset($item['description']);
+                unset($item['cost per']);
+
+                // add to array based on qty
+                $qty = $temp['qty'];
+                for ($x=0; $x<$qty; $x++) {
+                    array_push($items, $item);
+                }
+            }
+            // assign
+            $template[0]['items'] = $items;
+
+            // get photos
+            $photos = $db->fetchAll("select *, concat('https://nsmartrac.com/', path) as path from work_orders_photo where work_order_id = $work_order_id");
+            $template[0]['photos'] = $photos;
+
+            // assign
+            $row['template'] = $template[0];
+        }
+
+        array_push($data, $row);
+    }
+
+    $response = array("Status" => "success", "Code" => 200, "Message" => "Fetching data successful.", "Data" => $data);
     header("HTTP/1.0 200 OK");
 
     // return the header

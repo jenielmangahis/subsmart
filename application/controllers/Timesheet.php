@@ -118,23 +118,24 @@ class Timesheet extends MY_Controller
         // $army_time_str = "01:00 PM";
         // $regular_time_str = date('H:i:s', strtotime($army_time_str));
         // echo ;
-        $ay = array();
-        $ay[] = "Lou";
-        $ay[] = "pinton";
-        $ipaddress = $this->gtMyIpGlobal();
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
-        $lat = $get_location->lat;
-        $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
-        $output = json_decode($g_map);
-        $status = $output->status;
-        $address = ($status == "OK") ? $output->results[1]->address_components : 'Address not found';
-        $longname = "";
-        foreach ($address as $row) {
-            $longname = $row->long_name;
-            break;
-        }
-        var_dump($longname);
+        // $ay = array();
+        // $ay[] = "Lou";
+        // $ay[] = "pinton";
+        // $ipaddress = $this->gtMyIpGlobal();
+        // $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
+        // $lat = $get_location->lat;
+        // $lng = $get_location->lon;
+        // $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        // $output = json_decode($g_map);
+        // $status = $output->status;
+        // $address = ($status == "OK") ? $output->results[1] : 'Address not found';
+        // $longname = "";
+        // foreach ($address as $row) {
+        //     $longname = $row->long_name;
+        //     break;
+        // }
+        // var_dump($ipaddress);
+        echo $this->session->userdata('offset_zone');
     }
 
     public function employee()
@@ -1307,7 +1308,7 @@ class Timesheet extends MY_Controller
         date_default_timezone_set($this->session->userdata('usertimezone'));
         $data = new stdClass();
         $data->lunch_out = date('h:i A');
-        $content_notification = 'Manually clocked out';
+        $content_notification = 'Manually clocked out ' . date('Y-m-d H:i:s') . " " . $this->session->userdata('offset_zone');
         date_default_timezone_set('UTC');
         $clock_out_notify = array(
             'user_id' => $user_id,
@@ -1812,7 +1813,7 @@ class Timesheet extends MY_Controller
     //	    $data = new stdClass();
     //	    $data->date_time = $date_time;
     //	    $data->end_time = $end_time;
-    //	    echo json_encode($data);
+    //	    echo json_encode($data); 
     //    }
 
     public function clockInEmployee_manual($user_id, $entry_type)
@@ -1837,10 +1838,10 @@ class Timesheet extends MY_Controller
         $check_attendance = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
         date_default_timezone_set($this->session->userdata('usertimezone'));
         if ($entry_type == "Manual") {
-            $content_notification = 'Manually clocked In ';
+            $content_notification = 'Manually clocked In ' . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
             $approved_by = $this->session->userdata('logged')['id'];
         } else {
-            $content_notification = "Clocked In in " . $employeeLongnameAddress;
+            $content_notification = "Clocked In in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
             $approved_by = 0;
         }
 
@@ -1893,19 +1894,60 @@ class Timesheet extends MY_Controller
             $data->attendance_id = $attn_id;
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
-            $data->profile_img = $getUserDetail->profile_img;
-            $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked In today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
+            $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked In today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
             $data->device_type =  $getUserDetail->device_type;
             $data->company_id = getLoggedCompanyID();
+            $data->user_id = $user_id;
             $data->token = $getUserDetail->device_token;
             $data->title = "Time Clock Alert";
 
+
+
+
+            $this->db->select('id');
+            $this->db->from('user_notification');
+            $this->db->where('user_id', $user_id);
+            $this->db->where('date_created', $clock_in);
+            $query = $this->db->get();
+            $notify = $query->row();
+
+            $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+            if (!@getimagesize($image)) {
+                $image = base_url('uploads/users/default.png');
+            }
+
+            $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            data-id="' . $notify->id . '" class="dropdown-item notify-item active"
+            style="background-color:#e6e3e3">
+            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $data->FName . " " . $data->LName . '<span class="text-muted">' . $content_notification . '</span></p>
+            </a>';
+
+            $data->html = $html;
+            $data->content_notification = $content_notification;
+            $data->profile_img = $image;
+            $this->pusher_notification($data);
             if ($entry_type == "Manual") {
                 echo json_encode($data);
             } else {
                 echo json_encode($data);
             }
         }
+    }
+
+    public function pusher_notification($data)
+    {
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            'f3c73bc6ff54c5404cc8',
+            '20b5e1eb05dc73068e61',
+            '1168724',
+            $options
+        );
+        $pusher->trigger('nsmarttrac', 'my-event', $data);
     }
 
     public function clockInEmployee()
@@ -2075,8 +2117,8 @@ class Timesheet extends MY_Controller
     {
 
         $userid = $this->session->userdata('logged')['id'];
-        $notifycount = $this->input->post('notifycount');
-        $notification = $this->timesheet_model->get_unreadNotification($notifycount, "");
+        $badgeCount = $this->input->post('badgeCount');
+        $notification = $this->timesheet_model->get_unreadNotification($badgeCount, "");
         $html = '';
         date_default_timezone_set($this->session->userdata('usertimezone'));
         if ($notification != null) {
@@ -2099,7 +2141,7 @@ class Timesheet extends MY_Controller
             data-id=' . $notify->id . '" class="dropdown-item notify-item active"
             style="background-color:' . $bg . '">
             <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
-            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . ' at ' . $date_created . ' ' . $this->session->userdata('usertimezone') . '</span></p>
+            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
             </a>';
             }
         }
@@ -2151,24 +2193,19 @@ class Timesheet extends MY_Controller
 
         // }
 
-        $clock_out = 0;
-        $sched_clockOut = $this->input->post('time');
-        if ($sched_clockOut == 0 || $sched_clockOut == null) {
-            $clock_out = date('Y-m-d H:i:s');
-        } else {
-            $clock_out = ($sched_clockOut / 1000);
-        }
+        $clock_out = date('Y-m-d H:i:s');
+
         $employeeLongnameAddress = $this->employeeLongNameAddress();
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
         if ($check_attn->num_rows() == 1) {
             date_default_timezone_set($this->session->userdata('usertimezone'));
-            $content_notification = "Clocked Out in " . $employeeLongnameAddress;
+            $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
             $clock_out_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock Out',
                 'content' => $content_notification,
-                'date_created' => date('Y-m-d H:i:s'),
+                'date_created' => $clock_out,
                 'status' => 1,
                 'company_id' => getLoggedCompanyID()
             );
@@ -2214,11 +2251,36 @@ class Timesheet extends MY_Controller
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
-            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
+            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
             $data->device_type =  $getUserDetail->device_type;
             $data->company_id = getLoggedCompanyID();
             $data->token = $getUserDetail->device_token;
             $data->title = "Time Clock Alert";
+
+
+            $this->db->select('id');
+            $this->db->from('user_notification');
+            $this->db->where('user_id', $user_id);
+            $this->db->where('date_created', $clock_out);
+            $query = $this->db->get();
+            $notify = $query->row();
+
+            $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+            if (!@getimagesize($image)) {
+                $image = base_url('uploads/users/default.png');
+            }
+
+            $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            data-id="' . $notify->id . '" class="dropdown-item notify-item active"
+            style="background-color:#e6e3e3">
+            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $data->FName . " " . $data->LName . '<span class="text-muted">' . $content_notification . '</span></p>
+            </a>';
+            $data->user_id = $user_id;
+            $data->html = $html;
+            $data->content_notification = $content_notification;
+            $data->profile_img = $image;
+            $this->pusher_notification($data);
             echo json_encode($data);
         }
     }
@@ -2275,12 +2337,23 @@ class Timesheet extends MY_Controller
         $data->FName = $getUserDetail->FName;
         $data->LName = $getUserDetail->LName;
         $data->profile_img = $getUserDetail->profile_img;
-        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is taking a Break today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
+        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is taking a Break today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
         $data->device_type =  $getUserDetail->device_type;
         $data->company_id = getLoggedCompanyID();
         $data->token = $getUserDetail->device_token;
         $data->title = "Time Clock Alert";
 
+
+        $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+        if (!@getimagesize($image)) {
+            $image = base_url('uploads/users/default.png');
+        }
+
+        $data->user_id = $user_id;
+        $data->content_notification = "Is taking a Break in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+        $data->profile_img = $image;
+        $data->notif_action_made = "Lunchin";
+        $this->pusher_notification($data);
         echo json_encode($data);
     }
 
@@ -2331,12 +2404,24 @@ class Timesheet extends MY_Controller
         $data->FName = $getUserDetail->FName;
         $data->LName = $getUserDetail->LName;
         $data->profile_img = $getUserDetail->profile_img;
-        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is On the Clock again today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('usertimezone') . " Time";
+        $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " is On the Clock again today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
         $data->device_type =  $getUserDetail->device_type;
         $data->company_id = getLoggedCompanyID();
         $data->token = $getUserDetail->device_token;
         $data->title = "Time Clock Alert";
 
+
+        $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+        if (!@getimagesize($image)) {
+            $image = base_url('uploads/users/default.png');
+        }
+
+        $data->user_id = $user_id;
+        $data->html = $html;
+        $data->content_notification = "Is on the Clock again today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+        $data->profile_img = $image;
+        $data->notif_action_made = "Lunchout";
+        $this->pusher_notification($data);
         echo json_encode($data);
     }
 

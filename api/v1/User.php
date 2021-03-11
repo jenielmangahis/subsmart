@@ -89,10 +89,10 @@ function DELETE($id) {
 function GET($id, $flag = "ALL") {
     // curl
     $db = new database_handler();
-    $rows = $db->fetchAll("select *, concat(FName, ' ', LName) as full_name from users where company_id = $id");
+    $rows = $db->fetchAll("select *, concat(FName, ' ', LName) as full_name, concat('https://nsmartrac.com/uploads/users/user-profile/', profile_img) as profile_img from users where company_id = $id");
 
     if ($flag == "ONE") {
-        $rows = $db->fetchAll("select *, concat(FName, ' ', LName) as full_name from users where id = $id");
+        $rows = $db->fetchAll("select *, concat(FName, ' ', LName) as full_name, concat('https://nsmartrac.com/uploads/users/user-profile/', profile_img) as profile_img from users where id = $id");
     }
 
     $data = array();
@@ -100,17 +100,6 @@ function GET($id, $flag = "ALL") {
     foreach ($rows as $row) {
         // get user_id
         $user_id = $row['id'];
-        // get user address
-        $address = $db->fetchAll("select * from address where user_id = $user_id");
-        // get user phones
-        $phone = $db->fetchAll("select * from phone where user_id = $user_id");
-        // iterate phones
-        foreach ($phone as $item) {
-            // change data type
-            $phone['extensionn'] = $phone['extension'];
-            // unset
-            unset($phone['extension']);
-        }
 
         // get company_id
         $company_id = $row['company_id'];
@@ -118,8 +107,6 @@ function GET($id, $flag = "ALL") {
         $company = $db->fetchRow("select *, concat('https://nsmartrac.com/', business_logo) as business_logo, concat('https://nsmartrac.com/', business_image) as business_image from business_profile where id = $company_id");
 
         // assign
-        $row['address']         = $address;
-        $row['phone']           = $phone;
         $row['company']         = $company;
         $row['notify_email']    = boolval($row['notify_email']);
         $row['notify_sms']      = boolval($row['notify_sms']);
@@ -151,7 +138,7 @@ function INSERT() {
     $insert = $db->insertQuery($params, "users");
 
     if($insert) {
-        $response = array("Status" => "success", "Code" => 200, "Message" => "Adding data successful.");
+        $response = array("Status" => "success", "Code" => "200", "Message" => "Updating data successful.", "Data" => $insert['inserted_id']);
         header("HTTP/1.0 200 OK");
     } else {
         $response = array("Status" => "error", "Code" => 400, "Message" => "Adding data failed!");
@@ -171,7 +158,7 @@ function UPDATE($id) {
     $update = $db->updateQuery($params,'users', $id,'id');
 
     if($update) {
-        $response = array("Status" => "success", "Code" => "200", "Message" => "Updating data successful.", "Data" => $insert['inserted_id']);
+        $response = array("Status" => "success", "Code" => "200", "Message" => "Updating data successful.");
         header("HTTP/1.0 200 OK");
     } else {
         $response = array("Status" => "error", "Code" => "400", "Message" => "Updating data failed!");

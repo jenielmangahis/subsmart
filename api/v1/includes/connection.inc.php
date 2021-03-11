@@ -1,7 +1,7 @@
 <?php
 	include_once("database.class.php");
 
-	$server 	= "gator4155.hostgator.com";
+	$server 	= "localhost"; // gator4155.hostgator.com
 	$database 	= "admintom_nsmart_companies";
 	$user 		= "admintom_admin";
 	$password 	= "SmarTrac1$!";

@@ -452,8 +452,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <?php echo form_close(); ?>
 
-            <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
+             <!-- Modal Service Address -->
+             <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -528,23 +528,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
 
-    document.getElementById('contact_mobile').addEventListener('input', function (e) {
-        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
-    document.getElementById('contact_phone').addEventListener('input', function (e) {
-        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
+    // document.getElementById('contact_mobile').addEventListener('input', function (e) {
+    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    // });
+    // document.getElementById('contact_phone').addEventListener('input', function (e) {
+    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    // });
 
-    function validatecard() {
-        var inputtxt = $('.card-number').val();
+    // function validatecard() {
+    //     var inputtxt = $('.card-number').val();
 
-        if (inputtxt == 4242424242424242) {
-            $('.require-validation').submit();
-        } else {
-            alert("Not a valid card number!");
-            return false;
-        }
-    }
+    //     if (inputtxt == 4242424242424242) {
+    //         $('.require-validation').submit();
+    //     } else {
+    //         alert("Not a valid card number!");
+    //         return false;
+    //     }
+    // }
 </script>
