@@ -59,29 +59,34 @@ class Sms_Campaigns extends MY_Controller {
                 ];
 
                 $post = $this->input->post(); 
+                if($this->session->userdata('smsBlastId')){
+                    $sms_blast_id   = $this->session->userdata('smsBlastId');
+                    $sms_blast_data = ['campaign_name' => $post['sms_camapaign_name']];
+                    $smsBlast = $this->SmsBlast_model->updateSmsBlast($sms_blast_id, $sms_blast_data);
+                }else{
+                    if( $post['sms_camapaign_name'] != '' ){
+                            $user = $this->session->userdata('logged');
 
-                if( $post['sms_camapaign_name'] != '' ){
-                        $user = $this->session->userdata('logged');
+                            $sms_blast_data = [
+                                    'user_id' => $user['id'],
+                                    'campaign_name' => $post['sms_camapaign_name'],
+                                    'sms_text' => '',
+                                    'sending_type' => $this->SmsBlast_model->sendingTypeAll(),
+                                    'status' => $this->SmsBlast_model->statusDraft(),
+                                    'customer_type' => $this->SmsBlast_model->customerTypeResidential(),
+                                    'created' => date("Y-m-d H:i:s")
+                            ];      
 
-                        $sms_blast_data = [
-                                'user_id' => $user['id'],
-                                'campaign_name' => $post['sms_camapaign_name'],
-                                'sms_text' => '',
-                                'sending_type' => $this->SmsBlast_model->sendingTypeAll(),
-                                'status' => $this->SmsBlast_model->statusDraft(),
-                                'customer_type' => $this->SmsBlast_model->customerTypeResidential(),
-                                'created' => date("Y-m-d H:i:s")
-                        ];      
-
-                        $sms_id = $this->SmsBlast_model->create($sms_blast_data);
-
-                        $this->session->set_userdata('smsBlastId', $sms_id);
-
-                        $json_data = [
-                                        'is_success' => true,
-                                        'err_msg' => ''
-                                ];
+                            $sms_id = $this->SmsBlast_model->create($sms_blast_data);
+                            $this->session->set_userdata('smsBlastId', $sms_id);
+                    } 
                 }
+
+                $json_data = [
+                        'is_success' => true,
+                        'err_msg' => ''
+                ];
+                
 
                 echo json_encode($json_data);
         }
@@ -90,10 +95,36 @@ class Sms_Campaigns extends MY_Controller {
         {
                 $user = $this->session->userdata('logged');
                 $cid  = logged('company_id');
-                
-                $customers = $this->Customer_model->getAllByCompanyWithMobile($cid);            
+                $sms_blast_id = $this->session->userdata('smsBlastId');
+
+                $smsCampaign = $this->SmsBlast_model->getById($sms_blast_id);
+                $smsSendTo   = $this->SmsBlastSendTo_model->getAllBySmsBlastId($smsCampaign->id);
+                $customers   = $this->Customer_model->getAllByCompanyWithMobile($cid);            
                 $customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
 
+                $selectedGroups = array();
+                $selectedCustomer = array();
+                $selectedExcludes = array();
+                foreach($smsSendTo as $st){
+                    if( $st->customer_group_id > 0 ){
+                        $selectedGroups[$st->customer_group_id] = $st->customer_group_id;
+                    }
+
+                    if( $st->customer_id > 0 ){
+                        $selectedCustomer[$st->customer_id] = $st->customer_id;
+                    }
+
+                    if( $st->exclude > 0 ){
+                        $selectedExcludes[$st->exclude] = $st->exclude;
+                    }
+                    
+                }
+
+                $this->page_data['selectedCustomer'] = $selectedCustomer;
+                $this->page_data['selectedGroups']   = $selectedGroups;
+                $this->page_data['selectedExcludes'] = $selectedExcludes;
+                $this->page_data['smsCampaign'] = $smsCampaign;
+                $this->page_data['smsSendTo'] = $smsSendTo;
                 $this->page_data['customers'] = $customers;
                 $this->page_data['customerGroups'] = $customerGroups;
                 $this->load->view('sms_campaigns/add_campaign_send_to', $this->page_data);
@@ -185,6 +216,12 @@ class Sms_Campaigns extends MY_Controller {
 
         public function build_sms()
         {
+                $user = $this->session->userdata('logged');
+                $cid  = logged('company_id');
+                $sms_blast_id = $this->session->userdata('smsBlastId');
+                $smsCampaign = $this->SmsBlast_model->getById($sms_blast_id);
+
+                $this->page_data['smsCampaign'] = $smsCampaign;
                 $this->load->view('sms_campaigns/build_sms', $this->page_data);
         }
 
@@ -227,6 +264,7 @@ class Sms_Campaigns extends MY_Controller {
             $total_sms_price = $total_recipients * $price_per_sms;
             $grand_total     = $total_sms_price + $service_price;
 
+            $this->page_data['smsBlast'] = $smsBlast;
             $this->page_data['grand_total'] = $grand_total;
             $this->page_data['total_sms_price'] = $total_sms_price;
             $this->page_data['total_recipients'] = $total_recipients;
@@ -353,6 +391,30 @@ class Sms_Campaigns extends MY_Controller {
             ]; 
 
             echo json_encode($json_data);
+        }
+
+        public function edit_sms_campaign($id){
+            $company_id = logged('company_id');
+            $smsCampaign = $this->SmsBlast_model->getById($id);
+            $this->session->unset_userdata('smsBlastId');
+            if( $smsCampaign ){
+                if( $smsCampaign->company_id == $company_id ){
+
+                    $this->session->set_userdata('smsBlastId', $smsCampaign->id);
+                    $this->page_data['smsCampaign'] = $smsCampaign;
+                    $this->page_data['creditNoteItems'] = $creditNoteItems;
+
+                    $this->load->view('sms_campaigns/edit_sms_blast', $this->page_data);
+                }else{
+                    $this->session->set_flashdata('message', 'Record not found.');
+                    $this->session->set_flashdata('alert_class', 'alert-danger');
+                    redirect('credit_notes');
+                }
+            }else{
+                $this->session->set_flashdata('message', 'Record not found.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+                redirect('credit_notes');
+            }
         }
 }
 

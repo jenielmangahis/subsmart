@@ -169,7 +169,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   </div>
                                   <div class="form-group">
                                       <div class="checkbox checkbox-sec">
-                                          <input type="checkbox" name="is_scheduled" value="1"  id="is_scheduled" />
+                                          <?php 
+
+                                            if($smsBlast->price_variables != ''){ 
+                                              $is_scheduled = 'checked="checked"';
+                                              $send_date = date("Y-m-d",strtotime($smsBlast->send_date));
+                                              $send_time = date("H:i A", strtotime($smsBlast->send_time));
+                                            }else{
+                                              $is_scheduled = "";
+                                              $send_date = date("Y-m-d");
+                                              $send_time = date("H:i A");
+                                            }
+
+                                          ?>
+                                          <input type="checkbox" name="is_scheduled" value="1"  id="is_scheduled" <?= $is_scheduled; ?> />
                                           <label style="font-weight: 500;" for="is_scheduled">Schedule Campaign</label>
                                       </div>
                                       <div class="select-date-time" style="display: none;">
@@ -181,7 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                       <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
                                                           <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                                          <input type="text" name="send_date" value="<?= date("Y-m-d"); ?>"  class="form-control default-datepicker" autocomplete="off" required />
+                                                          <input type="text" name="send_date" value="<?= $send_date; ?>"  class="form-control default-datepicker" autocomplete="off" required />
                                                         </div>
                                                       </div>
                                                   </div>
@@ -189,7 +202,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                       <div class="input-group mb-3">
                                                         <div class="input-group-prepend bootstrap-timepicker timepicker">
                                                           <span class="input-group-text" id="basic-addon1"><i class="fa fa-clock-o"></i></span>
-                                                          <input id="smsTimepicker" name="send_time" type="text" class="form-control input-small">
+                                                          <input id="smsTimepicker" name="send_time" value="<?= $send_time; ?>" type="text" class="form-control input-small">
                                                         </div>
                                                   </div>
                                               </div>
@@ -204,7 +217,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <div class="row margin-top" style="position: relative;bottom: 55px;">
                                       <div class="col-sm-12"></div>
                                       <div class="col-sm-12 text-right">
-                                          <a class="btn btn-default margin-right" href="#">&laquo; Back</a>
+                                          <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/build_sms/'); ?>">&laquo; Back</a>
                                           <button class="btn btn-primary btn-campaign-update-send-schedule" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Save &raquo;</button>
                                       </div>
                                   </div>
@@ -257,6 +270,10 @@ $(function(){
           });
         }, 1000);
     });
+
+    <?php if($smsBlast->price_variables != ''){  ?>
+      $(".select-date-time").fadeIn();
+    <?php } ?>
 
     $("#is_scheduled").change(function(){
         if ($(this).is(':checked')) {

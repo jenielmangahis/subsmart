@@ -44,7 +44,7 @@
                                     </li>      
                                     <?php if($sb->status != 3){ ?>      
                                     <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('credit_notes/edit/' . $sb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_campaigns/edit_campaign/' . $sb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                     </li>                
                                     <?php } ?>
                                     <li role="presentation">
@@ -54,9 +54,9 @@
                                     <li role="separator" class="divider"></li>
                                     <?php if($sb->status != 3){ ?>
                                     <li role="separator" class="divider"></li>
-                                    <li role="presentation">
+                                    <!-- <li role="presentation">
                                         <a role="menuitem" class="close-sms-campaign" data-name="<?= $sb->campaign_name; ?>" data-id="<?= $sb->id; ?>" href="javascript:void(0);" data-id="<?= $sb->id; ?>"><span class="fa fa-trash-o icon"></span> Close</a>
-                                    </li>
+                                    </li> -->
                                     <?php } ?>
                                 </ul>
                             </div>

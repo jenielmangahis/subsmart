@@ -102,11 +102,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li class="active">1. Edit Campaign</li>
+                                  <li class="active">1. Create Campaign</li>
                                   <li>2. Select Customers</li>
                                   <li>3. Build SMS</li>
                                   <li>4. Preview</li>
-                                  <li>5. Purchase</li>
+                                  <!-- <li>5. Purchase</li> -->
                                 </ul>
                             </div>
                             <hr />

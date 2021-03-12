@@ -158,7 +158,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <li>2. Select Customers</li>
                           <li class="active">3. Build SMS</li>
                           <li>4. Preview</li>
-                          <li>5. Purchase</li>
+                          <!-- <li>5. Purchase</li> -->
                         </ul>
                     </div>
                     <hr />
@@ -166,7 +166,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-md-6">
                             <div class="campaign__text">
                                 <label>SMS message</label>
-                                <textarea name="sms_text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off">Sms from ADi</textarea>
+                                <?php 
+                                    $sms_text = 'Sms from ADi';
+                                    if( $smsCampaign->sms_text != '' ){
+                                        $sms_text = $smsCampaign->sms_text;
+                                    }
+                                ?>
+                                <textarea name="sms_text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off"><?= $sms_text; ?></textarea>
                             </div>
                             <div class="help help-sm margin-bottom-sec">
                                 message characters: <span class="margin-right-sec char-counter">0</span>
@@ -191,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a class="btn btn-default margin-right btn-preview-sms" href="javascript:void(0);">Preview SMS</a>
                         </div>
                         <div class="col-sm-6 text-right">
-                            <a class="btn btn-default margin-right" href="javascript:void(0);" style="margin-right: 10px;">&laquo; Back</a>
+                            <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
                             <button class="btn btn-primary btn-create-sms-msg" type="submit">Continue &raquo;</button>
                         </div>
                     </div>
