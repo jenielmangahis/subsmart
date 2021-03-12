@@ -439,8 +439,7 @@
                                     <div class="slimscroll notification-item-list" id="notificationList">
                                         <div id="autoNotifications">
                                             <a href="#" id="notificationDP" data-id="416&quot;" class="dropdown-item notify-item active" style="background-color:#e6e3e3">
-                                                <!-- <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="https://www.nsmartrac.local/nsmartrac/uploads/users/default.png" alt="User profile picture"> -->
-                                                <!-- <p class="notify-details" style="margin-left: 50px;">Loading...</span></p> -->
+                                                <p class="notify-details" style="margin-left: 50px;"><span class="text-muted">No new notifications.</span></p>
                                             </a>
                                         </div>
                                         <?php
@@ -456,10 +455,10 @@
                                             }
                                         }
                                         ?>
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                                        <!-- <a href="javascript:void(0);" class="dropdown-item notify-item active">
                                             <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
                                             <p class="notify-details">Item needs to reorder (<?php echo $reorders_count; ?>)<span class="text-muted">Please replenish immediately.</span></p>
-                                        </a>
+                                        </a> -->
 
 
                                         <!-- <a href="javascript:void(0);" class="dropdown-item notify-item active">
@@ -575,7 +574,7 @@
                                     } else if ($log->attendance_id == $attn->id && $attn->status == 0) {
 
                                         $lunch_time = convertDecimal_to_Time($attn->break_duration, "lunch");
-                                        $shift_duration = convertDecimal_to_Time($attn->shift_duration, "shift diration");
+                                        $shift_duration = convertDecimal_to_Time($attn->shift_duration + $attn->overtime, "shift diration");
                                         // var_dump($attendance_id);
                                         if ($log->action == "Check in") {
                                             $date_created = $log->date_created;
@@ -808,16 +807,19 @@
                     },
                     success: function(data) {
                         // alert(data.badgeCount);
-                        $('#notifyBadge').html(data.badgeCount);
-                        $('#nfcount').html(data.notifyCount);
-                        $('#autoNotifications').html(data.autoNotifications);
-                        notification_badge_value = data.badgeCount;
-                        if (data.badgeCount > 0) {
-                            // alert(data.badgeCount);
-                            $('#notifyBadge').show();
-                        } else {
-                            $('#notifyBadge').hide();
+                        if (data.notifyCount > 0) {
+                            $('#notifyBadge').html(data.badgeCount);
+                            $('#nfcount').html(data.notifyCount);
+                            $('#autoNotifications').html(data.autoNotifications);
+                            notification_badge_value = data.badgeCount;
+                            if (data.badgeCount > 0) {
+                                // alert(data.badgeCount);
+                                $('#notifyBadge').show();
+                            } else {
+                                $('#notifyBadge').hide();
+                            }
                         }
+
 
 
 

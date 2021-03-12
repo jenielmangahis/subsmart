@@ -9,9 +9,13 @@ function Step3() {
   let fields = [];
 
   const $form = $("[data-form-step=3]");
+  const $formSubmit = $("#submitBUtton");
+
   const $docRenderer = $("#main-pdf-render");
   const $docPreviewRenderer = $("#main-pdf-render-preview");
   const $fields = $(".fields");
+
+  const $recipientSelect = $(".esignBuilder__recipientSelect");
 
   const fileId = parseInt($("[name=file_id]").val());
   const documentUrl = $form.data("doc-url");
@@ -69,6 +73,7 @@ function Step3() {
     const $parent = $element.closest(".docPage");
     const key = $element.find(".subData").data("key");
     const docPage = $parent.data("page");
+    const recipientId = $("#recipientsSelect").get(0).dataset.recipientId;
 
     const payload = {
       coordinates: position,
@@ -76,6 +81,7 @@ function Step3() {
       doc_page: docPage,
       unique_key: key,
       field: $element.text().trim(),
+      recipient_id: recipientId,
     };
 
     const endpoint = `${prefixURL}/esign/apiCreateUserDocfileFields`;
@@ -96,6 +102,49 @@ function Step3() {
     fields = data.fields;
   }
 
+  function createField(field) {
+    const { coordinates: coords, unique_key, field_name, color } = field;
+    const { top, left } = JSON.parse(coords);
+
+    const uniqueKey = unique_key || Date.now();
+
+    const html = `
+      <div
+        class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging esignBuilder__field"
+        style="left: ${left}px; top: ${top}px; --color: ${color}"
+      >
+        <div class="subData" data-key="${uniqueKey}">${field_name}</div>
+
+        <div class="esignBuilder__fieldOptions">
+            <div class="esignBuilder__fieldClose">
+                <i class="fa fa-times"></i>
+            </div>
+        </div>
+      </div>
+    `;
+
+    const $element = createElementFromHTML(html);
+    $close = $element.find(".esignBuilder__fieldClose");
+    $close.on("click", async (event) => {
+      const $parent = $(event.target).closest(".ui-draggable");
+      const $signature = $parent.find(".subData");
+      const uniqueKey = $signature.data("key");
+
+      const endpoint = `${prefixURL}/esign/apiDeleteDocfileField/${uniqueKey}`;
+      await fetch(endpoint, { method: "DELETE" });
+
+      $parent.remove();
+    });
+
+    $element.draggable({
+      containment: ".ui-droppable",
+      appendTo: ".ui-droppable",
+      stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+    });
+
+    return $element;
+  }
+
   async function renderPDF() {
     const document = await PDFJS.getDocument({ url: documentUrl });
     for (let index = 1; index <= document.numPages; index++) {
@@ -109,29 +158,9 @@ function Step3() {
       const $pagePreview = await getPagePreview({ ...params, offsetTop });
       $docPreviewRenderer.append($pagePreview);
 
-      const $fields = currentFields.map((field) => {
-        const { coordinates: coords, unique_key, field_name } = field;
-        const { top, left } = JSON.parse(coords);
-
-        const html = `
-          <div
-            class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging"
-            style="position: absolute; left: ${left}px; top: ${top}px;">
-            <div class="subData" data-key="${unique_key}">${field_name}</div>
-          </div>
-        `;
-
-        const $element = createElementFromHTML(html);
-        $element.draggable({
-          containment: ".ui-droppable",
-          appendTo: ".ui-droppable",
-          stop: (_, ui) => storeField(ui.position, $(ui.helper)),
-        });
-
-        return $element;
-      });
-
+      const $fields = currentFields.map(createField);
       $page.append($fields);
+
       $page.droppable({
         drop: function (_, ui) {
           if (!ui.draggable.hasClass("fields")) {
@@ -139,15 +168,17 @@ function Step3() {
           }
 
           const $item = $(ui.helper).clone();
-          $item.removeClass("fields");
+          const color = getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
+          $element = createField({
+            coordinates: JSON.stringify(ui.position),
+            field_name: $item.text(),
+            color,
+          });
 
-          const html = `<div class="subData" data-key="${Date.now()}">${$item.text()}</div>`;
-          $item.html(html);
+          $(this).append($element);
+          storeField(ui.position, $element);
 
-          $(this).append($item);
-          storeField(ui.position, $item);
-
-          $item.draggable({
+          $element.draggable({
             containment: ".ui-droppable",
             appendTo: ".ui-droppable",
             stop: (_, ui) => storeField(ui.position, $(ui.helper)),
@@ -157,9 +188,57 @@ function Step3() {
     }
   }
 
+  function attachEventHandlers() {
+    const setColor = (color) => {
+      $form.get(0).style.setProperty("--color", color);
+    };
+
+    const $selectedRecipient = $recipientSelect.find("#recipientsSelect");
+    const currColor = $selectedRecipient.data("recipient-color");
+    setColor(currColor);
+
+    $recipientSelect.find(".dropdown-item").on("click", function (event) {
+      event.preventDefault();
+      const $target = $(event.target);
+      const color = $target.data("recipient-color");
+      const id = $target.data("recipient-id");
+
+      setColor(color);
+      $selectedRecipient.attr("data-recipient-id", id);
+      $selectedRecipient.find("span").text($target.text().trim());
+    });
+
+    $formSubmit.on("click", async function (event) {
+      event.preventDefault();
+
+      const $button = $(this);
+      const $loader = $button.find(".spinner-border");
+
+      $loader.removeClass("d-none");
+      $button.attr("disabled", true);
+
+      const endpoint = `${prefixURL}/DocuSign/send`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify({ document_id: fileId }),
+        headers: {
+          accepts: "application/json",
+          "content-type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      $loader.addClass("d-none");
+      $button.removeAttr("disabled");
+
+      console.log(data);
+    });
+  }
+
   async function init() {
     await getFields();
     await renderPDF();
+    attachEventHandlers();
 
     $fields.draggable({
       containment: ".ui-droppable",

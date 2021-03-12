@@ -3,8 +3,13 @@ function Step1() {
 
   const $form = $("[data-form-step=1]");
   const $fileInput = $("#docFile");
-  const $docPreview = $(".esignBuilder__docPreview");
   const $docModal = $("#documentModal");
+
+  const $docPreview = $(".esignBuilder__docPreview");
+  const $progress = $(".esignBuilder__uploadProgress");
+  const $progressCheck = $(".esignBuilder__uploadProgressCheck");
+
+  const $submitButton = $(".esignBuilder__submit");
 
   let documentUrl = null;
 
@@ -16,14 +21,31 @@ function Step1() {
       return;
     }
 
+    let document = null;
     documentUrl = URL.createObjectURL(file);
-    const document = await PDFJS.getDocument({ url: documentUrl });
+
+    try {
+      document = await PDFJS.getDocument({ url: documentUrl });
+    } catch (error) {
+      alert(error);
+      return;
+    }
+
     const documentPage = await document.getPage(1);
 
     const $canvas = $docPreview.find("canvas").get(0);
     const $docTitle = $docPreview.find(".esignBuilder__docTitle");
     const $docPageCount = $docPreview.find(".esignBuilder__docPageCount");
     const $docModalTitle = $docModal.find(".modal-title");
+    const context = $canvas.getContext("2d");
+
+    $docPreview.removeClass("d-none");
+    context.clearRect(0, 0, $canvas.width, $canvas.height);
+    $docPreview.removeClass("esignBuilder__docPreview--completed");
+    $progress.removeClass("esignBuilder__uploadProgress--completed");
+    $progressCheck.removeClass("esignBuilder__uploadProgressCheck--completed");
+
+    await sleep(1000);
 
     $docTitle.text(file.name);
     $docModalTitle.text(file.name);
@@ -33,11 +55,21 @@ function Step1() {
     const viewport = documentPage.getViewport(scaleRequired);
     const canvasContext = {
       viewport,
-      canvasContext: $canvas.getContext("2d"),
+      canvasContext: context,
     };
 
     await documentPage.render(canvasContext);
-    $docPreview.removeClass("d-none");
+
+    $docPreview.addClass("esignBuilder__docPreview--completed");
+    $progress.addClass("esignBuilder__uploadProgress--completed");
+
+    await sleep(500);
+
+    $progress.removeClass("esignBuilder__uploadProgress--completed");
+    $progressCheck.addClass("esignBuilder__uploadProgressCheck--completed");
+
+    $submitButton.attr("disabled", false);
+    $submitButton.addClass("btn-success");
   }
 
   async function onSubmit(event) {
@@ -90,3 +122,6 @@ $(document).ready(function () {
     step.init();
   }
 });
+
+// https://stackoverflow.com/a/47480429/8062659
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));

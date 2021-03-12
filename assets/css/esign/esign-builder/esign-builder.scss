@@ -1,5 +1,5 @@
 .esignBuilder {
-  margin-top: 88px;
+  margin-top: 96px;
   text-align: left !important;
 
   header {
@@ -44,23 +44,21 @@
     cursor: pointer !important;
   }
 
+  .btn {
+    &:disabled {
+      cursor: not-allowed !important;
+    }
+  }
+
   &__submit {
-    color: #1e1e1e;
-    background-color: #ffce00;
-    border: 1px solid #ffce00;
-
     font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding: 5px 20px;
-    border-radius: 3px;
+    font-weight: 400;
+    padding: 6px 12px;
+    border-radius: 4px;
 
-    &:hover,
-    &:active,
-    &:focus {
-      color: #1e1e1e !important;
-      background-color: #ffce00 !important;
-      border-color: #ffce00 !important;
+    &.btn-success {
+      background-color: #28a745;
+      color: #fff;
     }
   }
 
@@ -79,6 +77,15 @@
       width: 250px;
       border: 0;
       border-radius: 0;
+    }
+
+    &--completed {
+      .esignBuilder__docInfo {
+        .esignBuilder__docTitle,
+        .esignBuilder__docPageCount {
+          display: block;
+        }
+      }
     }
   }
 
@@ -106,11 +113,69 @@
     margin: 0;
     font-size: 13px;
     color: #797979;
+    display: none;
   }
 
   &__docPageCount {
     font-size: 12px;
     color: #797979;
+    display: none;
+  }
+
+  &__uploadProgress {
+    opacity: 1;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 16px;
+    width: 120px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    overflow: hidden;
+
+    span {
+      background: linear-gradient(to bottom, #666, #444);
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      opacity: 0;
+    }
+
+    &--completed {
+      span {
+        opacity: 1;
+        width: 100%;
+        transition: 300ms ease-in-out;
+      }
+    }
+  }
+
+  &__uploadProgressCheck {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    &--completed {
+      svg {
+        opacity: 1;
+        transform: translateY(0);
+        transition: 300ms ease-in-out;
+      }
+    }
   }
 
   &__modal {
@@ -135,7 +200,7 @@
     z-index: 1;
 
     .subData {
-      background-color: #ffd65b;
+      background-color: var(--color);
       padding: 5px 10px;
       font-family: monospace;
       border-radius: 3px;
@@ -143,6 +208,78 @@
   }
 
   .docPage {
-    width: max-content;
+    // width: max-content;
+    // position: relative;
+  }
+
+  #main-pdf-render {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
+    padding: 15px;
+    border-top: 1px solid #d9d9d9;
+  }
+
+  .sidebar-fields {
+    padding: 10px;
+  }
+
+  .sidebar_group {
+    margin-left: 0 !important;
+  }
+
+  .btn {
+    text-transform: none;
+  }
+
+  &__recipientSelect {
+    .btn {
+      width: 100%;
+    }
+  }
+
+  #recipientsSelect {
+    .fa {
+      color: var(--color);
+    }
+  }
+
+  .swatch:after {
+    background-color: var(--color);
+  }
+
+  &__field {
+    position: absolute !important;
+
+    .esignBuilder__fieldOptions {
+      position: absolute;
+      top: -32px;
+      display: flex;
+      align-items: center;
+      background-color: #333;
+    }
+
+    .esignBuilder__fieldClose {
+      color: #fff;
+      height: 30px;
+      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
   }
 }

@@ -7,6 +7,7 @@
                     <h3 class="modal-title" id="myModalLabel2" >Product/Service information</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
+                <form id="non-inventory-item-form" action="<?=url('accounting/products-and-services/non-inventory/create')?>" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <table class="table">
                         <thead>
@@ -29,7 +30,7 @@
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <div class="form-group" style="margin-bottom: 12px !important">
-                                                <label for="name">Name <span class="text-alert">*</span></label>
+                                                <label for="name">Name *</label>
                                                 <textarea name="name" id="name" class="form-control" required></textarea>
                                             </div>
                                             <div class="form-group" style="margin-bottom: 12px !important">
@@ -190,6 +191,7 @@
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>

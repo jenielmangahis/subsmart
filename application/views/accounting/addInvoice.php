@@ -56,10 +56,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-5 form-group">
                                     <label for="invoice_customer">Customer</label>
-                                    <select id="invoice_customer" name="customer_id"
+                                    <!-- <select id="invoice_customer" name="customer_id"
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select customer">
-                                    </select>
+                                    </select> -->
+                                    <select name="customer_id" id="customer_id" class="form-control" required>
+                                    <option>Select a customer</option>
+                                    <?php foreach ($customers as $customer):?>
+                                    <option value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                    <?php endforeach; ?>
+                                </select>
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <p>&nbsp;</p>
@@ -69,82 +75,74 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="invoice_job_location">Job Location <small class="help help-sm">(optional, select or add new one)</small></label>
-                                    <select id="invoice_job_location" name="invoice_job_location_id"
+                                    <!-- <select id="invoice_job_location" name="invoice_job_location_id"
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select Address">
-                                    </select>
+                                    </select> -->
+                                    <input type="text" class="form-control" name="invoice_job_location" id="job_location" />
                                 </div>
                                 <div class="col-md-5 form-group">
-                                    <p>&nbsp;</p>
+                                    <!-- <p>&nbsp;</p>
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalNewLocationAddress" style="color:#02A32C;"><span
-                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Location Address</a>
+                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Location Address</a> -->
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" required/>
+                                    <input type="text" class="form-control" name="job_name" id="job_name" />
                                 </div>
                             </div>
 
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
-                                    <div class="row">
+                                    <div class="row form-group">
+                                        <div class="col-md-3">
+                                        <label>Terms</label>
+                                            <select class="form-control" name="terms" id="addNewTerms1">
+                                                <option></option>
+                                                <option value="0">Add New</option>
+                                                <?php foreach($terms as $term) : ?>
+                                                <option value="<?php echo $term->id; ?>"><?php echo $term->description . ' ' . $term->day; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                         <div class="col-md-3">
                                             <label>Customer email</label>
                                             <input type="email" class="form-control" name="customer_email">
                                             <p><input type="checkbox"> Send later </p>
                                         </div>
                                         <div class="col-md-3">
-                                        <label>Location of sale</label>
-                                        <input type="text" class="form-control" style="width:200px;" name="location_scale">
+                                            <label>Location of sale</label>
+                                            <input type="text" class="form-control" name="location_scale">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Tracking no.</label>
+                                            <input type="text" class="form-control" name="tracking_number">
                                         </div>
                                     </div>
-                                    <br>
-                                    <div class="row">
+                                    <div class="row form-group">
                                         <div class="col-md-3">
-                                        <label>Billing address</label>
-                                            <textarea class="form-control" style="height:100px;width:100%;" name="billing_address"></textarea>
-                                        </div>
-                                        <div class="col-md-3">
-                                        <label>Terms</label>
-                                            <select class="form-control" name="terms" id="addNewTerms1">
-                                                <option></option>
-                                                <!-- <option>Add New</option>
-                                                <option>John Doe</option>-->
-                                                <option value="0">Add New</option>
-                                                <?php foreach($terms as $term) : ?>
-                                                <option value="<?php echo $term->id; ?>"><?php echo $term->description . ' ' . $term->day; ?></option>
-                                                <?php endforeach; ?>
-                                            </select><br><br>
-                                            <label>Ship via</label><br>
+                                            <label>Ship via</label>
                                             <input type="text" class="form-control" name="ship_via">
                                         </div>
                                         <div class="col-md-3">
-                                        <label>Shipping date</label><br>
-                                            <input type="text" class="form-control" name="shipping_date" id="datepickerinv2"><br>
-                                            <label>Tracking no.</label><br>
-                                            <input type="text" class="form-control" name="tracking_number">
+                                            <label>Shipping date</label>
+                                            <input type="text" class="form-control" name="shipping_date" id="datepickerinv2">
                                         </div>
-
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-3">
-                                        <label>Shipping to</label>
-                                            <textarea class="form-control" style="height:100px;width:100%;" name="shipping_to_address"></textarea>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-md-6">
                                         <label>Tags</label> <a href="#" style="float:right;color:blue;">Manage tags</a>
                                             <input type="text" class="form-control">
+                                        </div>
+                                    <!-- </div>
+                                    <div class="row form-group"> -->
+                                        <div class="col-md-3">
+                                            <label>Billing address</label>
+                                            <textarea class="form-control" style="width:100%;" name="billing_address"></textarea>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-                            <br><br>
-
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-3 form-group">
                                     <label for="estimate_date">Invoice Type <span style="color:red;">*</span></label>
@@ -171,9 +169,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input type="text" class="form-control" name="purchase_order" id="purchase_order">
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                            <label>Shipping to</label>
+                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address"></textarea>
+                                        </div>
 
-                                <div class="col-md-3 form-group">
-                                </div>
+                                <!-- <div class="col-md-3 form-group">
+                                </div> -->
 
                                 <div class="col-md-3 form-group">
                                     <label for="invoice_number">Invoice#</label>
@@ -182,7 +184,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
                                     <input type="text" class="form-control" name="invoice_number"
                                            id="invoice_number" value="INV-00000001" required placeholder="Enter Invoice#"
-                                           autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
@@ -547,4 +549,48 @@ defined('BASEPATH') or exit('No direct script access allowed');
     //         return false;
     //     }
     // }
+
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script>
+function initialize() {
+          var input = document.getElementById('job_location');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                document.getElementById('city2').value = place.name;
+                document.getElementById('cityLat').value = place.geometry.location.lat();
+                document.getElementById('cityLng').value = place.geometry.location.lng();
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('#customer_id').change(function(){
+    var id  = $(this).val();
+    // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){
+                // alert('success');
+                // console.log(response['customer']);
+            $("#job_location").val(response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+        
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+    });
+});
+
 </script>

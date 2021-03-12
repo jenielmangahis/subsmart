@@ -10,7 +10,7 @@ class Esign extends MY_Controller {
 		$this->checkLogin();
 		$this->load->model('Esign_model', 'Esign_model');
 		$this->load->model('Activity_model', 'activity');
-		add_css(array( 
+		add_css(array(
             'assets/textEditor/summernote-bs4.css',
         ));
 
@@ -39,25 +39,25 @@ class Esign extends MY_Controller {
 
 	public function addDefaultEsignTemplate($userId){
 		try {
-			$defaultData = $this->Esign_model->getAllDefaultLibrary($userId);		
+			$defaultData = $this->Esign_model->getAllDefaultLibrary($userId);
 			$insertedData = $this->Esign_model->insertBatchUserWiseTemplate($defaultData);
 			if($insertedData){
 				return true;
 			}else {
 				return false;
 			}
-			
+
 		}
 		catch(Exception $e) {
 			return false;
 		}
 	}
-	
+
 	public function addDefaultEsignTemplateToExistingUsers(){
 		try {
 			$this->load->model('Users_model', 'Users_model');
 			$getAllId = $this->Users_model->getAllUserId();
-			$defaultData = $this->Esign_model->getAllDefaultLibrary(0);		
+			$defaultData = $this->Esign_model->getAllDefaultLibrary(0);
 			$allData = [];
 			foreach($getAllId as $id ){
 				$currentDefaultData = $defaultData;
@@ -194,12 +194,12 @@ class Esign extends MY_Controller {
 		}
 
 		//$this->page_data['users'] = $this->User_docphoto_model->getUser(logged('id'));
-		
+
 		$this->load->view('esign/photos', $this->page_data);
 	}
 
 	public function Files(){
-		
+
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['file_id'] = $this->input->get('id');
@@ -207,14 +207,14 @@ class Esign extends MY_Controller {
 		if($this->page_data['file_id'] > 0) {
 			$query = $this->db->from('user_docfile')->where('id',$this->page_data['file_id'])->get();
 			$this->page_data['file_url'] = $query->row()->name;
-		} 
+		}
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
 		$this->page_data['recipients'] = $queryRecipients->result_array();
 
 		add_css('assets/css/esign/esign-builder/esign-builder.css');
 		add_footer_js([
-			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+			// 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
 			'assets/js/esign/libs/pdf.js',
 			'assets/js/esign/libs/pdf.worker.js',
 
@@ -248,6 +248,7 @@ class Esign extends MY_Controller {
 		$docId = $payload['docfile_id'];
 		$field = $payload['field'];
 		$uniqueKey = $payload['unique_key'];
+		$recipientId = $payload['recipient_id'];
 		$userId = logged('id');
 
 		$this->db->where('docfile_id', $docId);
@@ -263,6 +264,7 @@ class Esign extends MY_Controller {
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
+                'user_docfile_recipients_id' => $recipientId,
 			]);
 		} else {
 			$this->db->where('id', $record->id);
@@ -273,6 +275,7 @@ class Esign extends MY_Controller {
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
+                // 'user_docfile_recipients_id' => $recipientId,
 			]);
 		}
 
@@ -281,15 +284,31 @@ class Esign extends MY_Controller {
 
 	public function apiGetUserDocfileFields($docId)
 	{
-		$userId = logged('id');
+        $query = <<<SQL
+        SELECT `user_docfile_fields`.*, `user_docfile_recipients`.`color` FROM `user_docfile_fields`
+        LEFT JOIN `user_docfile_recipients` ON `user_docfile_recipients`.`id` = `user_docfile_fields`.`user_docfile_recipients_id`
+        WHERE `user_docfile_fields`.`docfile_id` = ? AND `user_docfile_fields`.`user_id` = ?
+        SQL;
 
-		$this->db->where('docfile_id', $docId);
-		$this->db->where('user_id', $userId);
-		$records = $this->db->get('user_docfile_fields')->result();
+		$records = (array) $this->db->query($query, [$docId, logged('id')])->result();
 
     	header('content-type: application/json');
 		echo json_encode(['fields' => $records]);
 	}
+
+    public function apiDeleteDocfileField($uniqueKey) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('unique_key', $uniqueKey);
+        $this->db->delete('user_docfile_fields');
+
+        header('content-type: application/json');
+        echo json_encode(['success' => true]);
+    }
 
 	public function changeFavoriteStatus($id,$isFavorite){
 		// $this->load->model('Esign_model', 'Esign_model');
@@ -305,7 +324,7 @@ class Esign extends MY_Controller {
 		echo json_encode($result);
 		return true;
 	}
-	
+
 	public function deleteLibrary($id){
 		$whereClouser['user_id'] = logged('id');
 		$whereClouser['isActive'] = 1;
@@ -337,9 +356,9 @@ class Esign extends MY_Controller {
 	public function createTemplate(){
 		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
-		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);	
-		
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
+
 		add_css('assets/css/esign/esign-editor/esign-editor.css');
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
@@ -347,13 +366,13 @@ class Esign extends MY_Controller {
 		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
 		$this->page_data['templates'] = $this->Esign_model->getLibraryWithCategory($loggedInUser);
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser); 
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
 		// echo $this->db->last_query();
 		// exit;
 		add_css('assets/css/esign/library/library.css');
 		$this->load->view('esign/templateLibrary', $this->page_data);
 	}
-	
+
 	public function addCategory(){
 		$loggedInUser = logged('id');
 		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
@@ -381,7 +400,7 @@ class Esign extends MY_Controller {
 		$this->activity->addEsignActivity($activity);
 	 	echo json_encode($result);
 	}
-	
+
 	public function createLibrary(){
 		$result['status'] = false;
 		$loggedInUser = logged('id');
@@ -481,7 +500,7 @@ class Esign extends MY_Controller {
 		$activity['activity'] = "Category ID : ".$categoryId." Updated By User ".logged('username');
 		$activity['user_id'] = logged('id');
 		$this->activity->addEsignActivity($activity);
-		
+
 		echo json_encode($result);
 		return true;
 	}
@@ -500,20 +519,20 @@ class Esign extends MY_Controller {
 			redirect('esign/esignmain');
 		}
 		$getTemplate = $this->Esign_model->editTemplate($loggedInUser, $queryParams['id']);
-		
+
 		if(!$getTemplate->num_rows()){
 			redirect('esign/esignmain');
 		}
-		
+
 		$this->page_data['template'] = $getTemplate->row();
-		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);		
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
 		// echo '<pre>';
 		// print_r($this->page_data);
 		// exit;
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
-	
+
 	public function saveCreatedTemplate(){
 		$loggedInUser = logged('id');
 		extract($this->input->post());
@@ -555,8 +574,8 @@ class Esign extends MY_Controller {
 	public function tempDefaultTemplate(){
 		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
-		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);		
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
 		$this->load->view('esign/tempInsertDefaultTemplate', $this->page_data);
 	}
 
@@ -582,7 +601,7 @@ class Esign extends MY_Controller {
 			redirect('esign/tempDefaultTemplate?isSuccess=1');
 		}else{
 				redirect('esign/esignmain');
-		}		
+		}
 	}
 	*/
 
@@ -611,7 +630,7 @@ class Esign extends MY_Controller {
 				$this->db->delete('user_docfile_recipients');
 			}
 		}
-		
+
 		foreach ($payload['recipients'] as $recipient) {
 			['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
 
@@ -664,7 +683,7 @@ class Esign extends MY_Controller {
         // further validation/sanitation of the filename may be appropriate
         $name = time()."_".rand(1,9999999)."_".basename($_FILES["docPhoto"]["name"]);
 		move_uploaded_file($tmp_name, "./uploads/DocPhoto/$name");
-		
+
 		// $config['upload_path']          = $_SERVER['DOCUMENT_ROOT'] .'/nsmartrac/uploads/DocPhoto/';
 		// $config['allowed_types']        = 'gif|jpg|png|jpeg';
 		// $config['max_size'] = 2000;
@@ -687,8 +706,8 @@ class Esign extends MY_Controller {
 			'user_id' => $id,
 			'docphoto' => $name,
 			'company_id' => $cid
-		]); 
-		
+		]);
+
 		// print_r("expression");
 		redirect('esign/Photos');
 	}
@@ -697,15 +716,15 @@ class Esign extends MY_Controller {
 
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		//$id = logged('id');
-		
+
 		// $extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
 		// $filename = time()."_".rand(1,9999999)."_"."DocFiles".".".$extension;
 		// $location = "../../uploads/DocFiles";
 		// echo move_uploaded_file($filename, $location);
 
-		
+
 		if(isset($_FILES['docFile']) && $_FILES['docFile']['tmp_name'] != '') {
-				
+
 			$tmp_name = $_FILES['docFile']['tmp_name'];
 			$extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
 			// basename() may prevent filesystem traversal attacks;
@@ -713,8 +732,8 @@ class Esign extends MY_Controller {
 			$name = time()."_".rand(1,9999999)."_".basename($_FILES["docFile"]["name"]);
 			move_uploaded_file($tmp_name, "./uploads/DocFiles/$name");
 			$id = 0;
-			
-		
+
+
 
 			if($_POST['file_id'] > 0)
 			{
@@ -722,10 +741,10 @@ class Esign extends MY_Controller {
 				$this->db->update($this->User_docflies_model->table, [
 					'name' => $name
 				]);
-					
+
 				$id = $_POST['file_id'];
 			} else {
-				
+
 				$id = $this->User_docflies_model->create([
 					'user_id' => logged('id'),
 					'name' => $name
@@ -742,7 +761,7 @@ class Esign extends MY_Controller {
 			}
 
 		} else if (isset($_POST['file_id']) && $_POST['file_id'] > 0) {
-			
+
 			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
 			{
 				redirect('esign/Files?id='.$_POST['file_id']);
@@ -751,18 +770,18 @@ class Esign extends MY_Controller {
 			{
 				redirect('esign/Files?id='.$_POST['file_id'].'&next_step=2');
 			}
-		}	
+		}
 	}
-	
+
 	private function _get_datatables_query($postData){
 		$tableName = 'esign_library_template';
 		$column_search = array( 'title', 'categoryName');
 		$column_order = array( 'title', 'status', 'categoryName' );
 		$order = array('esignLibraryTemplateId' => 'desc');
-		
+
         $this->db->from($tableName);
         $i = 0;
-        // loop searchable columns 
+        // loop searchable columns
         foreach($column_search as $item){
             // if datatable send POST for search
             if($postData['search']['value']){
@@ -774,7 +793,7 @@ class Esign extends MY_Controller {
                 }else{
                     $this->db->or_like($item, $postData['search']['value']);
                 }
-                
+
                 // last loop
                 if(count($column_search) - 1 == $i){
                     // close bracket
@@ -783,7 +802,7 @@ class Esign extends MY_Controller {
             }
             $i++;
         }
-         
+
         if(isset($postData['order'])){
             $this->db->order_by($column_order[$postData['order']['0']['column']], $postData['order']['0']['dir']);
         }else if(isset($order)){
@@ -796,7 +815,7 @@ class Esign extends MY_Controller {
 	// 	$query = $this->db->get();
     //     return $query->num_rows();
 	// }
-    
+
 	public function getRows($postData, $userId, $libraryId){
 		$this->_get_datatables_query($postData);
 		$this->db->where('esign_library_template.user_id',$userId )
@@ -809,7 +828,7 @@ class Esign extends MY_Controller {
 			$this->db->where('esign_library_category.fk_esignLibraryMaster', $libraryId);
 		}
 		$res['count'] = $this->db->get()->num_rows();
-		
+
 		$this->_get_datatables_query($postData);
 		$this->db->select('esignLibraryTemplateId, title, categoryName, isFavorite, status')
 		->where('esign_library_template.user_id',$userId )
@@ -844,15 +863,15 @@ class Esign extends MY_Controller {
 				<a class="trashColor" href="#"><i id="deleteId-'.$member->esignLibraryTemplateId.'" class="fa fa-trash"></i></a>
 			';
 			$title = '<a style="cursor: pointer;" redirectUrl="'.$editUrl.'" ondblclick="redirectOnDoubleClickToTitle(this)">'.$member->title.'</a>';
-			$data[] = array( 
-				$title, 
-				$status, 
-				$member->categoryName, 
+			$data[] = array(
+				$title,
+				$status,
+				$member->categoryName,
 				$fav,
 				$action
 			);
 		}
-		
+
 		// print_r($data);
 
         $countFiltered = $queryData['count'];
@@ -862,7 +881,7 @@ class Esign extends MY_Controller {
             "recordsFiltered" => $countFiltered,
             "data" => $data,
         );
-        
+
         // Output to JSON format
         echo json_encode($output);
 	}

@@ -86,7 +86,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         placeholder="Enter Location"
                                         type="text"
                                         class="form-control"
+                                        autocomplete="on" runat="server"
                                     />
+                                    <input type="hidden" id="city2" name="city2" />
+                                    <input type="hidden" id="cityLat" name="cityLat" />
+                                    <input type="hidden" id="cityLng" name="cityLng" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -450,41 +454,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </script>
 
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM&callback=initAutocomplete&libraries=places&v=weekly" ></script> -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM" type="text/javascript"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM" type="text/javascript"></script> -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 
 <script>
-    var placeSearch, autocomplete;
+//     var placeSearch, autocomplete;
 
+// function initialize() {
+//     // Create the autocomplete object, restricting the search
+//     // to geographical location types.
+//     autocomplete = new google.maps.places.Autocomplete(
+//     /** @type {HTMLInputElement} */
+//     (document.getElementById('autocomplete')), {
+//         types: ['geocode']
+//     });
+
+//     google.maps.event.addDomListener(document.getElementById('autocomplete'), 'focus', geolocate);
+// }
+
+// function geolocate() {
+
+//     if (navigator.geolocation) {
+//         navigator.geolocation.getCurrentPosition(function (position) {
+
+//             var geolocation = new google.maps.LatLng(
+//             position.coords.latitude, position.coords.longitude);
+//             var circle = new google.maps.Circle({
+//                 center: geolocation,
+//                 radius: position.coords.accuracy
+//             });
+//             autocomplete.setBounds(circle.getBounds());
+
+//             // Log autocomplete bounds here
+//             console.log(autocomplete.getBounds());
+//         });
+//     }
+// }
+
+// initialize();
 function initialize() {
-    // Create the autocomplete object, restricting the search
-    // to geographical location types.
-    autocomplete = new google.maps.places.Autocomplete(
-    /** @type {HTMLInputElement} */
-    (document.getElementById('autocomplete')), {
-        types: ['geocode']
-    });
-
-    google.maps.event.addDomListener(document.getElementById('autocomplete'), 'focus', geolocate);
-}
-
-function geolocate() {
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-
-            var geolocation = new google.maps.LatLng(
-            position.coords.latitude, position.coords.longitude);
-            var circle = new google.maps.Circle({
-                center: geolocation,
-                radius: position.coords.accuracy
+          var input = document.getElementById('autocomplete');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                document.getElementById('city2').value = place.name;
+                document.getElementById('cityLat').value = place.geometry.location.lat();
+                document.getElementById('cityLng').value = place.geometry.location.lng();
             });
-            autocomplete.setBounds(circle.getBounds());
-
-            // Log autocomplete bounds here
-            console.log(autocomplete.getBounds());
-        });
-    }
-}
-
-initialize();
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>

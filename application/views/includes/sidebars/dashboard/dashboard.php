@@ -81,7 +81,7 @@
     <div id="mySidebar" class="sidebar">
         <a id="controlBtn" style="display: none;" onclick="closeBtn()" href="#"><svg style="fill:white;" viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%"><path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path></svg></a>
         <a onclick="getSMS()" class="links" href="#"><i class="fa fa-sms fa-fw"></i> <span class="a-title">SMS / MMS</span></a>
-        <a class="links" href="#"><i class="fa fa-phone-alt fa-fw"></i> <span class="a-title">Call Logs</span></a>
+        <a class="links" onclick="getPhoneCalls()" href="#"><i class="fa fa-phone-alt fa-fw"></i> <span class="a-title">Call Logs</span></a>
         <a class="links" href="#"><i class="fa fa-clone fa-fw"></i> <span class="a-title">Smart Zoom</span></a>
         <a onclick="getInbox()" class="links" href="#"><i class="fa fa-inbox fa-fw"></i> <span class="a-title">Inbox</span></a>
         <a class="links" href="#"><i class="fa fa-paper-plane fa-fw"></i> <span class="a-title">Sent</span></a>
@@ -89,6 +89,14 @@
     </div>
     <div id="dashOverlay" class="col-lg-12">
         <h3 class="text-center">Content here</h3>
+    </div>
+    <div class="modal fade" id="dialpad" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document" style="max-width: 300px; margin-top:230px;">
+            <div class="modal-content" style="border-radius: 10px;">
+                <div class="modal-body text-center p-0" id="dialpadBody">
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -139,6 +147,18 @@
 
             $.ajax({
                 url: '<?php echo base_url(); ?>dashboard/getSMS',
+                method: 'GET',
+                data: {id:''},
+                success: function (response) {
+                    $('#dashOverlay').html(response);
+                }
+            });
+        }
+        
+        function getPhoneCalls() {
+
+            $.ajax({
+                url: '<?php echo base_url(); ?>dashboard/getPhoneCalls',
                 method: 'GET',
                 data: {id:''},
                 success: function (response) {

@@ -7,6 +7,7 @@
                     <h3 class="modal-title" id="myModalLabel2" >Product/Service information</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
+                <form id="service-item-form" action="<?=url('accounting/products-and-services/service/create')?>" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <table class="table">
                         <thead>
@@ -29,7 +30,7 @@
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <div class="form-group" style="margin-bottom: 12px !important">
-                                                <label for="name">Name <span class="text-alert">*</span></label>
+                                                <label for="name">Name *</label>
                                                 <textarea name="name" id="name" class="form-control" required></textarea>
                                             </div>
                                             <div class="form-group" style="margin-bottom: 12px !important">
@@ -74,7 +75,7 @@
                                         <div class="col-sm-12">
                                             <label for="description">Description</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="selling" value="1" checked>
+                                                <input class="form-check-input" type="checkbox" id="selling" name="selling" value="1" checked>
                                                 <label class="form-check-label" for="selling">
                                                     I sell this product/service to my customers.
                                                 </label>
@@ -130,7 +131,7 @@
                                         <div class="col-sm-12">
                                             <label>Purchasing information</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="purchasing" value="1">
+                                                <input class="form-check-input" type="checkbox" id="purchasing" name="purchasing" value="1">
                                                 <label class="form-check-label" for="purchasing">
                                                     I purchase this product/service from a vendor.
                                                 </label>
@@ -190,6 +191,7 @@
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>

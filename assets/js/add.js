@@ -625,7 +625,7 @@ function get_new_customers(inquiry_id) {
 function formatRepo(repo) {
   if (repo) {
     return repo.first_name
-      ? repo.first_name + " " + repo.middle_name + " " + repo.last_name
+      ? repo.first_name + " " + repo.last_name
       : "";
   }
 
@@ -644,7 +644,7 @@ function formatRepo(repo) {
 }
 
 function formatRepoSelection(repo) {
-  return repo.first_name ? repo.last_name + ", " + repo.email : "";
+  return repo.first_name ? repo.first_name + " " + repo.last_name : "";
 }
 
 function readURL(input) {

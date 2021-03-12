@@ -108,7 +108,7 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function getItemsWithFilter($filters = [])
+    public function getItemsWithFilter($filters = [], $columnName = 'title', $order)
     {
         $this->db->where('company_id', getLoggedCompanyID());
         $this->db->where_in('is_active', $filters['status']);
@@ -118,6 +118,7 @@ class Items_model extends MY_Model
         if(isset($filters['type'])) {
             $this->db->where_in('type', $filters['type']);
         }
+        $this->db->order_by($columnName, $order);
         $query = $this->db->get($this->table);
         return $query->result();
     }
@@ -128,6 +129,12 @@ class Items_model extends MY_Model
         $this->db->where('id', $id);
         $inactive = $this->db->update($this->table, ['is_active' => 0]);
         return $inactive ? true : false;
+    }
+
+    public function addBundleItems($data)
+    {
+        $this->db->insert_batch('bundle_item_contents', $data);
+        return $this->db->insert_id();
     }
 
     public function getByName($name)
