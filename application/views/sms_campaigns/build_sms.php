@@ -249,7 +249,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
 
             <div class="modal fade" id="modalPreviewSms" tabindex="-1" role="dialog" aria-labelledby="modalPreviewSmsTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog" role="document" style="margin-top:5%;">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Preview SMS</h5>
@@ -257,8 +257,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body" style="padding: 0px 30px;">
-                        <div class="phone">
+                      <div class="modal-body" style="padding: 0px 30px;text-align:center;">
+                        <div class="phone" style="margin-top:20px;">
                             <div class="phone__cnt">
                                 <div class="sms-blast-msg"></div>
                             </div>
