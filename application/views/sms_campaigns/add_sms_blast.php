@@ -2,6 +2,24 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.cell-inactive{
+    background-color: #d9534f;
+}
+.left {
+  float: left;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
 .tabs-menu {
     margin-bottom: 20px;
     padding: 0;
@@ -11,6 +29,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     list-style: none;
     margin: 0;
     padding: 0;
+}
+.md-right {
+  float: right;
+  width: max-content;
+  display: block;
+  padding-right: 0px;
 }
 .tabs-menu .active, .tabs-menu .active a {
     color: #2ab363;
@@ -27,7 +51,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid p-40">
+          <!--
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
@@ -47,11 +72,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div>
+            -->
             <!-- end row -->
             <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'id' => 'create_sms_blast', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card">
+                    <div class="card mt-0">
+
+                        <div class="row">
+                          <div class="col-sm-6 left">
+                            <h3 class="page-title">Create SMS Campaign</h3>
+                          </div>
+                          <div class="col-sm-6 right dashboard-container-1">
+                            <div class="float-right d-none d-md-block">
+                                <div class="dropdown">
+                                        <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
+                                        </a>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="alert alert-warning mt-2 mb-0" role="alert">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Start a new SMS campaign to promote your business.
+                            </span>
+                        </div>
+
                         <div class="card-body">
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
@@ -64,17 +110,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </ul>
                             </div>
                             <hr />
-                            <div class="row">
+                            <div>
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Campaign Name</label>
                                     <input type="text" class="form-control" name="sms_camapaign_name" id="" required placeholder="" autofocus/>
                                 </div>
                             </div>
                             <hr />
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <a class="btn btn-default" href="<?php echo url('sms_campaigns') ?>">Cancel</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft">Continue »</button>
+                            <div>
+                                <div class="col-md-4 form-group md-right">
+                                    <a class="btn btn-default" href="<?php echo url('sms_campaigns') ?>" style="float: left;margin-right: 10px;">Cancel</a>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>
                         </div>
@@ -99,8 +145,8 @@ $(function(){
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,    
-             dataType: "json",      
+             url: url,
+             dataType: "json",
              data: $("#create_sms_blast").serialize(),
              success: function(o)
              {

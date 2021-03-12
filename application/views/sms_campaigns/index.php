@@ -108,7 +108,7 @@ table.dataTable tbody tr td {
                                         </li>
                                 </ul>
                             </div>
-                            <div class="campaign-list-container"></div>  
+                            <div class="campaign-list-container"></div>
                         </section>
                         <!-- /.content -->
                     </div>
@@ -147,41 +147,41 @@ table.dataTable tbody tr td {
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script>    
-$(function(){ 
+<script>
+$(function(){
     var active_tab = 'all';
 
     $("#c-all-tab").click(function(){
         active_tab = 'all';
-        $(".nav-item").removeClass('active');        
+        $(".nav-item").removeClass('active');
         $(".nav-all").addClass('active');
         load_all_campaigns();
     });
 
     $("#c-active-tab").click(function(){
         active_tab = 'active';
-        $(".nav-item").removeClass('active');        
+        $(".nav-item").removeClass('active');
         $(".nav-active").addClass('active');
         load_active_campaigns();
     });
 
     $("#c-scheduled-tab").click(function(){
         active_tab = 'scheduled';
-        $(".nav-item").removeClass('active');        
+        $(".nav-item").removeClass('active');
         $(".nav-scheduled").addClass('active');
         load_scheduled_campaigns();
     });
 
     $("#c-closed-tab").click(function(){
         active_tab = 'closed';
-        $(".nav-item").removeClass('active');        
+        $(".nav-item").removeClass('active');
         $(".nav-closed").addClass('active');
         load_closed_campaigns();
     });
 
     $("#c-draft-tab").click(function(){
         active_tab = 'draft';
-        $(".nav-item").removeClass('active');        
+        $(".nav-item").removeClass('active');
         $(".nav-draft").addClass('active');
         load_draft_campaigns();
     });
@@ -215,7 +215,7 @@ $(function(){
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,     
+             url: url,
              //data: ,
              success: function(o)
              {
@@ -245,19 +245,19 @@ $(function(){
                 });
 
                 $("#form-close-campaign").submit(function(e){
-                  e.preventDefault();                  
+                  e.preventDefault();
                   var url = base_url + 'sms_campaigns/_close_campaign';
                   $(".btn-close-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span> Updating');
                   setTimeout(function () {
                     $.ajax({
                        type: "POST",
                        url: url,
-                       data : $("#form-close-campaign").serialize(),     
+                       data : $("#form-close-campaign").serialize(),
                        dataType:"json",
                        success: function(o)
                        {
                          $(".btn-close-campaign").html('Yes');
-                         $(".close-modal-footer").hide();                         
+                         $(".close-modal-footer").hide();
                          if( o.is_success == 1 ){
                           $(".close-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");
                           if( active_tab == 'all' ){
@@ -274,8 +274,8 @@ $(function(){
                           load_campaign_tab_counter();
                          }else{
                           $(".close-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
-                         } 
-                                         
+                         }
+
                        }
                     });
                   }, 800);
@@ -291,7 +291,7 @@ $(function(){
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,     
+             url: url,
              dataType:"json",
              success: function(o)
              {
@@ -307,5 +307,5 @@ $(function(){
 
 
 });
-    
+
 </script>
