@@ -112,6 +112,10 @@ class Dashboard extends Widgets {
         $this->load->view('dashboard/sms');
     }
     
+    public function getPhoneCalls(){
+        $this->load->view('dashboard/calls');
+    }
+    
     public function ac_dashboard_sort() {
         //$user_id = logged('id');
         $input = $this->input->post();

@@ -31,6 +31,11 @@ class Ring_central extends MY_Controller {
         $this->page_data['platform'] = $platform;
         $this->load->view('ringcentral/default', $this->page_data);
     }
+    
+    
+    public function loadDialPad(){
+        $this->load->view('dashboard/dialpad');
+    }
 
     private function response($status) {
         if ($status == "Queued"):

@@ -59,8 +59,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
-    <div wrapper__section class="p-40">
-        <?php include viewPath('includes/notifications'); ?>
+    <div wrapper__section class="p-40">        
         <div class="card p-20">
             <div class="container-fluid" style="font-size:14px;">
                 <div class="row">
@@ -139,9 +138,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
                                                     </li>
                                                     <li role="separator" class="divider"></li>
-                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('credit_notes/edit/' . $c->id) ?>"><span
                                                                     class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
                                                     <li role="presentation">
                                                         <a role="menuitem" class="clone-credit-note" href="javascript:void(0);" data-name="<?= $c->credit_note_number; ?>" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-files-o icon"></span>  Clone</a></li>
@@ -173,6 +173,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <p class="text-ter margin-bottom">Manage your credit notes.</p>
                                 <a class="btn btn-primary" href="<?php echo base_url('credit_notes/add_new') ?>"><span class="fa fa-plus fa-margin-right"></span> New Credit Note</a>
                             </div>
+                        <?php }else{ ?>
+                          <table class="table table-hover table-to-list" data-id="work_orders">
+                                <thead>
+                                <tr>
+                                    <th>Credit Note#</th>
+                                    <th>Date Issued</th>
+                                    <th>Job & Customer</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                    <th style="width: 5%;"></th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                          </table>
                         <?php } ?>
                         <?php } ?>
                     </div>

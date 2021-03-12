@@ -41,6 +41,8 @@ class Accounting extends MY_Controller {
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
+        $this->load->model('AcsProfile_model', 'AcsProfile_model');
+        $this->load->model('TaxRates_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -1178,11 +1180,40 @@ class Accounting extends MY_Controller {
     public function load_products_services()
     {
         $postData = json_decode(file_get_contents('php://input'), true);
+        $column = $postData['order'][0]['column'];
         $order = $postData['order'][0]['dir'];
+        $columnName = $postData['columns'][$column]['name'];
         $start = $postData['start'];
         $limit = $postData['length'];
         $search = $postData['columns'][0]['search']['value'];
         $data = [];
+
+        switch($columnName) {
+            case 'name' :
+                $column = 'title';
+            break;
+            case 'sku' :
+                $column = 'model';
+            break;
+            case 'type' : 
+                $column = 'type';
+            break;
+            case 'sales_desc' :
+                $column = 'description';
+            break;
+            case 'sales_price' :
+                $column = 'price';
+            break;
+            case 'cost' :
+                $column = 'COGS';
+            break;
+            case 'reorder_point' :
+                $column = 're_order_points';
+            break;
+            default : 
+                $column = 'title';
+
+        }
 
         if(in_array('0', $postData['category'])) {
             array_unshift($postData['category'], '');
@@ -1208,12 +1239,16 @@ class Accounting extends MY_Controller {
         if($postData['type'] === 'inventory') {
             $filters['type'] = [
                 'product',
-                'Product'
+                'Product',
+                'inventory',
+                'Inventory'
             ];
         } else if($postData['type'] === 'non-inventory') {
             $filters['type'] = [
                 'material',
-                'Material'
+                'Material',
+                'non-inventory',
+                'Non-inventory'
             ];
         } else if($postData['type'] === 'service') {
             $filters['type'] = [
@@ -1227,7 +1262,7 @@ class Accounting extends MY_Controller {
             ];
         }
 
-        $items = $this->items_model->getItemsWithFilter($filters);
+        $items = $this->items_model->getItemsWithFilter($filters, $column, $order);
 
         foreach($items as $item) {
             $qty = $this->items_model->countQty($item->id);
@@ -1244,7 +1279,7 @@ class Accounting extends MY_Controller {
                         'inventory_account' => '',
                         'purch_desc' => '',
                         'sales_price' => $item->price,
-                        'cost' => $item->cost,
+                        'cost' => $item->COGS,
                         'taxable' => '',
                         'qty_on_hand' => $qty,
                         'qty_po' => '',
@@ -1265,7 +1300,7 @@ class Accounting extends MY_Controller {
                     'inventory_account' => '',
                     'purch_desc' => '',
                     'sales_price' => $item->price,
-                    'cost' => $item->cost,
+                    'cost' => $item->COGS,
                     'taxable' => '',
                     'qty_on_hand' => $qty,
                     'qty_po' => '',
@@ -1282,6 +1317,16 @@ class Accounting extends MY_Controller {
                     return $item['qty_on_hand'] <= 3;
                 } else {
                     return $item['qty_on_hand'] === 0;
+                }
+            });
+        }
+
+        if($columnName === 'qty_on_hand') {
+            $sort = usort($data, function($a, $b) use ($order) {
+                if($order === 'asc') {
+                    return $a['qty_on_hand'] > $b['qty_on_hand'];
+                } else {
+                    return $a['qty_on_hand'] < $b['qty_on_hand'];
                 }
             });
         }
@@ -1392,6 +1437,121 @@ class Accounting extends MY_Controller {
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
+    }
+    public function create_item($type)
+    {
+        $input = $this->input->post();
+        $name = $input['name'];
+
+        $config = array(
+            'upload_path' => "./uploads/",
+            'allowed_types' => "gif|jpg|png|jpeg",
+            'overwrite' => TRUE,
+            'max_size' => "2048000",
+            'max_height' => "768",
+            'max_width' => "1024"
+        );
+
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload('icon')) {
+			$product_image = '';
+		} else {
+			$upload_data = array('upload_data' => $this->upload->data());
+			$product_image = $upload_data['upload_data']['file_name'];
+        }
+        
+        switch($type) {
+            case 'bundle' :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'item_categories_id' => $input['category'],
+                    'model' => $input['sku'],
+                    'description' => $input['description'],
+                    'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
+                    'attached_image' => $product_image,
+                    'is_active' => 1
+                ];
+            break;
+            case 'service' :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'item_categories_id' => $input['category'],
+                    'model' => $input['sku'],
+                    'description' => isset($input['selling']) ? $input['description'] : null,
+                    'price' => isset($input['selling']) ? $input['price'] : null,
+                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
+                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
+                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
+                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
+                    'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
+                    'cost' => isset($input['purchasing']) ? $input['cost'] : null,
+                    'is_active' => 1
+                ];
+            break;
+            case 'non-inventory' :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'item_categories_id' => $input['category'],
+                    'model' => $input['sku'],
+                    'description' => isset($input['selling']) ? $input['description'] : null,
+                    'price' => isset($input['selling']) ? $input['price'] : null,
+                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
+                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
+                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
+                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
+                    'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
+                    'cost' => isset($input['purchasing']) ? $input['cost'] : null,
+                    'is_active' => 1
+                ];
+            break;
+            case 'inventory' :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'item_categories_id' => $input['category'],
+                    'model' => $input['sku'],
+                    'description' => $input['description'],
+                    'price' => $input['price'],
+                    'income_account_id' => $input['income_account'],
+                    'tax_rate_id' => $input['sales_tax_cat'],
+                    'purchase_description' => $input['purchase_description'],
+                    'expense_account_id' => $input['expense_account'],
+                    'vendor_id' => $input['vendor_id'],
+                    'cost' => $input['cost'],
+                    'is_active' => 1
+                ];
+            break;
+        }
+
+        $create = $this->items_model->create($data);
+
+        if($create) {
+            if($type === 'bundle') {
+                $bundleItems = [];
+                foreach($input['item_id'] as $key => $value) {
+                    $bundleItems[] = [
+                        'company_id' => logged('company_id'),
+                        'item_id' => $create,
+                        'bundle_item_id' => $value,
+                        'quantity' => $quantity[$key]
+                    ];
+                }
+                $addBundleItems = $this->items_model->addBundleItems($bundleItems);
+            }
+
+            $this->session->set_flashdata('success', "Item $name has been successfully added.");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/products-and-services');
     }
     public function product_categories()
     {
@@ -5260,6 +5420,15 @@ class Accounting extends MY_Controller {
         //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
 
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+        }
+
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         if (!empty($setting)) {
@@ -5701,6 +5870,24 @@ class Accounting extends MY_Controller {
         // $user_id = logged('id');
         // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         // $this->load->view('accounting/estimateviewdetails',$this->page_data);
+        echo json_encode($this->page_data);
+    }
+
+    public function addLocationajax()
+    {
+        $id = $this->input->post('id');
+
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Clients_model');
+        
+        $company_id = logged('company_id');
+
+            $customer = $this->AcsProfile_model->getdataAjax($id);
+            $client   = $this->Clients_model->getById($company_id);
+
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+
         echo json_encode($this->page_data);
     }
 

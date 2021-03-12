@@ -18,7 +18,7 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->get_where('user_notification', array('user_id' => $user_id, 'status' => 1))->num_rows();
         return $qry;
     }
-    public function getTSNotification()
+    public function getNewForyouNotifications()
     {
         $user_id = $this->session->userdata('logged')['id'];
         $company_id = logged('company_id');
@@ -30,11 +30,21 @@ class Timesheet_model extends MY_Model
         // $query = $this->db->get();
         // $qry = $query->result();
         // var_dump($company_id);
+
+        $date = date_create(date("Y-m-d H:i:s"));
+        date_sub($date, date_interval_create_from_date_string("2 days"));
+        $date_2days_ago = date_format($date, "Y-m-d H:i:s");
+
         $this->db->reset_query();
-        if (logged('role') != 1) {
-            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " order by user_notification.date_created Desc");
+        $query = $this->db->query("SELECT * from user_seen_notif JOIN user_notification on user_notification.id=user_seen_notif.notif_id where user_notification.date_created >= '" . $date_2days_ago . "'");
+        $and_query = "";
+        foreach ($query->result() as $row) {
+            $and_query = $and_query . " and user_notification.id !=" . $row->notif_id;
+        }
+        if (logged("role") == 1) {
+            $query = $this->db->query("SELECT * FROM user_notification JOIN users ON users.id = user_notification.user_id where user_notification.date_created >= now() - interval 2 day and user_notification.company_id=" . $company_id . $and_query . " order by user_notification.date_created DESC");
         } else {
-            $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where u.company_id = " . $company_id . " and u.id = " . $user_id . " order by user_notification.date_created Desc");
+            $query = $this->db->query("SELECT * FROM user_notification JOIN users ON users.id = user_notification.user_id where user_notification.date_created >= now() - interval 2 day and user_notification.company_id=" . $company_id . " and user_notification.user_id=" . $user_id . $and_query . " order by user_notification.date_created DESC");
         }
 
         // $query = $this->db->get();
@@ -42,7 +52,12 @@ class Timesheet_model extends MY_Model
         // $qry = $query->result();
         return $query->result();
     }
-
+    public function getseennotifications()
+    {
+        $user_id = $this->session->userdata('logged')['id'];
+        $query = $this->db->query("SELECT * FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id);
+        return $query->result();
+    }
     public function get_unreadNotification($current_notif_count, $action)
     {
         $user_id = $this->session->userdata('logged')['id'];
@@ -63,21 +78,21 @@ class Timesheet_model extends MY_Model
         $and_query = "";
         if ($action === "counter") {
             $seened = $this->db->query("SELECT * from user_seen_notif where date_created >= '" . $date_2days_ago . "' and user_id = " . $user_id);
-            if($seened->num_rows() > 0){
+            if ($seened->num_rows() > 0) {
                 foreach ($seened->result() as $row) {
                     $and_query = $and_query . " and user_notification.id != " . $row->notif_id;
-                } 
+                }
             }
         }
 
         $query = $this->db->query("SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id where user_notification.company_id = " . $company_id . " and user_notification.status = 1 and user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " order by user_notification.date_created Desc");
 
-        if ($action === "counter") { 
+        if ($action === "counter") {
             return $query->num_rows();
         } elseif ($action === "notifCount") {
             return $query->num_rows();
         } else {
-                return $query->result();
+            return $query->result();
         }
 
 
@@ -308,18 +323,26 @@ class Timesheet_model extends MY_Model
                 'company_id' => $company_id
             );
             $this->db->insert($this->db_table, $data);
-            $ShiftDuration_and_overtime = $this->calculateShiftDuration_and_overtime($attn_id);
             $break = $this->calculateBreakDuration($attn_id);
             $update = array(
-                'shift_duration' => round($ShiftDuration_and_overtime[0], 2),
-                //                'break_duration' => $break_duration,
-                'overtime' => round($ShiftDuration_and_overtime[1], 2),
-                //                'date_out' => date('Y-m-d'),
                 'break_duration' => round($break, 2),
                 'status' => 0
             );
             $this->db->where('id', $attn_id);
             $this->db->update('timesheet_attendance', $update);
+
+
+            $ShiftDuration_and_overtime = $this->calculateShiftDuration_and_overtime($attn_id);
+            $update = array(
+                'shift_duration' => round($ShiftDuration_and_overtime[0], 2),
+                //                'break_duration' => $break_duration,
+                'overtime' => round($ShiftDuration_and_overtime[1], 2),
+                //                'date_out' => date('Y-m-d'),
+                'status' => 0
+            );
+            $this->db->where('id', $attn_id);
+            $this->db->update('timesheet_attendance', $update);
+
             $affected_row = $this->db->affected_rows();
 
             if ($affected_row > 0) {
@@ -374,7 +397,14 @@ class Timesheet_model extends MY_Model
             $minutes += $interval->i;
         }
 
-        $total_worked_hours = $minutes / 60;
+        $break_duration = 0;
+        $qry = $this->db->query("SELECT * FROM timesheet_attendance WHERE id = " . $attn_id);
+        $attendance = $qry->result();
+        foreach ($attendance as $row) {
+            $break_duration = $row->break_duration;
+        }
+
+        $total_worked_hours = ($minutes / 60) - $break_duration;
 
         if ($total_worked_hours > 8) {
             $shift_duration = 8;
@@ -383,7 +413,6 @@ class Timesheet_model extends MY_Model
             $shift_duration = $total_worked_hours;
             $over_time = 0;
         }
-
 
         $data = array($shift_duration, $over_time);
         return $data;

@@ -348,7 +348,7 @@
                 $('#msgs_details').show();
                 $('#msgs_details').html(response);
                 timeago.render(document.querySelectorAll('.timestamp'));
-                window.scrollTo(0, document.querySelector("#msgs_details").scrollHeight)
+                window.scrollTo(0, document.querySelector("msgs_details").scrollHeight)
                 document.getElementById('msgs_details').scrollTop = document.getElementById('msgs_details').scrollHeight;
                 $('#replyToBase6').val(no);
             }

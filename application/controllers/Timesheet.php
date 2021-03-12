@@ -135,7 +135,7 @@ class Timesheet extends MY_Controller
         //     break;
         // }
         // var_dump($ipaddress);
-        echo $this->session->userdata('offset_zone');
+        echo logged("role");
     }
 
     public function employee()
@@ -1222,9 +1222,33 @@ class Timesheet extends MY_Controller
     {
 
         $this->load->model('timesheet_model');
-        $this->page_data['allnotification'] = $this->timesheet_model->getTSNotification();
+        $this->page_data['newforyou'] = $this->timesheet_model->getNewForyouNotifications();
         // var_dump($this->page_data['allnotification']);
         $this->load->view('users/timesheet_notification_list', $this->page_data);
+    }
+    public function getseennotifications()
+    {
+        $seenednotifications = $this->timesheet_model->getseennotifications();
+        $html = "";
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        foreach ($seenednotifications as $row) {
+            $html = $html . "
+            <div class='toast fade show' role='alert' aria-live='assertive' aria-atomic='true' style='margin-left: auto; margin-right: auto; opacity: 0.7;box-shadow: none;'>
+                <div class='toast-header'>
+                    <img src='https://localhost/nsmartrac/uploads/users/default.png' class='rounded mr-2' alt='...'>
+                    <strong class='mr-auto'>" . $row->FName . " " . $row->LName . "</strong>
+                    <small class='text-muted'>" . date('M-d h:i A', strtotime($row->date_created)) . "</small>
+                    <button type='button' class='ml-2 mb-1 close' data-dismiss='toast' aria-label='Close'>
+                       <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='toast-body'>
+                    " . $row->content . "
+                </div>
+            </div>
+            ";
+        }
+        echo ($html);
     }
     public function attendance()
     {
@@ -1330,6 +1354,7 @@ class Timesheet extends MY_Controller
         }
         // echo json_encode($attn_id);
     }
+
 
     public function breakIn()
     {
@@ -2232,8 +2257,11 @@ class Timesheet extends MY_Controller
                 //                'date_out' => date('Y-m-d'),
                 'status' => 0
             );
-            $this->db->where('user_id', $user_id);
+            $this->db->where('id', $attn_id);
             $this->db->update('timesheet_attendance', $update);
+
+
+
             $affected_row = $this->db->affected_rows();
 
             $this->db->select('FName,LName,profile_img,device_type,device_token');
@@ -2247,7 +2275,7 @@ class Timesheet extends MY_Controller
             $data = new stdClass();
             $data->clock_out_time = date('h:i A');
             $data->attendance_id = $attn_id;
-            $data->shift_duration = $shift_duration;
+            $data->shift_duration = intval($hours_worked[0] + $hours_worked[1]) . ":" . (($hours_worked[0] + $hours_worked[1]) - intval($hours_worked[0] + $hours_worked[1])) * 60;
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
@@ -2880,7 +2908,6 @@ class Timesheet extends MY_Controller
         curl_close($ch);
     }
 }
-
 
 
 /* End of file Timesheet.php */

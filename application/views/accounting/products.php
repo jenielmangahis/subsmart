@@ -547,12 +547,10 @@ $('.action-bar .dropdown-menu .show-more-button').on('click', function(e) {
 
 	if($(this).prev().hasClass('hide')) {
 		$(this).prev().removeClass('hide');
-		$(this).children('i').removeClass('fa-caret-down');
-		$(this).children('i').addClass('fa-caret-up');
+		$(this).html('<i class="fa fa-caret-up text-info"></i> &nbsp; Show less');
 	} else {
 		$(this).prev().addClass('hide');
-		$(this).children('i').removeClass('fa-caret-up');
-		$(this).children('i').addClass('fa-caret-down');
+		$(this).html('<i class="fa fa-caret-down text-info"></i> &nbsp; Show more');
 	}
 });
 
@@ -580,6 +578,7 @@ $(`#products-services-table`).DataTable({
     lengthChange: false,
     pageLength: $('#table_rows').val(),
     info: false,
+	order: [[1, 'asc']],
 	ajax: {
 		url: 'products-and-services/load/',
 		dataType: 'json',
@@ -600,10 +599,11 @@ $(`#products-services-table`).DataTable({
 	},
 	columns: [
 		{
+			orderable: false,
 			data: null,
 			name: 'checkbox',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
-				if(!rowData.hasOwnProperty('is_category')) {
+				if(!rowData.hasOwnProperty('is_category') && rowData.type !== "Bundle") {
 					$(td).html('<input type="checkbox">');
 				} else {
 					$(td).html('');
@@ -762,6 +762,7 @@ $(`#products-services-table`).DataTable({
 			}
 		},
 		{
+			orderable: false,
 			data: 'taxable',
 			name: 'taxable',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
@@ -819,23 +820,60 @@ $(`#products-services-table`).DataTable({
 			}
 		},
 		{
+			orderable: false,
 			data: null,
 			name: 'action',
 			fnCreatedCell: function(td, cellData, rowData,row, col) {
-				$(td).html(`
-				<div class="btn-group float-right">
-					<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+				if(rowData.type !== "Bundle") {
+					if(rowData.type !== "Inventory" && rowData.type !== "Product") {
+						$(td).html(`
+						<div class="btn-group float-right">
+							<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
 
-					<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<span class="sr-only">Toggle Dropdown</span>
-					</button>
-					<div class="dropdown-menu">
-						<a class="dropdown-item make-inactive" href="#">Make inactive</a>
-						<a class="dropdown-item" href="#">Run report</a>
-						<a class="dropdown-item" href="#">Duplicate</a>
+							<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu">
+								<a class="dropdown-item make-inactive" href="#">Make inactive</a>
+								<a class="dropdown-item" href="#">Run report</a>
+								<a class="dropdown-item" href="#">Duplicate</a>
+							</div>
+						</div>
+						`);
+					} else {
+						$(td).html(`
+						<div class="btn-group float-right">
+							<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+
+							<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu">
+								<a class="dropdown-item make-inactive" href="#">Make inactive</a>
+								<a class="dropdown-item" href="#">Run report</a>
+								<a class="dropdown-item" href="#">Duplicate</a>
+								<a class="dropdown-item" href="#">Adjust quantity</a>
+								<a class="dropdown-item" href="#">Adjust starting value</a>
+								<a class="dropdown-item" href="#">Reorder</a>
+							</div>
+						</div>
+						`);
+					}
+				} else {
+					$(td).html(`
+					<div class="btn-group float-right">
+						<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+
+						<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						<div class="dropdown-menu">
+							<a class="dropdown-item make-inactive" href="#">Make inactive</a>
+							<a class="dropdown-item" href="#">Duplicate</a>
+						</div>
 					</div>
-				</div>
-				`);
+					`);
+				}
 
 				if(rowData.hasOwnProperty('is_category')) {
 					$(td).remove();

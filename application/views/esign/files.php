@@ -242,17 +242,6 @@
                             </button>
                             <input type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel" required/>
                         </div>
-
-                        <!-- <div class="dropdown">
-                                <button class="btn-upl dropdown-toggle" type="button" data-toggle="dropdown">Get from Cloud
-                                <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic1.png" alt=""> Box</a></li>
-                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic2.png" alt=""> Dropbox</a></li>
-                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic3.png" alt=""> Google Drive</a></li>
-                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic4.png" alt=""> One Drive</a></li>
-                                </ul>
-                            </div> -->
                     </div>
 
                     <div class="ml-3 esignBuilder__docPreview d-none">
@@ -260,6 +249,19 @@
                         <div class="esignBuilder__docInfo">
                             <h5 class="esignBuilder__docTitle"></h5>
                             <span class="esignBuilder__docPageCount"></span>
+                        </div>
+
+                        <div class="esignBuilder__uploadProgress" width="100%">
+                            <span></span>
+                        </div>
+
+                        <div class="esignBuilder__uploadProgressCheck">
+                            <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <title>Check</title>
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#28a745"></path>
+                                </g>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -270,8 +272,11 @@
         <footer>
             <div class="container-fluid">
                 <ul>
-                    <!-- <li><a href="#">Send Now</a></li> -->
-                    <li><button type="submit" class="next-btn esignBuilder__submit">next</button></li>
+                    <li>
+                        <button type="submit" class="btn esignBuilder__submit" disabled>
+                            Next
+                        </button>
+                    </li>
                 </ul>
             </div>
         </footer>
@@ -383,7 +388,7 @@
             <div class="container-fluid">
                 <ul class="d-flex align-items-center justify-content-end">
                     <li><a onClick='onbackclick("<?php echo url('esign/Files?id=' . $file_id . '&next_step=0') ?>")'>Back</a></li>
-                    <li><button class="esignBuilder__submit" type="submit">next</button></li>
+                    <li><button class="esignBuilder__submit" type="submit">Next</button></li>
                 </ul>
             </div>
         </footer>
@@ -398,18 +403,41 @@
         <input type="hidden" value="3" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
 
-
         <div class="card p-0 mb-0">
             <div class="site_content">
                 <div class="content_wrap" style="position: relative;">
                     <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden">
-                        <div class="resize-horizontal resize-right resize-line"></div>
-
-                        <div class="sidebar_footer"></div>
-
                         <div class="sidebar-fields sidebar-flex">
                             <div class="sidebar_main">
-                                <div class="sidebar-fields" style="box-shadow: rgba(0, 0, 0, 0.18) 0px -7px 7px -7px inset">
+                                <div class="dropdown esignBuilder__recipientSelect">
+                                    <button
+                                        data-recipient-color="<?=$recipients[0]['color'];?>"
+                                        data-recipient-id="<?=$recipients[0]['id'];?>"
+                                        class="btn btn-secondary dropdown-toggle"
+                                        type="button"
+                                        id="recipientsSelect"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fa fa-circle mr-1"></i>
+                                        <span><?=$recipients[0]['name'];?></span>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="recipientsSelect">
+                                        <?php foreach ($recipients as $recipient): ?>
+                                            <a
+                                                href="#"
+                                                class="dropdown-item"
+                                                data-recipient-color="<?=$recipient['color'];?>"
+                                                data-recipient-id="<?=$recipient['id'];?>"
+                                            >
+                                                <?=$recipient['name'];?>
+                                            </a>
+                                        <?php endforeach;?>
+                                    </div>
+                                </div>
+
+                                <div class="sidebar-fields">
                                     <div class="sidebar_group l-flex-between">
                                         <h5>
                                             <span tabindex="-1" class="ng-binding">Standard Fields</span>
@@ -564,13 +592,11 @@
                     </div>
 
                     <div
-                        class="content_main"
                         id="main-pdf-render"
-                        style="height: 887px;overflow: auto; position: relative;margin: 0 auto; text-align: center;"
                         role="region"
                     ></div>
 
-                    <div class="ng-scope content_sidebar content_sidebar-right">
+                    <div class="ng-scope content_sidebar content_sidebar-right ml-auto">
                         <div class="docsWrapper">
                             <div class="singleDocument">
                                 <div id="main-pdf-render-preview"></div>
@@ -579,6 +605,16 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="esignBuilder__footer">
+            <button type="button" class="btn btn-secondary mr-3">Back</button>
+            <button type="button" class="btn btn-success" id="submitBUtton">
+                <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                Send
+            </button>
         </div>
 
         <?php echo form_close(); ?>
@@ -591,34 +627,6 @@
 </body>
 
 </html>
-<script>
-    var current_target = 0;
-
-    // $('.next-btn').click(function() {
-    //     current_target = current_target + 1;
-    //     if (current_target == 0) {
-    //         $('#custome-fileup').show();
-    //         $("#add-recipeit").hide();
-    //         $("#tagspreview").hide();
-    //         $('#all-recipients-wrp').hide();
-    //     } else if (current_target == 1) {
-    //         $('#custome-fileup').hide();
-    //         $("#add-recipeit").show();
-    //         $("#tagspreview").hide();
-    //         $('#all-recipients-wrp').hide();
-    //     } else if (current_target == 2) {
-    //         $('#custome-fileup').hide();
-    //         $("#add-recipeit").hide();
-    //         $("#tagspreview").show();
-    //         $('#all-recipients-wrp').hide();
-    //     } else if (current_target == 3) {
-    //         $('#custome-fileup').hide();
-    //         $("#add-recipeit").hide();
-    //         $("#tagspreview").hide();
-    //         $('#all-recipients-wrp').show();
-    //     }
-    // });
-</script>
 <style>
     .main-wrapper {
         padding: 213px 0 292px;

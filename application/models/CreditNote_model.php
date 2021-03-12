@@ -15,10 +15,9 @@ class CreditNote_model extends MY_Model
 
     public function getAllByCompanyId($company_id)
     {
-
         $this->db->select('credit_notes.*, users.id AS uid, users.company_id,acs_profile.first_name,acs_profile.last_name,acs_profile.prof_id');
         $this->db->from($this->table);
-        $this->db->join('users', 'credit_notes.user_id = users.id', 'LEFT');
+        $this->db->join('users', 'credit_notes.user_id = users.id', 'INNER');
         $this->db->join('acs_profile', 'credit_notes.customer_id = acs_profile.prof_id', 'LEFT');        
         $this->db->where('users.company_id', $company_id);
 

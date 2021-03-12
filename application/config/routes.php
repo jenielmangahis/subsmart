@@ -511,6 +511,10 @@ $route['sms_campaigns/create_campaign_send_to'] = 'Sms_Campaigns/create_campaign
 $route['sms_campaigns/build_sms'] = 'Sms_Campaigns/build_sms';
 $route['sms_campaigns/create_sms_message'] = 'Sms_Campaigns/create_sms_message';
 $route['sms_campaigns/preview_sms_message'] = 'Sms_Campaigns/preview_sms_message';
+$route['sms_campaigns/create_send_schedule'] = 'Sms_Campaigns/create_send_schedule';
+$route['sms_campaigns/_load_campaigns/(:any)'] = 'Sms_Campaigns/ajax_load_campaigns/$1';
+$route['sms_campaigns/_load_sms_campaign_counter'] = 'Sms_Campaigns/ajax_load_sms_campaign_counter';
+$route['sms_campaigns/_close_campaign'] = 'Sms_Campaigns/ajax_close_campaign';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
@@ -656,3 +660,7 @@ $route['job/add_new_job_tag'] = 'Job/add_new_job_tag';
 $route['job/save_job_tag'] = 'Job/create_new_job_tag';
 $route['job/edit_job_tag/(:any)'] = 'Job/edit_job_tag/$1';
 $route['job/update_job_tag'] = 'Job/update_job_tag';
+
+//Forgot Password
+$route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
+$route['login/_update_user_password'] = 'Login/ajax_update_user_password';

@@ -5,9 +5,9 @@ class SmsBlast_model extends MY_Model
 {
     public $table = 'sms_blast';
 
-    public $stype_all_contacts    = 0;
-    public $stype_contact_group   = 1;
-    public $stype_certain_contact = 2;
+    public $stype_all_contacts    = 1;
+    public $stype_contact_group   = 2;
+    public $stype_certain_contact = 3;
 
     public $ctype_both = 1;
     public $ctype_residential = 2;
@@ -16,6 +16,8 @@ class SmsBlast_model extends MY_Model
 
     public $status_draft  = 0;
     public $status_active = 1;
+    public $status_scheduled = 2;
+    public $status_closed = 3;
    
     public function getAll($filters=array())
     {
@@ -36,7 +38,30 @@ class SmsBlast_model extends MY_Model
         return $query->result();
     }
 
-    
+    public function getAllByCompanyId($company_id, $filters=array(), $conditions=array())
+    {
+
+        $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
+        $this->db->from($this->table);
+        $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('campaign_name', $filters['search'], 'both');
+            }
+        }
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
+            }
+        }
+
+        $this->db->where('users.company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getById($id)
     {
@@ -60,7 +85,9 @@ class SmsBlast_model extends MY_Model
     public function statusOptions(){
         $options = [
             $this->status_active => 'Active',
-            $this->status_draft => 'Draft'
+            $this->status_draft => 'Draft',
+            $this->status_scheduled => 'Scheduled',
+            $this->status_closed => 'Closed'
         ];
 
         return $options;
@@ -68,6 +95,18 @@ class SmsBlast_model extends MY_Model
 
     public function statusDraft(){
         return $this->status_draft;
+    }
+
+    public function statusScheduled(){
+        return $this->status_scheduled;
+    }
+
+    public function statusClosed(){
+        return $this->status_closed;
+    }
+
+    public function statusActive(){
+        return $this->status_active;
     }
 
     public function sendingTypeAll(){
@@ -84,6 +123,24 @@ class SmsBlast_model extends MY_Model
         $this->db->set($data);
         $this->db->where('id', $sms_blast_id);
         $this->db->update();
+    }
+
+    public function getServicePrice(){
+        return 5;
+    }
+
+    public function getPricePerSms(){
+        return 0.05;
+    }
+
+    public function sendToOptions(){
+        $options = [
+            $this->stype_all_contacts => 'All Contacts',
+            $this->stype_certain_contact => 'Certain Contacts',
+            $this->stype_contact_group => 'Contact Groups'
+        ];
+
+        return $options;
     }
 
 }

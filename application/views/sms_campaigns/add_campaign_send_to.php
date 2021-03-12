@@ -2,6 +2,40 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.cell-inactive{
+    background-color: #d9534f;
+}
+.left {
+  float: left;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+.tabs-menu {
+    margin-bottom: 20px;
+    padding: 0;
+    margin-top: 20px;
+}
+.tabs-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.md-right {
+  float: right;
+  width: max-content;
+  display: block;
+  padding-right: 0px;
+}
 .tabs-menu {
     margin-bottom: 20px;
     padding: 0;
@@ -37,7 +71,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid p-40">
+            <!--
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
@@ -56,12 +91,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- end row -->
             <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'create_campaign_send_to', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card">
+                      <div class="card mt-0">
+                        <div class="row">
+                          <div class="col-sm-6 left">
+                            <h3 class="page-title">SMS Blast</h3>
+                          </div>
+                          <div class="col-sm-6 right dashboard-container-1">
+                            <div class="float-right d-none d-md-block">
+                                <div class="dropdown">
+                                        <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
+                                        </a>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="alert alert-warning mt-2 mb-0" role="alert">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Send to all your customers or only certain ones.
+                            </span>
+                        </div>
                         <div class="card-body">
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
@@ -84,11 +137,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="to_type_1">All my customers with phone</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="3" id="to_type_3">
+                                            <input type="radio" name="to_type" value="2" id="to_type_3">
                                             <label for="to_type_3">To a customer group</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="2" id="to_type_2">
+                                            <input type="radio" name="to_type" value="3" id="to_type_2">
                                             <label for="to_type_2">Only to certain customers</label>
                                         </div>
                                     </div>
@@ -116,23 +169,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="margin-bottom:20px ​!important;">
                                     <label>Exclude Customer Groups</label>
                                     <div class="help help-block help-sm">Optional, select the groups you would like to exclude from campaign.</div>
                                     <ul class="group-list">
-                                        <?php foreach($customerGroups as $cg){ ?>       
+                                        <?php foreach($customerGroups as $cg){ ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
                                                     <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>">
                                                     <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
-                                                </div> 
+                                                </div>
                                             </li>
                                         <?php } ?>
                                     </ul>
                                 </div>
                             </div>
 
-                            <div class="sending-option-2" style="display: none;">
+                            <div class="sending-option-2" style="display: none;margin-bottom:20px ​!important;">
                                 <div class="margin-bottom-ter">
                                     <span class="contact-selected-count" style="font-weight: bold;">0</span> customer selected.
                                 </div>
@@ -142,28 +195,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <th style="width:30px;"></th>
                                                 <th>Name</th>
-                                                <th>Phone</th>
-                                                <th>Subscribed</th>
+                                                <th style="width: 10%;">Phone</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach($customers as $c){ ?>
-                                                <?php if($c->mobile != ''){ ?>
+                                                <?php if($c->phone_m != ''){ ?>
                                                 <tr>
                                                     <td>
                                                         <div class="checkbox checkbox-sm">
-                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->id; ?>]" value="<?= $c->id; ?>" id="chk-customer-<?= $c->id; ?>">
-                                                            <label for="chk-customer-<?= $c->id; ?>"></label>
+                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>">
+                                                            <label for="chk-customer-<?= $c->prof_id; ?>"></label>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <?= $c->contact_name; ?>
-                                                        <div class="text-ter">
-                                                            <?= $c->customer_type; ?>
-                                                        </div>
+                                                        <?= $c->first_name . ' ' . $c->last_name; ?>
                                                     </td>
-                                                    <td><?= $c->mobile; ?></td>
-                                                    <td><span class="fa fa-check text-ter"></span></td>
+                                                    <td><?= $c->phone_m; ?></td>
                                                 </tr>
                                                 <?php } ?>
                                             <?php } ?>
@@ -178,12 +226,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <ul class="group-list">
-                                        <?php foreach($customerGroups as $cg){ ?>       
+                                        <?php foreach($customerGroups as $cg){ ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
                                                     <input class="checkbox-select chk-contact-group" type="checkbox" name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
                                                     <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
-                                                </div> 
+                                                </div>
                                             </li>
                                         <?php } ?>
                                     </ul>
@@ -206,12 +254,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
-
                             <hr />
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_sms_blast') ?>">« Back</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-send-settings">Continue »</button>
+                            <div>
+                                <div class="col-md-4 form-group md-right">
+                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_sms_blast') ?>" style="float: left;margin-right: 10px;">« Back</a>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-send-settings" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>
                         </div>
@@ -265,13 +312,13 @@ $(function(){
 
     $("#create_campaign_send_to").submit(function(e){
         e.preventDefault();
-        var url = base_url + '/sms_campaigns/create_campaign_send_to';
-        $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
+        var url = base_url + 'sms_campaigns/create_campaign_send_to';
+        $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,    
-             dataType: "json",      
+             url: url,
+             dataType: "json",
              data: $("#create_campaign_send_to").serialize(),
              success: function(o)
              {
@@ -279,7 +326,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "/sms_campaigns/build_sms";
+                    location.href = base_url + "sms_campaigns/build_sms";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);

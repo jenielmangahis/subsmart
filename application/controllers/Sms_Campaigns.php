@@ -22,11 +22,25 @@ class Sms_Campaigns extends MY_Controller {
                 $this->page_data['page']->title = 'SMS Campaigns';
                 $this->page_data['page']->menu = '';    
 
+                add_css(array(
+                    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+                    'assets/plugins/timepicker/bootstrap-timepicker.css',
+                ));
+
+                add_footer_js(array(
+                    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+                    'assets/plugins/timepicker/bootstrap-timepicker.js'
+                ));
+
         }
 
         public function index()
         {       
-
+                $this->page_data['status_active'] = $this->SmsBlast_model->statusActive();                
+                $this->page_data['status_scheduled'] = $this->SmsBlast_model->statusScheduled();
+                $this->page_data['status_closed']    = $this->SmsBlast_model->statusClosed();
+                $this->page_data['status_draft']     = $this->SmsBlast_model->statusDraft();
                 $this->load->view('sms_campaigns/index', $this->page_data);
 
         }
@@ -44,30 +58,30 @@ class Sms_Campaigns extends MY_Controller {
                         'err_msg' => 'Please enter Campaign Name'
                 ];
 
-        $post = $this->input->post(); 
+                $post = $this->input->post(); 
 
-        if( $post['sms_camapaign_name'] != '' ){
-                $user = $this->session->userdata('logged');
+                if( $post['sms_camapaign_name'] != '' ){
+                        $user = $this->session->userdata('logged');
 
-                $sms_blast_data = [
-                        'user_id' => $user['id'],
-                        'campaign_name' => $post['sms_camapaign_name'],
-                        'sms_text' => '',
-                        'sending_type' => $this->SmsBlast_model->sendingTypeAll(),
-                        'status' => $this->SmsBlast_model->statusDraft(),
-                        'customer_type' => $this->SmsBlast_model->customerTypeResidential(),
-                        'created' => date("Y-m-d H:i:s")
-                ];      
+                        $sms_blast_data = [
+                                'user_id' => $user['id'],
+                                'campaign_name' => $post['sms_camapaign_name'],
+                                'sms_text' => '',
+                                'sending_type' => $this->SmsBlast_model->sendingTypeAll(),
+                                'status' => $this->SmsBlast_model->statusDraft(),
+                                'customer_type' => $this->SmsBlast_model->customerTypeResidential(),
+                                'created' => date("Y-m-d H:i:s")
+                        ];      
 
-                $sms_id = $this->SmsBlast_model->create($sms_blast_data);
+                        $sms_id = $this->SmsBlast_model->create($sms_blast_data);
 
-                $this->session->set_userdata('smsBlastId', $sms_id);
+                        $this->session->set_userdata('smsBlastId', $sms_id);
 
-                $json_data = [
-                                'is_success' => true,
-                                'err_msg' => ''
-                        ];
-        }
+                        $json_data = [
+                                        'is_success' => true,
+                                        'err_msg' => ''
+                                ];
+                }
 
                 echo json_encode($json_data);
         }
@@ -92,30 +106,31 @@ class Sms_Campaigns extends MY_Controller {
                         'err_msg' => 'Please enter Campaign Name'
                 ];
 
-                $post = $this->input->post(); 
-                
+                $post         = $this->input->post(); 
                 $sms_blast_id = $this->session->userdata('smsBlastId');
+                
+                $data_setting = [
+                    'customer_type' => $post['optionA']['customer_type_service'],
+                    'sending_type' => $post['to_type']
+                ];
+
+                $smsBlast = $this->SmsBlast_model->updateSmsBlast($sms_blast_id, $data_setting);
+                $this->SmsBlastSendTo_model->deleteAllBySmsBlastId($sms_blast_id);
 
                 if( $post['to_type'] == 1 ){
                         //Use optionA data
-                        $data_setting = [
-                                'sms_blast_id' => $sms_blast_id,
-                                'customer_type' => $post['optionA']['customer_type_service'],
-                                'sending_type' => $post['to_type']
-                        ];
-
-                        $smsBlastSettingId = $this->SmsBlastSetting_model->create($data_setting);
-
                         $data_send_to = array();
-                        foreach( $post['optionA']['exclude_customer_group_id'] as $key => $value ){
-                                $data_send_to = [
-                                        'sms_blast_id' => $sms_blast_id,
-                                        'customer_id' => 0,
-                                        'customer_group_id' => $value,
-                                        'exclude' => 1
-                                ];
+                        if( !empty($post['optionA']['exclude_customer_group_id']) ){
+                                foreach( $post['optionA']['exclude_customer_group_id'] as $key => $value ){
+                                        $data_send_to = [
+                                                'sms_blast_id' => $sms_blast_id,
+                                                'customer_id' => 0,
+                                                'customer_group_id' => $value,
+                                                'exclude' => 1
+                                        ];
 
-                                $smsBlastSendTo = $this->SmsBlastSendTo_model->create($data_send_to);
+                                        $smsBlastSendTo = $this->SmsBlastSendTo_model->create($data_send_to);
+                                }       
                         }
 
                         $json_data = [
@@ -123,16 +138,9 @@ class Sms_Campaigns extends MY_Controller {
                                 'err_msg' => ''
                         ];
 
-                }elseif( $post['to_type'] == 2 ){
-                        //Use optionB data              
-                        $data_setting = [
-                                'sms_blast_id' => $sms_blast_id,
-                                'customer_type' => $post['optionB']['customer_type_service'],
-                                'sending_type' => $post['to_type']
-                        ];
-
-                        $smsBlastSettingId = $this->SmsBlastSetting_model->create($data_setting);
-
+                }elseif( $post['to_type'] == 3 ){
+                        //Use optionB data           
+                        $   
                         $data_send_to = array();
                         foreach( $post['optionB']['customer_id'] as $key => $value ){
                                 $data_send_to = [
@@ -150,16 +158,8 @@ class Sms_Campaigns extends MY_Controller {
                                 'err_msg' => ''
                         ];
 
-                }elseif( $post['to_type'] == 3 ){
+                }elseif( $post['to_type'] == 2 ){
                         //Use optionC data
-                        $data_setting = [
-                                'sms_blast_id' => $sms_blast_id,
-                                'customer_type' => $post['optionC']['customer_type_service'],
-                                'sending_type' => $post['to_type']
-                        ];
-
-                        $smsBlastSettingId = $this->SmsBlastSetting_model->create($data_setting);
-
                         $data_send_to = array();
                         if(isset($post['optionC']['customer_group_id'])){
                                 foreach( $post['optionC']['customer_group_id'] as $key => $value ){
@@ -213,13 +213,146 @@ class Sms_Campaigns extends MY_Controller {
 
         public function preview_sms_message()
         {
-                $sms_blast_id = $this->session->userdata('smsBlastId');
+            $this->load->helper('functions');
+            $sms_blast_id = $this->session->userdata('smsBlastId');
 
-                $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
-                $sms_text = $smsBlast->sms_text;
+            $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
+            $sms_text = $smsBlast->sms_text;
 
-                $this->page_data['sms_text'] = $sms_text;
-                $this->load->view('sms_campaigns/preview_sms', $this->page_data);
+            $smsRecipients = $this->SmsBlastSendTo_model->getAllBySmsBlastId($sms_blast_id);
+            $total_recipients = count($smsRecipients); 
+
+            $service_price = $this->SmsBlast_model->getServicePrice();
+            $price_per_sms = $this->SmsBlast_model->getPricePerSms();
+            $total_sms_price = $total_recipients * $price_per_sms;
+            $grand_total     = $total_sms_price + $service_price;
+
+            $this->page_data['grand_total'] = $grand_total;
+            $this->page_data['total_sms_price'] = $total_sms_price;
+            $this->page_data['total_recipients'] = $total_recipients;
+            $this->page_data['service_price'] = $service_price;
+            $this->page_data['price_per_sms'] = $price_per_sms;
+            $this->page_data['sms_text'] = $sms_text;
+            $this->load->view('sms_campaigns/preview_sms', $this->page_data);
+        }
+
+        public function create_send_schedule()
+        {
+            $is_success = 1;
+            $msg = '';
+
+            $post = $this->input->post(); 
+            $sms_blast_id = $this->session->userdata('smsBlastId');
+
+            if( isset($post['is_scheduled']) ){
+                $send_date = $post['send_date'];
+                $send_time = date("H:i:s",strtotime($post['send_date'] . " " . $post['send_time']));
+            }else{
+                $send_date = date("Y-m-d");
+                $send_time = date("H:i:s");
+            }
+
+            $service_price = $this->SmsBlast_model->getServicePrice();
+            $price_per_sms = $this->SmsBlast_model->getPricePerSms();
+            $total_sms_price = $total_recipients * $price_per_sms;
+            $grand_total     = $total_sms_price + $service_price;
+
+            $price_variables = [
+                'service_price' => $service_price,
+                'price_per_sms' => $price_per_sms,
+                'total_sms_price' => $total_sms_price
+            ];
+
+            $data = [
+                'price_variables' => serialize($price_variables),
+                'send_date' => $send_date,
+                'send_time' => $send_time,
+                'total_price' => $total_price,
+                'status' => $this->SmsBlast_model->statusScheduled(),
+                'is_paid' => 0,
+                'is_sent' => 0
+            ];
+
+            $smsBlast = $this->SmsBlast_model->updateSmsBlast($sms_blast_id,$data);
+
+
+            $msg = "Sms campaign was successfully saved.";
+            $json_data = [
+                    'is_success' => $is_success,
+                    'msg' => $msg
+            ];
+
+            echo json_encode($json_data);
+
+        }
+
+        public function ajax_load_campaigns($status){
+            $company_id = logged('company_id');
+            if( $status > 0 ){
+                $conditions[] = ['field' => 'sms_blast.status','value' => $status];    
+            }else{
+                $conditions = array();
+            }
+            
+            $smsBlast      = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+            $sendToOptions = $this->SmsBlast_model->sendToOptions();
+            $statusOptions = $this->SmsBlast_model->statusOptions();
+            
+            $this->page_data['statusOptions'] = $statusOptions;
+            $this->page_data['sendToOptions'] = $sendToOptions;
+            $this->page_data['smsBlast']      = $smsBlast;
+            $this->load->view('sms_campaigns/ajax_load_campaigns', $this->page_data);
+        }
+
+        public function ajax_load_sms_campaign_counter(){
+            $company_id = logged('company_id');
+
+            $smsAll = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), array());
+
+            $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusScheduled()];
+            $smsScheduled = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+            $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusActive()];
+            $smsActive = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+            $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusClosed()];
+            $smsClosed = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+            $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusDraft()];
+            $smsDraft = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+            $json_data = [
+                'total_sms' => count($smsAll),
+                'total_scheduled' => count($smsScheduled),
+                'total_active' => count($smsActive),
+                'total_closed' => count($smsClosed),
+                'total_draft' => count($smsDraft)
+            ];
+
+            echo json_encode($json_data);
+        }
+
+        public function ajax_close_campaign(){
+            $is_success = 0;
+            $msg = '';
+
+            $post     = $this->input->post(); 
+            $smsBlast = $this->SmsBlast_model->getById($post['smsid']);
+            if( $smsBlast ){
+                $data = ['status' => $this->SmsBlast_model->statusClosed()];
+                $this->SmsBlast_model->updateSmsBlast($post['smsid'], $data);
+
+                $is_success = 1;
+                $msg = 'SMS Campaign was successfully updated';
+            }else{
+                $msg = 'Record not found';
+            }
+            $json_data = [
+                'is_success' => $is_success,
+                'msg' => $msg
+            ]; 
+
+            echo json_encode($json_data);
         }
 }
 
