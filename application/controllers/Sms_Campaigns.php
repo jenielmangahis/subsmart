@@ -416,6 +416,47 @@ class Sms_Campaigns extends MY_Controller {
                 redirect('credit_notes');
             }
         }
+
+        public function ajax_clone_campaign(){
+            $is_success = 0;
+            $msg    = '';
+            $sms_id = 0;
+
+            $post     = $this->input->post(); 
+            $smsBlast = $this->SmsBlast_model->getById($post['smsid']);
+            if( $smsBlast ){
+                $data = (array)$smsBlast;
+                unset($data['id']);
+                unset($data['uid']);
+                unset($data['company_id']);
+                $sms_id     = $this->SmsBlast_model->create($data);
+                if( $sms_id > 0 ){
+                    $smsSendTo = $this->SmsBlastSendTo_model->getAllBySmsBlastId($post['smsid']);
+                    foreach($smsSendTo as $st){
+                        $data_send_to = (array)$st;
+                        unset($data_send_to['id']);
+                        $data_send_to['sms_blast_id'] = $sms_id;
+
+                        $smsBlastSendTo = $this->SmsBlastSendTo_model->create($data_send_to);
+                    }
+                    
+                    $is_success = 1;
+                    $msg = 'SMS Campaign was successfully updated';
+                }else{
+                    $msg = 'Record not found';
+                }
+                
+            }else{
+                $msg = 'Record not found';
+            }
+            $json_data = [
+                'sms_id' => $sms_id,
+                'is_success' => $is_success,
+                'msg' => $msg
+            ]; 
+
+            echo json_encode($json_data);
+        }
 }
 
 

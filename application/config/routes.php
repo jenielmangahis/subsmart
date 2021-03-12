@@ -516,6 +516,7 @@ $route['sms_campaigns/_load_campaigns/(:any)'] = 'Sms_Campaigns/ajax_load_campai
 $route['sms_campaigns/_load_sms_campaign_counter'] = 'Sms_Campaigns/ajax_load_sms_campaign_counter';
 $route['sms_campaigns/_close_campaign'] = 'Sms_Campaigns/ajax_close_campaign';
 $route['sms_campaigns/edit_campaign/(:num)'] = 'Sms_Campaigns/edit_sms_campaign/$1';
+$route['sms_campaigns/_clone_campaign'] = 'Sms_Campaigns/ajax_clone_campaign';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
