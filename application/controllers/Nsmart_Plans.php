@@ -20,7 +20,7 @@ class Nsmart_Plans extends MY_Controller {
 	public function index() {
 
 		//$user = $this->session->userdata('logged');
-
+		
 		$is_allowed = $this->isAllowedModuleAccess(80);
         if( !$is_allowed ){
             $this->page_data['module'] = 'plan_builder';
