@@ -17,6 +17,9 @@ class Invoice extends MY_Controller {
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
         $this->load->model('Payment_records_model', 'payment_records_model');
+        $this->load->model('AcsProfile_model', 'AcsProfile_model');
+        $this->load->model('Accounting_terms_model','accounting_terms_model');
+        $this->load->model('Accounting_invoices_model','accounting_invoices_model');
 
         $user_id = getLoggedUserID();
 
@@ -101,6 +104,7 @@ class Invoice extends MY_Controller {
             }
         }
 
+        
         $this->load->view('invoice/invoice', $this->page_data);
     }
 
@@ -153,8 +157,18 @@ class Invoice extends MY_Controller {
         // } else {
         //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
+        $company_id = logged('company_id');
+        $role = logged('role');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+        }
+
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        $terms = $this->accounting_terms_model->getCompanyTerms_a($company_id);
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {
@@ -163,11 +177,154 @@ class Invoice extends MY_Controller {
                 }
             }
             $this->page_data['setting'] = $setting;
+            $this->page_data['terms'] = $terms;
         }
         
 
         $this->load->view('invoice/add', $this->page_data);
 
+    }
+
+    public function addNewInvoice()
+    {
+        if($this->input->post('custocredit_card_paymentsmer_id') == 1){
+            $credit_card = 'Credit Card';
+        }else{
+            $credit_card = '0';
+        }
+
+        if($this->input->post('bank_transfer') == 1){
+            $bank_transfer = 'Bank Transfer';
+        }else{
+            $bank_transfer = '0';
+        }
+
+        if($this->input->post('instapay') == 1){
+            $instapay = 'Instapay';
+        }else{
+            $instapay = '0';
+        }
+
+        if($this->input->post('check') == 1){
+            $check = 'Check';
+        }else{
+            $check = '0';
+        }
+
+        if($this->input->post('cash') == 1){
+            $cash = 'Cash';
+        }else{
+            $cash = '0';
+        }
+
+        if($this->input->post('deposit') == 1){
+            $deposit = 'Deposit';
+        }else{
+            $deposit = '0';
+        }
+
+
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),//
+
+            'job_location' => $this->input->post('jobs_location'),//
+            'job_name' => $this->input->post('job_name'),//
+
+            'tags' => $this->input->post('tags'),//
+            'invoice_type' => $this->input->post('invoice_type'),//
+            'work_order_number' => $this->input->post('work_order_number'),//
+            'purchase_order' => $this->input->post('purchase_order'),//
+            'invoice_number' => $this->input->post('invoice_number'),//
+            'date_issued' => $this->input->post('date_issued'),//
+
+            'customer_email' => $this->input->post('customer_email'),//
+            'online_payments' => $this->input->post('online_payments'),
+            'billing_address' => $this->input->post('billing_address'),//
+            'shipping_to_address' => $this->input->post('shipping_to_address'),//
+            'ship_via' => $this->input->post('ship_via'),//
+            'shipping_date' => $this->input->post('shipping_date'),//
+            'tracking_number' => $this->input->post('tracking_number'),//
+            'terms' => $this->input->post('terms'),//
+            // 'invoice_date' => $this->input->post('invoice_date'),
+            'due_date' => $this->input->post('due_date'),//
+            'location_scale' => $this->input->post('location_scale'),//
+            'message_to_customer' => $this->input->post('message_to_customer'),//
+            'terms_and_conditions' => $this->input->post('terms_and_conditions'),//
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'test',
+            'status' => $this->input->post('status'),//
+
+            'deposit_request_type' => $this->input->post('deposit_request_type'),//
+            'deposit_request' => $this->input->post('deposit_amount'),//
+            // 'payment_schedule' => $this->input->post('payment_schedule'),
+            'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
+
+            'sub_total' => $this->input->post('sub_total'),//
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('grand_total'),//
+            
+
+            'user_id' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->invoice_model->createInvoice($new_data);
+
+        if($addQuery > 0){
+            //echo json_encode($addQuery);
+            $new_data2 = array(
+                'item' => $this->input->post('item'),
+                'item_type' => $this->input->post('item_type'),
+                // 'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('quantity'),
+                // 'rate' => $this->input->post('rate'),
+                'cost' => $this->input->post('price'),
+                'discount' => $this->input->post('discount'),
+                'tax' => $this->input->post('tax'),
+                'total' => $this->input->post('total'),
+                'type' => 'Invoice',
+                'type_id' => $addQuery,
+                'status' => '1',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            );
+
+            $a = $this->input->post('item');
+            $b = $this->input->post('item_type');
+            $c = $this->input->post('quantity');
+            $d = $this->input->post('price');
+            $e = $this->input->post('discount');
+            $f = $this->input->post('tax');
+            $g = $this->input->post('total');
+           
+        $i = 0;
+        foreach($a as $row){
+            $data['item'] = $a[$i];
+            $data['item_type'] = $b[$i];
+            $data['qty'] = $c[$i];
+            $data['cost'] = $d[$i];
+            $data['discount'] = $e[$i];
+            $data['tax'] = $f[$i];
+            $data['total'] = $g[$i];
+            $data['type'] = 'Invoice';
+            $data['type_id'] = $addQuery;
+            $data['status'] = '1';
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            // $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+            $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            $i++;
+        }
+
+        // redirect('accounting/banking');
+        redirect('invoice');
+            
+        }
+        else{
+            echo json_encode(0);
+        }
     }
 
     public function recurring_add()

@@ -123,7 +123,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <li class="active">2. Select Customers</li>
                                   <li>3. Build SMS</li>
                                   <li>4. Preview</li>
-                                  <li>5. Purchase</li>
+                                  <!-- <li>5. Purchase</li> -->
                                 </ul>
                             </div>
                             <hr />
@@ -131,6 +131,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="margin-bottom">
                                 <div class="form-group">
                                     <label><b>Who are you sending to?</b></label>
+                                    <?php if($smsCampaign){ ?>
+                                    <div>
+                                        <div class="radio radio-sec margin-right">
+                                            <input type="radio" name="to_type" value="1" id="to_type_1" <?= $smsCampaign->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
+                                            <label for="to_type_1">All my customers with phone</label>
+                                        </div>
+                                        <div class="radio radio-sec margin-right">
+                                            <input type="radio" name="to_type" value="2" id="to_type_3" <?= $smsCampaign->sending_type == 2 ? 'checked="checked"' : ''; ?>>
+                                            <label for="to_type_3">To a customer group</label>
+                                        </div>
+                                        <div class="radio radio-sec margin-right">
+                                            <input type="radio" name="to_type" value="3" id="to_type_2" <?= $smsCampaign->sending_type == 3 ? 'checked="checked"' : ''; ?>>
+                                            <label for="to_type_2">Only to certain customers</label>
+                                        </div>
+                                    </div>
+                                    <?php }else{ ?>
                                     <div>
                                         <div class="radio radio-sec margin-right">
                                             <input type="radio" name="to_type" value="1" id="to_type_1" checked="checked">
@@ -145,6 +161,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="to_type_2">Only to certain customers</label>
                                         </div>
                                     </div>
+                                    <?php } ?>
                                 </div>
                             </div>
 
@@ -176,7 +193,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach($customerGroups as $cg){ ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
-                                                    <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>">
+                                                    <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>" <?= array_key_exists($cg->id, $selectedExcludes) ? 'checked="checked"' : ''; ?>>
                                                     <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
                                                 </div>
                                             </li>
@@ -187,7 +204,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="sending-option-2" style="display: none;margin-bottom:20px ​!important;">
                                 <div class="margin-bottom-ter">
-                                    <span class="contact-selected-count" style="font-weight: bold;">0</span> customer selected.
+                                    <span class="contact-selected-count" style="font-weight: bold;"><?= count($selectedCustomer); ?></span> customer selected.
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <table id="dataTable1" class="table table-bordered table-striped">
@@ -204,7 +221,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <tr>
                                                     <td>
                                                         <div class="checkbox checkbox-sm">
-                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>">
+                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>" <?= array_key_exists($c->prof_id, $selectedCustomer) ? 'checked="checked"' : ''; ?>>
                                                             <label for="chk-customer-<?= $c->prof_id; ?>"></label>
                                                         </div>
                                                     </td>
@@ -222,14 +239,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="sending-option-3" style="display: none;">
                                 <div class="margin-bottom-ter">
-                                    <span class="contact-group-selected-count" style="font-weight: bold;">0</span> customer group selected.
+                                    <span class="contact-group-selected-count" style="font-weight: bold;"><?= count($selectedGroups); ?></span> customer group selected.
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <ul class="group-list">
                                         <?php foreach($customerGroups as $cg){ ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
-                                                    <input class="checkbox-select chk-contact-group" type="checkbox" name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
+                                                    <input class="checkbox-select chk-contact-group" type="checkbox" <?= array_key_exists($cg->id, $selectedGroups) ? 'checked="checked"' : ''; ?> name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
                                                     <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
                                                 </div>
                                             </li>
@@ -238,26 +255,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <label><b>Customer Type</b></label>
-                                    <div>
-                                        <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="optionC[customer_type_service]" value="0" id="customer-group-type-both" checked="checked">
-                                            <label for="customer-group-type-both">Both Residential and Commercial</label>
+                                    <?php if($smsCampaign){ ?>
+                                        <div>
+                                            <div class="radio radio-sec margin-right">
+                                                <input type="radio" name="optionC[customer_type_service]" value="0" <?= $smsCampaign->customer_type == 0 ? 'checked="checked"' : ''; ?> id="customer-group-type-both" checked="checked">
+                                                <label for="customer-group-type-both">Both Residential and Commercial</label>
+                                            </div>
+                                            <div class="radio radio-sec margin-right">
+                                                <input type="radio" name="optionC[customer_type_service]" value="1" <?= $smsCampaign->customer_type == 1 ? 'checked="checked"' : ''; ?> id="customer-group-type-residential">
+                                                <label for="customer-group-type-residential">Residential customers</label>
+                                            </div>
+                                            <div class="radio radio-sec margin-right">
+                                                <input type="radio" name="optionC[customer_type_service]" value="2" <?= $smsCampaign->customer_type == 2 ? 'checked="checked"' : ''; ?> id="customer-group-type-commercial">
+                                                <label for="customer-group-type-commercial">Commercial customers</label>
+                                            </div>
                                         </div>
-                                        <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="optionC[customer_type_service]" value="1" id="customer-group-type-residential">
-                                            <label for="customer-group-type-residential">Residential customers</label>
+                                    <?php }else{ ?>
+                                        <div>
+                                            <div class="radio radio-sec margin-right">
+                                                <input type="radio" name="optionC[customer_type_service]" value="0" id="customer-group-type-both" checked="checked">
+                                                <label for="customer-group-type-both">Both Residential and Commercial</label>
+                                            </div>
+                                            <div class="radio radio-sec margin-right">
+                                                <input type="radio" name="optionC[customer_type_service]" value="1" id="customer-group-type-residential">
+                                                <label for="customer-group-type-residential">Residential customers</label>
+                                            </div>
+                                            <div class="radio radio-sec margin-right">
+                                                <input type="radio" name="optionC[customer_type_service]" value="2" id="customer-group-type-commercial">
+                                                <label for="customer-group-type-commercial">Commercial customers</label>
+                                            </div>
                                         </div>
-                                        <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="optionC[customer_type_service]" value="2" id="customer-group-type-commercial">
-                                            <label for="customer-group-type-commercial">Commercial customers</label>
-                                        </div>
-                                    </div>
+                                    <?php } ?>
+                                    
                                 </div>
                             </div>
                             <hr />
                             <div>
                                 <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_sms_blast') ?>" style="float: left;margin-right: 10px;">« Back</a>
+                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/edit_campaign/' . $smsCampaign->id); ?>" style="float: left;margin-right: 10px;">« Back</a>
                                     <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-send-settings" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>
@@ -276,6 +311,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
+    <?php 
+        if( $smsCampaign ){
+            if($smsCampaign->sending_type == 1){
+                echo "to_type_1.click();";
+            }elseif( $smsCampaign->sending_type == 2 ){
+                echo '$(".sending-option-1").hide();';
+                echo '$(".sending-option-2").hide();';
+                echo '$(".sending-option-3").show();';
+            }else{
+                echo '$(".sending-option-1").hide();';
+                echo '$(".sending-option-2").show();';
+                echo '$(".sending-option-3").hide();';
+            } 
+        }
+    ?>
     $("#to_type_2").change(function(){
         if( $(this).attr('checked', 'checked') ){
             $(".sending-option-1").hide();

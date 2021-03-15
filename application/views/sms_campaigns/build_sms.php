@@ -158,7 +158,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <li>2. Select Customers</li>
                           <li class="active">3. Build SMS</li>
                           <li>4. Preview</li>
-                          <li>5. Purchase</li>
+                          <!-- <li>5. Purchase</li> -->
                         </ul>
                     </div>
                     <hr />
@@ -166,7 +166,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-md-6">
                             <div class="campaign__text">
                                 <label>SMS message</label>
-                                <textarea name="sms_text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off">Sms from ADi</textarea>
+                                <?php 
+                                    $sms_text = 'Sms from ADi';
+                                    if( $smsCampaign->sms_text != '' ){
+                                        $sms_text = $smsCampaign->sms_text;
+                                    }
+                                ?>
+                                <textarea name="sms_text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off"><?= $sms_text; ?></textarea>
                             </div>
                             <div class="help help-sm margin-bottom-sec">
                                 message characters: <span class="margin-right-sec char-counter">0</span>
@@ -191,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a class="btn btn-default margin-right btn-preview-sms" href="javascript:void(0);">Preview SMS</a>
                         </div>
                         <div class="col-sm-6 text-right">
-                            <a class="btn btn-default margin-right" href="javascript:void(0);" style="margin-right: 10px;">&laquo; Back</a>
+                            <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
                             <button class="btn btn-primary btn-create-sms-msg" type="submit">Continue &raquo;</button>
                         </div>
                     </div>
@@ -249,7 +255,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
 
             <div class="modal fade" id="modalPreviewSms" tabindex="-1" role="dialog" aria-labelledby="modalPreviewSmsTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog" role="document" style="margin-top:5%;">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Preview SMS</h5>
@@ -257,8 +263,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body" style="padding: 0px 30px;">
-                        <div class="phone">
+                      <div class="modal-body" style="padding: 0px 30px;text-align:center;">
+                        <div class="phone" style="margin-top:20px;">
                             <div class="phone__cnt">
                                 <div class="sms-blast-msg"></div>
                             </div>

@@ -556,7 +556,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title">
-                                                                <span>Not Logged-in Today</span>
+                                                                <span>Not Logged-in</span>
                                                             </div>
                                                             <div class="card-data">
                                                                 <span id="employee-not-loggedin"><?php echo $no_logged_in; ?></span>
@@ -1347,8 +1347,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             $(selected).parent('td').children('.loading-img-action').hide();
                             $(selected).parent('td').children('a').show();
                             $(selected).parent('td').children('i').show();
+                            app_notification(
+                                data.token,
+                                data.body,
+                                data.device_type,
+                                data.company_id,
+                                data.title
+                            );
                         }
                     });
+
                 }
             });
         });
@@ -1392,6 +1400,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         success: function(data) {
                             // console.log(data.current_status);
                             if (data != 0) {
+
+                                $(selected).parent('td').children('.loading-img-action').hide();
+                                $(selected).parent('td').children('a').show();
+                                $(selected).parent('td').children('i').show();
+
                                 let time = serverTime();
                                 $(selected).prev('a').hide();
                                 $(selected).attr('id', 'employeeCheckIn');
@@ -1401,28 +1414,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(time);
                                 $(selected).parent('td').prev('td').prev('td').prev('td').children('.out-indicator').show();
                                 $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').addClass('gray');
-                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').hide();
+                                $(selected).parent('tr').prev('td').prev('td').children('.lunch-indicator').hide();
                                 if (data.current_status == "on_lunch") {
-                                    // console.log(data.current_status);
                                     $(selected).parent('td').prev('td').children('.break-out-time').text(data.lunch_out);
                                     $(selected).parent('td').prev('td').children('.break-out-time').addClass("gray");
                                     $(selected).parent('td').prev('td').children('.break-out-time').show();
                                 }
                                 $(selected).parent('td').prev('td').children('.in-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').hide();
                                 $(selected).parent('td').prev('td').children('#employeeBreakIn').hide();
 
-                                // var second_in = $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val();
                                 clearTimeout(real_time);
 
-                                // if (second_in == 0){
-                                //     $(selected).attr('id',null);
-                                //     $(selected).attr('disabled','disabled');
-                                //     $(selected).prev('a').attr('disabled','disabled');
-                                //     $(selected).prev('a').attr('id',null);
-                                // }else{
-                                //     $(selected).attr('id','employeeCheckIn');
-                                //     $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val(0);
-                                // }
                                 Swal.fire({
                                     showConfirmButton: false,
                                     timer: 2000,
@@ -1440,9 +1444,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 });
                             }
 
-                            $(selected).parent('td').children('.loading-img-action').hide();
-                            $(selected).parent('td').children('a').show();
-                            $(selected).parent('td').children('i').show();
+                            app_notification(
+                                data.token,
+                                data.body,
+                                data.device_type,
+                                data.company_id,
+                                data.title
+                            );
                         }
                     });
                 }
@@ -1482,11 +1490,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             company_id: company_id
                         },
                         success: function(data) {
-                            if (data != 0) {
+                            console.log(data);
+                            if (data != null) {
                                 // let time = serverTime();
                                 $(selected).next('a').next('i').removeClass('fa-check');
                                 $(selected).next('a').next('i').addClass('fa-cutlery');
-                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(data);
+                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(data.time);
                                 $(selected).parent('td').prev('td').prev('td').children('.break-in-time').addClass("gray");
                                 $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').hide();
                                 $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').show();
@@ -1502,6 +1511,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     html: '<strong>' + emp_name + "</strong> is taking a break.",
                                     icon: 'success'
                                 });
+                                app_notification(
+                                    data.token,
+                                    data.body,
+                                    data.device_type,
+                                    data.company_id,
+                                    data.title
+                                );
                             } else {
                                 Swal.fire({
                                     showConfirmButton: false,
@@ -1514,6 +1530,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             $(selected).parent('td').children('.loading-img-action').hide();
                             $(selected).parent('td').children('a').show();
                             $(selected).parent('td').children('i').show();
+
                         }
                     });
                 }
@@ -1558,7 +1575,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 $(selected).next('a').next('i').removeClass('fa-cutlery');
                                 $(selected).prev('a').hide();
                                 $(selected).next('a').next('i').addClass('fa-check');
-                                $(selected).parent('td').prev('td').children('.break-out-time').text(data);
+                                $(selected).parent('td').prev('td').children('.break-out-time').text(data.time);
                                 $(selected).parent('td').prev('td').children('.break-out-time').addClass("gray");
                                 $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').hide();
                                 $(selected).parent('td').prev('td').children('.in-indicator').show();
@@ -1573,6 +1590,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     html: '<strong>' + emp_name + "</strong> is now back to work.",
                                     icon: 'success'
                                 });
+
+                                app_notification(
+                                    data.token,
+                                    data.body,
+                                    data.device_type,
+                                    data.company_id,
+                                    data.title
+                                );
                             } else {
                                 Swal.fire({
                                     showConfirmButton: false,
@@ -1585,6 +1610,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             $(selected).parent('td').children('.loading-img-action').hide();
                             $(selected).parent('td').children('a').show();
                             $(selected).parent('td').children('i').show();
+
                         }
                     });
                 }

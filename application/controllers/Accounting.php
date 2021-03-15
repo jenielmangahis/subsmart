@@ -38,6 +38,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('items_model');
+        $this->load->model('Invoice_model','invoice_model');
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
@@ -1152,7 +1153,8 @@ class Accounting extends MY_Controller {
     public function invoices()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['invoices'] = $this->accounting_invoices_model->getInvoices();
+        $company_id = getLoggedCompanyID();
+        $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
         $this->page_data['page_title'] = "Invoices";
         // print_r($this->page_data);
         $this->load->view('accounting/invoices', $this->page_data);
@@ -1192,9 +1194,6 @@ class Accounting extends MY_Controller {
             case 'name' :
                 $column = 'title';
             break;
-            case 'sku' :
-                $column = 'model';
-            break;
             case 'type' : 
                 $column = 'type';
             break;
@@ -1205,7 +1204,7 @@ class Accounting extends MY_Controller {
                 $column = 'price';
             break;
             case 'cost' :
-                $column = 'COGS';
+                $column = 'cost';
             break;
             case 'reorder_point' :
                 $column = 're_order_points';
@@ -1266,47 +1265,71 @@ class Accounting extends MY_Controller {
 
         foreach($items as $item) {
             $qty = $this->items_model->countQty($item->id);
+            $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+            $bundleItems = $this->items_model->getBundleContents($item->id);
+            $bundItems = [];
+            if(!empty($bundleItems)) {
+                foreach($bundleItems as $bundItem) {
+                    $bundItems[] = [
+                        'id' => $bundItem->id,
+                        'item_id' => $bundItem->bundle_item_id,
+                        'quantity' => $bundItem->quantity,
+                        'name' => $this->items_model->getItemById($bundItem->bundle_item_id)[0]->title
+                    ];
+                }
+            }
             if($search !== "") {
                 if(stripos($item->title, $search) !== false) {
                     $data[] = [
                         'id' => $item->id,
                         'name' => $item->title,
-                        'sku' => $item->model,
+                        'category_id' => $item->item_categories_id,
+                        'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
                         'type' => ucfirst($item->type),
                         'sales_desc' => $item->description,
-                        'income_account' => '',
-                        'expense_account' => '',
-                        'inventory_account' => '',
-                        'purch_desc' => '',
+                        'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
+                        'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
+                        'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
+                        'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                         'sales_price' => $item->price,
-                        'cost' => $item->COGS,
-                        'taxable' => '',
+                        'cost' => $item->cost,
+                        'taxable' => $item->tax_rate_id,
                         'qty_on_hand' => $qty,
-                        'qty_po' => '',
+                        'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                         'reorder_point' => $item->re_order_points,
                         'item_categories_id' => $item->item_categories_id,
-                        'icon' => $item->attached_image
+                        'icon' => $item->attached_image,
+                        'vendor_id' => $item->vendor_id,
+                        'sales_tax_cat' => $accountingDetails->tax_rate_id,
+                        'bundle_items' => $bundItems,
+                        'display_on_print' => $accountingDetails->display_on_print
                     ];
                 }
             } else {
                 $data[] = [
                     'id' => $item->id,
                     'name' => $item->title,
-                    'sku' => $item->model,
+                    'category_id' => $item->item_categories_id,
+                    'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
                     'type' => ucfirst($item->type),
                     'sales_desc' => $item->description,
-                    'income_account' => '',
-                    'expense_account' => '',
-                    'inventory_account' => '',
-                    'purch_desc' => '',
+                    'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
+                    'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
+                    'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
+                    'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                     'sales_price' => $item->price,
-                    'cost' => $item->COGS,
-                    'taxable' => '',
+                    'cost' => $item->cost,
+                    'taxable' => $item->tax_rate_id,
                     'qty_on_hand' => $qty,
-                    'qty_po' => '',
+                    'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                     'reorder_point' => $item->re_order_points,
                     'item_categories_id' => $item->item_categories_id,
-                    'icon' => $item->attached_image
+                    'icon' => $item->attached_image,
+                    'vendor_id' => $item->vendor_id,
+                    'sales_tax_cat' => $accountingDetails->tax_rate_id,
+                    'bundle_items' => $bundItems,
+                    'display_on_print' => $accountingDetails->display_on_print
                 ];
             }
         }
@@ -1321,19 +1344,25 @@ class Accounting extends MY_Controller {
             });
         }
 
-        if($columnName === 'qty_on_hand') {
-            $sort = usort($data, function($a, $b) use ($order) {
-                if($order === 'asc') {
+        $sort = usort($data, function($a, $b) use ($order, $columnName) {
+            if($order === 'asc') {
+                if(in_array($columnName, ['qty_on_hand', 'sales_price', 'cost', 'qty_po', 'reorder_point'])) {
                     return $a['qty_on_hand'] > $b['qty_on_hand'];
                 } else {
-                    return $a['qty_on_hand'] < $b['qty_on_hand'];
+                    return strcmp($a[$columnName], $b[$columnName]);
                 }
-            });
-        }
+            } else {
+                if(in_array($columnName, ['qty_on_hand', 'sales_price', 'cost', 'qty_po', 'reorder_point'])) {
+                    return $a['qty_on_hand'] < $b['qty_on_hand'];
+                } else {
+                    return strcmp($b[$columnName], $a[$columnName]);
+                }
+            }
+        });
 
         $recordsFiltered = count($data);
 
-        if($postData['group_by_category'] === "1") {
+        if($postData['group_by_category'] === "1" || $postData['group_by_category'] === 1) {
             $uncategorized = array_filter($data, function($item) {
                 return $item['item_categories_id'] === "0" || $item['item_categories_id'] === null || $item['item_categories_id'] === "";
             });
@@ -1466,10 +1495,7 @@ class Accounting extends MY_Controller {
                     'company_id' => logged('company_id'),
                     'title' => $name,
                     'type' => $type,
-                    'item_categories_id' => $input['category'],
-                    'model' => $input['sku'],
                     'description' => $input['description'],
-                    'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
                     'attached_image' => $product_image,
                     'is_active' => 1
                 ];
@@ -1479,14 +1505,10 @@ class Accounting extends MY_Controller {
                     'company_id' => logged('company_id'),
                     'title' => $name,
                     'type' => $type,
+                    'attached_image' => $product_image,
                     'item_categories_id' => $input['category'],
-                    'model' => $input['sku'],
                     'description' => isset($input['selling']) ? $input['description'] : null,
                     'price' => isset($input['selling']) ? $input['price'] : null,
-                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
-                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
-                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
-                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
                     'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
                     'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     'is_active' => 1
@@ -1497,14 +1519,10 @@ class Accounting extends MY_Controller {
                     'company_id' => logged('company_id'),
                     'title' => $name,
                     'type' => $type,
+                    'attached_image' => $product_image,
                     'item_categories_id' => $input['category'],
-                    'model' => $input['sku'],
                     'description' => isset($input['selling']) ? $input['description'] : null,
                     'price' => isset($input['selling']) ? $input['price'] : null,
-                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
-                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
-                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
-                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
                     'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
                     'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     'is_active' => 1
@@ -1515,14 +1533,11 @@ class Accounting extends MY_Controller {
                     'company_id' => logged('company_id'),
                     'title' => $name,
                     'type' => $type,
+                    'attached_image' => $product_image,
                     'item_categories_id' => $input['category'],
-                    'model' => $input['sku'],
+                    're_order_points' => $input['reorder_point'],
                     'description' => $input['description'],
                     'price' => $input['price'],
-                    'income_account_id' => $input['income_account'],
-                    'tax_rate_id' => $input['sales_tax_cat'],
-                    'purchase_description' => $input['purchase_description'],
-                    'expense_account_id' => $input['expense_account'],
                     'vendor_id' => $input['vendor_id'],
                     'cost' => $input['cost'],
                     'is_active' => 1
@@ -1533,20 +1548,188 @@ class Accounting extends MY_Controller {
         $create = $this->items_model->create($data);
 
         if($create) {
+            
             if($type === 'bundle') {
+                $accountingDetails = [
+                    'item_id' => $create,
+                    'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
+                    'sku' => $input['sku']
+                ];
+                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+
                 $bundleItems = [];
                 foreach($input['item_id'] as $key => $value) {
                     $bundleItems[] = [
                         'company_id' => logged('company_id'),
                         'item_id' => $create,
                         'bundle_item_id' => $value,
-                        'quantity' => $quantity[$key]
+                        'quantity' => $input['quantity'][$key]
                     ];
                 }
                 $addBundleItems = $this->items_model->addBundleItems($bundleItems);
+            } else if($type === 'inventory') {
+                $accountingDetails = [
+                    'item_id' => $create,
+                    'sku' => $input['sku'],
+                    'as_of_date' => date('Y-m-d', strtotime($input['as_of_date'])),
+                    'qty_po' => 0,
+                    'inv_asset_acc_id' => $input['inv_asset_acc'],
+                    'income_account_id' => $input['income_account'],
+                    'tax_rate_id' => $input['sales_tax_cat'],
+                    'purchase_description' => $input['purchase_description'],
+                    'expense_account_id' => $input['expense_account'],
+                ];
+                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+
+                $locations = [];
+                foreach($input['location_name'] as $key => $locName) {
+                    if($locName !== "") {
+                        $locations[] = [
+                            'company_id' => logged('company_id'),
+                            'qty' => $input['quantity'][$key],
+                            'name' => $locName,
+                            'item_id' => $create,
+                            'insert_date' => date('Y-m-d H:i:s')
+                        ];
+                    }
+                }
+                $addItemLocs = $this->items_model->saveBatchItemLocation($locations);
+            } else {
+                $accountingDetails = [
+                    'item_id' => $create,
+                    'sku' => $input['sku'],
+                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
+                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
+                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
+                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
+                ];
+                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
             }
 
             $this->session->set_flashdata('success', "Item $name has been successfully added.");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/products-and-services');
+    }
+    public function update_item($type, $id)
+    {
+        $input = $this->input->post();
+        $name = $input['name'];
+
+        switch ($type) {
+            case 'inventory' : 
+                $data = [
+                    'title' => $name,
+                    'item_categories_id' => $input['category'],
+                    're_order_points' => $input['reorder_point'],
+                    'description' => $input['description'],
+                    'price' => $input['price'],
+                    'vendor_id' => $input['vendor_id'],
+                    'cost' => $input['cost'],
+                ];
+            break;
+            case 'bundle' :
+                $data = [
+                    'title' => $name,
+                    'description' => $input['description'],
+                ];
+            break;
+            default : 
+                $data = [
+                    'title' => $name,
+                    'type' => $type,
+                    'item_categories_id' => $input['category'],
+                    'description' => isset($input['selling']) ? $input['description'] : null,
+                    'price' => isset($input['selling']) ? $input['price'] : null,
+                    'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
+                    'cost' => isset($input['purchasing']) ? $input['cost'] : null,
+                ];
+            break;
+        }
+
+        if($_FILES['icon']['name'] !== "") {
+            $config = array(
+                'upload_path' => "./uploads/",
+                'allowed_types' => "gif|jpg|png|jpeg",
+                'overwrite' => TRUE,
+                'max_size' => "2048000",
+                'max_height' => "768",
+                'max_width' => "1024"
+            );
+    
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('icon')) {
+                $product_image = '';
+            } else {
+                $upload_data = array('upload_data' => $this->upload->data());
+                $product_image = $upload_data['upload_data']['file_name'];
+            }
+
+            $data['attached_image'] = $product_image;
+        }
+
+        $condition = ['id' => $id, 'company_id' => getLoggedCompanyID()];
+        $update = $this->items_model->update($data, $condition);
+
+        if($update) {
+            if($type === 'inventory') {
+                $accountingDetails = [
+                    'sku' => $input['sku'],
+                    'inv_asset_acc_id' => $input['inv_asset_acc'],
+                    'income_account_id' => $input['income_account'],
+                    'tax_rate_id' => $input['sales_tax_cat'],
+                    'purchase_description' => $input['purchase_description'],
+                    'expense_account_id' => $input['expense_account'],
+                ];
+            } else if($type === 'bundle') {
+                $accountingDetails = [
+                    'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
+                    'sku' => $input['sku']
+                ];
+
+                foreach($input['item_id'] as $key => $item) {
+                    if($input['bundle_item_content_id'][$key] === null) {
+                        $itemContent = [
+                            [
+                                'company_id' => logged('company_id'),
+                                'item_id' => $id,
+                                'bundle_item_id' => $item,
+                                'quantity' => $input['quantity'][$key]
+                            ]
+                        ];
+
+                        $addBundleItem = $this->items_model->addBundleItems($itemContent);
+                    } else {
+                        $itemContent = [
+                            'bundle_item_id' => $item,
+                            'quantity' => $input['quantity'][$key]
+                        ];
+
+                        $updateBundleItem = $this->items_model->updateBundleItem($itemContent, $input['bundle_item_content_id'][$key]);
+                    }
+                }
+            } else {
+                $accountingDetails = [
+                    'sku' => $input['sku'],
+                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
+                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
+                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
+                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
+                ];
+            }
+
+            if($this->items_model->getItemAccountingDetails($id) === null) {
+                $accountingDetails['item_id'] = $id;
+                $accountingDetails['as_of_date'] = null;
+                $accountingDetails['qty_po'] = 0;
+                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails,);
+            } else {
+                $updateAccDetails = $this->items_model->updateItemAccountingDetails($accountingDetails, $id);
+            }
+
+            $this->session->set_flashdata('success', "Item $name has been successfully updated.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
@@ -3561,69 +3744,134 @@ class Accounting extends MY_Controller {
 	
 	public function addInvoice()
     {
+        if($this->input->post('custocredit_card_paymentsmer_id') == 1){
+            $credit_card = 'Credit Card';
+        }else{
+            $credit_card = '0';
+        }
+
+        if($this->input->post('bank_transfer') == 1){
+            $bank_transfer = 'Bank Transfer';
+        }else{
+            $bank_transfer = '0';
+        }
+
+        if($this->input->post('instapay') == 1){
+            $instapay = 'Instapay';
+        }else{
+            $instapay = '0';
+        }
+
+        if($this->input->post('check') == 1){
+            $check = 'Check';
+        }else{
+            $check = '0';
+        }
+
+        if($this->input->post('cash') == 1){
+            $cash = 'Cash';
+        }else{
+            $cash = '0';
+        }
+
+        if($this->input->post('deposit') == 1){
+            $deposit = 'Deposit';
+        }else{
+            $deposit = '0';
+        }
+
+
         $new_data = array(
-            'customer_id' => $this->input->post('customer_id'),
-            'customer_email' => $this->input->post('customer_email'),
+            'customer_id' => $this->input->post('customer_id'),//
+
+            'job_location' => $this->input->post('invoice_job_location'),//
+            'job_name' => $this->input->post('job_name'),//
+
+            'tags' => $this->input->post('tags'),//
+            'invoice_type' => $this->input->post('invoice_type'),//
+            'work_order_number' => $this->input->post('work_order_number'),//
+            'purchase_order' => $this->input->post('purchase_order'),//
+            'invoice_number' => $this->input->post('invoice_number'),//
+            'date_issued' => $this->input->post('date_issued'),//
+
+            'customer_email' => $this->input->post('customer_email'),//
             'online_payments' => $this->input->post('online_payments'),
-            'billing_address' => $this->input->post('billing_address'),
-            'shipping_to_address' => $this->input->post('shipping_to_address'),
-            'ship_via' => $this->input->post('ship_via'),
-            'shipping_date' => $this->input->post('shipping_date'),
-            'tracking_number' => $this->input->post('tracking_number'),
-            'terms' => $this->input->post('terms'),
-            'invoice_date' => $this->input->post('invoice_date'),
-            'due_date' => $this->input->post('due_date'),
-            'location_scale' => $this->input->post('location_scale'),
-            'message_on_invoice' => $this->input->post('message_on_invoice'),
-            'message_on_statement' => $this->input->post('message_on_statement'),
+            'billing_address' => $this->input->post('billing_address'),//
+            'shipping_to_address' => $this->input->post('shipping_to_address'),//
+            'ship_via' => $this->input->post('ship_via'),//
+            'shipping_date' => $this->input->post('shipping_date'),//
+            'tracking_number' => $this->input->post('tracking_number'),//
+            'terms' => $this->input->post('terms'),//
+            // 'invoice_date' => $this->input->post('invoice_date'),
+            'due_date' => $this->input->post('due_date'),//
+            'location_scale' => $this->input->post('location_scale'),//
+            'message_to_customer' => $this->input->post('message_to_customer'),//
+            'terms_and_conditions' => $this->input->post('terms_and_conditions'),//
             // 'attachments' => $this->input->post('file_name'),
             'attachments' => 'test',
-            'status' => 1,
-            'created_by' => logged('id'),
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
+            'status' => $this->input->post('status'),//
+
+            'deposit_request_type' => $this->input->post('deposit_request_type'),//
+            'deposit_request' => $this->input->post('deposit_amount'),//
+            // 'payment_schedule' => $this->input->post('payment_schedule'),
+            'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
+
+            'sub_total' => $this->input->post('sub_total'),//
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('grand_total'),//
+            
+
+            'user_id' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
         );
 
-        $addQuery = $this->accounting_invoices_model->createInvoice($new_data);
+        $addQuery = $this->invoice_model->createInvoice($new_data);
+
         if($addQuery > 0){
             //echo json_encode($addQuery);
             $new_data2 = array(
-                'product_services' => $this->input->post('prod'),
-                'description' => $this->input->post('desc'),
-                'qty' => $this->input->post('qty'),
-                'rate' => $this->input->post('rate'),
-                'amount' => $this->input->post('amount'),
+                'item' => $this->input->post('item'),
+                'item_type' => $this->input->post('item_type'),
+                // 'description' => $this->input->post('desc'),
+                'qty' => $this->input->post('quantity'),
+                // 'rate' => $this->input->post('rate'),
+                'cost' => $this->input->post('price'),
+                'discount' => $this->input->post('discount'),
                 'tax' => $this->input->post('tax'),
-                'type' => '1',
+                'total' => $this->input->post('total'),
+                'type' => 'Accounting Invoice',
                 'type_id' => $addQuery,
                 'status' => '1',
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             );
-            // $a['aa'] = $this->input->post('prod');
-            // $b['bb'] = $this->input->post('desc');
-            // $c['cc'] = $this->input->post('qty');
-            $a = $this->input->post('prod');
-            $b = $this->input->post('desc');
-            $c = $this->input->post('qty');
-            $d = $this->input->post('rate');
-            $e = $this->input->post('amount');
+
+            $a = $this->input->post('item');
+            $b = $this->input->post('item_type');
+            $c = $this->input->post('quantity');
+            $d = $this->input->post('price');
+            $e = $this->input->post('discount');
             $f = $this->input->post('tax');
+            $g = $this->input->post('total');
            
         $i = 0;
         foreach($a as $row){
-            $data['product_services'] = $a[$i];
-            $data['description'] = $b[$i];
+            $data['item'] = $a[$i];
+            $data['item_type'] = $b[$i];
             $data['qty'] = $c[$i];
-            $data['rate'] = $d[$i];
-            $data['amount'] = $e[$i];
+            $data['cost'] = $d[$i];
+            $data['discount'] = $e[$i];
             $data['tax'] = $f[$i];
-            $data['type'] = '1';
+            $data['total'] = $g[$i];
+            $data['type'] = 'Accounting Invoice';
             $data['type_id'] = $addQuery;
             $data['status'] = '1';
             $data['created_at'] = date("Y-m-d H:i:s");
             $data['updated_at'] = date("Y-m-d H:i:s");
-            $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+            // $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+            $addQuery2 = $this->accounting_invoices_model->additem_details($data);
             $i++;
         }
 
@@ -3877,6 +4125,7 @@ class Accounting extends MY_Controller {
             'estimate_date' => $this->input->post('estimate_date'),
             'expiry_date' => $this->input->post('expiry_date'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'status' => $this->input->post('status'),
             'estimate_type' => 'Standard',
             // 'ship_via' => $this->input->post('ship_via'),
             // 'ship_date' => $this->input->post('ship_date'),
@@ -3895,45 +4144,59 @@ class Accounting extends MY_Controller {
             'user_id' => $user_id,
             'company_id' => $company_id,
             // 'created_by' => logged('id'),
+
+            'sub_total' => $this->input->post('sub_total'),//
+            'deposit_request' => $this->input->post('adjustment_name'),//
+            'deposit_amount' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('grand_total'),//
+            
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
+            
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
         if($addQuery > 0){
-            $new_data2 = array(
-                'item_type' => $this->input->post('type'),
-                'description' => $this->input->post('desc'),
-                'qty' => $this->input->post('qty'),
-                'location' => $this->input->post('location'),
-                'cost' => $this->input->post('cost'),
-                'discount' => $this->input->post('discount'),
-                'tax' => $this->input->post('tax'),
-                'type' => '1',
-                'type_id' => $addQuery,
-                'status' => '1',
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            );
+            // $new_data2 = array(
+            //     'item_type' => $this->input->post('type'),
+            //     'description' => $this->input->post('desc'),
+            //     'qty' => $this->input->post('qty'),
+            //     'location' => $this->input->post('location'),
+            //     'cost' => $this->input->post('cost'),
+            //     'discount' => $this->input->post('discount'),
+            //     'tax' => $this->input->post('tax'),
+            //     'type' => '1',
+            //     'type_id' => $addQuery,
+            //     'status' => '1',
+            //     'created_at' => date("Y-m-d H:i:s"),
+            //     'updated_at' => date("Y-m-d H:i:s")
+            // );
             $a = $this->input->post('items');
-            $b = $this->input->post('desc');
-            $c = $this->input->post('quantity');
-            $d = $this->input->post('location');
-            $e = $this->input->post('price');
-            $f = $this->input->post('discount');
-            $g = $this->input->post('span_tax_0');
-            $h = $this->input->post('item_type');
+            $b = $this->input->post('item_type');
+            // $c = $this->input->post('desc');
+            $d = $this->input->post('quantity');
+            // $e = $this->input->post('location');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
 
             $i = 0;
             foreach($a as $row){
                 $data['item'] = $a[$i];
-                $data['item_type'] = $h[$i];
-                $data['description'] = $b[$i];
-                $data['qty'] = $c[$i];
-                $data['location'] = $d[$i];
-                $data['cost'] = $e[$i];
-                $data['discount'] = $f[$i];
-                $data['tax'] = $g[$i];
+                $data['item_type'] = $b[$i];
+                // $data['description'] = $c[$i];
+                $data['qty'] = $d[$i];
+                // $data['location'] = $e[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
                 $data['type'] = 'Standard Estimate';
                 $data['type_id'] = $addQuery;
                 $data['status'] = '1';
@@ -5322,13 +5585,13 @@ class Accounting extends MY_Controller {
         if(count( $result_autoincrement )) {
             if($result_autoincrement[0]['AUTO_INCREMENT'])
             {
-                $this->page_data['auto_increment_estimate_id'] = 1;    
+                $this->page_data['auto_increment_estimate_id'] = 20210000001;    
             } else {
                 
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
-            $this->page_data['auto_increment_estimate_id'] = 0;        
+            $this->page_data['auto_increment_estimate_id'] = 0000000;        
         }
 
         $user_id = logged('id');
@@ -5431,6 +5694,8 @@ class Accounting extends MY_Controller {
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
+        $terms = $this->accounting_terms_model->getCompanyTerms_a($company_id);
+
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {
                 if (is_serialized($value)) {
@@ -5438,6 +5703,7 @@ class Accounting extends MY_Controller {
                 }
             }
             $this->page_data['setting'] = $setting;
+            $this->page_data['terms'] = $terms;
         }
         
 

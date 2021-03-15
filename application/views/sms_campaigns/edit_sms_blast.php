@@ -81,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="row">
                           <div class="col-sm-6 left">
-                            <h3 class="page-title">Create SMS Campaign</h3>
+                            <h3 class="page-title">Edit SMS Campaign</h3>
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                             <div class="float-right d-none d-md-block">
@@ -102,7 +102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li class="active">1. Create Campaign</li>
+                                  <li class="active">1. Edit Campaign</li>
                                   <li>2. Select Customers</li>
                                   <li>3. Build SMS</li>
                                   <li>4. Preview</li>
@@ -113,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div>
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Campaign Name</label>
-                                    <input type="text" class="form-control" name="sms_camapaign_name" id="" required placeholder="" autofocus/>
+                                    <input type="text" class="form-control" value="<?= $smsCampaign->campaign_name; ?>" name="sms_camapaign_name" id="" required placeholder="" autofocus/>
                                 </div>
                             </div>
                             <hr />

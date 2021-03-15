@@ -44,6 +44,7 @@ class AcsProfile_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->order_by('first_name', 'ASC');
 
         $query = $this->db->get();
         return $query->result();

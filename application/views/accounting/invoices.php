@@ -78,9 +78,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<thead>
 										<tr>
 											<th></th>
-											<th>Invoice</th>
+											<th>ID</th>
+											<th>Invoice No.</th>
 											<th>Customer</th>
-											<th>Date</th>
+											<!-- <th>Date</th> -->
 											<th>Due Date</th>
 											<th>Balance</th>
 											<th>Total</th>
@@ -104,11 +105,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<tr>
 											<td><input type="checkbox"></td>
 											<td><?php echo $invoice->id; ?></td>
-											<td><?php echo $invoice->customer_id; ?></td>
-											<td><?php echo $invoice->created_at; ?></td>
+											<td><?php echo $invoice->invoice_number; ?></td>
+											<td><?php echo $invoice->first_name.' '.$invoice->last_name; ?></td>
+											<!-- <td><?php //echo $invoice->created_at; ?></td> -->
 											<td><?php echo $invoice->due_date; ?></td>
-											<td><?php echo $invoice->id; ?></td>
-											<td><?php //echo $invoice->amoungt; ?></td>
+											<td><?php echo $invoice->grand_total; ?></td>
+											<td><?php echo $invoice->grand_total; ?></td>
 											<td><?php echo $invoice->status; ?></td>
 											<td><a href="" class="btn btn-info">View</a></td>
 										</tr>

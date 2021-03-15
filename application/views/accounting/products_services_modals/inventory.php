@@ -71,12 +71,34 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="form-group row" style="margin: 0 !important">
+                                    <table class="table table-bordered table-hover" id="storage-locations">
+                                        <thead>
+                                            <tr>
+                                                <th width="70%">LOCATION</th>
+                                                <th>QTY</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="cursor-pointer">
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a href="#" class="text-info" id="addLocationLine"><i class="fa fa-plus"></i> Add lines</a>
+                                    <!-- <div class="form-group row" style="margin: 0 !important">
                                         <label for="initialQuantity" class="col-sm-6 col-form-label">Initial quantity on hand *</label>
                                         <div class="col-sm-6">
                                             <input type="number" class=" text-right form-control" id="initialQuantity" name="initial_quantity">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="form-group row" style="margin: 0 !important">
                                         <label for="asOfDate" class="col-sm-6 col-form-label">As of date*</label>
                                         <div class="col-sm-6">

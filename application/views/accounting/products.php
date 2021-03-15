@@ -268,7 +268,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<thead>
                                         <tr>
 											<th></th>
-											<th>Name</th>
+											<th>NAME</th>
 											<th class="sku">SKU</th>
 											<th class="type">TYPE</th>
 											<th class="sales_desc">SALES DESCRIPTION</th>
@@ -404,6 +404,19 @@ function applybtn()
 	$('#products-services-table').DataTable().ajax.reload();
 }
 
+function resetbtn()
+{
+	$('#status').val('active');
+	$('#type').val('all');
+	$('#category option').each(function() {
+		$(this).prop('selected', true);
+	});
+	$('#category').trigger('change');
+	$('#stock_status').val('all');
+
+	applybtn();
+}
+
 function selectType(type)
 {
 	$(`#${type}-form-modal`).modal('hide');
@@ -449,7 +462,7 @@ $(document).on('change', '.modal-right-side input#icon', function() {
 	}
 });
 
-$(document).on('click', '#bundle-items-table tbody tr td:not(:last-child)', function() {
+$(document).on('click', '#bundle-item-form #bundle-items-table tbody tr td:not(:last-child)', function() {
 	if($(this).parent().find('select[name="item_id[]"]').length < 1) {
 		$(this).parent().children('td:first-child').append('<select name="item_id[]" class="form-control"></select>');
 		$(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
@@ -463,9 +476,40 @@ $(document).on('click', '#bundle-items-table tbody tr td:not(:last-child)', func
 	}
 });
 
-$(document).on('click', '#bundle-form-modal #addBundleItem', function(e) {
+$(document).on('click', '#update-bundle-form #bundle-items-table tbody tr td:not(:last-child)', function() {
+	var data = $(this).parent()[0].dataset;
+	if($(this).parent().find('select').length === 0) {
+		$(this).parent().children('td:first-child, td:nth-child(2)').children('span').hide();
+		$(this).parent().children('td:first-child').append(`<select class="form-control"></select>`);
+
+		if($(this).parent().children('td:nth-child(2)').children('input').length > 0) {
+			$(this).parent().children('td:nth-child(2)').children('input').removeClass('hide');
+		} else {
+			$(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
+		}
+
+		if(data.item !== undefined) {
+			$(this).parent().children('td:first-child').children('select').append(`<option value="${data.item}">${data.name}</option>`);
+		} else {
+			$(this).parent().children('td:first-child').children('select').attr('name', 'item_id[]');
+		}
+
+		$(this).parent().find('select').select2({
+			ajax: {
+				url: 'products-and-services/items-dropdown',
+				dataType: 'json'
+			}
+		});
+	}
+});
+
+$(document).on('change', '#update-bundle-form #bundle-items-table tbody select', function() {
+	$(this).prev().val($(this).val());
+});
+
+$(document).on('click', '#bundle-form-modal #addBundleItem, #inventory-form-modal #addLocationLine', function(e) {
 	e.preventDefault();
-	$('#bundle-form-modal #bundle-items-table tbody').append(`
+	$(this).prev().children('tbody').append(`
 	<tr>
 		<td></td>
 		<td></td>
@@ -479,10 +523,17 @@ $(document).on('click', '#bundle-form-modal #addBundleItem', function(e) {
 	`);
 });
 
-$(document).on('click', '#bundle-form-modal #bundle-items-table .deleteRow', function(e) {
+$(document).on('click', '#storage-locations tbody tr td:not(:last-child)', function() {
+	if($(this).parent().find('input[name="location_name[]"]').length < 1) {
+		$(this).parent().children('td:first-child').append('<input type="text" name="location_name[]" class="form-control">');
+		$(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
+	}
+});
+
+$(document).on('click', '#bundle-form-modal #bundle-items-table .deleteRow, #inventory-form-modal #storage-locations .deleteRow', function(e) {
 	e.preventDefault();
 
-	if($('#bundle-items-table tbody tr').length > 2) {
+	if($(this).parent().parent().parent().children('tr').length > 2) {
 		$(this).parent().parent().remove();
 	} else {
 		$(this).parent().parent().children('td:not(:last-child)').html('');
@@ -530,6 +581,129 @@ $('#types-table tr').on('click', function(e) {
 	});
 });
 
+$(document).on('click', '#products-services-table .edit-item', function(e) {
+	e.preventDefault();
+	var row = $(this).parent().parent().parent();
+	var rowData = $('#products-services-table').DataTable().row(row).data();
+	var type = rowData.type.toLowerCase();
+
+	$.get('products-and-services/item-form/'+type, function(result) {
+		$('.modal-form-container').html(result);
+
+		if(type === 'inventory' || type === 'bundle') {
+			$('#inventory-form-modal table thead tr th a').remove();
+			$('#bundle-form-modal table thead tr th a').remove();
+		}
+		$(`#${type}-form-modal #name`).val(rowData.name);
+		$(`#${type}-form-modal #sku`).val(rowData.sku);
+		$(`#${type}-form-modal #category`).val(rowData.category_id);
+		$(`#${type}-form-modal #reorderPoint`).val(rowData.reorder_point);
+		$(`#${type}-form-modal #description`).val(rowData.sales_desc);
+		$(`#${type}-form-modal #price`).val(rowData.sales_price);
+		if(rowData.purch_desc !== null && rowData.purch_desc !== "") {
+			$(`#${type}-form-modal #purchasing`).prop('checked', true).trigger('change');
+		}
+		$(`#${type}-form-modal #purchaseDescription`).val(rowData.purch_desc);
+		$(`#${type}-form-modal #cost`).val(rowData.cost);
+		$(`#${type}-form-modal #vendor`).val(rowData.vendor_id);
+		$(`#${type}-form-modal #salesTaxCat`).val(rowData.sales_tax_cat).trigger('change');
+		$(`#${type}-form-modal #incomeAccount option`).each(function() {
+			if($(this).html() === rowData.income_account) {
+				$(this).parent().val($(this).attr('value'));
+			}
+		});
+		$(`#${type}-form-modal #expenseAcc option`).each(function() {
+			if($(this).html() === rowData.expense_account) {
+				$(this).parent().val($(this).attr('value'));
+			}
+		});
+		$(`#${type}-form-modal #invAssetAcc option`).each(function() {
+			if($(this).html() === rowData.inventory_account) {
+				$(this).parent().val($(this).attr('value'));
+			}
+		});
+		$(`#${type}-form-modal #invAssetAcc option`).each(function() {
+			if($(this).html() === rowData.inventory_account) {
+				$(this).parent().val($(this).attr('value'));
+			}
+		});
+		if(rowData.icon !== null && rowData.icon !== "") {
+			$(`#${type}-form-modal img.image-prev`).attr('src', `/uploads/${rowData.icon}`);
+			$(`#${type}-form-modal img.image-prev`).parent().addClass('d-flex justify-content-center');
+			$(`#${type}-form-modal img.image-prev`).parent().removeClass('hide');
+			$(`#${type}-form-modal img.image-prev`).parent().prev().addClass('hide');
+		}
+
+		$('#inventory-form-modal #storage-locations').next().remove();
+		$('#inventory-form-modal label[for="asOfDate"]').parent().remove();
+		$(`
+		<div class="form-group row" style="margin: 0 !important">
+			<div class="col-sm-6">
+				<label for="" class="m-0">Quantity on hand</label>
+				<p class="m-0">Adjust: <a class="text-info" href="#">Quantity</a> | <a class="text-info" href="#">Starting value</a></p>
+			</div>
+			<div class="col-sm-6">
+				<p class="text-right m-0">${rowData.qty_on_hand}</p>
+			</div>
+		</div>`).insertAfter('#inventory-form-modal #storage-locations');
+		$('#inventory-form-modal #storage-locations').parent().append(`
+		<div class="form-group row" style="margin: 0 !important">
+			<div class="col-sm-6">
+				<label for="" class="m-0">Quantity on PO</label>
+			</div>
+			<div class="col-sm-6">
+				<p class="text-right m-0">0</p>
+			</div>
+		</div>
+		`);
+		$('#inventory-form-modal #storage-locations').remove();
+		
+		$('#bundle-form-modal form').attr('id', 'update-bundle-form');
+		$(`#${type}-form-modal form`).attr('action', `/accounting/products-and-services/update/${type}/${rowData.id}`);
+		if(rowData.display_on_print === "1" || rowData.display_on_print === 1) {
+			$('#bundle-form-modal #displayBundle').prop('checked', true);
+		}
+		for(i in rowData.bundle_items) {
+			if($($('#bundle-form-modal #bundle-items-table tbody tr')[i]).length > 0 ) {
+				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-id', `${rowData.bundle_items[i].id}`);
+				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${rowData.bundle_items[i].item_id}`);
+				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${rowData.bundle_items[i].name}`);
+				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${rowData.bundle_items[i].quantity}`);
+				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
+				<span>${rowData.bundle_items[i].name}</span>
+				<input type="hidden" value="${rowData.bundle_items[i].id}" name="bundle_item_content_id[]">
+				<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
+				`);
+				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
+				<span>${rowData.bundle_items[i].quantity}</span>
+				<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
+				`);
+			} else {
+				$('#bundle-form-modal #bundle-items-table tbody').append(`
+				<tr data-id="${rowData.bundle_items[i].id}" data-item="${rowData.bundle_items[i].item_id}" data-name="${rowData.bundle_items[i].name}" data-quantity="${rowData.bundle_items[i].quantity}">
+					<td>
+						<span>${rowData.bundle_items[i].name}</span>
+						<input type="hidden" value="${rowData.bundle_items[i].id}" name="bundle_item_content_id[]">
+						<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
+					</td>
+					<td>
+						<span>${rowData.bundle_items[i].quantity}</span>
+						<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
+					</td>
+					<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+				</tr>
+				`);
+			}
+		}
+
+		if(type !== 'bundle') {
+			$(`#${type}-form-modal select`).select2();
+		}
+
+		$(`#${type}-form-modal`).modal('show');
+	});
+});
+
 $('#category').select2({
 	allowClear: true,
 });
@@ -566,7 +740,7 @@ $('#search').on('keyup', function() {
 	applybtn();
 });
 
-$('#table_rows').on('change', function() {
+$('#table_rows, #group_by_category').on('change', function() {
 	applybtn();
 });
 
@@ -590,7 +764,7 @@ $(`#products-services-table`).DataTable({
 			d.type = $('#type').val();
 			d.category = $('#category').select2('val');
 			d.stock_status = $('#stock_status').val();
-			d.group_by_category = $('#group_by_category').val();
+			d.group_by_category = $('#group_by_category').prop('checked') ? 1 : 0;
 			d.length = $('#table_rows').val();
 			d.columns[0].search.value = $('input#search').val();
 			return JSON.stringify(d);
@@ -767,7 +941,11 @@ $(`#products-services-table`).DataTable({
 			name: 'taxable',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
 				$(td).addClass('taxable');
-				$(td).html('<input type="checkbox" disabled class="m-auto">');
+				if(cellData !== "0") {
+					$(td).html('<input type="checkbox" disabled class="m-auto" checked>');
+				} else {
+					$(td).html('');
+				}
 				if($('#chk_taxable').prop('checked') === false) {
 					$(td).hide();
 				}
@@ -782,6 +960,9 @@ $(`#products-services-table`).DataTable({
 			name: 'qty_on_hand',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
 				$(td).addClass('qty_on_hand');
+				if(rowData.type !== 'Product' && rowData.type !== 'Inventory') {
+					$(td).html('');
+				}
 				if($('#chk_qty_on_hand').prop('checked') === false) {
 					$(td).hide();
 				}
@@ -828,7 +1009,7 @@ $(`#products-services-table`).DataTable({
 					if(rowData.type !== "Inventory" && rowData.type !== "Product") {
 						$(td).html(`
 						<div class="btn-group float-right">
-							<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+							<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
 
 							<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="sr-only">Toggle Dropdown</span>
@@ -843,7 +1024,7 @@ $(`#products-services-table`).DataTable({
 					} else {
 						$(td).html(`
 						<div class="btn-group float-right">
-							<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+							<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
 
 							<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="sr-only">Toggle Dropdown</span>
@@ -862,7 +1043,7 @@ $(`#products-services-table`).DataTable({
 				} else {
 					$(td).html(`
 					<div class="btn-group float-right">
-						<a href="#" class="edit-category btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+						<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
 
 						<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<span class="sr-only">Toggle Dropdown</span>

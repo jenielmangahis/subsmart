@@ -65,12 +65,11 @@ class SmsBlast_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
-        $this->db->select('*');
+        $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
+        $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
 
-        $this->db->where('id', $id);
+        $this->db->where('sms_blast.id', $id);
 
         $query = $this->db->get()->row();
         return $query;

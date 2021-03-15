@@ -7,6 +7,7 @@
 	</div>
 </footer><!-- End Footer -->
 <!-- jQuery  -->
+
 <script src="<?php echo $url->assets ?>plugins/jquery-initialize/jquery.initialize.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>
@@ -81,6 +82,130 @@
 
     });
 
+</script>
+
+<script>
+// $(document).ready(function() {
+     
+// 	 $('#start_date_').datepicker({
+// 		 dateFormat: 'mm/dd/yy',
+// 		 minDate: 0,
+			 
+// 	 });
+// 	 $("#end_date_").datepicker({
+// 		 dateFormat: 'mm/dd/yy',
+// 		 minDate:  7,
+		 
+// 	 });
+	 
+// 	 var _dt = new Date();
+// 	 var _dt = _dt.setDate(_dt.getDate());       
+// 	 $("#start_date_").datepicker("setDate","mm/dd/yy", _dt);
+// 	 $("#end_date_").datepicker("setDate", "mm/dd/yy", _dt);		
+	 
+	 
+//  });
+$(document).ready( function() {
+    var now = new Date();
+ 
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+
+   $('#start_date_').val(today);
+    
+});
+
+$(document).ready( function() {
+    var now = new Date();
+ 
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+
+   $('#estimate_date_').val(today);
+    
+});
+
+
+;(function($, window, document, undefined){
+    $("#start_date_").on("change", function(){
+       var date = new Date($("#start_date_").val()),
+           days = 7;
+        
+        if(!isNaN(date.getTime())){
+            date.setDate(date.getDate() + days);
+            
+            $("#end_date_").val(date.toInputFormat());
+        } else {
+            alert("Invalid Date");  
+        }
+    });
+    
+    Date.prototype.toInputFormat = function() {
+       var yyyy = this.getFullYear().toString();
+       var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+       var dd  = this.getDate().toString();
+       return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]); // padding
+    };
+})(jQuery, this, document);
+
+</script>
+
+<script>
+;(function($, window, document, undefined){
+    $("#estimate_date_").on("change", function(){
+       var date = new Date($("#estimate_date_").val()),
+           days = 7;
+        
+        if(!isNaN(date.getTime())){
+            date.setDate(date.getDate() + days);
+            
+            $("#expiry_date_").val(date.toInputFormat());
+        } else {
+            alert("Invalid Date");  
+        }
+    });
+    
+    Date.prototype.toInputFormat = function() {
+       var yyyy = this.getFullYear().toString();
+       var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+       var dd  = this.getDate().toString();
+       return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]); // padding
+    };
+})(jQuery, this, document);
+</script>
+
+<script>
+$(document).ready( function() {
+//     var now = new Date();
+ 
+//     var day = ("0" + now.getDate()).slice(-2);
+//     var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+//     var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+
+//    $('#end_date_').val(today);
+    
+
+var days = 7;
+  var date = new Date(document.getElementById("start_date_").value);
+  date.setDate(date.getDate() + parseInt(days));
+  document.getElementById("end_date_").valueAsDate = date;
+});
+</script>
+<script>
+$(document).ready( function() {
+var days = 7;
+  var date = new Date(document.getElementById("estimate_date_").value);
+  date.setDate(date.getDate() + parseInt(days));
+  document.getElementById("expiry_date_").valueAsDate = date;
+});
 </script>
 
 

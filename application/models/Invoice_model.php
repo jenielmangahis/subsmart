@@ -23,6 +23,30 @@ class Invoice_model extends MY_Model
         }
     }
 
+    public function getAllData($company_id)
+    {
+        // $company_id = getLoggedCompanyID();
+        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
+
+        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+
+        // $this->db->select('*');
+        // $this->db->from($this->table);
+        $this->db->where('invoices.company_id', $company_id);
+        $query = $this->db->get();
+
+		return $query->result();
+    }
+
+    public function createInvoice($data){
+	    $vendor = $this->db->insert('invoices', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+	}
+
     public function getAllByCompany($comp_id, $type, $filter = array())
     {
         $this->db->select('*');

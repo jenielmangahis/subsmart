@@ -75,7 +75,7 @@
                                         <div class="col-sm-12">
                                             <label for="description">Description</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="selling" value="1" checked>
+                                                <input class="form-check-input" type="checkbox" id="selling" name="selling" value="1" checked>
                                                 <label class="form-check-label" for="selling">
                                                     I sell this product/service to my customers.
                                                 </label>
@@ -131,7 +131,7 @@
                                         <div class="col-sm-12">
                                             <label>Purchasing information</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="purchasing" value="1">
+                                                <input class="form-check-input" type="checkbox" id="purchasing" name="purchasing" value="1">
                                                 <label class="form-check-label" for="purchasing">
                                                     I purchase this product/service from a vendor.
                                                 </label>

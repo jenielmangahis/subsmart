@@ -117,7 +117,7 @@ table.dataTable tbody tr td {
             </div>
             <!-- end row -->
 
-            <!-- Modal Delete Addon  -->
+            <!-- Modal Close SMS  -->
             <div class="modal fade bd-example-modal-sm" id="modalCloseCampaign" tabindex="-1" role="dialog" aria-labelledby="modalCloseCampaignTitle" aria-hidden="true">
               <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
@@ -135,6 +135,30 @@ table.dataTable tbody tr td {
                   <div class="modal-footer close-modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-danger btn-close-campaign">Yes</button>
+                  </div>
+                  <?php echo form_close(); ?>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Clone SMS  -->
+            <div class="modal fade bd-example-modal-sm" id="modalCloneCampaign" tabindex="-1" role="dialog" aria-labelledby="modalCloneCampaignTitle" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-files-o icon"></i> Clone</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-clone-campaign', 'autocomplete' => 'off' ]); ?>
+                  <?php echo form_input(array('name' => 'smsid', 'type' => 'hidden', 'value' => '', 'id' => 'clone-smsid'));?>
+                  <div class="modal-body clone-body-container">
+                      <p>Are you sure you want clone the campaign <b><span class="clone-campaign-name"></span></b>?</p>
+                  </div>
+                  <div class="modal-footer clone-modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary btn-clone-campaign">Yes</button>
                   </div>
                   <?php echo form_close(); ?>
                 </div>
@@ -234,6 +258,17 @@ $(function(){
                     ]
                 });
 
+                $(".clone-sms-campaign").click(function(){                  
+                  var campaign_name = $(this).attr("data-name");
+                  var campaign_id = $(this).attr("data-id");
+
+                  $("#clone-smsid").val(campaign_id);
+                  $(".clone-modal-footer").show();
+                  $(".clone-body-container").html('<p>Are you sure you want clone the campaign <b><span class="clone-campaign-name"></span></b>?</p>');
+                  $(".clone-campaign-name").html(campaign_name);
+                  $("#modalCloneCampaign").modal('show');
+                });
+
                 $(".close-sms-campaign").click(function(){
                   var campaign_name = $(this).attr("data-name");
                   var campaign_id = $(this).attr("data-id");
@@ -244,10 +279,35 @@ $(function(){
                   $("#modalCloseCampaign").modal('show');
                 });
 
+                $("#form-clone-campaign").submit(function(e){
+                  e.preventDefault();
+                  var url = base_url + 'sms_campaigns/_clone_campaign';
+                  $(".btn-clone-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                  setTimeout(function () {
+                    $.ajax({
+                       type: "POST",
+                       url: url,
+                       data : $("#form-clone-campaign").serialize(),
+                       dataType:"json",
+                       success: function(o)
+                       {
+                         $(".btn-clone-campaign").html('Yes');
+                         $(".clone-modal-footer").hide();
+                         if( o.sms_id > 1 ){
+                          location.href = base_url + "sms_campaigns/edit_campaign/" + o.sms_id;
+                         }else{
+                          $(".clone-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
+                         }
+
+                       }
+                    });                    
+                  }, 800);
+                });
+
                 $("#form-close-campaign").submit(function(e){
                   e.preventDefault();
                   var url = base_url + 'sms_campaigns/_close_campaign';
-                  $(".btn-close-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span> Updating');
+                  $(".btn-close-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
                   setTimeout(function () {
                     $.ajax({
                        type: "POST",
@@ -277,7 +337,7 @@ $(function(){
                          }
 
                        }
-                    });
+                    });                    
                   }, 800);
                 });
              }
