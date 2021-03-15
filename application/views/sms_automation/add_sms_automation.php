@@ -89,8 +89,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <label for=""><b>On Event</b></label>
-                                    <select class="form-control" name="rule_event">
+                                    <label for=""><b>On Event</b></label><br />
+                                    <select class="form-control" id="rule-event"  name="rule_event" style="width: 55%;">
                                       <?php foreach($optionRuleNotify as $key => $value){ ?>
                                         <option value="<?= $key; ?>"><?= $value; ?></option>
                                       <?php } ?>
@@ -99,24 +99,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <label for=""><b>Send</b><br /><small>This represents the time when we send the text.</small></label>
-                                    <select class="form-control" name="rule_notify_at">
+                                    <label for=""><b>Send</b><br /><small>This represents the time when we send the text.</small></label><br />
+                                    <select class="form-control" name="rule_notify_at" style="width: 55%;">
                                       <?php foreach($optionRuleNotifyAt as $key => $value){ ?>
                                         <option value="<?= $key; ?>"><?= $value; ?></option>
                                       <?php } ?>
                                     </select>
+                                    <label class="rule-notify-description" style="display: inline-block;margin-left: 10px;">After event</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for=""><b>Automation Name</b><br /><small>Set a name for your own reference.</small></label>
-                                    <input type="text" class="form-control" name="automation_name" id="" required placeholder="" autofocus/>
+                                    <input type="text" class="form-control" name="automation_name" id="" required placeholder="" autofocus style="width: 55%;"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <label for=""><b>Customer Type</b></label>
-                                    <select class="form-control" name="business_customer_type_service">
+                                    <label for=""><b>Customer Type</b></label><Br />
+                                    <select class="form-control" name="business_customer_type_service" style="width: 55%;">
                                       <?php foreach($optionCustomerTypeService as $key => $value){ ?>
                                         <option value="<?= $key; ?>"><?= $value; ?></option>
                                       <?php } ?>
@@ -178,7 +179,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    //location.href = base_url + "sms_campaigns/add_campaign_send_to";
+                    location.href = base_url + "sms_automation/build_sms";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);
@@ -187,6 +188,17 @@ $(function(){
              }
           });
         }, 1000);
+    });
+
+    $("#rule-event").change(function(){
+      var selected = $(this).val();
+      if( selected == 'estimate_submitted' || selected == 'invoice_due' ){
+        $(".rule-notify-description").html("After event");
+      }else if( selected == 'invoice_paid' ){
+        $(".rule-notify-description").html("After invoice was paid");
+      }else if( selected == 'work_order_completed' ){
+        $(".rule-notify-description").html("After work order was completed");
+      }
     });
 });
 </script>

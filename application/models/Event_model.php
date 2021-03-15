@@ -46,15 +46,18 @@ class Event_model extends MY_Model
     public function getAllByCompany($company_id, $user_id=0)
     {
 
-        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, events.company_id, customer_id, employee_id, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
-
-        if ($user_id) {
-            $this->db->join('user_events', 'user_events.event_id = events.id');
-            $this->db->where('user_events.user_id', $user_id);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','right');
+        if ($user_id > 0) {
+            /*$this->db->join('user_events', 'user_events.event_id = events.id');
+            $this->db->where('user_events.user_id', $user_id);*/
+            $this->db->where('events.employee_id', $user_id);
         }
 
-        $this->db->where('company_id', $company_id);
+        $this->db->where('events.company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
@@ -63,13 +66,11 @@ class Event_model extends MY_Model
     public function getAllEvents()
     {
 
-        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, events.company_id, customer_id, employee_id, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
-
-        if ($user_id) {
-            $this->db->join('user_events', 'user_events.event_id = events.id');
-            $this->db->where('user_events.user_id', $user_id);
-        }
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','right');
 
         $query = $this->db->get();
         return $query->result();

@@ -525,6 +525,10 @@ $route['sms_campaigns/_clone_campaign'] = 'Sms_Campaigns/ajax_clone_campaign';
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';
 $route['sms_automation/add_sms_automation'] = 'Sms_Automation/add_sms_automation';
 $route['sms_automation/save_draft_automation'] = 'Sms_Automation/create_draft_automation';
+$route['sms_automation/build_sms'] = 'Sms_Automation/build_sms';
+$route['sms_automation/create_sms_message'] = 'Sms_Automation/create_sms_message';
+$route['sms_automation/preview_sms_message'] = 'Sms_Automation/preview_sms_message';
+$route['sms_automation/payment'] = 'Sms_Automation/payment';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';

@@ -1099,6 +1099,13 @@ a.top-1 {
             img.setAttribute("class", "datagrid-image");
             info.el.prepend(img);
           },
+          eventContent: function(eventInfo) {
+            return { html: eventInfo.event.extendedProps.customHtml }
+          },
+          /*eventRender: function (event, element) {
+                alert(event.title);
+                  element.find('.fc-event-title').html(event.title);
+              },*/
           defaultDate: "<?php echo date('Y-m-d') ?>",
             editable: false,
             navLinks: true, // can click day/week names to navigate views
@@ -1203,7 +1210,8 @@ a.top-1 {
             events: {
               url: bc_events_url,
               method: 'POST'
-            },
+              
+            }            
             //events: <?php echo json_encode($resources_user_events); ?>,
 
         });

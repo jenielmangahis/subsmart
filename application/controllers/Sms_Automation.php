@@ -85,7 +85,7 @@ class Sms_Automation extends MY_Controller {
         $post['user_id'] = $user['id'];
         $post['status']  = $this->SmsAutomation_model->isDraft();
         $post['total_cost']  = 0;
-        $post['sms_message'] = '';
+        $post['sms_text'] = '';
         $post['created'] = date("Y-m-d H:i:s");
 
         $sms_automation_id = $this->SmsAutomation_model->create($post);
@@ -101,6 +101,63 @@ class Sms_Automation extends MY_Controller {
         	'err_msg' => $msg
         ];
         echo json_encode($json_data);
+    }
+
+    public function build_sms(){
+    	$user = $this->session->userdata('logged');
+        $cid  = logged('company_id');
+        $sms_automation_id = $this->session->userdata('smsAutomationId');
+        $smsAutomation = $this->SmsAutomation_model->getById($sms_automation_id);
+
+        $this->page_data['smsAutomation'] = $smsAutomation;
+        $this->load->view('sms_automation/build_sms', $this->page_data);
+    }
+
+    public function create_sms_message(){
+    	$is_success = false;
+    	$msg = '';
+
+
+        $post = $this->input->post(); 
+        $sms_automation_id = $this->session->userdata('smsAutomationId');
+
+        $data = ['sms_text' => $post['sms_text']];
+        $smsBlast = $this->SmsAutomation_model->updateSmsAutomation($sms_automation_id,$data);
+        $is_success = true;
+
+        $json_data = [
+                'is_success' => $is_success,
+                'err_msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function preview_sms_message(){
+        $sms_automation_id = $this->session->userdata('smsAutomationId');
+
+        $smsAutomation = $this->SmsAutomation_model->getById($sms_automation_id);
+        $sms_text = $smsAutomation->sms_text;
+
+        $price_per_sms = $this->SmsAutomation_model->getPricePerSms();
+        $total_sms_price = $price_per_sms;
+        $grand_total     = $total_sms_price;
+
+        $this->page_data['smsAutomation'] = $smsAutomation;
+        $this->page_data['grand_total'] = $grand_total;
+        $this->page_data['total_sms_price'] = $total_sms_price;
+        $this->page_data['price_per_sms'] = $price_per_sms;
+        $this->page_data['sms_text'] = $sms_text;
+        $this->load->view('sms_automation/preview_sms', $this->page_data);
+    }
+
+    public function payment(){
+    	$sms_automation_id = $this->session->userdata('smsAutomationId');
+
+        $smsAutomation = $this->SmsAutomation_model->getById($sms_automation_id);
+
+        $this->page_data['smsAutomation'] = $smsAutomation;
+        $this->load->view('sms_automation/payment', $this->page_data);
     }
 }
 

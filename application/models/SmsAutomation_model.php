@@ -74,6 +74,14 @@ class SmsAutomation_model extends MY_Model
         return $query;
     }
 
+    public function updateSmsAutomation($sms_automation_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('id', $sms_automation_id);
+        $this->db->update();
+    }
+
     
     public function deleteSmsAutomation($id){
         $user_id = logged('id');
@@ -83,12 +91,11 @@ class SmsAutomation_model extends MY_Model
     public function optionRuleNotify(){
         $options = [
             $this->rule_event_estimate_submitted => 'Estimate Follow-up',
-            $this->rule_event_invoice_due => 'Invoice Paid',
-            $this->rule_event_invoice_paid => 'Invoice Due',
+            $this->rule_event_invoice_due => 'Invoice Due',
+            $this->rule_event_invoice_paid => 'Invoice Paid',
             $this->rule_event_work_order_completed => 'Work Order Completed'
         ];
 
-        $options = array();
         return $options;
     }
 
@@ -107,7 +114,6 @@ class SmsAutomation_model extends MY_Model
             'P4W' => '4 Weeks'
         ];
 
-        $options = array();
         return $options;
     }
 
@@ -137,6 +143,10 @@ class SmsAutomation_model extends MY_Model
 
     public function isActive(){
         return $this->status_active;
+    }
+
+    public function getPricePerSms(){
+        return 0.05;
     }
 
 }
