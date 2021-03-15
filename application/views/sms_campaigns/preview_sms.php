@@ -173,11 +173,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                             if($smsBlast->price_variables != ''){ 
                                               $is_scheduled = 'checked="checked"';
-                                              $send_date = date("Y-m-d",strtotime($smsBlast->send_date));
+                                              $send_date = date("m/d/Y",strtotime($smsBlast->send_date));
                                               $send_time = date("H:i A", strtotime($smsBlast->send_time));
                                             }else{
                                               $is_scheduled = "";
-                                              $send_date = date("Y-m-d");
+                                              $send_date = date("m/d/Y");
                                               $send_time = date("H:i A");
                                             }
 
@@ -288,7 +288,7 @@ $(function(){
     });
 
     $('.default-datepicker').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'mm/dd/yyyy',
         autoclose: true
     });
 });
