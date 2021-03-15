@@ -15,6 +15,12 @@
         font-size: 2rem;
         cursor: pointer;
     }
+    .digit-delete {
+        float: left;
+        width: 33%;
+        font-size: 2rem;
+        cursor: pointer;
+    }
 
     .sub {
         font-size: 0.8rem;
@@ -110,29 +116,102 @@
         <i class="fa fa-star" style="font-size: 15px;" aria-hidden="true"></i>
     </div>    
     <div class="digit">
-        <div class="btn btn-small btn-success"><i class="fa fa-phone" aria-hidden="true"></i></div>
+        <div class="btn btn-small btn-success" id="initiateCallBtn" style="height: 52px; padding:10px; width: 75px"><i style="font-size: 25px;" class="fa fa-phone-alt" aria-hidden="true"></i></div>
     </div>
-    <div class="digit">
+    <div class="digit-delete" id="deleteNumberBtn">
         <i class="fa fa-arrow-left" style="font-size: 15px;" aria-hidden="true"></i>
     </div>
+
+    <div class="col-lg-12 float-left mt-3" id="callStatus"></div>
+</div>
+<input type="hidden" id="callOutNumber" />
+<div id="hang-up" style="display: none;">
+    <img src="<?= base_url('assets/ringcentral/') . 'hang-up.png' ?>" style="width: 80%;margin: 0 auto;height: 20px;" />
 </div>
 
 <script id="rendered-js">
+
     var count = 0;
+    var pollCheckStatus = 0;
+    var phoneNumber = 0;
 
     $(".digit").on('click', function () {
+        var numbers = '';
         var num = $(this).clone().children().remove().end().text();
-        if (count < 11) {
+        if (count < 12) {
             $("#output").append('<span>' + num.trim() + '</span>');
 
             count++;
+
+            $('#output span').each(function () {
+                numbers += $(this).html();
+            });
         }
+
+        $('#callOutNumber').val(numbers);
+        phoneNumber = numbers;
     });
 
-    $('.fa-long-arrow-dial-left').on('click', function () {
+    $('#deleteNumberBtn').on('click', function () {
         $('#output span:last-child').remove();
         count--;
     });
+
+    $('#initiateCallBtn').click(function () {
+
+        if($(this).hasClass('btn-success'))
+        {
+            $(this).html($('#hang-up').html());
+            $(this).removeClass('btn-success');
+            $(this).addClass('btn-danger');
+            var num = $('#callOutNumber').val();
+            $.ajax({
+               url: '<?php echo base_url(); ?>ring_central/initiateCallOut',
+               method: 'POST',
+               dataType:'json',
+               data: {to: num},
+               success: function (response) {
+                   $('#callStatus').html(response.status);
+                   console.log(response.id);
+//                    $.ajax({
+//                        url: '<?php echo base_url(); ?>ring_central/checkCallStatus',
+//                        method: 'POST',
+//                        data: {id: response.id},
+//                        success: function (response) {
+//                            $('#callStatus').html(response);
+//
+//
+//                        }
+//                    });
+
+               }
+           });
+        
+        }else{
+            
+            $(this).removeClass('btn-danger');
+            $(this).addClass('btn-success');
+            $(this).html('<i style="font-size: 25px;" class="fa fa-phone-alt" aria-hidden="true"></i>');
+           
+        }
+
+    });
+    
+    function initiateCallOut()
+    {
+
+    }
+
+    function checkCallStatus()
+    {
+       // alert(phoneNumber)
+       // pollCheckStatus = window.setInterval(function () {
+            var num = phoneNumber;
+           
+      //  }, 3000);
+    }
+
+
 </script>
 
 

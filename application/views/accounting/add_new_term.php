@@ -7,45 +7,60 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <table>
-              <tr>
-                <td><input type="radio" name="type"> Due in fixed number of days</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><input type="text" class="form-control" style="width:60px;"></td>
-                <td><b style="margin-left:-100px;">days</b></td>
-              </tr>
-          </table>
-          <table>
-              <tr>
-                <td><input type="radio" name="type"> Due by certain day of the month</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><input type="text" class="form-control" style="width:60px;"></td>
-                <td><b style="margin-left:-120px;">day of month</b></td>
-              </tr>
-          </table>
-          <table>
-              <tr>
-                <td><input type="radio" name="type"> Due the next month if issued within</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><input type="text" class="form-control" style="width:60px;"></td>
-                <td><b style="margin-left:-137px;">days of due date</b></td>
-              </tr>
-          </table>
-           
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save</button>
-      </div>
+      </div> 
+            <?php echo form_open_multipart('accounting/add_terms', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
+            <div class="modal-body">
+
+                  <table>
+                    <tr>
+                      <td><b>Name</b></td>
+                    </tr>
+                    <tr>
+                      <td><input type="text" name="name" id="name" class="form-control"> </td>
+                      <td></td>
+                    </tr>
+                </table>
+                <br><br>
+                <table>
+                    <tr>
+                      <td><input class="form-check-input" type="radio" name="type" id="type1" value="1" checked> Due in fixed number of days</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td><input type="number" class="form-control" id="net_due_days" name="net_due_days"></td>
+                      <td><b style="">&emsp;days</b></td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                      <td><input class="form-check-input" type="radio" name="type" id="type2" value="2"> Due by certain day of the month</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td><input type="number" class="form-control" id="day_of_month_due" name="day_of_month_due" disabled></td>
+                      <td><b style="">&emsp;day of month</b></td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                      <td>Due the next month if issued within</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td><input type="number" class="form-control" id="minimum_days_to_pay" name="minimum_days_to_pay" disabled></td>
+                      <td><b style="">&emsp;days of due date</b></td>
+                    </tr>
+                </table>
+                
+              
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-primary">Save</button> -->
+              <input type="submit" value="Save" class="btn btn-primary">
+            </div>
+      </form>
     </div>
   </div>
 </div>
@@ -122,3 +137,19 @@
     </div>
   </div>
 </div>
+
+<script>
+$('input[name="type"]').on('change', function() {
+    if($(this).val() === "1" || $(this).val() === 1) {
+        $('#net_due_days').prop('disabled', false);
+
+        $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', true);
+        $('#day_of_month_due, #minimum_days_to_pay').val('');
+    } else if($(this).val() === "2" || $(this).val() === 2) {
+        $('#net_due_days').prop('disabled', true);
+        $('#net_due_days').val('');
+
+        $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', false);
+    }
+});
+</script>

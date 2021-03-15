@@ -108,7 +108,7 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function getItemsWithFilter($filters = [], $columnName = 'title', $order)
+    public function getItemsWithFilter($filters = [], $columnName = 'title', $order = 'asc')
     {
         $this->db->where('company_id', getLoggedCompanyID());
         $this->db->where_in('is_active', $filters['status']);
@@ -135,6 +135,14 @@ class Items_model extends MY_Model
     {
         $this->db->insert_batch('bundle_item_contents', $data);
         return $this->db->insert_id();
+    }
+
+    public function updateBundleItem($data, $id)
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where('id', $id);
+        $update = $this->db->update('bundle_item_contents', $data);
+        return $update ? true : false;
     }
 
     public function getByName($name)
@@ -231,12 +239,48 @@ class Items_model extends MY_Model
         return $query->result_array();
     }
 
+    public function getBundleContents($id)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('item_id', $id);
+        $query = $this->db->get('bundle_item_contents');
+        return $query->result();
+    }
+
     public function saveNewItemLocation($data = array()) {
         if(!empty($data)){     
             $insert = $this->db->insert($this->table_has_location, $data);
             return $insert?$this->db->insert_id():false;
         }
         return false;
+    }
+
+    public function saveBatchItemLocation($data = []) {
+        if(!empty($data)) {
+            $insert = $this->db->insert_batch($this->table_has_location, $data);
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+
+    public function saveItemAccountingDetails($data = []) {
+        if(!empty($data)) {
+            $insert = $this->db->insert('items_accounting_details', $data);
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+
+    public function updateItemAccountingDetails($data, $item_id) {
+        $this->db->where('item_id', $item_id);
+        $update = $this->db->update('items_accounting_details', $data);
+        return $update ? true : false;
+    }
+
+    public function getItemAccountingDetails($item_id) {
+        $this->db->where('item_id', $item_id);
+        $query = $this->db->get('items_accounting_details');
+        return $query->row();
     }
 
     public function countQty($item_id) {

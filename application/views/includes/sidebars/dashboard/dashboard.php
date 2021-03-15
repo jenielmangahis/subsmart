@@ -102,6 +102,7 @@
     <script type="text/javascript">
         
         $(document).ready(function(){
+            
             var sidebar = $('#mySidebar');
             $('.sidebar a.links').click(function(){
                 if(!sidebar.hasClass('open'))
@@ -163,6 +164,7 @@
                 data: {id:''},
                 success: function (response) {
                     $('#dashOverlay').html(response);
+                    
                 }
             });
         }

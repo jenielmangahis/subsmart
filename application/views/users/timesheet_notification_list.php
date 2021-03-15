@@ -555,7 +555,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <nav id="navbar-example2" class="navbar navbar-light bg-light">
                                     <a class="navbar-brand" href="#" style="color: #6A4A86; font-size:18px; font-weight:700;">
                                         <?php if (count($newforyou) > 0) {
-                                            echo "New for you";
+                                            echo count($newforyou) . " New for you";
                                         } else {
                                             echo "See all notifications below";
                                         } ?>
@@ -565,25 +565,31 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <li class="nav-item dropdown">
                                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Action</a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#one">Mark all as read</a>
-                                                <div role="separator" class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#two">Delete all</a>
+                                                <?php if (count($newforyou) > 0) {
+                                                ?><a class="dropdown-item" id="read-all-notif" href="#">Mark all as read</a>
+                                                    <div role="separator" class="dropdown-divider"></div>
+                                                <?php } ?>
+                                                <a class="dropdown-item" id="delete-all-notif" href="#">Delete all</a>
                                             </div>
                                         </li>
                                     </ul>
                                 </nav>
                                 <div data-spy="scroll" data-target="#navbar-example2" data-offset="0">
-
                                     <?php if (count($newforyou) > 0) {
                                         date_default_timezone_set($this->session->userdata('usertimezone'));
                                         foreach ($newforyou as $row) {
+                                            // echo base_url() . '/uploads/users/user-profile/' . $row->profile_img;
+                                            $image = base_url() . '/uploads/users/user-profile/' . $row->profile_img;
+                                            if (!@getimagesize($image)) {
+                                                $image = base_url('uploads/users/default.png');
+                                            }
                                     ?>
-                                            <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" style="margin-left: auto;margin-right: auto;margin-top: 10px;">
+                                            <div class="toast fade show" id="notif<?= $row->id ?>" role="alert" aria-live="assertive" aria-atomic="true" style="margin-left: auto;margin-right: auto;margin-top: 10px;">
                                                 <div class="toast-header">
-                                                    <img src="https://localhost/nsmartrac/uploads/users/default.png" class="rounded mr-2" alt="...">
+                                                    <img src="<?= $image ?>" class="rounded mr-2" alt="...">
                                                     <strong class="mr-auto"><?= $row->FName ?> <?= $row->LName ?></strong>
                                                     <small class="text-muted"><?= date('h:i A', strtotime($row->date_created)) ?></small>
-                                                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                                    <button type="button" class="ml-2 mb-1 close delete-new-notif" data-dismiss="toast" aria-label="Close" data-notif-id="<?= $row->id ?>" data-user-id="<?= $row->user_id ?>">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
@@ -591,12 +597,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <?= $row->content ?>
                                                 </div>
                                             </div>
-                                        <?php
-                                        }
-                                    } else {
-                                        ?><center style="padding-top:20px; opacity:0.6;font-weight:600;">Nothing is new for you.</center>
                                     <?php
-                                    } ?>
+                                        }
+                                        $display = "display:none";
+                                    }
+                                    ?>
+                                    <center id="nothing_new_for_you" style="padding-top:20px; opacity:0.6;font-weight:600; <?= $display ?>">Nothing is new for you.</center>
+
 
                                     <hr>
                                     <div>
@@ -605,8 +612,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <center class="loading-img-action" id="loading-prev-notif"><img class="ts-loader-img" src="<?= base_url() ?>assets/css/timesheet/images/ring-loader.svg" alt="" style="height:40px;"> </center>
                                         </div>
                                         <div id="prev-notifications">
-
                                         </div>
+                                        <center id="nothing_prev_for_you" style="padding-top:20px; opacity:0.6;font-weight:600; display:none;">No previous notification to show.</center>
+
 
                                     </div>
                                 </div>
@@ -630,6 +638,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
+    var new_notif_ctr = <?php echo count($newforyou) ?>;
+    var count_of_prev_notiv = 0;
+    $(document).ready(function() {
+
+        $.ajax({
+            url: base_url + '/timesheet/getseennotifications',
+            method: "POST",
+            dataType: "json",
+            data: {
+                none: ""
+            },
+            success: function(data) {
+                $("#loading-prev-notif").hide();
+                $("#prev-notifications").html(data.html);
+                count_of_prev_notiv = data.count_of_prev_notiv;
+                if (count_of_prev_notiv == 0) {
+                    $("#nothing_prev_for_you").show();
+                }
+            }
+        });
+    });
+
     // $("#checkAl").click(function() {
     //     $('input:checkbox').not(this).prop('checked', this.checked);
     // });
@@ -637,66 +667,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     // $('#ts-notification').DataTable({
     //     "sort": false
     // });
-    $(document).ready(function() {
+    // $('#btn_delete').click(function() {
 
-        // $('#btn_delete').click(function() {
+    //     if (confirm("Are you sure you want to delete this?")) {
+    //         var id = [];
 
-        //     if (confirm("Are you sure you want to delete this?")) {
-        //         var id = [];
+    //         $(':checkbox:checked').each(function(i) {
+    //             //if(i != 0){
+    //             id[i] = $(this).val(); //alert(id[i]);
+    //             //}
+    //         });
 
-        //         $(':checkbox:checked').each(function(i) {
-        //             //if(i != 0){
-        //             id[i] = $(this).val(); //alert(id[i]);
-        //             //}
-        //         });
+    //         if (id.length === 0) //tell you if the array is empty
+    //         {
+    //             alert("Please Select atleast one checkbox");
+    //         } else {
+    //             $.ajax({
+    //                 type: "POST",
+    //                 async: true,
+    //                 cache: false,
+    //                 url: base_url + '/timesheet/removeNotification',
+    //                 data: {
+    //                     notificationid: id
+    //                 },
+    //                 success: function() {
 
-        //         if (id.length === 0) //tell you if the array is empty
-        //         {
-        //             alert("Please Select atleast one checkbox");
-        //         } else {
-        //             $.ajax({
-        //                 type: "POST",
-        //                 async: true,
-        //                 cache: false,
-        //                 url: base_url + '/timesheet/removeNotification',
-        //                 data: {
-        //                     notificationid: id
-        //                 },
-        //                 success: function() {
+    //                     for (var i = 0; i < id.length; i++) {
+    //                         $('tr#' + id[i] + '').css('background-color', '#ccc');
+    //                         $('tr#' + id[i] + '').fadeOut('slow');
+    //                     }
+    //                     //location.reload();
+    //                 }
 
-        //                     for (var i = 0; i < id.length; i++) {
-        //                         $('tr#' + id[i] + '').css('background-color', '#ccc');
-        //                         $('tr#' + id[i] + '').fadeOut('slow');
-        //                     }
-        //                     //location.reload();
-        //                 }
+    //             });
+    //         }
 
-        //             });
-        //         }
-
-        //     } else {
-        //         return false;
-        //     }
-        // });
-
-
-        $.ajax({
-            type: "POST",
-            async: true,
-            cache: false,
-            url: base_url + '/timesheet/getseennotifications',
-            data: {
-                none: ""
-            },
-            success: function(data) {
-                $("#loading-prev-notif").hide();
-                $("#prev-notifications").html(data);
-
-                //location.reload();
-            }
-
-        });
-    });
+    //     } else {
+    //         return false;
+    //     }
+    // });
 
     /*function notificationTbl() {
         $.ajax({

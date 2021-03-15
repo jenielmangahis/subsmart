@@ -135,7 +135,9 @@ class Timesheet extends MY_Controller
         //     break;
         // }
         // var_dump($ipaddress);
-        echo logged("role");
+        $user_id = $this->session->userdata('logged')['id'];
+        $company_id = logged('company_id');
+        echo ("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id . " and user_seen_notif.seen_status != 2 and user_notification.company_id = $company_id order by user_notification.date_created DESC");
     }
 
     public function employee()
@@ -1220,7 +1222,14 @@ class Timesheet extends MY_Controller
     }
     public function notification()
     {
+        add_css(array(
+            "assets/css/timesheet/timesheet_notification_list.css"
+        ));
 
+        add_footer_js(array(
+            "assets/js/timesheet/timesheet_notification_list.js"
+
+        ));
         $this->load->model('timesheet_model');
         $this->page_data['newforyou'] = $this->timesheet_model->getNewForyouNotifications();
         // var_dump($this->page_data['allnotification']);
@@ -1231,14 +1240,19 @@ class Timesheet extends MY_Controller
         $seenednotifications = $this->timesheet_model->getseennotifications();
         $html = "";
         date_default_timezone_set($this->session->userdata('usertimezone'));
+
         foreach ($seenednotifications as $row) {
+            $image = base_url() . '/uploads/users/user-profile/' . $row->profile_img;
+            if (!@getimagesize($image)) {
+                $image = base_url('uploads/users/default.png');
+            }
             $html = $html . "
-            <div class='toast fade show' role='alert' aria-live='assertive' aria-atomic='true' style='margin-left: auto; margin-right: auto; opacity: 0.7;box-shadow: none;'>
+            <div class='toast fade show' id='notif" . $row->id . "' role='alert' aria-live='assertive' aria-atomic='true' style='margin-left: auto; margin-right: auto; opacity: 0.7;box-shadow: none;'>
                 <div class='toast-header'>
-                    <img src='https://localhost/nsmartrac/uploads/users/default.png' class='rounded mr-2' alt='...'>
+                    <img src='" . $image . "' class='rounded mr-2' alt='...'>
                     <strong class='mr-auto'>" . $row->FName . " " . $row->LName . "</strong>
-                    <small class='text-muted'>" . date('M-d h:i A', strtotime($row->date_created)) . "</small>
-                    <button type='button' class='ml-2 mb-1 close' data-dismiss='toast' aria-label='Close'>
+                    <small class='text-muted'>" . date('M d h:i A', strtotime($row->date_created)) . "</small>
+                    <button type='button' class='ml-2 mb-1 close delete-prev-notif' data-dismiss='toast' aria-label='Close' data-notif-id='" . $row->id . "' data-user-id='" . $row->user_id . "'>
                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>
@@ -1248,7 +1262,15 @@ class Timesheet extends MY_Controller
             </div>
             ";
         }
-        echo ($html);
+        $ssss = array(
+            'html' => $html,
+            'count_of_prev_notiv' => count($seenednotifications)
+        );
+        $data = new stdClass();
+
+        $data->html = $html;
+        $data->count_of_prev_notiv = count($seenednotifications);
+        echo json_encode($data);
     }
     public function attendance()
     {
@@ -1325,33 +1347,79 @@ class Timesheet extends MY_Controller
         //        $week_id = $this->input->post('week_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $query = $this->timesheet_model->checkingOutEmployee($user_id, $attn_id, "Manual", $approved_by, $company_id);
+        $current_status = $this->timesheet_model->checkingOutEmployee($user_id, $attn_id, "Manual", $approved_by, $company_id);
 
         // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         // $getTimeZone = json_decode($ipInfo);
         date_default_timezone_set($this->session->userdata('usertimezone'));
         $data = new stdClass();
+
         $data->lunch_out = date('h:i A');
-        $content_notification = 'Manually clocked out ' . date('Y-m-d H:i:s') . " " . $this->session->userdata('offset_zone');
+        $pusher_content_notification = "Has been Manually Clocked out today at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+
         date_default_timezone_set('UTC');
         $clock_out_notify = array(
             'user_id' => $user_id,
             'title' => 'Clock Out',
-            'content' => $content_notification,
+            'content' => $pusher_content_notification,
             'date_created' => date('Y-m-d H:i:s'),
             'status' => 1,
             'company_id' => getLoggedCompanyID()
         );
         $this->db->insert('user_notification', $clock_out_notify);
-        $data->current_status = $query;
 
-        if ($query == "on_lunch") {
+
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+
+        $this->db->select('FName,LName,profile_img,device_token,device_type');
+        $this->db->from('users');
+        $this->db->where('id', $user_id);
+        $querys = $this->db->get();
+        $getUserDetail = $querys->row();
+
+        $data->current_status = $current_status;
+        $data->FName = $getUserDetail->FName;
+        $data->LName = $getUserDetail->LName;
+
+        $data->user_id = $user_id;
+
+        $content_notification = $getUserDetail->FName . " " . $getUserDetail->LName . " has been Manually Clocked out today at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+
+
+        $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+        if (!@getimagesize($image)) {
+            $image = base_url('uploads/users/default.png');
+        }
+
+        $html = '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            data-id="" class="dropdown-item notify-item active"
+            style="background-color:#e6e3e3">
+            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $data->FName . " " . $data->LName . '<span class="text-muted">' . $pusher_content_notification . '</span></p>
+            </a>';
+
+        $data->html = $html;
+        $data->content_notification = $pusher_content_notification;
+        $data->profile_img = $image;
+        $data->notif_action_made = '';
+
+        $data->token = $getUserDetail->device_token;
+        $data->body = $content_notification;
+        $data->device_type = $getUserDetail->device_type;
+        $data->company_id = $company_id;
+        $data->title = "Time Clock Alert";
+
+
+
+        if ($data->current_status == "on_lunch") {
             echo json_encode($data);
-        } elseif ($query == "not_lunch") {
+        } elseif ($data->current_status == "not_lunch") {
             echo json_encode($data);
         } else {
             echo json_encode(0);
         }
+
+        $this->pusher_notification($data);
         // echo json_encode($attn_id);
     }
 
@@ -1363,12 +1431,57 @@ class Timesheet extends MY_Controller
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
         $query = $this->timesheet_model->breakIn($user_id, $entry, $approved_by, $company_id);
+
         date_default_timezone_set($this->session->userdata('usertimezone'));
+
+        $this->db->select('FName,LName,profile_img,device_token,device_type');
+        $this->db->from('users');
+        $this->db->where('id', $user_id);
+        $querys = $this->db->get();
+        $getUserDetail = $querys->row();
+
+        $data = new stdClass();
+
+        $data->FName = $getUserDetail->FName;
+        $data->LName = $getUserDetail->LName;
+
+        $data->user_id = $user_id;
+
+        $content_notification = $getUserDetail->FName . " " . $getUserDetail->LName . " has Manually Break In today in at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+        $pusher_content_notification = "Has been Manually Break In today in at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+
+
+        $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+        if (!@getimagesize($image)) {
+            $image = base_url('uploads/users/default.png');
+        }
+
+        $html = '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            data-id="" class="dropdown-item notify-item active"
+            style="background-color:#e6e3e3">
+            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $data->FName . " " . $data->LName . '<span class="text-muted">' . $pusher_content_notification . '</span></p>
+            </a>';
+
+        $data->html = $html;
+        $data->content_notification = $pusher_content_notification;
+        $data->profile_img = $image;
+        $data->notif_action_made = 'Lunchin';
+
+        // for the app notification
+        $data->token = $getUserDetail->device_token;
+        $data->body = $content_notification;
+        $data->device_type = $getUserDetail->device_type;
+        $data->company_id = $company_id;
+        $data->title = "Time Clock Alert";
+
         if ($query != null) {
-            echo json_encode(date('h:i A', $query));
+            $data->time = date('h:i A', $query);
+            echo json_encode($data);
         } else {
             echo json_encode(0);
         }
+        $this->pusher_notification($data);
     }
     public function breakOut()
     {
@@ -1378,11 +1491,59 @@ class Timesheet extends MY_Controller
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
         $query = $this->timesheet_model->breakOut($user_id, $entry, $approved_by, $company_id);
+
+
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+
+        $this->db->select('FName,LName,profile_img,device_token,device_type');
+        $this->db->from('users');
+        $this->db->where('id', $user_id);
+        $querys = $this->db->get();
+        $getUserDetail = $querys->row();
+
+        $data = new stdClass();
+
+        $data->FName = $getUserDetail->FName;
+        $data->LName = $getUserDetail->LName;
+
+        $data->user_id = $user_id;
+
+        $content_notification = $getUserDetail->FName . " " . $getUserDetail->LName . " has Manually auxed back on the clock today in at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+        $pusher_content_notification = "Has Manually auxed back on the clock today in at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+
+
+        $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+        if (!@getimagesize($image)) {
+            $image = base_url('uploads/users/default.png');
+        }
+
+        $html = '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            data-id="" class="dropdown-item notify-item active"
+            style="background-color:#e6e3e3">
+            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $data->FName . " " . $data->LName . '<span class="text-muted">' . $pusher_content_notification . '</span></p>
+            </a>';
+
+        $data->html = $html;
+        $data->content_notification = $pusher_content_notification;
+        $data->profile_img = $image;
+        $data->notif_action_made = 'Lunchout';
+        $this->pusher_notification($data);
+
+        // for the app notification
+        $data->token = $getUserDetail->device_token;
+        $data->body = $content_notification;
+        $data->device_type = $getUserDetail->device_type;
+        $data->company_id = $company_id;
+        $data->title = "Time Clock Alert";
+
         if ($query != null) {
-            echo json_encode(date('h:i A', $query));
+            $data->time = date('h:i A', $query);
+            echo json_encode($data);
         } else {
             echo json_encode(0);
         }
+        $this->pusher_notification($data);
     }
     public function realTime()
     {
@@ -1941,7 +2102,7 @@ class Timesheet extends MY_Controller
                 $image = base_url('uploads/users/default.png');
             }
 
-            $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            $html = '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
             data-id="' . $notify->id . '" class="dropdown-item notify-item active"
             style="background-color:#e6e3e3">
             <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
@@ -2173,7 +2334,7 @@ class Timesheet extends MY_Controller
 
         $notificationListArray = array(
             'notifyCount' => $notifyCount,
-            'badgeCount' => $this->timesheet_model->get_unreadNotification($notifycount, "counter"),
+            'badgeCount' => $this->timesheet_model->get_unreadNotification($notifyCount, "counter"),
             'autoNotifications' => $html,
         );
         echo json_encode($notificationListArray);
@@ -2906,6 +3067,44 @@ class Timesheet extends MY_Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($ch);
         curl_close($ch);
+    }
+
+
+
+    ////LOU Pinton's code
+    public function delete_notification()
+    {
+        $notif_id = $this->input->post("notif_id");
+        $user_id = $this->input->post("user_id");
+
+        $this->timesheet_model->delete_notification($notif_id, $user_id);
+
+        echo json_encode("success");
+    }
+    public function delete_read_all_notif()
+    {
+        $user_id = logged('id');
+        $action = $this->input->post("action");
+
+        $this->timesheet_model->delete_read_all_notif($action, $user_id);
+
+        echo json_encode("success");
+    }
+    public function shift_duration_checker()
+    {
+        $attn_id = $this->input->post("attn_id");
+        $shift_duration_and_overtime = $this->timesheet_model->calculateShiftDuration_and_overtime($attn_id);
+        $data = new stdClass();
+        $data->shift_duration = $shift_duration_and_overtime[0];
+        $data->overtime = $shift_duration_and_overtime[1];
+        $overtime_status = $this->db->get_where("timesheet_attendance", array('id' => $attn_id, 'overtime_status' => 1))->num_rows();
+        if ($overtime_status > 0) {
+            $data->not_overtime_notice = false;
+        } else {
+            $data->not_overtime_notice = true;
+        }
+
+        echo json_encode($data);
     }
 }
 

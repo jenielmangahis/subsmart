@@ -71,7 +71,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                    <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
                                             <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
@@ -90,7 +90,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a>
+                                    <br><br>
+                                    <!-- <a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a> -->
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
@@ -111,30 +112,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="estimate_date" id="estimate_date"
+                                    <!-- <div class="input-group date" data-provide="datepicker"> -->
+                                        <input type="date" class="form-control" name="estimate_date" id="estimate_date_"
                                                placeholder="Enter Estimate Date">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-3">
                                     <label for="expiry_date" class="required"><b>Expiry Date</b></label>
                                     <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="expiry_date" id="expiry_date"
+                                    <!-- <div class="input-group date" data-provide="datepicker"> -->
+                                        <input type="date" class="form-control" name="expiry_date" id="expiry_date_"
                                                placeholder="Enter Expiry Date">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                             </div>
                             
                             <div class="row" style="background-color:white;">
                                     <div class="col-md-3">
-                                        <label for="purchase_order_number" class="required"><b>Purchase Order#</b></label>
+                                        <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
                                             id="purchase_order_number" required placeholder="Enter Purchase Order#"
                                             autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
@@ -179,6 +180,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <th><b>Type</b></th>
                                             <th><b>Quantity</b></th>
                                             <th><b>Price</b></th>
+                                            <th><b>Discount</b></th>
                                             <th><b>Total</b></th>
                                         </tr>
                                         </thead>
@@ -201,10 +203,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
+                                            <td><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control price" name="price[]" id="price_0"></td>
-                                            <td><span id="span_total_0">0.00</span></td>
+                                            <td><input type="number" class="form-control price" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <!-- <td><span id="span_total_0">0.00</span></td> -->
+                                            <td><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td><input type="text" class="form-control " name="total[]"
+                                                       data-counter="0" id="sub_total_form_input" min="0" value="0">
+                                                       $<span id="span_total_">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -485,16 +493,59 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
 
-    $(document).ready(function () {
-        $('#sel-customer').select2();
-        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+    // $(document).ready(function () {
+    //     $('#sel-customer').select2();
+    //     var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
 
-        /*$('#customers')
-            .empty() //empty select
-            .append($("<option/>") //add option tag in select
-                .val(customer_id) //set value for option to post it
-                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
-            .val(customer_id) //select option of select2
-            .trigger("change"); //apply to select2*/
+    //     /*$('#customers')
+    //         .empty() //empty select
+    //         .append($("<option/>") //add option tag in select
+    //             .val(customer_id) //set value for option to post it
+    //             .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+    //         .val(customer_id) //select option of select2
+    //         .trigger("change"); //apply to select2*/
+    // });
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('#customer_id').change(function(){
+    var id  = $(this).val();
+    // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){
+                // alert('success');
+                // console.log(response['customer']);
+            $("#job_location").val(response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#customer_email").val(response['customer'].email);
+            $("#shipping_address").val(response['customer'].mail_add);
+            $("#billing_address").val(response['customer'].mail_add);
+        
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
     });
+
+    $(document).on('click','.setmarkup',function(){
+       // alert('yeah');
+        var markup_amount = $('#markup_input').val();
+
+        $("#markup_input_form").val(markup_amount);
+        $("#span_markup_input_form").text(markup_amount);
+        $("#span_markup").text(markup_amount);
+
+        $('#modalSetMarkup').modal('toggle');
+    });
+});
+
 </script>

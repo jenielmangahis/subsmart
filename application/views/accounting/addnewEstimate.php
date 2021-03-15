@@ -66,40 +66,43 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                        <option value="0">- none -</option>
-                                        <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                        <?php } ?>
+                                    <select name="customer_id" id="customer_id" class="form-control" required>
+                                        <option value="0">Select a customer</option>
+                                        <?php foreach ($customers as $customer):?>
+                                        <option value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Customer</a>
+                                    <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
+                                       data-target="#modalNewCustomer" style="color:#02A32C;"><span
+                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> (optional, select or add new one)</label>
-                                    <div id="locationField">
-                                    <input
+                                    <label for="job_location"><b>Job Location</b> <small class="help help-sm">(optional)</small></label>
+                                    <!-- <input
                                         id="autocomplete"
                                         placeholder="Enter Location"
                                         type="text"
                                         class="form-control"
                                         autocomplete="on" runat="server"
-                                    />
-                                    <input type="hidden" id="city2" name="city2" />
+                                    /> -->
+                                    <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
+                                    <input type="text" class="form-control" name="job_location" id="job_location" />
+
+                                    <!-- <input type="hidden" id="city2" name="city2" />
                                     <input type="hidden" id="cityLat" name="cityLat" />
-                                    <input type="hidden" id="cityLng" name="cityLng" />
-                                    </div>
+                                    <input type="hidden" id="cityLng" name="cityLng" /> -->
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a>
+                                    <!-- <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a> -->
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
-                                    <label for="job_name"><b>Job Name</b> (optional)</label>
+                                    <label for="job_name"><b>Job Name</b> <small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" name="job_name" id="job_name"
                                            placeholder="Enter Job Name" required/>
                                 </div>
@@ -109,38 +112,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#" autofocus value="EST-0000001" />
+                                           required placeholder="Enter Estimate#"  value="<?php echo "EST-".date("YmdHis"); ?>" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="estimate_date" id="estimate_date"
+                                    <!-- <div class="input-group date" data-provide="datepicker"> -->
+                                        <input type="date" class="form-control" name="estimate_date" id="estimate_date_"
                                                placeholder="Enter Estimate Date">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-3">
                                     <label for="expiry_date" class="required"><b>Expiry Date</b></label>
                                     <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="expiry_date" id="expiry_date"
+                                    <!-- <div class="input-group date" data-provide="datepicker"> -->
+                                        <input type="date" class="form-control" name="expiry_date" id="expiry_date_"
                                                placeholder="Enter Expiry Date">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                             </div>
                             
                             <div class="row" style="background-color:white;">
                                     <div class="col-md-3">
-                                        <label for="purchase_order_number" class="required"><b>Purchase Order#</b></label>
+                                        <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
                                             id="purchase_order_number" required placeholder="Enter Purchase Order#"
-                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                             onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                     </div>
                                 <!-- </div>
                                 <div class="row" style="background-color:white;"> -->
@@ -148,7 +151,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <label for="status" class="required"><b>Estimate Status</b></label>
                                         <!-- <input type="text" class="form-control" name="zip" id="zip" required
                                             placeholder="Enter Estimate Status"/> -->
-                                            <select name="status" class="form-control">
+                                                <select name="status" class="form-control">
                                                     <option value="Draft">Draft</option>
                                                     <option value="Submitted">Submitted</option>
                                                     <option value="Approved">Approved</option>
@@ -180,10 +183,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <th>Name</th>
                                             <th>Type</th>
-                                            <th>Description</th>
+                                            <!-- <th>Description</th> -->
                                             <th width="100px">Quantity</th>
-                                            <th>Location</th>
-                                            <th width="100px">Cost</th>
+                                            <!-- <th>Location</th> -->
+                                            <th width="150px">Price</th>
                                             <th width="100px">Discount</th>
                                             <th>Tax(%)</th>
                                             <th>Total</th>
@@ -208,58 +211,63 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td>
+                                            <!-- <td> -->
                                                 <!-- <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="desc[]">
                                                 <ul class="suggestions"></ul> -->
-                                                <input type="text" class="form-control" name="desc[]">
-                                            </td>
+                                                <!-- <input type="text" class="form-control" name="desc[]"> -->
+                                            <!-- </td> -->
                                             <td><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control" name="location[]"></td>
+                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
                                             <td><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
                                             <td><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-                                            <td><span id="span_tax_0">0.00 (7.5%)</span><input type="hidden" value="0.00 (7.5%)" name="span_tax_0"></td>
-                                            <td><span id="span_total_0">0.00</span></td>
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td><input type="hidden" class="form-control tax" name="tax[]"
+                                                       data-counter="0" id="tax_0" min="0" value="0">
+                                                       <span id="span_tax_0">0.00 (7.5%)</span></td>
+                                            <td><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
                                     <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp;
-                                    <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a>
+                                    <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
                                     <hr>
                                 </div>
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;">
-                                <div class="col-md-8">
+                                <div class="col-md-7">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td><span id="span_sub_total_0">0.00</span></td>
+                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
+                                                <input type="hidden" name="sub_total" id="item_total"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment" id="adjustment_amount"></td>
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
                                             <td style="width:150px;">
-                                                <select class="form-control">
-                                                    <option>0</option>
-                                                </select>
+                                            <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
                                             <td>0.00</td>
                                         </tr>
                                         <tr>
-                                            <td>Markup</td>
-                                            <td><a href="#" style="color:#02A32C;">set markup</a></td>
-                                            <td>0.00</td>
+                                            <td>Markup $<span id="span_markup"></td>
+                                            <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
+                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
                                         </tr>
                                         <tr>
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="span_grand_total_0">0.00</span></b></td>
+                                            <td><b><span id="grand_total">0.00</span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -380,6 +388,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
+            <!-- Modal Set Markup -->
+            <div class="modal fade" id="modalSetMarkup" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                                <p>Set percent or fixed markup that will be applied to each item.</p>
+                                <p>The markup will not be visible to customer estimate.</p>
+
+                                <div class="btn-group margin-right-sec" role="group" aria-label="...">
+                                    <button class="btn btn-default" type="button" name="markup_type_percent">%</button>
+                                    <button class="btn btn-success" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
+                                    <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary setmarkup">Set Markup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal New Customer -->
+            <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body pt-0 pl-3 pb-3"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -415,6 +473,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <?php echo $file_selection; ?>
+<?php include viewPath('accounting/add_new_term'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
@@ -444,56 +503,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
 </script>
 
-<script>
-//     $( ".span_total_0" ).change(function() {
-//   alert( "Handler for .change() called." );
-// });
-// $(document).on('change','#span_total_0',function(){
-//     alert('Change Happened');
-// });
-</script>
-
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM&callback=initAutocomplete&libraries=places&v=weekly" ></script> -->
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLLOmVj1SqAmP9kHcOBRaF4RbxyzHcOpM" type="text/javascript"></script> -->
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
-
 <script>
-//     var placeSearch, autocomplete;
-
-// function initialize() {
-//     // Create the autocomplete object, restricting the search
-//     // to geographical location types.
-//     autocomplete = new google.maps.places.Autocomplete(
-//     /** @type {HTMLInputElement} */
-//     (document.getElementById('autocomplete')), {
-//         types: ['geocode']
-//     });
-
-//     google.maps.event.addDomListener(document.getElementById('autocomplete'), 'focus', geolocate);
-// }
-
-// function geolocate() {
-
-//     if (navigator.geolocation) {
-//         navigator.geolocation.getCurrentPosition(function (position) {
-
-//             var geolocation = new google.maps.LatLng(
-//             position.coords.latitude, position.coords.longitude);
-//             var circle = new google.maps.Circle({
-//                 center: geolocation,
-//                 radius: position.coords.accuracy
-//             });
-//             autocomplete.setBounds(circle.getBounds());
-
-//             // Log autocomplete bounds here
-//             console.log(autocomplete.getBounds());
-//         });
-//     }
-// }
-
-// initialize();
 function initialize() {
-          var input = document.getElementById('autocomplete');
+          var input = document.getElementById('job_location');
           var autocomplete = new google.maps.places.Autocomplete(input);
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
@@ -503,4 +516,47 @@ function initialize() {
             });
         }
         google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('#customer_id').change(function(){
+    var id  = $(this).val();
+    // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){
+                // alert('success');
+                // console.log(response['customer']);
+            $("#job_location").val(response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#customer_email").val(response['customer'].email);
+            $("#shipping_address").val(response['customer'].mail_add);
+            $("#billing_address").val(response['customer'].mail_add);
+        
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+    });
+
+    $(document).on('click','.setmarkup',function(){
+       // alert('yeah');
+        var markup_amount = $('#markup_input').val();
+
+        $("#markup_input_form").val(markup_amount);
+        $("#span_markup_input_form").text(markup_amount);
+        $("#span_markup").text(markup_amount);
+
+        $('#modalSetMarkup').modal('toggle');
+    });
+});
+
+</script>

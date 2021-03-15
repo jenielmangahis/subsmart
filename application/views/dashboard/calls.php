@@ -157,6 +157,9 @@
                 data: {id:''},
                 success: function (response) {
                     $('#dialpadBody').html(response);
+                    
+                   
+                    
                 }
             });
         }

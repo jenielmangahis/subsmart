@@ -55,7 +55,41 @@ class Ring_central extends MY_Controller {
             return json_encode(array('hasRecord' => false));
         endif;
     }
+    
+    public function initiateCallOut()
+    {
+        $to = post('to');
+        $platform = $this->ringcentral->getPlatform();
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                $resp = $platform->post('/account/~/extension/~/ring-out',
+                    array(
+                      'from' => array( 'phoneNumber' => "+16505691634" ),
+                      'to' => array( 'phoneNumber' => "$to" ),
+                      'playPrompt' => true
+                    ));
 
+                echo json_encode(array('status'=>$resp->json()->status->callStatus, 'id'=> $resp->json()->id));
+            }
+        }
+    }
+    
+    public function checkCallStatus()
+    {
+        $to = post('to');
+        $platform = $this->ringcentral->getPlatform();
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                $r = $platform->get('/account/~/extension/~/ringout/'.$to);
+                //$jsonResponse = json_decode();
+                print_r($r);
+            }
+        }
+    }
+
+    
     public function fetchPersonalSMS($to) {
         $platform = $this->ringcentral->getPlatform();
         if ($this->session->rcData) {

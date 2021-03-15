@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Login extends CI_Controller
+{
 
 	public $data;
 
@@ -9,21 +10,21 @@ class Login extends CI_Controller {
 	{
 		parent::__construct();
 
-		date_default_timezone_set( setting('timezone') );
+		date_default_timezone_set(setting('timezone'));
 
-		if( !empty($this->db->username) && !empty($this->db->hostname) && !empty($this->db->database) ){ }else{
+		if (!empty($this->db->username) && !empty($this->db->hostname) && !empty($this->db->database)) {
+		} else {
 			die('Database is not configured');
 		}
 
-		if(is_logged()){
-			redirect('dashboard','refresh');
+		if (is_logged()) {
+			redirect('dashboard', 'refresh');
 		}
 
 		$this->data = [
 			'assets' => assets_url(),
 			'body_classes'	=> setting('login_theme') == '1' ? 'login-page login-background' : 'login-page-side login-background'
 		];
-
 	}
 
 	public function index()
@@ -32,109 +33,110 @@ class Login extends CI_Controller {
 	}
 
 	public function timezonesetter()
-    {
-        $date_before = date('Y-m-d h:i:s A');
-        $usertimezone = $this->input->post("usertimezone");
-        date_default_timezone_set($usertimezone);
-        $date_after = date('Y-m-d h:i:s A');
-        $_SESSION['usertimezone'] = $usertimezone;
-        $display =array(
-            "usertimezone" => $usertimezone,
-            "newphptimezone" => date_default_timezone_get(),
-            "date_before" => $date_before,
-            "date_after" => $date_after,
-            "session_timezone" => $this->session->userdata('usertimezone')
-        );
-        echo json_encode($display);
-    }
+	{
+		$date_before = date('Y-m-d h:i:s A');
+		$usertimezone = $this->input->post("usertimezone");
+		date_default_timezone_set($usertimezone);
+		$date_after = date('Y-m-d h:i:s A');
+		$_SESSION['usertimezone'] = $usertimezone;
+		$_SESSION['offset_zone'] = $this->input->post("offset_zone");;
+		$display = array(
+			"usertimezone" => $usertimezone,
+			"newphptimezone" => date_default_timezone_get(),
+			"date_before" => $date_before,
+			"date_after" => $date_after,
+			"session_timezone" => $this->session->userdata('usertimezone'),
+			"offset_zone" => $this->session->userdata('offset_zone')
+
+		);
+		echo json_encode($display);
+	}
 	public function check()
 	{
 
-        $this->load->library('form_validation');
+		$this->load->library('form_validation');
 
-        $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|xss_clean');
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
+		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|xss_clean');
 
-        $is_recaptcha_enabled = (setting('google_recaptcha_enabled') == '1');
+		$is_recaptcha_enabled = (setting('google_recaptcha_enabled') == '1');
 
-        if($is_recaptcha_enabled)
-        	$this->form_validation->set_rules('g-recaptcha-response', 'Google Recaptcha', 'callback_validate_recaptcha');
+		if ($is_recaptcha_enabled)
+			$this->form_validation->set_rules('g-recaptcha-response', 'Google Recaptcha', 'callback_validate_recaptcha');
 
-        if ($this->form_validation->run() == FALSE)
-        {
-            $this->index();
-            return;
-        }
+		if ($this->form_validation->run() == FALSE) {
+			$this->index();
+			return;
+		}
 
-        $username = post('username');
-        $password = post('password');
-        $is_startup = 0;
+		$username = post('username');
+		$password = post('password');
+		$is_startup = 0;
 
-        $attempt = $this->users_model->attempt( compact('username', 'password') );
+		$attempt = $this->users_model->attempt(compact('username', 'password'));
 
-        if( $attempt=='valid' ){
+		if ($attempt == 'valid') {
 
-        	// If Allowed, then retreive user row and login the user
-			$user = $this->db->where( 'username', $username )->or_where( 'email', $username )->get( $this->users_model->table )->row();
-        	$this->users_model->login( $user, post('remember_me') );
+			// If Allowed, then retreive user row and login the user
+			$user = $this->db->where('username', $username)->or_where('email', $username)->get($this->users_model->table)->row();
+			$this->users_model->login($user, post('remember_me'));
 
-        	// Get all access modules
-        	if( $user->role == 1 || $user->role == 2 ){ //Admin and nsmart tech
-        		$access_modules = array(0 => 'all');
-        	}else{
-        		$this->load->model('Clients_model');
-        		$this->load->model('IndustryType_model');
-        		$this->load->model('IndustryTemplateModules_model');
+			// Get all access modules
+			if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+				$access_modules = array(0 => 'all');
+			} else {
+				$this->load->model('Clients_model');
+				$this->load->model('IndustryType_model');
+				$this->load->model('IndustryTemplateModules_model');
 
-        		$client = $this->Clients_model->getById($user->company_id);
+				$client = $this->Clients_model->getById($user->company_id);
 
-        		if( $client ){
-        			if( $client->is_startup == 1 ){
-        				$is_startup = 1;
-        			}
+				if ($client) {
+					if ($client->is_startup == 1) {
+						$is_startup = 1;
+					}
 
-        			$industryType = $this->IndustryType_model->getById($client->industry_type_id);
-        			if( $industryType ){
-        				$industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
-        				foreach( $industryModules as $im ){
-        					$access_modules[] = $im->industry_module_id;
-        				}
+					$industryType = $this->IndustryType_model->getById($client->industry_type_id);
+					if ($industryType) {
+						$industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
+						foreach ($industryModules as $im) {
+							$access_modules[] = $im->industry_module_id;
+						}
 
-        				$this->session->set_userdata('userAccessModules', $access_modules);
-        			}
-        		}
-        	}
-        }elseif( $attempt=='invalid_password' ){
+						$this->session->set_userdata('userAccessModules', $access_modules);
+					}
+				}
+			}
+		} elseif ($attempt == 'invalid_password') {
 
-        	// Show Message if invalid password
+			// Show Message if invalid password
 
-            $this->data['message'] = 'Invalid Password';
-            $this->data['message_type'] = 'danger';
+			$this->data['message'] = 'Invalid Password';
+			$this->data['message_type'] = 'danger';
 
-            $this->index();
-            return;
-        }elseif( $attempt=='not_allowed' ){
+			$this->index();
+			return;
+		} elseif ($attempt == 'not_allowed') {
 
-        	// Show Message if invalid password
+			// Show Message if invalid password
 
-            $this->data['message'] = 'You are not allowed to Login ! Contact Admin';
-            $this->data['message_type'] = 'danger';
+			$this->data['message'] = 'You are not allowed to Login ! Contact Admin';
+			$this->data['message_type'] = 'danger';
 
-            $this->index();
-            return;
-        }else{
-        	
-        	// if invalid value or false returned by $attempt
-            
-            $this->data['message'] = 'Something Went Wrong !';
-            $this->data['message_type'] = 'danger';
+			$this->index();
+			return;
+		} else {
 
-            $this->index();
-            return;
+			// if invalid value or false returned by $attempt
 
-        }
+			$this->data['message'] = 'Something Went Wrong !';
+			$this->data['message_type'] = 'danger';
 
-        /*$ipaddress = $this->timesheet_model->gtMyIpGlobal();
+			$this->index();
+			return;
+		}
+
+		/*$ipaddress = $this->timesheet_model->gtMyIpGlobal();
 	   
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
         $lat = $get_location->lat;
@@ -151,37 +153,37 @@ class Login extends CI_Controller {
 
 		$this->load->model('Activity_model', 'activity');
 		$activity['activityName'] = "User Login";
-		$activity['activity'] = " User ".logged('username')." is loggedin";
+		$activity['activity'] = " User " . logged('username') . " is loggedin";
 		$activity['user_id'] = logged('id');
-		
+
 		$isUserInserted = $this->activity->addEsignActivity($activity);
-        if( $is_startup == 1 ){
-        	redirect('onboarding/business_info');
-        }else{
-        	redirect('dashboard');
-        }
+		if ($is_startup == 1) {
+			redirect('onboarding/business_info');
+		} else {
+			redirect('dashboard');
+		}
 	}
 
 	public function validate_recaptcha($recaptchaResponse)
 	{
-		
-		$userIp=$this->input->ip_address();
-        $secret = setting('google_recaptcha_secretkey');
 
-        $url="https://www.google.com/recaptcha/api/siteverify?secret=".$secret."&response=".$recaptchaResponse."&remoteip=".$userIp;
- 
-        $ch = curl_init(); 
-        curl_setopt($ch, CURLOPT_URL, $url); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        $output = curl_exec($ch); 
-        curl_close($ch);      
-         
-        $status= json_decode($output, true);
- 
-        if ($status['success']) {
+		$userIp = $this->input->ip_address();
+		$secret = setting('google_recaptcha_secretkey');
+
+		$url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$output = curl_exec($ch);
+		curl_close($ch);
+
+		$status = json_decode($output, true);
+
+		if ($status['success']) {
 			return true;
-		}else{
-			$this->form_validation->set_message('validate_recaptcha', 'Google Recaptcha not valid !');  
+		} else {
+			$this->form_validation->set_message('validate_recaptcha', 'Google Recaptcha not valid !');
 			return false;
 		}
 	}
@@ -194,10 +196,10 @@ class Login extends CI_Controller {
 
 		$exists = $this->db->get($table)->num_rows();
 
-		if($exists > 0){
+		if ($exists > 0) {
 			return true;
-		}else{
-			$this->form_validation->set_message('validate_username', 'Invalid Username/Email');  
+		} else {
+			$this->form_validation->set_message('validate_username', 'Invalid Username/Email');
 			return false;
 		}
 	}
@@ -210,35 +212,33 @@ class Login extends CI_Controller {
 
 	public function reset_password()
 	{
-		
+
 		postAllowed();
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
 
-		if($this->form_validation->run() == FALSE){
+		if ($this->form_validation->run() == FALSE) {
 			$this->forget();
 			return;
 		}
 
-		$reset = $this->users_model->resetPassword( [ 'username' => post('username') ] );
+		$reset = $this->users_model->resetPassword(['username' => post('username')]);
 
-		$this->data['message']	=	'Reset Link Sent to <a href="#">'.obfuscate_email($reset).'</a> ! Please check your email';
+		$this->data['message']	=	'Reset Link Sent to <a href="#">' . obfuscate_email($reset) . '</a> ! Please check your email';
 		$this->data['message_type']	=	'info';
 
-		if($reset==='invalid'){
+		if ($reset === 'invalid') {
 			$this->data['message']	=	'Invalid Email/Username';
 			$this->data['message_type']	=	'danger';
 		}
 
 		$this->forget();
-
 	}
 
 	public function reset_password_new()
 	{
-		
-		$this->load->view('account/forget_new', $this->data, FALSE);
 
+		$this->load->view('account/forget_new', $this->data, FALSE);
 	}
 
 	public function new_password()
@@ -247,9 +247,10 @@ class Login extends CI_Controller {
 
 		$user = $this->users_model->getByWhere(['reset_token' => $reset_token]);
 
-		if(!$reset_token || !$user || empty($user)){
+		if (!$reset_token || !$user || empty($user)) {
 			echo 'Invalid Request';
-			redirect('login/forget', 'refresh'); return;
+			redirect('login/forget', 'refresh');
+			return;
 		}
 
 		$user = $user[0];
@@ -257,7 +258,6 @@ class Login extends CI_Controller {
 		$this->data['user']	=	$user;
 
 		$this->load->view('account/reset_password', $this->data, FALSE);
-
 	}
 
 	public function set_new_password()
@@ -268,7 +268,7 @@ class Login extends CI_Controller {
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[5]');
 		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'required|matches[password]');
 
-		if($this->form_validation->run() == FALSE){
+		if ($this->form_validation->run() == FALSE) {
 			$this->data['user']	=	$this->users_model->getByWhere(['reset_token' => post('token')])[0];
 			$this->load->view('account/reset_password', $this->data, FALSE);
 			return;
@@ -279,27 +279,27 @@ class Login extends CI_Controller {
 		$user	=	$this->users_model->getByWhere(compact('reset_token'))[0];
 
 		$this->users_model->update($user->id, [
-			'password'	=>	hash( "sha256", post('password') ),
+			'password'	=>	hash("sha256", post('password')),
 			'reset_token'	=>	'',
 		]);
 
 		$this->session->set_flashdata('message', 'New Password has been Updated, You can login now');
 		$this->session->set_flashdata('message_type', 'success');
 		redirect('login', 'refresh');
-
 	}
 
-	public function ajax_check_user_id_exists(){
-		$is_success = 0;		
+	public function ajax_check_user_id_exists()
+	{
+		$is_success = 0;
 		$user = $this->users_model->getUserByUsernname(post('user_id'));
-		if( $user ){
-			if( $user->postal_code == post('user_zipcode') ){
+		if ($user) {
+			if ($user->postal_code == post('user_zipcode')) {
 				$is_success = 1;
 				$msg = '';
-			}else{
+			} else {
 				$msg = 'User ID not found';
 			}
-		}else{
+		} else {
 			$msg = 'User ID not found';
 		}
 
@@ -308,25 +308,26 @@ class Login extends CI_Controller {
 		exit;
 	}
 
-	public function ajax_update_user_password(){
-		$is_success = 0;	
-		if( post('new_password') != post('re_password') ){
+	public function ajax_update_user_password()
+	{
+		$is_success = 0;
+		if (post('new_password') != post('re_password')) {
 			$msg = 'Password not match';
-		}else{
+		} else {
 			$user = $this->users_model->getUserByUsernname(post('user_id'));
-			if( $user ){
-				if( $user->postal_code == post('user_zipcode') ){
+			if ($user) {
+				if ($user->postal_code == post('user_zipcode')) {
 					$this->users_model->update($user->id, [
-						'password'	=>	hash( "sha256", post('new_password') ),
+						'password'	=>	hash("sha256", post('new_password')),
 						'password_plain' => post('new_password'),
 						'reset_token'	=>	''
 					]);
 					$is_success = 1;
 					$msg = 'You password was successfully changed. Redirecting to login page...';
-				}else{
+				} else {
 					$msg = 'User ID not found';
 				}
-			}else{
+			} else {
 				$msg = 'User ID not found';
 			}
 		}
@@ -335,7 +336,6 @@ class Login extends CI_Controller {
 		echo json_encode($json_data);
 		exit;
 	}
-
 }
 
 /* End of file Login.php */

@@ -198,12 +198,11 @@ add_css(array(
 
                     <div class="card" id="notes_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header">
-                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <span style="display: flex;" class="btn" type="button">
                                 <h6 class="page-title"> <span class="fa fa-book box_footer_icon"></span> &nbsp; Private Notes </h6>
-                            </button>
-                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 40px;font-size: 20px;display: block;margin-top: -38px;"></span></a>
+                            </span>
                         </div>
-                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#collapseOne">
+                        <div id="collapseOne" class="collapses" aria-labelledby="headingOne" data-parent="#collapseOne">
                         <div class="card-body">
                             <div class="row">
                                 <!--<div style="background-color: #32243d; width: 32px; height: 32px;">
@@ -256,15 +255,12 @@ add_css(array(
                     </div>
                     <div class="card" id="url_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header" id="headingThree">
-                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#url_link_form" aria-expanded="true" aria-controls="url_link_form">
+                            <button style="display: flex;" class="btn btn-link " type="button">
                                 <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
                             </button>
-                            <a href="javascript:void(0);" id="url_left_btn_column">
-                                <span class="fa fa-columns card_plus_sign"></span>
-                            </a>
                         </div>
                         <div class="card-body">
-                            <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#url_link_form">
+                            <div id="url_link_form" class="collapses" aria-labelledby="headingThree" data-parent="#url_link_form">
                                 <div class="card-body">
                                     <?php
                                     if(isset($jobs_data) && $jobs_data->link != NULL) {
@@ -280,7 +276,6 @@ add_css(array(
                                 </div>
                                 <br>
                             </div>
-
                         </div>
                     </div>
 
@@ -441,7 +436,6 @@ add_css(array(
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
-                                                    <a href="javascript:void(0);" id="notes_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                                     <h5 style="padding-left: 20px;" class="mb-0">Notes</h5>
                                                 </div>
                                                 <div class="card-body">
@@ -450,7 +444,7 @@ add_css(array(
                                                     </div>
                                                     <div id="notes_input_div_right" style="display:none;">
                                                         <div style=" height:70px;margin-bottom: 10px;">
-                                                            <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt_right" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                                            <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt_right" class="input"><?= isset($jobs_data) ? $jobs_data->description : ''; ?></textarea>
                                                             <button type="button" class="btn btn-primary btn-sm" id="save_memo_right" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                                         </div>
                                                     </div>
@@ -473,7 +467,6 @@ add_css(array(
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
-                                                    <a id="url_right_btn_column" href="javascript:void(0);"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
                                                     <h5 style="padding-left: 20px;">Url Link</h5>
                                                 </div>
                                                 <div class="card-body">

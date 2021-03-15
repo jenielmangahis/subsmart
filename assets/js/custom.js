@@ -120,6 +120,21 @@ $(document).on("focusout", ".price", function () {
   var counter = $(this).data("counter");
   calculation(counter);
 });
+$(document).on("focusout", ".markup_input", function () {
+  // alert('yeah');
+  var counter = $(this).data("counter");
+  calculation(counter);
+});
+
+$(document).on("focusout", ".adjustment_input", function () {
+  var counter = $(this).data("counter");
+  calculation(counter);
+});
+
+$(document).on("focusout", ".setmarkup", function () {
+  var counter = $(this).data("counter");
+  calculation(counter);
+});
 
 $(document).on('change','#span_total_0',function(){
     alert('Change Happened');
@@ -299,6 +314,8 @@ function calculation(counter) {
     parseFloat(discount)
   ).toFixed(2);
 
+  alert( 'yeah' + total);
+
   $("#span_total_" + counter).text(total);
   $("#span_tax_" + counter).text(tax1);
   $("#discount_" + counter).val(discount);
@@ -323,13 +340,37 @@ function calculation(counter) {
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="sub_total_form_input"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
 
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
-  $("#span_sub_total_0").text(total_discount.toFixed(2));
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  // var adjustment = $("#adjustment_input").val();
+  // var grand_total = s_total - parseFloat(adjustment);
+  // var markup = $("#markup_input_form").val();
+  // var grand_total_w = grand_total + parseFloat(markup);
+  
+
+  $("#grand_total").text(s_total.toFixed(2));
+  $("#grand_total_input").val(s_total.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -401,9 +442,9 @@ $(document).on("click", "#add_another_estimate", function (e) {
     '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
     "</td>\n" +    
     '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="desc[]">\n' +
-    "</td>\n" +
+    // "<td>\n" +
+    // '<input type="text" class="form-control quantity" name="desc[]">\n' +
+    // "</td>\n" +
     "<td>\n" +
     '<input type="number" class="form-control quantity" name="quantity[]" data-counter="' +
     count +
@@ -411,9 +452,9 @@ $(document).on("click", "#add_another_estimate", function (e) {
     count +
     '" min="1" value="1">\n' +
     "</td>\n" +
-    "<td>\n" +
-    '<input type="text" class="form-control" name="location[]">\n' +
-    "</td>\n" +
+    // "<td>\n" +
+    // '<input type="text" class="form-control" name="location[]">\n' +
+    // "</td>\n" +
     "<td>\n" +
     '<input type="number" class="form-control price" name="price[]" data-counter="' +
     count +
@@ -426,14 +467,24 @@ $(document).on("click", "#add_another_estimate", function (e) {
     count +
     '" id="discount_' +
     count +
-    '" min="0" value="0" readonly>\n' +
+    '" min="0" value="0" >\n' +
     "</td>\n" +
     "<td>\n" +
+    '<input type="hidden" class="form-control tax" name="tax[]" data-counter="' +
+    count +
+    '" id="tax_' +
+    count +
+    '" min="0" value="0">\n' +
     '<span id="span_tax_' +
     count +
     '">0.00 (7.5%)</span>\n' +
     "</td>\n" +
     "<td>\n" +
+    '<input type="hidden" class="form-control total" name="total[]" data-counter="' +
+    count +
+    '" id="item_total_' +
+    count +
+    '" min="0" value="0">\n' +
     '<span id="span_total_' +
     count +
     '">0.00</span>\n' +
@@ -802,7 +853,7 @@ $(document).on("click", "#add_another_new_invoice", function (e) {
     "<td>\n" +
     '<input type="hidden" class="form-control total" name="total[]" data-counter="' +
     count +
-    '" id="total_' +
+    '" id="item_total_' +
     count +
     '" min="0" value="0">\n' +
     '<span id="span_total_' +
