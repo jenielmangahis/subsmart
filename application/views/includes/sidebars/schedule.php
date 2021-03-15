@@ -24,6 +24,10 @@
         left: -13px;
         top: -10px;
     }
+    span.spacer-badge {
+      margin-right: 4px !important;
+      display: inline;
+    }
 </style>
 <nav class="navbar-side d-none d-md-block">
     <ul class="nav"><span class="nav-close">      	<svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%"><path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path></svg>        	</span>
@@ -31,13 +35,13 @@
         <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'schedule' || $page->menu === 'Workcalender' ))  ? "active" : ""; ?>">
             <a href="<?php echo base_url('workcalender') ?>"
                         title="Schedule">
-                <span class="fa fa-calendar"></span><span class="total-schedule left-sidebar-badge"></span> Schedule
+                <span class="fa fa-calendar" style="margin-right:5px;"></span><span class="total-schedule left-sidebar-badge"></span> Schedule
             </a>
         </li>
         <?php // additional menus for Schedule ?>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
-                <span class="fa fa-clipboard"></span><span class="total-taskhub left-sidebar-badge"></span> TaskHub
+                <span class="fa fa-clipboard" style="margin-right:4px;"></span><span class="total-taskhub left-sidebar-badge"></span> TaskHub
             </a>
         </li>
         <li class="submenus"<?php //echo (!empty($page->menu) && $page->menu === 'settings')  ? "class='active'" : ""; ?>>
@@ -45,8 +49,10 @@
                 <span class="fa fa-book"></span><span class="total-online-booking left-sidebar-badge"></span>Online Booking
             </a>
         </li>
-        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'priority' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/priority/') ?>" title="Credentials"><span class="fa fa-cube"></span>Priority</a></li>
-        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'map' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/map') ?>" title="Services"><span class="fa fa-users"></span>Bird Eye View</a></li>
+        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'priority' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/priority/') ?>" title="Credentials"><span class="fa fa-cube"></span>
+          <span class="spacer-badge"></span>Priority</a></li>
+        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'map' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/map') ?>" title="Services"><span class="fa fa-users"></span>
+          <span class="spacer-badge"></span>Bird Eye View</a></li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'event_types')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('event_types/index') ?>" title="Event Types">
                 <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Event Types
@@ -60,8 +66,8 @@
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
                 <span class="fa fa-gear"></span>
-                Calendar Settings
+                <span class="spacer-badge"></span>Calendar Settings
             </a>
-        </li>        
+        </li>
     </ul>
 </nav>
