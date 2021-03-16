@@ -118,7 +118,8 @@
                                                         <?php foreach($tax_rates as $taxRate) : ?>
                                                             <option value="<?=$taxRate->id?>"><?=$taxRate->name?></option>
                                                         <?php endforeach; ?>
-                                                    <?php endif; ?> 
+                                                    <?php endif; ?>
+                                                    <option value="0">Nontaxable</option>
                                                 </select>
                                             </div>
                                         </div>

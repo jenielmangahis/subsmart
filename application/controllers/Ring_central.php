@@ -75,16 +75,46 @@ class Ring_central extends MY_Controller {
         }
     }
     
-    public function checkCallStatus()
+    public function getUserCallLogs()
     {
-        $to = post('to');
         $platform = $this->ringcentral->getPlatform();
         if ($this->session->rcData) {
             $platform->auth()->setData((array) $this->session->rcData);
             if ($platform->loggedIn()) {
-                $r = $platform->get('/account/~/extension/~/ringout/'.$to);
+                $r = $platform->get('/account/~/extension/~/call-log/');
+                echo '<table class="table table-stripped">';
+                foreach($r->json()->records as $record):
+                    ?>
+                        <tr>
+                            <td>
+                                <?= $record->from->name ?><br/>
+                                <span><?= $record->from->phoneNumber ?></span>
+                            </td>
+                            <td><?= $record->direction ?></td>
+                            <td><?= date('F d, Y G:i:s', strtotime($record->startTime)) ?></td>
+                        </tr>
+                    <?php
+                endforeach;
+                
+                echo '</table>';
+                
+            }
+        }
+    }
+    
+    public function checkCallStatus($to)
+    {
+        //$to = post('to');
+        $platform = $this->ringcentral->getPlatform();
+        if ($this->session->rcData) {
+            $platform->auth()->setData((array) $this->session->rcData);
+            if ($platform->loggedIn()) {
+                $r = $platform->get('/account/~/extension/~/ring-out/'.$to);
                 //$jsonResponse = json_decode();
-                print_r($r);
+                echo json_encode(array('status'=>$r->json()->status->callerStatus,'callStatus'=>$r->json()->status->callStatus, 'id'=> $r->json()->id, 'status_all' => $r->json()->status));
+              // print_r($r->json());
+            }else{
+                echo json_encode(array('status'=>"", 'id'=> 0)); 
             }
         }
     }
@@ -314,7 +344,7 @@ class Ring_central extends MY_Controller {
         $this->session->unset_userdata('rcData');
         $this->session->set_userdata('isRCLogin', false);
 
-        header("Location: " . base_url());
+        header("Location: " . base_url('dashboard'));
         //exit();
     }
 

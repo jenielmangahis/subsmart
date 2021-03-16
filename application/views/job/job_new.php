@@ -654,7 +654,7 @@ add_css(array(
                                 </div>
                                 <div class="col-md-8">
                                     <div class="col-md-12">
-                                        <div id="streetViewBody" class="col-md-6 float-left no-padding" style="padding-right:15px;"></div>
+                                        <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
                                         <div id="map" class="col-md-6 float-left"></div>
                                     </div>
                                 </div>

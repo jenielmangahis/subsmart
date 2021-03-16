@@ -51,7 +51,7 @@
             </svg>
         </span>
         <li class="nav-header">EVENTS</li>
-        <li class="submenus <?= $this->uri->segment(2) == 'new_event' || $this->uri->segment(2) == '' ? "active" : "";  ?>">
+        <li class="submenus <?= $this->uri->segment(2) == 'new_event' || $this->uri->segment(2) == '' || $this->uri->segment(2) == 'event_preview' ? "active" : "";  ?>">
             <a href="<?= base_url('events') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Events</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'event_types/index') ? "active" : "";  ?>">

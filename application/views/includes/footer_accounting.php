@@ -192,6 +192,7 @@ var days = 7;
 <script>
 jQuery(document).ready(function () {
 $('#reportstable').DataTable();
+$('#items_table_estimate').DataTable();
 var elements = document.getElementsByName("amount[]");
 var element_array = Array.prototype.slice.call(elements);
 

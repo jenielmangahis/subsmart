@@ -527,6 +527,7 @@ class Events extends MY_Controller
             'event_address' => $input['event_address'],
             'status' => 1,//$this->input->post('job_status'),
             'description' => $input['message'],
+            'created_by' => $input['created_by'],
             'company_id' => $comp_id,
             //'date_created' => date('Y-m-d H:i:s'),
             'notes' => $input['notes'],

@@ -7,21 +7,21 @@
                 <a href="<?php echo base_url('workcalender/'); ?>">
                 <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
                     <em><?= date('D', strtotime($jb->start_date)) ?></em>
-                    <strong><?= date('M', strtotime($jb->start_date)) ?></strong>
+                    <strong style="background-color: #32243d;"><?= date('M', strtotime($jb->start_date)) ?></strong>
                     <span><?= date('d', strtotime($jb->start_date)) ?></span>
                 </time>
                 </a>
-                <div class="job-status text-center mb-2" style="background:<?= $jb->event_color?>; color:white;"><?php echo strtoupper($jb->status); ?></div>
-                <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;" class="text-center">ARRIVAL WINDOW</span><br/>
+                <div class="job-status text-center mb-2" style="background:<?= $jb->event_color?>; color:#ffffff;"><b><?php echo strtoupper($jb->status); ?></b></div>
+                <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;font-size: 14px;" class="text-center">ARRIVAL WINDOW</span><br/>
                 <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:12px">
                     <?php echo get_format_time($jb->start_time); ?>-<?php echo get_format_time_plus_hours($jb->end_time); ?>
                 </span>
             </div>
             <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
                 <a href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
-                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo strtoupper($jb->job_type . ' - ' . $jb->job_description); ?></h6>
-                    <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($jb->job_name); ?></p>
-                    <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($jb->job_location)); ?></p>
+                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo strtoupper($jb->job_number . ' - ' . $jb->job_type); ?></h6>
+                    <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($jb->job_description); ?></p>
+                    <a href="<?= $jb->link; ?>" target="_blank" style="color: #9d9e9d;font-size: 10px; "><?php echo ucwords(strtolower($jb->link)); ?></a>
                 </a>
             </div>
             <div class="col-lg-2 float-right" style="margin-top:40px !important; ">
@@ -34,3 +34,14 @@
     <?php } ?>
   </div>
 </div>
+<style>
+    .job-status {
+        width: 100%;
+        background: #32243d;
+        color: #ffffff;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-top: 10px;
+    }
+</style>

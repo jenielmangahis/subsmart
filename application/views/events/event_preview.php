@@ -43,7 +43,7 @@ add_css(array(
         bottom: 10px;
     }
     #map{
-        height: 190px;
+        height: 210px;
     }
     .title-border{
         border-bottom: 2px solid rgba(0,0,0,.1);
@@ -78,7 +78,7 @@ add_css(array(
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <?php if($company_info->business_logo != ""): ?>
+                                            <?php if($company_info->business_logo != "" && $jobs_data->event_type == 'Estimate'): ?>
                                                 <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?=  base_url().$company_info->business_logo; ?> ">
                                             <?php endif; ?>
                                         </div>
@@ -104,6 +104,9 @@ add_css(array(
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        <?php if($jobs_data->event_type == 'Estimate'): ?>
+
                                         <div class="col-md-12">
                                             <h6 class="title-border">FROM :</h6>
                                             <b><?= $company_info->business_name; ?></b><br>
@@ -111,6 +114,19 @@ add_css(array(
                                             <span><?= $company_info->city.' '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
                                             <span> Phone: <?= $company_info->business_phone ; ?></span>
                                         </div>
+
+                                        <?php else: $created_by = get_employee_name($jobs_data->created_by) ?>
+                                            <div class="col-md-12">
+                                                <h6 class="title-border">Created By :</h6>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <p><?= $created_by->FName.' '.$created_by->LName  ?></p>
+                                                    </div>
+                                                    <div id="map" class="col-md-4"></div>
+                                                    <div id="streetViewBody" class="col-md-4"></div>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
 
                                         <?php if($jobs_data->event_type == 'Estimate'): ?>
                                         <div class="col-md-12">
@@ -130,15 +146,13 @@ add_css(array(
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
                                                     <br>
-
                                                 </div>
-                                                <div id="map" class="col-md-3"></div>
-                                                <div id="streetViewBody" class="col-md-4"></div>
+
                                             </div>
                                         </div>
                                         <?php endif; ?>
                                         <div class="col-md-12">
-                                            <h6 class="title-border">JOB DETAILS :</h6>
+                                            <h6 class="title-border">Event Details :</h6>
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
@@ -188,13 +202,13 @@ add_css(array(
                                         </div>
                                         <div class="col-md-12">
                                             <br><br>
-                                            <h6 class="title-border">NOTES :</h6>
+                                            <h6 class="title-border">Notes :</h6>
                                             <span><?=  $jobs_data->message; ?></span>
                                         </div>
 
                                         <div class="col-md-12">
                                             <br>
-                                            <h6 class="title-border">ASSIGNED TO :</h6>
+                                            <h6 class="title-border">Assigned To :</h6>
                                             <?php
                                                 $employee_date = get_employee_name($jobs_data->employee_id)
                                             ?>
@@ -203,13 +217,13 @@ add_css(array(
 
                                         <div class="col-md-12">
                                             <br>
-                                            <h6 class="title-border">URL LINK :</h6>
+                                            <h6 class="title-border">Url Link :</h6>
                                             <span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span>
                                         </div>
 
                                         <div class="col-md-12">
                                             <br>
-                                            <h6 class="title-border">SCHEDULE :</h6>
+                                            <h6 class="title-border">Schedule :</h6>
                                             <table class="table table-bordered">
                                                 <tbody>
                                                     <tr>
@@ -253,13 +267,12 @@ include viewPath('includes/footer');
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
-
-<?php include viewPath('job/js/job_new_js'); ?>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=&v=weekly"></script>
 
 <script>
     var geocoder;
     function initMap(address=null) {
+        address = '<?php echo $jobs_data->event_address;  ?>';
         if(address == null){
             address = '6866 Pine Forest Rd Pensacola FL 32526';
         }
@@ -276,6 +289,7 @@ include viewPath('includes/footer');
         });
         geocoder = new google.maps.Geocoder();
         codeAddress(geocoder, map,address);
+        loadStreetView(address);
     }
 
     function codeAddress(geocoder, map,address) {
@@ -289,6 +303,19 @@ include viewPath('includes/footer');
             } else {
                 console.log(status);
                 console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+    function loadStreetView(address)
+    {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>job/loadStreetView",
+            data: {address : address}, // serializes the form's elements.
+            success: function(data)
+            {
+                $('#streetViewBody').html(data);
             }
         });
     }

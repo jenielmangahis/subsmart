@@ -24,7 +24,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="row">
                                 <input type="hidden" id="selectedIds">
-                                <?php if ($type == 'product' || empty($type)) : ?>
+                                <?php if ($type == 'inventory' || empty($type)) : ?>
                                 <div class="col-md-12" id="onHandInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-4 text-left">Inventory On Hand</h4>
@@ -291,7 +291,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row col-md-12">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Item Name</label>
                                             <input type="text" id="itemName" name="item_name" class="form-control col-md-5" required>
-                                            <input type="hidden" name="item_type" value="product">
+                                            <input type="hidden" name="item_type" value="inventory">
                                             <input type="hidden" name="item_id" id="itemId" value="0">
                                             <input type="hidden" name="event_type" id="event_type" value="save_another">
                                             <button type="submit" class="btn btn-primary col-md-2 ml-3" id="saveAddAnother">Save & Add Another</button>

@@ -891,22 +891,27 @@ class Workcalender extends MY_Controller
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
-        if(!empty($events)) {            
+        if(!empty($events)) {    
             foreach($events as $event) {
                 if( $event->event_description != '' ){
                    if($event->employee_id > 0) {
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+
+                        $title = $event->start_time . " - " . $event->end_time;
+                        $custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small><br /><small>" . $event->FName . ' ' . $event->LName . "</small><br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . "</small>";
+
                         $resources_user_events[$inc]['eventId'] = $event->id;
                         $resources_user_events[$inc]['eventType'] = 'events';
                         $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
-                        $resources_user_events[$inc]['title'] = $event->event_description;
-                        $resources_user_events[$inc]['start'] = $start_date_time;
-                        $resources_user_events[$inc]['end'] = $start_date_end;
+                        $resources_user_events[$inc]['title'] = $title;
+                        $resources_user_events[$inc]['customHtml'] = $custom_html;
+                        $resources_user_events[$inc]['start'] = $event->start_date;
+                        $resources_user_events[$inc]['end'] = $event->end_date;
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
 
                     $inc++;
-                    }elseif($event->employee_id == 0) {
+                    }/*elseif($event->employee_id == 0) {
                         foreach($get_users as $get_user) {
                             $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                             $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
@@ -920,7 +925,7 @@ class Workcalender extends MY_Controller
                         $inc++; 
                         }
                        
-                    } 
+                    }*/ 
                 }
             }
         }
@@ -1031,10 +1036,12 @@ class Workcalender extends MY_Controller
                             }
 
                             if( $event->summary != '' ){
+                                $custom_html = "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date . "<br />" . $event->summary;
                                 $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['eventType'] = 'events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";
                                 $resources_user_events[$inc]['title'] = $event->summary;
+                                $resources_user_events[$inc]['customHtml'] = $custom_html;
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
                                 $resources_user_events[$inc]['start'] = $start_date;
                                 $resources_user_events[$inc]['end'] = $end_date;
@@ -1060,10 +1067,13 @@ class Workcalender extends MY_Controller
                     $backgroundColor = $j->event_color;
                 }
 
+                $custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
+
                 $resources_user_events[$inc]['eventId'] = $j->id;
                 $resources_user_events[$inc]['eventType'] = 'jobs';
                 $resources_user_events[$inc]['resourceId'] = 'job' . $j->employee_id;
                 $resources_user_events[$inc]['title'] = $j->job_description;
+                $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
                 $resources_user_events[$inc]['end'] = $start_date_end;
                 $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;

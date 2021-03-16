@@ -283,7 +283,7 @@ class Sms_Campaigns extends MY_Controller {
             $sms_blast_id = $this->session->userdata('smsBlastId');
 
             if( isset($post['is_scheduled']) ){
-                $send_date = $post['send_date'];
+                $send_date = date("Y-m-d",strtotime($post['send_date']));
                 $send_time = date("H:i:s",strtotime($post['send_date'] . " " . $post['send_time']));
             }else{
                 $send_date = date("Y-m-d");

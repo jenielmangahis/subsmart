@@ -244,22 +244,34 @@ $(document).ready(function () {
         Swal.fire({
           title: "Do you want to overtime?",
           // icon:'question',
-          html: "Auto close after <strong></strong> seconds",
+          html:
+            'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
           imageUrl: baseURL + "/assets/img/timesheet/clock-out.png",
           showDenyButton: true,
-          confirmButtonText: `Yes,I want`,
-          denyButtonText: `Clock out now`,
+          confirmButtonText: `Continue`,
+          denyButtonText: `End Session`,
           allowOutsideClick: false,
-          timer: 10000,
+          timer: auto_out_timer,
           timerProgressBar: true,
           willOpen: () => {
             const content = Swal.getContent();
             const $ = content.querySelector.bind(content);
             timerInterval = setInterval(() => {
               if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
-                Swal.getContent().querySelector("strong").textContent = (
-                  Swal.getTimerLeft() / 1000
-                ).toFixed(0);
+                var coundown = Swal.getTimerLeft() / 1000 / 60;
+                var intV = parseInt(coundown);
+
+                var text_countdown = "";
+                if (intV != 0) {
+                  text_countdown =
+                    intV + ":" + parseInt((coundown - intV) * 60);
+                } else {
+                  text_countdown = parseInt((coundown - intV) * 60);
+                }
+
+                Swal.getContent().querySelector(
+                  "strong"
+                ).textContent = text_countdown;
               } else {
                 clearInterval(timerInterval);
               }
@@ -291,30 +303,23 @@ $(document).ready(function () {
               },
             });
           } else if (result.isDenied) {
-            // status = 0;
-            // $.ajax({
-            //     url:baseURL+"/timesheet/overtimeApproval",
-            //     type:"POST",
-            //     dataType:"json",
-            //     data:{attn_id:attn_id,status:status},
-            //     success:function (data) {
-            //         if (data == 1){
-            //             $('#autoClockOut').val(0);
-            //             Swal.fire(
-            //                 {
-            //                     showConfirmButton: false,
-            //                     timer: 3000,
-            //                     title: 'Success',
-            //                     html: "You will automatically Clock-out once the end of shift comes.",
-            //                     icon: 'success'
-            //                 });
-            //         }
-            //     }
-            // });
             autoClockOut();
           }
           if (result.dismiss === Swal.DismissReason.timer) {
             autoClockOut();
+          }
+          if (result.dismiss === "close") {
+            if (over_time_current >= 0.08333333333) {
+              autoClockOut();
+            } else {
+              $.ajax({
+                url: baseURL + "/timesheet/autoclockout_timer_closed",
+                type: "POST",
+                dataType: "json",
+                data: { attn_id: attn_id },
+                success: function (data) {},
+              });
+            }
           }
         });
       }
@@ -603,6 +608,8 @@ $(document).ready(function () {
   const min = document.querySelector("#min");
   const sec = document.querySelector("#sec");
   let attn_id = $("#attendanceId").val();
+  var auto_out_timer = 0;
+  var over_time_current = 0;
   $.ajax({
     url: baseURL + "/timesheet/shift_duration_checker",
     type: "POST",
@@ -614,7 +621,20 @@ $(document).ready(function () {
         data.shift_duration + data.overtime >= 8 &&
         data.not_overtime_notice
       ) {
-        overtimeTimer();
+        if (data.overtime < 0.08333333333 && !data.autoclockout_timer_closed) {
+          auto_out_timer = (0.08333333333 - data.overtime) * 60 * 60000;
+          overtimeTimer();
+        } else if (
+          data.autoclockout_timer_closed &&
+          0.08333333333 - data.overtime < 0.01666666666
+        ) {
+          auto_out_timer = (0.08333333333 - data.overtime) * 60 * 60000;
+          overtimeTimer();
+        } else if (data.overtime > 0.08333333333) {
+          over_time_current = data.overtime;
+          auto_out_timer = 10000;
+          overtimeTimer();
+        }
       }
     },
   });

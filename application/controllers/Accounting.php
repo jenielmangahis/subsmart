@@ -44,6 +44,7 @@ class Accounting extends MY_Controller {
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
         $this->load->model('AcsProfile_model', 'AcsProfile_model');
         $this->load->model('TaxRates_model');
+        $this->load->model('General_model', 'general');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -1302,8 +1303,7 @@ class Accounting extends MY_Controller {
                         'icon' => $item->attached_image,
                         'vendor_id' => $item->vendor_id,
                         'sales_tax_cat' => $accountingDetails->tax_rate_id,
-                        'bundle_items' => $bundItems,
-                        'display_on_print' => $accountingDetails->display_on_print
+                        'bundle_items' => $bundItems
                     ];
                 }
             } else {
@@ -1328,8 +1328,7 @@ class Accounting extends MY_Controller {
                     'icon' => $item->attached_image,
                     'vendor_id' => $item->vendor_id,
                     'sales_tax_cat' => $accountingDetails->tax_rate_id,
-                    'bundle_items' => $bundItems,
-                    'display_on_print' => $accountingDetails->display_on_print
+                    'bundle_items' => $bundItems
                 ];
             }
         }
@@ -1344,21 +1343,23 @@ class Accounting extends MY_Controller {
             });
         }
 
-        $sort = usort($data, function($a, $b) use ($order, $columnName) {
-            if($order === 'asc') {
-                if(in_array($columnName, ['qty_on_hand', 'sales_price', 'cost', 'qty_po', 'reorder_point'])) {
+        if($columnName === 'qty_on_hand') {
+            $sort = usort($data, function($a, $b) use ($order) {
+                if($order === 'asc') {
                     return $a['qty_on_hand'] > $b['qty_on_hand'];
                 } else {
-                    return strcmp($a[$columnName], $b[$columnName]);
-                }
-            } else {
-                if(in_array($columnName, ['qty_on_hand', 'sales_price', 'cost', 'qty_po', 'reorder_point'])) {
                     return $a['qty_on_hand'] < $b['qty_on_hand'];
+                }
+            });
+        } else if(in_array($columnName, ['income_account', 'expense_account', 'inventory_account', 'sku', 'purch_desc'])) {
+            $sort = usort($data, function($a, $b) use ($order, $columnName) {
+                if($order === 'asc') {
+                    return strcmp($a[$columnName], $b[$columnName]);
                 } else {
                     return strcmp($b[$columnName], $a[$columnName]);
                 }
-            }
-        });
+            });
+        }
 
         $recordsFiltered = count($data);
 
@@ -1622,6 +1623,7 @@ class Accounting extends MY_Controller {
             case 'inventory' : 
                 $data = [
                     'title' => $name,
+                    'type' => $type,
                     'item_categories_id' => $input['category'],
                     're_order_points' => $input['reorder_point'],
                     'description' => $input['description'],
@@ -5570,6 +5572,15 @@ class Accounting extends MY_Controller {
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        // $get_items = array(
+        //     'where' => array(
+        //         'items.company_id' => logged('company_id'),
+        //         'is_active' => 1,
+        //     ),
+        //     'table' => 'items',
+        //     'select' => 'items.id,title,price',
+        // );
+        // $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('accounting/addnewEstimate', $this->page_data);
