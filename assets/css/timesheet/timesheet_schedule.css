@@ -33,6 +33,17 @@ input.shift-end-input.changed {
   color: #212529;
 }
 
+input.shift-start-input.changed,
+input.shift-end-input.changed {
+  background-color: #cddc39;
+  color: #212529;
+}
+
+input.shift-start-input.pink,
+input.shift-end-input.pink {
+  background-color: #f9c2df;
+  color: #212529;
+}
 .action-btn-container {
   right: 0;
   bottom: 10px;

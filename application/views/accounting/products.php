@@ -20,6 +20,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	#products-services-table img {
 		max-height: 52px;
 	}
+	#products-services-table tbody tr td:first-child {
+		padding: 10px 18px;
+	}
 	.type-icon {
 		height: 100%;
 		background-position: center;
@@ -52,6 +55,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	.modal .modal-footer .btn-group .btn:not(:first-child) {
 		border-top-left-radius: 0 !important;
     	border-bottom-left-radius: 0 !important;
+	}
+	.action-bar .select2.select2-container {
+		text-align: left;
 	}
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -219,6 +225,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
+										<div class="action-bar h-100 d-none align-items-center">
+											<ul class="ml-auto" style="min-width: 50%">
+												<li class="d-flex align-items-center">
+													<select id="assign-category" class="form-control">
+													<option></option>
+													<option value="0">Uncategorized</option>
+													<?php foreach($this->items_model->getItemCategories() as $category) : ?>
+														<option value="<?=$category->item_categories_id?>"><?=$category->name?></option>
+													<?php endforeach; ?>
+													</select>
+
+													<div class="ml-2 btn-group">
+														<button type="button" class="btn btn-secondary dropdown-toggle hide-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+															Batch actions&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
+														</button>
+														<div class="dropdown-menu">
+															<a class="dropdown-item" href="#">Make inactive</a>
+															<a class="dropdown-item" href="#">Adjust quantity</a>
+															<a class="dropdown-item" href="#">Reorder</a>
+															<a class="dropdown-item" href="#">Make non-inventory</a>
+															<a class="dropdown-item" href="#">Make service</a>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</div>
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
 												<li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
@@ -267,7 +299,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="products-services-table" class="table table-striped table-bordered" style="width:100%">
 									<thead>
                                         <tr>
-											<th></th>
+											<th><input type="checkbox" value="all"></th>
 											<th>NAME</th>
 											<th class="sku">SKU</th>
 											<th class="type">TYPE</th>
@@ -387,6 +419,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
+let form = new FormData();
+let rowData = {};
 function col(el)
 {
 	var className = $(el).attr('id');
@@ -423,10 +457,106 @@ function selectType(type)
 	$('#type-selection-modal').modal('show');
 }
 
+function changeType(type)
+{
+	var action = $(`#${type}-item-form`).attr('action');
+	var formId = $(`#${type}-item-form`).attr('id');
+	form = new FormData(document.getElementById(`${type}-item-form`));
+	$(`#${type}-form-modal`).modal('hide');
+	$('#type-selection-modal').modal('show');
+	$('#type-selection-modal table tbody tr:last-child').hide();
+
+	$(document).on('show.bs.modal', '#inventory-form-modal, #non-inventory-form-modal, #service-form-modal', function() {
+		var modalId = $(this).attr('id');
+		switch(modalId) {
+			case 'inventory-form-modal' :
+				action = action.replace('/'+type, '/inventory');
+				type = 'inventory';
+			break;
+			case 'non-inventory-form-modal' :
+				action = action.replace('/'+type, '/non-inventory');
+				type = 'non-inventory';
+			break;
+			case 'service-form-modal' :
+				action = action.replace('/'+type, '/service');
+				type = 'service';
+			break;
+		}
+
+		$(this).find('form').attr('action', action);
+		$(this).find('form').attr('id', `${type}-item-form`);
+		if(form.has('name')) {
+			for(var data  of form.entries()) {
+				if(data[0] !== 'icon') {
+					$(this).find(`[name="${data[0]}"]`).val(data[1]).trigger('change');
+				} else {
+					if(rowData.icon !== null && rowData.icon !== "") {
+						$(this).find('img.image-prev').attr('src', `/uploads/${rowData.icon}`);
+						$(this).find('img.image-prev').parent().addClass('d-flex justify-content-center');
+						$(this).find('img.image-prev').parent().removeClass('hide');
+						$(this).find('img.image-prev').parent().prev().addClass('hide');
+					}
+				}
+			}
+
+			if(form.has('selling')) {
+				$(this).find('#selling').prop('checked', true).trigger('change');
+			}
+
+			if(form.has('purchasing')) {
+				$(this).find('#purchasing').prop('checked', true).trigger('change');
+			}
+		}
+	});
+}
+
 function removeIcon()
 {
 	$('.modal-right-side input#icon').val('').trigger('change');
 }
+
+$('#assign-category').select2({
+	placeholder: "Assign category"
+});
+
+$(document).on('change', '#products-services-table input[type="checkbox"]', function() {
+	if($(this).val() === 'all') {
+		if($(this).prop('checked')) {
+			$('#products-services-table td:first-child input[type="checkbox"]').prop('checked', true);
+		} else {
+			$('#products-services-table td:first-child input[type="checkbox"]').prop('checked', false);
+		}
+	} else {
+		var flag = true;
+		$('#products-services-table tbody input[type="checkbox"]').each(function() {
+			if($(this).prop('checked') === false) {
+				flag = false;
+			}
+		});
+
+		$('#products-services-table thead input[type="checkbox"]').prop('checked', flag);
+	}
+
+	var hasChecked = false;
+
+	$('#products-services-table tbody td:first-child input[type="checkbox"]').each(function() {
+		if($(this).prop('checked')) {
+			hasChecked = true;
+		}
+	});
+
+	if(hasChecked) {
+		$($('.action-bar')[1]).removeClass('d-flex');
+		$($('.action-bar')[1]).addClass('d-none');
+		$($('.action-bar')[0]).addClass('d-flex');
+		$($('.action-bar')[0]).removeClass('d-none');
+	} else {
+		$($('.action-bar')[0]).removeClass('d-flex');
+		$($('.action-bar')[0]).addClass('d-none');
+		$($('.action-bar')[1]).addClass('d-flex');
+		$($('.action-bar')[1]).removeClass('d-none');
+	}
+});
 
 $(document).on('click', '#products-services-table .make-inactive', function(e) {
 	e.preventDefault();
@@ -584,7 +714,7 @@ $('#types-table tr').on('click', function(e) {
 $(document).on('click', '#products-services-table .edit-item', function(e) {
 	e.preventDefault();
 	var row = $(this).parent().parent().parent();
-	var rowData = $('#products-services-table').DataTable().row(row).data();
+	rowData = $('#products-services-table').DataTable().row(row).data();
 	var type = rowData.type.toLowerCase();
 
 	$.get('products-and-services/item-form/'+type, function(result) {
@@ -593,6 +723,8 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 		if(type === 'inventory' || type === 'bundle') {
 			$('#inventory-form-modal table thead tr th a').remove();
 			$('#bundle-form-modal table thead tr th a').remove();
+		} else {
+			$(`#${type}-form-modal table thead tr th a`).attr('onclick', `changeType('${type}')`);
 		}
 		$(`#${type}-form-modal #name`).val(rowData.name);
 		$(`#${type}-form-modal #sku`).val(rowData.sku);
@@ -778,7 +910,7 @@ $(`#products-services-table`).DataTable({
 			name: 'checkbox',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
 				if(!rowData.hasOwnProperty('is_category') && rowData.type !== "Bundle") {
-					$(td).html('<input type="checkbox">');
+					$(td).html(`<input type="checkbox" value="${rowData.id}">`);
 				} else {
 					$(td).html('');
 				}

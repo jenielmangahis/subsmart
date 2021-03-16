@@ -136,11 +136,10 @@
                 <!-- /.box-tools -->
             </div>
             <!-- /.box-header -->
-            <div class="box-body no-padding float-left col-lg-12 pr-0" id="msgs_body">
-                <div class="progress" style="height:40px;"><div class="progress-bar progress-bar-striped bg-warning active" role="progressbar" style="width: 100%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">System is fetching data</div></div>
-            </div>
-            <div id="msgs_details" class="float-left col-lg-8" style="display: none;">
-
+            <div class="d-flex justify-content-center text-center">
+                <div class="box-body no-padding col-lg-10 pr-0" id="calls_body">
+                    <div class="progress" style="height:40px;"><div class="progress-bar progress-bar-striped bg-warning active" role="progressbar" style="width: 100%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">System is fetching data</div></div>
+                </div>
             </div>
         </div>
         <!-- /. box -->
@@ -148,6 +147,19 @@
 </div>
 
 <script type="text/javascript">
+    
+        $(document).ready(function(){
+            $.ajax({
+                url: '<?php echo base_url(); ?>ring_central/getUserCallLogs',
+                method: 'GET',
+                data: {id:''},
+                success: function (response) {
+                    $('#calls_body').html(response);
+                    
+                    
+                }
+            });
+        });
     
         function loadDialPad() {
             $('#dialpad').modal('show');

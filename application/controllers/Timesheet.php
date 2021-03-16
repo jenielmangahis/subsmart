@@ -527,163 +527,6 @@ class Timesheet extends MY_Controller
         echo json_encode($display);
     }
 
-    public function showScheduleTable()
-    {
-        $week = $this->input->get('week');
-        $week_convert = date('Y-m-d', strtotime($week));
-        $date_this_week = array(
-            "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
-            "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
-            "Wednesday" => date("M d", strtotime('wednesday this week', strtotime($week_convert))),
-            "Thursday" => date("M d", strtotime('thursday this week', strtotime($week_convert))),
-            "Friday" => date("M d", strtotime('friday this week', strtotime($week_convert))),
-            "Saturday" => date("M d", strtotime('saturday this week', strtotime($week_convert))),
-            "Sunday" => date("M d", strtotime('sunday this week', strtotime($week_convert))),
-        );
-        $date_this_check = array(
-            0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
-            1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
-            2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
-            3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
-            4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
-            5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
-            6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
-        );
-        $users = $this->users_model->getUsers();
-        $user_roles = $this->users_model->getRoles();
-
-        $display = '';
-        $display .= '<thead>';
-        $display .= '<tr>';
-        $display .= '<td>Dept</td>';
-        $display .= '<td>Employee</td>';
-        $display .= '<td>Status</td>';
-        $display .= '<td class="day"><span class="week-day">Mon</span><span class="week-date">' . $date_this_week['Monday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Tue</span><span class="week-date">' . $date_this_week['Tuesday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Wed</span><span class="week-date">' . $date_this_week['Wednesday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Thu</span><span class="week-date">' . $date_this_week['Thursday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Fri</span><span class="week-date">' . $date_this_week['Friday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Sat</span><span class="week-date">' . $date_this_week['Saturday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Sun</span><span class="week-date">' . $date_this_week['Sunday'] . '</span></td>';
-        $display .= '<td>Hours</td>';
-        $display .= '</tr>';
-        $display .= '</thead>';
-        $display .= '<tbody>';
-        $roles = null;
-        $name = null;
-        $status = null;
-        $monday = null;
-        $tuesday = null;
-        $wednesday = null;
-        $thursday = null;
-        $friday = null;
-        $saturday = null;
-        $sunday = null;
-        $mon_total = 0;
-        $tue_total = 0;
-        $wed_total = 0;
-        $thu_total = 0;
-        $fri_total = 0;
-        $sat_total = 0;
-        $sun_total = 0;
-        $total_hours = 0;
-        foreach ($users as $user) :
-            $timesheet_settings = $this->timesheet_model->getTimeSheetByWeek($date_this_check);
-            //	            $get_total_w_hours = $this->timesheet_model->getTotalWeekDuration($date_this_check);
-            foreach ($timesheet_settings as $ts_settings_data) {
-                if ($ts_settings_data->user_id == $user->id) {
-                    $timesheet_id = $ts_settings_data->id;
-                    //Get total week hours
-                    //                        foreach ($get_total_w_hours as $total_week_hours){
-                    //                            if($total_week_hours->user_id == $user->id){
-                    //                                $total_hours = $total_week_hours->total_duration."h";
-                    //                            }
-                    //                        }
-
-                    $timesheet_day = $this->timesheet_model->getTimeSheetDayById($timesheet_id);
-                    foreach ($timesheet_day as $days) {
-                        if ($days->day == "Monday") {
-                            $mon_total = $days->duration;
-                            $monday = date('ga', strtotime($days->start_time)) . "-" . date('ga', strtotime($days->end_time));
-                        } elseif ($days->day == "Tuesday") {
-                            $tue_total = $days->duration;
-                            $tuesday = date('ga', strtotime($days->start_time)) . "-" . date('ga', strtotime($days->end_time));
-                        } elseif ($days->day == "Wednesday") {
-                            $wed_total = $days->duration;
-                            $wednesday = date('ga', strtotime($days->start_time)) . "-" . date('ga', strtotime($days->end_time));
-                        } elseif ($days->day == "Thursday") {
-                            $thu_total = $days->duration;
-                            $thursday = date('ga', strtotime($days->start_time)) . "-" . date('ga', strtotime($days->end_time));
-                        } elseif ($days->day == "Friday") {
-                            $fri_total = $days->duration;
-                            $friday = date('ga', strtotime($days->start_time)) . "-" . date('ga', strtotime($days->end_time));
-                        } elseif ($days->day == "Saturday") {
-                            $sat_total = $days->duration;
-                            $saturday = date('ga', strtotime($days->start_time)) . "-" . date('ga', strtotime($days->end_time));
-                        } elseif ($days->day == "Sunday") {
-                            $sun_total = $days->duration;
-                            $sunday = date('ga', strtotime($days->start_time)) . "-" . date('ga', strtotime($days->end_time));
-                        }
-                    }
-                }
-            }
-            $name = $user->FName . " " . $user->LName;
-            foreach ($user_roles as $role) {
-                if ($user->role == $role->id) {
-                    $roles = $role->title;
-                }
-            }
-
-            switch ($user->status) {
-                case 1:
-                    $status = 'Fulltime';
-                    break;
-                default:
-                    $status = null;
-            }
-            //Calculating total duration for the week
-            $total_hours = $mon_total + $tue_total + $wed_total + $thu_total + $fri_total + $sat_total + $sun_total;
-            if ($total_hours == 0) {
-                $total_hours = null;
-            }
-
-            $display .= '<tr>';
-            $display .= '<td class="center">' . $roles . '</td>';
-            $display .= '<td><span class="employee-name">' . $name . '</span><span class="sub-text">' . $roles . '</span></td>';
-            $display .= '<td class="center">' . $status . '</td>';
-            $display .= '<td class="center">' . $monday . '</td>';
-            $display .= '<td class="center">' . $tuesday . '</td>';
-            $display .= '<td class="center">' . $wednesday . '</td>';
-            $display .= '<td class="center">' . $thursday . '</td>';
-            $display .= '<td class="center">' . $friday . '</td>';
-            $display .= '<td class="center">' . $saturday . '</td>';
-            $display .= '<td class="center">' . $sunday . '</td>';
-            $display .= '<td class="center">' . $total_hours . '</td>';
-            $display .= '</tr>';
-            $roles = null;
-            $name = null;
-            $status = null;
-            $monday = null;
-            $tuesday = null;
-            $wednesday = null;
-            $thursday = null;
-            $friday = null;
-            $saturday = null;
-            $sunday = null;
-            $mon_total = 0;
-            $tue_total = 0;
-            $wed_total = 0;
-            $thu_total = 0;
-            $fri_total = 0;
-            $sat_total = 0;
-            $sun_total = 0;
-            $total_hours = null;
-        endforeach;
-        $display .= '</tbody>';
-
-        echo json_encode($display);
-    }
-
     public function showListTable()
     {
         $week = $this->input->get('week');
@@ -2371,6 +2214,7 @@ class Timesheet extends MY_Controller
     {
         // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         // $getTimeZone = json_decode($ipInfo);
+        $_SESSION['autoclockout_timer_closed'] = false;
         date_default_timezone_set('UTC');
         $attn_id = $this->input->post('attn_id');
 
@@ -2384,6 +2228,7 @@ class Timesheet extends MY_Controller
         $employeeLongnameAddress = $this->employeeLongNameAddress();
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
+        var_dump($check_attn->num_rows());
         if ($check_attn->num_rows() == 1) {
             date_default_timezone_set($this->session->userdata('usertimezone'));
             $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
@@ -2459,7 +2304,7 @@ class Timesheet extends MY_Controller
                 $image = base_url('uploads/users/default.png');
             }
 
-            $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            $html = '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
             data-id="' . $notify->id . '" class="dropdown-item notify-item active"
             style="background-color:#e6e3e3">
             <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
@@ -3097,14 +2942,110 @@ class Timesheet extends MY_Controller
         $data = new stdClass();
         $data->shift_duration = $shift_duration_and_overtime[0];
         $data->overtime = $shift_duration_and_overtime[1];
-        $overtime_status = $this->db->get_where("timesheet_attendance", array('id' => $attn_id, 'overtime_status' => 1))->num_rows();
+        $overtime_status = $this->db->get_where("timesheet_attendance", array('id' => $attn_id, 'status' => 1))->num_rows();
         if ($overtime_status > 0) {
-            $data->not_overtime_notice = false;
+            $overtime_status = $this->db->get_where("timesheet_attendance", array('id' => $attn_id, 'overtime_status' => 1))->num_rows();
+            if ($overtime_status > 0) {
+                $data->not_overtime_notice = false;
+            } else {
+                $data->not_overtime_notice = true;
+            }
         } else {
-            $data->not_overtime_notice = true;
+            $data->not_overtime_notice = false;
+        }
+        if ($this->session->userdata('autoclockout_timer_closed') === "") {
+            $data->autoclockout_timer_closed = false;
+        } else {
+            $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
         }
 
         echo json_encode($data);
+    }
+    public function showScheduleTable()
+    {
+        $user_id = logged('id');
+        $company_id = logged('company_id');
+
+        $week = $this->input->get('week');
+        $week_convert = date('Y-m-d', strtotime($week));
+        $date_this_week = array(
+            "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
+            "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
+            "Wednesday" => date("M d", strtotime('wednesday this week', strtotime($week_convert))),
+            "Thursday" => date("M d", strtotime('thursday this week', strtotime($week_convert))),
+            "Friday" => date("M d", strtotime('friday this week', strtotime($week_convert))),
+            "Saturday" => date("M d", strtotime('saturday this week', strtotime($week_convert))),
+            "Sunday" => date("M d", strtotime('sunday this week', strtotime($week_convert))),
+        );
+        $date_this_check = array(
+            0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
+            1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
+            2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
+            3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
+            4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
+            5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
+            6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
+        );
+        $users = $this->users_model->getUsers();
+        $user_roles = $this->users_model->getRoles();
+
+        $display = '';
+        $display .= '<thead>';
+        $display .= '<tr>';
+        $display .= '<td>Employee</td>';
+        $display .= '<td>Status</td>';
+        $display .= '<td class="day"><span class="week-day">Mon</span><span class="week-date">' . $date_this_week['Monday'] . '</span></td>';
+        $display .= '<td class="day"><span class="week-day">Tue</span><span class="week-date">' . $date_this_week['Tuesday'] . '</span></td>';
+        $display .= '<td class="day"><span class="week-day">Wed</span><span class="week-date">' . $date_this_week['Wednesday'] . '</span></td>';
+        $display .= '<td class="day"><span class="week-day">Thu</span><span class="week-date">' . $date_this_week['Thursday'] . '</span></td>';
+        $display .= '<td class="day"><span class="week-day">Fri</span><span class="week-date">' . $date_this_week['Friday'] . '</span></td>';
+        $display .= '<td class="day"><span class="week-day">Sat</span><span class="week-date">' . $date_this_week['Saturday'] . '</span></td>';
+        $display .= '<td class="day"><span class="week-day">Sun</span><span class="week-date">' . $date_this_week['Sunday'] . '</span></td>';
+        $display .= '<td>Hours</td>';
+        $display .= '</tr>';
+        $display .= '</thead>';
+        $display .= '<tbody>';
+        foreach ($users as $user) {
+            $display .= '<tr>';
+            foreach ($user_roles as $role) {
+                if ($user->role === $role->id) {
+                    $role_title = $role->title;
+                }
+            }
+            $employee_schedules = $this->timesheet_model->get_employee_shift_schedule($user->id, $date_this_check);
+            if (count($employee_schedules) > 0) {
+            } else {
+                $status = "";
+                if ($user->status === 1) {
+                    $status = "Full Time";
+                }
+                $display .= '<td><span class="employee-name">' . $user->Fname . " " . $user->LName . '</span><span class="sub-text">' . $role_title . '</span></td>';
+            }
+            $display .= '</tr>';
+        }
+        $display .= '</tbody>';
+
+        echo json_encode($display);
+    }
+
+    public function set_schedule()
+    {
+        $new_shift_starts = $this->input->post("new_shift_starts");
+        $new_shift_start_ids = $this->input->post("new_shift_start_ids");
+        $new_shift_start_dates = $this->input->post("new_shift_start_dates");
+        $new_shift_starts_columns = $this->input->post("new_shift_starts_columns");
+        $new_shift_starts_ctr = $this->input->post("new_shift_starts_ctr");
+
+        $new_shift_ends = $this->input->post("new_shift_ends");
+        $new_shift_end_ids = $this->input->post("new_shift_end_ids");
+        $new_shift_end_dates = $this->input->post("new_shift_end_dates");
+        $new_shift_ends_columns = $this->input->post("new_shift_ends_columns");
+        $new_shift_ends_ctr = $this->input->post("new_shift_ends_ctr");
+    }
+    public function autoclockout_timer_closed()
+    {
+        $_SESSION['autoclockout_timer_closed'] = true;
+        echo json_encode("session set");
     }
 }
 

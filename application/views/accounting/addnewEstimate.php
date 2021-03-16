@@ -195,12 +195,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tbody id="table_body">
                                         <tr>
                                             <td>
-                                                <!-- <select id="s" name="items[]"  class="form-control">
-                                                    <option value="0"></option>
-                                                    <?php foreach($items as $c){ ?>
-                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
-                                                    <?php } ?>
-                                            </select> -->
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
@@ -233,8 +227,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp;
+                                    <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                     <hr>
                                 </div>
                             </div>
@@ -432,6 +427,54 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>

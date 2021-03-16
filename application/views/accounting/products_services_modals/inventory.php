@@ -93,12 +93,6 @@
                                         </tbody>
                                     </table>
                                     <a href="#" class="text-info" id="addLocationLine"><i class="fa fa-plus"></i> Add lines</a>
-                                    <!-- <div class="form-group row" style="margin: 0 !important">
-                                        <label for="initialQuantity" class="col-sm-6 col-form-label">Initial quantity on hand *</label>
-                                        <div class="col-sm-6">
-                                            <input type="number" class=" text-right form-control" id="initialQuantity" name="initial_quantity">
-                                        </div>
-                                    </div> -->
                                     <div class="form-group row" style="margin: 0 !important">
                                         <label for="asOfDate" class="col-sm-6 col-form-label">As of date*</label>
                                         <div class="col-sm-6">
@@ -174,7 +168,8 @@
                                                         <?php foreach($tax_rates as $taxRate) : ?>
                                                             <option value="<?=$taxRate->id?>"><?=$taxRate->name?></option>
                                                         <?php endforeach; ?>
-                                                    <?php endif; ?>  
+                                                    <?php endif; ?>
+                                                    <option value="0">Nontaxable</option>
                                                 </select>
                                             </div>
                                         </div>

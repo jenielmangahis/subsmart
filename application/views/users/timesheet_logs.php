@@ -148,7 +148,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-md-12 banking-tab-container">
                                 <a href="<?php echo url('/timesheet/attendance') ?>" class="banking-tab" style="text-decoration: none">Attendance</a>
                                 <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab">Notification</a>
-                                <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "employee") ?: '-active'; ?>" style="text-decoration: none">Employee</a>
+                                <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab" style="text-decoration: none">Employee</a>
+                                <a href="<?php echo url('/timesheet/logs') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "logs") ?: '-active'; ?>">Logs</a>
                                 <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab">Schedule</a>
                                 <a href="<?php echo url('/timesheet/list') ?>" class="banking-tab">List</a>
                                 <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Settings</a>
@@ -186,41 +187,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $(document).ready(function() {
-        // Datepicker
-        $("#tsEmployeeDatepicker").datepicker();
-        let week_of = $('#tsEmployeeDatepicker').val();
-        $('#tsEmployeeDataTable').ready(showEmployeeTable(week_of));
-
-        $(document).on('change', '#tsEmployeeDatepicker', function() {
-            $("#tsEmployeeDataTable").DataTable().destroy();
-            let week = $(this).val();
-            showEmployeeTable(week);
-        });
-
-        function showEmployeeTable(week) {
-            $('#tsEmployeeDataTable_wrapper').css('display', 'none');
-            $('#tsEmployeeDataTable').css('display', 'none');
-            $(".table-ts-loader").fadeIn('fast', function() {
-                $('.table-ts-loader').css('display', 'block');
-            });
-            $.ajax({
-                url: "<?= base_url() ?>timesheet/showEmployeeTable",
-                type: "GET",
-                dataType: "json",
-                data: {
-                    week: week
-                },
-                success: function(data) {
-                    $(".table-ts-loader").fadeOut('fast', function() {
-                        $('#tsEmployeeDataTable').html(data).removeAttr('style').DataTable({
-                            "sort": false
-                        });
-                        $('#tsEmployeeDataTable_wrapper').css('display', 'block');
-                        $('.table-ts-loader').css('display', 'none');
-                    });
-                }
-            });
-        }
-    });
 </script>

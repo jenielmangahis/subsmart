@@ -186,13 +186,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody id="table_body_option1">
                                         <tr>
-                                            <td>
-                                                <!-- <select id="s" name="items[]"  class="form-control">
-                                                    <option value="0"></option>
-                                                    <?php foreach($items as $c){ ?>
-                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
-                                                    <?php } ?>
-                                                </select> -->
+                                        <td>
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
@@ -205,14 +199,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </select></td>
                                             <td><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
+                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
                                             <td><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <!-- <td><span id="span_total_0">0.00</span></td> -->
                                             <td><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td><input type="text" class="form-control " name="total[]"
-                                                       data-counter="0" id="sub_total_form_input" min="0" value="0">
-                                                       $<span id="span_total_">0.00</span></td>
+                                                       data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                            <input type="hidden" class="form-control tax" name="tax[]"
+                                                       data-counter="0" id="tax_0" min="0" value="0">
+                                            <td><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -221,10 +217,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-60px;">
-                                <div class="col-md-7">
+                                <div class="col-md-8">
                                 </div>
-                                <div class="col-md-5">
-                                    <table class="table" style="text-align:left;">
+                                <div class="col-md-4">
+                                    <!-- <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
@@ -239,6 +235,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td><b>Option-1 Total</b></td>
                                             <td></td>
                                             <td><b>0.00</b></td>
+                                        </tr>
+                                    </table> -->
+                                    <table class="table" style="text-align:left;">
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td></td>
+                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
+                                                <input type="hidden" name="sub_total" id="item_total"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td></td>
+                                            <td>0.00</td>
+                                        </tr>
+                                        <tr style="display:none;">
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:150px;">
+                                            <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </td>
+                                            <td>0.00</td>
+                                        </tr>
+                                        <tr style="display:none;">
+                                            <td>Markup $<span id="span_markup"></td>
+                                            <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
+                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Grand Total ($)</b></td>
+                                            <td></td>
+                                            <td><b><span id="grand_total">0.00</span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>

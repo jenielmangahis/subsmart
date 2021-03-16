@@ -439,9 +439,11 @@ class Timesheet_model extends MY_Model
                 $start = new DateTime($check_in);
                 $end = new DateTime($row->date_created);
                 $interval = $start->diff($end);
-                $minutes = $interval->days * 24 * 60;
-                $minutes += $interval->h * 60;
-                $minutes += $interval->i;
+                $minutes = ($interval->days * 24 * 60) * 60;
+                $minutes += ($interval->h * 60) * 60;
+                $minutes += ($interval->i) * 60;
+                $minutes += $interval->s;
+                $minutes = $minutes / 60;
             }
         }
 
@@ -450,9 +452,11 @@ class Timesheet_model extends MY_Model
             $end =  new DateTime(date('Y-m-d H:i:s'));
             $interval = $start->diff($end);
 
-            $minutes = $interval->days * 24 * 60;
-            $minutes += $interval->h * 60;
-            $minutes += $interval->i;
+            $minutes = ($interval->days * 24 * 60) * 60;
+            $minutes += ($interval->h * 60) * 60;
+            $minutes += ($interval->i) * 60;
+            $minutes += $interval->s;
+            $minutes = $minutes / 60;
         }
 
         $break_duration = 0;
@@ -465,7 +469,7 @@ class Timesheet_model extends MY_Model
         $total_worked_hours = ($minutes / 60) - $break_duration;
 
         if ($total_worked_hours > 8) {
-            $shift_duration = 8;
+            $shift_duration = $total_worked_hours;
             $over_time = $total_worked_hours - 8;
         } else {
             $shift_duration = $total_worked_hours;
@@ -1147,6 +1151,20 @@ class Timesheet_model extends MY_Model
         $this->db->like("date_created", $date);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function get_employees($user_id, $company_id)
+    {
+    }
+    public function get_employee_shift_schedule($user_id, $week)
+    {
+        for ($x = 0; $x < count($week); $x++) {
+            $this->db->or_where('shift_date', $week[$x]);
+        }
+
+        $this->db->where('user_id', $user_id);
+        $qry = $this->db->get('timesheet_shift_schedule');
+        return $qry->result();
     }
 }
 

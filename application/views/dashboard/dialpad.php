@@ -71,7 +71,8 @@
         cursor: pointer;
     }
 </style>
-<div id="output"></div>
+
+<input type="tel" id="output" style="width: 100%;border: none; text-align: center"/>
 <div class="row-dial">
     <div class="digit" id="one">1</div>
     <div class="digit" id="two">2
@@ -124,7 +125,6 @@
 
     <div class="col-lg-12 float-left mt-3" id="callStatus"></div>
 </div>
-<input type="hidden" id="callOutNumber" />
 <div id="hang-up" style="display: none;">
     <img src="<?= base_url('assets/ringcentral/') . 'hang-up.png' ?>" style="width: 80%;margin: 0 auto;height: 20px;" />
 </div>
@@ -133,23 +133,18 @@
 
     var count = 0;
     var pollCheckStatus = 0;
-    var phoneNumber = 0;
+    var phoneNumber = '';
 
     $(".digit").on('click', function () {
-        var numbers = '';
         var num = $(this).clone().children().remove().end().text();
         if (count < 12) {
-            $("#output").append('<span>' + num.trim() + '</span>');
-
+            phoneNumber += num.trim();
             count++;
 
-            $('#output span').each(function () {
-                numbers += $(this).html();
-            });
+            
         }
 
-        $('#callOutNumber').val(numbers);
-        phoneNumber = numbers;
+        $('#output').val(phoneNumber);
     });
 
     $('#deleteNumberBtn').on('click', function () {
@@ -164,7 +159,7 @@
             $(this).html($('#hang-up').html());
             $(this).removeClass('btn-success');
             $(this).addClass('btn-danger');
-            var num = $('#callOutNumber').val();
+            var num = $('#output').val();
             $.ajax({
                url: '<?php echo base_url(); ?>ring_central/initiateCallOut',
                method: 'POST',
@@ -173,17 +168,8 @@
                success: function (response) {
                    $('#callStatus').html(response.status);
                    console.log(response.id);
-//                    $.ajax({
-//                        url: '<?php echo base_url(); ?>ring_central/checkCallStatus',
-//                        method: 'POST',
-//                        data: {id: response.id},
-//                        success: function (response) {
-//                            $('#callStatus').html(response);
-//
-//
-//                        }
-//                    });
-
+                   checkCallStatus(response.id)
+                   $('#output').val(num);
                }
            });
         
@@ -192,7 +178,8 @@
             $(this).removeClass('btn-danger');
             $(this).addClass('btn-success');
             $(this).html('<i style="font-size: 25px;" class="fa fa-phone-alt" aria-hidden="true"></i>');
-           
+            $('#callStatus').html('');
+            window.clearInterval(pollCheckStatus);
         }
 
     });
@@ -202,13 +189,34 @@
 
     }
 
-    function checkCallStatus()
+    function checkCallStatus(result_id)
     {
        // alert(phoneNumber)
-       // pollCheckStatus = window.setInterval(function () {
-            var num = phoneNumber;
+        pollCheckStatus = window.setInterval(function () {
+            $.ajax({
+                url: '<?php echo base_url(); ?>ring_central/checkCallStatus/'+result_id,
+                method: 'POST',
+                dataType:'json',
+                data: {id: result_id},
+                success: function (response) {
+                    $('#callStatus').html(response.status);
+                    console.log(response.status_all);
+                    
+                    if(response.status == "Finished"){
+                        window.clearInterval(pollCheckStatus);
+                        $('#initiateCallBtn').html('<i style="font-size: 25px;" class="fa fa-phone-alt" aria-hidden="true"></i>');
+                        $('#initiateCallBtn').removeClass('btn-danger');
+                        $('#initiateCallBtn').addClass('btn-success');
+                        $('#callStatus').html(response.status);
+                    }else if(response.callStatus=="Success"){
+                        $('#callStatus').html(response.callStatus);
+                        
+                    }
+                }
+            });
+            
            
-      //  }, 3000);
+        }, 3000);
     }
 
 

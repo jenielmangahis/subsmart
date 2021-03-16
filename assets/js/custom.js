@@ -314,7 +314,7 @@ function calculation(counter) {
     parseFloat(discount)
   ).toFixed(2);
 
-  alert( 'yeah' + total);
+  // alert( 'yeah' + total);
 
   $("#span_total_" + counter).text(total);
   $("#span_tax_" + counter).text(tax1);
@@ -351,7 +351,7 @@ function calculation(counter) {
 
   var subtotal = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="sub_total_form_input"]').each(function(){
+    $('*[id^="span_total_"]').each(function(){
     subtotal += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
@@ -363,14 +363,14 @@ function calculation(counter) {
   $("#item_total").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);
-  // var adjustment = $("#adjustment_input").val();
-  // var grand_total = s_total - parseFloat(adjustment);
-  // var markup = $("#markup_input_form").val();
-  // var grand_total_w = grand_total + parseFloat(markup);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
   
 
-  $("#grand_total").text(s_total.toFixed(2));
-  $("#grand_total_input").val(s_total.toFixed(2));
+  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
