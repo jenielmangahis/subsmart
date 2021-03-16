@@ -502,17 +502,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="section-title">Other Details</div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label for="">Address</label>
                                 <input type="text" name="address" class="form-control">
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">State</label>
+                                <input type="text" name="state" value="" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Zip Code</label>
+                                <input type="text" name="postal_code" value="" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
                             <div class="col-md-6">
                                 <label for="">Title</label>
                                 <select name="role" id="employeeRole" class="form-control select2-role"></select>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="">Status</label>

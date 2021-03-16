@@ -191,11 +191,14 @@ class Event_model extends MY_Model
     public function getAllCompanyEventsWithAddress($company_id)
     {
 
-        $this->db->select('events.id, events.event_type_id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, events.company_id, customer_id, employee_id, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','right');
 
         $this->db->where('events.event_address !=', '');
-        $this->db->where('company_id', $company_id);
+        $this->db->where('events.company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
@@ -204,8 +207,11 @@ class Event_model extends MY_Model
     public function getAllUserEventsWithAddress($employee_id, $date_range = array())
     {
 
-        $this->db->select('events.id, events.event_type_id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, events.company_id, customer_id, employee_id, event_address, event_state, event_zip_code, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','right');
 
         $this->db->where('events.event_address !=', '');
         if( !empty($date_range) ){
@@ -213,7 +219,7 @@ class Event_model extends MY_Model
             $end_date   = $date_range['date_to'];
             $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
         }
-        $this->db->where('employee_id', $employee_id);
+        $this->db->where('events.employee_id', $employee_id);
 
         $query = $this->db->get();
         return $query->result();
