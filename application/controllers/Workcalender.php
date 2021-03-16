@@ -1435,7 +1435,6 @@ class Workcalender extends MY_Controller
             $company_id = logged('company_id');
             $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
         }
-        
 
         //Google Events
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
@@ -1579,6 +1578,7 @@ class Workcalender extends MY_Controller
                 'event_id' => $u->id,
                 'type' => 'events',
                 'event_title' => get_customer_by_id($u->customer_id)->contact_name,
+                'event_type' => $u->event_type,
                 'event_description' => $u->event_description,
                 'start_date' => date('F j, Y', strtotime($u->start_date)),
                 'end_date' => date('F j, Y', strtotime($u->end_date)),
@@ -1596,6 +1596,7 @@ class Workcalender extends MY_Controller
                 'event_id' => $g['geventID'],
                 'type' => 'g-events',
                 'event_title' => $g['title'],
+                'event_type' => 'Google Event',
                 'event_description' => $g['description'],
                 'start_date' => date('F j, Y', strtotime($g['start'])),
                 'end_date' => date('F j, Y', strtotime($g['end'])),
