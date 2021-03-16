@@ -1579,6 +1579,7 @@ class Workcalender extends MY_Controller
                 'type' => 'events',
                 'event_title' => get_customer_by_id($u->customer_id)->contact_name,
                 'event_type' => $u->event_type,
+                'event_number' => $u->event_number,
                 'event_description' => $u->event_description,
                 'start_date' => date('F j, Y', strtotime($u->start_date)),
                 'end_date' => date('F j, Y', strtotime($u->end_date)),
@@ -1595,6 +1596,7 @@ class Workcalender extends MY_Controller
             $events[$start_date][] = [
                 'event_id' => $g['geventID'],
                 'type' => 'g-events',
+                'event_number' => '',
                 'event_title' => $g['title'],
                 'event_type' => 'Google Event',
                 'event_description' => $g['description'],
