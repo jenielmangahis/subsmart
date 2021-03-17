@@ -184,11 +184,16 @@ a.top-1 {
     margin-bottom: 14px !important;
   }
   img.rounded-circle.nav-user-img.vertical-center.jobs {
-    max-width: 100px;
+    max-width: 45px;
     position: relative;
     bottom: 11px;
     float: right;
     box-shadow: rgb(0 0 0 / 28%) 0 1px 3px;
+  }
+  .col-widget {
+    width: 49%;
+    float: left;
+    padding: 0px 10px 0px 5px;
   }
   img.rounded-circle.nav-user-img.vertical-center.events {
     max-width: 45px;
@@ -314,6 +319,22 @@ a.top-1 {
     border-radius: 5px;
   }
   @media only screen and (max-width: 600px) {
+    .row.d-lg-flex .col-md-12 {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+    }
+    .col-20 {
+      width: 100% !important;
+      border: 0px !important;
+    }
+    .mb-2.col-lg-12.float-left.jobsRow {
+      padding-bottom: 20px !important;
+      padding-top: 20px !important;
+    }
+    img.rounded-circle.nav-user-img.vertical-center.jobs, img.rounded-circle.nav-user-img.vertical-center.events {
+      margin: 0 auto;
+      float: none !important;
+    }
     .p-40 {
       padding-top: 0px !important;
     }
@@ -323,6 +344,13 @@ a.top-1 {
     .pr-b10 {
       position: relative;
       bottom: 0px;
+    }
+  }
+  @media screen and (max-width: 1500px) {
+    .col-widget {
+      width: 95%;
+      float: left;
+      padding: 0px 10px 0px 5px;
     }
   }
   @media screen and (max-width: 1190px) {
@@ -336,6 +364,16 @@ a.top-1 {
     }
   }
   @media screen and (max-width: 600px) {
+    .card.p-20 {
+      padding-right: 0px !important;
+    }
+    .col-12.col-md-9.left-col.pr-0, .card.p-20 {
+      padding-left: 0px !important;
+      box-shadow: none !important;
+    }
+    .card, .card-body.mt-3 {
+      width: 100% !important;
+    }
     #calender_toolbar {
       display: block;
       margin-bottom: 0px;
@@ -376,7 +414,7 @@ a.top-1 {
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
-        <div class="col-12 col-md-9 left-col">
+        <div class="col-12 col-md-9 left-col pr-0">
             <?php include viewPath('includes/sidebars/schedule'); ?>
             <?php include viewPath('includes/notifications'); ?>
             <div wrapper__section>
@@ -518,7 +556,7 @@ a.top-1 {
 
 
                               <div class="row cus-dashboard-div">
-                                <div class="col-lg-6 col-md-12 col-sm-12" id="widget_3">
+                                <div class="col-widget" id="widget_3">
                                   <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
                                      <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs
                                   </div>
@@ -528,7 +566,7 @@ a.top-1 {
                                       <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
                                         <div style="height: 280px;">
                                           <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
-                                            <div class="row d-none d-lg-flex">
+                                            <div class="row d-lg-flex">
                                                 <div class="col-md-12">
                                                     <div class="cus-dashboard-div">
                                                         <div id="upcoming-jobs-container"></div>
@@ -545,7 +583,7 @@ a.top-1 {
                                 </div>
                               </div>
 
-                              <div class="col-lg-6 col-md-12 col-sm-12" id="widget_3">
+                              <div class="col-widget" id="widget_3">
                                 <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
                                    <i class="fa fa-paper-plane" aria-hidden="true"></i> Upcoming Events
                                 </div>
@@ -555,7 +593,7 @@ a.top-1 {
                                     <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
                                       <div style="height: 280px;">
                                         <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
-                                          <div class="row d-none d-lg-flex">
+                                          <div class="row d-lg-flex">
                                               <div class="col-md-12">
                                                   <div class="cus-dashboard-div">
                                                       <div id="upcoming-events-container"></div>
@@ -613,7 +651,7 @@ a.top-1 {
             </div>
         </div>
         <?php //if( !$is_mobile ){ ?>
-        <div class="col-12 col-md-3 mt-40 right-col" style="background-color: #ffffff;overflow-y: scroll;overflow-x: hidden;height: max-content;display: block !important;padding-bottom: 20px;">
+        <div class="col-12 col-md-3 mt-40 right-col pl-1" style="background-color: #ffffff;overflow-y: scroll;overflow-x: hidden;height: max-content;display: block !important;padding-bottom: 20px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div class="right-calendar-loading"></div>
