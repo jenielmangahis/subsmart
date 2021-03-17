@@ -48,8 +48,10 @@ class Sms_Automation extends MY_Controller {
             $conditions = array();
         }
         
-        $smsAutomation      = $this->SmsAutomation_model->getAllByCompanyId($company_id, array(), $conditions);
-        
+        $smsAutomation = $this->SmsAutomation_model->getAllByCompanyId($company_id, array(), $conditions);
+        $optionRuleEvent = $this->SmsAutomation_model->optionRuleNotify();
+        	
+        $this->page_data['optionRuleEvent'] = $optionRuleEvent;
         $this->page_data['smsAutomation'] = $smsAutomation;
         $this->load->view('sms_automation/ajax_load_automation_list', $this->page_data);
     }
@@ -86,7 +88,8 @@ class Sms_Automation extends MY_Controller {
         $post['status']  = $this->SmsAutomation_model->isDraft();
         $post['total_cost']  = 0;
         $post['sms_text'] = '';
-        $post['created'] = date("Y-m-d H:i:s");
+        $post['is_paid']  = 0;
+        $post['created']  = date("Y-m-d H:i:s");
 
         $sms_automation_id = $this->SmsAutomation_model->create($post);
         if( $sms_automation_id > 0 ){
@@ -122,7 +125,7 @@ class Sms_Automation extends MY_Controller {
         $sms_automation_id = $this->session->userdata('smsAutomationId');
 
         $data = ['sms_text' => $post['sms_text']];
-        $smsBlast = $this->SmsAutomation_model->updateSmsAutomation($sms_automation_id,$data);
+        $smsAutomation = $this->SmsAutomation_model->updateSmsAutomation($sms_automation_id,$data);
         $is_success = true;
 
         $json_data = [
@@ -158,6 +161,32 @@ class Sms_Automation extends MY_Controller {
 
         $this->page_data['smsAutomation'] = $smsAutomation;
         $this->load->view('sms_automation/payment', $this->page_data);
+    }
+
+    public function activate_automation(){
+    	$is_success = false;
+    	$msg = '';
+
+    	$sms_automation_id = $this->session->userdata('smsAutomationId');
+
+    	$smsAutomation = $this->SmsAutomation_model->getById($sms_automation_id);
+    	if( $smsAutomation ){
+    		$price_per_sms = $this->SmsAutomation_model->getPricePerSms();
+	        $total_sms_price = $price_per_sms;
+	        $grand_total     = $total_sms_price;
+
+    		$data = ['status' => $this->SmsAutomation_model->isActive(), 'total_cost' => $grand_total, 'is_paid' => 1];
+	        $smsAutomation = $this->SmsAutomation_model->updateSmsAutomation($sms_automation_id,$data);
+
+	        $is_success = true;
+	        $msg = 'Sms automation was successfully updated.';
+    	}else{
+    		$msg = 'Cannot find data';
+    	}
+
+    	$json_data = ['is_success' => $is_success, 'msg' => $msg];
+    	echo json_encode($json_data);
+    	
     }
 }
 

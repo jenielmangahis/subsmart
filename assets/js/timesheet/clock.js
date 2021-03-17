@@ -242,7 +242,7 @@ $(document).ready(function () {
         }
         notificationRing();
         Swal.fire({
-          title: "Do you want to overtime?",
+          title: "Do you need more time?",
           // icon:'question',
           html:
             'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',

@@ -174,14 +174,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-14 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
+                                        <input type="hidden" name="count2" value="0" id="count2">
                                         <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Option-1 Items</b></th>
                                             <th><b>Type</b></th>
-                                            <th><b>Quantity</b></th>
-                                            <th><b>Price</b></th>
-                                            <th><b>Discount</b></th>
-                                            <th><b>Total</b></th>
+                                            <th width="100px"><b>Quantity</b></th>
+                                            <th width="100px"><b>Price</b></th>
+                                            <th width="100px"><b>Discount</b></th>
+                                            <th width="100px"><b>Total</b></th>
                                         </tr>
                                         </thead>
                                         <tbody id="table_body_option1">
@@ -205,14 +206,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
                                             <input type="hidden" class="form-control tax" name="tax[]"
-                                                       data-counter="0" id="tax_0" min="0" value="0">
+                                                       data-counter="0" id="tax_1_0" min="0" value="0">
                                             <td><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a>
+                                    <!-- <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add another line</a>
                                 </div>
                             </div>
 
@@ -247,7 +249,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>0.00</td>
+                                            <td>$ <span id="total_tax_">0.00<input type="hidden" name="total_tax_" id="total_tax_"></td>
                                         </tr>
                                         <tr style="display:none;">
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -287,22 +289,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <th><b>Option-2 Items</b></th>
                                             <th><b>Type</b></th>
-                                            <th><b>Quantity</b></th>
-                                            <th><b>Price</b></th>
-                                            <th><b>Total</b></th>
+                                            <th width="100px"><b>Quantity</b></th>
+                                            <th width="100px"><b>Price</b></th>
+                                            <th width="100px"><b>Discount</b></th>
+                                            <th width="100px"><b>Total</b></th>
                                         </tr>
                                         </thead>
                                         <tbody id="table_body_option2">
                                         <tr>
-                                            <td>
-                                                <!-- <select id="s" name="items[]"  class="form-control">
-                                                    <option value="0"></option>
-                                                    <?php foreach($items as $c){ ?>
-                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
-                                                    <?php } ?>
-                                                </select> -->
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
+                                        <td>
+                                                <input type="text" class="form-control getItems2"
+                                                       onKeyup="getItemsOption2(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
@@ -311,14 +308,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control price" name="price[]" id="price_0"></td>
-                                            <td><span id="span_total_0">0.00</span></td>
+                                            <td><input type="number" class="form-control quantity2" name="quantity[]"
+                                                       data-counter="0" id="quantity_2_0" value="1"></td>
+                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
+                                            <td><input type="number" class="form-control price2" name="price[]"
+                                                       data-counter="0" id="price_2_0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control discount2" name="discount[]"
+                                                       data-counter="0" id="discount_2_0" min="0" value="0" readonly></td>
+                                            <input type="hidden" class="form-control tax" name="tax[]"
+                                                       data-counter="0" id="tax_2_0" min="0" value="0">
+                                            <td><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_2_0" min="0" value="0">
+                                                       $<span id="span_total_2_0">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" id="add_another_option2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a>
+                                    <!-- <a href="#" id="add_another_option2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add another line</a>
                                 </div>
                             </div>
 
@@ -326,21 +332,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-7">
                                 </div>
                                 <div class="col-md-5">
-                                    <table class="table" style="text-align:left;">
+                                <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>0.00</td>
+                                            <td>$ <span id="span_sub_total_option2">0.00</span>
+                                                <input type="hidden" name="sub_total" id="item_total_2"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
+                                            <td>$ <span id="total_tax_2">0.00<input type="hidden" name="total_tax_2" id="total_tax_2"></td>
+                                        </tr>
+                                        <tr style="display:none;">
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:150px;">
+                                            <input type="number" name="adjustment_input2" id="adjustment_input2" value="0" class="form-control adjustment_input2" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </td>
                                             <td>0.00</td>
                                         </tr>
+                                        <tr style="display:none;">
+                                            <td>Markup $<span id="span_markup"></td>
+                                            <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
+                                            <td><input type="hidden" name="markup_input_form2" id="markup_input_form2" class="markup_input" value="0"><span id="span_markup_input_form2">0.00</span></td>
+                                        </tr>
                                         <tr>
-                                            <td><b>Option-2 Total</b></td>
+                                            <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b>0.00</b></td>
+                                            <td><b><span id="grand_total2">0.00</span>
+                                                <input type="hidden" name="grand_total2" id="grand_total_input2" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -466,6 +487,58 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="min-height: calc(100vh - 210px);
+                                                        overflow-y: auto;
+                                                        overflow-x: hidden;
+                                                        max-height: 100%;
+                                                        position: relative;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>

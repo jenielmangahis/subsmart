@@ -739,8 +739,9 @@ class Workorder extends MY_Controller
             $users    = $this->Users_model->getAll();
             foreach( $users as $user ){
                 //Set Center Map
-                $pointA  =  $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
-                $gdata   = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
+                $pointA   =  $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
+                $description_a = "<b><i class='fa fa-user'></i> ".$user->FName. " " .$user->LName. "</b><br /><small>".$pointA."</small>";
+                $gdata    = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
                 if($gdata){
                     $json = json_decode($gdata, true);
                     if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
@@ -767,18 +768,21 @@ class Workorder extends MY_Controller
                         $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
                         $json   = json_decode($gdata, true);   
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                            $description_b = "<i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<br /><br />" . $e->event_type . "<br /><small>" . $pointB . "</small>";
+
                             $locations[] = [
-                                'title' => "<b>Start Point</b><br />" . $pointA,
+                                'title' => $description_a,
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
                                 'title' => "<b>Start Point</b><br />" . $pointA,
+                                'description' => $description_a,
                                 'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];
                             $locations[] = [
-                                'title' => $pointB,
+                                'title' => $description_b,
                                 'lat' => $json['results'][0]['geometry']['location']['lat'],
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => "<b>" . $e->event_description . "</b><br /><small>" . $pointB . "</small>",
+                                'description' => $description_b,
                                 'marker' => $marker
                             ];  
                         }
@@ -787,29 +791,37 @@ class Workorder extends MY_Controller
                 } 
 
                 //Jobs
-                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user'],$date_range,$criteria);
-                /*foreach($jobs as $j){
-                    if( $j->job_location != '' ){
-                        $pointB = $j->job_location; 
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($user->id,$date_range,$criteria);
+                /*echo "<pre>";
+                print_r($jobs);
+                exit;*/
+                foreach($jobs as $j){
+                    //if( $j->job_location != '' ){
+                        $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code; 
+                        $description_b = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><br />" . $j->job_number . " - " . $j->job_type . "<br /><small>" . $j->first_name . ' ' . $j->last_name . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
+
                         $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
                         $json   = json_decode($gdata, true); 
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                            $locations[] = [
-                                'title' => $pointA,
+                                'title' => $description_a,
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
-                                'description' => $pointA,
+                                'description' => $description_a,
                                 'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];
                             $locations[] = [
-                                'title' => $pointB,
+                                'title' => $description_b,
                                 'lat' => $json['results'][0]['geometry']['location']['lat'],
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => $j->job_number . " - " . $j->job_name,
+                                'description' => $description_b,
+                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];    
                         }    
-                    }
-                }*/
+                    //}
+
+                    $counter++;  
+                }
             } 
         }else{
             if( $post['user'] > 0 ){
@@ -824,6 +836,7 @@ class Workorder extends MY_Controller
 
             //Set Center Map
             $pointA  = $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
+            $description_a = "<b><i class='fa fa-user'></i> ".$user->FName. " " .$user->LName. "</b><br /><small>".$pointA."</small>";
             $gdata   = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
             if($gdata){
                 $json = json_decode($gdata, true);
@@ -845,21 +858,22 @@ class Workorder extends MY_Controller
                         
                     }
                     $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
+                    $description_b = "<i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<br /><br />" . $e->event_type . "<br /><small>" . $pointB . "</small>";
                     $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
                     $json   = json_decode($gdata, true);   
                     if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                         $locations[] = [
-                            'title' => "<b>Start Point</b><br />" . $pointA,
+                            'title' => $description_a,
                             'lat' => $center_lat,
                             'lng' => $center_lng,
-                            'description' => "<b>Start Point</b><br />" . $pointA,
+                            'description' => $description_a,
                             'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                         ];
                         $locations[] = [
-                            'title' => $pointB,
+                            'title' => $description_b,
                             'lat' => $json['results'][0]['geometry']['location']['lat'],
                             'lng' => $json['results'][0]['geometry']['location']['lng'],
-                            'description' => "<b>" . $e->event_description . "</b><br /><small>" . $pointB . "</small>",
+                            'description' => $description_b,
                             'marker' => $marker
                         ]; 
                     } 
@@ -883,17 +897,17 @@ class Workorder extends MY_Controller
                         $json   = json_decode($gdata, true);  
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                             $locations[$counter] = [
-                                'title' => $pointA,
+                                'title' => $description_a,
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
-                                'description' => $pointA,
+                                'description' => $description_a,
                                 'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];
                             $locations[$counter+1] = [
                                 'title' => $pointB,
                                 'lat' => $json['results'][0]['geometry']['location']['lat'],
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => "<b" . $j->job_number . " - " . $j->job_description . "</b><br/ ><small>".$pointB."</small>",
+                                'description' => "<b>" . $j->job_number . " - " . $j->job_description . "</b><br/ ><small>".$pointB."</small>",
                                 'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];    
 

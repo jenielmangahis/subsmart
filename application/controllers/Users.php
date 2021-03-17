@@ -756,6 +756,11 @@ class Users extends MY_Controller {
         $username = $this->input->post('values[username]');
         $password = $this->input->post('values[password]');
         $address = $this->input->post('values[address]');
+
+        $city  = $this->input->post('values[city]');
+        $state  = $this->input->post('values[state]');
+        $postal_code  = $this->input->post('values[postal_code]');
+
         $user_type = $this->input->post('values[user_type]');
         $role = $this->input->post('values[role]');
         $status = $this->input->post('values[status]');
@@ -778,6 +783,9 @@ class Users extends MY_Controller {
             'company_id' => $cid,
             'profile_img' => $profile_img,
             'address' => $address,
+            'state' => $state,
+            'city' => $city,
+            'postal_code' => $postal_code,
             'payscale_id' => $payscale_id,
             'employee_number' => $emp_number
         );
@@ -1375,6 +1383,11 @@ class Users extends MY_Controller {
         $username = $this->input->post('values[username]');
         $password = $this->input->post('values[password]');
         $address = $this->input->post('values[address]');
+
+        $city  = $this->input->post('values[city]');
+        $state  = $this->input->post('values[state]');
+        $postal_code  = $this->input->post('values[postal_code]');
+
         $role = $this->input->post('values[role]');
         $status = $this->input->post('values[status]');
         $web_access = $this->input->post('values[web_access]');
@@ -1397,6 +1410,9 @@ class Users extends MY_Controller {
             'status' => $status,            
             'profile_img' => $profile_img,
             'address' => $address,
+            'state' => $state,
+            'city' => $city,
+            'postal_code' => $postal_code,
             'payscale_id' => $payscale_id,
             'employee_number' => $emp_number
         );

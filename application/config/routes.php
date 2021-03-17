@@ -317,6 +317,8 @@ $route['accounting/products-and-services/items-dropdown'] = 'accounting/get_item
 $route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting/inactive_item/$1";
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting/create_item/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting/update_item/$1/$2';
+$route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting/assign_category/$1';
+$route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting/batch_action/$1';
 
 $route['accounting/product-categories'] = 'accounting/product_categories';
 $route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
@@ -529,6 +531,7 @@ $route['sms_automation/build_sms'] = 'Sms_Automation/build_sms';
 $route['sms_automation/create_sms_message'] = 'Sms_Automation/create_sms_message';
 $route['sms_automation/preview_sms_message'] = 'Sms_Automation/preview_sms_message';
 $route['sms_automation/payment'] = 'Sms_Automation/payment';
+$route['sms_automation/activate_automation'] = 'Sms_Automation/activate_automation';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
@@ -613,6 +616,7 @@ $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
 $route['job/_load_upcoming_jobs'] = 'Job/ajax_load_upcoming_jobs';
+$route['job/bird_eye_view'] = 'Workorder/map';
 
 //Estimates
 $route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';

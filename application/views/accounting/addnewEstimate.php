@@ -192,7 +192,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <th>Total</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="table_body">
+                                        <tbody id="jobs_items_table_body">
                                         <tr>
                                             <td>
                                                 <input type="text" class="form-control getItems"

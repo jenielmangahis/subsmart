@@ -133,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-5" style="margin-bottom: 12px"></div>
                             <div class="col-lg-4 eft">
                                 <div class="action-btn-container">
-                                    <button id="schedule_save_btn" class="btn btn-success action-btn" id="schedule_save_btn" data-approved="100"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save changes</button>
+                                    <button id="schedule_save_btn" class="btn btn-success action-btn" id="schedule_save_btn" data-approved="100" disabled="true"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save changes</button>
                                 </div>
                             </div>
                         </div>
@@ -233,7 +233,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $(".ts_schedule").datepicker();
 
         let selected_week = $('#scheduleWeek').val();
-        // $('#ts_schedule_tbl').ready(showScheduleTable(selected_week));
+        $('#ts_schedule_tbl').ready(showScheduleTable(selected_week));
         $(document).on('change', '#scheduleWeek', function() {
             let week = $(this).val();
             $("#ts_schedule_tbl").DataTable().destroy();

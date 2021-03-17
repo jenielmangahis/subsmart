@@ -30,7 +30,12 @@
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-title" value="<?= $e['event_title']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-start-date" value="<?= $e['start_date']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-end-date" value="<?= $e['end_date']; ?>" />
-                  <h6 style="color:black;font-weight:700; margin:0;"><?php echo strtoupper($e['what_of_even'] . ' - ' . $e['event_description']); ?></h6>
+                  <?php if($e['type'] == 'events'){ ?>
+                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo $e['event_number'] . ' - ' . $e['event_type']; ?></h6>
+                  <?php }else{ ?>
+                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo $e['event_type']; ?></h6>
+                  <?php } ?>
+                  
                   <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($e['event_title']); ?></p>
                   <?php if( trim($e['address']) != '' ){ ?>
                     <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($e['address'])); ?></p>

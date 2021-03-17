@@ -38,10 +38,24 @@
 <div class="section-title">Other Details</div>
 <div class="form-group">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <label for="">Address</label>
             <input type="text" name="address" value="<?= $user->address; ?>" class="form-control">
         </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label for="">State</label>
+            <input type="text" name="state" value="<?= $user->state; ?>" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label for="">Zip Code</label>
+            <input type="text" name="postal_code" value="<?= $user->postal_code; ?>" class="form-control">
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
         <div class="col-md-6">
             <label for="">Title</label>
             <select name="role" id="employeeRole" class="form-control edit-select2-role">
@@ -52,8 +66,6 @@
             </select>
         </div>
     </div>
-</div>
-<div class="form-group">
     <div class="row">
         <div class="col-md-6">
             <label for="">Status</label>

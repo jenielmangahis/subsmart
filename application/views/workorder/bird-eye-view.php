@@ -80,7 +80,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
     <div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/schedule'); ?>
+<?php
+  $url =  base_url(uri_string());
+  if(strpos($url, 'job/bird_eye_view') !== false) {
+    include viewPath('includes/sidebars/job'); 
+  }else{
+    include viewPath('includes/sidebars/schedule'); 
+  }
+?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <form id="map-filter">

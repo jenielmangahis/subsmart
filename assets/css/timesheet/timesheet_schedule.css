@@ -12,6 +12,10 @@ input.shift-end-input {
   transition-duration: 0.5s;
   transition-timing-function: linear;
 }
+input.shift-start-input.blank,
+input.shift-end-input.blank {
+  background-color: transparent;
+}
 input.shift-start-input.changed:focus,
 input.shift-end-input.changed:focus {
   border-radius: 1px;

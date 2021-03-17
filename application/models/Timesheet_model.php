@@ -1158,13 +1158,40 @@ class Timesheet_model extends MY_Model
     }
     public function get_employee_shift_schedule($user_id, $week)
     {
+        $or_query = "";
+        for ($x = 0; $x < count($week); $x++) {
+            if ($or_query != "") {
+                $or_query .= ' or shift_date = "' . $week[$x] . '"';
+            } else {
+                $or_query .= ' shift_date = "' . $week[$x] . '"';
+            }
+        }
+        $qry = $this->db->query('SELECT * FROM timesheet_shift_schedule WHERE (' . $or_query . ') and user_id = ' . $user_id . ' order by shift_date DESC');
+        return $qry->result();
+    }
+    public function get_all_employee_shift_schedule($week)
+    {
         for ($x = 0; $x < count($week); $x++) {
             $this->db->or_where('shift_date', $week[$x]);
         }
-
-        $this->db->where('user_id', $user_id);
         $qry = $this->db->get('timesheet_shift_schedule');
         return $qry->result();
+    }
+    public function is_schedule_exist($user_id, $shift_date)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->where('shift_date', $shift_date);
+        $qry = $this->db->get('timesheet_shift_schedule');
+    }
+    public function update_existing_schedule($data, $shift_date, $user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->where('shift_date', $shift_date);
+        $this->db->update('timesheet_shift_schedule', $data);
+    }
+    public function add_new_shift_shedules($data)
+    {
+        $this->db->insert_batch('timesheet_shift_schedule', $data);
     }
 }
 

@@ -61,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <?php echo form_open_multipart('sms_automation/save', ['class' => 'form-validate', 'id' => 'activate-automation', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'activate-automation', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
 
                         <div class="card-body">
-                            <div class="validation-error" style="display: none;"></div>
+                            <div class="form-msg" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
                                   <li>1. Edit Rules</li>
@@ -108,8 +108,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                     <br />
                                     <div class="checkbox checkbox-sm">
-                                        <input class="checkbox-select chk-contact-group" type="checkbox" name="" value="1" id="" required="">
-                                        <label for="chk-contact-group">I agree to bill my card</label>
+                                        <input class="checkbox-select chk-terms" type="checkbox" name="accept_terms" value="1" id="chk-terms">
+                                        <label for="chk-terms">I agree to bill my card</label>
                                     </div>
                                     <br />
                                     <div class="terms-condition">
@@ -121,7 +121,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div>
                                 <div class="col-md-4 form-group md-right">
                                     <a class="btn btn-default margin-right" href="<?php echo url('sms_automation/preview_sms_message'); ?>">&laquo; Back</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-save-draft" style="margin-right: 0px;">Activate Automation</button>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-activate" style="margin-right: 0px;">Activate Automation</button>
                                 </div>
                             </div>
                         </div>
@@ -192,40 +192,45 @@ $(function(){
 
     $("#activate-automation").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_automation/save_draft_automation';
-        $(".btn-automation-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: "json",
-             data: $("#create_sms_automation").serialize(),
-             success: function(o)
-             {
-                if( o.is_success ){
-                    $(".validation-error").hide();
-                    $(".validation-error").html('');
-                    //redirect to step2
-                    location.href = base_url + "sms_automation/build_sms";
-                }else{
-                    $(".validation-error").show();
-                    $(".validation-error").html(o.err_msg);
-                    $(".btn-automation-save-draft").html('Continue »');
-                }
-             }
-          });
-        }, 1000);
-    });
 
-    $("#rule-event").change(function(){
-      var selected = $(this).val();
-      if( selected == 'estimate_submitted' || selected == 'invoice_due' ){
-        $(".rule-notify-description").html("After event");
-      }else if( selected == 'invoice_paid' ){
-        $(".rule-notify-description").html("After invoice was paid");
-      }else if( selected == 'work_order_completed' ){
-        $(".rule-notify-description").html("After work order was completed");
-      }
+        if( $("#chk-terms").is(":checked") ){
+          var url = base_url + 'sms_automation/activate_automation';
+          $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+          setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#activate-automation").serialize(),
+               success: function(o)
+               {
+                  if( o.is_success ){
+                      $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
+                      $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
+                      setTimeout(function() {
+                          location.href = base_url + "sms_automation";
+                      }, 2500);
+                  }else{
+                      $(".btn-automation-activate").html('Activate Automation');
+
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot activate automation.',
+                        text: 'Please try again later'
+                      });
+                  }
+               }
+            });
+          }, 1000);
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Cannot proceed.',
+            text: 'Please check form inputs'
+          });
+        }
+
+        
     });
 });
 </script>

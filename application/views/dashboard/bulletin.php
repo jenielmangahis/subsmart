@@ -270,36 +270,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 </style>
 <div class="<?= $class ?>" id="widget_<?= $id ?>">
-    <div class="card" style="margin-top:0;">
-        <div class="card-header" style="background:#9775fa; color:white;">
-           <i class="fa fa-book" aria-hidden="true"></i> Timesheet
-        </div>
-        <div class="card-body" style="padding: 0 !important; overflow-x: scroll;">
-            <div class="expenses-money-section" style="margin-top:10px;">
-                <div class="inner-news">
-                    <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
-                        <thead>
-                            <tr>
-                                <th style="width:40%" rowspan="2">Employee Name</th>
-                                <th rowspan="2">In</th>
-                                <th rowspan="2">Out</th>
-                                <th colspan="2">Lunch</th>
-                                <!-- <th rowspan="2">Action</th>
-                                <th rowspan="2">Comments/Location</th> -->
-                            </tr>
-                            <tr>
-                                <th>In</th>
-                                <th>Out</th>
-                            </tr>
-                        </thead>
-                        <tbody  id="timesheetBody">
-                            <tr>
-                                <td colspan="6"><div class="progress" style="height:40px;"><div class="progress-bar progress-bar-striped bg-warning active" role="progressbar" style="width: 100%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">System is fetching data</div></div></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <a href="<?php echo base_url() . "timesheet/attendance"; ?>">See More</a>
+    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+        <i class="fa fa-book" aria-hidden="true"></i> Timesheet
+    </div>
+    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
+        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
+            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
+                <div class="expenses-money-section" style="margin-top:10px;">
+                    <div class="inner-news">
+                        <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
+                            <thead>
+                                <tr>
+                                    <th style="width:40%" rowspan="2">Employee Name</th>
+                                    <th rowspan="2">In</th>
+                                    <th rowspan="2">Out</th>
+                                    <th colspan="2">Lunch</th>
+                                    <!-- <th rowspan="2">Action</th>
+                                    <th rowspan="2">Comments/Location</th> -->
+                                </tr>
+                                <tr>
+                                    <th>In</th>
+                                    <th>Out</th>
+                                </tr>
+                            </thead>
+                            <tbody  id="timesheetBody">
+                                <tr>
+                                    <td colspan="6"><div class="progress" style="height:40px;"><div class="progress-bar progress-bar-striped bg-warning active" role="progressbar" style="width: 100%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">System is fetching data</div></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <a href="<?php echo base_url() . "timesheet/attendance"; ?>">See More</a>
 
+                    </div>
                 </div>
             </div>
         </div>
