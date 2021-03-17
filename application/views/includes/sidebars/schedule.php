@@ -19,6 +19,10 @@
         color: #fff;
         text-align: left;
     }
+    li.submenus a span span.badge {
+        position: absolute !important;
+        left: -2px !important;
+    }
     .left-sidebar-badge{
         position: relative;
         left: -13px;
