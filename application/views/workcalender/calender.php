@@ -527,7 +527,7 @@ a.top-1 {
                                     <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
                                       <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
                                         <div style="height: 280px;">
-                                          <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer;height:250px;">
+                                          <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
                                             <div class="row d-none d-lg-flex">
                                                 <div class="col-md-12">
                                                     <div class="cus-dashboard-div">
@@ -554,7 +554,7 @@ a.top-1 {
                                   <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
                                     <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
                                       <div style="height: 280px;">
-                                        <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer;height:250px;">
+                                        <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
                                           <div class="row d-none d-lg-flex">
                                               <div class="col-md-12">
                                                   <div class="cus-dashboard-div">

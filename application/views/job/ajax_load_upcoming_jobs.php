@@ -1,4 +1,4 @@
-<div class="row" style="height: 180px; overflow-y: auto;">
+<div class="row" style="height: 250px; overflow-y: auto;">
   <div class="col-lg-12 col-md-12 col-sm-12">
     <?php if ( !empty($upcomingJobs) ) { ?>
       <?php foreach($upcomingJobs as $jb){ ?>
