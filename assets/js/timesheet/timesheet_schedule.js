@@ -258,7 +258,20 @@ function Shift_end_validation(selected, validate_start, validate_end) {
 }
 
 $(document).on("click", "#schedule_save_btn", function () {
+  console.log("Pasok");
   if (!has_error_in_new_schedule) {
+    console.log("========SHIFT START=========");
+    console.log(new_shift_starts);
+    console.log(new_shift_start_ids);
+    console.log(new_shift_start_dates);
+    console.log(new_shift_starts_columns);
+    console.log(new_shift_starts_ctr);
+    console.log("========SHIFT END=========");
+    console.log(new_shift_ends);
+    console.log(new_shift_end_ids);
+    console.log(new_shift_end_dates);
+    console.log(new_shift_ends_columns);
+    console.log(new_shift_ends_ctr);
     $.ajax({
       url: baseURL + "/timesheet/set_schedule",
       type: "POST",
@@ -275,8 +288,17 @@ $(document).on("click", "#schedule_save_btn", function () {
         new_shift_end_dates: new_shift_end_dates,
         new_shift_ends_columns: new_shift_ends_columns,
         new_shift_ends_ctr: new_shift_ends_ctr,
+        week_schedule: $("#scheduleWeek").val(),
       },
-      success: function (data) {},
+      success: function (data) {
+        Swal.fire({
+          showConfirmButton: false,
+          timer: 2000,
+          title: "Success",
+          html: "Changes has been saved",
+          icon: "success",
+        });
+      },
     });
   } else {
     console.log("========ERROR FOUND=========");

@@ -213,6 +213,13 @@ class Items_model extends MY_Model
         return false;
     }
 
+    public function updateMultipleItem($data)
+    {
+        $update = $this->db->update_batch($this->table, $data, 'id');
+
+        return $update;
+    }
+
     public function getItemById($id) 
     {
         $this->db->select('*');
@@ -245,6 +252,15 @@ class Items_model extends MY_Model
         $this->db->where('item_id', $id);
         $query = $this->db->get('bundle_item_contents');
         return $query->result();
+    }
+
+    public function deleteBundleItem($id, $item_id)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('id', $id);
+        $this->db->where('item_id', $item_id);
+        $delete = $this->db->delete('bundle_item_contents');
+        return $delete ? true : false;
     }
 
     public function saveNewItemLocation($data = array()) {

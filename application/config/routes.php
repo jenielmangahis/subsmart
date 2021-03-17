@@ -317,6 +317,8 @@ $route['accounting/products-and-services/items-dropdown'] = 'accounting/get_item
 $route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting/inactive_item/$1";
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting/create_item/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting/update_item/$1/$2';
+$route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting/assign_category/$1';
+$route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting/batch_action/$1';
 
 $route['accounting/product-categories'] = 'accounting/product_categories';
 $route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';

@@ -1303,7 +1303,9 @@ class Accounting extends MY_Controller {
                         'icon' => $item->attached_image,
                         'vendor_id' => $item->vendor_id,
                         'sales_tax_cat' => $accountingDetails->tax_rate_id,
-                        'bundle_items' => $bundItems
+                        'bundle_items' => $bundItems,
+                        'locations' => $this->items_model->getLocationByItemId($item->id),
+                        'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : ''
                     ];
                 }
             } else {
@@ -1328,7 +1330,9 @@ class Accounting extends MY_Controller {
                     'icon' => $item->attached_image,
                     'vendor_id' => $item->vendor_id,
                     'sales_tax_cat' => $accountingDetails->tax_rate_id,
-                    'bundle_items' => $bundItems
+                    'bundle_items' => $bundItems,
+                    'locations' => $this->items_model->getLocationByItemId($item->id),
+                    'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : ''
                 ];
             }
         }
@@ -1691,6 +1695,14 @@ class Accounting extends MY_Controller {
                     'sku' => $input['sku']
                 ];
 
+                $bundleItems = $this->items_model->getBundleContents($id);
+
+                foreach($bundleItems as $bundleItem) {
+                    if(!in_array($bundleItem->id, $input['bundle_item_content_id'])) {
+                        $this->items_model->deleteBundleItem($bundleItem->id, $id);
+                    }
+                }
+
                 foreach($input['item_id'] as $key => $item) {
                     if($input['bundle_item_content_id'][$key] === null) {
                         $itemContent = [
@@ -1737,6 +1749,60 @@ class Accounting extends MY_Controller {
         }
 
         redirect('/accounting/products-and-services');
+    }
+    public function assign_category($categoryId)
+    {
+        $items = json_decode($this->input->post('items'));
+        $data = [];
+
+        foreach($items as $item) {
+            $data[] = [
+                'id' => $item,
+                'item_categories_id' => $categoryId
+            ];
+        }
+
+        $assignCate = $this->items_model->updateMultipleItem($data);
+
+        $categoryName = $categoryId !== "0" ? $this->items_model->getCategory($categoryId)->name : 'Uncategorized';
+        if($assignCate > 0) {
+            $this->session->set_flashdata('success', "Category $categoryName assigned.");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+    }
+    public function batch_action($action)
+    {
+        $items = json_decode($this->input->post('items'));
+        $data = [];
+
+        foreach($items as $item) {
+            if($action === 'make-inactive') {
+                $data[] = [
+                    'id' => $item,
+                    'is_active' => 0
+                ];
+            } else {
+                $data[] = [
+                    'id' => $item,
+                    'type' => str_replace('make-', '', $action)
+                ];
+            }
+        }
+
+        $updateAction = $this->items_model->updateMultipleItem($data);
+
+        if($updateAction > 0) {
+            if($action !== 'make-inactive') {
+                $action = str_replace('make-', '', $action);
+                $previousType = $action === 'service' ? 'non-inventory' : 'service';
+                $this->session->set_flashdata('success', "You converted $updateAction $previousType to a $action item.");
+            } else {
+                $this->session->set_flashdata('success', "You made $updateAction item(s) inactive.");
+            }
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
     }
     public function product_categories()
     {

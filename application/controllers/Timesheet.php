@@ -135,9 +135,27 @@ class Timesheet extends MY_Controller
         //     break;
         // }
         // var_dump($ipaddress);
-        $user_id = $this->session->userdata('logged')['id'];
-        $company_id = logged('company_id');
-        echo ("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id . " and user_seen_notif.seen_status != 2 and user_notification.company_id = $company_id order by user_notification.date_created DESC");
+        // $user_id = $this->session->userdata('logged')['id'];
+        // $company_id = logged('company_id');
+        // echo ("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id . " and user_seen_notif.seen_status != 2 and user_notification.company_id = $company_id order by user_notification.date_created DESC");
+        // date_default_timezone_set($this->session->userdata('usertimezone'));
+        // $the_date = strtotime("2010-01-19 00:00:00");
+        // echo (date_default_timezone_get() . "<br />");
+        // echo (date("Y-d-m H:i:s", $the_date) . "<br />");
+        // date_default_timezone_set("UTC");
+        // echo ("UTC<br>");
+        // echo (date("Y-d-m H:i:s", $the_date) . "<br />");
+        $start = new DateTime("2021-03-16 03:00:00");
+        $end =  new DateTime(date('Y-m-d H:i:s'));
+        $interval = $start->diff($end);
+
+        $minutes = ($interval->days * 24 * 60) * 60;
+        $minutes += ($interval->h * 60) * 60;
+        $minutes += ($interval->i) * 60;
+        $minutes += $interval->s;
+        $minutes = $minutes / 60;
+        var_dump($end);
+        echo $minutes / 60;
     }
 
     public function employee()
@@ -3008,18 +3026,84 @@ class Timesheet extends MY_Controller
         foreach ($users as $user) {
             $display .= '<tr>';
             foreach ($user_roles as $role) {
-                if ($user->role === $role->id) {
+                if ($user->role == $role->id) {
                     $role_title = $role->title;
                 }
             }
+            $status = "";
+            if ($user->status == 1) {
+                $status = "Full Time";
+            }
             $employee_schedules = $this->timesheet_model->get_employee_shift_schedule($user->id, $date_this_check);
             if (count($employee_schedules) > 0) {
-            } else {
-                $status = "";
-                if ($user->status === 1) {
-                    $status = "Full Time";
+                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . '</span></td>';
+                $display .= '<td class="center">' . $status . '</td>';
+
+                $mon = '';
+                $tue = '';
+                $wed =  '';
+                $thur =  '';
+                $fri =  '';
+                $sat =  '';
+                $sun =  '';
+                $duration = 0;
+                foreach ($employee_schedules as $schedule) {
+                    $duration += $schedule->duration;
+                    $shift_start_date = date('Y-m-d', strtotime($schedule->shift_start));
+                    $shift_start = date('H:i', strtotime($schedule->shift_start));
+                    $shift_end_date = date('Y-m-d', strtotime($schedule->shift_end));
+                    $shift_end = date('H:i', strtotime($schedule->shift_end));
+                    if ($date_this_check[0] == $schedule->shift_date) {
+                        $mon = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 1, "Tuesday");
+                    } elseif ($date_this_check[1] == $schedule->shift_date) {
+                        $tue = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 2, "Wednesday");
+                    } elseif ($date_this_check[2] == $schedule->shift_date) {
+                        $wed = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 3, "Thursday");
+                    } elseif ($date_this_check[3] == $schedule->shift_date) {
+                        $thur = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 4, "Friday");
+                    } elseif ($date_this_check[4] == $schedule->shift_date) {
+                        $fri = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 5, "Saturday");
+                    } elseif ($date_this_check[5] == $schedule->shift_date) {
+                        $sat = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 6, "Sunday");
+                    } elseif ($date_this_check[6] == $schedule->shift_date) {
+                        $sun = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 7, "Monday");
+                    }
                 }
-                $display .= '<td><span class="employee-name">' . $user->Fname . " " . $user->LName . '</span><span class="sub-text">' . $role_title . '</span></td>';
+                if ($mon == '') {
+                    $mon = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 1, "blank");
+                }
+                if ($tue == '') {
+                    $tue = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 2, "blank");
+                }
+                if ($wed == '') {
+                    $wed = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 3, "blank");
+                }
+                if ($thur == '') {
+                    $thur = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 4, "blank");
+                }
+                if ($fri == '') {
+                    $fri = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 5, "blank");
+                }
+                if ($sat == '') {
+                    $sat = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 6, "blank");
+                }
+                if ($sun == '') {
+                    $sun = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 7, "blank");
+                }
+                $display .= $mon . $tue . $wed . $thur . $fri . $sat . $sun;
+                $display .= '<td class="center"><label id="duration' . $user->id . '">' . $duration . '</label></td>';
+            } else {
+                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . '</span></td>';
+                $display .= '<td class="center">' . $status . '</td>';
+                for ($i = 0; $i < 7; $i++) {
+                    $display .= '<td class="center">';
+                    $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-start-input blank" value="">';
+                    $display .= '<p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>';
+                    $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-end-input blank" value="">';
+                    $display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
+                    $display .= '</td>';
+                }
+                $display .= '<td class="center"><label id="duration' . $user->id . '"></label></td>';
             }
             $display .= '</tr>';
         }
@@ -3027,9 +3111,45 @@ class Timesheet extends MY_Controller
 
         echo json_encode($display);
     }
-
+    public function shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user_id, $column, $cross_over_day)
+    {
+        $input_style = "";
+        if ($cross_over_day == "blank") {
+            $input_style = "blank";
+        }
+        $display = '<td class="center">';
+        $display .= '<input type="time" data-date="' . $shift_start_date . '" data-id="' . $user_id . '" data-column="' . $column . '" class="shift-start-input ' . $input_style . '" value="' . $shift_start . '">';
+        $display .= '<p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>';
+        $display .= '<input type="time" data-date="' . $shift_start_date . '" data-id="' . $user_id . '" data-column="' . $column . '" class="shift-end-input ' . $input_style . '" value="' . $shift_end . '">';
+        if ($shift_start_date != $shift_end_date) {
+            $display .= '<label class="shift-end-day-indecator">' . $cross_over_day . '</label>';
+        } else {
+            $display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
+        }
+        $display .= '</td>';
+        return $display;
+    }
     public function set_schedule()
     {
+
+
+        // date_default_timezone_set($this->session->userdata('usertimezone'));
+        $week_schedule = $this->input->post("week_schedule");
+        $week = date('Y-m-d', strtotime($week_schedule));
+        $the_date = strtotime($week);
+        // date_default_timezone_set("UTC");
+        $week_convert = date("Y-m-d", $the_date);
+
+        $date_this_check = array(
+            0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
+            1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
+            2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
+            3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
+            4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
+            5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
+            6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
+        );
+
         $new_shift_starts = $this->input->post("new_shift_starts");
         $new_shift_start_ids = $this->input->post("new_shift_start_ids");
         $new_shift_start_dates = $this->input->post("new_shift_start_dates");
@@ -3041,6 +3161,96 @@ class Timesheet extends MY_Controller
         $new_shift_end_dates = $this->input->post("new_shift_end_dates");
         $new_shift_ends_columns = $this->input->post("new_shift_ends_columns");
         $new_shift_ends_ctr = $this->input->post("new_shift_ends_ctr");
+
+
+        $new_schedules = array();
+        $all_employee_schedules = $this->timesheet_model->get_all_employee_shift_schedule($date_this_check);
+
+        for ($a = 0; $a < $new_shift_starts_ctr; $a++) {
+            $shift_date = $new_shift_start_dates[$a];
+            $shift_start = $new_shift_start_dates[$a] . " " . $new_shift_starts[$a];
+            $user_id = $new_shift_start_ids[$a];
+            $column = $new_shift_starts_columns[$a];
+            $found_shift_end = false;
+            $shift_end = "";
+            for ($x = 0; $x < $new_shift_ends_ctr; $x++) {
+                if ($new_shift_end_ids[$x] == $user_id && $new_shift_ends_columns[$x] == $column) {
+                    $found_shift_end = true;
+                    $shift_end = $new_shift_end_dates[$x] . " " . $new_shift_ends[$x];
+                    break;
+                }
+            }
+
+            date_default_timezone_set($this->session->userdata('usertimezone'));
+            $the_date = strtotime($shift_start);
+            date_default_timezone_set("UTC");
+            $shift_start = date("Y-m-d H:i:s", $the_date);
+            $shift_date = date("Y-m-d", $the_date);
+            if ($found_shift_end) {
+                date_default_timezone_set($this->session->userdata('usertimezone'));
+                $the_date = strtotime($shift_end);
+                date_default_timezone_set("UTC");
+                $shift_end = date("Y-m-d H:i:s", $the_date);
+            }
+            $sched_exist = false;
+            foreach ($all_employee_schedules as $schedule) {
+                if ($schedule->shift_date == $shift_date && $schedule->user_id == $user_id) {
+                    if ($found_shift_end) {
+
+                        $existing_schedule = array(
+                            'shift_start' => $shift_start,
+                            'shift_end' => $shift_end,
+                            'duration' => $this->get_differenct_of_dates($shift_start, $shift_end)
+                        );
+                    } else {
+                        $existing_schedule = array(
+                            'shift_start' => $shift_start,
+                            'duration' => 8
+                        );
+                    }
+                    $sched_exist = true;
+                    break;
+                }
+            }
+            if ($sched_exist) {
+                $this->timesheet_model->update_existing_schedule($existing_schedule, $shift_date, $user_id);
+            } else {
+                if ($found_shift_end) {
+                    $new_schedules[] = array(
+                        'shift_date' => $shift_date,
+                        'shift_start' => $shift_start,
+                        'shift_end' => $shift_end,
+                        'user_id' => $user_id,
+                        'duration' => $this->get_differenct_of_dates($shift_start, $shift_end)
+                    );
+                } else {
+                    $new_schedules[] = array(
+                        'shift_date' => $shift_date,
+                        'shift_start' => $shift_start,
+                        'user_id' => $user_id,
+                        'duration' => 8
+                    );
+                }
+            }
+        }
+        if (count($new_schedules) > 0) {
+            $this->timesheet_model->add_new_shift_shedules($new_schedules);
+        }
+        $data = new stdClass();
+        $data->all_employee_schedules = $date_this_check;
+        echo json_encode($data);
+    }
+    public function get_differenct_of_dates($date_start, $date_end)
+    {
+        $start = new DateTime($date_start);
+        $end =  new DateTime($date_end);
+        $interval = $start->diff($end);
+
+        $difference = ($interval->days * 24 * 60) * 60;
+        $difference += ($interval->h * 60) * 60;
+        $difference += ($interval->i) * 60;
+        $difference += $interval->s;
+        return ($difference / 60) / 60;
     }
     public function autoclockout_timer_closed()
     {
