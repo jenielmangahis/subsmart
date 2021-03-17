@@ -47,16 +47,16 @@
                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_campaigns/edit_campaign/' . $sb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                     </li>                
                                     <?php } ?>
-                                    <!-- <li role="presentation">
+                                    <li role="presentation">
                                         <a role="menuitem" class="clone-sms-campaign" href="javascript:void(0);" data-name="<?= $sb->campaign_name; ?>" data-id="<?= $sb->id; ?>">
                                         <span class="fa fa-files-o icon"></span>  Clone</a>
-                                    </li> -->
+                                    </li>
                                     <li role="separator" class="divider"></li>
                                     <?php if($sb->status != 3){ ?>
                                     <li role="separator" class="divider"></li>
-                                    <!-- <li role="presentation">
+                                    <li role="presentation">
                                         <a role="menuitem" class="close-sms-campaign" data-name="<?= $sb->campaign_name; ?>" data-id="<?= $sb->id; ?>" href="javascript:void(0);" data-id="<?= $sb->id; ?>"><span class="fa fa-trash-o icon"></span> Close</a>
-                                    </li> -->
+                                    </li>
                                     <?php } ?>
                                 </ul>
                             </div>

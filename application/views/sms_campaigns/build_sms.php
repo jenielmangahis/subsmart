@@ -158,7 +158,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <li>2. Select Customers</li>
                           <li class="active">3. Build SMS</li>
                           <li>4. Preview</li>
-                          <!-- <li>5. Purchase</li> -->
+                          <li>5. Purchase</li>
                         </ul>
                     </div>
                     <hr />
@@ -167,7 +167,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="campaign__text">
                                 <label>SMS message</label>
                                 <?php 
-                                    $sms_text = 'Sms from ADi';
+                                    $sms_text = 'Sms from ' . $company->business_name;
                                     if( $smsCampaign->sms_text != '' ){
                                         $sms_text = $smsCampaign->sms_text;
                                     }

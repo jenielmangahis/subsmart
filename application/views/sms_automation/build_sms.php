@@ -147,7 +147,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="campaign__text">
                                 <label>SMS message</label>
                                 <?php 
-                                    $sms_text = 'Sms from ADi';
+                                    $sms_text = 'Sms from ' . $company->business_name;
                                     if( $smsAutomation->sms_text != '' ){
                                         $sms_text = $smsAutomation->sms_text;
                                     }

@@ -113,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <br />
                                     <div class="terms-condition">
-                                      <p>By clicking Activate button you agree to <a class="view-modal-info" data-id="terms-condition" href="javascript:void(0);" style="color:#259e57;">NSmarTrac's Terms & Conditions</a>, <a class="view-modal-info" data-id="refund-policy" href="javascript:void(0);" style="color:#259e57;">Refund Policy</a> and <a class="view-modal-info" data-id="anti-spam" href="javascript:void(0);" style="color:#259e57;">Anti-Spam Policy</a></p>
+                                      <p>By clicking Activate button you agree to <a href="<?= base_url("terms-and-condition"); ?>" style="color:#259e57;" target="_new">NSmarTrac's Terms & Conditions</a>, <a href="<?= base_url("privacy-policy"); ?>" style="color:#259e57;" target="_new">Privacy Policy</a> and <a href="<?= base_url("anti-spam-policy"); ?>" style="color:#259e57;" style="color:#259e57;" target="_new">Anti-Spam Policy</a></p>
                                     </div>  
                                 </div>
                             </div>
@@ -125,34 +125,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="modal fade" id="modalPaymentInfo" tabindex="-1" role="dialog" aria-labelledby="modalTermsConditionTitle" aria-hidden="true">
-                          <div class="modal-dialog modal-md" role="document" style="margin-top:5%;">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="modalPaymentInfoTitle">NSmarTrac's Terms & Conditions</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body" style="padding: 20px 30px;">
-                                  <div id="terms-condition">
-                                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare. Morbi tincidunt ornare massa eget egestas purus viverra accumsan. Integer malesuada nunc vel risus commodo viverra maecenas. Lorem mollis aliquam ut porttitor leo. Turpis egestas sed tempus urna et pharetra pharetra massa. Nunc scelerisque viverra mauris in. Congue quisque egestas diam in arcu cursus euismod quis viverra. Tortor consequat id porta nibh venenatis cras sed. Malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit. Eget duis at tellus at urna. In pellentesque massa placerat duis. Justo donec enim diam vulputate ut. Duis at consectetur lorem donec. Et tortor consequat id porta nibh venenatis cras sed felis.
-                                  </div>
-
-                                  <div id="refund-policy">
-                                  Amet justo donec enim diam vulputate ut. Viverra accumsan in nisl nisi scelerisque eu. Ut consequat semper viverra nam libero justo laoreet. Nec dui nunc mattis enim. Arcu non sodales neque sodales. A scelerisque purus semper eget duis at tellus. Sed felis eget velit aliquet sagittis. Leo vel orci porta non pulvinar neque. Luctus venenatis lectus magna fringilla urna porttitor rhoncus dolor. Purus ut faucibus pulvinar elementum. Orci dapibus ultrices in iaculis nunc sed augue lacus. Ultricies mi eget mauris pharetra et ultrices neque ornare aenean. Pellentesque sit amet porttitor eget dolor morbi non arcu. Iaculis at erat pellentesque adipiscing commodo elit. Quis risus sed vulputate odio ut enim. Nisi est sit amet facilisis magna etiam. Amet nisl purus in mollis nunc sed id semper risus. Senectus et netus et malesuada fames ac.
-                                  </div>
-
-                                  <div id="anti-spam">
-                                  Rhoncus est pellentesque elit ullamcorper dignissim cras tincidunt lobortis feugiat. Quam nulla porttitor massa id neque aliquam. Leo urna molestie at elementum. Sed risus ultricies tristique nulla aliquet. Ut faucibus pulvinar elementum integer enim neque. Tincidunt arcu non sodales neque sodales. Dictum sit amet justo donec enim diam vulputate ut. Vitae auctor eu augue ut lectus. Arcu vitae elementum curabitur vitae nunc. Lectus quam id leo in. Morbi quis commodo odio aenean. Sem viverra aliquet eget sit amet tellus cras. Luctus accumsan tortor posuere ac ut consequat semper viverra. Id volutpat lacus laoreet non.
-                                  </div>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                              </div>
-                          </div>
                       </div>
 
                     </div>
@@ -169,27 +141,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    $(".view-modal-info").click(function(){
-      var type = $(this).attr('data-id');
-      if( type == 'terms-condition' ){
-        $("#modalPaymentInfoTitle").html("NSmarTrac's Terms & Conditions");
-        $("#terms-condition").show();
-        $("#refund-policy").hide();
-        $("#anti-spam").hide();
-      }else if( type == 'refund-policy' ){
-        $("#modalPaymentInfoTitle").html("Refund Policy");
-        $("#terms-condition").hide();
-        $("#refund-policy").show();
-        $("#anti-spam").hide();
-      }else{
-        $("#modalPaymentInfoTitle").html("Anti-Spam Policy");
-        $("#terms-condition").hide();
-        $("#refund-policy").hide();
-        $("#anti-spam").show();
-      }
-      $("#modalPaymentInfo").modal('show');
-    });
-
     $("#activate-automation").submit(function(e){
         e.preventDefault();
 

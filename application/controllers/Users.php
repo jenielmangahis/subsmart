@@ -723,8 +723,9 @@ class Users extends MY_Controller {
 	}
 	
 	public function getRoles(){
+		$cid = logged('company_id');
 	    $role_title = $this->input->get('search');
-        $roles = $this->users_model->getRolesBySearch($role_title);
+        $roles = $this->users_model->getRolesBySearch($role_title, $cid);
         $data = array();
         foreach ($roles as $role){
             $data[] = array(
@@ -836,7 +837,7 @@ class Users extends MY_Controller {
 	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
 
 	    $cid   = logged('company_id');		
-        $roles = $this->users_model->getRoles();
+        $roles = $this->users_model->getRoles($cid);
 
         if( $role_id == 1 || $role_id == 2 ){
 			$this->page_data['payscale'] = $this->PayScale_model->getAll();

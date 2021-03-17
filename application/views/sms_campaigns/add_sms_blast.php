@@ -106,7 +106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <li>2. Select Customers</li>
                                   <li>3. Build SMS</li>
                                   <li>4. Preview</li>
-                                  <!-- <li>5. Purchase</li> -->
+                                  <li>5. Purchase</li>
                                 </ul>
                             </div>
                             <hr />
