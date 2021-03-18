@@ -617,6 +617,33 @@
             </button>
         </div>
 
+
+        <div class="esignBuilder__optionsSidebar">
+            <div class="esignBuilder__optionsSidebarOption">
+                <button type="button" class="btn btn-primary btn-block" id="addOption">
+                    + Add Option
+                </button>
+            </div>
+
+            <div class="esignBuilder__optionsSidebarFormula">
+                <p class="mt-2 mb-2">
+                    Build a formula from number and date fields in your envelope.
+                    Field names must be enclosed in square brackets ("[]").
+                </p>
+
+                <textarea style="width: 100%;" id="formulaInput"></textarea>
+            </div>
+
+            <div class="footer">
+                <button type="button" class="btn btn-secondary btn-block" id="saveOption">
+                    <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Save
+                </button>
+            </div>
+        </div>
+
         <?php echo form_close(); ?>
         <?php include viewPath('esign/esign-page-preview-step-4-style');?>
     <?php endif;?>

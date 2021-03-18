@@ -35,6 +35,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('tags_model');
         $this->load->model('job_tags_model');
         $this->load->model('users_model');
+        $this->load->model('items_model');
         $this->load->model('accounting_recurring_transactions_model');
 		$this->load->library('form_validation');
     }
@@ -155,8 +156,28 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
                 case 'inventory_qty_modal':
+                    $accounts = $this->chart_of_accounts_model->select();
+                    $accountTypes = $this->account_model->getAccounts();
+
+                    $bankAccounts = [];
+                    foreach($accountTypes as $accType) {
+                        $accName = strtolower($accType->account_name);
+
+                        foreach($accounts as $account) {
+                            if($account->account_id === $accType->id) {
+                                $bankAccounts[$accType->account_name][] = [
+                                    'value' => $accName.'-'.$account->id,
+                                    'text' => $account->name,
+                                ];
+                            }
+                        }
+                    }
+
+
                     $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
                     $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
+                    $this->page_data['accounts'] = $bankAccounts;
+                    $this->page_data['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                 break;
                 case 'payroll_modal':
                     $this->page_data['employees'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
@@ -630,6 +651,13 @@ class Accounting_modals extends MY_Controller {
         }
 
         echo json_encode(['balance' => $selectedBalance]);
+    }
+
+    public function getItemDetails($id) {
+        $item = $this->items_model->getItemById($id)[0];
+        $locations = $this->items_model->getLocationByItemId($id);
+
+        echo json_encode(['item' => $item, 'locations' => $locations]);
     }
 
     public function action() {
@@ -1233,6 +1261,7 @@ class Accounting_modals extends MY_Controller {
 
             if($adjustmentId > 0) {
                 $adjustmentProducts = [];
+                $locationData = [];
                 foreach($data['product'] as $key => $value) {
                     $adjustmentProducts[] = [
                         'adjustment_id' => $adjustmentId,
@@ -1240,14 +1269,20 @@ class Accounting_modals extends MY_Controller {
                         'new_quantity' => $data['new_qty'][$key],
                         'change_in_quantity' => $data['change_in_qty'][$key],
                     ];
+
+                    $locationData[] = [
+                        'id' => $data['location'][$key],
+                        'qty' => $data['new_qty'][$key]
+                    ];
                 }
 
+                $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
                 $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
             }
 
             $return['data'] = $adjustmentId;
-            $return['success'] = $adjustmentId && $adjustmentProdId ? true : false;
-            $return['message'] = $adjustmentId && $adjustmentProdId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['success'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? true : false;
+            $return['message'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;

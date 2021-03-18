@@ -899,6 +899,94 @@ $(document).on('click', '#products-services-table .duplicate-item', function(e) 
 	});
 });
 
+$(document).on('click', '#products-services-table .adjust-quantity', function(e) {
+	e.preventDefault();
+	var row = $(this).parent().parent().parent().parent();
+	rowData = $('#products-services-table').DataTable().row(row).data();
+
+	adjustInvQtyModal();
+});
+
+function adjustInvQtyModal() {
+	$.get('/accounting/get-other-modals/inventory_qty_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+		$('#inventoryModal #inventory-adjustments-table select[name="product[]"]').val(rowData.id).trigger('change');
+		$(`#inventoryModal #inventory-adjustments-table select[name="product[]"] option:not([value="${rowData.id}"],:disabled)`).remove();
+
+		rowCount = $('div#modal-container table tbody tr').length;
+		rowInputs = $('div#modal-container table tbody tr:first-child()').html();
+		blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+
+		$('#inventoryModal select').select2();
+		$('#inventoryModal').modal('show');
+	});
+}
+
+$(document).on('click', '#inventory-form-modal .adjust-quantity', function(e) {
+	e.preventDefault();
+
+	adjustInvQtyModal();
+});
+
+$('.dropdown-item.batch-adjust-qty').on('click', function(e) {
+	e.preventDefault();
+
+	var items = [];
+	$('#products-services-table td:first-child input[type="checkbox"]').each(function() {
+		if($(this).prop('checked')) {
+			items.push($(this).val());
+		}
+	});
+
+	$.get('/accounting/get-other-modals/inventory_qty_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+		$('#inventory-adjustments-table select[name="product[]"] option:not(:selected)').each(function() {
+			if(!items.includes($(this).attr('value'))) {
+				$(this).remove();
+			}
+		});
+
+		rowCount = $('div#modal-container table tbody tr').length;
+		rowInputs = $('div#modal-container table tbody tr:first-child()').html();
+		blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+
+		for(i in items) {
+			if($($('#inventory-adjustments-table tbody tr')[i]).length > 0) {
+				if($($('#inventory-adjustments-table tbody tr')[i]).find('[name="product[]"]').length === 0) {
+					$($('#inventory-adjustments-table tbody tr')[i]).trigger('click');
+				}
+			} else {
+				$('#inventory-adjustments-table tbody').append('<tr></tr>');
+				$($('#inventory-adjustments-table tbody tr')[i]).append(rowInputs);
+				$($('#inventory-adjustments-table tbody tr')[i]).children(':nth-child(2)').html(parseInt(i) + 1);
+			}
+
+			$($('#inventory-adjustments-table tbody tr')[i]).find('[name="product[]"]').val(items[i]).trigger('change');
+		}
+
+		$('#inventoryModal select').select2();
+		$('#inventoryModal').modal('show');
+	});
+});
+
 $(document).on('click', '#products-services-table .edit-item', function(e) {
 	e.preventDefault();
 	var row = $(this).parent().parent().parent();
@@ -923,7 +1011,7 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 		<div class="form-group row" style="margin: 0 !important">
 			<div class="col-sm-6">
 				<label for="" class="m-0">Quantity on hand</label>
-				<p class="m-0">Adjust: <a class="text-info" href="#">Quantity</a> | <a class="text-info" href="#">Starting value</a></p>
+				<p class="m-0">Adjust: <a class="text-info adjust-quantity" href="#">Quantity</a> | <a class="text-info" href="#">Starting value</a></p>
 			</div>
 			<div class="col-sm-6">
 				<p class="text-right m-0">${rowData.qty_on_hand}</p>
@@ -1309,7 +1397,7 @@ $(`#products-services-table`).DataTable({
 								<a class="dropdown-item make-inactive" href="#">Make inactive</a>
 								<a class="dropdown-item" href="#">Run report</a>
 								<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
-								<a class="dropdown-item" href="#">Adjust quantity</a>
+								<a class="dropdown-item adjust-quantity" href="#">Adjust quantity</a>
 								<a class="dropdown-item" href="#">Adjust starting value</a>
 								<a class="dropdown-item" href="#">Reorder</a>
 							</div>

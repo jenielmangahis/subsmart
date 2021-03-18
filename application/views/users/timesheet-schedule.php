@@ -141,71 +141,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-12 table-responsive">
                                 <div class="table-wrapper-settings">
                                     <table id="ts_schedule_tbl" class="table table-hover table-striped dataTable no-footer" style="width: 100%;" role="grid" aria-describedby="ts_schedule_tbl_info">
-                                        <thead>
-                                            <tr role="row">
-                                                <td class="sorting_disabled" rowspan="1" colspan="1" style="width: 200px;">Employee</td>
-                                                <td class="sorting_disabled" rowspan="1" colspan="1">Status</td>
-                                                <td class="day sorting_disabled" rowspan="1" colspan="1"><span class="week-day">Mon</span><span class="week-date">Mar 01</span></td>
-                                                <td class="day sorting_disabled" rowspan="1" colspan="1"><span class="week-day">Tue</span><span class="week-date">Mar 02</span></td>
-                                                <td class="day sorting_disabled" rowspan="1" colspan="1"><span class="week-day">Wed</span><span class="week-date">Mar 03</span></td>
-                                                <td class="day sorting_disabled" rowspan="1" colspan="1"><span class="week-day">Thu</span><span class="week-date">Mar 04</span></td>
-                                                <td class="day sorting_disabled" rowspan="1" colspan="1"><span class="week-day">Fri</span><span class="week-date">Mar 05</span></td>
-                                                <td class="day sorting_disabled" rowspan="1" colspan="1"><span class="week-day">Sat</span><span class="week-date">Mar 06</span></td>
-                                                <td class="day sorting_disabled" rowspan="1" colspan="1"><span class="week-day">Sun</span><span class="week-date">Mar 07</span></td>
-                                                <td class="sorting_disabled" rowspan="1" colspan="1">Hours</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr role="row" class="odd">
-                                                <td><span class="employee-name">Jonah Pacas-Abanil</span><span class="sub-text">Owner</span></td>
-                                                <td class="center">Fulltime</td>
-                                                <td class="center">
-                                                    <input type="time" data-date="2021-03-01" data-id="1" data-column="1" class="shift-start-input" value="">
-                                                    <p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                                                    <input type="time" data-date="2021-03-01" data-id="1" data-column="1" class="shift-end-input" value="">
-                                                    <label class="shift-end-day-indecator" style="display:none;"></label>
-                                                </td>
-                                                <td class="center">
-                                                    <input type="time" data-date="2021-03-02" data-id="1" data-column="2" class="shift-start-input" value="">
-                                                    <p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                                                    <input type="time" data-date="2021-03-02" data-id="1" data-column="2" class="shift-end-input" value="">
-                                                    <label class="shift-end-day-indecator" style="display:none;"></label>
-                                                </td>
-                                                <td class="center">
-                                                    <input type="time" data-date="2021-03-03" data-id="1" data-column="3" class="shift-start-input" value="">
-                                                    <p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                                                    <input type="time" data-date="2021-03-03" data-id="1" data-column="3" class="shift-end-input" value="">
-                                                    <label class="shift-end-day-indecator" style="display:none;"></label>
-                                                </td>
-                                                <td class="center">
-                                                    <input type="time" data-date="2021-03-04" data-id="1" data-column="4" class="shift-start-input" value="">
-                                                    <p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                                                    <input type="time" data-date="2021-03-04" data-id="1" data-column="4" class="shift-end-input" value="">
-                                                    <label class="shift-end-day-indecator" style="display:none;"></label>
-                                                </td>
-                                                <td class="center">
-                                                    <input type="time" data-date="2021-03-05" data-id="1" data-column="5" class="shift-start-input" value="">
-                                                    <p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                                                    <input type="time" data-date="2021-03-05" data-id="1" data-column="5" class="shift-end-input" value="">
-                                                    <label class="shift-end-day-indecator" style="display:none;"></label>
-                                                </td>
-                                                <td class="center">
-                                                    <input type="time" data-date="2021-03-06" data-id="1" data-column="6" class="shift-start-input" value="">
-                                                    <p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                                                    <input type="time" data-date="2021-03-06" data-id="1" data-column="6" class="shift-end-input" value="">
-                                                    <label class="shift-end-day-indecator" style="display:none;"></label>
-                                                </td>
-                                                <td class="center">
-                                                    <input type="time" data-date="2021-03-07" data-id="1" data-column="7" class="shift-start-input" value="">
-                                                    <p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                                                    <input type="time" data-date="2021-03-07" data-id="1" data-column="7" class="shift-end-input" value="">
-                                                    <label class="shift-end-day-indecator" style="display:none;"></label>
-                                                </td>
-                                                <td class="center">
-                                                    <label>40</label>
-                                                </td>
-                                            </tr>
-                                        </tbody>
+
                                     </table>
                                     <div class="table-ts-loader" style="display:none;">
                                         <img class="ts-loader-img" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
@@ -261,6 +197,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             });
                             $('#ts_schedule_tbl_wrapper').css('display', 'block');
                             $('.table-ts-loader').css('display', 'none');
+                            // console.log(data);
                         });
                     }
                 });

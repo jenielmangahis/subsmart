@@ -253,8 +253,6 @@ $(function() {
                     </div>
                 `);
             }
-            $(modal_element).modal('show');
-            $(document).off('shown', modal_element);
 
             if($('div#modal-container table').length > 0) {
                 rowCount = $('div#modal-container table tbody tr').length;
@@ -285,6 +283,11 @@ $(function() {
                     });
                 });
             }
+
+            $(`${modal_element} select`).select2();
+
+            $(modal_element).modal('show');
+            $(document).off('shown', modal_element);
         });
     });
 
@@ -363,6 +366,8 @@ $(function() {
 
             $(this).html(rowInputs);
             $(this).children('td:nth-child(2)').html(rowNum);
+
+            $(this).find('select').select2();
         }
     });
 
@@ -1102,6 +1107,42 @@ $(function() {
                 form.prev().removeClass('hide');
             }
         });
+    });
+
+    $(document).on('change', '#inventory-adjustments-table select[name="product[]"]', function() {
+        var input = $(this);
+
+        $.get(`/accounting/get-item-details/${input.val()}`, function(res) {
+            var result = JSON.parse(res);
+
+            input.parent().next().html(result.item.description);
+
+            input.parent().next().next().children('select').html('<option value="" disabled selected>&nbsp;</option>');
+            for(i in result.locations) {
+                input.parent().next().next().children('select').append(`<option value="${result.locations[i].id}" data-quantity="${result.locations[i].qty}">${result.locations[i].name}</option>`);
+            }
+        });
+    });
+
+    $(document).on('change', '#inventory-adjustments-table select[name="location[]"]', function() {
+        var selected = $(this).children('option:selected');
+        var quantity = selected[0].dataset.quantity;
+
+        $(this).parent().next().addClass('text-right');
+        $(this).parent().next().html(quantity);
+        $(this).parent().parent().find('input[name="new_qty[]"]').val(quantity);
+        $(this).parent().parent().find('input[name="change_in_qty[]"]').val(0);
+    });
+
+    $(document).on('change', '#inventory-adjustments-table input[name="new_qty[]"], #inventory-adjustments-table input[name="change_in_qty[]"]', function() {
+        var value = $(this).val();
+        if($(this).attr('name') === 'new_qty[]') {
+            var changeInQty = parseInt(value) - parseInt($(this).parent().prev().html());
+            $(this).parent().parent().find('[name="change_in_qty[]"]').val(changeInQty);
+        } else {
+            var newQty = parseInt($(this).parent().prev().prev().html()) + parseInt(value);
+            $(this).parent().parent().find('[name="new_qty[]"]').val(newQty);
+        }
     });
 });
 

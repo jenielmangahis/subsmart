@@ -7,15 +7,18 @@ class Event_model extends MY_Model
     public $table = 'events';
     public $table_items = 'event_items';
 
-    public function get_all_events()
+    public function get_all_events($limit=0)
     {
         $cid=logged('company_id');
         $this->db->from($this->table);
-        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name');
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
         $this->db->join('users', 'users.id = events.employee_id','left');
         $this->db->where("events.company_id", $cid);
         $this->db->order_by('id', "DESC");
+        if($limit > 0){
+            $this->db->limit($limit);
+        }
         $query = $this->db->get();
         return $query->result();
     }

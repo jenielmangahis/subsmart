@@ -21,6 +21,8 @@ function Step3() {
   const documentUrl = $form.data("doc-url");
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
+  const $optionsSidebar = $(".esignBuilder__optionsSidebar");
+
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
     const viewport = await documentPage.getViewport(1.5);
@@ -69,7 +71,11 @@ function Step3() {
     return $element;
   }
 
-  async function storeField(position, $element) {
+  async function storeField(position, $element, specs = null) {
+    if (!$element.hasClass("esignBuilder__field")) {
+      $element = $element.closest(".esignBuilder__field");
+    }
+
     const $parent = $element.closest(".docPage");
     const key = $element.find(".subData").data("key");
     const docPage = $parent.data("page");
@@ -82,16 +88,28 @@ function Step3() {
       unique_key: key,
       field: $element.text().trim(),
       recipient_id: recipientId,
+      specs,
     };
 
     const endpoint = `${prefixURL}/esign/apiCreateUserDocfileFields`;
-    await fetch(endpoint, {
+    const response = await fetch(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
         accepts: "application/json",
         "content-type": "application/json",
       },
+    });
+
+    await response.json();
+
+    // updates local fields
+    fields = fields.map((field) => {
+      if (field.unique_key != key || !field.specs) {
+        return field;
+      }
+
+      return { ...field, specs: JSON.stringify(specs) };
     });
   }
 
@@ -102,18 +120,62 @@ function Step3() {
     fields = data.fields;
   }
 
-  function createField(field) {
-    const { coordinates: coords, unique_key, field_name, color } = field;
-    const { top, left } = JSON.parse(coords);
+  function showFieldSidebar(field) {
+    const { field_name, specs: fieldSpecs } = field;
+    const isFormula = field_name === "Formula";
 
+    const optionsSidebarActiveClass = "esignBuilder__optionsSidebar--show";
+    const optionsSidebarActiveClassFormula = "esignBuilder__optionsSidebar--formula"; // prettier-ignore
+
+    $optionsSidebar.find("#formulaInput").val("");
+    $optionsSidebar.find(".esignBuilder__optionInput").remove();
+    $optionsSidebar.removeClass(optionsSidebarActiveClassFormula);
+
+    if (fieldSpecs) {
+      const specs = JSON.parse(fieldSpecs || null) || {};
+
+      if (isFormula) {
+        const $formula = $optionsSidebar.find("#formulaInput");
+        $formula.val(specs.formula || "");
+        $optionsSidebar.addClass(optionsSidebarActiveClassFormula);
+      } else {
+        const { options = [] } = specs;
+        if (options.length) {
+          const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
+          $optionsSidebar.append($inputs);
+        }
+      }
+    }
+
+    $optionsSidebar.addClass(optionsSidebarActiveClass);
+
+    if (isFormula) {
+      $optionsSidebar.addClass(optionsSidebarActiveClassFormula);
+    }
+  }
+
+  function hideFieldSidebar() {
+    const optionsSidebarActiveClass = "esignBuilder__optionsSidebar--show";
+    $optionsSidebar.find(".esignBuilder__optionInput").remove();
+    $optionsSidebar.removeClass(optionsSidebarActiveClass);
+  }
+
+  function createField(field) {
+    const { coordinates: coords, unique_key, field_name = "", color } = field;
+    const coordinates = JSON.parse(coords);
+    const top = parseInt(coordinates.top, 10);
+    const left = parseInt(coordinates.left, 10);
+
+    const fieldName = field_name.trim();
     const uniqueKey = unique_key || Date.now();
+    field.field_name = fieldName;
 
     const html = `
       <div
         class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging esignBuilder__field"
         style="left: ${left}px; top: ${top}px; --color: ${color}"
       >
-        <div class="subData" data-key="${uniqueKey}">${field_name}</div>
+        <div class="subData" data-key="${uniqueKey}">${fieldName}</div>
 
         <div class="esignBuilder__fieldOptions">
             <div class="esignBuilder__fieldClose">
@@ -125,6 +187,11 @@ function Step3() {
 
     const $element = createElementFromHTML(html);
     $close = $element.find(".esignBuilder__fieldClose");
+    const activeClass = "esignBuilder__field--active";
+
+    const fieldsWithOption = ["Dropdown", "Checkbox", "Radio", "Formula"];
+    const hasOption = fieldsWithOption.includes(fieldName);
+
     $close.on("click", async (event) => {
       const $parent = $(event.target).closest(".ui-draggable");
       const $signature = $parent.find(".subData");
@@ -134,6 +201,7 @@ function Step3() {
       await fetch(endpoint, { method: "DELETE" });
 
       $parent.remove();
+      hideFieldSidebar();
     });
 
     $element.draggable({
@@ -141,6 +209,30 @@ function Step3() {
       appendTo: ".ui-droppable",
       stop: (_, ui) => storeField(ui.position, $(ui.helper)),
     });
+
+    $element.find(".subData").on("click", function () {
+        const $prevActive = $(`.${activeClass}`);
+      const dataKey = $(this).data("key");
+      const currField = fields.find(({ unique_key }) => unique_key == dataKey);
+
+      $prevActive.removeClass(activeClass);
+      $(this).addClass(activeClass);
+
+      if (!hasOption || !currField) {
+        return;
+      }
+
+      showFieldSidebar(currField);
+    });
+
+    if (!field.isNew) {
+      return $element;
+    }
+
+    if (hasOption) {
+      $element.addClass(activeClass);
+      showFieldSidebar(field);
+    }
 
     return $element;
   }
@@ -173,6 +265,7 @@ function Step3() {
             coordinates: JSON.stringify(ui.position),
             field_name: $item.text(),
             color,
+            isNew: true,
           });
 
           $(this).append($element);
@@ -186,6 +279,28 @@ function Step3() {
         },
       });
     }
+  }
+
+  function createDropdownInput({ value = null }) {
+    const html = `
+        <div class="esignBuilder__optionInput">
+            <input class="form-control">
+            <button type="button" class="btn esignBuilder__dropdownClose" tabindex="-1">
+              <i class="fa fa-times"></i>
+            </button>
+        </div>
+      `;
+
+    const $element = createElementFromHTML(html);
+    $element.find("input").val(value);
+
+    const $close = $element.find(".esignBuilder__dropdownClose");
+
+    $close.on("click", function () {
+      $(this).parent().remove();
+    });
+
+    return $element;
   }
 
   function attachEventHandlers() {
@@ -230,8 +345,66 @@ function Step3() {
       const data = await response.json();
       $loader.addClass("d-none");
       $button.removeAttr("disabled");
+    });
 
-      console.log(data);
+    const $addOption = $optionsSidebar.find("#addOption");
+    $addOption.on("click", function () {
+      const $element = createDropdownInput({ value: "" });
+      $optionsSidebar.append($element);
+      $element.find("input").focus();
+    });
+
+    const $saveOption = $optionsSidebar.find("#saveOption");
+    $saveOption.on("click", async function () {
+      let specs = null;
+      const isFormula = $optionsSidebar.hasClass("esignBuilder__optionsSidebar--formula"); // prettier-ignore
+
+      if (isFormula) {
+        $formula = $optionsSidebar.find("#formulaInput");
+        const value = $formula.val();
+        specs = { formula: value };
+      } else {
+        const $inputs = $optionsSidebar.find("input");
+        if (!$inputs.length) {
+          return;
+        }
+
+        const values = [];
+        $inputs.each(function (_, input) {
+          values.push($(input).val());
+        });
+
+        if (values.some(isEmpty)) {
+          alert("Option must not be empty.");
+          return;
+        }
+
+        specs = {
+          options: values,
+          selected: values[0],
+        };
+      }
+
+      const $element = $(".esignBuilder__field--active");
+      const $parent = $element.closest(".esignBuilder__field");
+
+      const top = $parent.css("top");
+      const left = $parent.css("left");
+      const position = { top, left };
+
+      const $button = $(this);
+      const $loader = $button.find(".spinner-border");
+
+      $loader.removeClass("d-none");
+      $button.attr("disabled", true);
+
+      await storeField(position, $element, specs);
+      $optionsSidebar.removeClass("esignBuilder__optionsSidebar--show");
+      $optionsSidebar.find(".esignBuilder__optionInput").remove();
+      $element.removeClass("esignBuilder__field--active");
+
+      $loader.addClass("d-none");
+      $button.removeAttr("disabled");
     });
   }
 
@@ -256,3 +429,8 @@ $(document).ready(function () {
     step.init();
   }
 });
+
+// https://stackoverflow.com/a/3261380/8062659
+function isEmpty(str) {
+  return !str || 0 === str.length;
+}

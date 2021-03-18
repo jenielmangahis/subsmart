@@ -73,6 +73,11 @@ function time_availability($index=0,$count=FALSE){
     return $time[$index];
 }
 
+function event_status($index=0){
+    $time = array('Draft','Scheduled','On My Way','Started','Finished','Convert To Job');
+    return $time[$index];
+}
+
 if (!function_exists('get_employee_name')){
     function get_employee_name($id=null){
         $CI = &get_instance();

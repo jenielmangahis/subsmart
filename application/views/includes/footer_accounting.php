@@ -193,6 +193,7 @@ var days = 7;
 jQuery(document).ready(function () {
 $('#reportstable').DataTable();
 $('#items_table_estimate').DataTable();
+$('#items_table_estimate_option2').DataTable();
 var elements = document.getElementsByName("amount[]");
 var element_array = Array.prototype.slice.call(elements);
 

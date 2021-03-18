@@ -282,4 +282,56 @@
       box-sizing: border-box;
     }
   }
+
+  &__optionsSidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #ececec;
+    padding: 10px;
+    z-index: 1031;
+    border-left: 1px solid #d9d9d9;
+    transform: translateX(100%);
+    transition: transform 0.3s;
+
+    &--show {
+      transform: translateX(0);
+    }
+
+    &Option {
+      display: block;
+    }
+
+    &Formula {
+      display: none;
+    }
+
+    &--formula {
+      .esignBuilder__optionsSidebarOption {
+        display: none;
+      }
+
+      .esignBuilder__optionsSidebarFormula {
+        display: block;
+      }
+    }
+
+    .footer {
+      background-color: #ececec;
+    }
+
+    .esignBuilder__optionInput {
+      margin-top: 0.5rem !important;
+      margin-bottom: 0.5rem !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-control {
+      height: 30px;
+    }
+  }
 }

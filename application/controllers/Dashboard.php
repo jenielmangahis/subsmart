@@ -13,6 +13,7 @@ class Dashboard extends Widgets {
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $this->load->model('jobs_model');
+        $this->load->model('event_model');
         $this->load->model('estimate_model');
         $this->load->model('invoice_model');
         $this->load->model('Crud', 'crud');
@@ -64,8 +65,10 @@ class Dashboard extends Widgets {
     }
 
     public function index() {
-        
+        // load necessary model and functions
         $this->load->model('widgets_model');
+        $this->load->helper('functions');
+
         $user_id = logged('id');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
         // echo $this->db->last_query(); 
@@ -99,6 +102,7 @@ class Dashboard extends Widgets {
         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
         
         $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
+        $this->page_data['events'] = $this->event_model->get_all_events(5);
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['status_arr'] = $status_arr;
         $this->load->view('dashboard', $this->page_data);

@@ -29,36 +29,14 @@
                             <div class="form-group">
                                 <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
                                 <select name="inventory_adj_acc" id="inventoryAdjAccount" class="form-control" required>
-                                    <optgroup label="Cost of Goods Sold">
-                                        <option value="cogs-1">Cost of Goods Sold</option>
-                                    </optgroup>
-                                    <optgroup label="Expenses">
-                                        <option value="expenses-1">Advertising</option>
-                                    </optgroup>
-                                    <optgroup label="Other Expense">
-                                        <option value="oexpense-1">Miscellaneous</option>
-                                    </optgroup>
-                                    <optgroup label="Income">
-                                        <option value="income-1">Billable Expense Income</option>
-                                    </optgroup>
-                                    <optgroup label="Other Income">
-                                        <option value="oincome-1">Interest Earned</option>
-                                    </optgroup>
-                                    <optgroup label="Equity">
-                                        <option value="equity-1">Additional Paid In Capital</option>
-                                    </optgroup>
-                                    <optgroup label="Other Current Assets">
-                                        <option value="ocassets-1">Inventory Asset</option>
-                                    </optgroup>
-                                    <optgroup label="Other Assets">
-                                        <option value="oassets-1">Shareholder Investment</option>
-                                    </optgroup>
-                                    <optgroup label="Bank">
-                                        <option value="bank-1">Cash on hand</option>
-                                    </optgroup>
-                                    <optgroup label="Other Current Liabilities">
-                                        <option value="ocliab-1">Alabama Department of Revenue Payable</option>
-                                    </optgroup>
+                                    <?php foreach($accounts as $key => $value) : ?>
+                                        <optgroup label="<?= $key ?>">
+                                            <?php foreach($value as $account) : ?>
+                                                <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
+                                                <?php $count++; ?>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -74,9 +52,10 @@
                                             <th>#</th>
                                             <th width="20%">PRODUCT</th>
                                             <th width="20%">DESCRIPTION</th>
-                                            <th width="15%">QTY ON HAND</th>
-                                            <th width="15%">NEW QTY</th>
-                                            <th width="15%">CHANGE IN QTY</th>
+                                            <th width="15%">LOCATION</th>
+                                            <th width="10%">QTY ON HAND</th>
+                                            <th width="10%">NEW QTY</th>
+                                            <th width="10%">CHANGE IN QTY</th>
                                             <th></th>
                                         </thead>
                                         <tbody class="cursor-pointer">
@@ -85,11 +64,16 @@
                                                 <td>1</td>
                                                 <td>
                                                     <select name="product[]" class="form-control" required>
-                                                        <option value=""></option>
-                                                        <option value="1">test product</option>
+                                                        <option value="" disabled selected>&nbsp;</option>
+                                                        <?php foreach($items as $item) : ?>
+                                                            <option value="<?=$item->id?>"><?=$item->title?></option>
+                                                        <?php endforeach; ?>
                                                     </select>
                                                 </td>
                                                 <td></td>
+                                                <td>
+                                                    <select name="location[]" class="form-control"></select>
+                                                </td>
                                                 <td></td>
                                                 <td><input type="number" name="new_qty[]" class="form-control text-right" required></td>
                                                 <td><input type="number" name="change_in_qty[]" class="form-control text-right" required></td>
@@ -98,6 +82,7 @@
                                             <tr>
                                                 <td></td>
                                                 <td>2</td>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>

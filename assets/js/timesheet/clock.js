@@ -12,7 +12,6 @@ function app_notification(token, body, device_type, company_id, title) {
       title: title,
     },
     success: function (data) {
-      console.log(data);
       console.log("App notification success!");
     },
   });
@@ -61,7 +60,6 @@ $(document).ready(function () {
           dataType: "json",
           // data:{clock_in:clock_in},
           success: function (data) {
-            //    console.log('test');
             if (data != null) {
               $(selected).attr("id", "clockOut");
               $(".clock").addClass("clock-active");
@@ -96,7 +94,6 @@ $(document).ready(function () {
                   this.close();
                 },
               });
-              // console.log(data.company_id);
               app_notification(
                 data.token,
                 data.body,
@@ -370,7 +367,6 @@ $(document).ready(function () {
             data: { attn_id: attn_id },
             success: function (data) {
               if (data != null) {
-                // console.log('clock-out')
                 // $(selected).attr('id','lunchOut');
                 $(".clock").removeClass("clock-active").addClass("clock-break");
                 $("#userLunchIn").text(data.lunch_in);
@@ -480,7 +476,6 @@ $(document).ready(function () {
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, I want to Clock-out!",
       }).then((result) => {
-        // console.log(result);
         if (result.value) {
           $.ajax({
             url: baseURL + "/timesheet/clockOutEmployee",
@@ -551,7 +546,6 @@ $(document).ready(function () {
           data: { attn_id: attn_id, time: time },
           success: function (data) {
             if (data != null) {
-              // console.log(baseURL+data.profile_img);
               $("#unScheduledShift").val(null);
               $(".clock").removeClass("clock-active");
               $(".out").text(data.clock_out_time);
@@ -602,41 +596,23 @@ $(document).ready(function () {
   })();
   // end of auto clock out
 
+  //Auto clockout popup
+
   //Live Clock JS
   const deg = 6;
   const hr = document.querySelector("#hr");
   const min = document.querySelector("#min");
   const sec = document.querySelector("#sec");
-  let attn_id = $("#attendanceId").val();
-  var auto_out_timer = 0;
-  var over_time_current = 0;
-  $.ajax({
-    url: baseURL + "/timesheet/shift_duration_checker",
-    type: "POST",
-    dataType: "json",
-    data: { attn_id: attn_id },
-    success: function (data) {
-      console.log(data);
-      if (
-        data.shift_duration + data.overtime >= 8 &&
-        data.not_overtime_notice
-      ) {
-        if (data.overtime < 0.08333333333 && !data.autoclockout_timer_closed) {
-          auto_out_timer = (0.08333333333 - data.overtime) * 60 * 60000;
-          overtimeTimer();
-        } else if (
-          data.autoclockout_timer_closed &&
-          0.08333333333 - data.overtime < 0.01666666666
-        ) {
-          auto_out_timer = (0.08333333333 - data.overtime) * 60 * 60000;
-          overtimeTimer();
-        } else if (data.overtime > 0.08333333333) {
-          over_time_current = data.overtime;
-          auto_out_timer = 10000;
-          overtimeTimer();
-        }
-      }
-    },
-  });
+  if (hr != null) {
+    setInterval(() => {
+      let day = new Date();
+      let hh = day.getHours() * 30;
+      let mm = day.getMinutes() * deg;
+      let ss = day.getSeconds() * deg;
+      hr.style.transform = "rotateZ(" + (hh + mm / 12) + "deg)";
+      min.style.transform = "rotateZ(" + mm + "deg)";
+      sec.style.transform = "rotateZ(" + ss + "deg)";
+    });
+  }
   // end of Live clock
 });

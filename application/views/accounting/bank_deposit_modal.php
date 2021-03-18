@@ -82,7 +82,7 @@
                                                 <td>1</td>
                                                 <td>
                                                     <select name="received_from[]" class="form-control">
-                                                        <option value=""></option>
+                                                        <option value="" disabled selected>&nbsp;</option>
                                                         <?php if(count($dropdown['customers']) !== 0) : ?>
                                                         <optgroup label="Customers">
                                                             <?php foreach($dropdown['customers'] as $customer) :?>
@@ -108,7 +108,7 @@
                                                 </td>
                                                 <td>
                                                     <select name="account[]" class="form-control" required>
-                                                        <option value=""></option>
+                                                        <option value="" disabled selected>&nbsp;</option>
                                                         <?php foreach($accounts as $key => $value) : ?>
                                                             <optgroup label="<?= $key ?>">
                                                                 <?php foreach($value as $account) : ?>
@@ -122,7 +122,7 @@
                                                 <td><input type="text" name="description[]" class="form-control"></td>
                                                 <td>
                                                     <select name="payment_method[]" class="form-control">
-                                                        <option value=""></option>
+                                                        <option value="" disabled selected>&nbsp;</option>
                                                         <option value="1">Cash</option>
                                                         <option value="2">Check</option>
                                                         <option value="3">Credit Card</option>

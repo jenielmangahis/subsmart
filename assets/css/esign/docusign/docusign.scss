@@ -1,5 +1,31 @@
+@font-face {
+  font-family: "Southam";
+  src: url(../fill-and-sign/fonts/SouthamDemo.otf);
+}
+
+@font-face {
+  font-family: "AuthenticSignature";
+  src: url(../fill-and-sign/fonts/AuthenticSignature.ttf);
+}
+
+@font-face {
+  font-family: "HolligateSignature";
+  src: url(../fill-and-sign/fonts/HolligateSignatureDemo.ttf);
+}
+
+@font-face {
+  font-family: "Richness";
+  src: url(../fill-and-sign/fonts/RichnessDemoRegular.ttf);
+}
+
+@font-face {
+  font-family: "ShorelinesScript";
+  src: url(../fill-and-sign/fonts/ShorelinesScriptBold.otf);
+}
+
 .signing {
   margin-top: 50px;
+  margin-bottom: 50px;
 
   &__documentContainer {
     display: flex;
@@ -10,6 +36,88 @@
       width: 100%;
       box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%),
         0 1px 5px 0 rgb(0 0 0 / 12%);
+    }
+  }
+
+  &__documentPage {
+    position: relative;
+  }
+
+  &__fieldSignature {
+    padding: 14px;
+    border: 1px solid #d6d6d6;
+    cursor: pointer;
+
+    svg {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  &__signaturePad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    padding-bottom: 0;
+
+    canvas {
+      border: 1px solid #ece3e3;
+      margin: 0 !important;
+    }
+
+    a {
+      align-self: flex-end;
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  &__signatureInput {
+    font-family: "Southam";
+    height: 200px;
+    font-size: 100px;
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-shadow: none !important;
+    color: #000 !important;
+
+    &::-webkit-input-placeholder {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 20px;
+    }
+
+    &[data-font="font-1"] {
+      font-family: "Southam";
+    }
+
+    &[data-font="font-2"] {
+      font-family: "AuthenticSignature";
+      font-size: 80px;
+    }
+
+    &[data-font="font-3"] {
+      font-family: "HolligateSignature";
+      font-size: 50px;
+    }
+
+    &[data-font="font-4"] {
+      font-family: "Richness";
+      font-size: 50px;
+    }
+
+    &[data-font="font-5"] {
+      font-family: "ShorelinesScript";
+      font-size: 50px;
+    }
+  }
+
+  .dropdown {
+    .btn {
+      padding: 0 5px;
     }
   }
 }

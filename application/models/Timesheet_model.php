@@ -1160,10 +1160,14 @@ class Timesheet_model extends MY_Model
     {
         $or_query = "";
         for ($x = 0; $x < count($week); $x++) {
+            date_default_timezone_set($this->session->userdata('usertimezone'));
+            $the_date = strtotime($week[$x] . " 00:00:00");
+            date_default_timezone_set("UTC");
+            $shift_date = date('Y-m-d', $the_date);
             if ($or_query != "") {
-                $or_query .= ' or shift_date = "' . $week[$x] . '"';
+                $or_query .= ' or shift_date = "' . $shift_date . '"';
             } else {
-                $or_query .= ' shift_date = "' . $week[$x] . '"';
+                $or_query .= ' shift_date = "' . $shift_date . '"';
             }
         }
         $qry = $this->db->query('SELECT * FROM timesheet_shift_schedule WHERE (' . $or_query . ') and user_id = ' . $user_id . ' order by shift_date DESC');
