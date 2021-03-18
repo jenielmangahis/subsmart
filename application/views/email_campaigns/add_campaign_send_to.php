@@ -99,13 +99,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <div class="card mt-0">
                         <div class="row">
                           <div class="col-sm-6 left">
-                            <h3 class="page-title">SMS Blast</h3>
+                            <h3 class="page-title">Email Blast</h3>
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                        <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                            <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
+                                        <a href="<?php echo url('email_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Email Blast list
                                         </a>
                                 </div>
                             </div>
@@ -121,9 +121,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <ul class="clearfix">
                                   <li>1. Edit Campaign</li>
                                   <li class="active">2. Select Customers</li>
-                                  <li>3. Build SMS</li>
+                                  <li>3. Build Email</li>
                                   <li>4. Preview</li>
-                                  <li>5. Purchase</li>
+                                  <!-- <li>5. Purchase</li> -->
                                 </ul>
                             </div>
                             <hr />
@@ -131,18 +131,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="margin-bottom">
                                 <div class="form-group">
                                     <label><b>Who are you sending to?</b></label>
-                                    <?php if($smsCampaign){ ?>
+                                    <?php if($emailCampaign){ ?>
                                     <div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="1" id="to_type_1" <?= $smsCampaign->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
+                                            <input type="radio" name="to_type" value="1" id="to_type_1" <?= $emailCampaign->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
                                             <label for="to_type_1">All my customers with phone</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="2" id="to_type_3" <?= $smsCampaign->sending_type == 2 ? 'checked="checked"' : ''; ?>>
+                                            <input type="radio" name="to_type" value="2" id="to_type_3" <?= $emailCampaign->sending_type == 2 ? 'checked="checked"' : ''; ?>>
                                             <label for="to_type_3">To a customer group</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="3" id="to_type_2" <?= $smsCampaign->sending_type == 3 ? 'checked="checked"' : ''; ?>>
+                                            <input type="radio" name="to_type" value="3" id="to_type_2" <?= $emailCampaign->sending_type == 3 ? 'checked="checked"' : ''; ?>>
                                             <label for="to_type_2">Only to certain customers</label>
                                         </div>
                                     </div>
@@ -167,7 +167,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="sending-option-1">
                                 <div class="margin-bottom-ter">
-                                    <span class="customer-count" data-to="customer-count-all"><?= count($customers); ?></span> contacts have a valid phone (excluding unsubscribed).
+                                    <span class="customer-count" data-to="customer-count-all"><?= count($customers); ?></span> contacts have a valid email.
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <label><b>Customer Type</b></label>
@@ -212,12 +212,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <th style="width:30px;"></th>
                                                 <th>Name</th>
-                                                <th style="width: 10%;">Phone</th>
+                                                <th style="width: 10%;">Email</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach($customers as $c){ ?>
-                                                <?php if($c->phone_m != ''){ ?>
+                                                <?php if($c->email != ''){ ?>
                                                 <tr>
                                                     <td>
                                                         <div class="checkbox checkbox-sm">
@@ -228,7 +228,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <td>
                                                         <?= $c->first_name . ' ' . $c->last_name; ?>
                                                     </td>
-                                                    <td><?= $c->phone_m; ?></td>
+                                                    <td><?= $c->email; ?></td>
                                                 </tr>
                                                 <?php } ?>
                                             <?php } ?>
@@ -255,18 +255,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <label><b>Customer Type</b></label>
-                                    <?php if($smsCampaign){ ?>
+                                    <?php if($emailCampaign){ ?>
                                         <div>
                                             <div class="radio radio-sec margin-right">
-                                                <input type="radio" name="optionC[customer_type_service]" value="0" <?= $smsCampaign->customer_type == 0 ? 'checked="checked"' : ''; ?> id="customer-group-type-both" checked="checked">
+                                                <input type="radio" name="optionC[customer_type_service]" value="0" <?= $emailCampaign->customer_type == 0 ? 'checked="checked"' : ''; ?> id="customer-group-type-both" checked="checked">
                                                 <label for="customer-group-type-both">Both Residential and Commercial</label>
                                             </div>
                                             <div class="radio radio-sec margin-right">
-                                                <input type="radio" name="optionC[customer_type_service]" value="1" <?= $smsCampaign->customer_type == 1 ? 'checked="checked"' : ''; ?> id="customer-group-type-residential">
+                                                <input type="radio" name="optionC[customer_type_service]" value="1" <?= $emailCampaign->customer_type == 1 ? 'checked="checked"' : ''; ?> id="customer-group-type-residential">
                                                 <label for="customer-group-type-residential">Residential customers</label>
                                             </div>
                                             <div class="radio radio-sec margin-right">
-                                                <input type="radio" name="optionC[customer_type_service]" value="2" <?= $smsCampaign->customer_type == 2 ? 'checked="checked"' : ''; ?> id="customer-group-type-commercial">
+                                                <input type="radio" name="optionC[customer_type_service]" value="2" <?= $emailCampaign->customer_type == 2 ? 'checked="checked"' : ''; ?> id="customer-group-type-commercial">
                                                 <label for="customer-group-type-commercial">Commercial customers</label>
                                             </div>
                                         </div>
@@ -292,7 +292,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div>
                                 <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/edit_campaign/' . $smsCampaign->id); ?>" style="float: left;margin-right: 10px;">« Back</a>
+                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/edit_campaign/' . $emailCampaign->id); ?>" style="float: left;margin-right: 10px;">« Back</a>
                                     <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-send-settings" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>
@@ -312,10 +312,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     <?php 
-        if( $smsCampaign ){
-            if($smsCampaign->sending_type == 1){
+        if( $emailCampaign ){
+            if($emailCampaign->sending_type == 1){
                 echo "to_type_1.click();";
-            }elseif( $smsCampaign->sending_type == 2 ){
+            }elseif( $emailCampaign->sending_type == 2 ){
                 echo '$(".sending-option-1").hide();';
                 echo '$(".sending-option-2").hide();';
                 echo '$(".sending-option-3").show();';

@@ -278,68 +278,6 @@ $(function(){
                   $(".close-campaign-name").html(campaign_name);
                   $("#modalCloseCampaign").modal('show');
                 });
-
-                $("#form-clone-campaign").submit(function(e){
-                  e.preventDefault();
-                  var url = base_url + 'sms_campaigns/_clone_campaign';
-                  $(".btn-clone-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-                  setTimeout(function () {
-                    $.ajax({
-                       type: "POST",
-                       url: url,
-                       data : $("#form-clone-campaign").serialize(),
-                       dataType:"json",
-                       success: function(o)
-                       {
-                         $(".btn-clone-campaign").html('Yes');
-                         $(".clone-modal-footer").hide();
-                         if( o.sms_id > 1 ){
-                          location.href = base_url + "sms_campaigns/edit_campaign/" + o.sms_id;
-                         }else{
-                          $(".clone-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
-                         }
-
-                       }
-                    });                    
-                  }, 800);
-                });
-
-                $("#form-close-campaign").submit(function(e){
-                  e.preventDefault();
-                  var url = base_url + 'sms_campaigns/_close_campaign';
-                  $(".btn-close-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-                  setTimeout(function () {
-                    $.ajax({
-                       type: "POST",
-                       url: url,
-                       data : $("#form-close-campaign").serialize(),
-                       dataType:"json",
-                       success: function(o)
-                       {
-                         $(".btn-close-campaign").html('Yes');
-                         $(".close-modal-footer").hide();
-                         if( o.is_success == 1 ){
-                          $(".close-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");
-                          if( active_tab == 'all' ){
-                            load_all_campaigns();
-                          }else if( active_tab == 'closed' ){
-                            load_closed_campaigns();
-                          }else if( active_tab == 'active' ){
-                            load_active_campaigns();
-                          }else if( active_tab == 'draft' ){
-                            load_draft_campaigns();
-                          }else if( active_tab == 'scheduled' ){
-                            load_scheduled_campaigns();
-                          }
-                          load_campaign_tab_counter();
-                         }else{
-                          $(".close-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
-                         }
-
-                       }
-                    });                    
-                  }, 800);
-                });
              }
           });
         }, 1000);
@@ -364,6 +302,68 @@ $(function(){
           });
         }, 800);
     }
+
+    $("#form-clone-campaign").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'sms_campaigns/_clone_campaign';
+      $(".btn-clone-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-clone-campaign").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $(".btn-clone-campaign").html('Yes');
+             $(".clone-modal-footer").hide();
+             if( o.sms_id > 1 ){
+              location.href = base_url + "sms_campaigns/edit_campaign/" + o.sms_id;
+             }else{
+              $(".clone-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
+             }
+
+           }
+        });                    
+      }, 800);
+    });
+
+    $("#form-close-campaign").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'sms_campaigns/_close_campaign';
+      $(".btn-close-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-close-campaign").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $(".btn-close-campaign").html('Yes');
+             $(".close-modal-footer").hide();
+             if( o.is_success == 1 ){
+              $(".close-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");
+              if( active_tab == 'all' ){
+                load_all_campaigns();
+              }else if( active_tab == 'closed' ){
+                load_closed_campaigns();
+              }else if( active_tab == 'active' ){
+                load_active_campaigns();
+              }else if( active_tab == 'draft' ){
+                load_draft_campaigns();
+              }else if( active_tab == 'scheduled' ){
+                load_scheduled_campaigns();
+              }
+              load_campaign_tab_counter();
+             }else{
+              $(".close-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
+             }
+
+           }
+        });                    
+      }, 800);
+    });
 
 
 });

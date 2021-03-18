@@ -401,12 +401,20 @@ class Users_model extends MY_Model {
         $qry = $this->db->get($this->table);
         return $qry->result();
     }
-    public function getRoles(){
+    public function getRoles( $company_id = 0 ){
+    	if( $company_id != 1 ){
+        	$this->db->where('id <>', 1);
+        	$this->db->where('id <>', 2);
+        }
 	    $qry = $this->db->get('roles');
 	    return $qry->result();
     }
-    public function getRolesBySearch($search){
+    public function getRolesBySearch($search, $company_id = 0){
         $this->db->like('title',$search);
+        if( $company_id != 1 ){
+        	$this->db->where('id <>', 1);
+        	$this->db->where('id <>', 2);
+        }
         $qry = $this->db->get('roles')->result();
         return $qry;
     }

@@ -1340,9 +1340,9 @@ class Accounting extends MY_Controller {
         if($postData['stock_status'] !== 'all') {
             $data = array_filter($data, function($item) use ($postData) {
                 if($postData['stock_status'] === 'low stock') {
-                    return $item['qty_on_hand'] <= 3;
+                    return $item['qty_on_hand'] <= $item['reorder_point'] && $item['type'] === 'Inventory';
                 } else {
-                    return $item['qty_on_hand'] === 0;
+                    return $item['qty_on_hand'] === 0 && $item['type'] === 'Inventory';
                 }
             });
         }

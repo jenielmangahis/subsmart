@@ -1,4 +1,4 @@
-<div class="row" style="height: 140px; overflow-y: auto;">
+<div class="row" style="height: 240px; overflow-y: auto;">
   <div class="col-lg-12 col-md-12 col-sm-12">
     <?php if ( !empty($events) ) { ?>
       <?php foreach($events as $event) { ?>
@@ -25,7 +25,7 @@
                 <?php }else{ ?>
                   <a href="<?= base_url("events/event_preview/" . $e['event_id']) ?>" class="">
                 <?php } ?>
-                
+
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-type" value="<?= $e['type']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-title" value="<?= $e['event_title']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-start-date" value="<?= $e['start_date']; ?>" />
@@ -35,7 +35,7 @@
                   <?php }else{ ?>
                     <h6 style="color:black;font-weight:700; margin:0;"><?php echo $e['event_type']; ?></h6>
                   <?php } ?>
-                  
+
                   <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($e['event_title']); ?></p>
                   <?php if( trim($e['address']) != '' ){ ?>
                     <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($e['address'])); ?></p>

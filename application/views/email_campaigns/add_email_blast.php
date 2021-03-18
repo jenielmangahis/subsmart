@@ -74,27 +74,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             -->
             <!-- end row -->
-            <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'id' => 'create_sms_blast', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'create_email_blast', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
 
                         <div class="row">
                           <div class="col-sm-6 left">
-                            <h3 class="page-title">Edit SMS Campaign</h3>
+                            <h3 class="page-title">Create Email Campaign</h3>
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                        <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                            <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
+                                        <a href="<?php echo url('email_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Email Blast list
                                         </a>
                                 </div>
                             </div>
                           </div>
                         </div>
                         <div class="alert alert-warning mt-2 mb-0" role="alert">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Start a new SMS campaign to promote your business.
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Start a new email campaign to promote your business.
                             </span>
                         </div>
 
@@ -102,18 +102,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li class="active">1. Edit Campaign</li>
+                                  <li class="active">1. Create Campaign</li>
                                   <li>2. Select Customers</li>
-                                  <li>3. Build SMS</li>
+                                  <li>3. Build Email</li>
                                   <li>4. Preview</li>
-                                  <li>5. Purchase</li>
+                                  <!-- <li>5. Purchase</li> -->
                                 </ul>
                             </div>
                             <hr />
                             <div>
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Campaign Name</label>
-                                    <input type="text" class="form-control" value="<?= $smsCampaign->campaign_name; ?>" name="sms_camapaign_name" id="" required placeholder="" autofocus/>
+                                    <input type="text" class="form-control" name="email_camapaign_name" id="" required placeholder="" autofocus/>
                                 </div>
                             </div>
                             <hr />
@@ -138,23 +138,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    $("#create_sms_blast").submit(function(e){
+    $("#create_email_blast").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_campaigns/save_draft_campaign';
+        var url = base_url + 'email_campaigns/save_draft_campaign';
         $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#create_sms_blast").serialize(),
+             data: $("#create_email_blast").serialize(),
              success: function(o)
              {
                 if( o.is_success ){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "sms_campaigns/add_campaign_send_to";
+                    location.href = base_url + "email_campaigns/add_campaign_send_to";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);

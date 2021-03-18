@@ -12,6 +12,10 @@ input.shift-end-input {
   transition-duration: 0.5s;
   transition-timing-function: linear;
 }
+#ts_schedule_tbl_filter input {
+  visibility: visible;
+  position: inherit;
+}
 input.shift-start-input.blank,
 input.shift-end-input.blank {
   background-color: transparent;
@@ -27,7 +31,6 @@ input.shift-end-input.changed:focus {
   font-size: 10px;
   color: #676767;
 }
-
 #ts_schedule_tbl td {
   padding: 12px 8px;
 }
@@ -65,4 +68,19 @@ label.shift-end-day-indecator {
   color: #ff5722;
   font-size: 12px;
   margin-top: 2px;
+}
+label.copy-alert {
+  font-size: 10px;
+  color: #4eb245;
+  position: absolute;
+  margin-top: -3px;
+  margin-left: -15px;
+}
+label.copy-alert.group {
+  margin-left: 0px;
+}
+
+td a {
+  padding: 5px;
+  cursor: pointer;
 }

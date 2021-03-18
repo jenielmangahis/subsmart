@@ -128,10 +128,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Preview and select when to send the SMS-es.
                         </span>
                     </div>
-                    <div class="row" style="background:#f2f2f2;">
-                      <div class="col-md-4 pl-0 pr-0 left">
+                    <div class="tabs-menu">
+                        <ul class="clearfix">
+                          <li>1. Edit Campaign</li>
+                          <li>2. Select Customers</li>
+                          <li>3. Build SMS</li>
+                          <li class="active">4. Preview</li>
+                          <li>5. Purchase</li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4 pl-0 pr-0 left" style="background-color: #ffffff !important;">
 
-                          <div class="panel-info">
+                          <div class="panel-info" style="background-color: #ffffff;">
                               <div class="phone" style="margin-left: 38px;">
                                   <div class="phone__cnt">
                                       <div class="sms-blast-msg"><?= $sms_text; ?></div>
@@ -141,20 +150,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                       </div>
                       <div class="col-md-8 pl-0 pr-0 left">
-
-                          <div class="panel-info">
-                              <form class="form" name="plan-form" data-shop="form">
-                                  <div class="tabs-menu">
-                                      <ul class="clearfix">
-                                        <li>1. Edit Campaign</li>
-                                        <li>2. Select Customers</li>
-                                        <li>3. Build SMS</li>
-                                        <li class="active">4. Preview</li>
-                                        <!-- <li>5. Purchase</li> -->
-                                      </ul>
-                                  </div>
-                                  <hr />
-
+                        <form class="form" name="plan-form" data-shop="form">
+                          <div class="panel-info" style="margin-top: 29px;">
                                   <div class="margin-bottom">
                                       <div class="form-msg" style="display: none;"></div>
                                       <div>
@@ -208,21 +205,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               </div>
                                           </div>
                                       </div>
-                                  </div>
+                                  </div><!-- 
                                   <hr>
                                   <div class="margin-bottom">
                                       <span class="bold margin-right">Total: $<?= number_format($grand_total, 2); ?></span>
-                                  </div>
-
-                                  <div class="row margin-top" style="position: relative;bottom: 55px;">
-                                      <div class="col-sm-12"></div>
-                                      <div class="col-sm-12 text-right">
-                                          <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/build_sms/'); ?>">&laquo; Back</a>
-                                          <button class="btn btn-primary btn-campaign-update-send-schedule" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Save &raquo;</button>
-                                      </div>
-                                  </div>
-                              </form>
+                                  </div> -->
                           </div>
+                        </div>
+                          <div class="row margin-top" style="bottom: 55px;">
+                              <div class="col-sm-12"></div>
+                              <div class="col-sm-12 text-right">
+                                  <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/build_sms/'); ?>">&laquo; Back</a>
+                                  <button class="btn btn-primary btn-campaign-update-send-schedule" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Continue &raquo;</button>
+                              </div>
+                          </div>
+                        </form>
 
                       </div>
                   </div>
@@ -258,10 +255,11 @@ $(function(){
              {
                 if( o.is_success == 1 ){
                     $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
-                    $(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
-                    setTimeout(function() {
+                    location.href = base_url + "sms_campaigns/payment";
+                    //$(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
+                    /*setTimeout(function() {
                         location.href = base_url + "sms_campaigns";
-                    }, 2500);
+                    }, 2500);*/
                 }else{
                     $('.form-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
                     $(".btn-campaign-update-send-schedule").html('Save');

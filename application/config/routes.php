@@ -261,6 +261,7 @@ $route['accounting/send-email-form']['post'] = "accounting_modals/showEmailModal
 $route['accounting/delete-group-tag/(:any)/(:any)']['DELETE'] = "accounting/deleteGroupTag/$1/$2";
 $route['accounting/update-group-tag/(:any)/(:any)']['POST'] = "accounting/updateGroupTag/$1/$2";
 
+// Modals
 $route['accounting/get-group-tags'] = 'accounting/get_group_tags';
 $route['accounting/load-all-tags']['post'] = "accounting/load_all_tags";
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
@@ -277,6 +278,7 @@ $route['accounting/edit-group-tag-form'] = 'accounting_modals/edit_group_tag_for
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
+$route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 $route['accounting/attachments'] = 'accounting/attachments';
@@ -317,8 +319,6 @@ $route['accounting/products-and-services/items-dropdown'] = 'accounting/get_item
 $route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting/inactive_item/$1";
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting/create_item/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting/update_item/$1/$2';
-$route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting/assign_category/$1';
-$route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting/batch_action/$1';
 
 $route['accounting/product-categories'] = 'accounting/product_categories';
 $route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
@@ -522,6 +522,8 @@ $route['sms_campaigns/_load_sms_campaign_counter'] = 'Sms_Campaigns/ajax_load_sm
 $route['sms_campaigns/_close_campaign'] = 'Sms_Campaigns/ajax_close_campaign';
 $route['sms_campaigns/edit_campaign/(:num)'] = 'Sms_Campaigns/edit_sms_campaign/$1';
 $route['sms_campaigns/_clone_campaign'] = 'Sms_Campaigns/ajax_clone_campaign';
+$route['sms_campaigns/payment'] = 'Sms_Campaigns/payment';
+$route['sms_campaigns/process_payment'] = 'Sms_Campaigns/process_payment';
 
 //sms automation
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';
@@ -532,6 +534,13 @@ $route['sms_automation/create_sms_message'] = 'Sms_Automation/create_sms_message
 $route['sms_automation/preview_sms_message'] = 'Sms_Automation/preview_sms_message';
 $route['sms_automation/payment'] = 'Sms_Automation/payment';
 $route['sms_automation/activate_automation'] = 'Sms_Automation/activate_automation';
+$route['sms_automation/edit_automation/(:num)'] = 'Sms_Automation/edit_sms_automation/$1';
+$route['sms_automation/_delete_automation'] = 'Sms_Automation/ajax_delete_automation';
+
+//email blast
+$route['email_campaigns/add_email_blast'] = 'Email_Campaigns/add_email_blast';
+$route['email_campaigns/save_draft_campaign'] = 'Email_Campaigns/create_draft_campaign';
+$route['email_campaigns/add_campaign_send_to'] = 'Email_Campaigns/add_campaign_send_to';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';

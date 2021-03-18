@@ -46,7 +46,7 @@
                                                 <td>1</td>
                                                 <td>
                                                     <select name="accounts[]" class="form-control">
-                                                        <option value=""></option>
+                                                        <option value="" disabled selected>&nbsp;</option>
                                                         <?php foreach($accounts as $key => $value) : ?>
                                                             <optgroup label="<?= $key ?>">
                                                                 <?php foreach($value as $account) : ?>
@@ -61,7 +61,7 @@
                                                 <td><input type="text" name="descriptions[]" class="form-control"></td>
                                                 <td>
                                                     <select name="names[]" class="form-control">
-                                                        <option value=""></option>
+                                                        <option value="" disabled selected>&nbsp;</option>
                                                         <optgroup label="Customers">
                                                             <?php foreach($dropdown['customers'] as $customer):?>
                                                                 <option value="customer-<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>

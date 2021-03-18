@@ -95,6 +95,31 @@ table.dataTable tbody tr td {
                     </div>
                     <!-- end card -->
                 </div>
+
+                <!-- Modal Close SMS  -->
+                <div class="modal fade bd-example-modal-sm" id="modalDeleteAutomation" tabindex="-1" role="dialog" aria-labelledby="modalDeleteAutomationTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-md" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-delete-automation', 'autocomplete' => 'off' ]); ?>
+                      <?php echo form_input(array('name' => 'automationid', 'type' => 'hidden', 'value' => '', 'id' => 'automationid'));?>
+                      <div class="modal-body delete-body-container">
+                          <p>Are you sure you want delete the sms automation <b><span class="delete-automation-name"></span></b>?</p>
+                      </div>
+                      <div class="modal-footer delete-modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-danger btn-delete-automation">Yes</button>
+                      </div>
+                      <?php echo form_close(); ?>
+                    </div>
+                  </div>
+                </div>
+
             </div>
             <!-- end row -->
         </div>
@@ -131,10 +156,46 @@ $(function(){
                       { "sWidth": "10%", "aTargets": [ 5 ] }
                     ]
                 });
+
+                $(".delete-sms-automation").click(function(){
+                  var automation_name = $(this).attr("data-name");
+                  var automation_id = $(this).attr("data-id");
+                  $("#automationid").val(automation_id);
+                  $(".delete-modal-footer").show();
+                  $(".delete-body-container").html('<p>Are you sure you want delete the sms automation <b><span class="delete-automation-name"></span></b>?</p>');
+                  $(".delete-automation-name").html(automation_name);
+                  $("#modalDeleteAutomation").modal('show');
+                });
              }
           });
         }, 1000);
     }
+
+    $("#form-delete-automation").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'sms_automation/_delete_automation';
+      $(".btn-delete-automation").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-delete-automation").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $(".btn-delete-automation").html('Yes');                         
+             if( o.is_success == 1 ){
+              $(".delete-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");                          
+              load_automation_list('all');
+             }else{
+              $(".delete-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
+             }
+             $(".delete-modal-footer").hide();
+
+           }
+        });                    
+      }, 800);
+    });
 });
 
 </script>

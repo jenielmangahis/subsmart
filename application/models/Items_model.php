@@ -279,6 +279,13 @@ class Items_model extends MY_Model
         return false;
     }
 
+    public function updateBatchLocations($data)
+    {
+        $update = $this->db->update_batch($this->table_has_location, $data, 'id');
+
+        return $update;
+    }
+
     public function saveItemAccountingDetails($data = []) {
         if(!empty($data)) {
             $insert = $this->db->insert('items_accounting_details', $data);

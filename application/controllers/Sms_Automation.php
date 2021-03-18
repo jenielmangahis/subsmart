@@ -13,7 +13,8 @@ class Sms_Automation extends MY_Controller {
 		parent::__construct();
 
         $this->load->model('SmsAutomation_model');
-        $this->load->model('Users_model');              
+        $this->load->model('Users_model');    
+        $this->load->model('Clients_model');             
         $this->load->model('Customer_model');
         $this->load->model('CustomerGroup_model');
 
@@ -50,8 +51,12 @@ class Sms_Automation extends MY_Controller {
         
         $smsAutomation = $this->SmsAutomation_model->getAllByCompanyId($company_id, array(), $conditions);
         $optionRuleEvent = $this->SmsAutomation_model->optionRuleNotify();
-        	
+        $optionRuleNotifyAt = $this->SmsAutomation_model->optionRuleNotifyAt();
+        $optionStatus = $this->SmsAutomation_model->optionStatus();
+
+        $this->page_data['optionRuleNotifyAt'] = $optionRuleNotifyAt;
         $this->page_data['optionRuleEvent'] = $optionRuleEvent;
+        $this->page_data['optionStatus'] = $optionStatus;
         $this->page_data['smsAutomation'] = $smsAutomation;
         $this->load->view('sms_automation/ajax_load_automation_list', $this->page_data);
     }
@@ -76,28 +81,45 @@ class Sms_Automation extends MY_Controller {
 
     	$user = $this->session->userdata('logged');
         $post = $this->input->post();
-        $excludeGroups = array();
-        if( isset($post['excludeGroups']) ){
-        	foreach($post['excludeGroups'] as $value){
-        		$excludeGroups[$value] = $value;
-        	}
-        }
-        unset($post['excludeGroups']);
-        $post['exclude_customer_groups'] = serialize($excludeGroups);
-        $post['user_id'] = $user['id'];
-        $post['status']  = $this->SmsAutomation_model->isDraft();
-        $post['total_cost']  = 0;
-        $post['sms_text'] = '';
-        $post['is_paid']  = 0;
-        $post['created']  = date("Y-m-d H:i:s");
+        if($this->session->userdata('smsAutomationId')){
+        	$sms_automation_id = $this->session->userdata('smsAutomationId');
 
-        $sms_automation_id = $this->SmsAutomation_model->create($post);
-        if( $sms_automation_id > 0 ){
-        	$is_success = true;
-        	$this->session->set_userdata('smsAutomationId', $sms_automation_id);
+        	$excludeGroups = array();
+	        if( isset($post['excludeGroups']) ){
+	        	foreach($post['excludeGroups'] as $value){
+	        		$excludeGroups[$value] = $value;
+	        	}
+	        }
+	        unset($post['excludeGroups']);
+	        $post['exclude_customer_groups'] = serialize($excludeGroups);
+	        $smsAutomation = $this->SmsAutomation_model->updateSmsAutomation($sms_automation_id,$post);
+	        $is_success = true;
+
         }else{
-        	$msg = 'Cannot save data';
+        	$excludeGroups = array();
+	        if( isset($post['excludeGroups']) ){
+	        	foreach($post['excludeGroups'] as $value){
+	        		$excludeGroups[$value] = $value;
+	        	}
+	        }
+	        unset($post['excludeGroups']);
+	        $post['exclude_customer_groups'] = serialize($excludeGroups);
+	        $post['user_id'] = $user['id'];
+	        $post['status']  = $this->SmsAutomation_model->isDraft();
+	        $post['total_cost']  = 0;
+	        $post['sms_text'] = '';
+	        $post['is_paid']  = 0;
+	        $post['created']  = date("Y-m-d H:i:s");
+
+	        $sms_automation_id = $this->SmsAutomation_model->create($post);
+	        if( $sms_automation_id > 0 ){
+	        	$is_success = true;
+	        	$this->session->set_userdata('smsAutomationId', $sms_automation_id);
+	        }else{
+	        	$msg = 'Cannot save data';
+	        }
         }
+	        
 
         $json_data = [
         	'is_success' => $is_success,
@@ -112,6 +134,9 @@ class Sms_Automation extends MY_Controller {
         $sms_automation_id = $this->session->userdata('smsAutomationId');
         $smsAutomation = $this->SmsAutomation_model->getById($sms_automation_id);
 
+        $company = $this->Clients_model->getById($cid);
+
+        $this->page_data['company'] = $company;
         $this->page_data['smsAutomation'] = $smsAutomation;
         $this->load->view('sms_automation/build_sms', $this->page_data);
     }
@@ -187,6 +212,61 @@ class Sms_Automation extends MY_Controller {
     	$json_data = ['is_success' => $is_success, 'msg' => $msg];
     	echo json_encode($json_data);
     	
+    }
+
+    public function edit_sms_automation($id){
+        $company_id = logged('company_id');
+        $smsAutomation = $this->SmsAutomation_model->getById($id);
+        $this->session->unset_userdata('smsAutomationId');
+        if( $smsAutomation ){
+            if( $smsAutomation->company_id == $company_id ){
+                $customer_groups = unserialize($smsAutomation->exclude_customer_groups);
+                
+                $this->session->set_userdata('smsAutomationId', $smsAutomation->id);
+                $this->page_data['smsAutomation'] = $smsAutomation;
+                $this->page_data['selectedGroups'] = $customer_groups;
+		        $this->page_data['customerGroups'] = $this->CustomerGroup_model->getAllByCompany($company_id);
+		        $this->page_data['optionRuleNotify'] = $this->SmsAutomation_model->optionRuleNotify();
+		        $this->page_data['optionRuleNotifyAt'] = $this->SmsAutomation_model->optionRuleNotifyAt();
+		        $this->page_data['optionCustomerTypeService'] = $this->SmsAutomation_model->optionCustomerTypeService();
+                $this->load->view('sms_automation/edit_sms_automation', $this->page_data);
+            }else{
+                $this->session->set_flashdata('message', 'Record not found.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+                redirect('credit_notes');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('sms_automation');
+        }
+    }
+
+    public function ajax_delete_automation(){
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg    = '';
+
+        $post = $this->input->post(); 
+        $smsAutomation = $this->SmsAutomation_model->getById($post['automationid']);
+        if( $smsAutomation ){
+            if( $smsAutomation->company_id == $company_id  ){
+                $this->SmsAutomation_model->deleteSmsAutomation($smsAutomation->id);
+                $is_success = 1;
+                $msg = 'Record deleted';
+            }else{
+                $msg = 'Cannot find record';    
+            }
+        }else{
+            $msg = 'Cannot find record';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 }
 

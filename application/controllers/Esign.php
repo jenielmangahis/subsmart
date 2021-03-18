@@ -244,12 +244,13 @@ class Esign extends MY_Controller {
 		$payload = json_decode(file_get_contents('php://input'), true);
 
 		$coordinates = json_encode($payload['coordinates']);
+		$specs = $payload['specs'] ? json_encode($payload['specs']) : null;
 		$docPage = $payload['doc_page'];
-		$docId = $payload['docfile_id'];
 		$field = $payload['field'];
-		$uniqueKey = $payload['unique_key'];
 		$recipientId = $payload['recipient_id'];
 		$userId = logged('id');
+		$docId = $payload['docfile_id'];
+		$uniqueKey = $payload['unique_key'];
 
 		$this->db->where('docfile_id', $docId);
 		$this->db->where('user_id', $userId);
@@ -265,6 +266,7 @@ class Esign extends MY_Controller {
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
                 'user_docfile_recipients_id' => $recipientId,
+				'specs' => $specs,
 			]);
 		} else {
 			$this->db->where('id', $record->id);
@@ -275,6 +277,7 @@ class Esign extends MY_Controller {
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
+				'specs' => is_null($specs) ? $record->specs : $specs,
                 // 'user_docfile_recipients_id' => $recipientId,
 			]);
 		}

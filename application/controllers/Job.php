@@ -1047,9 +1047,9 @@ class Job extends MY_Controller
         $user_id = getLoggedUserID();
         $comp_id = logged('company_id');
 
-        if( $role == 1 || $role == 2 ){            
+        if( $role == 1 || $role == 2 ){                        
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobs();
-        }else{            
+        }else{                        
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
         }
         

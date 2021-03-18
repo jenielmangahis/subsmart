@@ -139,23 +139,22 @@ class Timesheet extends MY_Controller
         // $company_id = logged('company_id');
         // echo ("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id . " and user_seen_notif.seen_status != 2 and user_notification.company_id = $company_id order by user_notification.date_created DESC");
         // date_default_timezone_set($this->session->userdata('usertimezone'));
-        // $the_date = strtotime("2010-01-19 00:00:00");
-        // echo (date_default_timezone_get() . "<br />");
-        // echo (date("Y-d-m H:i:s", $the_date) . "<br />");
-        // date_default_timezone_set("UTC");
-        // echo ("UTC<br>");
-        // echo (date("Y-d-m H:i:s", $the_date) . "<br />");
-        $start = new DateTime("2021-03-16 03:00:00");
-        $end =  new DateTime(date('Y-m-d H:i:s'));
-        $interval = $start->diff($end);
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime("2021-03-15" . " 00:00:00");
+        date_default_timezone_set("UTC");
+        $shift_date = date('Y-m-d', $the_date);
+        echo  $shift_date;
+        // $start = new DateTime("2021-03-16 03:00:00");
+        // $end =  new DateTime(date('Y-m-d H:i:s'));
+        // $interval = $start->diff($end);
 
-        $minutes = ($interval->days * 24 * 60) * 60;
-        $minutes += ($interval->h * 60) * 60;
-        $minutes += ($interval->i) * 60;
-        $minutes += $interval->s;
-        $minutes = $minutes / 60;
-        var_dump($end);
-        echo $minutes / 60;
+        // $minutes = ($interval->days * 24 * 60) * 60;
+        // $minutes += ($interval->h * 60) * 60;
+        // $minutes += ($interval->i) * 60;
+        // $minutes += $interval->s;
+        // $minutes = $minutes / 60;
+        // var_dump($end);
+        // echo $minutes / 60;
     }
 
     public function employee()
@@ -1280,6 +1279,8 @@ class Timesheet extends MY_Controller
             echo json_encode(0);
         }
 
+        $data->device_type = "";
+        $data->token = "";
         $this->pusher_notification($data);
         // echo json_encode($attn_id);
     }
@@ -1342,6 +1343,9 @@ class Timesheet extends MY_Controller
         } else {
             echo json_encode(0);
         }
+
+        $data->device_type = "";
+        $data->token = "";
         $this->pusher_notification($data);
     }
     public function breakOut()
@@ -1389,7 +1393,6 @@ class Timesheet extends MY_Controller
         $data->content_notification = $pusher_content_notification;
         $data->profile_img = $image;
         $data->notif_action_made = 'Lunchout';
-        $this->pusher_notification($data);
 
         // for the app notification
         $data->token = $getUserDetail->device_token;
@@ -1404,6 +1407,8 @@ class Timesheet extends MY_Controller
         } else {
             echo json_encode(0);
         }
+        $data->device_type = "";
+        $data->token = "";
         $this->pusher_notification($data);
     }
     public function realTime()
@@ -1973,12 +1978,15 @@ class Timesheet extends MY_Controller
             $data->html = $html;
             $data->content_notification = $content_notification;
             $data->profile_img = $image;
-            $this->pusher_notification($data);
             if ($entry_type == "Manual") {
                 echo json_encode($data);
             } else {
                 echo json_encode($data);
             }
+
+            $data->device_type = "";
+            $data->token = "";
+            $this->pusher_notification($data);
         }
     }
 
@@ -2246,7 +2254,7 @@ class Timesheet extends MY_Controller
         $employeeLongnameAddress = $this->employeeLongNameAddress();
         $user_id = $this->session->userdata('logged')['id'];
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
-        var_dump($check_attn->num_rows());
+        // var_dump($check_attn->num_rows());
         if ($check_attn->num_rows() == 1) {
             date_default_timezone_set($this->session->userdata('usertimezone'));
             $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
@@ -2299,7 +2307,7 @@ class Timesheet extends MY_Controller
             $data = new stdClass();
             $data->clock_out_time = date('h:i A');
             $data->attendance_id = $attn_id;
-            $data->shift_duration = intval($hours_worked[0] + $hours_worked[1]) . ":" . (($hours_worked[0] + $hours_worked[1]) - intval($hours_worked[0] + $hours_worked[1])) * 60;
+            $data->shift_duration = gmdate('H:i', floor(($shift_duration + $hours_worked[1]) * 3600));
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
@@ -2332,8 +2340,10 @@ class Timesheet extends MY_Controller
             $data->html = $html;
             $data->content_notification = $content_notification;
             $data->profile_img = $image;
-            $this->pusher_notification($data);
             echo json_encode($data);
+            $data->device_type = "";
+            $data->token = "";
+            $this->pusher_notification($data);
         }
     }
 
@@ -2405,8 +2415,10 @@ class Timesheet extends MY_Controller
         $data->content_notification = "Is taking a Break in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
         $data->profile_img = $image;
         $data->notif_action_made = "Lunchin";
-        $this->pusher_notification($data);
         echo json_encode($data);
+        $data->device_type = "";
+        $data->token = "";
+        $this->pusher_notification($data);
     }
 
     public function lunchOutEmployee()
@@ -2469,12 +2481,14 @@ class Timesheet extends MY_Controller
         }
 
         $data->user_id = $user_id;
-        $data->html = $html;
+        $data->html = "";
         $data->content_notification = "Is on the Clock again today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
         $data->profile_img = $image;
         $data->notif_action_made = "Lunchout";
-        $this->pusher_notification($data);
         echo json_encode($data);
+        $data->device_type = "";
+        $data->token = "";
+        $this->pusher_notification($data);
     }
 
     private function employeeAddress()
@@ -2984,8 +2998,9 @@ class Timesheet extends MY_Controller
         $user_id = logged('id');
         $company_id = logged('company_id');
 
-        $week = $this->input->get('week');
-        $week_convert = date('Y-m-d', strtotime($week));
+        $week = strtotime($this->input->get('week'));
+        // date_default_timezone_set('UTC');
+        $week_convert = date('Y-m-d', $week);
         $date_this_week = array(
             "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
             "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
@@ -2995,6 +3010,9 @@ class Timesheet extends MY_Controller
             "Saturday" => date("M d", strtotime('saturday this week', strtotime($week_convert))),
             "Sunday" => date("M d", strtotime('sunday this week', strtotime($week_convert))),
         );
+
+
+
         $date_this_check = array(
             0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
             1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
@@ -3003,7 +3021,9 @@ class Timesheet extends MY_Controller
             4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
             5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
             6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
+            7 => date("Y-m-d", strtotime('monday next week', strtotime($week_convert))),
         );
+
         $users = $this->users_model->getUsers();
         $user_roles = $this->users_model->getRoles();
 
@@ -3011,7 +3031,7 @@ class Timesheet extends MY_Controller
         $display .= '<thead>';
         $display .= '<tr>';
         $display .= '<td>Employee</td>';
-        $display .= '<td>Status</td>';
+        $display .= '<td>Action</td>';
         $display .= '<td class="day"><span class="week-day">Mon</span><span class="week-date">' . $date_this_week['Monday'] . '</span></td>';
         $display .= '<td class="day"><span class="week-day">Tue</span><span class="week-date">' . $date_this_week['Tuesday'] . '</span></td>';
         $display .= '<td class="day"><span class="week-day">Wed</span><span class="week-date">' . $date_this_week['Wednesday'] . '</span></td>';
@@ -3036,8 +3056,10 @@ class Timesheet extends MY_Controller
             }
             $employee_schedules = $this->timesheet_model->get_employee_shift_schedule($user->id, $date_this_check);
             if (count($employee_schedules) > 0) {
-                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . '</span></td>';
-                $display .= '<td class="center">' . $status . '</td>';
+                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
+                $display .= '<td><a class="group-copy-btn" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
+                $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
+                $display .= '<label class="copy-alert group"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
 
                 $mon = '';
                 $tue = '';
@@ -3047,60 +3069,79 @@ class Timesheet extends MY_Controller
                 $sat =  '';
                 $sun =  '';
                 $duration = 0;
+                // $tester = "";
                 foreach ($employee_schedules as $schedule) {
-                    $duration += $schedule->duration;
-                    $shift_start_date = date('Y-m-d', strtotime($schedule->shift_start));
-                    $shift_start = date('H:i', strtotime($schedule->shift_start));
-                    $shift_end_date = date('Y-m-d', strtotime($schedule->shift_end));
-                    $shift_end = date('H:i', strtotime($schedule->shift_end));
-                    if ($date_this_check[0] == $schedule->shift_date) {
+
+                    date_default_timezone_set('UTC');
+                    $the_date_start = strtotime($schedule->shift_start);
+                    $the_date_end = strtotime($schedule->shift_end);
+                    date_default_timezone_set($this->session->userdata('usertimezone'));
+                    $shift_start_date = date('Y-m-d', $the_date_start);
+                    $shift_start = date('H:i',  $the_date_start);
+                    $shift_end_date = date('Y-m-d',  $the_date_end);
+                    $shift_end = date('H:i',  $the_date_end);
+
+                    // $tester .=  "Original: " . $schedule->shift_start . " <br>" . $this->session->userdata('usertimezone') . " Converted: " . $shift_start_date . "  :  " . $shift_start . "<br>";
+                    if ($date_this_check[0] == $shift_start_date) {
                         $mon = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 1, "Tuesday");
-                    } elseif ($date_this_check[1] == $schedule->shift_date) {
+                        $duration += $schedule->duration;
+                    } elseif ($date_this_check[1] == $shift_start_date) {
                         $tue = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 2, "Wednesday");
-                    } elseif ($date_this_check[2] == $schedule->shift_date) {
+                        $duration += $schedule->duration;
+                    } elseif ($date_this_check[2] == $shift_start_date) {
                         $wed = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 3, "Thursday");
-                    } elseif ($date_this_check[3] == $schedule->shift_date) {
+                        $duration += $schedule->duration;
+                    } elseif ($date_this_check[3] == $shift_start_date) {
                         $thur = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 4, "Friday");
-                    } elseif ($date_this_check[4] == $schedule->shift_date) {
+                        $duration += $schedule->duration;
+                    } elseif ($date_this_check[4] == $shift_start_date) {
                         $fri = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 5, "Saturday");
-                    } elseif ($date_this_check[5] == $schedule->shift_date) {
+                        $duration += $schedule->duration;
+                    } elseif ($date_this_check[5] == $shift_start_date) {
                         $sat = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 6, "Sunday");
-                    } elseif ($date_this_check[6] == $schedule->shift_date) {
+                        $duration += $schedule->duration;
+                    } elseif ($date_this_check[6] == $shift_start_date) {
                         $sun = $this->shift_schedule_td_setter($shift_start_date, $shift_start, $shift_end_date, $shift_end, $user->id, 7, "Monday");
+                        $duration += $schedule->duration;
                     }
                 }
                 if ($mon == '') {
                     $mon = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 1, "blank");
                 }
                 if ($tue == '') {
-                    $tue = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 2, "blank");
+                    $tue = $this->shift_schedule_td_setter($date_this_check[1], "", $date_this_check[1], "", $user->id, 2, "blank");
                 }
                 if ($wed == '') {
-                    $wed = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 3, "blank");
+                    $wed = $this->shift_schedule_td_setter($date_this_check[2], "", $date_this_check[2], "", $user->id, 3, "blank");
                 }
                 if ($thur == '') {
-                    $thur = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 4, "blank");
+                    $thur = $this->shift_schedule_td_setter($date_this_check[3], "", $date_this_check[3], "", $user->id, 4, "blank");
                 }
                 if ($fri == '') {
-                    $fri = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 5, "blank");
+                    $fri = $this->shift_schedule_td_setter($date_this_check[4], "", $date_this_check[4], "", $user->id, 5, "blank");
                 }
                 if ($sat == '') {
-                    $sat = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 6, "blank");
+                    $sat = $this->shift_schedule_td_setter($date_this_check[5], "", $date_this_check[5], "", $user->id, 6, "blank");
                 }
                 if ($sun == '') {
-                    $sun = $this->shift_schedule_td_setter($date_this_check[0], "", $date_this_check[0], "", $user->id, 7, "blank");
+                    $sun = $this->shift_schedule_td_setter($date_this_check[6], "", $date_this_check[6], "", $user->id, 7, "blank");
                 }
                 $display .= $mon . $tue . $wed . $thur . $fri . $sat . $sun;
-                $display .= '<td class="center"><label id="duration' . $user->id . '">' . $duration . '</label></td>';
+                $display .= '<td class="center"><label id="duration' . $user->id . '">' . round($duration, 2) . '</label></td>';
             } else {
-                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . '</span></td>';
-                $display .= '<td class="center">' . $status . '</td>';
+                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
+                $display .= '<td><a class="group-copy-btn" style="display:none;" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
+                $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
+                $display .= '<label class="copy-alert"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
                 for ($i = 0; $i < 7; $i++) {
                     $display .= '<td class="center">';
                     $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-start-input blank" value="">';
                     $display .= '<p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>';
                     $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-end-input blank" value="">';
                     $display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
+                    $display .= '<div style="padding-top:10px;"><a style="display:none;" class="copy-btn" title="Copy" data-column= "' . ($i + 1) . '" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
+                    $display .= '<a  class="paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
+                    $display .= '<label class="copy-alert"  id="copy_id_' . $user->id . '_' . ($i + 1) . '" style="display:none;">Copied!</label>';
                     $display .= '</td>';
                 }
                 $display .= '<td class="center"><label id="duration' . $user->id . '"></label></td>';
@@ -3116,6 +3157,8 @@ class Timesheet extends MY_Controller
         $input_style = "";
         if ($cross_over_day == "blank") {
             $input_style = "blank";
+            $copy_dive_style = "padding-top:10px;";
+            $copy_style = "display:none";
         }
         $display = '<td class="center">';
         $display .= '<input type="time" data-date="' . $shift_start_date . '" data-id="' . $user_id . '" data-column="' . $column . '" class="shift-start-input ' . $input_style . '" value="' . $shift_start . '">';
@@ -3125,7 +3168,11 @@ class Timesheet extends MY_Controller
             $display .= '<label class="shift-end-day-indecator">' . $cross_over_day . '</label>';
         } else {
             $display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
+            $copy_dive_style .= "padding-top:10px;";
         }
+        $display .= '<div style="' . $copy_dive_style . '"><a style="' . $copy_style . '" class="copy-btn" title="Copy" data-column= "' . ($column) . '" data-id="' . $user_id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
+        $display .= '<a  class="paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
+        $display .= '<label class="copy-alert"  id="copy_id_' . $user_id . '_' . ($column) . '" style="display:none;">Copied!</label>';
         $display .= '</td>';
         return $display;
     }
