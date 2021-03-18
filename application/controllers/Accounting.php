@@ -45,6 +45,7 @@ class Accounting extends MY_Controller {
         $this->load->model('AcsProfile_model', 'AcsProfile_model');
         $this->load->model('TaxRates_model');
         $this->load->model('General_model', 'general');
+        $this->load->model('item_starting_value_adj_model', 'starting_value_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -1803,6 +1804,95 @@ class Accounting extends MY_Controller {
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
+    }
+    public function adjust_starting_value_form($item_id)
+    {
+        $accounts = $this->chart_of_accounts_model->select();
+        $accountTypes = $this->account_model->getAccounts();
+
+        $bankAccounts = [];
+        foreach($accountTypes as $accType) {
+            $accName = strtolower($accType->account_name);
+
+            foreach($accounts as $account) {
+                if($account->account_id === $accType->id) {
+                    $bankAccounts[$accType->account_name][] = [
+                        'value' => $accName.'-'.$account->id,
+                        'text' => $account->name,
+                    ];
+                }
+            }
+        }
+
+        $item = $this->items_model->getItemById($item_id)[0];
+        $itemAccDetails = $this->items_model->getItemAccountingDetails($item_id);
+        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+        $this->page_data['accounts'] = $bankAccounts;
+        $this->page_data['item'] = $item;
+        $this->page_data['accountingDetails'] = $itemAccDetails;
+        $this->page_data['invAssetAcc'] = $invAssetAcc;
+        $this->page_data['locations'] = $this->items_model->getLocationByItemId($item_id);
+        $this->load->view('accounting/adjust_starting_value', $this->page_data);
+    }
+    public function adjust_starting_value($item_id)
+    {
+        $item = $this->items_model->getItemById($item_id)[0];
+        $startValueAdjData = [
+            'company_id' => logged('company_id'),
+            'item_id' => $item_id,
+            'ref_no' => $this->input->post('ref_no'),
+            'location_id' => $this->input->post('location'),
+            'initial_qty' => $this->input->post('initial_qty_on_hand'),
+            'as_of_date' => date('Y-m-d', strtotime($this->input->post('as_of_date'))),
+            'initial_cost' => $this->input->post('initial_cost'),
+            'inv_adj_account' => $this->input->post('inv_adj_acc'),
+            'memo' => $this->input->post('memo'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $itemData = [
+            'initial_cost' => $startValueAdjData['initial_cost']
+        ];
+
+        $accDetails = [
+            'as_of_date' => $startValueAdjData['as_of_date']
+        ];
+
+        $locationId = $startValueAdjData['location_id'];
+        $locationAdjustments = $this->items_model->getItemQuantityAdjustments($item_id, $locationId);
+        $locationDetails = [
+            'initial_qty' => $startValueAdjData['initial_qty']
+        ];
+        $quantity = intval($startValueAdjData['initial_qty']);
+        if(!empty($locationAdjustments)) {
+            foreach($locationAdjustments as $adj) {
+                $quantity = $quantity + intval($adj->change_in_quantity);
+            }
+        }
+        $locationDetails['qty'] = $quantity;
+
+        // Update item initial cost in items
+        $updateItem = $this->items_model->update($itemData, ['id' => $item_id, 'company_id' => logged('company_id')]);
+
+        // Update item as of date in item_accounting_details table
+        $updateAccDetails = $this->items_model->updateItemAccountingDetails($accDetails, $item_id);
+
+        // Update initial quantity and quantity of item in items_has_storage_loc table
+        $condition = ['id' => $locationId, 'item_id' => $item_id, 'company_id' => logged('company_id')];
+        $updateLocation = $this->items_model->updateLocationDetails($locationDetails, $condition);
+
+        // Insert starting value adjustment record
+        $insert = $this->starting_value_model->create($startValueAdjData);
+
+        if($insert > 0) {
+            $this->session->set_flashdata('success', "Item $item->title starting value successfully adjusted.");
+        } else { 
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect($_SERVER['HTTP_REFERER']);
     }
     public function product_categories()
     {

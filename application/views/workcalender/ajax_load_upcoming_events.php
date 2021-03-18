@@ -11,7 +11,7 @@
                       <span><?= date('d', strtotime($e['start_date'])) ?></span>
                   </time>
                   <!-- <div class="job-status text-center mb-2" style="background:<?= $e['event_color']; ?>; color:white;"><?php echo strtoupper($jb->status); ?></div> -->
-                  <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:12px">
+                  <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:11px">
                       <?php if( $e['start_time'] == $e['end_time'] ){ ?>
                         <?= date("g:i A",strtotime($e['start_time'])); ?>
                       <?php }else{ ?>
@@ -19,7 +19,7 @@
                       <?php } ?>
                   </span>
               </div>
-              <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
+              <div class="col-lg-7 float-left mt-2" style="padding-right: 0;text-align: left;">
                 <?php if( $e['type'] == 'g-events' ){ ?>
                   <a href="javascript:void(0);" class="uevent-view-details" data-event-id="<?= $e['event_id']; ?>">
                 <?php }else{ ?>
@@ -31,19 +31,22 @@
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-start-date" value="<?= $e['start_date']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-end-date" value="<?= $e['end_date']; ?>" />
                   <?php if($e['type'] == 'events'){ ?>
-                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo $e['event_number'] . ' - ' . $e['event_type']; ?></h6>
+                    <h6 style="color:black;font-weight:700; margin:0;font-size: 13px;"><?php echo $e['event_number'] . ' : ' . $e['event_type']; ?></h6>
                   <?php }else{ ?>
-                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo $e['event_type']; ?></h6>
+                    <h6 style="color:black;font-weight:700; margin:0;font-size: 13px;"><?php echo $e['event_type']; ?></h6>
                   <?php } ?>
 
                   <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($e['event_title']); ?></p>
                   <?php if( trim($e['address']) != '' ){ ?>
-                    <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($e['address'])); ?></p>
+                    <small style="color: #9d9e9d; "><?php echo ucwords(strtolower($e['address'])); ?></small><br>
+                      <i> <small class="text-muted" ><?= $e['event_description']; ?></small></i>
+                      <a href="<?=$e['url_link']; ?>" target=""><small style="color: darkred;"><?=$e['url_link']; ?></small></a>
                   <?php } ?>
+
                 </a>
               </div>
-              <div class="col-lg-2 float-right">
-                  <img src="<?= base_url() ?>uploads/users/default.png" alt="user" class="rounded-circle nav-user-img vertical-center events">
+              <div class="col-lg-1 float-right" style="margin-top:40px !important; ">
+                  <img style="position: absolute;width: 40px;" src="<?= base_url() ?>uploads/users/user-profile/<?=$e['profile_img']; ?>" onerror="this.onerror=null;this.src='<?= base_url() ?>uploads/users/default.png';"  alt="user" class="rounded-circle nav-user-img vertical-center">
               </div>
           </div>
         <?php } ?>

@@ -320,6 +320,9 @@ $route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounti
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting/create_item/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting/update_item/$1/$2';
 
+$route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
+$route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';
+
 $route['accounting/product-categories'] = 'accounting/product_categories';
 $route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
 $route['accounting/product-categories/get'] = 'accounting/get_categories';
@@ -524,6 +527,8 @@ $route['sms_campaigns/edit_campaign/(:num)'] = 'Sms_Campaigns/edit_sms_campaign/
 $route['sms_campaigns/_clone_campaign'] = 'Sms_Campaigns/ajax_clone_campaign';
 $route['sms_campaigns/payment'] = 'Sms_Campaigns/payment';
 $route['sms_campaigns/process_payment'] = 'Sms_Campaigns/process_payment';
+$route['sms_campaigns/_load_paypal'] = 'Sms_Campaigns/get_paypal';
+$route['sms_campaigns/process_paypal_payment'] = 'Sms_Campaigns/process_paypal_payment';
 
 //sms automation
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';

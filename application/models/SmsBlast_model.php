@@ -142,6 +142,10 @@ class SmsBlast_model extends MY_Model
         return $options;
     }
 
+    public function isPaid(){
+        return 1;
+    }
+
 }
 
 /* End of file SmsBlast_model.php */

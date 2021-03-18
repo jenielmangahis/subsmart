@@ -852,6 +852,30 @@ $('#types-table tr').on('click', function(e) {
 	});
 });
 
+$(document).on('click', '#products-services-table .adjust-starting-value', function(e) {
+	e.preventDefault();
+	var row = $(this).parent().parent().parent().parent();
+	rowData = $('#products-services-table').DataTable().row(row).data();
+
+	$.get('adjust-starting-value-form/'+rowData.id, function(result) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(result);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${result}
+				</div>
+			`);
+		}
+		$('#adjust-starting-value-modal').modal('show');
+
+		$('#adjust-starting-value-modal select').select2();
+		$('#adjust-starting-value-modal #asOfDate').datepicker({
+			uiLibrary: 'bootstrap'
+		});
+	});
+});
+
 $(document).on('click', '#products-services-table .duplicate-item', function(e) {
 	e.preventDefault();
 	var row = $(this).parent().parent().parent().parent();
@@ -861,6 +885,7 @@ $(document).on('click', '#products-services-table .duplicate-item', function(e) 
 	$.get('products-and-services/item-form/'+type, function(result) {
 		$('.modal-form-container').html(result);
 
+		$('#bundle-form-modal table thead tr th a').remove();
 		occupyFields(rowData, type, 'duplicate');
 
 		for(i in rowData.bundle_items) {
@@ -1398,7 +1423,7 @@ $(`#products-services-table`).DataTable({
 								<a class="dropdown-item" href="#">Run report</a>
 								<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
 								<a class="dropdown-item adjust-quantity" href="#">Adjust quantity</a>
-								<a class="dropdown-item" href="#">Adjust starting value</a>
+								<a class="dropdown-item adjust-starting-value" href="#">Adjust starting value</a>
 								<a class="dropdown-item" href="#">Reorder</a>
 							</div>
 						</div>

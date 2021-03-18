@@ -1226,8 +1226,9 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('reference_no', 'Reference No.', 'required');
         $this->form_validation->set_rules('inventory_adj_acc', 'Inventory Adjustment Account', 'required');
 
-        if(isset($data['product']) && isset($data['new_qty']) && isset($data['change_in_qty'])) {
+        if(isset($data['product']) && isset($data['new_qty']) && isset($data['change_in_qty']) && isset($data['location'])) {
             $this->form_validation->set_rules('product[]', 'Product', 'required');
+            $this->form_validation->set_rules('location[]', 'Location', 'required');
             $this->form_validation->set_rules('new_qty[]', 'New Quantity', 'required');
             $this->form_validation->set_rules('change_in_qty[]', 'Change in Quantity', 'required');
         }
@@ -1266,6 +1267,7 @@ class Accounting_modals extends MY_Controller {
                     $adjustmentProducts[] = [
                         'adjustment_id' => $adjustmentId,
                         'product_id' => $value,
+                        'location_id' => $data['location'][$key],
                         'new_quantity' => $data['new_qty'][$key],
                         'change_in_quantity' => $data['change_in_qty'][$key],
                     ];

@@ -171,24 +171,31 @@ class Sms_Campaigns extends MY_Controller {
                     ];
 
             }elseif( $post['to_type'] == 3 ){
-                    //Use optionB data           
-                    $   
+                    //Use optionB data    
                     $data_send_to = array();
-                    foreach( $post['optionB']['customer_id'] as $key => $value ){
-                            $data_send_to = [
-                                    'sms_blast_id' => $sms_blast_id,
-                                    'customer_id' => $value,
-                                    'customer_group_id' => 0,
-                                    'exclude' => 0
-                            ];
+                    if( isset($post['optionB']['customer_id']) ){
+                        foreach( $post['optionB']['customer_id'] as $key => $value ){
+                                $data_send_to = [
+                                        'sms_blast_id' => $sms_blast_id,
+                                        'customer_id' => $value,
+                                        'customer_group_id' => 0,
+                                        'exclude' => 0
+                                ];
 
-                            $smsBlastSendTo = $this->SmsBlastSendTo_model->create($data_send_to);
+                                $smsBlastSendTo = $this->SmsBlastSendTo_model->create($data_send_to);
+                        }
+
+                        $json_data = [
+                                'is_success' => true,
+                                'err_msg' => ''
+                        ];   
+                    }else{
+                        $json_data = [
+                                'is_success' => false,
+                                'err_msg' => 'Please select customer'
+                        ];
                     }
-
-                    $json_data = [
-                            'is_success' => true,
-                            'err_msg' => ''
-                    ];
+                    
 
             }elseif( $post['to_type'] == 2 ){
                     //Use optionC data
@@ -485,11 +492,14 @@ class Sms_Campaigns extends MY_Controller {
     }
 
     public function process_payment(){
+        $this->load->helper(array('paypal_helper'));
+        // Load Paypal SDK
+        include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
+
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';   
 
         $post = $this->input->post(); 
-        echo "<pre>";
-        print_r($post);
-        exit;
 
         $sms_blast_id = $this->session->userdata('smsBlastId');
 
@@ -508,14 +518,76 @@ class Sms_Campaigns extends MY_Controller {
 
         }elseif( $post['payment_method'] == 'paypal' ){
 
+            //Add custom data such as item/subscription id etc.
+            //$userID = 123456;        
+
+            /*
+             * Paypal Process Here - Start
+            */
+
+            $client_id     = paypal_credential('client_id');
+            $client_secret = paypal_credential('client_secret');           
+
+            $return_url = base_url('/sms_campaign/paypal?status=1');
+            $cancel_url = base_url('/sms_campaign/paypal?status=2');
+
+            //Add paypal client id & secret
+            $apiContext = new \PayPal\Rest\ApiContext(
+                new \PayPal\Auth\OAuthTokenCredential(
+                    $client_id,  
+                    $client_secret
+                )
+            );
+
+            $payer = new \PayPal\Api\Payer();
+            $payer->setPaymentMethod("paypal");
+
+            $redirectUrls = new \PayPal\Api\RedirectUrls();
+            $redirectUrls->setReturnUrl($return_url)
+              ->setCancelUrl($cancel_url);
+
+            $amount = new \PayPal\Api\Amount();
+            $amount->setCurrency("USD")
+              ->setTotal($grand_total);
+
+            // Set transaction object
+            $transaction = new \PayPal\Api\Transaction();
+            $transaction->setAmount($amount)
+              ->setDescription("NSmartrac : SMS Campaign");
+
+            // Create the full payment object
+            $payment = new \PayPal\Api\Payment();
+            $payment->setIntent('sale')
+              ->setPayer($payer)
+              ->setRedirectUrls($redirectUrls)
+              ->setTransactions(array($transaction));
+
+            try {
+              $payment->create($apiContext);
+
+              // Get PayPal redirect URL and redirect the customer
+              $approvalUrl = $payment->getApprovalLink();
+
+              // Redirect the customer to $approvalUrl
+            } catch (PayPal\Exception\PayPalConnectionException $ex) {
+              echo $ex->getCode();
+              echo $ex->getData();
+              die($ex);
+            } catch (Exception $ex) {
+              die($ex);
+            }
+
+            $this->session->set_userdata('regiserUserId', $uid);
+            $this->session->set_userdata('regiserClientId', $cid);
+
+            header("Location:" . $approvalUrl);
+
         }elseif( $post['payment_method'] == 'converge' ){
-            $plan      = $this->NsmartPlan_model->getById($subscription_id);
-            $plan_name = strtolower($plan->plan_name);
             //Converge
             // Provide Converge Credentials
-            $merchantID =  CONVERGE_MERCHANTID; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
-            $merchantUserID = CONVERGE_MERCHANTUSERID; // "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
-            $merchantPIN = CONVERGE_MERCHANTPIN; // "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
+            $merchantID =  '2179135'; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+            $merchantUserID = 'adiAPI'; // "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+            $merchantPIN = 'U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR'; // "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
 
             //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
             $url    = CONVERGE_TOKENURL; // URL to Converge production session token server
@@ -556,7 +628,6 @@ class Sms_Campaigns extends MY_Controller {
             "&ssl_user_id=$merchantUserID".
             "&ssl_pin=$merchantPIN".
             "&ssl_transaction_type=ccaddrecurring".
-            "&ssl_billing_cycle=MONTHLY".
             "&ssl_next_payment_date=$next_billing".
             "&ssl_description=$ssl_description".
             "&ssl_phone=$ssl_phone".
@@ -577,8 +648,136 @@ class Sms_Campaigns extends MY_Controller {
             exit;*/
             /* Now we redirect to the HPP */
             //header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken");  //Demo Redirect
-            header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect 
+
+            $hppurl = $hppurl . "?ssl_txn_auth_token=$sessiontoken";
+            header("Location: " . $hppurl); //Prod Redirect 
         }
+    }
+
+    public function get_paypal(){
+        $this->load->helper(array('paypal_helper'));
+
+        $is_success = 0;
+        $msg = '';
+        $approvalUrl = '';
+
+        // Load Paypal SDK
+        include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
+
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';   
+
+        $post = $this->input->post(); 
+
+        $sms_blast_id = $this->session->userdata('smsBlastId');
+
+        $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
+        $sms_text = $smsBlast->sms_text;
+
+        $smsRecipients = $this->SmsBlastSendTo_model->getAllBySmsBlastId($sms_blast_id);
+        $total_recipients = count($smsRecipients); 
+
+        $service_price = $this->SmsBlast_model->getServicePrice();
+        $price_per_sms = $this->SmsBlast_model->getPricePerSms();
+        $total_sms_price = $total_recipients * $price_per_sms;
+        $grand_total     = $total_sms_price + $service_price;
+
+        //Add custom data such as item/subscription id etc.
+        //$userID = 123456;        
+
+        /*
+         * Paypal Process Here - Start
+        */
+
+        $client_id     = paypal_credential('client_id');
+        $client_secret = paypal_credential('client_secret');           
+
+        $return_url = base_url('/sms_campaigns/process_paypal_payment?status=1');
+        $cancel_url = base_url('/sms_campaigns/process_paypal_payment?status=2');
+
+        //Add paypal client id & secret
+        $apiContext = new \PayPal\Rest\ApiContext(
+            new \PayPal\Auth\OAuthTokenCredential(
+                $client_id,  
+                $client_secret
+            )
+        );
+
+        $payer = new \PayPal\Api\Payer();
+        $payer->setPaymentMethod("paypal");
+
+        $redirectUrls = new \PayPal\Api\RedirectUrls();
+        $redirectUrls->setReturnUrl($return_url)
+          ->setCancelUrl($cancel_url);
+
+        $amount = new \PayPal\Api\Amount();
+        $amount->setCurrency("USD")
+          ->setTotal($grand_total);
+
+        // Set transaction object
+        $transaction = new \PayPal\Api\Transaction();
+        $transaction->setAmount($amount)
+          ->setDescription("NSmartrac : SMS Campaign");
+
+        // Create the full payment object
+        $payment = new \PayPal\Api\Payment();
+        $payment->setIntent('sale')
+          ->setPayer($payer)
+          ->setRedirectUrls($redirectUrls)
+          ->setTransactions(array($transaction));
+
+        try {
+          $payment->create($apiContext);
+
+          // Get PayPal redirect URL and redirect the customer
+          $approvalUrl = $payment->getApprovalLink();
+          $is_success = 1;
+
+          // Redirect the customer to $approvalUrl
+        } catch (PayPal\Exception\PayPalConnectionException $ex) {
+          $msg = 'Cannot process paypal payment';
+          $is_success = 0;
+          /*echo $ex->getCode();
+          echo $ex->getData();
+          die($ex);*/
+        } catch (Exception $ex) {
+          $msg = 'Cannot process paypal payment';
+          $is_success = 0;
+          //die($ex);
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'approvalUrl' => $approvalUrl
+        ];
+
+        echo json_encode($json_data);        
+    }
+
+    public function process_paypal_payment(){
+        if( isset($_GET['paymentId']) && isset($_GET['PayerID']) ){
+            $sms_blast_id = $this->session->userdata('smsBlastId');
+            $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
+
+            $sms_blast_data = [
+                'status' => $this->SmsBlast_model->statusActive(),
+                'is_paid' => $this->SmsBlast_model->isPaid()
+            ];
+            $smsBlast = $this->SmsBlast_model->updateSmsBlast($sms_blast_id, $sms_blast_data);
+
+            $this->session->set_flashdata('message', 'Payment process completed');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+
+        }else{
+            $this->session->set_flashdata('message', 'Payment process failed');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        $this->session->unset_userdata('smsBlastId');
+
+        redirect('sms_campaigns');
+        exit;
     }
 }
 
