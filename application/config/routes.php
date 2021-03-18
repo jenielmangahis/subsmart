@@ -524,6 +524,8 @@ $route['sms_campaigns/edit_campaign/(:num)'] = 'Sms_Campaigns/edit_sms_campaign/
 $route['sms_campaigns/_clone_campaign'] = 'Sms_Campaigns/ajax_clone_campaign';
 $route['sms_campaigns/payment'] = 'Sms_Campaigns/payment';
 $route['sms_campaigns/process_payment'] = 'Sms_Campaigns/process_payment';
+$route['sms_campaigns/_load_paypal'] = 'Sms_Campaigns/get_paypal';
+$route['sms_campaigns/process_paypal_payment'] = 'Sms_Campaigns/process_paypal_payment';
 
 //sms automation
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';

@@ -106,6 +106,22 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" id="companyChecklist" tabindex="-1" role="dialog" aria-labelledby="companyChecklist" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title" id="exampleModalLabel"><i class="fa fa-check-square"></i> Checklist</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="modal fade" id="newFeed" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
                         <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
                             <div class="modal-content" style="border-radius: 30px;">
@@ -762,6 +778,23 @@
 
 
 <script type="text/javascript">
+    
+    function load_checklist(){
+        var url = base_url + 'users/_load_checklist';
+        $("#companyChecklist").modal('show');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: "json",
+             success: function(o)
+             {
+                $("#companyChecklist").modal('show');
+             }
+          });
+        }, 1000);
+    }
+
     function waitForClockInOut() {
     $.ajax({
     type: "GET",

@@ -122,7 +122,7 @@ class Onboarding extends MY_Controller {
 	        	$this->session->set_flashdata('alert_class', 'alert-danger');
 	        }
 
-	        redirect('onboarding/add_ons');
+	        redirect('onboarding/availability');
 
         }else{
         	$this->session->set_flashdata('message', 'Cannot find data');
