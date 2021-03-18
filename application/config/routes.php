@@ -320,6 +320,9 @@ $route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounti
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting/create_item/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting/update_item/$1/$2';
 
+$route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
+$route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';
+
 $route['accounting/product-categories'] = 'accounting/product_categories';
 $route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
 $route['accounting/product-categories/get'] = 'accounting/get_categories';

@@ -106,9 +106,10 @@ class Event_model extends MY_Model
 
     public function getAllUpComingEvents($user_id = 0)
     {
-        $this->db->select('*');
-
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');
         $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','left');
 
         $start_date = date('Y-m-d');
         $end_date = date('Y-m-d', strtotime($start_date . ' +5 day'));
@@ -122,13 +123,17 @@ class Event_model extends MY_Model
 
         if ( $query ) {
             return $query->result();
+        }else{
+            return false;
         }
     }
 
     public function getAllUpComingEventsByCompanyId($company_id = 0)
     {
-        $this->db->select('*');
-
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','left');
         $this->db->from($this->table);
         //$this->db->join('user_events', 'user_events.event_id = events.id');
 
@@ -145,6 +150,8 @@ class Event_model extends MY_Model
 
         if ( $query ) {
             return $query->result();
+        }else{
+            return false;
         }
     }
 

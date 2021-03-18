@@ -213,6 +213,16 @@ class Items_model extends MY_Model
         return false;
     }
 
+    public function updateLocationDetails($data, $condition = array())
+    {
+        if(!empty($data)) {
+            $update = $this->db->update($this->table_has_location, $data, $condition);
+
+            return $update ? true : false;
+        }
+        return false;
+    }
+
     public function updateMultipleItem($data)
     {
         $update = $this->db->update_batch($this->table, $data, 'id');
@@ -284,6 +294,15 @@ class Items_model extends MY_Model
         $update = $this->db->update_batch($this->table_has_location, $data, 'id');
 
         return $update;
+    }
+
+    public function getItemQuantityAdjustments($item_id, $location_id)
+    {
+        $this->db->where('product_id', $item_id);
+        $this->db->where('location_id', $location_id);
+        $query = $this->db->get('accounting_inventory_qty_adjustment_items');
+
+        return $query->result();
     }
 
     public function saveItemAccountingDetails($data = []) {

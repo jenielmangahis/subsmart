@@ -12,20 +12,24 @@
                 </time>
                 </a>
                 <div class="job-status text-center mb-2" style="background:<?= $jb->event_color?>; color:#ffffff;"><b><?php echo strtoupper($jb->status); ?></b></div>
-                <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;font-size: 14px;" class="text-center">ARRIVAL WINDOW</span><br/>
+                <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;font-size: 10px;" class="text-center">ARRIVAL TIME</span><br/>
                 <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:12px">
                     <?php echo get_format_time($jb->start_time); ?>-<?php echo get_format_time_plus_hours($jb->end_time); ?>
                 </span>
             </div>
-            <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
-                <a href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
-                    <h6 style="color:black;font-weight:700; margin:0;"><?php echo strtoupper($jb->job_number . ' - ' . $jb->job_type); ?></h6>
-                    <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($jb->job_description); ?></p>
-                    <a href="<?= $jb->link; ?>" target="_blank" style="color: #9d9e9d;font-size: 10px; "><?php echo ucwords(strtolower($jb->link)); ?></a>
+            <div class="col-lg-7 float-left mt-2" style="padding-right: 0;text-align: left;">
+                <a style="color: #000!important;" href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
+                    <h6 style="font-weight:600; margin:0;font-size: 13px;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
+                    <b class="text-muted">
+                        <?= $jb->first_name. ' '. $jb->last_name; ?>
+                    </b><br>
+                    <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
+                    <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i>
+                    <a href="<?=$jb->link; ?>" target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>
                 </a>
             </div>
-            <div class="col-lg-2 float-right" style="margin-top:40px !important; ">
-                <img src="<?= base_url() ?>uploads/users/default.png" alt="user" class="rounded-circle nav-user-img vertical-center jobs">
+            <div class="col-lg-1 float-right">
+                <img style="position: absolute;width: 40px;" src="<?= base_url() ?>uploads/users/user-profile/<?= $jb->profile_img; ?>" onerror="this.onerror=null;this.src='<?= base_url() ?>uploads/users/default.png';" alt="user" class="rounded-circle nav-user-img vertical-center">
             </div>
         </div>
       <?php } ?>

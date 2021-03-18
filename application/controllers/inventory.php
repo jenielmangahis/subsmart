@@ -49,13 +49,13 @@ class Inventory extends MY_Controller
 
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
-            $items = $this->items_model->filterBy(['category' => $get['category']], $comp_id, ucfirst($type));
+            $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
         } else {
             
             if( $role_id == 1 || $role_id == 2 ){
-                $arg = array('type'=>ucfirst($type)); 
+                $arg = array('type'=>ucfirst($type), 'is_active'=>1); 
             }else{
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type)); 
+                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1); 
             }
 
             $items = $this->items_model->getByWhere($arg);

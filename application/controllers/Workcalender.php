@@ -1587,7 +1587,9 @@ class Workcalender extends MY_Controller
                 'end_time' => $u->end_time,
                 'what_of_even' => $u->what_of_even,
                 'event_color' => $u->event_color,
-                'address' => $u->event_address . ' ' . $u->event_state
+                'address' => $u->event_address . ' ' . $u->event_state,
+                'url_link' => $u->url_link,
+                'profile_img' => $u->profile_img,
             ];
         }
 
