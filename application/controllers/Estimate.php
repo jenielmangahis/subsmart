@@ -38,21 +38,23 @@ class Estimate extends MY_Controller
     }
 
     public function index($tab = '')
-    {
+    {        
         $is_allowed = $this->isAllowedModuleAccess(18);
         if( !$is_allowed ){
             $this->page_data['module'] = 'estimate';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-        $role = logged('role');
-        if ($role == 2 || $role == 3 || $role == 1) {
+
+        $company_id = logged('company_id');
+        $role = logged('role');        
+
+        /*if ($role == 2 || $role == 1) {            
             $this->page_data['jobs'] = $this->jobs_model->getByWhere([]);
-        }else{
-            $company_id = logged('company_id');
+        }else{       
             $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);   
-        }
-            
+        } */ 
+
         if (!empty($tab)) {
             $query_tab = $tab;
             if( $tab == 'declined%20by%20customer' ){
@@ -60,8 +62,7 @@ class Estimate extends MY_Controller
             }
             $this->page_data['tab'] = $tab;
             $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => lcfirst($query_tab)), $company_id, $role);
-        } else {
-
+        } else {            
             // search
             if (!empty(get('search'))) {
 
@@ -72,10 +73,10 @@ class Estimate extends MY_Controller
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
 
-            } else {
+            } else {                
                 if( $role == 1 || $role == 2 ){
                     $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
-                }else{
+                }else{                    
                     $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
                 }
             }

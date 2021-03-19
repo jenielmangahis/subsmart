@@ -1432,7 +1432,7 @@ class Workcalender extends MY_Controller
         if( $role_id == 1 || $role_id == 2 ){
             $upcoming_events = $this->event_model->getAllUpComingEvents();
         }else{
-            $company_id = logged('company_id');
+            $company_id = logged('company_id');            
             $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
         }
 

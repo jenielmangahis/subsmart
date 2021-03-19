@@ -151,7 +151,7 @@ class Estimate_model extends MY_Model
             }
         }
         //
-        if( $role_id > 3 ){
+        if( $role_id > 2 ){
             $this->db->where('estimates.company_id', $company_id);
         }
 

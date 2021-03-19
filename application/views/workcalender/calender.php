@@ -602,7 +602,7 @@ a.top-1 {
                                           </div>
                                         </div>
                                         <div class="text-center">
-                                            <a class="text-info" href="<?= base_url()?>job">SEE ALL JOBS</a>
+                                            <a class="text-info" href="<?= base_url()?>events">SEE ALL EVENTS</a>
                                         </div>
                                       </div>
                                     </div>

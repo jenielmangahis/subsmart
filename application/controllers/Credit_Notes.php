@@ -90,7 +90,6 @@ class Credit_Notes extends MY_Controller
         $company_id    = logged('company_id');
         $role = logged('role');
         $total_all = 0;
-
         if( $role == 1 || $role == 2 ){  
             foreach($status as $key => $value){
                 $total = $this->CreditNote_model->countAllByStatus($key);
@@ -105,7 +104,7 @@ class Credit_Notes extends MY_Controller
                 $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyId($company_id);    
             }
             
-        }else{
+        }else{        	
             foreach($status as $key => $value){
                 $total = $this->CreditNote_model->countAllByStatusAndCompanyId($key,$company_id);
                 $total_all+= $total;
@@ -115,9 +114,9 @@ class Credit_Notes extends MY_Controller
             $this->page_data['total_all'] = $total_all;
             $this->page_data['statusSummary'] = $statusSummary;
             if( $tab > 0 ){
-                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByStatus($tab);    
-            }else{
-                $this->page_data['creditNotes'] = $this->CreditNote_model->getAll();    
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyIdAndStatus($company_id,$tab);
+            }else{            	
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyId($company_id);    
             }
         }
 
