@@ -69,13 +69,13 @@ class Sms_Campaigns extends MY_Controller {
                         $user = $this->session->userdata('logged');
 
                         $sms_blast_data = [
-                                'user_id' => $user['id'],
-                                'campaign_name' => $post['sms_camapaign_name'],
-                                'sms_text' => '',
-                                'sending_type' => $this->SmsBlast_model->sendingTypeAll(),
-                                'status' => $this->SmsBlast_model->statusDraft(),
-                                'customer_type' => $this->SmsBlast_model->customerTypeResidential(),
-                                'created' => date("Y-m-d H:i:s")
+                            'user_id' => $user['id'],
+                            'campaign_name' => $post['sms_camapaign_name'],
+                            'sms_text' => '',
+                            'sending_type' => $this->SmsBlast_model->sendingTypeAll(),
+                            'status' => $this->SmsBlast_model->statusDraft(),
+                            'customer_type' => $this->SmsBlast_model->customerTypeResidential(),
+                            'created' => date("Y-m-d H:i:s")
                         ];      
 
                         $sms_id = $this->SmsBlast_model->create($sms_blast_data);
@@ -760,10 +760,15 @@ class Sms_Campaigns extends MY_Controller {
             $sms_blast_id = $this->session->userdata('smsBlastId');
             $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
 
+            $payment_variables = serialize($_GET);
+
             $sms_blast_data = [
+                'payment_gateway' => $this->SmsBlast_model->paymentGatewayPaypal(),
+                'payment_variables' => $payment_variables,
                 'status' => $this->SmsBlast_model->statusActive(),
                 'is_paid' => $this->SmsBlast_model->isPaid()
             ];
+
             $smsBlast = $this->SmsBlast_model->updateSmsBlast($sms_blast_id, $sms_blast_data);
 
             $this->session->set_flashdata('message', 'Payment process completed');
@@ -778,6 +783,32 @@ class Sms_Campaigns extends MY_Controller {
 
         redirect('sms_campaigns');
         exit;
+    }
+
+    public function ajax_process_stripe_payment(){
+        $is_success = true;
+        $msg = '';
+
+        $post = $this->input->post(); 
+        $sms_blast_id = $this->session->userdata('smsBlastId');
+        $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
+
+        $payment_variables = ['stripeToken' => $post['stripeToken']];
+
+        $sms_blast_data = [
+            'payment_gateway' => $this->SmsBlast_model->paymentGatewayStripe(),
+            'payment_variables' => serialize($payment_variables),
+            'status' => $this->SmsBlast_model->statusActive(),
+            'is_paid' => $this->SmsBlast_model->isPaid()
+        ];
+        $smsBlast = $this->SmsBlast_model->updateSmsBlast($sms_blast_id, $sms_blast_data);
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 }
 
