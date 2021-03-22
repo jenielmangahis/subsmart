@@ -83,15 +83,31 @@ class DocuSign extends MY_Controller
         $mail->From = $from;
         $mail->FromName = 'nSmarTrac';
         $mail->Subject = $subject;
+        $mail->IsHTML(true);
+
+        $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
+        $template = file_get_contents($templatePath);
 
         $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $baseUrl = str_replace('/send', '', $baseUrl);
+
+        $this->db->where('id', logged('id'));
+        $inviter = $this->db->get('users')->row();
+        $inviterName = implode(' ', [$inviter->FName, $inviter->LName]);
 
         foreach ($recipients as $recipient) {
             $message = json_encode(['recipient_id' => $recipient->id, 'document_id' => $documentId]);
             $hash = encrypt($message, $this->password);
 
-            $mail->Body = $baseUrl . '/signing?hash=' . $hash;
+            $data = [
+                '%link%' => $baseUrl . '/signing?hash=' . $hash,
+                '%inviter%' => $inviterName,
+            ];
+
+            // $mail->Body = $baseUrl . '/signing?hash=' . $hash;
+            $message = strtr($template, $data);
+
+            $mail->MsgHTML($message);
             $mail->addAddress($recipient->email);
             $mail->send();
             $mail->ClearAllRecipients();

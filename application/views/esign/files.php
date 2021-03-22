@@ -619,27 +619,41 @@
 
 
         <div class="esignBuilder__optionsSidebar">
-            <div class="esignBuilder__optionsSidebarOption">
+            <p class="esignBuilder__optionsSidebarFieldId">
+                Field ID: <span></span>
+            </p>
+
+            <div class="options mt-3">
                 <button type="button" class="btn btn-primary btn-block" id="addOption">
                     + Add Option
                 </button>
             </div>
 
-            <div class="esignBuilder__optionsSidebarFormula">
+            <div class="formula">
                 <p class="mt-2 mb-2">
                     Build a formula from number and date fields in your envelope.
-                    Field names must be enclosed in square brackets ("[]").
+                    Field ids must be enclosed in square brackets ("[]").
                 </p>
 
                 <textarea style="width: 100%;" id="formulaInput"></textarea>
+                <small class="form-text text-muted">Example: [16160]-[23502]</small>
+            </div>
+
+            <div class="note">
+                <p class="mt-2 mb-2">Add Text</p>
+                <textarea style="width: 100%;" id="noteInput"></textarea>
             </div>
 
             <div class="footer">
-                <button type="button" class="btn btn-secondary btn-block" id="saveOption">
+                <button type="button" class="btn btn-success btn-block" id="saveOption">
                     <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                     Save
+                </button>
+
+                <button type="button" class="btn btn-secondary btn-block" id="closeOption">
+                    Close
                 </button>
             </div>
         </div>

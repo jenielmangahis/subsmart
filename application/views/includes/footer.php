@@ -58,6 +58,12 @@
 <script src="<?php echo $url->assets;?>js/icons/icon.navbar.js"></script>
 <script src="<?php echo $url->assets;?>plugins/sweetalert/sweetalert2@10.js"></script>
 
+<script>
+jQuery(document).ready(function () {
+$('#items_table_estimate_sales').DataTable();
+});
+</script>
+
 <?php echo put_footer_assets(); ?>
 
 
@@ -193,18 +199,18 @@ $(document).ready( function() {
 //    $('#end_date_').val(today);
     
 
-var days = 7;
-  var date = new Date(document.getElementById("start_date_").value);
-  date.setDate(date.getDate() + parseInt(days));
-  document.getElementById("end_date_").valueAsDate = date;
+// var days = 7;
+//   var date = new Date(document.getElementById("start_date_").value);
+//   date.setDate(date.getDate() + parseInt(days));
+//   document.getElementById("end_date_").valueAsDate = date;
 });
 </script>
 <script>
 $(document).ready( function() {
-var days = 7;
-  var date = new Date(document.getElementById("estimate_date_").value);
-  date.setDate(date.getDate() + parseInt(days));
-  document.getElementById("expiry_date_").valueAsDate = date;
+// var days = 7;
+//   var date = new Date(document.getElementById("estimate_date_").value);
+//   date.setDate(date.getDate() + parseInt(days));
+//   document.getElementById("expiry_date_").valueAsDate = date;
 });
 </script>
 

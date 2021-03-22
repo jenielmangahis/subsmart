@@ -117,11 +117,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="row" style="padding: 10px 33px 20px 33px;">
                             <div class="col-md-12 banking-tab-container">
                                 <a href="<?php echo url('/timesheet/attendance') ?>" class="banking-tab" style="text-decoration: none">Attendance</a>
+                                <a href="<?php echo url('/timesheet/attendance_logs') ?>" class="banking-tab">Logs</a>
                                 <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab">Notification</a>
                                 <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab" style="text-decoration: none">Employee</a>
                                 <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "schedule") ?: '-active'; ?>">Schedule</a>
                                 <a href="<?php echo url('/timesheet/list') ?>" class="banking-tab">List</a>
-                                <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Settings</a>
+                                <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">PTO</a>
                             </div>
                         </div>
                         <!-- Date Selector -->

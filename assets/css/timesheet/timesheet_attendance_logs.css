@@ -1,0 +1,109 @@
+.time-log {
+  /* width: 105px;
+  /* border: none; */
+  font-size: 12px;
+  color: #676767;
+  /* /* text-align: center; */
+  transition-duration: 0.5s;
+  transition-timing-function: linear;
+}
+.time-log.gray {
+  background-color: #e9ecef;
+  padding-left: 5px;
+  padding-right: 6px;
+  border-radius: 10px;
+  width: 80px;
+}
+td.num_only {
+  width: 40px;
+}
+thead > tr > td {
+  font-weight: bold;
+  font-size: 12px;
+}
+td > a.edit-entry-btn {
+  font-size: 18px;
+  cursor: pointer;
+}
+div.dataTables_wrapper div.dataTables_filter input {
+  position: relative;
+  visibility: visible;
+}
+tfoot {
+  font-weight: bold;
+}
+
+/* Sidebar Modal */
+.modal-right-side .modal.right.fade .modal-dialog {
+  right: 0;
+  -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+  transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+.modal-right-side .modal.right .modal-dialog {
+  position: fixed;
+  margin: auto;
+  min-width: 520px;
+  height: 100%;
+  -webkit-transform: translate3d(0%, 0, 0);
+  -ms-transform: translate3d(0%, 0, 0);
+  -o-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
+}
+
+.modal-right-side .modal-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.modal-right-side .modal.right .modal-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.modal-right-side .modal-content {
+  border-radius: 0;
+  border: none;
+}
+
+.modal-right-side .modal-body {
+  margin-bottom: 30px;
+}
+#edit_attendance_log span {
+  font-size: 10px;
+  font-weight: normal;
+}
+#edit_attendance_log label {
+  width: 100%;
+  font-size: 25px;
+  font-weight: bold;
+}
+.modal-body {
+  padding-top: 25px;
+}
+table.dataTable.no-footer,
+table.dataTable tfoot th,
+table.dataTable tfoot td {
+  border: 1px solid #dee2e6;
+}
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+  background-color: #e0e0e0;
+  height: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #ffffff;
+}
+#timeLogTable .employee-name {
+  width: 200px !important;
+}
+tfoot label {
+  font-weight: bold;
+}

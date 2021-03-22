@@ -4,7 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Job extends MY_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -155,6 +154,16 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
+//        $get_customer = array(
+//            'table' => 'acs_profile',
+//            'select' => 'prof_id,first_name,last_name,middle_name',
+//            'order' => array(
+//                'order_by' => 'first_name',
+//                'ordering' => 'ASC',
+//            ),
+//        );
+//        $this->page_data['customers']  = $this->general->get_data_with_param($get_customer);
+
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
@@ -288,6 +297,104 @@ class Job extends MY_Controller
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
         $this->load->view('job/job_preview', $this->page_data);
+    }
+
+    public function send_invoice_preview($id=null) {
+        //$this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        // get all employees
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        }
+        $this->load->view('job/email_template/invoice', $this->page_data);
+    }
+
+
+    public function send_invoice($id=null)
+    {
+//        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+//            echo json_encode(['success' => false]);
+//            return;
+//        }
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+        $subject = 'nSmarTrac: Jobs';
+
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        //get job data
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        }
+
+        $content = $this->load->view('job/email_template/invoice', $this->page_data , TRUE);
+        $mail->Body = 'Lez go';
+        $mail->MsgHTML($content);
+        $mail->addAddress('moresecureadi@gmail.com');
+        $mail->send();
+        $mail->ClearAllRecipients();
+        echo json_encode(['success' => true]);
     }
 
     public function new_job_edit($id) {
@@ -429,8 +536,47 @@ class Job extends MY_Controller
     }
 
     public function save_esign() {
-       // echo json_encode($_POST);
+        $input = $this->input->post();
+            // customer_ad_model
+        if($input){
+            $id = $input['id'];
+            unset($input['id']);
+            if ($this->general->update_with_key($input,$id ,"jobs_approval")) {
+                echo "Success";
+            } else {
+                echo "Error";
+            }
+        }
         echo date("d-m-Y h:i A");
+    }
+
+    public function get_item_storage_location(){
+        $id = $_POST['id'];
+        $get_item_location = array(
+            'where' => array(
+                'item_id' => $id,
+                'qty !=' => NULL,
+            ),
+            'table' => 'items_has_storage_loc',
+            'select' => 'id,name,qty',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        echo json_encode($this->general->get_data_with_param($get_item_location),TRUE);
+    }
+
+    public function get_selected_item(){
+        $id = $_POST['id'];
+        $get_item = array(
+            'where' => array(
+                'id' => $id,
+            ),
+            'table' => 'items',
+            'select' => 'brand,description',
+        );
+        echo json_encode($this->general->get_data_with_param($get_item,FALSE),TRUE);
     }
 
     public function get_customers(){
@@ -438,8 +584,8 @@ class Job extends MY_Controller
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name',
             'order' => array(
-                'order_by' => 'prof_id',
-                'ordering' => 'DESC',
+                'order_by' => 'first_name',
+                'ordering' => 'ASC',
             ),
         );
         echo json_encode($this->general->get_data_with_param($get_customer),TRUE);
@@ -705,7 +851,7 @@ class Job extends MY_Controller
         $jobs_payments_data = array();
         $jobs_payments_data['jobs_id'] =  $jobs_id;
         $jobs_payments_data['method'] =  $method;
-        $jobs_payments_data['amount'] =  $input['amount'];
+        $jobs_payments_data['amount'] =  $input['total_amount'];
 
         if($method == 'CHECK'){
             $jobs_payments_data['route_num'] = $input['route_number'];
@@ -743,22 +889,22 @@ class Job extends MY_Controller
         $this->general->add_($jobs_settings_data, 'job_settings');
 
         // add to cslendar of the new job
-        $events_data = array(
-            'customer_id' => $input['customer_id'],
-            'event_description' => $input['job_description'],
-            'employee_id' => $input['employee_id'],
-            'start_date' => $input['start_date'],
-            'start_time' => $input['start_time'],
-            'end_date' => $input['end_date'],
-            'end_time' => $input['end_time'],
-            'event_color' => $jobs_id,
-            'customer_reminder_notification' => $input['customer_reminder_notification'],
-            'company_id' => $comp_id,
-            //'description' => $jobs_id,
-            //'tags' => $jobs_id,
-            'notify_at' => $input['customer_reminder_notification'],
-        );
-        $this->general->add_($events_data, 'events');
+//        $events_data = array(
+//            'customer_id' => $input['customer_id'],
+//            'event_description' => $input['job_description'],
+//            'employee_id' => $input['employee_id'],
+//            'start_date' => $input['start_date'],
+//            'start_time' => $input['start_time'],
+//            'end_date' => $input['end_date'],
+//            'end_time' => $input['end_time'],
+//            'event_color' => $jobs_id,
+//            'customer_reminder_notification' => $input['customer_reminder_notification'],
+//            'company_id' => $comp_id,
+//            //'description' => $jobs_id,
+//            //'tags' => $jobs_id,
+//            'notify_at' => $input['customer_reminder_notification'],
+//        );
+//        $this->general->add_($events_data, 'events');
 
         echo $jobs_id;
     }
@@ -1046,6 +1192,9 @@ class Job extends MY_Controller
         $role    = logged('role');
         $user_id = getLoggedUserID();
         $comp_id = logged('company_id');
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
 
         if( $role == 1 || $role == 2 ){                        
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobs();
@@ -1525,6 +1674,36 @@ class Job extends MY_Controller
 
             return $name;
         }
+    }
+
+
+    public function createOrUpdateSignature()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $isCreated = false;
+
+        $this->db->where('jobs_id', $payload['jobs_id']);
+        $record = $this->db->get('jobs_approval')->row();
+
+        if (is_null($record)) {
+            $isCreated = true;
+            $this->db->insert('jobs_approval', $payload);
+        } else {
+            $this->db->where('id', $record->id);
+            $this->db->update('jobs_approval', $payload);
+        }
+
+        $id = $isCreated ? $this->db->insert_id() : $record->id;
+        $this->db->where('id', $id);
+        $record = $this->db->get('jobs_approval')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['jobs_approval' => $record, 'is_created' => $isCreated]);
     }
 }
 

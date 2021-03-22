@@ -111,8 +111,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
+                                    <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
+                                           required placeholder="Enter Estimate#"  value="<?php echo "EST-".date("YmdHis"); ?>" /> -->
                                     <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#"  value="<?php echo "EST-".date("YmdHis"); ?>" />
+                                           required placeholder="Enter Estimate#"  value="<?php echo "EST-"; 
+                                           foreach ($number as $num):
+                                                $next = $num->estimate_number;
+                                                $arr = explode("-", $next);
+                                                $date_start = $arr[0];
+                                                $nextNum = $arr[1];
+                                            //    echo $number;
+                                           endforeach;
+                                           $val = $nextNum + 1;
+                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
+                                           ?>" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
@@ -188,11 +200,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <!-- <th>Location</th> -->
                                             <th width="100px">Cost</th>
                                             <th width="100px">Discount</th>
-                                            <th>Tax(%)</th>
+                                            <th>Tax (Change in %)</th>
                                             <th>Total</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="table_body">
+                                        <tbody id="jobs_items_table_body">
                                         <tr>
                                             <td>
                                                 <!-- <select id="s" name="items[]"  class="form-control">
@@ -223,18 +235,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
                                             <td><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td><input type="hidden" class="form-control tax" name="tax[]"
-                                                       data-counter="0" id="tax_0" min="0" value="0">
-                                                       <span id="span_tax_0">0.00 (7.5%)</span></td>
+                                                       data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.00 (7.5%)</span> -->
+                                                       </td>
                                             <td><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp;
+                                    <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                     <hr>
                                 </div>
                             </div>
@@ -417,6 +431,54 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate_sales" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -501,7 +563,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             .empty() //empty select
             .append($("<option/>") //add option tag in select
                 .val(customer_id) //set value for option to post it
-                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+
             .val(customer_id) //select option of select2
             .trigger("change"); //apply to select2*/
     });
@@ -528,17 +590,17 @@ $(document).ready(function(){
  
     $('#customer_id').change(function(){
     var id  = $(this).val();
-    // alert(id);
+    //alert(id);
 
         $.ajax({
             type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            url:"<?php echo base_url(); ?>/accounting/addLocationajax",
             data: {id : id },
             dataType: 'json',
             success: function(response){
                 // alert('success');
                 // console.log(response['customer']);
-            $("#job_location").val(response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
         
             },
                 error: function(response){

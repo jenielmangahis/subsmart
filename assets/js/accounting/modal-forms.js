@@ -13,6 +13,29 @@ var recurringDays = '';
 var monthlyRecurrFields = ''
 
 $(function() {
+    $(document).on('change', '#adjust-starting-value-modal #location', function() {
+        var selected = $(this).children('option:selected');
+        var initial_qty = selected[0].dataset.initial_qty;
+
+        $('#adjust-starting-value-modal #initialQty').val(initial_qty);
+
+        computeTotalValue();
+    });
+
+    $(document).on('change', '#adjust-starting-value-modal #initialQty, #adjust-starting-value-modal #initialCost', function() {
+        computeTotalValue();
+    });
+
+    $(document).on('change', '#adjust-starting-value-modal #refNo', function() {
+        var value = $(this).val();
+
+        if(value !== "") {
+            $('#adjust-starting-value-modal .modal-title span').html('#'+value);
+        } else {
+            $('#adjust-starting-value-modal .modal-title span').html('');
+        }
+    });
+
     $(document).on('keyup', timesheetInputs + ', div#singleTimeModal input#time', function(e) {
         var el = $(this);
         var charLimit = el.val().length;
@@ -263,6 +286,8 @@ $(function() {
                 $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
             }
 
+            $(`${modal_element} select`).select2();
+
             if(view === "bank_deposit_modal") {
                 $('div#depositModal select#tags').select2({
                     placeholder: 'Start typing to add a tag',
@@ -273,7 +298,7 @@ $(function() {
                     }
                 });
             } else if(view === "weekly_timesheet_modal") {
-                tableWeekDate();
+                tableWeekDate(document.getElementById('weekDates'));
             }
 
             if($(`${modal_element} .date`).length > 0) {
@@ -283,8 +308,6 @@ $(function() {
                     });
                 });
             }
-
-            $(`${modal_element} select`).select2();
 
             $(modal_element).modal('show');
             $(document).off('shown', modal_element);
@@ -320,6 +343,17 @@ $(function() {
             var result = JSON.parse(res);
 
             $(`div#transferModal h3#${id}Balance`).html(result.balance);
+        });
+    });
+
+    $(document).on('change', 'div#payrollModal select#payFrom', function() {
+        var value = $(this).val();
+        var el = $(this);
+        
+        $.get('/accounting/get-account-balance/'+value, function(res) {
+            var result = JSON.parse(res);
+
+            el.parent().parent().next().children('h6').html('Balance '+result.balance);
         });
     });
 
@@ -488,7 +522,7 @@ $(function() {
 
     $(document).on('change', 'div#statementModal select#statementType, div#statementModal select#customerBalanceStatus', function() {
         $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
-        $('div#statementModal div.modal-body div.row:last-child()').addClass('hide');
+        $('div#statementModal div.modal-body div.card-body div.row:last-child()').addClass('hide');
 
         if($(this).attr('id') === 'statementType') {
             if($(this).val() === '2') {
@@ -503,8 +537,8 @@ $(function() {
 
     $(document).on('change', 'div#statementModal div.modal-body select#statementType', function() {
         if($(this).val() === '2') {
-            $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').remove();
-            $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').remove();
+            $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').remove();
+            $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').remove();
         } else {
             var today = new Date();
             var todayDate = String(today.getDate()).padStart(2, '0');
@@ -517,20 +551,20 @@ $(function() {
             var startDateMonth = String(startDate.getMonth() + 1).padStart(2, '0');
             startDate = startDateMonth+'/'+startDateDay+'/'+startDate.getFullYear();
 
-            if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').length === 0) {
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2)').html('<div class="form-group"></div>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append('<label for="startDate">Start Date</label>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(2) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="${startDate}"/>`);
+            if($('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').length === 0) {
+                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2)').html('<div class="form-group"></div>');
+                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').append('<label for="startDate">Start Date</label>');
+                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(2) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="start_date" id="startDate" value="${startDate}"/>`);
 
                 $(`#statementModal input#startDate`).datepicker({
                     uiLibrary: 'bootstrap'
                 });
             }
 
-            if($('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').length === 0) {
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3)').html('<div class="form-group"></div>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append('<label for="endDate">End Date</label>');
-                $('div#statementModal div.modal-body div.row:nth-child(3) div:nth-child(3) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="${today}"/>`);
+            if($('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').length === 0) {
+                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3)').html('<div class="form-group"></div>');
+                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').append('<label for="endDate">End Date</label>');
+                $('div#statementModal div.modal-body div.card-body div.row:nth-child(3) div:nth-child(3) div').append(`<input onchange="showApplyButton()" type="text" class="form-control date" name="end_date" id="endDate" value="${today}"/>`);
 
                 $(`#statementModal input#endDate`).datepicker({
                     uiLibrary: 'bootstrap'
@@ -539,7 +573,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#statementModal div.modal-body button.apply-button', function(e) {
+    $(document).on('click', 'div#statementModal div.modal-body div.card-body button.apply-button', function(e) {
         e.preventDefault();
 
         var statementType = $('div#statementModal select#statementType').val();
@@ -1249,16 +1283,15 @@ const payrollTotal = () => {
     $('table#payroll-table tfoot tr td:last-child() p').html('$'+totalPay);
 }
 
-const tableWeekDate = () => {
-    var value = $('#weeklyTimesheetModal select#weekDates').val();
+const tableWeekDate = (el) => {
+    var value = $(el).val();
     var split = value.split('-');
-    var startDateSplit = split[0].split('/');
-    var endDateSplit = split[1].split('/');
-    var printNum = parseInt(startDateSplit[1]);
+    var startDate = new Date(split[0]);
+    var endDate = new  Date(split[1]);
 
-    for(var i = 3; printNum <= parseInt(endDateSplit[1]); i++) {
-        $(`#weeklyTimesheetModal table#timesheet-table thead th:nth-child(${i}) p:nth-child(2)`).html(printNum);
-        printNum++;
+    for(var i = 3; startDate.getTime() <= endDate.getTime(); i++) {
+        $(`#weeklyTimesheetModal table#timesheet-table thead th:nth-child(${i}) p:nth-child(2)`).html(startDate.getDate());
+        startDate = new Date(startDate.getTime() + 86400000);
     }
 }
 
@@ -1580,7 +1613,7 @@ const clearTableLines = (e) => {
 
 const showApplyButton = () => {
     $('div#statementModal div.modal-body button.apply-button').removeClass('hide');
-    $('div#statementModal div.modal-body div.row:last-child()').addClass('hide');
+    $('div#statementModal div.modal-body div.card-body div.row:last-child()').addClass('hide');
 }
 
 const submitModalForm = (event, el) => {
@@ -1684,7 +1717,7 @@ const makeRecurring = (modalName) => {
         }
 
         if($(`div#${modalId} input#templateName`).length === 0) {
-            $(`div#${modalId} div.modal-body`).prepend(res);
+            $(`div#${modalId} div.modal-body .card-body`).prepend(res);
         }
         $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
         $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" type="submit">Save template</button>');
@@ -1792,4 +1825,14 @@ const viewPrint = (id, title = "") => {
         toast(false, "Please enter and complete at least one line item.");
         return;
     }
+}
+
+const computeTotalValue = () => {
+    var initalQty = $('#adjust-starting-value-modal #initialQty').val();
+    var initialCost = $('#adjust-starting-value-modal #initialCost').val();
+
+    var totalValue = parseFloat(initialCost) * parseInt(initalQty);
+    totalValue = totalValue === 0 ? 0.00 : totalValue
+
+    $('#adjust-starting-value-modal .total-value').html('$'+parseFloat(totalValue).toFixed(2));
 }

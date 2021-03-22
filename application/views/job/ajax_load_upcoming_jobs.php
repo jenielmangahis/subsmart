@@ -7,7 +7,7 @@
                 <a href="<?php echo base_url('workcalender/'); ?>">
                 <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
                     <em><?= date('D', strtotime($jb->start_date)) ?></em>
-                    <strong style="background-color: #32243d;"><?= date('M', strtotime($jb->start_date)) ?></strong>
+                    <strong style="background-color: #58c04e;"><?= date('M', strtotime($jb->start_date)) ?></strong>
                     <span><?= date('d', strtotime($jb->start_date)) ?></span>
                 </time>
                 </a>
@@ -20,12 +20,21 @@
             <div class="col-lg-7 float-left mt-2" style="padding-right: 0;text-align: left;">
                 <a style="color: #000!important;" href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
                     <h6 style="font-weight:600; margin:0;font-size: 13px;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
+            <?php if(!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
                     <b class="text-muted">
                         <?= $jb->first_name. ' '. $jb->last_name; ?>
                     </b><br>
-                    <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
-                    <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i>
-                    <a href="<?=$jb->link; ?>" target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>
+            <?php endif; ?>
+                    <?php if(!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
+                        <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
+                        <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i><br>
+                    <?php endif; ?>
+                    <?php if(!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
+                         Amount : <small>$<?= $jb->amount; ?></small>
+                    <?php endif; ?>
+                    <?php if(!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
+                        <a href="<?=$jb->link; ?>" target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>
+                    <?php endif; ?>
                 </a>
             </div>
             <div class="col-lg-1 float-right">

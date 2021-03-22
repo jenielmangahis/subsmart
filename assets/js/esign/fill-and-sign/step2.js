@@ -9,7 +9,7 @@ function Step2({ documentId }) {
   const $signatureModal = $("#signatureModal");
   const $addSignatureButton = $("#addSignatureButton");
 
-  const $signaturePad = $(".fillAndSign__signaturePad");
+  const $signaturePad = $signatureModal.find(".fillAndSign__signaturePad");
   const $signaturePadCanvas = $signaturePad.find("canvas");
   const $signaturePadClear = $signaturePad.find("a");
   const $signatureApplyButton = $("#signatureApplyButton");
@@ -26,8 +26,8 @@ function Step2({ documentId }) {
   const $downloadButton = $("#downloadDocument");
   const $container = $(".fillAndSign");
 
-  const $fontSelect = $("#fontSelect");
-  const $signatureTextInput = $(".fillAndSign__signatureInput");
+  const $fontSelect = $signatureModal.find("#fontSelect");
+  const $signatureTextInput = $signatureModal.find(".fillAndSign__signatureInput"); // prettier-ignore
 
   const $previewContainer = $(".fillAndSign__preview");
   const $doneButton = $("#doneButton");

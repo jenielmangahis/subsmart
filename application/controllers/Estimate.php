@@ -259,6 +259,8 @@ class Estimate extends MY_Controller
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['items'] = $this->items_model->getItemlist();
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/add', $this->page_data);

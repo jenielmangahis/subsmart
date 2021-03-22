@@ -1612,6 +1612,9 @@ class Workcalender extends MY_Controller
             ];
         }
 
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+
         $this->page_data['events'] = $events;
         $this->load->view('workcalender/ajax_load_upcoming_events', $this->page_data);
     }

@@ -7,7 +7,7 @@
               <div class="col-20 float-left no-padding text-center" style="min-height:130px;border-right:1px solid #ccc; padding-right:5px;">
                   <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
                       <em><?= date('D', strtotime($e['start_date'])) ?></em>
-                      <strong style="background-color: #32243d;"><?= date('M', strtotime($e['start_date'])) ?></strong>
+                      <strong style="background-color: #58c04e;"><?= date('M', strtotime($e['start_date'])) ?></strong>
                       <span><?= date('d', strtotime($e['start_date'])) ?></span>
                   </time>
                   <!-- <div class="job-status text-center mb-2" style="background:<?= $e['event_color']; ?>; color:white;"><?php echo strtoupper($jb->status); ?></div> -->
@@ -38,9 +38,13 @@
 
                   <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($e['event_title']); ?></p>
                   <?php if( trim($e['address']) != '' ){ ?>
+                      <?php if(!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
                     <small style="color: #9d9e9d; "><?php echo ucwords(strtolower($e['address'])); ?></small><br>
                       <i> <small class="text-muted" ><?= $e['event_description']; ?></small></i>
+                      <?php endif; ?>
+                      <?php if(!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
                       <a href="<?=$e['url_link']; ?>" target=""><small style="color: darkred;"><?=$e['url_link']; ?></small></a>
+                      <?php endif; ?>
                   <?php } ?>
 
                 </a>

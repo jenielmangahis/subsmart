@@ -432,11 +432,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-md-12 banking-tab-container">
                                 <a href="<?php echo url('/timesheet/attendance') ?>" class="banking-tab">Attendance</a>
                                 <?php if ($this->session->userdata('logged')['role'] < 5) : ?>
+                                    <a href="<?php echo url('/timesheet/attendance_logs') ?>" class="banking-tab">Logs</a>
                                     <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "notification") ?: '-active'; ?>" style="text-decoration: none">Notification</a>
                                     <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab">Employee</a>
                                     <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab">Schedule</a>
                                     <a href="<?php echo url('/timesheet/list') ?>" class="banking-tab">List</a>
-                                    <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Settings</a>
+                                    <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">PTO</a>
                                 <?php endif; ?>
                             </div>
                         </div>

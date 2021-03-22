@@ -101,16 +101,16 @@ function Step3() {
       },
     });
 
-    await response.json();
+    const { record = null, is_created } = await response.json();
 
-    // updates local fields
-    fields = fields.map((field) => {
-      if (field.unique_key != key || !field.specs) {
-        return field;
-      }
-
-      return { ...field, specs: JSON.stringify(specs) };
-    });
+    if (is_created && record) {
+      fields.push(record);
+    } else {
+      // updates local fields
+      fields = fields.map((field) =>
+        field.unique_key != key ? field : record
+      );
+    }
   }
 
   async function getFields() {
@@ -122,41 +122,46 @@ function Step3() {
 
   function showFieldSidebar(field) {
     const { field_name, specs: fieldSpecs } = field;
-    const isFormula = field_name === "Formula";
+    const specs = JSON.parse(fieldSpecs || null) || {};
 
-    const optionsSidebarActiveClass = "esignBuilder__optionsSidebar--show";
-    const optionsSidebarActiveClassFormula = "esignBuilder__optionsSidebar--formula"; // prettier-ignore
+    const $fieldId = $optionsSidebar.find(".esignBuilder__optionsSidebarFieldId span"); // prettier-ignore
+    const $formulaInput = $optionsSidebar.find("#formulaInput");
+    const $noteInput = $optionsSidebar.find("#noteInput");
+    const $optionInputs = $optionsSidebar.find(".esignBuilder__optionInput");
 
-    $optionsSidebar.find("#formulaInput").val("");
-    $optionsSidebar.find(".esignBuilder__optionInput").remove();
-    $optionsSidebar.removeClass(optionsSidebarActiveClassFormula);
+    $fieldId.html("");
+    $fieldId.html(field.unique_key);
 
-    if (fieldSpecs) {
-      const specs = JSON.parse(fieldSpecs || null) || {};
+    $formulaInput.val("");
+    $noteInput.val("");
+    $optionInputs.remove();
 
-      if (isFormula) {
-        const $formula = $optionsSidebar.find("#formulaInput");
-        $formula.val(specs.formula || "");
-        $optionsSidebar.addClass(optionsSidebarActiveClassFormula);
-      } else {
-        const { options = [] } = specs;
-        if (options.length) {
-          const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
-          $optionsSidebar.append($inputs);
-        }
+    let fieldType = "options";
+
+    if (field_name === "Formula") {
+      fieldType = "formula";
+      $formulaInput.val(specs.formula || "");
+    } else if (field_name === "Note") {
+      fieldType = "note";
+      $noteInput.val(specs.note || "");
+    } else {
+      const { options = [] } = specs;
+      if (options.length) {
+        const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
+        $optionsSidebar.append($inputs);
       }
     }
 
-    $optionsSidebar.addClass(optionsSidebarActiveClass);
-
-    if (isFormula) {
-      $optionsSidebar.addClass(optionsSidebarActiveClassFormula);
-    }
+    $optionsSidebar.attr("data-field-type", fieldType);
+    $optionsSidebar.addClass("esignBuilder__optionsSidebar--show");
   }
 
   function hideFieldSidebar() {
     const optionsSidebarActiveClass = "esignBuilder__optionsSidebar--show";
+    const fieldActiveClass = "esignBuilder__field--active";
+
     $optionsSidebar.find(".esignBuilder__optionInput").remove();
+    $(`.${fieldActiveClass}`).removeClass(fieldActiveClass);
     $optionsSidebar.removeClass(optionsSidebarActiveClass);
   }
 
@@ -169,6 +174,7 @@ function Step3() {
     const fieldName = field_name.trim();
     const uniqueKey = unique_key || Date.now();
     field.field_name = fieldName;
+    field.unique_key = uniqueKey;
 
     const html = `
       <div
@@ -189,7 +195,13 @@ function Step3() {
     $close = $element.find(".esignBuilder__fieldClose");
     const activeClass = "esignBuilder__field--active";
 
-    const fieldsWithOption = ["Dropdown", "Checkbox", "Radio", "Formula"];
+    const fieldsWithOption = [
+      "Dropdown",
+      "Checkbox",
+      "Radio",
+      "Formula",
+      "Note",
+    ];
     const hasOption = fieldsWithOption.includes(fieldName);
 
     $close.on("click", async (event) => {
@@ -211,7 +223,7 @@ function Step3() {
     });
 
     $element.find(".subData").on("click", function () {
-        const $prevActive = $(`.${activeClass}`);
+      const $prevActive = $(`.${activeClass}`);
       const dataKey = $(this).data("key");
       const currField = fields.find(({ unique_key }) => unique_key == dataKey);
 
@@ -219,6 +231,7 @@ function Step3() {
       $(this).addClass(activeClass);
 
       if (!hasOption || !currField) {
+        hideFieldSidebar();
         return;
       }
 
@@ -232,6 +245,8 @@ function Step3() {
     if (hasOption) {
       $element.addClass(activeClass);
       showFieldSidebar(field);
+    } else {
+      hideFieldSidebar();
     }
 
     return $element;
@@ -357,20 +372,22 @@ function Step3() {
     const $saveOption = $optionsSidebar.find("#saveOption");
     $saveOption.on("click", async function () {
       let specs = null;
-      const isFormula = $optionsSidebar.hasClass("esignBuilder__optionsSidebar--formula"); // prettier-ignore
+      const fieldType = $optionsSidebar.attr("data-field-type");
+      const $formulaInput = $optionsSidebar.find("#formulaInput");
+      const $noteInput = $optionsSidebar.find("#noteInput");
+      const $optionInputs = $optionsSidebar.find("input");
 
-      if (isFormula) {
-        $formula = $optionsSidebar.find("#formulaInput");
-        const value = $formula.val();
-        specs = { formula: value };
+      if (fieldType === "formula") {
+        specs = { formula: $formulaInput.val() };
+      } else if (fieldType === "note") {
+        specs = { note: $noteInput.val() };
       } else {
-        const $inputs = $optionsSidebar.find("input");
-        if (!$inputs.length) {
+        if (!$optionInputs.length) {
           return;
         }
 
         const values = [];
-        $inputs.each(function (_, input) {
+        $optionInputs.each(function (_, input) {
           values.push($(input).val());
         });
 
@@ -406,6 +423,9 @@ function Step3() {
       $loader.addClass("d-none");
       $button.removeAttr("disabled");
     });
+
+    const $closeOption = $optionsSidebar.find("#closeOption");
+    $closeOption.on("click", hideFieldSidebar);
   }
 
   async function init() {

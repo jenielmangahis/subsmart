@@ -64,6 +64,7 @@ class Chart_of_accounts_model extends MY_Model {
 				$this->db->order_by('name', $order);
 			break;
 			default :
+				$this->db->select('accounting_chart_of_accounts.*, account.account_name');
 				$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
 				$this->db->order_by('account.account_name', $order);
 			break;

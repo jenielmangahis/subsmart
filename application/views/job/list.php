@@ -164,66 +164,134 @@ add_css(array(
                                   <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">For any business, getting customers is only half the battle; creating a job workflow will help track each scheduled ticket from draft to receiving payment.</span>
                             </div>
                         </div>
+                        <?php
+                            $scheduled=$started=$approved=$invoiced=$completed=0;
+                            foreach($jobs as $job) {
+                                switch ($job->status){
+                                    case'Scheduled':
+                                        $scheduled++;
+                                        break;
+                                    case'Started':
+                                        $started++;
+                                        break;
+                                    case'Approved':
+                                        $approved++;
+                                        break;
+                                    case'Invoiced':
+                                        $invoiced++;
+                                        break;
+                                    case'Completed':
+                                        $completed++;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        ?>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tabs">
-                                <ul class="clearfix work__order" id="myTab" role="tablist">
-                                    <li class="active">
-                                        <a class="nav-link active"  href="#"  aria-controls="tab1" aria-selected="true">All (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">New (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Scheduled 0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Started (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Paused (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Invoiced (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Withdrawn (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Closed (0)</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="active">
+                                    <a class="nav-link active" data-toggle="tab"  href="#tab1"  aria-controls="tab1" aria-selected="true">All (<?= count($jobs); ?>)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab2" aria-controls="tab2" aria-selected="false">Scheduled (<?= $scheduled ?>)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab3" aria-controls="tab3" aria-controls="tab1" aria-selected="false">Started (<?= $started ?>)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab4" aria-controls="tab4" aria-controls="tab1" aria-selected="false">Approved (<?= $approved ?>)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab5" aria-controls="tab5" aria-controls="tab1" aria-selected="false">Invoiced (<?= $invoiced ?>)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab6" aria-controls="tab6" aria-controls="tab1" aria-selected="false">Completed (<?= $completed ?>)</a>
+                                </li>
+                            </ul>
+                            <br>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab1" role="tab" aria-labelledby="tab1">
+                                    <?php if (!empty($jobs)) { ?>
+                                        <table class="table table-hover table-bordered table-striped" id="jobListTable">
+                                            <thead>
+                                                <tr>
+                                                    <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
+                                                    <th scope="col"><strong>Job Number</strong></th>
+                                                    <th scope="col"><strong>Date</strong></th>
+                                                    <th scope="col"><strong>Customer</strong></th>
+                                                    <th scope="col"><strong>Employee</strong></th>
+                                                    <th scope="col"><strong>Status</strong></th>
+                                                    <th scope="col"><strong>Amount</strong></th>
+                                                    <th scope="col"><strong>Job Types</strong></th>
+                                                    <th scope="col"><strong>Job Tags</strong></th>
+                                                    <th scope="col"><strong>Priority</strong></th>
+                                                    <th scope="col"><strong>Manage</strong></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($jobs as $job) : ?>
+
+                                                <tr>
+                                                    <td class="pl-3"><?= $job->job_number; ?></td>
+                                                    <td class="pl-3"><?php echo date_format(date_create($job->start_date),"m/d/Y"); ?></td>
+                                                    <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
+                                                    <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
+                                                    <td class="pl-3"><?= $job->status; ?></td>
+                                                    <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',','); ?></td>
+                                                    <td class="pl-3"><?php echo $job->job_type; ?></td>
+                                                    <td class="pl-3"><?php echo $job->name; ?></td>
+                                                    <td class="pl-3"><?=$job->priority; ?></td>
+                                                    <td class="pl-3">
+                                                        <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                        <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
+                                                            <span class="fa fa-trash"></span> Delete
+                                                        </a>
+                                                        <?php endif; ?>
+                                                        <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
+                                                            <span class="fa fa-pencil"></span> Edit
+                                                        </a>&nbsp;
+                                                        <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
+                                                            <span class="fa fa-search-plus"></span> Preview
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php } else { ?>
+                                        <hr>
+                                        <div class="page-empty-container" style="text-align:center; margin-top:50px;">
+                                            <h5 class="page-empty-header">You haven't yet added your Jobs</h5>
+                                            <p class="text-ter margin-bottom">Manage your job.</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                                <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="tab2">
                                 <?php if (!empty($jobs)) { ?>
-                                    <!--<div class="dropdown" style="position: relative;display: inline-block;margin-bottom:10px;">
-                                        <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" aria-expanded="false">
-                                            Batch actions&nbsp;<i class="fa fa-angle-down fa-lg" style="margin-left:10px;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(200px, 46px, 0px);">
-                                            <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
-                                        </ul>
-                                    </div>-->
-                                    <table class="table table-hover table-bordered table-striped" id="jobListTable">
+                                    <table class="table table-hover table-bordered table-striped" id="scheduledJobs">
                                         <thead>
-                                        <tr>
-                                            <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
-                                            <th scope="col"><strong>Job Number</strong></th>
-                                            <th scope="col"><strong>Date</strong></th>
-                                            <th scope="col"><strong>Customer</strong></th>
-                                            <th scope="col"><strong>Employee</strong></th>
-                                            <th scope="col"><strong>Status</strong></th>
-                                            <th scope="col"><strong>Amount</strong></th>
-                                            <th scope="col"><strong>Job Types</strong></th>
-                                            <th scope="col"><strong>Job Tags</strong></th>
-                                            <th scope="col"><strong>Priority</strong></th>
-                                            <th scope="col"><strong>Manage</strong></th>
-                                        </tr>
+                                            <tr>
+                                                <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
+                                                <th scope="col"><strong>Job Number</strong></th>
+                                                <th scope="col"><strong>Date</strong></th>
+                                                <th scope="col"><strong>Customer</strong></th>
+                                                <th scope="col"><strong>Employee</strong></th>
+                                                <th scope="col"><strong>Status</strong></th>
+                                                <th scope="col"><strong>Amount</strong></th>
+                                                <th scope="col"><strong>Job Types</strong></th>
+                                                <th scope="col"><strong>Job Tags</strong></th>
+                                                <th scope="col"><strong>Priority</strong></th>
+                                                <th scope="col"><strong>Manage</strong></th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                         <?php foreach($jobs as $job) : ?>
+                                        <?php if($job->status == 'Scheduled' ): ?>
                                             <tr>
                                                 <td class="pl-3"><?= $job->job_number; ?></td>
-                                                <td class="pl-3"><?php echo date_format(date_create($job->date_created),"m/d/Y"); ?></td>
+                                                <td class="pl-3"><?php echo date_format(date_create($job->start_date),"m/d/Y"); ?></td>
                                                 <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
                                                 <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
                                                 <td class="pl-3"><?= $job->status; ?></td>
@@ -233,9 +301,9 @@ add_css(array(
                                                 <td class="pl-3"><?=$job->priority; ?></td>
                                                 <td class="pl-3">
                                                     <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
-                                                        <span class="fa fa-trash"></span> Delete
-                                                    </a>
+                                                        <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
+                                                            <span class="fa fa-trash"></span> Delete
+                                                        </a>
                                                     <?php endif; ?>
                                                     <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
                                                         <span class="fa fa-pencil"></span> Edit
@@ -245,6 +313,7 @@ add_css(array(
                                                     </a>
                                                 </td>
                                             </tr>
+                                            <?php endif; ?>
                                         <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -255,6 +324,239 @@ add_css(array(
                                         <p class="text-ter margin-bottom">Manage your job.</p>
                                     </div>
                                 <?php } ?>
+                            </div>
+
+                                <div class="tab-pane" id="tab3" role="tabpanel" aria-labelledby="tab3">
+                                    <?php if (!empty($jobs)) { ?>
+                                        <table class="table table-hover table-bordered table-striped" id="startedJobs">
+                                            <thead>
+                                            <tr>
+                                                <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
+                                                <th scope="col"><strong>Job Number</strong></th>
+                                                <th scope="col"><strong>Date</strong></th>
+                                                <th scope="col"><strong>Customer</strong></th>
+                                                <th scope="col"><strong>Employee</strong></th>
+                                                <th scope="col"><strong>Status</strong></th>
+                                                <th scope="col"><strong>Amount</strong></th>
+                                                <th scope="col"><strong>Job Types</strong></th>
+                                                <th scope="col"><strong>Job Tags</strong></th>
+                                                <th scope="col"><strong>Priority</strong></th>
+                                                <th scope="col"><strong>Manage</strong></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($jobs as $job) : ?>
+                                                <?php if($job->status == 'Started' ): ?>
+                                                    <tr>
+                                                        <td class="pl-3"><?= $job->job_number; ?></td>
+                                                        <td class="pl-3"><?php echo date_format(date_create($job->start_date),"m/d/Y"); ?></td>
+                                                        <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
+                                                        <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
+                                                        <td class="pl-3"><?= $job->status; ?></td>
+                                                        <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',','); ?></td>
+                                                        <td class="pl-3"><?php echo $job->job_type; ?></td>
+                                                        <td class="pl-3"><?php echo $job->name; ?></td>
+                                                        <td class="pl-3"><?=$job->priority; ?></td>
+                                                        <td class="pl-3">
+                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
+                                                                    <span class="fa fa-trash"></span> Delete
+                                                                </a>
+                                                            <?php endif; ?>
+                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
+                                                                <span class="fa fa-pencil"></span> Edit
+                                                            </a>&nbsp;
+                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
+                                                                <span class="fa fa-search-plus"></span> Preview
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php } else { ?>
+                                        <hr>
+                                        <div class="page-empty-container" style="text-align:center; margin-top:50px;">
+                                            <h5 class="page-empty-header">You haven't yet added your Jobs</h5>
+                                            <p class="text-ter margin-bottom">Manage your job.</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="tab-pane" id="tab4" role="tabpanel" aria-labelledby="tab4">
+                                    <?php if (!empty($jobs)) { ?>
+                                        <table class="table table-hover table-bordered table-striped" id="approvedJobs">
+                                            <thead>
+                                            <tr>
+                                                <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
+                                                <th scope="col"><strong>Job Number</strong></th>
+                                                <th scope="col"><strong>Date</strong></th>
+                                                <th scope="col"><strong>Customer</strong></th>
+                                                <th scope="col"><strong>Employee</strong></th>
+                                                <th scope="col"><strong>Status</strong></th>
+                                                <th scope="col"><strong>Amount</strong></th>
+                                                <th scope="col"><strong>Job Types</strong></th>
+                                                <th scope="col"><strong>Job Tags</strong></th>
+                                                <th scope="col"><strong>Priority</strong></th>
+                                                <th scope="col"><strong>Manage</strong></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($jobs as $job) : ?>
+                                                <?php if($job->status == 'Approved' ): ?>
+                                                    <tr>
+                                                        <td class="pl-3"><?= $job->job_number; ?></td>
+                                                        <td class="pl-3"><?php echo date_format(date_create($job->start_date),"m/d/Y"); ?></td>
+                                                        <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
+                                                        <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
+                                                        <td class="pl-3"><?= $job->status; ?></td>
+                                                        <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',','); ?></td>
+                                                        <td class="pl-3"><?php echo $job->job_type; ?></td>
+                                                        <td class="pl-3"><?php echo $job->name; ?></td>
+                                                        <td class="pl-3"><?=$job->priority; ?></td>
+                                                        <td class="pl-3">
+                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
+                                                                    <span class="fa fa-trash"></span> Delete
+                                                                </a>
+                                                            <?php endif; ?>
+                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
+                                                                <span class="fa fa-pencil"></span> Edit
+                                                            </a>&nbsp;
+                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
+                                                                <span class="fa fa-search-plus"></span> Preview
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php } else { ?>
+                                        <hr>
+                                        <div class="page-empty-container" style="text-align:center; margin-top:50px;">
+                                            <h5 class="page-empty-header">You haven't yet added your Jobs</h5>
+                                            <p class="text-ter margin-bottom">Manage your job.</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="tab-pane" id="tab5" role="tabpanel" aria-labelledby="tab5">
+                                    <?php if (!empty($jobs)) { ?>
+                                        <table class="table table-hover table-bordered table-striped" id="invoicedJobs">
+                                            <thead>
+                                            <tr>
+                                                <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
+                                                <th scope="col"><strong>Job Number</strong></th>
+                                                <th scope="col"><strong>Date</strong></th>
+                                                <th scope="col"><strong>Customer</strong></th>
+                                                <th scope="col"><strong>Employee</strong></th>
+                                                <th scope="col"><strong>Status</strong></th>
+                                                <th scope="col"><strong>Amount</strong></th>
+                                                <th scope="col"><strong>Job Types</strong></th>
+                                                <th scope="col"><strong>Job Tags</strong></th>
+                                                <th scope="col"><strong>Priority</strong></th>
+                                                <th scope="col"><strong>Manage</strong></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($jobs as $job) : ?>
+                                                <?php if($job->status == 'Invoiced' || $job->status == 'Finished' ): ?>
+                                                    <tr>
+                                                        <td class="pl-3"><?= $job->job_number; ?></td>
+                                                        <td class="pl-3"><?php echo date_format(date_create($job->start_date),"m/d/Y"); ?></td>
+                                                        <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
+                                                        <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
+                                                        <td class="pl-3"><?= $job->status; ?></td>
+                                                        <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',','); ?></td>
+                                                        <td class="pl-3"><?php echo $job->job_type; ?></td>
+                                                        <td class="pl-3"><?php echo $job->name; ?></td>
+                                                        <td class="pl-3"><?=$job->priority; ?></td>
+                                                        <td class="pl-3">
+                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
+                                                                    <span class="fa fa-trash"></span> Delete
+                                                                </a>
+                                                            <?php endif; ?>
+                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
+                                                                <span class="fa fa-pencil"></span> Edit
+                                                            </a>&nbsp;
+                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
+                                                                <span class="fa fa-search-plus"></span> Preview
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php } else { ?>
+                                        <hr>
+                                        <div class="page-empty-container" style="text-align:center; margin-top:50px;">
+                                            <h5 class="page-empty-header">You haven't yet added your Jobs</h5>
+                                            <p class="text-ter margin-bottom">Manage your job.</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+
+                                <div class="tab-pane" id="tab6" role="tabpanel" aria-labelledby="tab6">
+                                    <?php if (!empty($jobs)) { ?>
+                                        <table class="table table-hover table-bordered table-striped" id="completedJobs">
+                                            <thead>
+                                            <tr>
+                                                <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
+                                                <th scope="col"><strong>Job Number</strong></th>
+                                                <th scope="col"><strong>Date</strong></th>
+                                                <th scope="col"><strong>Customer</strong></th>
+                                                <th scope="col"><strong>Employee</strong></th>
+                                                <th scope="col"><strong>Status</strong></th>
+                                                <th scope="col"><strong>Amount</strong></th>
+                                                <th scope="col"><strong>Job Types</strong></th>
+                                                <th scope="col"><strong>Job Tags</strong></th>
+                                                <th scope="col"><strong>Priority</strong></th>
+                                                <th scope="col"><strong>Manage</strong></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($jobs as $job) : ?>
+                                                <?php if($job->status == 'Completed' ): ?>
+                                                    <tr>
+                                                        <td class="pl-3"><?= $job->job_number; ?></td>
+                                                        <td class="pl-3"><?php echo date_format(date_create($job->start_date),"m/d/Y"); ?></td>
+                                                        <td class="pl-3"><?= $job->first_name.' '.$job->last_name ; ?></td>
+                                                        <td class="pl-3"><?= $job->FName.' '.$job->LName ; ?></td>
+                                                        <td class="pl-3"><?= $job->status; ?></td>
+                                                        <td class="pl-3">$<?= number_format((float)$job->amount,2,'.',','); ?></td>
+                                                        <td class="pl-3"><?php echo $job->job_type; ?></td>
+                                                        <td class="pl-3"><?php echo $job->name; ?></td>
+                                                        <td class="pl-3"><?=$job->priority; ?></td>
+                                                        <td class="pl-3">
+                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
+                                                                    <span class="fa fa-trash"></span> Delete
+                                                                </a>
+                                                            <?php endif; ?>
+                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
+                                                                <span class="fa fa-pencil"></span> Edit
+                                                            </a>&nbsp;
+                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
+                                                                <span class="fa fa-search-plus"></span> Preview
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php } else { ?>
+                                        <hr>
+                                        <div class="page-empty-container" style="text-align:center; margin-top:50px;">
+                                            <h5 class="page-empty-header">You haven't yet added your Jobs</h5>
+                                            <p class="text-ter margin-bottom">Manage your job.</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -281,6 +583,36 @@ add_footer_js(array(
 <script>
     $(document).ready(function () {
         $('#jobListTable').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
+        });
+        $('#scheduledJobs').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
+        });
+        $('#startedJobs').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
+        });
+        $('#approvedJobs').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
+        });
+        $('#invoicedJobs').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
+        });
+        $('#completedJobs').DataTable({
             "lengthChange": true,
             "searching" : true,
             "pageLength": 10,

@@ -23,7 +23,7 @@ if(isset($jobs_data)){
                         selected = "selected";
                     }
                     //console.log(cust_id);
-                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
+                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.first_name + ', ' + o.last_name +'</option>';
                 });
                 $('#customer_id').append(toAppend);
                 //console.log(template_data);
@@ -172,30 +172,25 @@ if(isset($jobs_data)){
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
-            total = '$' + withCommas + '.00';
             console.log(total);
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
                 "<td width=\"20%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
                 "<td width=\"20%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
-                "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                //"<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">$"+formatNumber(total)+"</b><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
                 "</tr>";
             tableBody = $("#jobs_items_table_body");
             tableBody.append(markup);
             markup2 = "<tr id=\"sss\">" +
                 "<td >"+title+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
-                "<td >"+price+"</td>\n" +
-                "<td ></td>\n" +
-                "<td >"+qty+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
                 "<td >0</td>\n" +
+                "<td >"+price+"</td>\n" +
+                "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
+                "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
                 "<td ></td>\n" +
-                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
+                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
                 "</tr>";
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
@@ -221,10 +216,11 @@ if(isset($jobs_data)){
             }
             var withCommas = Number(total).toLocaleString('en');
             if(tax_total < 1){
-                $('#invoice_sub_total').html('$' + formatNumber(total));
+                $('#invoice_sub_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             }
-            $('#invoice_overall_total').html('$' + formatNumber(total));
+            $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             $('#pay_amount').val(withCommas);
+            $('#total_amount').val(total);
         }
         //$(".color-scheme").on( 'click', function () {});
         function formatNumber(num) {
@@ -241,7 +237,9 @@ if(isset($jobs_data)){
             var cost = $('#price'+id).val();
             var new_sub_total = Number(qty) * Number(cost);
             $('#sub_total'+id).data('subtotal',new_sub_total);
-            $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
+            $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_qty'+id).text(qty);
             calculate_subtotal();
         });
 
@@ -263,16 +261,47 @@ if(isset($jobs_data)){
 
         $("body").delegate(".edit_item_list", "click", function(){
             var id = this.id;
-            console.log(id);
-            var title = $(this).data('name');
-            var price = $(this).data('price');
-            var qty = $(this).data('quantity');
+            var node = document.getElementById('device_qty'+id);
+            var qty = node.textContent;
             $('#new_items').modal('show');
-            $('#item_details_name').val(title);
+            $('#item_details_name').val($(this).data('name'));
             $('#item_details_qty').val(qty);
-            $('#item_details_cost').val(price);
-            $('#item_details_title').html('Edit Item');
+            $('#item_details_cost').val($(this).data('price'));
+            $('#item_details_title').html('Edit Points and Location');
+            load_item_location(id);
+            load_item(id);
+
         });
+
+        function load_item(id){
+            $.ajax({
+                type: "POST",
+                data: {id : id},
+                url: "<?= base_url() ?>/job/get_selected_item",
+                success: function(data){
+                    var template_data = JSON.parse(data);
+                    $('#description').val(template_data.description);
+                    $('#brand').val(template_data.brand);
+                    console.log(template_data);
+                }
+            });
+        }
+
+        function load_item_location(id){
+            $.ajax({
+                type: "POST",
+                data: {id : id},
+                url: "<?= base_url() ?>/job/get_item_storage_location",
+                success: function(data){
+                    var template_data = JSON.parse(data);
+                    var toAppend = '';
+                    $.each(template_data,function(i,o){
+                        toAppend += '<option value='+o.name+'>'+o.name + ' - ' + o.qty +'</option>';
+                    });
+                    $('#item_location').append(toAppend);
+                }
+            });
+        }
 
         // get the tax value and deduct it to subtotal then display over all total
         $("#tax_rate").on( 'change', function () {
