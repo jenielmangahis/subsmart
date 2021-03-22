@@ -699,3 +699,8 @@ $route['job/update_job_tag'] = 'Job/update_job_tag';
 //Forgot Password
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
+
+//Cards File
+$route['cards_file/list'] = 'CardsFile/index';
+$route['cards_file/add_new'] = 'CardsFile/add_new_card';
+$route['cards_file/create_new_card'] = 'CardsFile/create_new_card';

@@ -859,7 +859,7 @@ class Workcalender extends MY_Controller
 
         $post = $this->input->post();
         $role = logged('role');
-        
+        $company_id = logged('company_id');
         /*if ($role == 2 || $role == 3 || $role == 22) {
             $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
@@ -868,7 +868,6 @@ class Workcalender extends MY_Controller
         if( $role == 1 || $role == 2 ){
            $events = $this->event_model->getAllEvents(); 
         }else{
-           $company_id = logged('company_id');
            $events = $this->event_model->getAllByCompany($company_id); 
         }
 
@@ -880,7 +879,7 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByUserId();
         }
 
-        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
         $a_settings = unserialize($settings[0]->value);
         if( $a_settings ){
             $user_timezone = $a_settings['calendar_timezone'];
@@ -899,7 +898,31 @@ class Workcalender extends MY_Controller
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
 
                         $title = $event->start_time . " - " . $event->end_time;
-                        $custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small><br /><small>" . $event->FName . ' ' . $event->LName . "</small><br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . "</small>";
+                        /*$custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small><br /><small>" . $event->FName . ' ' . $event->LName . "</small><br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . "</small>";*/
+
+                        $custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small>";
+                        if( isset($a_settings['work_order_show_customer']) ){
+                            $custom_html .= "<br /><small>" . $event->FName . ' ' . $event->LName . "</small>";
+                        }
+
+                        if( isset($a_settings['work_order_show_details']) ){
+                            $custom_html .= "<br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . " - " . $event->description . "</small>";
+                        }
+
+                        if( isset($a_settings['work_order_show_link']) ){
+                            $custom_html .= "<br /><small><a href='".$event->url_link."'>".$event->url_link."</a></small>";
+                        } 
+
+                        if( isset($a_settings['work_order_show_price']) ){
+                            $eventItems = $this->event_model->get_specific_event_items($event->id);
+                            $total_price = 0;
+                            foreach($eventItems as $item){
+                                $total_price += ($item->price * $item->qty);
+                            }
+
+                            $custom_html .= "<br /><small>Price : ". number_format((float)$total_price,2,'.',',') . "</small>";
+
+                        }  
 
                         $resources_user_events[$inc]['eventId'] = $event->id;
                         $resources_user_events[$inc]['eventType'] = 'events';
@@ -1067,7 +1090,33 @@ class Workcalender extends MY_Controller
                     $backgroundColor = $j->event_color;
                 }
 
-                $custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
+                //$custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
+
+                $custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small>";
+
+                if( isset($a_settings['work_order_show_customer']) ){
+                    $custom_html .= "<br /><small>" . $j->FName . ' ' . $j->LName . "</small>";
+                }
+
+                if( isset($a_settings['work_order_show_details']) ){
+                    $custom_html .= "<br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . " - " . $j->job_description . "</small>";
+                }
+
+                if( isset($a_settings['work_order_show_price']) ){
+                    $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
+                    $total_price = 0;
+                    foreach($jobItems as $item){
+                        $total_price += ($item->price * $item->qty);
+                    }
+
+                    $custom_html .= "<br /><small>Price : ". number_format((float)$total_price,2,'.',',') . "</small>";
+
+                }
+
+                /*if( isset($a_settings['work_order_show_link']) ){
+                    $custom_html .= "<br /><small><a href=''>".$event->url_link."</a></small>";
+                }*/
+
 
                 $resources_user_events[$inc]['eventId'] = $j->id;
                 $resources_user_events[$inc]['eventType'] = 'jobs';
@@ -1090,6 +1139,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Event_model', 'event_model');
 
         $post = $this->input->post();
+
 
         $is_success = false;
         $message    = 'Cannot create event';

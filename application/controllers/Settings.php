@@ -30,6 +30,7 @@ class Settings extends MY_Controller {
     public function schedule()
     {
         $is_allowed = $this->isAllowedModuleAccess(8);
+        $company_id = logged('company_id');
         if( !$is_allowed ){
             $this->page_data['module'] = 'settings';
             echo $this->load->view('no_access_module', $this->page_data, true);
@@ -41,7 +42,7 @@ class Settings extends MY_Controller {
         $post = $this->input->post();
         $get = $this->input->get();
 
-        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $settings = $this->settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);
         $this->page_data['settings'] = unserialize($settings);
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
@@ -61,7 +62,7 @@ class Settings extends MY_Controller {
         if (!empty($post)) {
             $this->load->model('Settings_model', 'setting_model');
             if (!empty($settings)) {
-                $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+                $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
 
                 if (!empty($settings)) {
 
@@ -78,6 +79,7 @@ class Settings extends MY_Controller {
                 $this->session->set_flashdata('alert', 'Schedule Settings Updated Successfully');
             } else {
                 $this->setting_model->create([
+                    'company_id' => $company_id,
                     'key'   => DB_SETTINGS_TABLE_KEY_SCHEDULE,
                     'value' => serialize($post)
                 ]);
