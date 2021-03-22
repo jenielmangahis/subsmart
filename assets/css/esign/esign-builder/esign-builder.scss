@@ -300,21 +300,36 @@
       transform: translateX(0);
     }
 
-    &Option {
-      display: block;
-    }
-
-    &Formula {
-      display: none;
-    }
-
-    &--formula {
-      .esignBuilder__optionsSidebarOption {
-        display: none;
+    &[data-field-type="options"] {
+      .options {
+        display: block;
       }
 
-      .esignBuilder__optionsSidebarFormula {
+      .note,
+      .formula {
+        display: none;
+      }
+    }
+
+    &[data-field-type="formula"] {
+      .formula {
         display: block;
+      }
+
+      .note,
+      .options {
+        display: none;
+      }
+    }
+
+    &[data-field-type="note"] {
+      .note {
+        display: block;
+      }
+
+      .formula,
+      .options {
+        display: none;
       }
     }
 

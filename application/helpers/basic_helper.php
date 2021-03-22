@@ -2005,9 +2005,9 @@ function get_estimate_status_total($status = 0, $count_only = false)
         if (!empty($status)) {
             if ($count_only) {
 
-                return count($CI->estimate_model->getByWhere(array('status' => $status)));
+                return count($CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status)));
             } else {
-                return $CI->estimate_model->getByWhere(array('status' => $status));
+                return $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status));
             }
         }
 
@@ -2020,9 +2020,9 @@ function get_estimate_status_total($status = 0, $count_only = false)
         if (!empty($status)) {
             if ($count_only) {
 
-                return count($CI->estimate_model->getByWhere(array('status' => $status)));
+                return count($CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status)));
             } else {
-                return $CI->estimate_model->getByWhere(array('status' => $status));
+                return $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status));
             }
         }
 

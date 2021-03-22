@@ -287,7 +287,6 @@ $route['accounting/attachments/load-attachments']['post'] = 'accounting/load_att
 $route['accounting/attachments/download'] = "accounting/download_attachment";
 $route['accounting/attachments/update']['post'] = "accounting/edit_attachment";
 $route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting/delete_attachment/$1";
-$route['accounting/load-chart-of-accounts']['post'] = 'accounting/load_chart_of_accounts';
 
 $route['accounting/payment-methods'] = 'accounting/payment_methods';
 $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting/load_payment_methods';
@@ -319,6 +318,8 @@ $route['accounting/products-and-services/items-dropdown'] = 'accounting/get_item
 $route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting/inactive_item/$1";
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting/create_item/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting/update_item/$1/$2';
+$route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting/assign_category/$1';
+$route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting/batch_action/$1';
 
 $route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
 $route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';
@@ -334,16 +335,17 @@ $route['accounting/product-categories/delete/(:any)']['DELETE'] = "accounting/de
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
 
-$route['accounting/chart_of_accounts/create'] = 'Accounting/add';
-$route['accounting/chart_of_accounts/fetch_acc_detail'] = 'Accounting/fetch_acc_detail';
-$route['accounting/chart_of_accounts/add'] = 'Accounting/addChartofaccounts';
-$route['accounting/chart_of_accounts/edit/(:any)?'] = 'Accounting/edit/$1';
-$route['accounting/chart_of_accounts/update'] = 'Accounting/update';
-$route['accounting/chart_of_accounts/update_name'] = 'Accounting/update_name';
-$route['accounting/chart_of_accounts/inactive'] = 'Accounting/inactive';
-$route['accounting/chart_of_accounts/import'] = 'Accounting/import';
-$route['accounting/chart_of_accounts/refresh'] = 'Accounting/refresh';
-$route['accounting/chart_of_accounts/active/(:any)'] = 'Accounting/make_account_active/$1';
+$route['accounting/chart-of-accounts'] = 'accounting_controllers/chart_of_accounts/index';
+$route['accounting/chart-of-accounts/load']['post'] = 'accounting_controllers/chart_of_accounts/load_chart_of_accounts';
+$route['accounting/chart-of-accounts/create'] = 'accounting_controllers/chart_of_accounts/create';
+$route['accounting/chart-of-accounts/fetch-acc-detail'] = 'accounting_controllers/chart_of_accounts/fetch_acc_detail';
+$route['accounting/chart-of-accounts/add'] = 'accounting_controllers/chart_of_accounts/add';
+$route['accounting/chart-of-accounts/edit/(:any)?'] = 'accounting_controllers/chart_of_accounts/edit/$1';
+$route['accounting/chart-of-accounts/update'] = 'accounting_controllers/chart_of_accounts/update';
+$route['accounting/chart-of-accounts/inactive'] = 'accounting_controllers/chart_of_accounts/inactive';
+$route['accounting/chart-of-accounts/active/(:any)'] = 'accounting_controllers/chart_of_accounts/make_account_active/$1';
+$route['accounting/chart-of-accounts/import'] = 'accounting_controllers/chart_of_accounts/import';
+
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';
 $route['accounting/reconcile/(:any)'] = 'reconcile/index/$1';
@@ -529,6 +531,7 @@ $route['sms_campaigns/payment'] = 'Sms_Campaigns/payment';
 $route['sms_campaigns/process_payment'] = 'Sms_Campaigns/process_payment';
 $route['sms_campaigns/_load_paypal'] = 'Sms_Campaigns/get_paypal';
 $route['sms_campaigns/process_paypal_payment'] = 'Sms_Campaigns/process_paypal_payment';
+$route['sms_campaigns/process_stripe_payment'] = 'Sms_Campaigns/ajax_process_stripe_payment';
 
 //sms automation
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';

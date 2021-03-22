@@ -256,8 +256,10 @@ class Esign extends MY_Controller {
 		$this->db->where('user_id', $userId);
 		$this->db->where('unique_key', $uniqueKey);
 		$record = $this->db->get('user_docfile_fields')->row();
+		$isCreated = false;
 
 		if (is_null($record)) {
+			$isCreated = true;
 			$this->db->insert('user_docfile_fields', [
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
@@ -282,7 +284,12 @@ class Esign extends MY_Controller {
 			]);
 		}
 
-		echo json_encode(['success' => true]);
+		$recordId = $isCreated ? $this->db->insert_id() : $record->id;
+
+		$this->db->where('id', $recordId);
+		$record = $this->db->get('user_docfile_fields')->row();
+
+		echo json_encode(['record' => $record, 'is_created' => $isCreated]);
 	}
 
 	public function apiGetUserDocfileFields($docId)

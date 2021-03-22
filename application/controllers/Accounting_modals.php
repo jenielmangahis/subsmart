@@ -44,12 +44,28 @@ class Accounting_modals extends MY_Controller {
         if ($view) {
             switch ($view) {
                 case 'pay_down_credit_card_modal':
+                    $detailTypes = $this->account_detail_model->getDetailTypesById(3);
+                    $accounts = $this->chart_of_accounts_model->select();
+
+                    $bankAccounts = [];
+                    foreach($detailTypes as $detailType) {
+                        $detailTypeAccs = array_filter($accounts, function($v, $k) use ($detailType) {
+                            return $v->acc_detail_id === $detailType->acc_detail_id;
+                        }, ARRAY_FILTER_USE_BOTH);
+
+                        if(!empty($detailTypeAccs)) {
+                            $bankAccounts[$detailType->acc_detail_name] = $detailTypeAccs;
+                        }
+                    }
+                    
+                    $this->page_data['dropdown']['accounts'] = $bankAccounts;
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                 break;
                 case 'single_time_activity_modal':
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+                    $this->page_data['dropdown']['services'] = $this->items_model->getItemsWithFilter(['type' => ['service', 'Service'], 'status' => [1]]);
 
                     $time = '00:00';
                     $endTime = '23:45';
@@ -181,6 +197,10 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'payroll_modal':
                     $this->page_data['employees'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
+                    $accounts = $this->chart_of_accounts_model->select();
+                    $accounts = array_filter($accounts, function($v, $k) {
+                        return $v->account_id === 3 || $v->account_id === "3";
+                    }, ARRAY_FILTER_USE_BOTH); 
 
                     $currentDay = date('m/d/Y');
                     $startDay = date('m/d/Y', strtotime($date . ' -6 months'));
@@ -216,11 +236,13 @@ class Accounting_modals extends MY_Controller {
 
                     krsort($payPeriod);
                     $this->page_data['payPeriods'] = $payPeriod;
+                    $this->page_data['accounts'] = $accounts;
                 break;
                 case 'weekly_timesheet_modal':
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['services'] = $this->items_model->getItemsWithFilter(['type' => ['service', 'Service'], 'status' => [1]]);
 
                     $date = date('m/d/Y');
                     $yearLater = date('m/d/Y', strtotime($date . ' -1 year'));
@@ -297,7 +319,7 @@ class Accounting_modals extends MY_Controller {
                 break;
             }
 
-            $this->load->view("accounting/". $view, $this->page_data);
+            $this->load->view("accounting/modals/". $view, $this->page_data);
         }
     }
 
@@ -349,7 +371,7 @@ class Accounting_modals extends MY_Controller {
                 $this->page_data['accounts'] = $bankAccounts;
             }
 
-            $this->load->view("accounting/recurring_".$modal."_fields", $this->page_data);
+            $this->load->view("accounting/modals/recurring_fields/recurring_".$modal."_fields", $this->page_data);
         }
     }
 
@@ -479,19 +501,19 @@ class Accounting_modals extends MY_Controller {
     }
 
     public function group_job_tag_form() {
-        $this->load->view("accounting/group_tag_form");
+        $this->load->view("accounting/modals/group_tag_form");
     }
 
     public function job_tag_modal() {
-        $this->load->view("accounting/job_tags_modal");
+        $this->load->view("accounting/modals/job_tags_modal");
     }
 
     public function job_tag_form() {
-        $this->load->view("accounting/job_tag_modal_form");
+        $this->load->view("accounting/modals/job_tag_modal_form");
     }
 
     public function edit_group_tag_form() {
-        $this->load->view("accounting/edit_group_form");
+        $this->load->view("accounting/modals/edit_group_form");
     }
 
     public function get_job_tags() {
@@ -581,7 +603,7 @@ class Accounting_modals extends MY_Controller {
             'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
         ];
 
-        $this->load->view("accounting/payroll_summary", $this->page_data);
+        $this->load->view("accounting/modals/payroll_summary", $this->page_data);
     }
 
     public function get_statement_customers() {
@@ -1769,6 +1791,6 @@ class Accounting_modals extends MY_Controller {
 
         $this->pdf->save_pdf("accounting/modals/print_action/statement", ['data' => $post], $filename, 'portrait');
 
-        $this->load->view("accounting/send_statement_modal", $this->page_data);
+        $this->load->view("accounting/modals/send_statement_modal", $this->page_data);
     }
 }

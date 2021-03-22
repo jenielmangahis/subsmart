@@ -5,25 +5,26 @@
 </style>
 
 <div class="<?= $class ?>"  id="widget_<?= $id ?>">
-    <div class="card" style="margin-top:0;">
-        <div class="card-header" style="background: #40c057; color:white;">
-            <i class="fa fa-calendar" aria-hidden="true"></i> Open Estimates
-        </div>
-        <div class="card-body" style="padding:5px 10px;">
-            <div style="height: 250px; overflow-y: scroll">
-                        <div class="mb-2 col-lg-12 float-left">
-                            <table class="table table-striped table-hover">
-                                <tr>
-                                    <th class="col-lg-2"></th>
-                                    <th class="text-left">Estimate #</th>
-                                    <th class="text-center">Amount</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Last Update</th>
-                                </tr>
-                                <?php
-                                $jobCounter = 0;
-                                if ($job) {
-                                    foreach ($job as $jb) :
+    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+        <i class="fa fa-calendar" aria-hidden="true"></i> Open Estimates
+    </div>
+    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
+        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
+            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
+                <div style="height: 250px; overflow-y: scroll">
+                    <div class="mb-2 col-lg-12 float-left">
+                        <table class="table table-striped table-hover">
+                            <tr>
+                                <th class="col-lg-2"></th>
+                                <th class="text-left">Estimate #</th>
+                                <th class="text-center">Amount</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Last Update</th>
+                            </tr>
+                            <?php
+                            $jobCounter = 0;
+                            if ($job) {
+                                foreach ($job as $jb) :
                                     ?>
                                     <tr style="cursor:pointer;">
                                         <td>    
@@ -45,18 +46,18 @@
                                         </td>
                                     </tr>
                                     <?php
-                                    endforeach;
-                                }
-                                ?>
-                            </table>
-                        </div>
+                                endforeach;
+                            }
+                            ?>
+                        </table>
+                    </div>
 
-                ?>
+                    ?>
+                </div>
+                <div class="text-center">
+                    <a class="text-info" href="<?= base_url() ?>job">SEE ALL ESTIMATES</a>
+                </div>
             </div>
-            <div class="text-center">
-                <a class="text-info" href="<?= base_url() ?>job">SEE ALL ESTIMATES</a>
-            </div>
-           
         </div>
 
     </div>

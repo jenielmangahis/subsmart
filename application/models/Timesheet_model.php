@@ -36,12 +36,12 @@ class Timesheet_model extends MY_Model
         $date_2days_ago = date_format($date, "Y-m-d H:i:s");
 
         $this->db->reset_query();
-        $query = $this->db->query("SELECT * from user_seen_notif JOIN user_notification on user_notification.id=user_seen_notif.notif_id where user_notification.date_created > '" . $date_2days_ago . "'");
+        $query = $this->db->query("SELECT * from user_seen_notif JOIN user_notification on user_notification.id=user_seen_notif.notif_id where user_notification.date_created > '" . $date_2days_ago . "' and user_seen_notif.user_id = " . $user_id);
         $and_query = "";
         foreach ($query->result() as $row) {
             $and_query = $and_query . " and user_notification.id !=" . $row->notif_id;
         }
-        $query = $this->db->query("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName, users.profile_img  FROM user_notification JOIN users ON users.id = user_notification.user_id where user_notification.date_created > '" . $date_2days_ago . "' and user_notification.company_id=" . $company_id . $and_query . " order by user_notification.date_created DESC");
+        $query = $this->db->query("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName, users.profile_img  FROM user_notification JOIN users ON user_notification.user_id=users.id where user_notification.date_created > '" . $date_2days_ago . "' and user_notification.company_id=" . $company_id . $and_query . " order by user_notification.date_created DESC");
 
 
         // $query = $this->db->get();
@@ -318,7 +318,7 @@ class Timesheet_model extends MY_Model
 
     public function checkInEmployee($user_id, $entry, $approved_by, $company_id)
     {
-        // $attn_id = $this->attendance($user_id,1,0,null,null,null);
+        $attn_id = $this->attendance($user_id, 1, 0, null, null, null);
         $qry = $this->db->get_where($this->db_table, array('attendance_id' => $attn_id, 'action' => 'Check in'));
         $data = array(
             'attendance_id' => $attn_id,
@@ -469,7 +469,7 @@ class Timesheet_model extends MY_Model
         $total_worked_hours = ($minutes / 60) - $break_duration;
 
         if ($total_worked_hours > 8) {
-            $shift_duration = $total_worked_hours;
+            $shift_duration = 8;
             $over_time = $total_worked_hours - 8;
         } else {
             $shift_duration = $total_worked_hours;
@@ -513,7 +513,7 @@ class Timesheet_model extends MY_Model
 
     public function calculateOvertime($user_id, $attn_id)
     {
-        $shift = $this->calculateShiftDuration($attn_id);
+        $shift = $this->calculateShiftDuration_and_overtime($attn_id);
         $query = $this->db->get_where('ts_schedule_day', array('user_id' => $user_id, 'start_date' => date('Y-m-d')));
         $hired_type = $this->db->get_where('users', array('id' => $user_id));
         $min_duration = 0;
@@ -525,9 +525,9 @@ class Timesheet_model extends MY_Model
         }
         if ($query->num_rows() == 1) {
             $sched = $query->row()->duration;
-            $overtime = $shift - $sched;
+            $overtime = $shift[0] - $sched;
         } else {
-            $overtime = $shift - $min_duration;
+            $overtime = $shift[0] - $min_duration;
         }
         return round($overtime, 2);
     }
@@ -1099,7 +1099,7 @@ class Timesheet_model extends MY_Model
         $this->db->where("user_id", $user_id);
         $this->db->like('date_created', $date);
         $query = $this->db->get();
-        return  $query - result();
+        return  $query;
     }
 
     public function getLeaveList($date, $status_request)
@@ -1196,6 +1196,37 @@ class Timesheet_model extends MY_Model
     public function add_new_shift_shedules($data)
     {
         $this->db->insert_batch('timesheet_shift_schedule', $data);
+    }
+    public function delete_shift_schedule($queries)
+    {
+        $this->db->query('DELETE FROM timesheet_shift_schedule WHERE ' . $queries);
+    }
+    public function get_all_attendance($date_from, $date_to, $company_id)
+    {
+        $qry = $this->db->query("SELECT 
+        timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,
+        users.FName, users.LName, roles.title
+            FROM timesheet_attendance JOIN users ON timesheet_attendance.user_id = users.id JOIN roles ON users.role = roles.id WHERE timesheet_attendance.date_created >='" . $date_from . "' AND timesheet_attendance.date_created <='" . $date_to . "' AND users.company_id = " . $company_id . " order by timesheet_attendance.date_created DESC");
+        return $qry->result();
+    }
+    public function get_logs_of_attendance($att_id)
+    {
+        $this->db->where('attendance_id', $att_id);
+        $qry = $this->db->get('timesheet_logs');
+        return $qry->result();
+    }
+    public function get_schedule_in_shift_date($shift_date, $user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->where('shift_date', $shift_date);
+        $qry = $this->db->get('timesheet_shift_schedule');
+        return $qry->result();
+    }
+    public function get_especitif_attendance($att_id)
+    {
+        $this->db->where('id', $att_id);
+        $qry = $this->db->get('timesheet_attendance');
+        return $qry->result();
     }
 }
 

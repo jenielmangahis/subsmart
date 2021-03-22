@@ -19,15 +19,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-12">
                                     <h3 class="page-title">Lists</h3>
                                 </div>
-                                <div class="col-sm-12 p-0">
-                                    <div class="alert alert-warning mt-4 mb-4" role="alert">
-                                        <span style="color:black;">Message here</span>
-                                    </div>
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5><a href="/accounting/chart_of_accounts" class="text-info">Chart of accounts</a></h5>
+                                    <h5><a href="/accounting/chart-of-accounts" class="text-info">Chart of accounts</a></h5>
                                     <p>Displays your accounts. Balance sheet accounts track your assets and liabilities, and income and expense accounts categorize your transactions. From here, you can add or edit accounts.</p>
                                 </div>
                                 <div class="col-md-6">
@@ -63,16 +58,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-6">
                                     <h5><a href="/accounting/tags" class="text-info">Tags</a></h5>
                                     <p>Displays the list of all tags created. You can add, edit, and delete your tags here.</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5><a href="#" class="text-info">Custom Form Styles</a></h5>
-                                    <p>Customize your sales form designs, set defaults, and manage multiple templates.</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5><a href="#" class="text-info">Custom Fields</a></h5>
-                                    <p>Sort, track, and report the information that matters to you. Now with enhanced custom fields, you can add more detailed info about your customers, vendors, and transactions.</p>
                                 </div>
                             </div>
                         </div>

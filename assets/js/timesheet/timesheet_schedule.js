@@ -12,6 +12,10 @@ var new_shift_ends_ctr = 0;
 var has_error_in_new_schedule = false;
 var has_error_in_new_schedule_ctr = 0;
 
+var delete_shift_dates = new Array();
+var delete_shift_dates_user_ids = new Array();
+var delete_shift_dates_ctr = 0;
+
 $(document).on("change", ".shift-start-input", function () {
   let selected = this;
   shift_start_input_changed(selected);
@@ -215,6 +219,7 @@ function shift_end_input_changed(selected) {
     $(selected).attr("data-id"),
     data_column
   );
+  remove_error_if_both_blank(selected);
 }
 
 function timeStringToFloat(time) {
@@ -303,6 +308,14 @@ function shift_error_finder(selected) {
   }
 }
 function remove_error_if_both_blank(selected) {
+  var data_date = $(selected)
+    .parent("td")
+    .children(".shift-start-input")
+    .attr("data-date");
+  var data_id = $(selected)
+    .parent("td")
+    .children(".shift-start-input")
+    .attr("data-id");
   if (
     $(selected).parent("td").children(".shift-start-input").val() == "" &&
     $(selected).parent("td").children(".shift-end-input").val() == ""
@@ -318,6 +331,40 @@ function remove_error_if_both_blank(selected) {
       .children(".shift-start-input")
       .removeClass("pink")
       .addClass("blank");
+
+    var found_delete = false;
+    for (var i = 0; i < delete_shift_dates_ctr; i++) {
+      if (
+        delete_shift_dates[i] == data_date &&
+        delete_shift_dates_user_ids[i] == data_id
+      ) {
+        found_delete = true;
+        break;
+      }
+    }
+    if (!found_delete) {
+      delete_shift_dates.push(
+        $(selected)
+          .parent("td")
+          .children(".shift-start-input")
+          .attr("data-date")
+      );
+      delete_shift_dates_user_ids.push(
+        $(selected).parent("td").children(".shift-start-input").attr("data-id")
+      );
+      delete_shift_dates_ctr++;
+    }
+  } else {
+    for (var i = 0; i < delete_shift_dates_ctr; i++) {
+      if (
+        delete_shift_dates[i] == data_date &&
+        delete_shift_dates_user_ids[i] == data_id
+      ) {
+        delete_shift_dates[i] = "";
+        delete_shift_dates_user_ids[i] = "";
+        break;
+      }
+    }
   }
 }
 function Shift_end_validation(selected, validate_start, validate_end) {
@@ -380,6 +427,9 @@ $(document).on("click", "#schedule_save_btn", function () {
     console.log(new_shift_end_dates);
     console.log(new_shift_ends_columns);
     console.log(new_shift_ends_ctr);
+    console.log("========DELETE SHIFT=========");
+    console.log(delete_shift_dates);
+    console.log(delete_shift_dates_user_ids);
     $.ajax({
       url: baseURL + "/timesheet/set_schedule",
       type: "POST",
@@ -397,6 +447,9 @@ $(document).on("click", "#schedule_save_btn", function () {
         new_shift_ends_columns: new_shift_ends_columns,
         new_shift_ends_ctr: new_shift_ends_ctr,
         week_schedule: $("#scheduleWeek").val(),
+
+        delete_shift_dates: delete_shift_dates,
+        delete_shift_dates_user_ids: delete_shift_dates_user_ids,
       },
       success: function (data) {
         Swal.fire({
@@ -686,60 +739,12 @@ $(document).on("click", ".group-paste-btn", function () {
     $(suntd).children(".shift-end-input").val(copied_group_end[6]);
   }
   if (group_copy || single_copy) {
-    if (
-      $(montd).children(".shift-start-input").val() != "" &&
-      $(montd).children(".shift-end-input").val() != ""
-    ) {
-      // shift_start_input_changed($(montd).children(".shift-start-input"));
-      shift_end_input_changed($(montd).children(".shift-end-input"));
-    }
-
-    if (
-      $(tuetd).children(".shift-start-input").val() != "" &&
-      $(tuetd).children(".shift-end-input").val() != ""
-    ) {
-      // shift_start_input_changed($(tuetd).children(".shift-start-input"));
-      shift_end_input_changed($(tuetd).children(".shift-end-input"));
-    }
-
-    if (
-      $(wedtd).children(".shift-start-input").val() != "" &&
-      $(wedtd).children(".shift-end-input").val() != ""
-    ) {
-      // shift_start_input_changed($(wedtd).children(".shift-start-input"));
-      shift_end_input_changed($(wedtd).children(".shift-end-input"));
-    }
-
-    if (
-      $(thurtd).children(".shift-start-input").val() != "" &&
-      $(thurtd).children(".shift-end-input").val() != ""
-    ) {
-      // shift_start_input_changed($(thurtd).children(".shift-start-input"));
-      shift_end_input_changed($(thurtd).children(".shift-end-input"));
-    }
-
-    if (
-      $(fritd).children(".shift-start-input").val() != "" &&
-      $(fritd).children(".shift-end-input").val() != ""
-    ) {
-      // shift_start_input_changed($(fritd).children(".shift-start-input"));
-      shift_end_input_changed($(fritd).children(".shift-end-input"));
-    }
-
-    if (
-      $(sattd).children(".shift-start-input").val() != "" &&
-      $(sattd).children(".shift-end-input").val() != ""
-    ) {
-      // shift_start_input_changed($(sattd).children(".shift-start-input"));
-      shift_end_input_changed($(sattd).children(".shift-end-input"));
-    }
-
-    if (
-      $(suntd).children(".shift-start-input").val() != "" &&
-      $(suntd).children(".shift-end-input").val() != ""
-    ) {
-      // shift_start_input_changed($(suntd).children(".shift-start-input"));
-      shift_end_input_changed($(suntd).children(".shift-end-input"));
-    }
+    shift_end_input_changed($(montd).children(".shift-end-input"));
+    shift_end_input_changed($(tuetd).children(".shift-end-input"));
+    shift_end_input_changed($(wedtd).children(".shift-end-input"));
+    shift_end_input_changed($(thurtd).children(".shift-end-input"));
+    shift_end_input_changed($(fritd).children(".shift-end-input"));
+    shift_end_input_changed($(sattd).children(".shift-end-input"));
+    shift_end_input_changed($(suntd).children(".shift-end-input"));
   }
 });

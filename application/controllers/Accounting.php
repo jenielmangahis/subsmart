@@ -88,7 +88,7 @@ class Accounting extends MY_Controller {
                 array('/accounting/reports',array()),
                 array("",	array('/accounting/salesTax','/accounting/payrollTax')),
                 array('#',	array()),
-                array("",	array('/accounting/chart_of_accounts','/accounting/reconcile')),
+                array("",	array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
     }
@@ -171,56 +171,21 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/taxes', $this->page_data);
     }
 
-    public function chart_of_accounts()
-    {
-        $this->page_data['alert'] = 'accounting/alert_promt';
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/chart_of_accounts/index', $this->page_data);
-    }
-
     public function attachments()
     {
+        add_footer_js(array(
+            "assets/js/accounting/attachments.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/lists/attachment', $this->page_data);
     }
 
     public function upload_files()
     {
-        $this->load->helper('string');
         $files = $_FILES['attachments'];
 
-        if(count($files) > 0) {
-            $data = [];
-            foreach($files['name'] as $key => $name) {
-                $extension = end(explode('.', $name));
-
-                do {
-                    $randomString = random_string('alnum');
-                    $fileNameToStore = $randomString . '.' .$extension;
-                    $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
-                } while ($exists);
-
-                $fileType = explode('/', $files['type'][$key]);
-                $uploadedName = str_replace('.'.$extension, '', $name);
-
-                $data[] = [
-                    'company_id' => getLoggedCompanyID(),
-                    'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
-                    'uploaded_name' => $uploadedName,
-                    'stored_name' => $fileNameToStore,
-                    'file_extension' => $extension,
-                    'size' => $files['size'][$key],
-                    'notes' => null,
-                    'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
-                ];
-
-                move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
-            }
-
-            $insert = $this->accounting_attachments_model->insertBatch($data);
-
+        if(count($files['name']) > 0) {
+            $insert = $this->uploadFile($files);
 
             $return = [
                 'data' => $insert,
@@ -323,6 +288,9 @@ class Accounting extends MY_Controller {
 
     public function payment_methods()
     {
+        add_footer_js(array(
+            "assets/js/accounting/payment-method.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/payment_methods', $this->page_data);
     }
@@ -441,6 +409,9 @@ class Accounting extends MY_Controller {
 
     public function recurring_transactions()
     {
+        add_footer_js(array(
+            "assets/js/accounting/recurring-transactions.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/recurring_transactions', $this->page_data);
     }
@@ -794,6 +765,9 @@ class Accounting extends MY_Controller {
 
     public function terms()
     {
+        add_footer_js(array(
+            "assets/js/accounting/terms.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/terms', $this->page_data);
     }
@@ -952,6 +926,9 @@ class Accounting extends MY_Controller {
     //Tags
     public function tags()
     {
+        add_footer_js(array(
+            "assets/js/accounting/banking/tags.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/tags', $this->page_data);
     }
@@ -1177,6 +1154,9 @@ class Accounting extends MY_Controller {
     }
     public function products_and_services()
     {
+        add_footer_js(array(
+            "assets/js/accounting/sales/products-and-services.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
         $this->load->view('accounting/products', $this->page_data);
@@ -1269,6 +1249,15 @@ class Accounting extends MY_Controller {
             $qty = $this->items_model->countQty($item->id);
             $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
 
+            if($item->attached_image !== null && $item->attached_image !== "") {
+                $icon = "/uploads/$item->attached_image";
+            } else if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
+                $icon = "/uploads/accounting/attachments/$attachment->stored_name";
+            } else {
+                $icon = "";
+            }
+
             $bundleItems = $this->items_model->getBundleContents($item->id);
             $bundItems = [];
             if(!empty($bundleItems)) {
@@ -1301,7 +1290,7 @@ class Accounting extends MY_Controller {
                         'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                         'reorder_point' => $item->re_order_points,
                         'item_categories_id' => $item->item_categories_id,
-                        'icon' => $item->attached_image,
+                        'icon' => $icon,
                         'vendor_id' => $item->vendor_id,
                         'sales_tax_cat' => $accountingDetails->tax_rate_id,
                         'bundle_items' => $bundItems,
@@ -1328,7 +1317,7 @@ class Accounting extends MY_Controller {
                     'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                     'reorder_point' => $item->re_order_points,
                     'item_categories_id' => $item->item_categories_id,
-                    'icon' => $item->attached_image,
+                    'icon' => $icon,
                     'vendor_id' => $item->vendor_id,
                     'sales_tax_cat' => $accountingDetails->tax_rate_id,
                     'bundle_items' => $bundItems,
@@ -1473,26 +1462,67 @@ class Accounting extends MY_Controller {
             $this->session->set_flashdata('error', "Please try again!");
         }
     }
+    private function uploadFile($files)
+    {
+        $this->load->helper('string');
+        $data = [];
+        foreach($files['name'] as $key => $name) {
+            $extension = end(explode('.', $name));
+
+            do {
+                $randomString = random_string('alnum');
+                $fileNameToStore = $randomString . '.' .$extension;
+                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+            } while ($exists);
+
+            $fileType = explode('/', $files['type'][$key]);
+            $uploadedName = str_replace('.'.$extension, '', $name);
+
+            $data[] = [
+                'company_id' => getLoggedCompanyID(),
+                'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
+                'uploaded_name' => $uploadedName,
+                'stored_name' => $fileNameToStore,
+                'file_extension' => $extension,
+                'size' => $files['size'][$key],
+                'notes' => null,
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
+
+            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+        }
+
+        $insert = $this->accounting_attachments_model->insertBatch($data);
+
+        return $insert;
+    }
     public function create_item($type)
     {
         $input = $this->input->post();
         $name = $input['name'];
 
-        $config = array(
-            'upload_path' => "./uploads/",
-            'allowed_types' => "gif|jpg|png|jpeg",
-            'overwrite' => TRUE,
-            'max_size' => "2048000",
-            'max_height' => "768",
-            'max_width' => "1024"
-        );
+        if($_FILES['icon']['name'] !== "") {
+            $files = [
+                'name' => [
+                    $_FILES['icon']['name']
+                ],
+                'type' => [
+                    $_FILES['icon']['type']
+                ],
+                'tmp_name' => [
+                    $_FILES['icon']['tmp_name']
+                ],
+                'error' => [
+                    $_FILES['icon']['tmp_name']
+                ],
+                'size' => [
+                    $_FILES['icon']['size']
+                ]
+            ];
 
-		$this->load->library('upload', $config);
-		if (!$this->upload->do_upload('icon')) {
-			$product_image = '';
-		} else {
-			$upload_data = array('upload_data' => $this->upload->data());
-			$product_image = $upload_data['upload_data']['file_name'];
+            $attachmentId = $this->uploadFile($files);
         }
         
         switch($type) {
@@ -1502,7 +1532,7 @@ class Accounting extends MY_Controller {
                     'title' => $name,
                     'type' => $type,
                     'description' => $input['description'],
-                    'attached_image' => $product_image,
+                    // 'attached_image' => $product_image,
                     'is_active' => 1
                 ];
             break;
@@ -1511,7 +1541,7 @@ class Accounting extends MY_Controller {
                     'company_id' => logged('company_id'),
                     'title' => $name,
                     'type' => $type,
-                    'attached_image' => $product_image,
+                    // 'attached_image' => $product_image,
                     'item_categories_id' => $input['category'],
                     'description' => isset($input['selling']) ? $input['description'] : null,
                     'price' => isset($input['selling']) ? $input['price'] : null,
@@ -1525,7 +1555,7 @@ class Accounting extends MY_Controller {
                     'company_id' => logged('company_id'),
                     'title' => $name,
                     'type' => $type,
-                    'attached_image' => $product_image,
+                    // 'attached_image' => $product_image,
                     'item_categories_id' => $input['category'],
                     'description' => isset($input['selling']) ? $input['description'] : null,
                     'price' => isset($input['selling']) ? $input['price'] : null,
@@ -1539,7 +1569,7 @@ class Accounting extends MY_Controller {
                     'company_id' => logged('company_id'),
                     'title' => $name,
                     'type' => $type,
-                    'attached_image' => $product_image,
+                    // 'attached_image' => $product_image,
                     'item_categories_id' => $input['category'],
                     're_order_points' => $input['reorder_point'],
                     'description' => $input['description'],
@@ -1558,6 +1588,7 @@ class Accounting extends MY_Controller {
             if($type === 'bundle') {
                 $accountingDetails = [
                     'item_id' => $create,
+                    'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                     'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
                     'sku' => $input['sku']
                 ];
@@ -1576,6 +1607,7 @@ class Accounting extends MY_Controller {
             } else if($type === 'inventory') {
                 $accountingDetails = [
                     'item_id' => $create,
+                    'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                     'sku' => $input['sku'],
                     'as_of_date' => date('Y-m-d', strtotime($input['as_of_date'])),
                     'qty_po' => 0,
@@ -1603,6 +1635,7 @@ class Accounting extends MY_Controller {
             } else {
                 $accountingDetails = [
                     'item_id' => $create,
+                    'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                     'sku' => $input['sku'],
                     'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
                     'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
@@ -1641,6 +1674,7 @@ class Accounting extends MY_Controller {
                 $data = [
                     'title' => $name,
                     'description' => $input['description'],
+                    're_order_points' => null
                 ];
             break;
             default : 
@@ -1652,29 +1686,31 @@ class Accounting extends MY_Controller {
                     'price' => isset($input['selling']) ? $input['price'] : null,
                     'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
                     'cost' => isset($input['purchasing']) ? $input['cost'] : null,
+                    're_order_points' => null
                 ];
             break;
         }
 
         if($_FILES['icon']['name'] !== "") {
-            $config = array(
-                'upload_path' => "./uploads/",
-                'allowed_types' => "gif|jpg|png|jpeg",
-                'overwrite' => TRUE,
-                'max_size' => "2048000",
-                'max_height' => "768",
-                'max_width' => "1024"
-            );
-    
-            $this->load->library('upload', $config);
-            if (!$this->upload->do_upload('icon')) {
-                $product_image = '';
-            } else {
-                $upload_data = array('upload_data' => $this->upload->data());
-                $product_image = $upload_data['upload_data']['file_name'];
-            }
+            $files = [
+                'name' => [
+                    $_FILES['icon']['name']
+                ],
+                'type' => [
+                    $_FILES['icon']['type']
+                ],
+                'tmp_name' => [
+                    $_FILES['icon']['tmp_name']
+                ],
+                'error' => [
+                    $_FILES['icon']['tmp_name']
+                ],
+                'size' => [
+                    $_FILES['icon']['size']
+                ]
+            ];
 
-            $data['attached_image'] = $product_image;
+            $attachmentId = $this->uploadFile($files);
         }
 
         $condition = ['id' => $id, 'company_id' => getLoggedCompanyID()];
@@ -1683,6 +1719,7 @@ class Accounting extends MY_Controller {
         if($update) {
             if($type === 'inventory') {
                 $accountingDetails = [
+                    'attachment_id' => $attachmentId,
                     'sku' => $input['sku'],
                     'inv_asset_acc_id' => $input['inv_asset_acc'],
                     'income_account_id' => $input['income_account'],
@@ -1692,6 +1729,7 @@ class Accounting extends MY_Controller {
                 ];
             } else if($type === 'bundle') {
                 $accountingDetails = [
+                    'attachment_id' => $attachmentId,
                     'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
                     'sku' => $input['sku']
                 ];
@@ -1727,6 +1765,7 @@ class Accounting extends MY_Controller {
                 }
             } else {
                 $accountingDetails = [
+                    'attachment_id' => $attachmentId,
                     'sku' => $input['sku'],
                     'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
                     'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
@@ -1739,7 +1778,7 @@ class Accounting extends MY_Controller {
                 $accountingDetails['item_id'] = $id;
                 $accountingDetails['as_of_date'] = null;
                 $accountingDetails['qty_po'] = 0;
-                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails,);
+                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails, $id);
             } else {
                 $updateAccDetails = $this->items_model->updateItemAccountingDetails($accountingDetails, $id);
             }
@@ -1833,7 +1872,7 @@ class Accounting extends MY_Controller {
         $this->page_data['accountingDetails'] = $itemAccDetails;
         $this->page_data['invAssetAcc'] = $invAssetAcc;
         $this->page_data['locations'] = $this->items_model->getLocationByItemId($item_id);
-        $this->load->view('accounting/adjust_starting_value', $this->page_data);
+        $this->load->view('accounting/modals/adjust_starting_value', $this->page_data);
     }
     public function adjust_starting_value($item_id)
     {
@@ -1896,6 +1935,9 @@ class Accounting extends MY_Controller {
     }
     public function product_categories()
     {
+        add_footer_js(array(
+            "assets/js/accounting/sales/product-categories.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product Categories";
         $this->load->view('accounting/product_categories', $this->page_data);
@@ -3667,239 +3709,11 @@ class Accounting extends MY_Controller {
         $this->receipt_model->deleteReceiptData($id);
     }
 
-    /*chart_of_accounts start*/
-    public function load_chart_of_accounts()
-    {
-        $postData = json_decode(file_get_contents('php://input'), true);
-        $search = $postData['columns'][0]['search']['value'];
-        $column = $postData['order'][0]['column'];
-        $order = $postData['order'][0]['dir'];
-        $columnName = $postData['columns'][$column]['name'];
-        $start = $postData['start'];
-        $limit = $postData['length'];
-
-        $status = [
-            1
-        ];
-
-        if($postData['inactive'] === '1' || $postData['inactive'] === 1) {
-            array_push($status, 0);
-        }
-
-        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status, $order, $columnName);
-
-        $data = [];
-
-        foreach($accounts as $account) {
-            if($search !== "") {
-                if(stripos($account->name, $search) !== false) {
-                    $data[] = [
-                        'id' => $account->id,
-                        'name' => $account->name,
-                        'type' => $this->account_model->getName($account->account_id),
-                        'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
-                        'nsmartrac_balance' => $account->balance,
-                        'bank_balance' => '',
-                        'status' => $account->active
-                    ];
-                }
-            } else {
-                $data[] = [
-                    'id' => $account->id,
-                    'name' => $account->name,
-                    'type' => $this->account_model->getName($account->account_id),
-                    'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
-                    'nsmartrac_balance' => $account->balance,
-                    'bank_balance' => '',
-                    'status' => $account->active
-                ];
-            }
-        }
-
-        $result = [
-            'draw' => $postData['draw'],
-            'recordsTotal' => count($accounts),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
-    }
-
-    public function make_account_active($id)
-    {
-        $active =  $this->chart_of_accounts_model->makeActive($id);
-
-        echo json_encode([
-            'success' => $active ? true : false,
-            'message' => $active ? 'Success' : 'Error'
-        ]);
-    }
-
-    public function add()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/chart_of_accounts/add', $this->page_data);
-    }
-
-    public function addChartofaccounts()
-    {
-        $data = [
-            'company_id' => logged('company_id'),
-            'account_id' => $this->input->post('account_type'),
-            'acc_detail_id' => $this->input->post('detail_type'),
-            'name' => $this->input->post('name'),
-            'description' => $this->input->post('description'),
-            'parent_acc_id' => $this->input->post('sub_account_type'),
-            'time' => $this->input->post('choose_time'),
-            'balance' => $this->input->post('balance'),
-            'time_date' => $this->input->post('time_date')
-        ];
-
-        $account = $this->chart_of_accounts_model->saverecords($data);
-
-        if($account > 0) {
-            $this->session->set_flashdata('success', "Data inserted successfully!");
-        } else {
-            $this->session->set_flashdata('error', "Please try again!");
-        }
-
-        redirect("accounting/chart_of_accounts");
-    }
-
-    public function edit($id)
-    {
-        $this->page_data['alert'] = 'accounting/alert_promt';
-        $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
-        echo $this->load->view('accounting/chart_of_accounts/edit-new', $this->page_data, true);
-        exit;
-    }
-
-    public function update()
-    {
-        $data = [
-            'id' => $this->input->post('id'),
-            'company_id' => logged('company_id'),
-            'account_id' => $this->input->post('account_type'),
-            'acc_detail_id' => $this->input->post('detail_type'),
-            'name' => $this->input->post('name'),
-            'description' => $this->input->post('description'),
-            'parent_acc_id' => $this->input->post('sub_account_type'),
-            'time' => $this->input->post('choose_time'),
-            'balance' => $this->input->post('balance'),
-            'time_date' => $this->input->post('time') === 'Other' ? $this->input->post('time_date') : null
-        ];
-
-        $accountUpdate = $this->chart_of_accounts_model->updaterecords($data);
-
-        if($accountUpdate) {
-            $this->session->set_flashdata('success', "Data updated successfully!");
-        } else {
-            $this->session->set_flashdata('error', "Please try again!");
-        }
-        redirect("accounting/chart_of_accounts");
-    }
-
-    public function fetch_acc_detail()
-    {
-        if($this->input->post('account_id'))
-        {
-            foreach($this->account_detail_model->getDetailTypesById($this->input->post('account_id')) as $row) {
-                echo "<option value='".$row->acc_detail_id."'>".$row->acc_detail_name."</option>";
-            }
-        }
-    }
-
     public function lists()
     {
         $this->load->view('accounting/list', $this->page_data);
     }
 
-    public function update_name()
-    {
-        $id = $this->input->post('id');
-        $name = $this->input->post('name');
-        $this->chart_of_accounts_model->update_name($id,$name);
-    }
-
-    public function inactive()
-    {
-        $id = $this->input->post('id');
-        $inactive = $this->chart_of_accounts_model->inactive($id);
-
-        echo json_encode([
-            'success' => $inactive ? true : false,
-            'message' => $inactive ? 'Success' : 'Error'
-        ]);
-    }
-
-    public function import()
-    {
-        $this->page_data['page_title'] = "Import";
-        if(isset($_FILES["file"]["name"]))
-        {
-            $path = $_FILES["file"]["tmp_name"];
-            $object = PHPExcel_IOFactory::load($path);
-            foreach($object->getWorksheetIterator() as $worksheet)
-            {
-                $highestRow = $worksheet->getHighestRow();
-                $highestColumn = $worksheet->getHighestColumn();
-                for($row=1; $row<=$highestRow; $row++)
-                {
-                    $account_id = $worksheet->getCellByColumnAndRow(0, $row)->getValue();
-                    $acc_detail_id = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
-                    $name = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
-                    $description = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
-                    $sub_acc_id = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
-                    $time = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
-                    $balance = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
-                    $time_date = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
-                    $data[] = array(
-                        'account_id'   => $account_id,
-                        'acc_detail_id'    => $acc_detail_id,
-                        'name'  => $name,
-                        'description'   => $description,
-                        'sub_acc_id'  => $sub_acc_id,
-                        'time'  => $time,
-                        'balance'  => $balance,
-                        'time_date'  => $time_date
-                    );
-                }
-            }
-            $this->chart_of_accounts_model->insert($data);
-            echo 'Data Imported successfully';
-        }
-    }
-
-    public function refresh()
-    {
-        $html = "";
-        $i=1;
-        foreach($this->chart_of_accounts_model->select() as $row)
-        {
-            $html .="<tr>
-                        <td>
-                            <input type='checkbox'></td><td class='edit_field' data-id='".$row->id."'>".$row->name."
-                        </td>
-                        <td class='type'>".$this->account_model->getName($row->account_id)."</td>
-                        <td class='detailtype'>".$this->account_detail_model->getName($row->acc_detail_id)."</td>
-                        <td class='nbalance'>".$row->balance."</td>
-                        <td class='balance'></td>
-                        <td>
-                            <div class='dropdown show'><a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>View Register</a>
-                                <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
-                                    <a class='dropdown-item' href='javascript:void(0);' data-href=".url('/accounting/chart_of_accounts/edit/'.$row->id)." id='editAccount' data-id='$row->id'>Edit</a>
-                                    <a class='dropdown-item' href='#' onClick='make_inactive(".$row->id.")'>Make Inactive (Reduce usage)</a>
-                                    <a class='dropdown-item' href='#'>Run Report</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>";
-            $i++;
-        }
-        echo $html;
-    }
-	
 	public function addInvoice()
     {
         if($this->input->post('custocredit_card_paymentsmer_id') == 1){
@@ -5728,6 +5542,10 @@ class Accounting extends MY_Controller {
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+
+        // print_r($this->page_data['number']);
+
         // $get_items = array(
         //     'where' => array(
         //         'items.company_id' => logged('company_id'),
@@ -5782,6 +5600,7 @@ class Accounting extends MY_Controller {
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('accounting/addNewEstimateOptions', $this->page_data);
@@ -6316,10 +6135,10 @@ class Accounting extends MY_Controller {
         $company_id = logged('company_id');
 
             $customer = $this->AcsProfile_model->getdataAjax($id);
-            $client   = $this->Clients_model->getById($company_id);
+          //  $client   = $this->Clients_model->getById($company_id);
 
             $this->page_data['customer'] = $customer;
-            $this->page_data['client'] = $client;
+           // $this->page_data['client'] = $client;
 
         echo json_encode($this->page_data);
     }

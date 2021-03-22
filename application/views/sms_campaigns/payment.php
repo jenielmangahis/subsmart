@@ -387,15 +387,16 @@ $(function(){
     });
 
     // Handle form submission.
-    var form = document.getElementById('subscribe-form-payment');
+    var form = document.getElementById('payment-sms-blast');
     form.addEventListener('submit', function(event) {
       event.preventDefault();
-
+      $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>  Processing Payment');
       stripe.createToken(card).then(function(result) {
         if (result.error) {
           // Inform the user if there was an error.
           var errorElement = document.getElementById('card-errors');
           errorElement.textContent = result.error.message;
+          $(".stripe-btn").html('Submit Payment');
         } else {
           // Send the token to your server.
           stripeTokenHandler(result.token);
@@ -406,7 +407,7 @@ $(function(){
     // Submit the form with the token ID.
     function stripeTokenHandler(token) {
       // Insert the token ID into the form so it gets submitted to the server
-      var form = document.getElementById('subscribe-form-payment');
+      var form = document.getElementById('payment-sms-blast');
       var hiddenInput = document.createElement('input');
       hiddenInput.setAttribute('type', 'hidden');
       hiddenInput.setAttribute('name', 'stripeToken');
@@ -414,7 +415,26 @@ $(function(){
       form.appendChild(hiddenInput);
 
       // Submit the form
-      form.submit();
+      stripeUpdateSmsPayment();
+      //form.submit();
+    }
+
+    function stripeUpdateSmsPayment(){
+      $(".payment-method").html('<div class="alert alert-success">Payment process completed.</div>');
+      $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      var url = base_url + 'sms_campaigns/process_stripe_payment';
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: "json",
+           data:$("#payment-sms-blast").serialize(),
+           success: function(o)
+           {
+              location.href = base_url + 'sms_campaigns';
+           }
+        });
+      }, 1000);
     }
 });
 </script>

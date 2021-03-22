@@ -1,21 +1,23 @@
 <div class="col-lg-3 col-md-6 col-sm-12" id="addWidget">
-    <div class="card" style="margin:0;">
-        <div class="card-header">
-            <i class="fa fa-bar-chart"></i> Add More Report
-        </div>
-        <div class="card-body">
-            <div 
-                onmouseover="$('.add_widget').attr('style', 'font-size: 120px; color: black')" 
-                onmouseout="$('.add_widget').attr('style', 'font-size: 120px; color: gray')" 
-                onclick="$('#addWidgets').modal('show')"
-                class="text-center justify-content-center" style="cursor: pointer">
-                <i style="font-size: 120px; color: gray" class="fa fa-plus-circle add_widget"></i><br />
-                <span>Manage Widgets</span>
-            </div>
-            <hr />
-            <div class="justify-content-center text-center">
-                <span>Track stats important to your business</span><br />
-                <button onclick="document.location = '<?= base_url('nsmart_plans/index') ?>'" class="btn btn-primary mt-2">Upgrade Plan</button>
+    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+        <i class="fa fa-bar-chart"></i> Add More Report
+    </div>
+    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
+        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
+            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
+                <div 
+                    onmouseover="$('.add_widget').attr('style', 'font-size: 120px; color: black')" 
+                    onmouseout="$('.add_widget').attr('style', 'font-size: 120px; color: gray')" 
+                    onclick="$('#addWidgets').modal('show')"
+                    class="text-center justify-content-center" style="cursor: pointer">
+                    <i style="font-size: 120px; color: gray" class="fa fa-plus-circle add_widget"></i><br />
+                    <span>Manage Widgets</span>
+                </div>
+                <hr />
+                <div class="justify-content-center text-center">
+                    <span>Track stats important to your business</span><br />
+                    <button onclick="document.location = '<?= base_url('nsmart_plans/index') ?>'" class="btn btn-primary mt-2">Upgrade Plan</button>
+                </div>
             </div>
         </div>
     </div>
@@ -70,15 +72,15 @@
 
     function addWidget(id)
     {
-        var isGlobal = $('#widgetGlobal_'+id).is(":checked")?'1':0;
-        var isMain = $('#widgetMain_'+id).is(":checked")?'1':0;
+        var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
+        var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
         $.ajax({
             url: '<?php echo base_url(); ?>widgets/addWidget',
             method: 'POST',
-            data: {id: id, isGlobal:isGlobal, isMain:isMain},
+            data: {id: id, isGlobal: isGlobal, isMain: isMain},
             //dataType: 'json',
             success: function (response) {
-                if(isMain != '1'){
+                if (isMain != '1') {
                     $(response).insertBefore($('#addWidget'));
                 }
             }

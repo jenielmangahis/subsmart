@@ -131,8 +131,7 @@ class Event_model extends MY_Model
     public function getAllUpComingEventsByCompanyId($company_id = 0)
     {
         $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');
-        $this->db->from($this->table);
-        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = `events.customer_id','left');
         $this->db->join('users', 'users.id = events.employee_id','left');
         $this->db->from($this->table);
         //$this->db->join('user_events', 'user_events.event_id = events.id');
@@ -140,7 +139,7 @@ class Event_model extends MY_Model
         $start_date = date('Y-m-d');
         $end_date = date('Y-m-d', strtotime($start_date . ' +5 day'));
 
-        $this->db->where('company_id', $company_id);
+        $this->db->where('events.company_id', $company_id);
         $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
 
         $this->db->order_by('id', 'DESC');

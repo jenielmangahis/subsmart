@@ -3,10 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 add_css(array(
     'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
     'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-    //"assets/css/accounting/sidebar.css",
-    'assets/textEditor/summernote-bs4.css',
+    //'assets/frontend/css/workorder/main.css',
+    // 'assets/css/beforeafter.css',
 ));
+
+
 ?>
 <?php include viewPath('includes/header'); ?>
 
@@ -140,7 +143,7 @@ add_css(array(
                                     <?php } ?>
                                 </select>
                             </div>
-                            <select id="employee_id" name="employee_id" class="form-control">
+                            <select id="employee_id" name="employee_id" class="form-control" required>
                                 <option value="">Select Employee</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
@@ -623,8 +626,9 @@ add_css(array(
                                 <hr>
                                 <div class="col-md-4">
                                     <h6>Customer Info</h6>
-                                    <select id="customer_id" name="customer_id" class="form-control" required>
+                                    <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
                                         <option value="">Select Existing Customer</option>
+
                                     </select>
                                     <table id="customer_info" class="table">
                                         <thead>
@@ -676,8 +680,6 @@ add_css(array(
                                     <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
                                 </td>
                                 <td>
-                                </td>
-                                <td>
                                     <small>Job Tags</small>
                                     <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
                                 </td>
@@ -709,7 +711,7 @@ add_css(array(
                                         <td width="20%"><small>Unit Price</small>
                                             <input id='price"+idd+"' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
                                         </td>
-                                        <td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>
+                                        <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
                                         <td style="text-align: center" class="d-flex" width="15%">
                                             <b data-subtotal='"+total_+"' id='sub_total"+idd+"' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
@@ -771,7 +773,7 @@ add_css(array(
                                     </div>
                                     <div class="col-sm-6">
                                         <small>Tax Rate</small>
-                                        <a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>
+                                        <!--<a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>-->
                                         <select id="tax_rate" name="tax_rate" class="form-control">
                                             <option value="">None</option>
                                             <?php foreach ($tax_rates as $rate) : ?>
@@ -873,7 +875,7 @@ add_css(array(
                                                     <?php
                                                     if(isset($jobs_data) && $jobs_data->link != NULL) {
                                                         ?>
-                                                        <a target="_blank" href="<?= $jobs_data->link; ?>"><p><?= $jobs_data->link; ?></p></a>
+                                                        <a  target="_blank" href="<?= $jobs_data->link; ?>"><p style="color: darkred;"><?= $jobs_data->link; ?></p></a>
                                                         <?php
                                                     }else{
                                                         ?>
@@ -907,6 +909,7 @@ add_css(array(
                                 <div class="col-sm-12">
                                     <hr>
                                 </div>
+                                <?php if(isset($jobs_data) && $jobs_data->status == 'Invoiced'): ?>
                                 <div class="col-sm-12">
                                     <div class="card box_right" id="pd_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                         <div class="row">
@@ -946,6 +949,10 @@ add_css(array(
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php endif; ?>
+
+                                <?php if(isset($jobs_data) && $jobs_data->status != 'Scheduled'): ?>
                                 <div class="col-sm-12">
                                     <div class="card box_right">
                                         <div class="row">
@@ -955,62 +962,44 @@ add_css(array(
                                                 </div>
                                                 <div class="card-body">
                                                     <span class="help help-sm help-block">Record all items used on jobs</span>
-                                                    <a href="#" id="" data-toggle="modal" data-target="#new_items" type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span> Add New Item</a>
+                                                    <a href="#" id="" data-toggle="modal" data-target="#new_inventory" type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span> Add New Item</a>
                                                     <br>
                                                     <table style="width: 100%;" id="device_audit" class="table table-hover table-bordered table-striped">
                                                         <thead>
-                                                        <tr>
-                                                            <td>Name</td>
-                                                            <td>Sold By</td>
-                                                            <td>Points</td>
-                                                            <td>Retail Cost</td>
-                                                            <td>Purchase Price</td>
-                                                            <td>Qty</td>
-                                                            <td>Tot Points</td>
-                                                            <td>Tot Cost</td>
-                                                            <td>Tot Purchase Price</td>
-                                                            <td>Net</td>
-                                                            <td>Action</td>
-                                                        </tr>
+                                                            <tr>
+                                                                <td>Name</td>
+                                                                <td>Points</td>
+                                                                <td>Price</td>
+                                                                <td>Qty</td>
+                                                                <td>Subtotal</td>
+                                                                <td>Location</td>
+                                                                <td>Action</td>
+                                                            </tr>
                                                         </thead>
                                                         <tbody id="device_audit_datas">
-
-                                                        <?php if (isset($device_info)) : ?>
-                                                            <?php foreach ($device_info as $device) { ?>
+                                                        <?php if(isset($jobs_data_items)): ?>
+                                                            <?php
+                                                                $subtotal = 0.00;
+                                                                foreach ($jobs_data_items as $item):
+                                                                $total = $item->price * $item->qty;
+                                                            ?>
                                                                 <tr>
-                                                                    <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                        <?= $device->device_name; ?>
-                                                                    </td>
-                                                                    <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                        <?= $device->sold_by; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                        <?= $device->device_points; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                                                        <?= '$'.$device->retail_cost; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                                                        <?= '$'.$device->purch_price; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                        <?= $device->device_qty; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                                                        <?= $device->total_points; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                                                        <?= '$'.$device->total_cost; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                                                        <?= '$'.$device->total_purch_price; ?>
-                                                                    </td>
-                                                                    <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
-                                                                        <?= '$'.$device->device_net; ?>
+                                                                    <td ><?= $item->title; ?></td>
+                                                                    <td ><?= $item->points; ?></td>
+                                                                    <td ><?= number_format((float)$item->price,2,'.',',');?></td>
+                                                                    <td id="device_qty<?= $item->id; ?>"><?= $item->qty; ?></td>
+                                                                    <td ><?= number_format((float)$total,2,'.',',');?></td>
+                                                                    <td ><?= $item->location; ?></td>
+                                                                    <td ><a href="#" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>" class="edit_item_list">
+                                                                            <span class="fa fa-edit"></span>
+                                                                        </a>
+                                                                        <!--<a href="javascript:void(0)" class="remove_audit_item_row">
+                                                                            <span class="fa fa-trash"></span></i>
+                                                                        </a>-->
                                                                     </td>
                                                                 </tr>
-                                                            <?php } ?>
-                                                        <?php endif ?>
+                                                            <?php $subtotal = $subtotal + $total; endforeach; ?>
+                                                        <?php endif; ?>
                                                         </tbody>
                                                     </table>
                                                     <br>
@@ -1024,10 +1013,12 @@ add_css(array(
                                         </div>
                                     </div>
                                 </div>
+                                <?php endif; ?>
                             </div>
                             <br>
                         </div>
                         <div class="row">
+                            <input id="total_amount" type="hidden" name="total_amount">
                             <input id="signature_link" type="hidden" name="signature_link">
                             <input id="name" type="hidden" name="authorize_name">
                             <input id="datetime_signed" type="hidden" name="datetime_signed">
@@ -1046,7 +1037,7 @@ add_css(array(
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <!--<div class="card">
                         <div class="card-body">
                             <div class="card box_right">
                                 <div class="row">
@@ -1063,7 +1054,7 @@ add_css(array(
                             <br>
 
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
         </div>
@@ -1163,159 +1154,8 @@ add_css(array(
     </div>
 </div>
 
-<!-- Items Modal -->
-<div class="modal fade" id="new_items" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="item_details_title">Add New Item</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="new_customer_form">
-                <div class="modal-body">
-                    <div class="contact-info">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Item Name</label>
-                                            <input type="text" id="item_details_name" name="item_details_name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="last_name" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Qty</label>
-                                            <input type="text" id="item_details_qty" name="middle_name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Cost</label>
-                                            <input type="number" id="item_details_cost" name="email" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Cost Per</label>
-                                            <select class="form-control" name="cost_per" id="cost_per" required>
-                                                <option value="each" selected>Each</option>
-                                                <option>Weight</option>
-                                                <option>Length</option>
-                                                <option>Area</option>
-                                                <option>Volume</option>
-                                                <option>Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Unit</label>
-                                            <input type="text" name="mail_add" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Brand</label>
-                                            <input type="text" name="middle_name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Vendor</label>
-                                            <select class="form-control" name="vendor" id="exampleFormControlSelect1">
-                                                <option disabled>Select</option>
-                                                <option value="1">Vendor A</option>
-                                                <option value="2">Vendor B</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Product Url</label>
-                                            <input type="text" name="state" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Cost of Goods</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Model Number</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Item Group</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Sold By</label>
-                                            <select id="employee_id_sold" name="employee_id_sold" class="form-control">
-                                                <option selected="">Select Employee</option>
-                                                <?php if(!empty($employees)): ?>
-                                                    <?php foreach ($employees as $employee): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->employee_ids == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Points</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Location</label>
-                                            <button class="btn btn-default" type="button" data-id="" id="seeLocation" data-toggle="dropdown" aria-expanded="true">
-                                                <span class="btn-label">See Location <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-right" id="" style="width:300px;" role="menu" aria-labelledby="dropdown-edit">
-                                                <li role="presentation" style="background-color:#D3D3D3;">
-                                                    <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"><span style="padding-right:150px;">
-                                                            <strong>Location</strong></span><span style="border-left:1px solid black;"> <strong>Qty</strong></span>
-                                                </li>
-                                                <li role="separator" class="divider"></li>
-                                            </ul>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer modal-footer-detail">
-                    <div class="button-modal-list">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                        <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<?php include viewPath('job/modals/inventory_location'); ?>
+<?php include viewPath('job/modals/new_inventory'); ?>
 
 <!-- Signature Modal -->
 <div class="modal fade" id="updateSignature" role="dialog">
@@ -1328,102 +1168,11 @@ add_css(array(
             <div class="modal-body">
 
             </div>
-
         </div>
     </div>
 </div>
 
-<!-- eSgin Modal -->
-<div class="modal fade" id="fill_esign" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="banking-tab-container">
-                    <div class="rb-01">
-                        <ul class="nav nav-tabs border-0">
-                            <li class="nav-item">
-                                <a class="h6 mb-0 nav-link banking-sub-tab active" data-toggle="tab" href="#fill_esign_tab">
-                                    Fill & eSign
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#approval_tab">
-                                    Approval
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body pt-3">
-
-                <div class="tab-content mt-4" >
-                    <div class="tab-pane active standard-accordion" id="fill_esign_tab">
-                        <div class="d-none">
-                            <a href="<?= base_url('esign/createTemplate'); ?>" style="float: right;" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span> Add New</a>
-                            <select name="library_template" id="library_template" class="select2LibrarySelection dropdown form-control">
-                                <option>Select Library Template</option>
-                                <?php if(isset($esign_templates)) : ?>
-                                    <?php foreach($esign_templates as $esign_template){ ?>
-                                        <option value="<?= $esign_template->esignLibraryTemplateId; ?>"><?= $esign_template->title; ?></option>
-                                    <?php } ?>
-                                <?php endif; ?>
-                            </select>
-                            <br>
-                            <small>Template</small>
-                            <hr>
-                            <textarea id="summernote" name="template"></textarea>
-                        </div>
-
-                        <div class="fillAndSign fillAndSign--job">
-                            <?php include viewPath('job/fillandesign/step1'); ?>
-                            <?php include viewPath('job/fillandesign/step2'); ?>
-                        </div>
-                        <div class="modal-footer d-none">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span> Close</button>
-                            <button type="button" id="click" class="btn btn-primary save-signature"><span class="fa fa-paper-plane-o"></span> Save</button>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                <span class="fa fa-close"></span> Close
-                            </button>
-                            <button type="button" data-status="Approved" data-id="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>" class="btn btn-primary save-signature" id="fillAndSignNext">
-                                <i class="fa fa-arrow-right"></i> Next
-                            </button>
-                            <button type="button" class="btn btn-primary save-signature" id="fillAndSignSave">
-                                <i class="fa fa-save"></i> Save
-                            </button>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade standard-accordion" id="approval_tab">
-                        <label>Authorizer Name</label>
-                        <input type="text" name="authorizer_name" id="authorizer_name" class="form-control" >
-                        <br>
-                        <label>Signature Below</label>
-                        <hr>
-                        <div id="signature" style='border:none;'>
-                            <canvas id="signature-pad" class="signature-pad" width="700px" height="230px"></canvas>
-                        </div>
-                        <textarea style="display: none;" name="data[output]" id='output'></textarea>
-
-                        <div class="modal-footer">
-                            <button type="button" id="click" class="btn btn-primary save-signature" data-dismiss="modal">
-                                <span class="fa fa-paper-plane-o"></span> Save
-                            </button>
-                            <button type="button" id="cancel-signature" class="btn btn-default" data-dismiss="modal">
-                                <span class="fa fa-close"></span> Cancel
-                            </button>
-                            <button type="button" id="clear-signature" class="btn btn-default">
-                                <span class="fa fa-close"></span> Clear
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<?php include viewPath('job/modals/fill_esign'); ?>
 
 <!-- Modal -->
 <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
@@ -1528,56 +1277,7 @@ add_css(array(
     </div>
 </div>
 
-<!-- Word Order Modal -->
-<div class="modal fade" id="workorder_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Select WorkOrder To Make a Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="workorder_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> WorkOrder #</td>
-                                <td> Job Name</td>
-                                <td> Date</td>
-                                <td> </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($workorders)): ?>
-                                <?php foreach ($workorders as $workorder): ?>
-                                    <tr>
-                                        <td><?= $workorder->work_order_number; ?></td>
-                                        <td><?= $workorder->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($workorder->start_date)); ?></td>
-                                        <td>
-                                            <button id="<?= $workorder->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default workorder_select">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<?php include viewPath('job/modals/wordorder_import'); ?>
 
 <!-- Invoice Modal -->
 <div class="modal fade" id="invoice_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
@@ -1775,6 +1475,7 @@ add_css(array(
                     <div class="col-md-12">
                         <label for="">Method</label>
                         <select id="pay_method" name="method" class="form-control">
+                            <option value="">Select Payment Method</option>
                             <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CC') {echo 'selected'; } ?> value="CC">Credit Card</option>
                             <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CHECK') {echo 'selected'; } ?> value="CHECK">Check</option>
                             <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CASH') {echo 'selected'; } ?> value="CASH">Cash</option>
@@ -2000,12 +1701,20 @@ add_css(array(
     </div>
 </div>
 
+<style>
+    .dataTables_empty{
+        display: none;
+    }
+
+</style>
 <?php
+// JS to add only Job module
 add_footer_js(array(
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js',
+    //'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
     'assets/textEditor/summernote-bs4.js',
 ));
 include viewPath('includes/footer');
@@ -2018,6 +1727,28 @@ include viewPath('includes/footer');
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
 <?php include viewPath('job/js/job_new_js'); ?>
+<script>
+    $(function(){
+        $("#customer_id").select2({
+            placeholder: "Select Customer"
+        });
+        $("#employee_id").select2({
+            placeholder: "Select Customer"
+        });
+    });
+</script>
+
+<?php if(!isset($jobs_data)) : ?>
+    <script>
+        window.addEventListener('beforeunload', function (e) {
+            // Cancel the event as stated by the standard.
+            e.preventDefault();
+            // Chrome requires returnValue to be set.
+            //$('#myModal').modal();
+            e.returnValue = '';
+        });
+    </script>
+<?php endif; ?>
 
 <script>
     var geocoder;

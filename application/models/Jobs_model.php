@@ -67,7 +67,7 @@ class Jobs_model extends MY_Model
     public function get_specific_job_items($id)
     {
         $this->db->from($this->table_items);
-        $this->db->select('items.title,items.price,job_items.qty');
+        $this->db->select('items.id,items.title,items.price,job_items.qty,job_items.location,job_items.points');
         $this->db->join('items', 'items.id = job_items.items_id','left');
         $this->db->where("job_items.job_id", $id);
         $query = $this->db->get();
@@ -295,12 +295,13 @@ class Jobs_model extends MY_Model
 
     public function getAllUpcomingJobsByCompanyId($company_id = 0)
     {        
-        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, job_url_links.link');
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, job_url_links.link,jpd.amount');
 
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
         $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id');
-
+        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id','left');
         $start_date = date('Y-m-d');
         $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
         
@@ -316,12 +317,13 @@ class Jobs_model extends MY_Model
     {
         $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
         jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
-        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img');
+        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount');
 
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
         $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
-
+        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id','left');
+        $start_date = date('Y-m-d');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
         $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');

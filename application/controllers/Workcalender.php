@@ -1432,7 +1432,7 @@ class Workcalender extends MY_Controller
         if( $role_id == 1 || $role_id == 2 ){
             $upcoming_events = $this->event_model->getAllUpComingEvents();
         }else{
-            $company_id = logged('company_id');
+            $company_id = logged('company_id');            
             $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
         }
 
@@ -1611,6 +1611,9 @@ class Workcalender extends MY_Controller
                 'address' => ''
             ];
         }
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
 
         $this->page_data['events'] = $events;
         $this->load->view('workcalender/ajax_load_upcoming_events', $this->page_data);
