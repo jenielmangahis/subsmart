@@ -50,11 +50,9 @@ class CardsFile_model extends MY_Model
 
     public function getById($id)
     {
-        $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
+        $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
-
-        $this->db->where('sms_blast.id', $id);
+        $this->db->where('id', $id);
 
         $query = $this->db->get()->row();
         return $query;

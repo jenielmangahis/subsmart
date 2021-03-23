@@ -119,7 +119,52 @@ class CardsFile extends MY_Controller {
 
 		$this->CardsFile_model->companyResetAllprimaryCard($company_id);
 		$this->CardsFile_model->updateCardsFile($post['id'], ['is_primary' => 1]);
-		exit;
+
+		$json_data = [
+			'is_success' => 1,
+			'msg' => ''
+		];
+
+		echo json_encode($json_data);
+		//exit;
+	}
+
+	public function edit_card($id){
+		$company_id = logged('company_id');
+		$cardFile = $this->CardsFile_model->getById($id);
+		if( $cardFile->company_id == $company_id ){
+			$this->page_data['cardFile'] = $cardFile;
+			$this->load->view('cards_file/edit_card', $this->page_data);
+		}else{
+			$this->session->set_flashdata('message', 'Cannot find record.');
+			$this->session->set_flashdata('alert_class', 'alert-danger');
+			redirect('cards_file/list');
+		}
+	}
+
+	public function delete_card(){
+		$is_success = false;
+		$msg = 'Cannot find record';
+
+		$post = $this->input->post();
+		$company_id = logged('company_id');
+
+		$cardFile = $this->CardsFile_model->getById($post['cid']);
+		if( $cardFile ){
+			if( $cardFile->company_id == $company_id ){
+				$this->CardsFile_model->deleteCard($post['cid']);
+
+				$is_success = true;
+				$msg = '';
+			} 
+		}
+
+		$json_data = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		]; 
+
+		echo json_encode($json_data);
 	}
 }
 

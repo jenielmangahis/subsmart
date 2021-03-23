@@ -37,6 +37,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     bottom: 0px;
   }
 }
+.card-help {
+    padding-left: 45px;
+    padding-top: 10px;
+}
+.text-ter {
+    color: #888888;
+}
+.card-type.visa {
+    background-position: 0 0;
+}
+.card-type {
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    background: url(<?= base_url("/assets/img/credit_cards.png"); ?>) no-repeat 0 0;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.card-type.americanexpress {
+    background-position: -83px 0;
+}
+.expired{
+  color:red;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/setting'); ?>
@@ -74,7 +99,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <tbody>
                                 <?php foreach($cardsFile as $c){ ?>
                                     <tr>
-                                        <td><?= $c->card_number; ?></td>
+                                        <td>   
+                                          <?php 
+                                            $card_type = strtolower($c->cc_type); 
+                                            $card_type = str_replace(" ", "", $card_type);
+                                          ?>
+                                          <span class="card-type <?= $card_type; ?>"></span>                                       
+                                          <?php 
+                                            $card_number = maskCreditCardNumber($c->card_number);
+                                            echo $card_number;
+                                          ?>   
+                                          <?php
+                                            $today = date("y-m-d");  
+                                            $day   = date("d");                                 
+                                            $expires = date("y-m-d",strtotime($c->expiration_year . "-" . $c->expiration_month . "-" . $day));
+                                            $expired = 'expires';
+                                            if( strtotime($expires) < strtotime($today) ){
+                                              $expired = 'expired';
+                                            }
+                                            
+                                          ?>
+                                          <span class="<?= $expired; ?>"> (<?= $expired; ?> <?= $c->expiration_month . "/" . $c->expiration_year; ?>)</span>
+                                          <?php if($c->is_primary == 1){ ?>
+                                            <div class="card-help text-ter">
+                                              This is the card used for membership and purchases.
+                                            </div> 
+                                          <?php } ?>
+                                        </td>
                                         <td><?= $c->card_owner_name; ?></td>
                                         <td style="text-align: center;">
                                           <?php 
@@ -93,15 +144,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
                                                   <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                               </button>
-                                              <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">                            
+                                              <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit"> 
                                                   <li role="presentation">
-                                                      <a role="menuitem" tabindex="-1" href="<?php echo base_url('credit_notes/view/' . $c->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
-                                                  </li>   
-                                                  <li role="presentation">
-                                                      <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_campaigns/edit_campaign/' . $c->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                  </li>    
-                                                  <li role="presentation">
-                                                      <a role="menuitem" class="close-sms-campaign" data-name="<?= $c->campaign_name; ?>" data-id="<?= $c->id; ?>" href="javascript:void(0);" data-id="<?= $c->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                      <a role="menuitem" class="delete-card" data-id="<?= $c->id; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
                                                   </li>  
                                               </ul>
                                           </div>
@@ -119,7 +164,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
 
         <!-- Modal Delete Addon  -->
-        <div class="modal fade bd-example-modal-sm" id="modalDeleteColor" tabindex="-1" role="dialog" aria-labelledby="modalDeleteColorTitle" aria-hidden="true">
+        <div class="modal fade bd-example-modal-sm" id="modalDeleteCard" tabindex="-1" role="dialog" aria-labelledby="modalDeleteCardTitle" aria-hidden="true">
           <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -128,14 +173,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <?php echo form_open_multipart('color_settings/delete_color', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_open_multipart('cards_file/delete_card', ['id' => 'delete-card', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
               <?php echo form_input(array('name' => 'cid', 'type' => 'hidden', 'value' => '', 'id' => 'cid'));?>
               <div class="modal-body">
-                  <p>Delete selected color?</p>
+                  <p>Delete selected card?</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-danger">Yes</button>
+                <button type="submit" class="btn btn-danger btn-delete-card">Yes</button>
               </div>
               <?php echo form_close(); ?>
             </div>
@@ -155,16 +200,57 @@ $(function(){
       $(".cc-is-primary").not(this).prop('checked', false);  
 
       $.ajax({
-       type: "POST",
-       url: url,
-       dataType: "json",
-       data: {id:id},
-       success: function(o)
-       {
-          
-       }
+         type: "POST",
+         url: url,
+         dataType: "json",
+         data: {id:id},
+         success: function(o)
+         {
+            location.reload();
+         }
+      });
+
     });
 
+    $(".delete-card").click(function(){
+      var cid = $(this).attr('data-id');
+      $("#cid").val(cid);
+      $("#modalDeleteCard").modal('show');
+    });
+
+    $("#delete-card").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'cards_file/delete_card';
+      $(".btn-delete-card").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: "json",
+           data: $("#delete-card").serialize(),
+           success: function(o)
+           {
+              if( o.is_success ){ 
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Card has been deleted',
+                    showConfirmButton: false,
+                    timer: 1500
+                  })
+                  setTimeout(function(){location.reload();},1000);  
+              }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Cannot delete',
+                    text: 'Cannot find record'
+                  });
+              }
+
+              $(".btn-delete-card").html('Yes');
+              $("#modalDeleteCard").modal('hide');
+           }
+        });
+      }, 1000);
     });
 });
 </script>

@@ -705,3 +705,4 @@ $route['cards_file/list'] = 'CardsFile/index';
 $route['cards_file/add_new'] = 'CardsFile/add_new_card';
 $route['cards_file/create_new_card'] = 'CardsFile/create_new_card';
 $route['cards_file/_update_primary_card'] = 'CardsFile/update_primary_card';
+$route['cards_file/delete_card'] = 'CardsFile/delete_card';
