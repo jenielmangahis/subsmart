@@ -288,49 +288,49 @@ $route['accounting/attachments/download'] = "accounting/download_attachment";
 $route['accounting/attachments/update']['post'] = "accounting/edit_attachment";
 $route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting/delete_attachment/$1";
 
-$route['accounting/payment-methods'] = 'accounting/payment_methods';
-$route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting/load_payment_methods';
-$route['accounting/payment-methods/add']['post'] = 'accounting/add_payment_method';
-$route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting/delete_payment_method/$1";
-$route['accounting/payment-methods/activate/(:any)'] = "accounting/activate_payment_method/$1";
-$route['accounting/payment-methods/update']['post'] = "accounting/update_payment_method";
+$route['accounting/payment-methods'] = 'accounting_controllers/payment_methods/index';
+$route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting_controllers/payment_methods/load_payment_methods';
+$route['accounting/payment-methods/add']['post'] = 'accounting_controllers/payment_methods/add';
+$route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting_controllers/payment_methods/inactive/$1";
+$route['accounting/payment-methods/activate/(:any)'] = "accounting_controllers/payment_methods/activate/$1";
+$route['accounting/payment-methods/update']['post'] = "accounting_controllers/payment_methods/update";
 
-$route['accounting/recurring-transactions'] = "accounting/recurring_transactions";
-$route['accounting/recurring-transactions/load-recurring-transactions']['post'] = "accounting/load_recurring_transactions";
-$route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = "accounting/delete_recurring_transaction/$1";
-$route['accounting/recurring-transactions/get-details/(:any)'] = "accounting/get_recurring_transaction/$1";
-$route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "accounting/update_recurring_transaction/$1/$2";
+$route['accounting/recurring-transactions'] = "accounting_controllers/recurring_transactions/index";
+$route['accounting/recurring-transactions/load-recurring-transactions']['post'] = "accounting_controllers/recurring_transactions/load_recurring_transactions";
+$route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = "accounting_controllers/recurring_transactions/delete/$1";
+$route['accounting/recurring-transactions/get-details/(:any)'] = "accounting_controllers/recurring_transactions/get/$1";
+$route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "accounting_controllers/recurring_transactions/update/$1/$2";
 
-$route['accounting/terms'] = "accounting/terms";
-$route['accounting/terms/add'] = "accounting/add_terms";
-$route['accounting/terms/load-terms']['post'] = 'accounting/load_terms';
-$route['accounting/terms/delete/(:any)']['DELETE'] = "accounting/delete_term/$1";
-$route['accounting/terms/activate/(:any)'] = "accounting/activate_term/$1";
-$route['accounting/terms/update']['post'] = "accounting/update_term";
+$route['accounting/terms'] = "accounting_controllers/payment_terms/index";
+$route['accounting/terms/add'] = "accounting_controllers/payment_terms/add";
+$route['accounting/terms/load-terms']['post'] = 'accounting_controllers/payment_terms/load_terms';
+$route['accounting/terms/delete/(:any)']['DELETE'] = "accounting_controllers/payment_terms/delete/$1";
+$route['accounting/terms/activate/(:any)'] = "accounting_controllers/payment_terms/activate/$1";
+$route['accounting/terms/update']['post'] = "accounting_controllers/payment_terms/update";
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 
-$route['accounting/products-and-services'] = 'accounting/products_and_services';
-$route['accounting/products-and-services/load']['post'] = 'accounting/load_products_services';
-$route['accounting/products-and-services/item-form/(:any)'] = 'accounting/get_item_form/$1';
-$route['accounting/products-and-services/items-dropdown'] = 'accounting/get_item_dropdown';
-$route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting/inactive_item/$1";
-$route['accounting/products-and-services/(:any)/create']['post'] = 'accounting/create_item/$1';
-$route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting/update_item/$1/$2';
-$route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting/assign_category/$1';
-$route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting/batch_action/$1';
+$route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
+$route['accounting/products-and-services/load']['post'] = 'accounting_controllers/products_and_services/load';
+$route['accounting/products-and-services/item-form/(:any)'] = 'accounting_controllers/products_and_services/get_item_form/$1';
+$route['accounting/products-and-services/items-dropdown'] = 'accounting_controllers/products_and_services/get_item_dropdown';
+$route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting_controllers/products_and_services/inactive/$1";
+$route['accounting/products-and-services/(:any)/create']['post'] = 'accounting_controllers/products_and_services/create/$1';
+$route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting_controllers/products_and_services/update/$1/$2';
+$route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting_controllers/products_and_services/assign_category/$1';
+$route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting_controllers/products_and_services/batch_action/$1';
 
 $route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
 $route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';
 
-$route['accounting/product-categories'] = 'accounting/product_categories';
-$route['accounting/product-categories/load']['post'] = 'accounting/load_product_categories';
-$route['accounting/product-categories/get'] = 'accounting/get_categories';
-$route['accounting/product-categories/create']['post'] = 'accounting/create_item_category';
-$route['accounting/product-categories/get/(:any)'] = 'accounting/get_category_details/$1';
-$route['accounting/product-categories/update/(:any)']['post'] = 'accounting/update_category/$1';
-$route['accounting/product-categories/delete/(:any)']['DELETE'] = "accounting/delete_category/$1";
+$route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';
+$route['accounting/product-categories/load']['post'] = 'accounting_controllers/product_categories/load_product_categories';
+$route['accounting/product-categories/get'] = 'accounting_controllers/product_categories/get_categories';
+$route['accounting/product-categories/create']['post'] = 'accounting_controllers/product_categories/create';
+$route['accounting/product-categories/get/(:any)'] = 'accounting_controllers/product_categories/get_category_details/$1';
+$route['accounting/product-categories/update/(:any)']['post'] = 'accounting_controllers/product_categories/update/$1';
+$route['accounting/product-categories/delete/(:any)']['DELETE'] = "accounting_controllers/product_categories/delete/$1";
 
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
@@ -699,3 +699,8 @@ $route['job/update_job_tag'] = 'Job/update_job_tag';
 //Forgot Password
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
+
+//Cards File
+$route['cards_file/list'] = 'CardsFile/index';
+$route['cards_file/add_new'] = 'CardsFile/add_new_card';
+$route['cards_file/create_new_card'] = 'CardsFile/create_new_card';

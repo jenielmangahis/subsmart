@@ -388,6 +388,11 @@ class Timesheet_model extends MY_Model
             );
             $this->db->where('id', $attn_id);
             $this->db->update('timesheet_attendance', $update);
+            $update = array(
+                'status' => 0
+            );
+            $this->db->where('user_id', $user_id);
+            $this->db->update('timesheet_attendance', $update);
 
 
             $ShiftDuration_and_overtime = $this->calculateShiftDuration_and_overtime($attn_id);
@@ -1204,7 +1209,7 @@ class Timesheet_model extends MY_Model
     public function get_all_attendance($date_from, $date_to, $company_id)
     {
         $qry = $this->db->query("SELECT 
-        timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,
+        timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,timesheet_attendance.status,
         users.FName, users.LName, roles.title
             FROM timesheet_attendance JOIN users ON timesheet_attendance.user_id = users.id JOIN roles ON users.role = roles.id WHERE timesheet_attendance.date_created >='" . $date_from . "' AND timesheet_attendance.date_created <='" . $date_to . "' AND users.company_id = " . $company_id . " order by timesheet_attendance.date_created DESC");
         return $qry->result();
@@ -1227,6 +1232,16 @@ class Timesheet_model extends MY_Model
         $this->db->where('id', $att_id);
         $qry = $this->db->get('timesheet_attendance');
         return $qry->result();
+    }
+    public function attendance_logs_update($update, $where, $table)
+    {
+
+        for ($i = 0; $i < count($where); $i++) {
+            $this->db->where($where[$i][0], $where[$i][1]);
+        }
+        $this->db->update($table, $update);
+        $affected_row = $this->db->affected_rows();
+        return  $affected_row;
     }
 }
 

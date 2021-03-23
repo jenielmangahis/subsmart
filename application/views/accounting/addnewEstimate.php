@@ -152,7 +152,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="col-md-3">
                                         <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
-                                            id="purchase_order_number" required placeholder="Enter Purchase Order#"
+                                            id="purchase_order_number" placeholder="Enter Purchase Order#"
                                              onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                     </div>
                                 <!-- </div>

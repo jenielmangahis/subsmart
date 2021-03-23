@@ -1271,14 +1271,13 @@ class Timesheet extends MY_Controller
 
 
 
-        if ($data->current_status == "on_lunch") {
-            echo json_encode($data);
-        } elseif ($data->current_status == "not_lunch") {
-            echo json_encode($data);
-        } else {
-            echo json_encode(0);
-        }
-
+        // if ($data->current_status == "on_lunch") {
+        // } elseif ($data->current_status == "not_lunch") {
+        //     echo json_encode($data);
+        // } else {
+        //     echo json_encode(0);
+        // }
+        echo json_encode($data);
         $data->device_type = "";
         $data->token = "";
         $this->pusher_notification($data);
@@ -2290,6 +2289,12 @@ class Timesheet extends MY_Controller
                 'status' => 0
             );
             $this->db->where('id', $attn_id);
+            $this->db->update('timesheet_attendance', $update);
+
+            $update = array(
+                'status' => 0
+            );
+            $this->db->where('user_id', $user_id);
             $this->db->update('timesheet_attendance', $update);
 
 
@@ -3349,7 +3354,7 @@ class Timesheet extends MY_Controller
         date_default_timezone_set($this->session->userdata('usertimezone'));
         $the_date = strtotime($date_to . " 24:59:00");
         date_default_timezone_set("UTC");
-        $date_to = date("Y-m-d", $the_date);
+        $date_to = date("Y-m-d H:i:s", $the_date);
         $company_id = logged('company_id');
         $attendances = $this->timesheet_model->get_all_attendance($date_from, $date_to, $company_id);
         $display = '';
@@ -3390,7 +3395,10 @@ class Timesheet extends MY_Controller
             $display .= '<span class="employee-name">' . $attendance->FName . ' ' .   $attendance->LName . '</span><span class="employee-role">' . $attendance->title . '</span>';
             $display .= '</td>';
             $display .= '<td class="center">';
-            $display .= '<a class="edit-entry-btn" title="Edit Entry"><a href="#" class="edit_attendancelogs_btn" data-user-name="' . $attendance->FName . ' ' .   $attendance->LName . '" data-att-id="' . $attendance->id . '" data-user-id="' . $attendance->user_id . '" data-shift-date ="' . date("Y-m-d", strtotime($attendance->date_created)) . '" style="font-weight: bold"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></a>';
+            if ($attendance->status == 0) {
+                $display .= '<a class="edit-entry-btn" title="Edit Entry"><a href="#" class="edit_attendancelogs_btn" data-user-name="' . $attendance->FName . ' ' .   $attendance->LName . '" data-att-id="' . $attendance->id . '" data-user-id="' . $attendance->user_id . '" data-shift-date ="' . date("Y-m-d", strtotime($attendance->date_created)) . '" style="font-weight: bold"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></a>';
+            }
+
             $display .= '</td>';
             $display .= '<td class="center"><label class="time-log gray">' . $shift_date . '</td>';
 
@@ -3472,6 +3480,8 @@ class Timesheet extends MY_Controller
             if ($expected_hours != '') {
                 if ($expected_work_hours < ($attendance->shift_duration + $attendance->overtime)) {
                     $overtime = round(($attendance->shift_duration + $attendance->overtime) - $expected_work_hours, 2);
+                } elseif ($attendance->shift_duration == 0) {
+                    $overtime = 0;
                 } else {
                     $overtime = $expected_work_hours;
                 }
@@ -3590,7 +3600,9 @@ class Timesheet extends MY_Controller
         date_default_timezone_set('UTC');
         $attendances = $this->timesheet_model->get_especitif_attendance($att_id);
         $ot_status = '';
+        $clock_status = 0;
         foreach ($attendances as $attendance) {
+            $clock_status = $attendance->status;
             $shift_durations = $attendance->shift_duration + $attendance->overtime;
             $break_duration = $attendance->break_duration;
             $overtime = $attendance->overtime;
@@ -3624,8 +3636,8 @@ class Timesheet extends MY_Controller
         $data->user_id = $user_id;
         $data->shift_start = $shift_start;
         $data->shift_end = $shift_end;
-        $data->expected_hours = $expected_hours;
         $data->shift_schedule_id = $shift_schedule_id;
+        $data->expected_hours = $expected_hours;
         $data->checkin_date = $checkin_date;
         $data->checkout_date = $checkout_date;
         $data->breakin_date = $breakin_date;
@@ -3643,6 +3655,7 @@ class Timesheet extends MY_Controller
         $data->ot_status = $ot_status;
         $data->expected_break = $expected_break;
         $data->expected_work_hours = $expected_work_hours;
+        $data->clock_status = $clock_status;
         echo json_encode($data);
     }
     public function get_differenct_of_dates_ajax()
@@ -3651,6 +3664,70 @@ class Timesheet extends MY_Controller
         $to_date = $this->input->post("to_date");
         $data = $this->get_differenct_of_dates($from_date, $to_date);
         echo json_encode($data);
+    }
+
+    public function datetime_zone_converter($olddate, $from_timezone, $to_timezone)
+    {
+        date_default_timezone_set($from_timezone);
+        $the_date = strtotime($olddate);
+        date_default_timezone_set($to_timezone);
+        $newdate = date("Y-m-d H:i:s", $the_date);
+        return $newdate;
+    }
+    public function attendance_logs_update()
+    {
+        $form_timesheet_attendance_id = $this->input->post('form_timesheet_attendance_id');
+        $form_user_id = $this->input->post('form_user_id');
+        $form_timesheet_shift_schedule_id = $this->input->post('form_timesheet_shift_schedule_id');
+        $form_shift_start = $this->input->post('form_shift_start');
+        $form_shift_end = $this->input->post('form_shift_end');
+        $form_clockin_date = $this->input->post('form_clockin_date');
+        $form_clockin_time = $this->input->post('form_clockin_time');
+        $form_clockout_date = $this->input->post('form_clockout_date');
+        $form_clockout_time = $this->input->post('form_clockout_time');
+        $form_breakin_date = $this->input->post('form_breakin_date');
+        $form_breakin_time = $this->input->post('form_breakin_time');
+        $form_breakout_date = $this->input->post('form_breakout_date');
+        $form_breakout_time = $this->input->post('form_breakout_time');
+        $form_expected_hours = $this->input->post('form_expected_hours');
+        $form_worked_hours = $this->input->post('form_worked_hours');
+        $form_break_duration = $this->input->post('form_break_duration');
+        $form_over_time = $this->input->post('form_over_time');
+        $form_attendance_notes = $this->input->post('form_attendance_notes');
+
+        $update = array(
+            "shift_duration" => $form_worked_hours - $form_over_time,
+            "break_duration" => $form_break_duration,
+            "overtime" => $form_over_time,
+            "notes" => $form_attendance_notes
+        );
+        $where = array(
+            array(
+                "id", $form_timesheet_attendance_id
+            )
+        );
+        $this->timesheet_model->attendance_logs_update($update, $where, "timesheet_attendance");
+
+
+        $date_created = $this->datetime_zone_converter($form_clockin_date . " " . $form_clockin_time, $this->session->userdata('usertimezone'), "UTC");
+        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Check in'");
+        $this->db->reset_query();
+
+
+        $date_created = $this->datetime_zone_converter($form_clockout_date . " " . $form_clockout_time, $this->session->userdata('usertimezone'), "UTC");
+        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Check out'");
+        $this->db->reset_query();
+
+
+        $date_created = $this->datetime_zone_converter($form_breakin_date . " " . $form_breakin_time, $this->session->userdata('usertimezone'), "UTC");
+        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Break in'");
+        $this->db->reset_query();
+
+        $date_created = $this->datetime_zone_converter($form_breakout_date . " " . $form_breakout_time, $this->session->userdata('usertimezone'), "UTC");
+        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Break out'");
+        $this->db->reset_query();
+
+        echo json_encode(0);
     }
 }
 
