@@ -123,7 +123,7 @@ class Event extends MY_Controller
         //Add to app default google calendar
         $this->load->model('GoogleAccounts_model');
         $google_user_api    = $this->GoogleAccounts_model->getByAuthUser();
-        $google_credentials = google_credentials();        
+        $google_credentials = google_credentials();
         $access_token = "";
         $refresh_token = "";
         $google_client_id = "";
@@ -211,7 +211,7 @@ class Event extends MY_Controller
 
         if ($this->event_model->delete(post('event_id'))) {
 
-            // remove user events            
+            // remove user events
             $this->load->model('UserEvent_model', 'UserEvent_model');
 
             $userEvents = $this->UserEvent_model->getByEventId(post('event_id'));
@@ -240,7 +240,7 @@ class Event extends MY_Controller
 
 
     public function get_event_form()
-    {        
+    {
         $this->load->model('ColorSettings_model');
         $this->load->model('EventType_model');
         $this->load->model('AcsProfile_model');
@@ -271,7 +271,7 @@ class Event extends MY_Controller
             $eventTypes = $this->EventType_model->getAll();
             $customers = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
-            $customers = $this->AcsProfile_model->getAll();    
+            $customers = $this->AcsProfile_model->getAll();
             $args = array('company_id' => logged('company_id'));
             $eventTypes = $this->EventType_model->getAllByCompanyId(logged('company_id'));
         }
@@ -281,7 +281,7 @@ class Event extends MY_Controller
         $this->page_data['customers'] = $customers;
         $this->page_data['eventTypes'] = $eventTypes;
         $this->page_data['colorSettings'] = $colorSettings;
-        
+
         die($this->load->view('event/event_form', $this->page_data, true));
     }
 
@@ -532,12 +532,12 @@ class Event extends MY_Controller
         if($event){
             if( $event->description != '' ){
                 $details = get_customer_by_id($event->customer_id)->contact_name . " - " . $event->description;
-            }else{  
+            }else{
                 $details = get_customer_by_id($event->customer_id)->contact_name;
             }
             $event_date_from = date("Ymd\THis\Z", strtotime($event->start_date . ' ' . $event->start_time));
             $event_date_to   = date("Ymd\THis\Z", strtotime($event->end_date . ' ' . $event->end_time));
-            
+
             header('Content-type: text/calendar; charset=utf-8');
             header('Content-Disposition: attachment; filename=calendar.ics');
 
@@ -557,6 +557,6 @@ class Event extends MY_Controller
         }
 
         exit;
-        
+
     }
 }
