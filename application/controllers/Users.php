@@ -63,7 +63,8 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		$cid=logged('id');
-		$profiledata = $this->business_model->getByUserId($cid);	
+		$comp_id = logged('company_id');
+		$profiledata = $this->business_model->getByCompanyId($comp_id);	
 		$schedules   = unserialize($profiledata->working_days);
 		
 		$this->page_data['profiledata'] = $profiledata;
@@ -248,14 +249,10 @@ class Users extends MY_Controller {
 	}
 
 	public function saveBusinessNameImage() {
-		$pdata=$_POST;
-		echo "<pre>";
-		print_r($pdata);
-		$bid=$pdata['id'];
-		echo $bid;exit;
+		$pdata = $_POST;
+		$bid   = $pdata['id'];
+		$comp_id = logged('company_id');
 		if (!empty($_FILES['image']['name'])){
-
-			$comp_id = logged('company_id');
 			$target_dir = "./uploads/users/business_profile/$comp_id/";
 			
 			if(!file_exists($target_dir)) {
@@ -267,7 +264,7 @@ class Users extends MY_Controller {
 			$this->business_model->update($bid, ['business_image' => $business_image]);
 
 		}else{
-			copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$user->id.'/default.png');
+			copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$bid.'/default.png');
 		}
 
 		$this->business_model->update($bid, ['business_name' => $pdata['business_name'], 'business_desc' => $pdata['business_desc']]);
