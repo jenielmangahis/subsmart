@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <style>
 .cell-active{
     background-color: #5bc0de;
@@ -37,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/schedule'); ?>
+    <?php include viewPath('includes/sidebars/setting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -65,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <th style="width: 40%;">Card</th>
                                     <th style="width: 10%;">Card holder</th>
-                                    <th style="width: 10%;">Primary Card</th>
+                                    <th style="width: 10%;text-align: center;">Primary Card</th>
                                     <th style="width: 10%;"></th>
                                 </tr>
                             </thead>
@@ -73,8 +75,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <?php foreach($cardsFile as $c){ ?>
                                     <tr>
                                         <td><?= $c->card_number; ?></td>
-                                        <td style="text-align: center;color:#ffffff;"><?= $c->card_owner_name; ?></td>
-                                        <td></td>
+                                        <td><?= $c->card_owner_name; ?></td>
+                                        <td style="text-align: center;">
+                                          <?php 
+                                            $is_checked = '';
+                                            if( $c->is_primary == 1 ){
+                                              $is_checked = 'checked="checked"';
+                                            }
+                                          ?>
+                                          <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" <?= $is_checked; ?> class="custom-control-input cc-is-primary" data-id="<?= $c->id; ?>">
+                                            <span class="custom-control-indicator"></span>
+                                          </label>
+                                        </td>
                                         <td>
                                           <div class="dropdown dropdown-btn">
                                               <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
@@ -136,11 +149,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <script type="text/javascript">
 $(function(){
-    $(".btn-delete-color").click(function(){
-        var addon_id = $(this).attr("data-id");
-        $("#cid").val(addon_id);
+    $(".cc-is-primary").change(function(){
+      var url = base_url + 'cards_file/_update_primary_card';
+      var id  = $(this).attr("data-id");
+      $(".cc-is-primary").not(this).prop('checked', false);  
 
-        $("#modalDeleteColor").modal("show");
+      $.ajax({
+       type: "POST",
+       url: url,
+       dataType: "json",
+       data: {id:id},
+       success: function(o)
+       {
+          
+       }
+    });
+
     });
 });
 </script>

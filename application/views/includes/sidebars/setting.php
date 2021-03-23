@@ -52,6 +52,12 @@
                 Notifications
             </a>
         </li>  
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'cards_file')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('cards_file/list') ?>" title="Notifications">
+                <span class="fa fa-credit-card"></span>
+                Cards on File
+            </a>
+        </li>  
         <!-- <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'online_payments')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/online_payments') ?>" title="Online Payments">
                 <span class="fa fa-credit-card"></span>

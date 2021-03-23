@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/schedule'); ?>
+    <?php include viewPath('includes/sidebars/setting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                           <div class="col-md-10">
                             <label for=""><b>Card Number</b><span class="required_field">*</span></label>
-                            <input type="text" required="" value="" class="form-control" name="card_owner_name" id="card_owner_name" required="">
+                            <input type="text" required="" value="" class="form-control" name="card_number" id="card_number" required="">
                           </div>
                         </div>
                         <br />
@@ -85,16 +85,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <label for=""><br /></label>
                                   <select name="expiration_year" class="form-control" required="">
                                     <option>- year-</option>
-                                    <option value="21">2021</option>
-                                    <option value="22">2022</option>
-                                    <option value="23">2023</option>
-                                    <option value="24">2024</option>
-                                    <option value="25">2025</option>
-                                    <option value="26">2026</option>
-                                    <option value="27">2027</option>
-                                    <option value="28">2028</option>
-                                    <option value="29">2029</option>
-                                    <option value="30">2030</option>
+                                    <?php for($x = date("Y"); $x <= date("Y",strtotime("+10 years")); $x++){ ?>
+                                      <?php $year = substr($x, -2); ?>
+                                      <option value="<?= $year; ?>"><?= $x; ?></option>  
+                                    <?php } ?>
                                   </select>
                               </div>
                           </div>

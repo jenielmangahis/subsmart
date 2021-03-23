@@ -28,7 +28,7 @@ class Onboarding extends MY_Controller {
 		$user = (object)$this->session->userdata('logged');
 		$uid  = logged('id');
 		$cid  = logged('company_id');
-		$profiledata = $this->business_model->getByUserId($uid);
+		$profiledata = $this->business_model->getByCompanyId($cid);
 		$client      = $this->Clients_model->getById($cid);
 
 		$business_name    = $client->business_name;
@@ -161,7 +161,7 @@ class Onboarding extends MY_Controller {
 		$cid  = logged('company_id');
 
 		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$profiledata = $this->business_model->getByCompanyId($cid);	
 		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
 		
 		$this->load->view('onboarding/booking_online_demo', $this->page_data);
@@ -173,7 +173,7 @@ class Onboarding extends MY_Controller {
 		$uid  = logged('id');
 		$cid  = logged('company_id');
 
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$uid));	
+		$profiledata = $this->business_model->getByWhere(array('company_id'=>$cid));	
 		$client      = $this->Clients_model->getById($cid);
 
 		$num_emp          = $client->number_of_employee;
@@ -193,10 +193,11 @@ class Onboarding extends MY_Controller {
 		$is_success = true;
 		$msg = '';
 
-		$user   = (object)$this->session->userdata('logged');	
+		$user   = (object)$this->session->userdata('logged');
+		$cid    = logged('company_id');	
 		$pdata  = $this->input->post();
 		$action = $pdata['action'];
-		$business = $this->business_model->getByUserId($user->id);
+		$business = $this->business_model->getByCompanyId($cid);
 		unset($pdata['action']);
 
 		$schedules = array();
@@ -311,7 +312,8 @@ class Onboarding extends MY_Controller {
 		$user   = (object)$this->session->userdata('logged');	
 		$pdata  = $this->input->post();
 		$action = $pdata['action'];
-		$business = $this->business_model->getByUserId($user->id);
+		$cid    = logged('company_id');
+		$business = $this->business_model->getByCompanyId($cid);
 		unset($pdata['action']);
 		if($business){
 			$bid = $business->id;
@@ -406,8 +408,9 @@ class Onboarding extends MY_Controller {
 		}else{
 			$this->business_model->update($bid,$pdata);	
 			$pdata['user_id'] = $user->id;
-			$imbid=$user->id;
-			$bid = $this->business_model->create($pdata);
+			$pdata['company_id'] = $cid;
+			$imbid = $user->id;
+			$bid   = $this->business_model->create($pdata);
 
 			if(!empty($_FILES['image']['name'])){
 				$target_dir = "./uploads/users/business_profile/$bid/";
@@ -444,8 +447,8 @@ class Onboarding extends MY_Controller {
 		
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');	
-		$cid = logged('id');
-		$profiledata = $this->business_model->getByUserId($cid);
+		$cid  = logged('company_id');
+		$profiledata = $this->business_model->getByCompanyId($cid);
 
 		$workingDays = unserialize($profiledata->working_days);
 		
@@ -522,8 +525,8 @@ class Onboarding extends MY_Controller {
         ));
 
 		$user = (object)$this->session->userdata('logged');
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByUserId($cid);	
+		$cid  = logged('company_id');
+		$profiledata = $this->business_model->getByCompanyId($cid);	
 		$states = statesList();
 
 		$this->page_data['states'] = $states;

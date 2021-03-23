@@ -82,15 +82,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="wrapper" role="wrapper">
 <?php
   $url =  base_url(uri_string());
-  if(strpos($url, 'job/bird_eye_view') !== false) {
+  if( $map_type == 'jobs' ) {
     include viewPath('includes/sidebars/job'); 
   }else{
     include viewPath('includes/sidebars/schedule'); 
   }
 ?>
+<style>
+.gm-style-iw-d{
+  overflow: hidden !important;
+  padding: 10px;
+}
+</style>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <form id="map-filter">
+        <input type="hidden" name="map_type" id="map_type" value="<?= $map_type; ?>">
         <div class="container-fluid p-40">
             <!-- end row -->
             <div class="row">
