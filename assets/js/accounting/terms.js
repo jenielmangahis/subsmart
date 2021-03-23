@@ -88,19 +88,24 @@ var table = $('#terms_table').DataTable({
 $('a[data-target="#payment_term_modal"]').on('click', function() {
     $('#payment_term_modal h4.modal-title').html('New Term');
 
-    $('input[name="type"][value="1"]').trigger('click');
+    $('#payment_term_modal input[name="id"]').remove();
+    $('#payment_term_modal input[name="type"][value="1"]').trigger('click');
     $('#payment-term-form input[type="text"], #payment-term-form input[type="number"]').val('');
+});
+
+$('#payment_term_modal .form-check label').on('click', function() {
+    $(this).prev().trigger('click');
 });
 
 $('input[name="type"]').on('change', function() {
     if($(this).val() === "1" || $(this).val() === 1) {
-        $('#net_due_days').prop('disabled', false);
+        $('#payment_term_modal #net_due_days').prop('disabled', false);
 
         $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', true);
         $('#day_of_month_due, #minimum_days_to_pay').val('');
     } else if($(this).val() === "2" || $(this).val() === 2) {
-        $('#net_due_days').prop('disabled', true);
-        $('#net_due_days').val('');
+        $('#payment_term_modal #net_due_days').val('');
+        $('#payment_term_modal #net_due_days').prop('disabled', true);
 
         $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', false);
     }
@@ -234,7 +239,11 @@ $(document).on('click', '#terms_table .edit-term', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = table.row(row).data();
 
-    $('#payment-term-form').prepend(`<input type="hidden" value="${data.id}" name="id">`);
+    if($('#payment-term-form input[name="id"]').length > 0) {
+        $('#payment-term-form input[name="id"]').val(data.id);
+    } else {
+        $('#payment-term-form').prepend(`<input type="hidden" value="${data.id}" name="id">`);
+    }
 
     if(data.name !== null && data.name !== "null") {
         $('#payment-term-form #name').val(data.name);
@@ -243,10 +252,10 @@ $(document).on('click', '#terms_table .edit-term', function(e) {
     $(`input[name="type"][value="${data.type}"]`).trigger('click');
     
     if(data.type === 1 || data.type === "1") {
-        $('#net_due_days').val(data.net_due_days);
+        $('#payment_term_modal #net_due_days').val(data.net_due_days);
     } else if(data.type === 2 || data.type === "2") {
-        $('#day_of_month_due').val(data.day_of_month_due);
-        $('#minimum_days_to_pay').val(data.minimum_days_to_pay);
+        $('#payment_term_modal #day_of_month_due').val(data.day_of_month_due);
+        $('#payment_term_modal #minimum_days_to_pay').val(data.minimum_days_to_pay);
     }
 
     $('#payment_term_modal h4.modal-title').html('Edit Term');

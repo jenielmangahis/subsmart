@@ -15,22 +15,25 @@ $('#transaction_type_modal .modal-footer .btn-success').on('click', function(e) 
     e.preventDefault();
 
     var modal = '';
+    var view = '';
     var modalName = $('select#type').val();
-    $(`a[data-target="#${modalName}"]`).trigger('click');
 
     switch(modalName) {
         case 'depositModal' : 
             modal = 'bank_deposit';
+            view = 'bank_deposit_modal';
         break;
         case 'journalEntryModal' :
             modal = 'journal_entry';
+            view = 'journal_entry_modal';
         break;
         case 'transferModal' : 
             modal ='transfer';
+            view = 'transfer_modal';
         break;
     }
 
-    makeRecurring(modal);
+    append_modal(view, modalName, modal, 'create');
 
     $('#transaction_type_modal').modal('hide');
 });
@@ -195,34 +198,11 @@ $(document).on('click', '#recurring_transactions .edit-recurring', function(e) {
         break;
     }
 
-    append_modal(view, modalName, modal);
-
-    $.get(`/accounting/recurring-transactions/get-details/${rowData.id}`, function(res) {
-        var result = JSON.parse(res);
-
-        if(result.success === false) {
-            $.toast({
-                icon: result.success ? 'success' : 'error',
-                heading: result.success ? 'Success' : 'Error',
-                text: result.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-        } else {
-            var data = result.data;
-
-            set_modal_data(data, modalName);
-
-            $(`#${modalName}`).modal('show');
-        }
-    });
+    append_modal(view, modalName, modal, 'edit', rowData.id);
 });
 
-function append_modal(view, modalName, modal) {
+function append_modal(view, modalName, modal, method, id)
+{
     $.get(GET_OTHER_MODAL_URL+view, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
@@ -254,6 +234,8 @@ function append_modal(view, modalName, modal) {
             });
         }
 
+        $(`#${modalName} select`).select2();
+
         makeRecurring(modal);
 
         if($(`#${modalName} .date`).length > 0) {
@@ -263,10 +245,42 @@ function append_modal(view, modalName, modal) {
                 });
             });
         }
+
+        if(method === 'edit') {
+            getRowData(id, modalName);
+        }
+
+        $(`#${modalName}`).modal('show');
     });
 }
 
-function set_modal_data(data, modalName) {
+function getRowData(id, modalName)
+{
+    $.get(`/accounting/recurring-transactions/get-details/${id}`, function(res) {
+        var result = JSON.parse(res);
+
+        if(result.success === false) {
+            $.toast({
+                icon: result.success ? 'success' : 'error',
+                heading: result.success ? 'Success' : 'Error',
+                text: result.message,
+                showHideTransition: 'fade',
+                hideAfter: 3000,
+                allowToastClose: true,
+                position: 'top-center',
+                stack: false,
+                loader: false,
+            });
+        } else {
+            var data = result.data;
+
+            set_modal_data(data, modalName);
+        }
+    });
+}
+
+function set_modal_data(data, modalName)
+{
     var txnType = data.txn_type.replace(" ", "_");
     $(`#${modalName}`).parent('form').removeAttr('onsubmit').attr('id', 'update-recurring-form').addClass(`update-recurring-${txnType}-${data.id}`);
     switch(modalName) {
@@ -304,10 +318,10 @@ function set_modal_data(data, modalName) {
                 }
 
                 $($(`#depositModal #bank-deposit-table tbody tr`)[i]).trigger('click');
-                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="received_from[]"]').val(items[i].received_from_key+'-'+items[i].received_from_id);
-                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="account[]"]').val(items[i].received_from_account_key+'-'+items[i].received_from_account_id);
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="received_from[]"]').val(items[i].received_from_key+'-'+items[i].received_from_id).trigger('change');
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="account[]"]').val(items[i].received_from_account_key+'-'+items[i].received_from_account_id).trigger('change');
                 $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="description[]"]').val(items[i].description);
-                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="payment_method[]"]').val(items[i].payment_method);
+                $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="payment_method[]"]').val(items[i].payment_method).trigger('change');
                 $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="reference_no[]"]').val(items[i].ref_no);
                 $($(`#depositModal #bank-deposit-table tbody tr`)[i]).find('[name="amount[]"]').val(items[i].amount).trigger('change');
             }
@@ -323,7 +337,7 @@ function set_modal_data(data, modalName) {
 
             var items = data.transaction.items;
             for(i in items) {
-                if($($(`#journalEntryModal #bank-deposit-table tbody tr`)[i]).length === 0) {
+                if($($(`#journalEntryModal #journal-table tbody tr`)[i]).length === 0) {
                     $(`#journalEntryModal #journal-table tbody`).append(`
                         <tr>
                             <td></td>
@@ -339,7 +353,7 @@ function set_modal_data(data, modalName) {
                 }
 
                 $($(`#journalEntryModal #journal-table tbody tr`)[i]).trigger('click');
-                $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="accounts[]"]').val(`${items[i].account_key}-${items[i].account_id}`);
+                $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="accounts[]"]').val(`${items[i].account_key}-${items[i].account_id}`).trigger('change');
 
                 if(items[i].debit !== null & items[i].debit !== "" && items[i].debit !== 0 && items[i].debit !== "0") {
                     $($(`#journalEntryModal #journal-table tbody tr`)[i]).find('[name="debits[]"]').val(items[i].debit).trigger('change');

@@ -1317,6 +1317,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-yesterday').text(null);
                                 $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').show();
                                 $(selected).attr('id', 'employeeCheckOut');
+                                $(selected).attr('data-company', data.company_id);
                                 $(selected).prev('a').attr('disabled', null);
                                 $(selected).prev('a').attr('id', 'employeeBreakIn');
                                 $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(null);
@@ -1399,7 +1400,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             company_id: company_id
                         },
                         success: function(data) {
-                            // console.log(data.current_status);
+                            console.log(data);
                             if (data != 0) {
 
                                 $(selected).parent('td').children('.loading-img-action').hide();
@@ -1449,7 +1450,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 data.token,
                                 data.body,
                                 data.device_type,
-                                data.company_id,
+                                company_id,
                                 data.title
                             );
                         }

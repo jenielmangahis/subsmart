@@ -200,7 +200,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="modal fade" id="inactive_term" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="row">
@@ -231,7 +231,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="modal fade" id="active_term" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="row">

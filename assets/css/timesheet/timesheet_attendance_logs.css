@@ -107,3 +107,6 @@ table.dataTable tfoot td {
 tfoot label {
   font-weight: bold;
 }
+form#formNewProject td {
+  height: 20px;
+}

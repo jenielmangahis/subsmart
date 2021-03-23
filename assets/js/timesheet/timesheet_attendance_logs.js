@@ -176,7 +176,7 @@ $(document).ready(function () {
         shift_date: $(this).attr("data-shift-date"),
       },
       success: function (data) {
-        console.log(data);
+        // console.log(data);
         $("#form_timesheet_attendance_id").val(data.att_id);
         $("#form_user_id").val(data.user_id);
         $("#form_timesheet_shift_schedule_id").val(data.shift_schedule_id);
@@ -227,7 +227,59 @@ $(document).ready(function () {
     let form_over_time = $("#form_over_time").html();
     let form_attendance_notes = $("#form_attendance_notes").html();
     let form_ot_status = $("#form_ot_status").html();
-    console.log(form_clockin_time);
+    let edit_attendance_name = $("#edit_attendance_name").html();
+
+    Swal.fire({
+      title: "Save changes?",
+      html:
+        "Are you sure you want to update this attendance log of <b>" +
+        edit_attendance_name +
+        "</b>?",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: "#2ca01c",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Submit Changes",
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: baseURL + "/timesheet/attendance_logs_update",
+          type: "POST",
+          dataType: "json",
+          data: {
+            form_timesheet_attendance_id: form_timesheet_attendance_id,
+            form_user_id: form_user_id,
+            form_timesheet_shift_schedule_id: form_timesheet_shift_schedule_id,
+            form_shift_start: form_shift_start,
+            form_shift_end: form_shift_end,
+            form_clockin_date: form_clockin_date,
+            form_clockin_time: form_clockin_time,
+            form_clockout_date: form_clockout_date,
+            form_clockout_time: form_clockout_time,
+            form_breakin_date: form_breakin_date,
+            form_breakin_time: form_breakin_time,
+            form_breakout_date: form_breakout_date,
+            form_breakout_time: form_breakout_time,
+            form_expected_hours: form_expected_hours,
+            form_worked_hours: form_worked_hours,
+            form_break_duration: form_break_duration,
+            form_over_time: form_over_time,
+            form_attendance_notes: form_attendance_notes,
+          },
+          success: function (data) {
+            show_attendance_logs_table();
+            Swal.fire({
+              showConfirmButton: false,
+              timer: 2000,
+              title: "Success",
+              html: "Changes has been saved!",
+              icon: "success",
+            });
+          },
+        });
+      }
+    });
+    // console.log(form_clockin_time);
   });
 });
 
@@ -260,7 +312,12 @@ function edit_attendance_log_form_changed() {
     var date1 = new Date(arrayofdates[i][0]);
     var date2 = new Date(arrayofdates[i][1]);
     let diff = (date2.getTime() - date1.getTime()) / 1000 / 60 / 60;
-    arrayofdurations.push(Math.round(diff * 100) / 100);
+    $rounded_amount = Math.round(diff * 100) / 100;
+    if ($rounded_amount > 0) {
+    } else {
+      $rounded_amount = 0;
+    }
+    arrayofdurations.push($rounded_amount);
   }
   var work_hours =
     Math.round((arrayofdurations[0] - arrayofdurations[1]) * 100) / 100;
@@ -269,6 +326,7 @@ function edit_attendance_log_form_changed() {
 
   let payable_hours = 0;
   if (form_expected_hours == "") {
+    console.log(arrayofdurations);
     if (work_hours > 8) {
       $("#form_over_time").html(Math.round((work_hours - 8) * 100) / 100);
     } else {
@@ -295,5 +353,5 @@ function edit_attendance_log_form_changed() {
     }
   }
 
-  $("#form_minutes_late").html(arrayofdurations[2]);
+  $("#form_minutes_late").html(Math.round(arrayofdurations[2] * 60));
 }
