@@ -7,7 +7,7 @@ class Customer extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
         //$this->load->model('Customer_model', 'customer_model');
@@ -20,6 +20,10 @@ class Customer extends MY_Controller
         $this->load->library('form_validation');
         $this->load->helper('url');
         $this->load->helper('functions');
+
+        $cid  = logged('id');
+        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 
         $user_id = getLoggedUserID();
         // concept
@@ -34,18 +38,18 @@ class Customer extends MY_Controller
 
         //error_reporting(0);
     }
-    
-    
+
+
     public function getModulesList()
     {
         $user_id = logged('id');
         $this->load->library('wizardlib');
-        
+
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['widgets'] = $this->customer_ad_model->getModulesList();
         $this->load->view('customer/adv_cust_modules/add_module_details', $this->page_data);
     }
-    
+
     public function index()
     {
         $this->load->library('wizardlib');
@@ -282,14 +286,14 @@ class Customer extends MY_Controller
             echo "Error";
         }
     }
-    
+
     private function removeItemString($string, $item)
     {
         $parts = explode(',', $string);
         while(($i = array_search($item, $parts)) !== false){
             unset($parts[$i]);
         }
-        
+
         return implode(',', $parts);
     }
 
@@ -299,7 +303,7 @@ class Customer extends MY_Controller
         $details = post('ams_values');
         $ams_id = post('ams_id');
         $id = post('id');
-        
+
         $mod_ids = $this->removeItemString($details, $id);
         $input = array('ams_id'=>$ams_id,'ams_values' => $mod_ids);
         if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
@@ -1815,7 +1819,7 @@ class Customer extends MY_Controller
 
 
     public function group()
-    {   
+    {
         $is_allowed = $this->isAllowedModuleAccess(11);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer_group';
@@ -1927,13 +1931,13 @@ class Customer extends MY_Controller
         if(count( $result_autoincrement )) {
             if($result_autoincrement[0]['AUTO_INCREMENT'])
             {
-                $this->page_data['auto_increment_estimate_id'] = 1;    
+                $this->page_data['auto_increment_estimate_id'] = 1;
             } else {
-                
+
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
-            $this->page_data['auto_increment_estimate_id'] = 0;        
+            $this->page_data['auto_increment_estimate_id'] = 0;
         }
 
         $user_id = logged('id');
@@ -1951,7 +1955,7 @@ class Customer extends MY_Controller
         if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
@@ -1984,7 +1988,7 @@ class Customer extends MY_Controller
 
         $post = $this->input->post();
 
-        $company_id = logged('company_id');        
+        $company_id = logged('company_id');
         $merchant   = $this->ConvergeMerchant_model->getByCompanyId($company_id);
 
         $is_mailing = 0;
@@ -2049,8 +2053,8 @@ class Customer extends MY_Controller
             $this->ConvergeMerchant_model->create($post);
         }
 
-        //Send Email   
-        $message = "<p>Below is the user merchant details.</p><br />";     
+        //Send Email
+        $message = "<p>Below is the user merchant details.</p><br />";
         $message .= "<table>";
             $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
             $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
@@ -2089,13 +2093,13 @@ class Customer extends MY_Controller
             $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>IS SOLE PROPRIETORSHIP</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";            
+            $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>FEDERAL ID NUMBER</td><td>".$post['federal_id_number']."</td></tr>";
 
             $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PRINCIPAL 1 INFORMATION (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</h5></td></tr>";
             $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
-            $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";           
+            $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
             $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
             $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
             $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
@@ -2131,32 +2135,32 @@ class Customer extends MY_Controller
         $message .= "</table>";
         $message .= "<br /><p>Confidentiality Statement</p>
     <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
-        
-        //Email Sending     
+
+        //Email Sending
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
         $server    = MAIL_SERVER;
         $port      = MAIL_PORT ;
         $username  = MAIL_USERNAME;
         $password  = MAIL_PASSWORD;
-        $from      = MAIL_FROM;     
+        $from      = MAIL_FROM;
         $subject   = 'nSmarTrac: Merchant Data Application';
         $mail = new PHPMailer;
-        //$mail->SMTPDebug = 4;                         
-        $mail->isSMTP();                                     
-        $mail->Host = $server; 
-        $mail->SMTPAuth = true;    
-        $mail->Username   = $username; 
+        //$mail->SMTPDebug = 4;
+        $mail->isSMTP();
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username   = $username;
         $mail->Password   = $password;
         $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->SMTPSecure = 'ssl';    
+        $mail->SMTPSecure = 'ssl';
         $mail->Timeout    =   10; // set the timeout (seconds)
         $mail->Port = $port;
-        $mail->From = $from; 
+        $mail->From = $from;
         $mail->FromName = 'nSmarTrac';
 
-        //$mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');    
-        $mail->addAddress('joyce.reynolds@elavon.com', 'joyce.reynolds@elavon.com');    
-        $mail->isHTML(true);                          
+        //$mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');
+        $mail->addAddress('joyce.reynolds@elavon.com', 'joyce.reynolds@elavon.com');
+        $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $message;
 
@@ -2192,8 +2196,8 @@ class Customer extends MY_Controller
         $merchant = $this->ConvergeMerchant_model->getByCompanyId($company_id);
         if( $merchant ){
             $post = (array)$merchant;
-            //Send Email   
-            $message = "<p>Below is the user merchant details.</p><br />";     
+            //Send Email
+            $message = "<p>Below is the user merchant details.</p><br />";
             $message .= "<table>";
                 $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
                 $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
@@ -2238,7 +2242,7 @@ class Customer extends MY_Controller
                 $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PRINCIPAL 1 INFORMATION (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</h5></td></tr>";
                 $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
                 $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
-                $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";                
+                $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
                 $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
                 $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
                 $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
@@ -2273,31 +2277,31 @@ class Customer extends MY_Controller
             $message .= "</table>";
             $message .= "<br /><p>Confidentiality Statement</p>
     <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
-            
-            //Email Sending     
+
+            //Email Sending
             include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
             $server    = MAIL_SERVER;
             $port      = MAIL_PORT ;
             $username  = MAIL_USERNAME;
             $password  = MAIL_PASSWORD;
-            $from      = MAIL_FROM;                 
+            $from      = MAIL_FROM;
             $subject   = 'nSmarTrac: Merchant Data Application';
             $mail = new PHPMailer;
-            //$mail->SMTPDebug = 4;                         
-            $mail->isSMTP();                                     
-            $mail->Host = $server; 
-            $mail->SMTPAuth = true;    
-            $mail->Username   = $username; 
+            //$mail->SMTPDebug = 4;
+            $mail->isSMTP();
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username   = $username;
             $mail->Password   = $password;
             $mail->getSMTPInstance()->Timelimit = 5;
-            $mail->SMTPSecure = 'ssl';    
+            $mail->SMTPSecure = 'ssl';
             $mail->Timeout    =   10; // set the timeout (seconds)
             $mail->Port = $port;
-            $mail->From = $from; 
+            $mail->From = $from;
             $mail->FromName = 'NsmarTrac';
 
-            $mail->addAddress($recipient, $recipient);    
-            $mail->isHTML(true);                          
+            $mail->addAddress($recipient, $recipient);
+            $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $message;
 

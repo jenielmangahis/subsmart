@@ -91,6 +91,9 @@ class Accounting extends MY_Controller {
                 array("",	array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
+        $cid  = logged('id');
+        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
     }
 
     /*public function index()
@@ -124,7 +127,7 @@ class Accounting extends MY_Controller {
         	$this->page_data['list_categories'] = $this->categories_model->getCategories();
             $this->page_data['attachments'] = $this->expenses_model->getAttachment();
             $this->page_data['items'] = $this->items_model->getItemlist();
-            
+
         $this->load->view('accounting/dashboard', $this->page_data);
     }
 
@@ -355,7 +358,7 @@ class Accounting extends MY_Controller {
 
         if($insert > 0) {
             $this->session->set_flashdata('success', "Item $item->title starting value successfully adjusted.");
-        } else { 
+        } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
 
@@ -401,13 +404,13 @@ class Accounting extends MY_Controller {
     }
 
     /* payscale */
-    
+
     public function employeeinfo(){
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/employeeinfoReport', $this->page_data);
     }
-	
-	
+
+
     /*** Vendors ***/
     public function addVendor()
     {
@@ -418,7 +421,7 @@ class Accounting extends MY_Controller {
         if (!file_exists($filePath)) {
             mkdir($filePath);
         }
-		
+
 		$config['upload_path']  =  $filePath;
         $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
         $config['max_size']        = '20000';
@@ -475,7 +478,7 @@ class Accounting extends MY_Controller {
             $new_id = $addQuery;
             $comp = mb_substr($this->input->post('company'), 0, 3);
             $vendor_id = strtolower($comp) . $new_id;
-			
+
             $updateQuery = $this->vendors_model->updateVendor($new_id, array("vendor_id" => $vendor_id));
 
             if($updateQuery){
@@ -583,7 +586,7 @@ class Accounting extends MY_Controller {
         if (!file_exists($filePath)) {
              mkdir($filePath);
         }
-		
+
 		$config['upload_path']  =  $filePath;
         $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
         $config['max_size']        = '20000';
@@ -729,7 +732,7 @@ class Accounting extends MY_Controller {
        $query = $this->expenses_model->addBill($new_data);
 
     if($query > 0){
-           
+
         $i = 0;
         foreach($a as $row){
             $data['category'] = $a[$i];
@@ -747,7 +750,7 @@ class Accounting extends MY_Controller {
                 $aa = $this->input->post('category');
                 $bb = $this->input->post('description');
                 $cc = $this->input->post('amount');
-            
+
             $f = 0;
             foreach($aa as $row2){
                 $data2['category'] = $aa[$f];
@@ -763,11 +766,11 @@ class Accounting extends MY_Controller {
             }
 
         redirect('accounting/banking');
-            
+
         }
         else{
             echo json_encode(0);
-        } 
+        }
 
     }
 
@@ -828,11 +831,11 @@ class Accounting extends MY_Controller {
             $bill_id = $query;
             $date_created = date("Y-m-d H:i:s");
             $date_modified = date("Y-m-d H:i:s");
-        
+
             $query = $this->expenses_model->addBillcategory($new_data);
-     
+
         }
-       
+
 
        if ($query == true){
            echo json_encode(1);
@@ -865,7 +868,7 @@ class Accounting extends MY_Controller {
     }
 
     public function editBillData(){
-        
+
 		$new_data = array(
 			'bill_id' => $this->input->post('id'),
             'mailing_address' => $this->input->post('mailing_address'),
@@ -2122,7 +2125,7 @@ class Accounting extends MY_Controller {
             'adjustment_name' => $this->input->post('adjustment_name'),//
             'adjustment_value' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('grand_total'),//
-            
+
 
             'user_id' => logged('id'),
             'date_created' => date("Y-m-d H:i:s"),
@@ -2157,7 +2160,7 @@ class Accounting extends MY_Controller {
             $e = $this->input->post('discount');
             $f = $this->input->post('tax');
             $g = $this->input->post('total');
-           
+
         $i = 0;
         foreach($a as $row){
             $data['item'] = $a[$i];
@@ -2179,7 +2182,7 @@ class Accounting extends MY_Controller {
 
         // redirect('accounting/banking');
         redirect('accounting/invoices');
-            
+
         }
         else{
             echo json_encode(0);
@@ -2404,7 +2407,7 @@ class Accounting extends MY_Controller {
                 $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
                 $i++;
             }
-    
+
             redirect('accounting/banking');
         }
         else{
@@ -2443,7 +2446,7 @@ class Accounting extends MY_Controller {
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
-            
+
             'estimate_type' => 'Standard',
 
             'user_id' => $user_id,
@@ -2454,13 +2457,13 @@ class Accounting extends MY_Controller {
             'deposit_request' => $this->input->post('adjustment_name'),//
             'deposit_amount' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('grand_total'),//
-            
+
             'adjustment_name' => $this->input->post('adjustment_name'),//
             'adjustment_value' => $this->input->post('adjustment_input'),//
 
             'markup_type' => '$',//
             'markup_amount' => $this->input->post('markup_input_form'),//
-            
+
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         );
@@ -2511,7 +2514,7 @@ class Accounting extends MY_Controller {
                 $addQuery2 = $this->accounting_invoices_model->additem_details($data);
                 $i++;
             }
-    
+
            redirect('accounting/newEstimateList');
         }
         else{
@@ -2543,14 +2546,14 @@ class Accounting extends MY_Controller {
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
-            
+
             'estimate_type' => 'Bundle',
             'bundle1_message' => $this->input->post('bundle1_message'),
             'bundle2_message' => $this->input->post('bundle2_message'),
             'bundle1_total' => $this->input->post('bundle1_total'),
             'bundle2_total' => $this->input->post('bundle2_total'),
             'bundle_discount' => $this->input->post('bundle_discount'),
-            
+
 
             'user_id' => $user_id,
             'company_id' => $company_id,
@@ -2560,13 +2563,13 @@ class Accounting extends MY_Controller {
             'deposit_request' => '$',
             'deposit_amount' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('supergrandtotal'),//
-            
+
             'adjustment_name' => $this->input->post('adjustment_name'),//
             'adjustment_value' => $this->input->post('adjustment_input'),//
 
             'markup_type' => '$',//
             'markup_amount' => $this->input->post('markup_input_form'),//
-            
+
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         );
@@ -2628,7 +2631,7 @@ class Accounting extends MY_Controller {
                 $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
                 $z++;
             }
-    
+
            redirect('accounting/newEstimateList');
         }
         else{
@@ -2660,14 +2663,14 @@ class Accounting extends MY_Controller {
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
-            
+
             'estimate_type' => 'Bundle',
             'bundle1_message' => $this->input->post('bundle1_message'),
             'bundle2_message' => $this->input->post('bundle2_message'),
             'bundle1_total' => $this->input->post('bundle1_total'),
             'bundle2_total' => $this->input->post('bundle2_total'),
             'bundle_discount' => $this->input->post('bundle_discount'),
-            
+
 
             'user_id' => $user_id,
             'company_id' => $company_id,
@@ -2677,13 +2680,13 @@ class Accounting extends MY_Controller {
             'deposit_request' => '$',
             'deposit_amount' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('supergrandtotal'),//
-            
+
             'adjustment_name' => $this->input->post('adjustment_name'),//
             'adjustment_value' => $this->input->post('adjustment_input'),//
 
             'markup_type' => '$',//
             'markup_amount' => $this->input->post('markup_input_form'),//
-            
+
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         );
@@ -2745,14 +2748,14 @@ class Accounting extends MY_Controller {
                 $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
                 $z++;
             }
-    
+
            redirect('accounting/newEstimateList');
         }
         else{
             echo json_encode(0);
         }
     }
-	
+
     public function addSalesReceipt()
     {
         $new_data = array(
@@ -2806,7 +2809,7 @@ class Accounting extends MY_Controller {
             $d = $this->input->post('rate');
             $e = $this->input->post('amount');
             $f = $this->input->post('tax');
-            
+
             $i = 0;
             foreach($a as $row){
                 $data['product_services'] = $a[$i];
@@ -2823,14 +2826,14 @@ class Accounting extends MY_Controller {
                 $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
                 $i++;
             }
-        
+
             redirect('accounting/banking');
         }
         else{
             echo json_encode(0);
         }
     }
-	
+
 	public function updateSalesReceipt()
     {
         $new_data = array(
@@ -2863,7 +2866,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function deleteSalesReceipt(){
         $id = $this->input->post('id');
         $query = $this->accounting_sales_receipt_model->deleteSalesReceipt($id);
@@ -2930,7 +2933,7 @@ class Accounting extends MY_Controller {
             $d = $this->input->post('rate');
             $e = $this->input->post('amount');
             $f = $this->input->post('tax');
-            
+
             $i = 0;
             foreach($a as $row){
                 $data['product_services'] = $a[$i];
@@ -2947,7 +2950,7 @@ class Accounting extends MY_Controller {
                 $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
                 $i++;
             }
-        
+
             redirect('accounting/banking');
         }
         else{
@@ -3006,7 +3009,7 @@ class Accounting extends MY_Controller {
             $d = $this->input->post('rate');
             $e = $this->input->post('amount');
             $f = $this->input->post('tax');
-            
+
             $i = 0;
             foreach($a as $row){
                 $data['product_services'] = $a[$i];
@@ -3023,14 +3026,14 @@ class Accounting extends MY_Controller {
                 $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
                 $i++;
             }
-        
+
             redirect('accounting/banking');
         }
         else{
             echo json_encode(0);
         }
     }
-	
+
     public function addCreditMemo()
     {
         $company_id  = getLoggedCompanyID();
@@ -3089,7 +3092,7 @@ class Accounting extends MY_Controller {
             $d = $this->input->post('rate');
             $e = $this->input->post('amount');
             $f = $this->input->post('tax');
-            
+
             $i = 0;
             foreach($a as $row){
                 $data['product_services'] = $a[$i];
@@ -3106,14 +3109,14 @@ class Accounting extends MY_Controller {
                 $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
                 $i++;
             }
-        
+
             redirect('accounting/banking');
         }
         else{
             echo json_encode(0);
         }
     }
-	
+
 	public function updateCreditMemo()
     {
         $new_data = array(
@@ -3145,7 +3148,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function deleteCreditMemo(){
         $id = $this->input->post('id');
         $query = $this->accounting_credit_memo_model->deleteCreditMemo($id);
@@ -3157,7 +3160,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function addDelayedCharge()
     {
         $company_id  = getLoggedCompanyID();
@@ -3207,7 +3210,7 @@ class Accounting extends MY_Controller {
             $d = $this->input->post('rate');
             $e = $this->input->post('amount');
             $f = $this->input->post('tax');
-            
+
             $i = 0;
             foreach($a as $row){
                 $data['product_services'] = $a[$i];
@@ -3224,14 +3227,14 @@ class Accounting extends MY_Controller {
                 $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
                 $i++;
             }
-        
+
             redirect('accounting/banking');
         }
         else{
             echo json_encode(0);
         }
     }
-	
+
 	public function updateDelayedCharge()
     {
         $new_data = array(
@@ -3260,7 +3263,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function deleteDelayedCharge(){
         $id = $this->input->post('id');
         $query = $this->accounting_delayed_charge_model->deleteDelayedCharge($id);
@@ -3272,7 +3275,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function addSalesTimeActivity(){
         $new_data = array(
             'vendor_id' => $this->input->post('vendor_id'),
@@ -3295,7 +3298,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function updateSalesTimeActivity()
     {
         $new_data = array(
@@ -3319,7 +3322,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function deleteSalesTimeActivity(){
         $id = $this->input->post('id');
         $query = $this->accounting_sales_time_activity_model->deleteTimeActivity($id);
@@ -3331,7 +3334,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function addCustomersAccounting(){
         $new_data = array(
             'prof_id' => $this->input->post('prof_id'),
@@ -3365,7 +3368,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	
+
 	public function updateCustomersAccounting(){
         $new_data = array(
             'prof_id' => $this->input->post('prof_id'),
@@ -3469,7 +3472,7 @@ class Accounting extends MY_Controller {
         $query = $this->accounting_purchase_order_model->createPurchase($new_data);
 
         if($query > 0){
-           
+
         $i = 0;
         foreach($a as $row){
             $data['category'] = $a[$i];
@@ -3487,7 +3490,7 @@ class Accounting extends MY_Controller {
                 $aa = $this->input->post('category');
                 $bb = $this->input->post('description');
                 $cc = $this->input->post('amount');
-            
+
             $f = 0;
             foreach($aa as $row2){
                 $data2['category'] = $aa[$f];
@@ -3504,7 +3507,7 @@ class Accounting extends MY_Controller {
 
         redirect('accounting/banking');
             // echo "yes";
-            
+
         }
         else{
             echo json_encode(0);
@@ -3546,7 +3549,7 @@ class Accounting extends MY_Controller {
             $a = $this->input->post('category');
             $b = $this->input->post('description');
             $c = $this->input->post('amount');
-           
+
         $i = 0;
         foreach($a as $row){
             $data['category'] = $a[$i];
@@ -3567,7 +3570,7 @@ class Accounting extends MY_Controller {
                 $dd = $this->input->post('rate');
                 $ee = $this->input->post('amount');
                 $ff = $this->input->post('tax');
-            
+
             $f = 0;
             foreach($aa as $row2){
                 $data2['product_services'] = $aa[$i];
@@ -3586,7 +3589,7 @@ class Accounting extends MY_Controller {
             }
 
         redirect('accounting/banking');
-            
+
         }
         else{
             echo json_encode(0);
@@ -3628,7 +3631,7 @@ class Accounting extends MY_Controller {
             $a = $this->input->post('category');
             $b = $this->input->post('description');
             $c = $this->input->post('amount');
-           
+
         $i = 0;
         foreach($a as $row){
             $data['category'] = $a[$i];
@@ -3649,7 +3652,7 @@ class Accounting extends MY_Controller {
                 $dd = $this->input->post('rate');
                 $ee = $this->input->post('amount');
                 $ff = $this->input->post('tax');
-            
+
             $f = 0;
             foreach($aa as $row2){
                 $data2['product_services'] = $aa[$i];
@@ -3668,7 +3671,7 @@ class Accounting extends MY_Controller {
             }
 
         redirect('accounting/banking');
-            
+
         }
         else{
             echo json_encode(0);
@@ -3701,13 +3704,13 @@ class Accounting extends MY_Controller {
             'created_by' => logged('id'),
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
-            
+
         );
 
         $addQuery = $this->expenses_model->addCheck($new_data);
-        
+
         if($query > 0){
-           
+
         $i = 0;
         foreach($a as $row){
             $data['category'] = $a[$i];
@@ -3725,7 +3728,7 @@ class Accounting extends MY_Controller {
                 $aa = $this->input->post('category');
                 $bb = $this->input->post('description');
                 $cc = $this->input->post('amount');
-            
+
             $f = 0;
             foreach($aa as $row2){
                 $data2['category'] = $aa[$f];
@@ -3742,7 +3745,7 @@ class Accounting extends MY_Controller {
 
         redirect('accounting/banking');
             // echo "yes";
-            
+
         }
         else{
             echo json_encode(0);
@@ -3777,7 +3780,7 @@ class Accounting extends MY_Controller {
         $query = $this->expenses_model->addExpense($new_data);
 
         if($query > 0){
-           
+
         $i = 0;
         foreach($a as $row){
             $data['category'] = $a[$i];
@@ -3795,7 +3798,7 @@ class Accounting extends MY_Controller {
                 $aa = $this->input->post('category');
                 $bb = $this->input->post('description');
                 $cc = $this->input->post('amount');
-            
+
             $f = 0;
             foreach($aa as $row2){
                 $data2['category'] = $aa[$f];
@@ -3811,11 +3814,11 @@ class Accounting extends MY_Controller {
             }
 
         redirect('accounting/banking');
-            
+
         }
         else{
             echo json_encode(0);
-        } 
+        }
     }
 
     //
@@ -3869,7 +3872,7 @@ class Accounting extends MY_Controller {
             $d = $this->input->post('rate');
             $e = $this->input->post('amount');
             $f = $this->input->post('tax');
-           
+
         $i = 0;
         foreach($a as $row){
             $data['product_services'] = $a[$i];
@@ -3889,7 +3892,7 @@ class Accounting extends MY_Controller {
 
         // redirect('accounting/banking');
         redirect('accounting/invoices');
-            
+
         }
         else{
             echo json_encode(0);
@@ -3899,7 +3902,7 @@ class Accounting extends MY_Controller {
 
     // New Forms
     public function addNewEstimate()
-    {   
+    {
         $this->load->model('AcsProfile_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
@@ -3908,13 +3911,13 @@ class Accounting extends MY_Controller {
         if(count( $result_autoincrement )) {
             if($result_autoincrement[0]['AUTO_INCREMENT'])
             {
-                $this->page_data['auto_increment_estimate_id'] = 1;    
+                $this->page_data['auto_increment_estimate_id'] = 1;
             } else {
-                
+
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
-            $this->page_data['auto_increment_estimate_id'] = 0;        
+            $this->page_data['auto_increment_estimate_id'] = 0;
         }
 
         $user_id = logged('id');
@@ -3932,7 +3935,7 @@ class Accounting extends MY_Controller {
         if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
@@ -3957,7 +3960,7 @@ class Accounting extends MY_Controller {
     }
 
     public function addNewEstimateOptions()
-    {   
+    {
         $this->load->model('AcsProfile_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
@@ -3966,13 +3969,13 @@ class Accounting extends MY_Controller {
         if(count( $result_autoincrement )) {
             if($result_autoincrement[0]['AUTO_INCREMENT'])
             {
-                $this->page_data['auto_increment_estimate_id'] = 20210000001;    
+                $this->page_data['auto_increment_estimate_id'] = 20210000001;
             } else {
-                
+
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
-            $this->page_data['auto_increment_estimate_id'] = 0000000;        
+            $this->page_data['auto_increment_estimate_id'] = 0000000;
         }
 
         $user_id = logged('id');
@@ -3990,7 +3993,7 @@ class Accounting extends MY_Controller {
         if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
@@ -4001,9 +4004,9 @@ class Accounting extends MY_Controller {
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('accounting/addNewEstimateOptions', $this->page_data);
     }
-    
+
     public function addNewEstimateBundle()
-    {   
+    {
         $this->load->model('AcsProfile_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
@@ -4012,13 +4015,13 @@ class Accounting extends MY_Controller {
         if(count( $result_autoincrement )) {
             if($result_autoincrement[0]['AUTO_INCREMENT'])
             {
-                $this->page_data['auto_increment_estimate_id'] = 1;    
+                $this->page_data['auto_increment_estimate_id'] = 1;
             } else {
-                
+
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
-            $this->page_data['auto_increment_estimate_id'] = 0;        
+            $this->page_data['auto_increment_estimate_id'] = 0;
         }
 
         $user_id = logged('id');
@@ -4036,7 +4039,7 @@ class Accounting extends MY_Controller {
         if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
@@ -4072,7 +4075,7 @@ class Accounting extends MY_Controller {
         if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         }
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
@@ -4088,7 +4091,7 @@ class Accounting extends MY_Controller {
             $this->page_data['setting'] = $setting;
             $this->page_data['terms'] = $terms;
         }
-        
+
 
         $this->load->view('accounting/addInvoice', $this->page_data);
     }
@@ -4199,9 +4202,9 @@ class Accounting extends MY_Controller {
             $this->page_data['jobs'] = $this->jobs_model->getByWhere([]);
         }else{
             $company_id = logged('company_id');
-            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);   
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
         }
-            
+
         if (!empty($tab)) {
             $query_tab = $tab;
             if( $tab == 'declined%20by%20customer' ){
@@ -4236,7 +4239,7 @@ class Accounting extends MY_Controller {
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
-        
+
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
 
@@ -4454,14 +4457,14 @@ class Accounting extends MY_Controller {
         $config['charset']    = 'utf-8';
         $config['newline']    = "\r\n";
         $config['mailtype'] = 'html';
-        $config['validation'] = TRUE;  
+        $config['validation'] = TRUE;
 
         $this->email->initialize($config);
 
         $subject =  '
         <table></table>
         ';
-        
+
         $email = $this->input->post('email');
         $header_message = "<html><head><title>".$subject."</title></head><body>";
         $footer_message = "</body></html>";
@@ -4469,7 +4472,7 @@ class Accounting extends MY_Controller {
         $msg = $header_message.$footer_message;
 
         $this->email->from('smartrac.noreply@gmail.com', 'NSMARTRAC');
-        $this->email->to($email); 
+        $this->email->to($email);
         $this->email->subject('NSMARTRAC - Merchant application');
         $this->email->message($subject);
 
@@ -4484,7 +4487,7 @@ class Accounting extends MY_Controller {
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
-        
+
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
 
@@ -4506,7 +4509,7 @@ class Accounting extends MY_Controller {
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
-        
+
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
 
@@ -4528,7 +4531,7 @@ class Accounting extends MY_Controller {
 
         $this->load->model('AcsProfile_model');
         $this->load->model('Clients_model');
-        
+
         $company_id = logged('company_id');
 
             $customer = $this->AcsProfile_model->getdataAjax($id);
@@ -4550,7 +4553,7 @@ class Accounting extends MY_Controller {
 
         if ($role == 1 || $role == 2) {
             $this->page_data['users'] = $this->users_model->getAllUsers();
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();  
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
@@ -4575,7 +4578,7 @@ class Accounting extends MY_Controller {
 
         if ($role == 1 || $role == 2) {
             $this->page_data['users'] = $this->users_model->getAllUsers();
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();  
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);

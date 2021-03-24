@@ -6,9 +6,12 @@ class Taskhub extends MY_Controller {
 		parent::__construct();
 		$this->checkLogin();
 		$this->load->model(array('taskhub_model','taskhub_updates_model','taskhub_status_model','taskhub_participants_model'));
-		
+
 		$this->page_data['page']->menu = 'taskhub';
-		$this->page_data['module'] = 'calendar'; 
+		$this->page_data['module'] = 'calendar';
+		$cid  = logged('id');
+		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 	}
 
 	public function index(){
@@ -53,7 +56,7 @@ class Taskhub extends MY_Controller {
 				$taskid = $id;
 			}
 			$this->page_data['task'] = $this->taskhub_model->getById($taskid);
-			
+
 			$this->page_data['selected_participants'] = $this->db->query(
 															'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
 															'left join users b on b.id = a.user_id '.
@@ -66,7 +69,7 @@ class Taskhub extends MY_Controller {
 		$this->form_validation->set_rules('estimated_date_complete', 'Estimated Date of Competion', 'trim|required');
 
 		if($this->form_validation->run() == false){
-			$this->load->view('workcalender/taskhub/entry', $this->page_data);	
+			$this->load->view('workcalender/taskhub/entry', $this->page_data);
 		} else {
 			$assigned_to = $this->input->post('assigned_to');
 			if($assigned_to == ''){
@@ -74,7 +77,7 @@ class Taskhub extends MY_Controller {
 			}
 
 			$process_successful = false;
-			
+
 			if($taskid > 0){
 				$task = $this->page_data['task'];
 
@@ -186,7 +189,7 @@ class Taskhub extends MY_Controller {
 								'task_id' => trim($taskid),
 								'user_id' => $participant,
 								'is_assigned' => 0
-							);	
+							);
 
 							array_push($data_participants, $data_participant);
 						}
@@ -207,7 +210,7 @@ class Taskhub extends MY_Controller {
 			} else {
 				$this->page_data['error'] = 'Error creating task';
 				$this->load->view('workcalender/taskhub/entry', $this->page_data);
-			}	
+			}
 		}
 	}
 
@@ -266,14 +269,14 @@ class Taskhub extends MY_Controller {
 			'where a.relation_id = '. $id . ' ' .
 			  'and a.type = "task" '.
 
-			'order by `update_date` ASC '	
+			'order by `update_date` ASC '
 		)->result();
 
 		$sql = 'update tasks set view_count = view_count + 1 where task_id = ' . $id;
 
 		$this->db->query($sql);
-		
-		$this->load->view('workcalender/taskhub/view', $this->page_data);	
+
+		$this->load->view('workcalender/taskhub/view', $this->page_data);
 	}
 
 	public function comment($id){
@@ -284,7 +287,7 @@ class Taskhub extends MY_Controller {
 
 		$data = array(
 			'type' => 'task',
-			'user_id' => $uid,			
+			'user_id' => $uid,
 			'comment' => $comment,
 			'comment_date' => date('Y-m-d h:i:s'),
 			'company_id' => $company_id,
@@ -332,7 +335,7 @@ class Taskhub extends MY_Controller {
 
 				$this->load->view('workcalender/taskhub/add_update', $this->page_data);
 			}
-		}	
+		}
 	}
 
 	public function getTasksWithFilters(){
@@ -343,7 +346,7 @@ class Taskhub extends MY_Controller {
 
 		if(isset($_POST['keyword'])){
 			$keyword = $_POST['keyword'];
-		}	
+		}
 
 		if(isset($_POST['statusid'])){
 			$status_id = $_POST['status'];

@@ -21,6 +21,10 @@ class Invoice extends MY_Controller {
         $this->load->model('Accounting_terms_model','accounting_terms_model');
         $this->load->model('Accounting_invoices_model','accounting_invoices_model');
 
+				$cid  = logged('id');
+				$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+				$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
+
         $user_id = getLoggedUserID();
 
         // add css and js file path so that they can be attached on this page dynamically
@@ -61,7 +65,7 @@ class Invoice extends MY_Controller {
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
                 $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
-            } else {    
+            } else {
 
                 // search
                 if (!empty(get('search'))) {
@@ -104,7 +108,7 @@ class Invoice extends MY_Controller {
             }
         }
 
-        
+
         $this->load->view('invoice/invoice', $this->page_data);
     }
 
@@ -163,7 +167,7 @@ class Invoice extends MY_Controller {
         if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         }
 
 
@@ -179,7 +183,7 @@ class Invoice extends MY_Controller {
             $this->page_data['setting'] = $setting;
             $this->page_data['terms'] = $terms;
         }
-        
+
 
         $this->load->view('invoice/add', $this->page_data);
 
@@ -263,7 +267,7 @@ class Invoice extends MY_Controller {
             'adjustment_name' => $this->input->post('adjustment_name'),//
             'adjustment_value' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('grand_total'),//
-            
+
 
             'user_id' => logged('id'),
             'date_created' => date("Y-m-d H:i:s"),
@@ -298,7 +302,7 @@ class Invoice extends MY_Controller {
             $e = $this->input->post('discount');
             $f = $this->input->post('tax');
             $g = $this->input->post('total');
-           
+
         $i = 0;
         foreach($a as $row){
             $data['item'] = $a[$i];
@@ -320,7 +324,7 @@ class Invoice extends MY_Controller {
 
         // redirect('accounting/banking');
         redirect('invoice');
-            
+
         }
         else{
             echo json_encode(0);
@@ -455,7 +459,7 @@ class Invoice extends MY_Controller {
             'message_to_customer' => post('message'),
             'terms_and_conditions' => post('terms_conditions')
         ]);
-            
+
         $this->activity_model->add('New Invoice $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Invoice Created Successfully');
@@ -482,7 +486,7 @@ class Invoice extends MY_Controller {
             'reference_number' => post('reference'),
             'notes' => post('notes')
         ]);
-            
+
         $this->activity_model->add('New Payment Record $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Payment Recorded Successfully');
@@ -578,7 +582,7 @@ class Invoice extends MY_Controller {
             'message_to_customer' => post('message'),
             'terms_and_conditions' => post('terms_conditions')
         ]);
-            
+
         $this->activity_model->add('New Recurring Invoice $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Recurring Invoice Created Successfully');
@@ -598,9 +602,9 @@ class Invoice extends MY_Controller {
             'max_height' => "768",
             'max_width' => "1024"
         );
-        
+
         $this->load->library('upload', $config);
-        
+
         if($this->upload->do_upload()) {
             $draftlogo = array('upload_data' => $this->upload->data());
             $logo = $draftlogo['upload_data']['file_name'];
@@ -633,7 +637,7 @@ class Invoice extends MY_Controller {
             'default_msg' => post('message_commercial'),
             'default_terms' => post('terms_commercial'),
         );
-        
+
         $payment_fee = array(
             'percent' => post('payment_fee_percent'),
             'amount' => post('payment_fee_amount'),
@@ -696,7 +700,7 @@ class Invoice extends MY_Controller {
                 'autoconvert_work_order' => post('autoconvert_work_order')
             ]);
         }
-            
+
         $this->activity_model->add('Update Invoice Settings $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'Invoice Settings Saved Successfully');
@@ -909,20 +913,20 @@ class Invoice extends MY_Controller {
                 'charset'   => 'iso-8859-1',
                 'wordwrap'  => TRUE
             );
-    
+
             $this->load->library('email', $config);
-            
+
             $this->email->set_newline("\r\n");
             $this->email->from(post('from_email'), post('from_name'));
             $this->email->to("jeykell125@gmail.com");
             $this->email->cc(post('cc[]'));
             $this->email->bcc(post('bcc[]'));
-    
+
             $this->email->subject(post('mail_subject'));
             $this->email->message(post('mail_msg'));
-    
+
             $this->email->send();
-    
+
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Email has been Sent');
         } else {
@@ -938,7 +942,7 @@ class Invoice extends MY_Controller {
         $sid = 'your_sid';
         $token = 'your_token';
         $client = new Client($sid, $token);
-        
+
         // Use the client to do fun stuff like send text messages!
             return $client->messages->create(
             // the number you'd like to send the message to
@@ -956,7 +960,7 @@ class Invoice extends MY_Controller {
     {
         $this->index($index);
     }
-	
+
 	 /**
      *
      */
@@ -966,7 +970,7 @@ class Invoice extends MY_Controller {
         $invoiceCustomer = new InvoiceCustomer($this);
     }
 
-    public function new_customer_form() 
+    public function new_customer_form()
     {
         $get = $this->input->get();
 
@@ -982,10 +986,10 @@ class Invoice extends MY_Controller {
 
     }
 
-    public function record_payment_form() 
+    public function record_payment_form()
     {
         $get = $this->input->get();
-        
+
         if (!empty($get)) {
             $invoice = get_invoice_by_id($get['invoice_id']);
             $this->page_data['action'] = $get['action'];
@@ -1004,7 +1008,7 @@ class Invoice extends MY_Controller {
 
     }
 
-    public function pay_now_form() 
+    public function pay_now_form()
     {
         $get = $this->input->get();
 
@@ -1069,14 +1073,14 @@ class Invoice extends MY_Controller {
     {
         require_once('application/libraries/stripe-php/init.php');
         \Stripe\Stripe::setApiKey($this->config->item('stripe_secret'));
-     
+
         \Stripe\Charge::create ([
                 "amount" => 100 * 100,
                 "currency" => "usd",
                 "source" => $this->input->post('stripeToken'),
-                "description" => "Test payment from nsmartrac.com." 
+                "description" => "Test payment from nsmartrac.com."
         ]);
-        
+
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'Payment made successfully');
 

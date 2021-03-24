@@ -43,10 +43,11 @@
         border-radius: 0 0 0 0 !important;
     }
     img.company-logo {
-        width: 80px;
-        height: 80px;
+        width: auto;
+        height: auto;
         object-fit: cover;
         margin: 0 auto;
+        max-height: 120px;
     }
     svg#svg-sprite-menu-close {
       position: relative;

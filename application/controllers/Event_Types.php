@@ -12,12 +12,16 @@ class Event_Types extends MY_Controller {
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 
+		$cid  = logged('id');
+		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
+
 		$this->page_data['page']->title = 'Event Types';
-		$this->page_data['page']->menu = 'event_types';		
+		$this->page_data['page']->menu = 'event_types';
 	}
 
 
-	public function index(){			
+	public function index(){
 		$user_id = logged('id');
         $role_id = logged('role');
         $company_id = logged('company_id');
@@ -34,7 +38,7 @@ class Event_Types extends MY_Controller {
     public function add_new_event_type(){
         $this->load->model('Icons_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -117,7 +121,7 @@ class Event_Types extends MY_Controller {
                 }
             }
 
-            
+
         }else{
             $this->session->set_flashdata('message', 'Please specify event type name');
             $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -129,7 +133,7 @@ class Event_Types extends MY_Controller {
     public function edit_event_type( $event_type_id ){
         $this->load->model('Icons_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -157,14 +161,14 @@ class Event_Types extends MY_Controller {
                 if( isset($post['is_default_icon']) ){
                     if( $post['default_icon_id'] > 0 ){
                         $icon = $this->Icons_model->getById($post['default_icon_id']);
-                        $marker_icon = $icon->image;         
-                        $is_marker_icon_default_list = 1;               
+                        $marker_icon = $icon->image;
+                        $is_marker_icon_default_list = 1;
                     }
-                }else{                    
+                }else{
                     if( $_FILES['image']['size'] > 0 ){
                         if( $_FILES['image']['size'] > 0 ){
                             $marker_icon = $this->moveUploadedFile();
-                            $is_marker_icon_default_list = 0;        
+                            $is_marker_icon_default_list = 0;
                         }
                     }
                 }
@@ -175,7 +179,7 @@ class Event_Types extends MY_Controller {
                     'is_marker_icon_default_list' => 1,
                     'is_marker_icon_default_list' => $is_marker_icon_default_list,
                     'modified' => date("Y-m-d H:i:s")
-                ];    
+                ];
                 $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
 
                 $this->session->set_flashdata('message', 'Event Type was successful updated');
@@ -197,7 +201,7 @@ class Event_Types extends MY_Controller {
             redirect('event_types/edit/'.$post['eid']);
 
         }
-    }   
+    }
 
 	public function delete_event_type(){
 		$id = $this->EventType_model->deleteById(post('eid'));

@@ -22,6 +22,10 @@ class Workorder extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Jobs_model', 'jobs_model');
 
+        $cid  = logged('id');
+        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
+
         $user_id = getLoggedUserID();
 
         // add css and js file path so that they can be attached on this page dynamically
@@ -684,7 +688,7 @@ class Workorder extends MY_Controller
         add_css(array(
             'assets/css/daterange/daterangepicker.css'
         ));
-        
+
         add_footer_js(array(
             'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js',
             'https://maps.googleapis.com/maps/api/js?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&callback=initMap',
@@ -728,7 +732,7 @@ class Workorder extends MY_Controller
         $this->load->model('EventType_model');
         $this->load->model('Clients_model');
 
-        $user_id    = logged('id');  
+        $user_id    = logged('id');
         $locations  = array();
         $markers    = array();
         $center_lat = '';
@@ -741,12 +745,12 @@ class Workorder extends MY_Controller
             if( $post['map_type'] == 'events' ){
                 $criteria = ['events.status' => $post['job_status']];
             }else{
-                $criteria = ['jobs.status' => $post['job_status']]; 
+                $criteria = ['jobs.status' => $post['job_status']];
             }
         }else{
             $criteria = array();
         }
-        
+
         if( $post['user'] == 'all' ){
             $users    = $this->Users_model->getAll();
             $default_imp_img = base_url('uploads/users/default.png');
@@ -781,10 +785,10 @@ class Workorder extends MY_Controller
                                     $marker = base_url('/uploads/event_types/' . $eventType->company_id . "/" . $eventType->icon_marker);
                                 }
                             }
-                            
-                            $pointB = $e->event_address; 
+
+                            $pointB = $e->event_address;
                             $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
-                            $json   = json_decode($gdata, true);   
+                            $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                 $description_b = "<table style='font-size:12px;'>
                                     <tr'>
@@ -811,17 +815,17 @@ class Workorder extends MY_Controller
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
                                     'marker' => $marker
-                                ];  
+                                ];
                             }
                         }
-                        $counter++;    
-                    } 
+                        $counter++;
+                    }
                 }else{
                     //Jobs
                     $jobs    = $this->Jobs_model->getAllJobsByUserId($user->id,$date_range,$criteria);
                     foreach($jobs as $j){
                         //if( $j->job_location != '' ){
-                            $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code; 
+                            $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code;
 
                             $description_b = "<table style='font-size:12px;'>
                                 <tr'>
@@ -839,7 +843,7 @@ class Workorder extends MY_Controller
                             //$description_b = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><br />" . $j->job_number . " - " . $j->job_type . "<br /><small>" . $j->first_name . ' ' . $j->last_name . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
 
                             $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
-                            $json   = json_decode($gdata, true); 
+                            $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                $locations[] = [
                                     'title' => $description_a,
@@ -854,14 +858,14 @@ class Workorder extends MY_Controller
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
-                                ];    
-                            }    
+                                ];
+                            }
                         //}
 
-                        $counter++;  
+                        $counter++;
                     }
                 }
-            } 
+            }
         }else{
             if( $post['user'] > 0 ){
                 $user    = $this->Users_model->getUser($post['user']);
@@ -895,10 +899,10 @@ class Workorder extends MY_Controller
                             }else{
                                 $marker = base_url('/uploads/event_types/' . $eventType->company_id . "/" . $eventType->icon_marker);
                             }
-                            
+
                         }
 
-                        $pointB = $e->event_address;  
+                        $pointB = $e->event_address;
                         $description_b = "<table style='font-size:12px;'>
                             <tr'>
                                 <td style='width:10%;'>
@@ -913,7 +917,7 @@ class Workorder extends MY_Controller
 
                         //$description_b = "<i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<br /><br />" . $e->event_type . "<br /><small>" . $pointB . "</small>";
                         $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
-                        $json   = json_decode($gdata, true);   
+                        $json   = json_decode($gdata, true);
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                             $locations[] = [
                                 'title' => $description_a,
@@ -928,10 +932,10 @@ class Workorder extends MY_Controller
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
                                 'description' => $description_b,
                                 'marker' => $marker
-                            ]; 
-                        } 
+                            ];
+                        }
                     }
-                    $counter++;    
+                    $counter++;
                 }
             }else{
                 //Jobs
@@ -946,9 +950,9 @@ class Workorder extends MY_Controller
                             $new_description = "<br /><b>". $j->job_number . " - " . $j->job_description . "</b>" . $description;
                             $locations[$index_b]['description'] = $new_description;
                         }else{
-                            $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code; 
+                            $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code;
                             $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
-                            $json   = json_decode($gdata, true);  
+                            $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                 $locations[$counter] = [
                                     'title' => $description_a,
@@ -963,15 +967,15 @@ class Workorder extends MY_Controller
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => "<b>" . $j->job_number . " - " . $j->job_description . "</b><br/ ><small>".$pointB."</small>",
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
-                                ];    
+                                ];
 
                                 $jobs_customer[$j->prof_id] = ['index_a' => $counter, 'index_b' => $counter + 1];
 
                                 $counter++;
-                            } 
+                            }
                         }
                     }
-                } 
+                }
             }
         }
         $this->page_data['center_lng'] = $center_lng;
@@ -993,7 +997,7 @@ class Workorder extends MY_Controller
         $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
 
         $company_id        = logged('company_id');
-        $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id); 
+        $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id);
 
         //Default values
         $prefix = 'WO-';
@@ -1187,7 +1191,7 @@ class Workorder extends MY_Controller
         $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
 
         $company_id        = logged('company_id');
-        $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id); 
+        $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id);
 
         if( $workorderSettings ){
             $data = [
@@ -1269,7 +1273,7 @@ class Workorder extends MY_Controller
     public function edit_checklist($id){
         $this->load->model('Checklist_model');
         $this->load->model('ChecklistItem_model');
-        
+
         $checklistAttachType = $this->Checklist_model->getAttachType();
 
         $checklist = $this->Checklist_model->getById($id);
