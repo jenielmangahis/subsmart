@@ -127,27 +127,35 @@ class Payment_methods extends MY_Controller {
             'updated_at' => date('Y-m-d h:i:s')
         ];
 
-        $paymentMethod= $this->accounting_payment_methods_model->create($data);
+        $paymentMethod = $this->accounting_payment_methods_model->create($data);
+        $name = $data['name'];
 
-        $return = [
-            'data' => $paymentMethod,
-            'success' => $paymentMethod ? true : false,
-            'message' => $paymentMethod ? 'Success!' : 'Error!'
-        ];
+        if($paymentMethod) {
+            $this->session->set_flashdata('success', "$name added successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
 
-        echo json_encode($return);
+        redirect('/accounting/payment-methods');
     }
 
     public function inactive($id)
     {
         $result = [];
 
+        $name = $this->accounting_payment_methods_model->getById($id)->name;
         $delete = $this->accounting_payment_methods_model->delete($id);
-        $result['success'] = $delete;
-        $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
 
-        echo json_encode($result);
-        exit;
+        if($delete) {
+            $this->session->set_flashdata('success', "$name is now inactive!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+        // $result['success'] = $delete;
+        // $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
+
+        // echo json_encode($result);
+        // exit;
     }
 
     public function activate($id)
@@ -155,26 +163,38 @@ class Payment_methods extends MY_Controller {
         $result = [];
 
         $activate = $this->accounting_payment_methods_model->activate($id);
-        $result['success'] = $activate;
-        $result['message'] = $activate ? 'Successfully Activated' : 'Failed to activate';
+        $name = $this->accounting_payment_methods_model->getById($id)->name;
 
-        echo json_encode($result);
-        exit;
+        if($activate) {
+            $this->session->set_flashdata('success', "$name is now active!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        // $result['success'] = $activate;
+        // $result['message'] = $activate ? 'Successfully Activated' : 'Failed to activate';
+
+        // echo json_encode($result);
+        // exit;
     }
 
-    public function update()
+    public function update($id)
     {
         $data = [
             'name' => $this->input->post('name'),
             'credit_card' => $this->input->post('credit_card')
         ];
 
-        $update = $this->accounting_payment_methods_model->updatePaymentMethod($this->input->post('id'), $data);
+        $update = $this->accounting_payment_methods_model->updatePaymentMethod($id, $data);
 
-        echo json_encode([
-            'data' => $update,
-            'success' => $update ? true : false,
-            'message' => $update ? 'Success!' : 'Error!'
-        ]);
+        $name = $data['name'];
+
+        if($update) {
+            $this->session->set_flashdata('success', "$name updated successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/payment-methods');
     }
 }

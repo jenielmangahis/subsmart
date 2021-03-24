@@ -18,7 +18,7 @@ function reloadTagsTable() {
 //DataTables JS
 $('#group-tags-select2').select2({
     ajax: {
-        url: '/accounting/get-group-tags',
+        url: '/accounting/tags/get-group-tags',
         dataType: 'json'
     }
 });
@@ -34,7 +34,7 @@ $('#tags_table').DataTable({
     info: false,
     paging: false,
     ajax: {
-        url: 'load-all-tags/',
+        url: 'tags/load-all-tags/',
         dataType: 'json',
         contentType: 'application/json', 
         type: 'POST',
@@ -106,7 +106,7 @@ $(document).on('submit', '#tags_group_form', function(e) {
     var data = new FormData(document.getElementById('tags_group_form'));
 
     $.ajax({
-        url: '/accounting/addTagsGroup',
+        url: '/accounting/tags/add-group-tag',
         data: data,
         type: 'post',
         processData: false,
@@ -141,7 +141,7 @@ $(document).on('submit', '#update_group_form', function(e) {
     var data = new FormData(document.getElementById('update_group_form'));
 
     $.ajax({
-        url:`/accounting/update-group-tag/${data.get('group_id')}/group`,
+        url:`/accounting/tags/update/${data.get('group_id')}/group`,
         data: {name: data.get('tags_group_name')},
         type:"POST",
         dataType: "json",
@@ -168,7 +168,7 @@ $(document).on('submit', '#tags_form', function(e) {
     var data = new FormData(document.getElementById('tags_form'));
 
     $.ajax({
-        url: '/accounting/addTags',
+        url: '/accounting/tags/add-tag',
         data: data,
         type: 'post',
         processData: false,
@@ -215,7 +215,7 @@ $(document).on('submit', 'table#group-tags tbody form', function(e) {
     var data = new FormData(document.getElementById(form.attr('id')));
 
     $.ajax({
-        url:`/accounting/update-group-tag/${data.get('tag_id')}/tag`,
+        url:`/accounting/tags/update/${data.get('tag_id')}/tag`,
         data: {name: data.get('update_tag_name')},
         type:"POST",
         dataType: "json",
@@ -236,7 +236,7 @@ $(document).on('submit', '#create-tag-form', function(e) {
     var data = new FormData(document.getElementById('create-tag-form'));
 
     $.ajax({
-        url: '/accounting/addTags',
+        url: '/accounting/tags/add-tag',
         data: data,
         type: 'post',
         processData: false,
@@ -267,7 +267,7 @@ $(document).on('click', '#deleteGroup, #deleteTag', function(e) {
     var type = $(this).parent().parent().data('type');
     
     $.ajax({
-        url:`/accounting/delete-group-tag/${id}/${type}`,
+        url:`/accounting/tags/delete/${id}/${type}`,
         type:"DELETE",
         success:function () {
             reloadTagsTable();
@@ -292,7 +292,7 @@ $(document).on('click', '#submiteUpdateTag', function(e) {
     var input = $(this).parent().prev().find(`input`).val();
 
     $.ajax({
-        url:`/accounting/update-group-tag/${target.id}/${target.type}`,
+        url:`/accounting/tags/update/${target.id}/${target.type}`,
         type:"POST",
         data: {name: input},
         dataType: "json",

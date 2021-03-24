@@ -898,6 +898,21 @@ function calculation(counter) {
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   $("#eqpt_cost").val(eqpt_cost);
 
+  if($("#grand_total").length && $("#grand_total").val().length)
+  {
+    // console.log('none');
+    alert('none');
+  }else{
+    $("#grand_total").text(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+    $("#supergrandtotal").text(super_grand.toFixed(2));
+    $("#supergrandtotal_input").val(super_grand.toFixed(2));
+  }
+
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
   $("#sales_tax").val(sls);
@@ -1073,6 +1088,23 @@ function calculation(counter) {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  if($("#grand_total").length && $("#grand_total").val().length)
+  {
+    // console.log('none');
+    alert('none');
+  }else{
+    $("#grand_total").text(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+    $("#supergrandtotal").text(super_grand.toFixed(2));
+    $("#supergrandtotal_input").val(super_grand.toFixed(2));
+  }
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -1165,6 +1197,20 @@ function calculation2(counter) {
 
   $("#grand_total2").text(grand_total_w.toFixed(2));
   $("#grand_total_input2").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  if($("#grand_total").length && $("#grand_total").val().length)
+  {
+    // console.log('none');
+    alert('none');
+  }else{
+    $("#grand_total").text(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+  }
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);

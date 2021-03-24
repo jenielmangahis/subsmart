@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span><strong>Success!</strong> <?php echo $this->session->flashdata('success'); ?></span>
                         </div>
                         <?php elseif($this->session->flashdata('error')) : ?>
-                        <div class="alert alert-success alert-dismissible my-4" role="alert">
+                        <div class="alert alert-danger alert-dismissible my-4" role="alert">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <span><strong>Error!</strong> <?php echo $this->session->flashdata('error'); ?></span>
                         </div>
@@ -124,20 +124,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="modal fade" id="payment_method_modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">New Payment Method</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <form id="payment-method-form">
+                <form id="payment-method-form" action="/accounting/payment-methods/add" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card p-0 m-0">
                                 <div class="card-body" style="max-height: 650px;">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" id="name" class="form-control">
@@ -168,7 +168,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="modal fade" id="inactive_payment_method" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="row">
@@ -177,7 +177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="card-body" style="max-height: 650px;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p>Are you sure you want to make <span class="method-name"></span> inactive?</p>
+                                            <p>Are you sure you want to make <b><span class="method-name"></span></b> inactive?</p>
                                         </div>
                                     </div>
                                 </div>
@@ -199,7 +199,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     
     <div class="modal fade" id="active_payment_method" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="row">
@@ -208,7 +208,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="card-body" style="max-height: 650px;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p>Are you sure you want to make <span class="method-name"></span> active?</p>
+                                            <p>Are you sure you want to make <b><span class="method-name"></span></b> active?</p>
                                         </div>
                                     </div>
                                 </div>

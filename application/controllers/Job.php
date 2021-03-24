@@ -814,7 +814,7 @@ class Job extends MY_Controller
             'message' => $input['message'],
             'company_id' => $comp_id,
             'date_created' => date('Y-m-d H:i:s'),
-            'notes' => $input['notes'],
+            //'notes' => $input['notes'],
             'attachment' => $input['attachment'],
             'tax_rate' => $input['tax_rate'],
             'job_type' => $input['job_type'],

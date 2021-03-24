@@ -171,121 +171,6 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/taxes', $this->page_data);
     }
 
-    public function attachments()
-    {
-        add_footer_js(array(
-            "assets/js/accounting/attachments.js"
-        ));
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/lists/attachment', $this->page_data);
-    }
-
-    public function upload_files()
-    {
-        $files = $_FILES['attachments'];
-
-        if(count($files['name']) > 0) {
-            $insert = $this->uploadFile($files);
-
-            $return = [
-                'data' => $insert,
-                'success' => $insert ? true : false,
-                'message' => $insert ? 'Success!' : 'Error!'
-            ];
-        } else {
-            $return = [
-                'data' => null,
-                'success' => false,
-                'message' => 'No files uploaded.'
-            ];
-        }
-
-        echo json_encode($return);
-    }
-
-    public function load_attachment_files()
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-
-        $attachments = $this->accounting_attachments_model->getCompanyAttachments();
-
-        $data = [];
-
-        if(count($attachments) > 0) {
-            foreach($attachments as $attachment) {
-                $data[] = [
-                    'id' => $attachment['id'],
-                    'thumbnail' => $attachment['stored_name'],
-                    'type' => $attachment['type'],
-                    'name' => $attachment['uploaded_name'],
-                    'size' => $attachment['size'],
-                    'upload_date' => date('m/d/Y', strtotime($attachment['created_at'])),
-                    'links' => '',
-                    'note' => $attachment['notes']
-                ];
-            }
-        }
-
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($attachments),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
-    }
-
-    public function download_attachment() {
-        $filename = $this->input->get('filename');
-        $file = "./uploads/accounting/attachments/$filename";
-
-        if(file_exists($file)) {
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="'.basename($file).'"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($file));
-            readfile($file);
-        }
-    }
-
-    public function edit_attachment() {
-        $post = $this->input->post();
-
-        $data = [
-            'uploaded_name' => $post['file_name'],
-            'notes' => $post['notes']
-        ];
-
-        $update = $this->accounting_attachments_model->updateAttachment($post['id'], $data);
-
-        echo json_encode([
-            'data' => $update,
-            'success' => $update ? true : false,
-            'message' => $update ? 'Success!' : 'Error!'
-        ]);
-    }
-
-    public function delete_attachment($id) {
-        $result = [];
-
-        $attachment = $this->accounting_attachments_model->getById($id);
-        if(file_exists("./uploads/accounting/attachments/".$attachment->stored_name)) {
-            unlink("./uploads/accounting/attachments/".$attachment->stored_name);
-        }
-        $delete = $this->accounting_attachments_model->delete($id);
-        $result['success'] = $delete;
-        $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
-
-        echo json_encode($result);
-        exit;
-    }
-
     public function my_accountant()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -310,199 +195,6 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->load->view('accounting/receipts', $this->page_data);
-    }
-
-    //december 30 update
-    //Tags
-    public function tags()
-    {
-        add_footer_js(array(
-            "assets/js/accounting/banking/tags.js"
-        ));
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/tags', $this->page_data);
-    }
-
-    public function get_group_tags()
-    {
-        $groupTags = $this->tags_model->getGroup();
-
-        $return = [];
-
-        foreach($groupTags as $group) {
-            $return['results'][] = [
-                'id' => $group['id'],
-                'text' => $group['name']
-            ];
-        }
-
-        echo json_encode($return);
-    }
-
-    public function load_all_tags()
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-
-        $getTags = $this->tags_model->getTags();
-
-        $tags = [];
-        foreach($getTags as $key => $tag) {
-            $nameColumn = '';
-            if($tag['type'] === 'group' && count($tag['tags']) > 0) {
-                $nameColumn .= '<a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-'.$key.'"><i class="fa fa-chevron-down"></i></a>';
-            }
-
-            if($tag['type'] === 'group'){
-                $nameColumn .= '<span class="'.$tag['type'].'-span-'.$tag['id'].'">'.$tag['name'].' ('.count($tag['tags']).')</span>';
-            } else {
-                $nameColumn .= '<span class="'.$tag['type'].'-span-'.$tag['id'].'">'.$tag['name'].'</span>';
-            }
-
-            $actionsColumn = '';
-
-            if($tag['type'] === 'group') {
-                $nameColumn .= '
-                <div class="form-group-'.$tag['id'].' hide">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="text" name="group_name" value="'.$tag['name'].'" data-id="'.$tag['id'].'" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-success" id="submiteUpdateTag" data-type="group" data-id="'.$tag['id'].'">Save</button>
-                            <button type="button" class="close float-right text-dark" data-type="group" id="closeFormTag" data-id="'.$tag['id'].'" style="transform: translate(0px, -15px);"><span aria-hidden="true">×</span></button>
-                        </div>
-                    </div>
-                </div>';
-
-                $actionsColumn .= '
-                <div class="dropdown">
-                    <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px;">Run report</button>
-                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
-                        <span class="fa fa-caret-down"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" data-id="'.$tag['id'].'" data-name="'.$tag['name'].'" data-type="group">
-                        <li><a href="javascript:void(0);" id="addNewTag" class="dropdown-item" >Add tag</a></li>
-                        <li><a href="javascript:void(0);" id="updateTagGroup" class="dropdown-item">Edit group</a></li>
-                        <li><a href="javascript:void(0);" id="deleteGroup" class="dropdown-item">Delete group</a></li>
-                    </ul>
-                </div>';
-            } else {
-                $nameColumn .= '
-                <div class="form-'.$tag['type'].'-'.$tag['id'].' hide">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="text" name="tags_name" value="'.$tag['name'].'" data-id="'.$tag['id'].'" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-success" id="submiteUpdateTag" data-type="'.$tag['type'].'" data-id="'.$tag['id'].'">Save</button>
-                            <button type="button" class="close float-right text-dark" data-type="'.$tag['type'].'" id="closeFormTag" data-id="'.$tag['id'].'" style="transform: translate(0px, -15px);"><span aria-hidden="true">×</span></button>
-                        </div>
-                    </div>
-                </div>';
-
-                $actionsColumn .= '
-                <div class="dropdown">
-                    <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px;">Run report</button>
-                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
-                        <span class="fa fa-caret-down"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" data-id="'.$tag['id'].'" data-type="'.$tag['type'].'">
-                        <li><a href="javascript:void(0);" class="dropdown-item" id="updateTagGroup">Edit tag</a></li>
-                        <li><a href="javascript:void(0);" class="dropdown-item" id="deleteTag" data-tag_id="'.$tag['id'].'">Delete tag</a></li>
-                    </ul>
-                </div>
-                ';
-            }
-
-            $tags[] = [
-                'name' => $nameColumn,
-                'transactions' => '',
-                'actions' => $actionsColumn,
-                'type' => $tag['type'],
-                'parentIndex' => $tag['parentIndex']
-            ];
-        }
-
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($getTags),
-            'recordsFiltered' => count($getTags),
-            'data' => array_slice($tags, 0, 50)
-        ];
-
-        echo json_encode($result);
-    }
-
-    public function addTagsGroup(){
-        $company_id  = getLoggedCompanyID();
-        // echo "<pre>";
-        // print_r($this->input->post());
-        // exit;
-        $new_data = array(
-            'name' => $this->input->post('tags_group_name'),
-            'company_id' => $company_id,
-            'status' => 1,
-            'created_at' => date("Y-m-d H:i:s"),
-        );
-
-        $tags = $this->tags_model->addtagGroup($new_data);
-
-        $return = [
-            'data' => $tags,
-            'success' => $tags !== null ? true : false,
-            'message' => $tags !== null ? 'Success' : 'Error'
-        ];
-
-        echo json_encode($return);
-    }
-
-    public function addTags(){
-        $company_id  = getLoggedCompanyID();
-        $group_id = $this->input->post('group_id');
-
-        $new_data = array(
-            'name' => $this->input->post('tag_name'),
-            'company_id' => $company_id,
-            'status' => 1,
-            'created_at' => date("Y-m-d H:i:s"),
-        );
-        
-        if (isset($group_id) && $group_id) $new_data['group_tag_id'] = $group_id;
-
-
-        $tags = $this->tags_model->add($new_data);
-
-        $return = [
-            'data' => $tags,
-            'success' => $tags !== null ? true : false,
-            'message' => $tags !== null ? 'Success' : 'Error'
-        ];
-
-        echo json_encode($return);
-
-    }
-
-    public function deleteGroupTag($id, $type) {
-        $result = [];
-
-        $delete = $this->tags_model->delete($id, $type);
-        $result['success'] = $delete;
-        $result['message'] = $delete ? 'Deleted' : 'Failed';
-
-        echo json_encode($result);
-        exit;
-    }
-
-    public function updateGroupTag($id, $type) {
-        $result = [];
-        $name = $this->input->post('name');
-
-        $update = $this->tags_model->update($id, $name, $type);
-        $result['success'] = $update;
-        $result['message'] = $update ? 'Updated' : 'Failed';
-
-        echo json_encode($result);
-        exit;
     }
 
     //---->
@@ -543,42 +235,42 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/deposits', $this->page_data);
     }
 
-    private function uploadFile($files)
-    {
-        $this->load->helper('string');
-        $data = [];
-        foreach($files['name'] as $key => $name) {
-            $extension = end(explode('.', $name));
+    // private function uploadFile($files)
+    // {
+    //     $this->load->helper('string');
+    //     $data = [];
+    //     foreach($files['name'] as $key => $name) {
+    //         $extension = end(explode('.', $name));
 
-            do {
-                $randomString = random_string('alnum');
-                $fileNameToStore = $randomString . '.' .$extension;
-                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
-            } while ($exists);
+    //         do {
+    //             $randomString = random_string('alnum');
+    //             $fileNameToStore = $randomString . '.' .$extension;
+    //             $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+    //         } while ($exists);
 
-            $fileType = explode('/', $files['type'][$key]);
-            $uploadedName = str_replace('.'.$extension, '', $name);
+    //         $fileType = explode('/', $files['type'][$key]);
+    //         $uploadedName = str_replace('.'.$extension, '', $name);
 
-            $data[] = [
-                'company_id' => getLoggedCompanyID(),
-                'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
-                'uploaded_name' => $uploadedName,
-                'stored_name' => $fileNameToStore,
-                'file_extension' => $extension,
-                'size' => $files['size'][$key],
-                'notes' => null,
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
-            ];
+    //         $data[] = [
+    //             'company_id' => getLoggedCompanyID(),
+    //             'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
+    //             'uploaded_name' => $uploadedName,
+    //             'stored_name' => $fileNameToStore,
+    //             'file_extension' => $extension,
+    //             'size' => $files['size'][$key],
+    //             'notes' => null,
+    //             'status' => 1,
+    //             'created_at' => date('Y-m-d h:i:s'),
+    //             'updated_at' => date('Y-m-d h:i:s')
+    //         ];
 
-            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
-        }
+    //         move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+    //     }
 
-        $insert = $this->accounting_attachments_model->insertBatch($data);
+    //     $insert = $this->accounting_attachments_model->insertBatch($data);
 
-        return $insert;
-    }
+    //     return $insert;
+    // }
 
     public function adjust_starting_value_form($item_id)
     {
@@ -2842,71 +2534,102 @@ class Accounting extends MY_Controller {
             'estimate_date' => $this->input->post('estimate_date'),
             'expiry_date' => $this->input->post('expiry_date'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
-            'estimate_type' => 'Standard',
-            // 'ship_via' => $this->input->post('ship_via'),
-            // 'ship_date' => $this->input->post('ship_date'),
-            // 'tracking_no' => $this->input->post('tracking_no'),
-            // 'ship_to' => $this->input->post('ship_to'),
-            // 'tags' => $this->input->post('tags'),
+            'status' => $this->input->post('status'),
+            'estimate_type' => 'Options',
             'attachments' => 'testing',
-            // 'message_invoice' => $this->input->post('message_invoice'),
-            // 'message_statement' => $this->input->post('message_statement'),
             'status' => $this->input->post('status'),
             'deposit_request' => $this->input->post('deposit_request'),
             'deposit_amount' => $this->input->post('deposit_amount'),
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
+            
+            'estimate_type' => 'Bundle',
+            'bundle1_message' => $this->input->post('bundle1_message'),
+            'bundle2_message' => $this->input->post('bundle2_message'),
+            'bundle1_total' => $this->input->post('bundle1_total'),
+            'bundle2_total' => $this->input->post('bundle2_total'),
+            'bundle_discount' => $this->input->post('bundle_discount'),
+            
+
             'user_id' => $user_id,
             'company_id' => $company_id,
             // 'created_by' => logged('id'),
+
+            // 'sub_total' => $this->input->post('sub_total'),
+            'deposit_request' => '$',
+            'deposit_amount' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('supergrandtotal'),//
+            
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
+            
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
         if($addQuery > 0){
-            $new_data2 = array(
-                'item_type' => $this->input->post('type'),
-                'description' => $this->input->post('desc'),
-                'qty' => $this->input->post('qty'),
-                'location' => $this->input->post('location'),
-                'cost' => $this->input->post('cost'),
-                'discount' => $this->input->post('discount'),
-                'tax' => $this->input->post('tax'),
-                'type' => '1',
-                'type_id' => $addQuery,
-                'status' => '1',
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            );
-            $a = $this->input->post('type');
-            $b = $this->input->post('desc');
-            $c = $this->input->post('qty');
-            $d = $this->input->post('location');
-            $e = $this->input->post('cost');
-            $f = $this->input->post('discount');
-            $g = $this->input->post('tax');
+            $a = $this->input->post('items');
+            $b = $this->input->post('item_type');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
 
             $i = 0;
             foreach($a as $row){
-                $data['item_type'] = $a[$i];
-                $data['description'] = $b[$i];
-                $data['qty'] = $c[$i];
-                $data['location'] = $d[$i];
-                $data['cost'] = $e[$i];
-                $data['discount'] = $f[$i];
-                $data['tax'] = $g[$i];
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
                 $data['type'] = 'Options Estimate';
                 $data['type_id'] = $addQuery;
                 $data['status'] = '1';
+                $data['estimate_type'] = 'Options';
+                $data['bundle_option_type'] = '1';
                 $data['created_at'] = date("Y-m-d H:i:s");
                 $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
                 $i++;
             }
+
+            $j = $this->input->post('items2');
+            $k = $this->input->post('item_type2');
+            $l = $this->input->post('quantity2');
+            $m = $this->input->post('price2');
+            $n = $this->input->post('discount2');
+            $o = $this->input->post('tax2');
+            $p = $this->input->post('total2');
+
+            $z = 0;
+            foreach($j as $row2){
+                $data2['item'] = $j[$z];
+                $data2['item_type'] = $k[$z];
+                $data2['qty'] = $l[$z];
+                $data2['cost'] = $m[$z];
+                $data2['discount'] = $n[$z];
+                $data2['tax'] = $o[$z];
+                $data2['total'] = $p[$z];
+                $data2['type'] = 'Options Estimate';
+                $data2['type_id'] = $addQuery;
+                $data2['status'] = '1';
+                $data2['estimate_type'] = 'Options';
+                $data2['bundle_option_type'] = '2';
+                $data2['created_at'] = date("Y-m-d H:i:s");
+                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
+                $z++;
+            }
     
-            redirect('accounting/newEstimateList');
+           redirect('accounting/newEstimateList');
         }
         else{
             echo json_encode(0);
@@ -2928,71 +2651,102 @@ class Accounting extends MY_Controller {
             'estimate_date' => $this->input->post('estimate_date'),
             'expiry_date' => $this->input->post('expiry_date'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
-            'estimate_type' => 'Standard',
-            // 'ship_via' => $this->input->post('ship_via'),
-            // 'ship_date' => $this->input->post('ship_date'),
-            // 'tracking_no' => $this->input->post('tracking_no'),
-            // 'ship_to' => $this->input->post('ship_to'),
-            // 'tags' => $this->input->post('tags'),
+            'status' => $this->input->post('status'),
+            'estimate_type' => 'Bundle',
             'attachments' => 'testing',
-            // 'message_invoice' => $this->input->post('message_invoice'),
-            // 'message_statement' => $this->input->post('message_statement'),
             'status' => $this->input->post('status'),
             'deposit_request' => $this->input->post('deposit_request'),
             'deposit_amount' => $this->input->post('deposit_amount'),
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
+            
+            'estimate_type' => 'Bundle',
+            'bundle1_message' => $this->input->post('bundle1_message'),
+            'bundle2_message' => $this->input->post('bundle2_message'),
+            'bundle1_total' => $this->input->post('bundle1_total'),
+            'bundle2_total' => $this->input->post('bundle2_total'),
+            'bundle_discount' => $this->input->post('bundle_discount'),
+            
+
             'user_id' => $user_id,
             'company_id' => $company_id,
             // 'created_by' => logged('id'),
+
+            // 'sub_total' => $this->input->post('sub_total'),
+            'deposit_request' => '$',
+            'deposit_amount' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('supergrandtotal'),//
+            
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
+            
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
         if($addQuery > 0){
-            $new_data2 = array(
-                'item_type' => $this->input->post('type'),
-                'description' => $this->input->post('desc'),
-                'qty' => $this->input->post('qty'),
-                'location' => $this->input->post('location'),
-                'cost' => $this->input->post('cost'),
-                'discount' => $this->input->post('discount'),
-                'tax' => $this->input->post('tax'),
-                'type' => '1',
-                'type_id' => $addQuery,
-                'status' => '1',
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            );
-            $a = $this->input->post('type');
-            $b = $this->input->post('desc');
-            $c = $this->input->post('qty');
-            $d = $this->input->post('location');
-            $e = $this->input->post('cost');
-            $f = $this->input->post('discount');
-            $g = $this->input->post('tax');
+            $a = $this->input->post('items');
+            $b = $this->input->post('item_type');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
 
             $i = 0;
             foreach($a as $row){
-                $data['item_type'] = $a[$i];
-                $data['description'] = $b[$i];
-                $data['qty'] = $c[$i];
-                $data['location'] = $d[$i];
-                $data['cost'] = $e[$i];
-                $data['discount'] = $f[$i];
-                $data['tax'] = $g[$i];
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
                 $data['type'] = 'Bundle Estimate';
                 $data['type_id'] = $addQuery;
                 $data['status'] = '1';
+                $data['estimate_type'] = 'Bundle';
+                $data['bundle_option_type'] = '1';
                 $data['created_at'] = date("Y-m-d H:i:s");
                 $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
                 $i++;
             }
+
+            $j = $this->input->post('items2');
+            $k = $this->input->post('item_type2');
+            $l = $this->input->post('quantity2');
+            $m = $this->input->post('price2');
+            $n = $this->input->post('discount2');
+            $o = $this->input->post('tax2');
+            $p = $this->input->post('total2');
+
+            $z = 0;
+            foreach($j as $row2){
+                $data2['item'] = $j[$z];
+                $data2['item_type'] = $k[$z];
+                $data2['qty'] = $l[$z];
+                $data2['cost'] = $m[$z];
+                $data2['discount'] = $n[$z];
+                $data2['tax'] = $o[$z];
+                $data2['total'] = $p[$z];
+                $data2['type'] = 'Bundle Estimate';
+                $data2['type_id'] = $addQuery;
+                $data2['status'] = '1';
+                $data2['estimate_type'] = 'Bundle';
+                $data2['bundle_option_type'] = '2';
+                $data2['created_at'] = date("Y-m-d H:i:s");
+                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
+                $z++;
+            }
     
-            redirect('accounting/newEstimateList');
+           redirect('accounting/newEstimateList');
         }
         else{
             echo json_encode(0);

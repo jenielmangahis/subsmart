@@ -201,6 +201,7 @@ $(document).ready(function () {
         $("#edit_attendance_name").html(user_name);
         $("#form_expected_break_duration").html(data.expected_break);
         $("#form_expected_work_hours").html(data.expected_work_hours);
+        $("#editors_footprint").html(data.footprint_text);
       },
     });
   });
@@ -280,6 +281,16 @@ $(document).ready(function () {
       }
     });
     // console.log(form_clockin_time);
+  });
+
+  $(document).on("click", "#download_to_excel", function () {
+    $.ajax({
+      url: baseURL + "/timesheet/download_attendance_sheet_logs_to_excel",
+      type: "POST",
+      dataType: "json",
+      data: { attn_id: "" },
+      success: function (data) {},
+    });
   });
 });
 

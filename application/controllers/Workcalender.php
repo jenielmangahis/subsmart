@@ -15,7 +15,7 @@ class Workcalender extends MY_Controller
 
         $this->page_data['page']->title = 'Work Calender';
         $this->page_data['page']->menu  = 'Workcalender';
-        $this->page_data['module']      = 'calendar'; 
+        $this->page_data['module']      = 'calendar';
 
         //$this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Workzone_model', 'workzone_model');
@@ -49,7 +49,7 @@ class Workcalender extends MY_Controller
             die();
         }
         $this->load->model('Event_model', 'event_model');
-        
+
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
@@ -221,9 +221,9 @@ class Workcalender extends MY_Controller
            $get_recent_users = $this->Users_model->getAllRecentUsers();
         }else{
            $get_users  = $this->Users_model->getUsers();
-           $get_recent_users = $this->Users_model->getAllUsersByCompany($company_id); 
+           $get_recent_users = $this->Users_model->getAllUsersByCompany($company_id);
         }
-        
+
         $resources_users = array();
         $resources_user_events = array();
 
@@ -234,7 +234,7 @@ class Workcalender extends MY_Controller
                 $default_imp_img = userProfileImage($get_user->id);
 
                 /*if( $get_user->profile_img != null ) {
-                        $default_imp_img = base_url('uploads/users/'.$get_user->profile_img ."." . $get_user->img_type );                     
+                        $default_imp_img = base_url('uploads/users/'.$get_user->profile_img ."." . $get_user->img_type );
                 } else {
                     $default_imp_img = base_url('uploads/users/default.png');
                 }*/
@@ -242,8 +242,8 @@ class Workcalender extends MY_Controller
                 $resources_users[$inc]['id'] = "user" . $get_user->id;
                 $resources_users[$inc]['building'] = 'Employee';
                 $resources_users[$inc]['title'] = "#" . $get_user->id . " " . $get_user->FName . " " . $get_user->LName;
-                $resources_users[$inc]['imageurl'] = $default_imp_img; 
-            $inc++;               
+                $resources_users[$inc]['imageurl'] = $default_imp_img;
+            $inc++;
             }
         }
 
@@ -269,19 +269,19 @@ class Workcalender extends MY_Controller
                         $resources_user_events[$inc]['start'] = $start_date_time;
                         $resources_user_events[$inc]['end'] = $start_date_end;
                         $resources_user_events[$inc]['eventColor'] = $event->event_color;
-                    $inc++; 
+                    $inc++;
                     }
-                   
+
                 }
             }
-        }  
+        }
 
         $enabled_calendar = array();
         $enabled_mini_calendar = array();
         $calendar_list    = array();
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
         if( $google_user_api ){
-            $google_credentials = google_credentials();        
+            $google_credentials = google_credentials();
 
             $access_token = "";
             $refresh_token = "";
@@ -303,8 +303,8 @@ class Workcalender extends MY_Controller
 
             if(isset($google_credentials['client_secret'])) {
                 $google_secrect = $google_credentials['client_secret'];
-            }    
-            
+            }
+
             //Set Client
             $client = new Google_Client();
             $client->setClientId($google_client_id);
@@ -324,21 +324,21 @@ class Workcalender extends MY_Controller
             $calendar     = new Google_Service_Calendar($client);
             $data = $calendar->calendarList->listCalendarList();
 
-            $calendar_list = $data->getItems(); 
+            $calendar_list = $data->getItems();
             $email = $google_user_api->google_email;
             $enabled_calendar = unserialize($google_user_api->enabled_calendars);
             $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);
-        }   
+        }
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
 
         $this->load->model('Users_model', 'user_model');
-        
+
         $this->page_data['settings'] = $settings;
         $this->page_data['enabled_calendar'] = $enabled_calendar;
         $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
         $this->page_data['get_recent_users'] = $get_recent_users;
-        
+
         $this->page_data['resources_users'] = $resources_users;
         $this->page_data['resources_user_events'] = $resources_user_events;
         $this->page_data['is_mobile'] = $is_mobile;
@@ -346,6 +346,9 @@ class Workcalender extends MY_Controller
 
         $this->page_data['calendar_list'] = $calendar_list;
 
+    		$cid  = logged('id');
+    		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+    		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
         $this->load->view('workcalender/calender', $this->page_data);
     }
 
@@ -808,7 +811,7 @@ class Workcalender extends MY_Controller
         	$company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
         }
-        
+
         $this->page_data['events'] = array();
 
         // setting of the calender
@@ -866,9 +869,9 @@ class Workcalender extends MY_Controller
         }*/
 
         if( $role == 1 || $role == 2 ){
-           $events = $this->event_model->getAllEvents(); 
+           $events = $this->event_model->getAllEvents();
         }else{
-           $events = $this->event_model->getAllByCompany($company_id); 
+           $events = $this->event_model->getAllByCompany($company_id);
         }
 
         /*if ($role == 4) {
@@ -890,7 +893,7 @@ class Workcalender extends MY_Controller
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
-        if(!empty($events)) {    
+        if(!empty($events)) {
             foreach($events as $event) {
                 if( $event->event_description != '' ){
                    if($event->employee_id > 0) {
@@ -911,7 +914,7 @@ class Workcalender extends MY_Controller
 
                         if( isset($a_settings['work_order_show_link']) ){
                             $custom_html .= "<br /><small><a href='".$event->url_link."'>".$event->url_link."</a></small>";
-                        } 
+                        }
 
                         if( isset($a_settings['work_order_show_price']) ){
                             $eventItems = $this->event_model->get_specific_event_items($event->id);
@@ -922,7 +925,7 @@ class Workcalender extends MY_Controller
 
                             $custom_html .= "<br /><small>Price : ". number_format((float)$total_price,2,'.',',') . "</small>";
 
-                        }  
+                        }
 
                         $resources_user_events[$inc]['eventId'] = $event->id;
                         $resources_user_events[$inc]['eventType'] = 'events';
@@ -945,10 +948,10 @@ class Workcalender extends MY_Controller
                             $resources_user_events[$inc]['start'] = $start_date_time;
                             $resources_user_events[$inc]['end'] = $start_date_end;
                             $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-                        $inc++; 
+                        $inc++;
                         }
-                       
-                    }*/ 
+
+                    }*/
                 }
             }
         }
@@ -958,7 +961,7 @@ class Workcalender extends MY_Controller
         $calendar_list    = array();
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
         if( $google_user_api ){
-            $google_credentials = google_credentials();        
+            $google_credentials = google_credentials();
 
             $access_token = "";
             $refresh_token = "";
@@ -980,8 +983,8 @@ class Workcalender extends MY_Controller
 
             if(isset($google_credentials['client_secret'])) {
                 $google_secrect = $google_credentials['client_secret'];
-            }    
-            
+            }
+
             //Set Client
             $client = new Google_Client();
             $client->setClientId($google_client_id);
@@ -1001,7 +1004,7 @@ class Workcalender extends MY_Controller
             $calendar     = new Google_Service_Calendar($client);
             $data = $calendar->calendarList->listCalendarList();
 
-            $calendar_list = $data->getItems(); 
+            $calendar_list = $data->getItems();
             $email = $google_user_api->google_email;
             $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
 
@@ -1020,10 +1023,10 @@ class Workcalender extends MY_Controller
                         $bgcolor = $cl->backgroundColor;
                     }
 
-                    foreach( $events->items as $event ){  
+                    foreach( $events->items as $event ){
 
                         $gevent = $this->event_model->getEventByGoogleEventId($event->id);
-                        
+
                         if( empty($gevent) ){
 
                             if( $event->start->timeZone != '' ){
@@ -1054,7 +1057,7 @@ class Workcalender extends MY_Controller
                             }else{
                                 $date = new DateTime($event->end->date);
                                 $date->setTimezone($tz);
-                                
+
                                 $end_date = $date->format('Y-m-d H:i:s');
                             }
 
@@ -1128,14 +1131,14 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
 
                 $inc++;
-            } 
+            }
         }
 
         echo json_encode($resources_user_events);
     }
 
     public function ajax_create_google_event()
-    {   
+    {
         $this->load->model('Event_model', 'event_model');
 
         $post = $this->input->post();
@@ -1147,9 +1150,9 @@ class Workcalender extends MY_Controller
         if( $post['gevent_name'] != '' && $post['gevent_date_from'] != '' && $post['gevent_date_to'] != '' && $post['gevent_start_time'] != '' && $post['gevent_end_time'] != '' ){
             $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
             if( $google_user_api ){
-                $google_credentials = google_credentials();        
+                $google_credentials = google_credentials();
 
-                $google_credentials = google_credentials();        
+                $google_credentials = google_credentials();
 
                 $access_token = "";
                 $refresh_token = "";
@@ -1171,8 +1174,8 @@ class Workcalender extends MY_Controller
 
                 if(isset($google_credentials['client_secret'])) {
                     $google_secrect = $google_credentials['client_secret'];
-                }    
-                
+                }
+
                 //Set Client
                 $client = new Google_Client();
                 $client->setClientId($google_client_id);
@@ -1246,7 +1249,7 @@ class Workcalender extends MY_Controller
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message 
+            'message' => $message
         ];
 
         echo json_encode($json_data);
@@ -1262,7 +1265,7 @@ class Workcalender extends MY_Controller
         if( $post['gcalendar_name'] != '' ){
             $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
             if( $google_user_api ){
-                $google_credentials = google_credentials();        
+                $google_credentials = google_credentials();
 
                 $access_token = "";
                 $refresh_token = "";
@@ -1284,8 +1287,8 @@ class Workcalender extends MY_Controller
 
                 if(isset($google_credentials['client_secret'])) {
                     $google_secrect = $google_credentials['client_secret'];
-                }    
-                
+                }
+
                 //Set Client
                 $client = new Google_Client();
                 $client->setClientId($google_client_id);
@@ -1311,7 +1314,7 @@ class Workcalender extends MY_Controller
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message 
+            'message' => $message
         ];
 
         echo json_encode($json_data);
@@ -1348,7 +1351,7 @@ class Workcalender extends MY_Controller
         }
 
         if( $google_user_api ){
-            $google_credentials = google_credentials();        
+            $google_credentials = google_credentials();
 
             $access_token = "";
             $refresh_token = "";
@@ -1370,8 +1373,8 @@ class Workcalender extends MY_Controller
 
             if(isset($google_credentials['client_secret'])) {
                 $google_secrect = $google_credentials['client_secret'];
-            }    
-            
+            }
+
             //Set Client
             $client = new Google_Client();
             $client->setClientId($google_client_id);
@@ -1391,9 +1394,9 @@ class Workcalender extends MY_Controller
             $calendar     = new Google_Service_Calendar($client);
             $data = $calendar->calendarList->listCalendarList();
 
-            $calendar_list = $data->getItems(); 
+            $calendar_list = $data->getItems();
             $email = $google_user_api->google_email;
-            $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);            
+            $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
             foreach( $calendar_list as $cl ){
                 if(in_array($cl['id'], $enabled_mini_calendar)){
                     //Display in events
@@ -1409,10 +1412,10 @@ class Workcalender extends MY_Controller
                         $bgcolor = $cl->backgroundColor;
                     }
 
-                    foreach( $events->items as $event ){  
+                    foreach( $events->items as $event ){
 
                         $gevent = $this->event_model->getEventByGoogleEventId($event->id);
-                        
+
                         if( empty($gevent) ){
                             if( $event->start->timeZone != '' ){
                                 $tz = new DateTimeZone($event->start->timeZone);
@@ -1442,7 +1445,7 @@ class Workcalender extends MY_Controller
                             }else{
                                 $date = new DateTime($event->end->date);
                                 $date->setTimezone($tz);
-                                
+
                                 $end_date = $date->format('Y-m-d H:i:s');
                             }
 
@@ -1474,7 +1477,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Event_model', 'event_model', 'settings_model');
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
-        if( $settings[0] ){              
+        if( $settings[0] ){
             date_default_timezone_set($settings['calendar_timezone']);
         }
 
@@ -1482,7 +1485,7 @@ class Workcalender extends MY_Controller
         if( $role_id == 1 || $role_id == 2 ){
             $upcoming_events = $this->event_model->getAllUpComingEvents();
         }else{
-            $company_id = logged('company_id');            
+            $company_id = logged('company_id');
             $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
         }
 
@@ -1501,7 +1504,7 @@ class Workcalender extends MY_Controller
         $calendar_list    = array();
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
         if( $google_user_api ){
-            $google_credentials = google_credentials();        
+            $google_credentials = google_credentials();
 
             $access_token = "";
             $refresh_token = "";
@@ -1523,8 +1526,8 @@ class Workcalender extends MY_Controller
 
             if(isset($google_credentials['client_secret'])) {
                 $google_secrect = $google_credentials['client_secret'];
-            }    
-            
+            }
+
             //Set Client
             $client = new Google_Client();
             $client->setClientId($google_client_id);
@@ -1544,7 +1547,7 @@ class Workcalender extends MY_Controller
             $calendar     = new Google_Service_Calendar($client);
             $data = $calendar->calendarList->listCalendarList();
 
-            $calendar_list = $data->getItems(); 
+            $calendar_list = $data->getItems();
             $email = $google_user_api->google_email;
 
             $start_date = date("Y-m-d");
@@ -1561,17 +1564,17 @@ class Workcalender extends MY_Controller
             );
 
             foreach( $calendar_list as $cl ){
-                //Display in events                
+                //Display in events
                 $events = $calendar->events->listEvents($cl['id'],$optParams);
                 $bgcolor = "#38a4f8";
                 if( $cl->backgroundColor != '' ){
                     $bgcolor = $cl->backgroundColor;
                 }
 
-                foreach( $events->items as $event ){  
+                foreach( $events->items as $event ){
 
                     $gevent = $this->event_model->getEventByGoogleEventId($event->id);
-                    
+
                     if( empty($gevent) ){
 
                         if( $event->start->timeZone != '' ){
@@ -1602,7 +1605,7 @@ class Workcalender extends MY_Controller
                         }else{
                             $date = new DateTime($event->end->date);
                             $date->setTimezone($tz);
-                            
+
                             $end_date = $date->format('Y-m-d H:i:s');
                         }
 
@@ -1673,9 +1676,9 @@ class Workcalender extends MY_Controller
         $this->load->model('GoogleAccounts_model');
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
         if( $google_user_api ){
-            $google_credentials = google_credentials();        
+            $google_credentials = google_credentials();
 
-            $google_credentials = google_credentials();        
+            $google_credentials = google_credentials();
 
             $access_token = "";
             $refresh_token = "";
@@ -1697,8 +1700,8 @@ class Workcalender extends MY_Controller
 
             if(isset($google_credentials['client_secret'])) {
                 $google_secrect = $google_credentials['client_secret'];
-            }    
-            
+            }
+
             //Set Client
             $client = new Google_Client();
             $client->setClientId($google_client_id);

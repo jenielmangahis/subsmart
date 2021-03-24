@@ -1486,7 +1486,7 @@ const getTagForm = (data = {}, method) => {
         $('#tags-modal #tagGroup').select2({
             dropdownParent: $('#tags-modal'),
             ajax: {
-                url: '/accounting/get-group-tags',
+                url: '/accounting/tags/get-group-tags',
                 dataType: 'json'
             }
         });

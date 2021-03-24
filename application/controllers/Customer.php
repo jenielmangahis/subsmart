@@ -1035,6 +1035,7 @@ class Customer extends MY_Controller
                      //print_r($csvData);
                     if (!empty($csvData)) {
                         foreach ($csvData as $row) {
+                            //print_r($row);
                             $rowCount++;
                             $input_profile = array(
                                 'fk_user_id' => logged('id'),
@@ -1049,12 +1050,14 @@ class Customer extends MY_Controller
                                 'state' => $row['State'],
                                 'zip_code' => $row['Zip'],
                                 'country' => 'USA',
+                                'company_id' => logged('company_id'),
                             );
                             if(!empty( $row['FirstName']) && !empty( $row['LastName'])) {
                                 $check_user = array(
                                     'where' => array(
                                         'first_name' => $row['FirstName'],
                                         'last_name' => $row['LastName'],
+                                        'company_id' => logged('company_id'),
                                     ),
                                     'returnType' => 'count'
                                 );
@@ -1112,12 +1115,24 @@ class Customer extends MY_Controller
                                             'credit_score' => $score2,
                                         );
 
-                                        $input_billing = array(
-                                            'fk_prof_id' => $fk_prod_id,
-                                            'mmr' => $row['MonthlyMonitoringRate'],
-                                            'contract_term' => $row['ContractTerm'],
-
-                                        );
+                                        if(logged('company_id') == 2){
+                                            $input_billing = array(
+                                                'fk_prof_id' => $fk_prod_id,
+                                                'mmr' => $row['MonthlyMonitoringRate'],
+                                                'contract_term' => $row['ContractTerm'],
+                                                'routing_num' => $row['Routing#'],
+                                                'acct_num' => $row['Acct#'],
+                                                'credit_card_num' => $row['CC#'],
+                                                'credit_card_exp' => $row['Exp date'],
+                                                'ach_date' => $row['Ach date'],
+                                            );
+                                        }else{
+                                            $input_billing = array(
+                                                'fk_prof_id' => $fk_prod_id,
+                                                'mmr' => $row['MonthlyMonitoringRate'],
+                                                'contract_term' => $row['ContractTerm'],
+                                            );
+                                        }
 
                                         $this->customer_ad_model->add($input_alarm,"acs_alarm");
                                         $this->customer_ad_model->add($input_office,"acs_office");

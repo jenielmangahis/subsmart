@@ -20,12 +20,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
    </style>
 
     <!-- page wrapper start -->
-    <div wrapper__section>
+    <div wrapper__section style="margin-top:2%;padding-left:1.5%;">
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Submit Bundle Estimate</h1>
+                        <h4 style="font-family: Sarabun, sans-serif">Submit Bundle Estimate</h4>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
                                 for this job.
@@ -55,7 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('estimate/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('estimate/savenewestimateBundle', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <style>
 
             </style>
@@ -85,7 +85,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a>
+                                    <!-- <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a> -->
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
@@ -99,39 +99,51 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
-                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date"
+                                    <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
                                            required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
-                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
+                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date"
+                                           required placeholder="Enter Estimate#"  value="<?php echo "EST-"; 
+                                           foreach ($number as $num):
+                                                $next = $num->estimate_number;
+                                                $arr = explode("-", $next);
+                                                $date_start = $arr[0];
+                                                $nextNum = $arr[1];
+                                            //    echo $number;
+                                           endforeach;
+                                           $val = $nextNum + 1;
+                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
+                                           ?>" />
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="estimate_date" id="estimate_date"
+                                    <!-- <div class="input-group date" data-provide="datepicker"> -->
+                                        <input type="date" class="form-control" name="estimate_date" id="start_date_"
                                                placeholder="Enter Estimate Date">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-3">
                                     <label for="expiry_date" class="required"><b>Expiry Date</b></label>
                                     <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                    <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="expiry_date" id="expiry_date"
+                                    <!-- <div class="input-group date" data-provide="datepicker"> -->
+                                        <input type="date" class="form-control" name="expiry_date" id="end_date_"
                                                placeholder="Enter Expiry Date">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                             </div>
                             
                             <div class="row" style="background-color:white;">
                                     <div class="col-md-3">
-                                        <label for="purchase_order_number" class="required"><b>Purchase Order#</b></label>
+                                        <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
-                                            id="purchase_order_number" required placeholder="Enter Purchase Order#"
+                                            id="purchase_order_number" placeholder="Enter Purchase Order#"
                                             autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                     </div>
                                 <!-- </div>
@@ -154,29 +166,48 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
-                                        <thead>
+                                        <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Bundle-1 Items</b></th>
-                                            <th><b>Quantity</b></th>
-                                            <th><b>Price</b></th>
-                                            <th><b>Total</b></th>
+                                            <th><b>Type</b></th>
+                                            <th width="100px"><b>Quantity</b></th>
+                                            <th width="100px"><b>Price</b></th>
+                                            <th width="100px"><b>Discount</b></th>
+                                            <th width="150px"><b>Tax (Change in %)</b></th>
+                                            <th width="100px"><b>Total</b></th>
                                         </tr>
                                         </thead>
                                         <tbody id="table_body_bundle1">
                                         <tr>
+                                        <td>
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
+                                            </td>
                                             <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
+                                            <td><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control" name="price[]"></td>
-                                            <td><span id="span_total_0">0.00</span></td>
+                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
+                                            <td><input type="number" class="form-control price" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                            <td><input type="text" class="form-control tax_changeoptions" name="tax[]"
+                                                       data-counter="0" id="tax_1_0" min="0" value="0">
+                                                       <!-- <span id="tax_111_0">0.00</span></td> -->
+                                            <td><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" id="add_another_bundle1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a>
+                                    <!-- <a href="#" id="add_another_bundle1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add another line</a>
                                 </div>
                             </div>
 
@@ -188,22 +219,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>$0.00</td>
+                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
+                                                <input type="hidden" name="sub_total" id="item_total"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$0.00</td>
+                                            <td>$ <span id="total_tax_">0.00<input type="hidden" name="total_tax_" id="total_tax_"></td>
                                         </tr>
                                         <tr>
-                                            <td>Adjustments</td>
-                                            <td></td>
-                                            <td>$0.00</td>
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:150px;">
+                                            <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </td>
+                                            <td>0.00</td>
                                         </tr>
                                         <tr>
                                             <td><b>Bundle-1 Total</b></td>
                                             <td></td>
-                                            <td><b>$0.00</b></td>
+                                            <td><b><span id="grand_total">0.00</span>
+                                                <input type="hidden" name="bundle1_total" id="grandtotal_input" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -214,7 +250,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
                                 <div class="col-md-5 table-responsive">
                                     <label for="option1_m"><h6>Bundle 1 Message</h6></label>
-                                    <textarea name="option1_message" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="bundle1_message" cols="40" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
 
@@ -222,29 +258,47 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
-                                        <thead>
+                                        <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Bundle-2 Items</b></th>
-                                            <th><b>Quantity</b></th>
-                                            <th><b>Price</b></th>
-                                            <th><b>Total</b></th>
+                                            <th><b>Type</b></th>
+                                            <th width="100px"><b>Quantity</b></th>
+                                            <th width="100px"><b>Price</b></th>
+                                            <th width="100px"><b>Discount</b></th>
+                                            <th width="150px"><b>Tax (Change in %)</b></th>
+                                            <th width="100px"><b>Total</b></th>
                                         </tr>
                                         </thead>
                                         <tbody id="table_body_bundle2">
                                         <tr>
-                                            <td><select name="item_type[]" class="form-control">
+                                        <td>
+                                                <input type="text" class="form-control getItems2"
+                                                       onKeyup="getItemsOption2(this)" name="items2[]">
+                                                <ul class="suggestions"></ul>
+                                            </td>
+                                            <td><select name="item_type2[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control" name="price[]"></td>
-                                            <td><span id="span_total_0">0.00</span></td>
+                                            <td><input type="number" class="form-control quantity2" name="quantity2[]"
+                                                       data-counter="0" id="quantity2_0" value="1"></td>
+                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
+                                            <td><input type="number" class="form-control price2" name="price2[]"
+                                                       data-counter="0" id="price2_0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control discount2" name="discount2[]"
+                                                       data-counter="0" id="discount2_0" min="0" value="0" readonly></td>
+                                            <td><input type="text" class="form-control tax_changeoptionsb" name="tax2[]"
+                                                       data-counter="0" id="tax2_1_0" min="0" value="0"></td>
+                                            <td><input type="hidden" class="form-control " name="total2[]"
+                                                       data-counter="0" id="item_total2_0" min="0" value="0">
+                                                       $<span id="span_total2_0">0.00</span></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <a href="#" id="add_another_bundle2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a>
+                                    <!-- <a href="#" id="add_another_bundle2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list2" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add another line</a>
                                 </div>
                             </div>
 
@@ -256,32 +310,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>$0.00</td>
+                                            <td>$ <span id="span_sub_total_invoice2">0.00</span>
+                                                <input type="hidden" name="sub_total2" id="item_total2"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$0.00</td>
+                                            <td>$ <span id="total_tax2_">0.00<input type="hidden" name="total_tax2_" id="total_tax2_"></td>
                                         </tr>
-                                        <tr>
-                                            <td>Adjustments</td>
-                                            <td></td>
-                                            <td>$0.00</td>
+                                        <tr style="display:none;">
+                                            <td>Markup $<span id="span_markup"></td>
+                                            <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
+                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
                                         </tr>
                                         <tr>
                                             <td>Bundle Discount</td>
-                                            <td></td>
-                                            <td style="width:100px;"><input type="text" class="form-control" placeholder="0"></td>
+                                            <td align="right">$</td>
+                                            <td style="width:100px;"><input type="number" name="bundle_discount" class="form-control"></td>
                                         </tr>
                                         <tr>
                                             <td><b>Bundle-2 Total</b></td>
                                             <td></td>
-                                            <td><b>$0.00</b></td>
+                                            <td><b><span id="grand_total2">0.00</span><input type="hidden" name="bundle2_total" id="grand_total_input2" value='0'></b></td>
                                         </tr>
                                         <tr>
                                             <td><b>Grand Total</b></td>
                                             <td></td>
-                                            <td><b>$0.00</b></td>
+                                            <td><b><span id="supergrandtotal">0.00</span>
+                                                <input type="hidden" name="supergrandtotal" id="supergrandtotal_input" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -292,7 +348,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
                                 <div class="col-md-5 table-responsive">
                                     <label for="option2_m"><h6>Bundle 2 Message</h6></label>
-                                    <textarea name="option2_message" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="bundle2_message" cols="40" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
                             <br><br>
@@ -310,6 +366,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 form-group">
                                     <div class="input-group">
                                         <!-- <div class="input-group-addon bold">$</div> -->
+                                        <!-- <label><h4>$</h4></label> -->
                                         <input type="text" name="deposit_amount" value="0" class="form-control"
                                                autocomplete="off">
                                     </div>
@@ -411,6 +468,102 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="item_list2" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate_option2" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item2">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -473,4 +626,1119 @@ defined('BASEPATH') or exit('No direct script access allowed');
             .val(customer_id) //select option of select2
             .trigger("change"); //apply to select2*/
     });
+</script>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script>
+function initialize() {
+          var input = document.getElementById('job_location');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                document.getElementById('city2').value = place.name;
+                document.getElementById('cityLat').value = place.geometry.location.lat();
+                document.getElementById('cityLng').value = place.geometry.location.lng();
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('#sel-customer').change(function(){
+    var id  = $(this).val();
+    // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){
+                // alert('success');
+                // console.log(response['customer']);
+            $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#customer_email").val(response['customer'].email);
+            $("#shipping_address").val(response['customer'].mail_add);
+            $("#billing_address").val(response['customer'].mail_add);
+        
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+    });
+
+    $(document).on('click','.setmarkup',function(){
+       // alert('yeah');
+        var markup_amount = $('#markup_input').val();
+
+        $("#markup_input_form").val(markup_amount);
+        $("#span_markup_input_form").text(markup_amount);
+        $("#span_markup").text(markup_amount);
+
+        $('#modalSetMarkup').modal('toggle');
+    });
+});
+
+</script>
+
+<script>
+$(".select_item").click(function () {
+            var idd = this.id;
+            console.log(idd);
+            console.log($(this).data('itemname'));
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
+            // var qty = $(this).data('quantity');
+            if(!$(this).data('quantity')){
+              // alert($(this).data('quantity'));
+              var qty = 0;
+            }else{
+              // alert('0');
+              var qty = $(this).data('quantity');
+            }
+
+            var count = parseInt($("#count").val()) + 1;
+            $("#count").val(count);
+            var total_ = price * qty;
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            total = '$' + withCommas + '.00';
+            // console.log(total);
+            // alert(total);
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
+                "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" class=\"form-control qtyest\"></td>\n" +
+                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+                "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\"  id='discount_"+idd+"'></td>\n" +
+                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\"><input type=\"text\"  data-itemid='"+idd+"' class=\"form-control tax_changeoptions2\" name=\"tax[]\" data-counter=\"0\"  id='tax_1_"+idd+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' test=\"test\" id='span_total_"+idd+"' class=\"total_per_item\">"+total+
+                "</span><input type=\"hidden\" name=\"total[]\" id='item_total_"+idd+"' value='"+total+"'></td>" +
+                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+                "</tr>";
+            tableBody = $("#table_body_bundle1");
+            tableBody.append(markup);
+            markup2 = "<tr id=\"sss\">" +
+                "<td >"+title+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >"+price+"</td>\n" +
+                "<td ></td>\n" +
+                "<td >"+qty+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >0</td>\n" +
+                "<td ></td>\n" +
+                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
+                "</tr>";
+            tableBody2 = $("#device_audit_datas");
+            tableBody2.append(markup2);
+            // calculate_subtotal();
+
+  var in_id = idd;
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+//   alert( 'yeah' + tax1);
+
+  $("#span_total_" + in_id).text(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax_11_" + in_id).val(tax1);
+  $("#discount_" + in_id).val(discount);
+
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total_'+ in_id).length ){
+    $('#item_total_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltaxx = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltaxx += parseFloat($(this).val());
+  });
+
+//   alert(subtotaltaxx);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_").text(subtotaltaxx.toFixed(2));
+  $("#total_tax_").val(subtotaltaxx.toFixed(2));
+  
+
+  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+//   alert(super_grand);
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+
+        });
+
+$(".select_item2").click(function () {
+            var idd = this.id;
+            console.log(idd);
+            console.log($(this).data('itemname'));
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
+            var qty = $(this).data('quantity');
+
+            var count = parseInt($("#count").val()) + 1;
+            $("#count").val(count);
+            var total_ = price * qty;
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            total = '$' + withCommas + '.00';
+            // console.log(total);
+            // alert(total);
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items2[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id2[]\"></td>\n" +
+                "<td width=\"20%\"><select name=\"item_type2[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity2_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity2[]\" class=\"form-control qtyest2\"></td>\n" +
+                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+                "<td width=\"10%\"><input id='price2_"+idd+"' value='"+price+"'  type=\"number\" name=\"price2[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount2[]\" class=\"form-control discount2\"  id='discount2_"+idd+"'></td>\n" +
+                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_changeoptions2b\" name=\"tax2[]\" data-counter=\"0\"  id='tax2_1_"+idd+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total2_"+idd+"' class=\"total_per_item2\">"+total+
+                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+                "</span><input type=\"hidden\" name=\"total2[]\" id='item_total2_"+idd+"' value='"+total+"'></td>" +
+                "</tr>";
+            tableBody = $("#table_body_bundle2");
+            tableBody.append(markup);
+            markup2 = "<tr id=\"sss\">" +
+                "<td >"+title+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >"+price+"</td>\n" +
+                "<td ></td>\n" +
+                "<td >"+qty+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >0</td>\n" +
+                "<td ></td>\n" +
+                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
+                "</tr>";
+            tableBody2 = $("#device_audit_datas");
+            tableBody2.append(markup2);
+            // calculate_subtotal();
+
+  var in_id = idd;
+  var price = $("#price2_" + in_id).val();
+  var quantity = $("#quantity2_" + in_id).val();
+  var discount = $("#discount2_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+//   alert( 'yeah' + tax1);
+
+  $("#span_total2_" + in_id).text(total);
+  $("#tax2_1_" + in_id).text(tax1);
+  $("#tax2_11_" + in_id).val(tax1);
+  $("#discount2_" + in_id).val(discount);
+
+  if( $('#tax2_1_'+ in_id).length ){
+    $('#tax2_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total2_'+ in_id).length ){
+    $('#item_total2_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price2_" + p).val();
+    var quantity = $("#quantity2_" + p).val();
+    var discount = $("#discount2_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total2_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltaxx = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax2_1_"]').each(function(){
+      subtotaltaxx += parseFloat($(this).val());
+  });
+
+//   alert(subtotaltaxx);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+  $("#item_total2").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax2_").text(subtotaltaxx.toFixed(2));
+  $("#total_tax2_").val(subtotaltaxx.toFixed(2));
+  
+
+  $("#grand_total2").text(grand_total_w.toFixed(2));
+  $("#grand_total_input2").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+  
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+  
+  
+        });
+
+        // $("body").delegate(".qtyest", "keyup", function(){
+        //     //console.log( "Handler for .keyup() called." );
+        //     var id = this.id;
+        //     var qty=this.value;
+        //     var cost = $('#price'+id).val();
+        //     var new_sub_total = Number(qty) * Number(cost);
+        //     $('#sub_total'+id).data('subtotal',new_sub_total);
+        //     $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
+        //     calculate_subtotal();
+        // });
+    $(document).on("focusout", ".qtyest", function () {
+        
+        var id = this.id;
+        var in_id = $(this).attr('data-itemid');
+            var qty=this.value;
+            var cost = $('#price_'+in_id).val();
+            var new_sub_total = Number(qty) * Number(cost);
+            var new_sub_total_val = Number(qty) * Number(cost);
+            var tax = '0.075';
+            // var new_sub_total_tax =  new_sub_total * tax;
+            var new_sub_total_tax = (parseFloat(new_sub_total) * 7.5) / 100;
+            var new_sub_total_w_tax =  (parseFloat(new_sub_total_tax) + parseFloat(new_sub_total));
+            // $('#sub_total'+id).data('subtotal',new_sub_total);
+            // $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
+            // alert(new_sub_total_w_tax);
+            $("#item_total_"+in_id).text(new_sub_total_w_tax.toFixed(2));
+            $("#item_total_"+in_id).val(new_sub_total_w_tax.toFixed(2));
+            // $(".total_per_item").text(new_sub_total_tax.toFixed(2));
+            // var counter = $(this).data("counter");
+            // var counter = jQuery(obj)
+            // .parent()
+            // .parent()
+            // .parent()
+            // .find(".price")
+            // .data("counter");
+            // calculate_subtotal();
+            // calculation(counter);
+
+            //   var in_id = id;
+            var price = $("#price_" + in_id).val();
+            var quantity = $("#quantity_" + in_id).val();
+            var discount = $("#discount_" + in_id).val();
+            var tax = (parseFloat(price) * 7.5) / 100;
+            var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+                2
+            );
+            if( discount == '' ){
+                discount = 0;
+            }
+            
+            var total = (
+                (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+                parseFloat(discount)
+            ).toFixed(2);
+
+            //   alert( 'yeah' + tax1);
+
+            $("#span_total_" + in_id).text(total);
+            $("#tax_1_" + in_id).text(tax1);
+            $("#tax_11_" + in_id).val(tax1);
+            $("#discount_" + in_id).val(discount);
+
+            if( $('#tax_1_'+ in_id).length ){
+                $('#tax_1_'+in_id).val(tax1);
+            }
+
+            if( $('#item_total_'+ in_id).length ){
+                $('#item_total_'+in_id).val(total);
+            }
+
+            var eqpt_cost = 0;
+            var cnt = $("#count").val();
+            var total_discount = 0;
+            for (var p = 0; p <= cnt; p++) {
+                var prc = $("#price_" + p).val();
+                var quantity = $("#quantity_" + p).val();
+                var discount = $("#discount_" + p).val();
+                // var discount= $('#discount_' + p).val();
+                // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+                eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+                total_discount += parseFloat(discount);
+            }
+            //   var subtotal = 0;
+            // $( total ).each( function(){
+            //   subtotal += parseFloat( $( this ).val() ) || 0;
+            // });
+
+            eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+            total_discount = parseFloat(total_discount).toFixed(2);
+            // var test = 5;
+
+            var subtotal = 0;
+            // $("#span_total_0").each(function(){
+                $('*[id^="span_total_"]').each(function(){
+                subtotal += parseFloat($(this).text());
+            });
+            // $('#sum').text(subtotal);
+
+            var subtotaltaxx = 0;
+            // $("#span_total_0").each(function(){
+                $('*[id^="tax_1_"]').each(function(){
+                subtotaltaxx += parseFloat($(this).val());
+            });
+
+            //   alert(subtotaltaxx);
+
+            $("#eqpt_cost").val(eqpt_cost);
+            $("#total_discount").val(total_discount);
+            $("#span_sub_total_0").text(total_discount);
+            $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+            $("#item_total").val(subtotal.toFixed(2));
+            
+            var s_total = subtotal.toFixed(2);
+            var adjustment = $("#adjustment_input").val();
+            var grand_total = s_total - parseFloat(adjustment);
+            var markup = $("#markup_input_form").val();
+            var grand_total_w = grand_total + parseFloat(markup);
+
+            $("#total_tax_").text(subtotaltaxx.toFixed(2));
+            $("#total_tax_").val(subtotaltaxx.toFixed(2));
+            
+
+            $("#grand_total").text(grand_total_w.toFixed(2));
+            $("#grand_total_input").val(grand_total_w.toFixed(2));
+            $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+            var bundle1_total = $("#grand_total").text();
+            var bundle2_total = $("#grand_total2").text();
+            var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+            $("#supergrandtotal").text(super_grand.toFixed(2));
+            $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+
+            var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+            sls = parseFloat(sls).toFixed(2);
+            $("#sales_tax").val(sls);
+            cal_total_due();
+        });
+
+    $(document).on("focusout", ".qtyest2", function () {
+        // alert('two');
+        var id = this.id;
+        var in_id = $(this).attr('data-itemid');
+            var qty=this.value;
+            var cost = $('#price_'+in_id).val();
+            var new_sub_total = Number(qty) * Number(cost);
+            var new_sub_total_val = Number(qty) * Number(cost);
+            var tax = '0.075';
+            // var new_sub_total_tax =  new_sub_total * tax;
+            var new_sub_total_tax = (parseFloat(new_sub_total) * 7.5) / 100;
+            var new_sub_total_w_tax =  (parseFloat(new_sub_total_tax) + parseFloat(new_sub_total));
+            // $('#sub_total'+id).data('subtotal',new_sub_total);
+            // $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
+            // alert(new_sub_total_w_tax);
+            $("#item_total_"+in_id).text(new_sub_total_w_tax.toFixed(2));
+            $("#item_total_"+in_id).val(new_sub_total_w_tax.toFixed(2));
+            // $(".total_per_item").text(new_sub_total_tax.toFixed(2));
+            // var counter = $(this).data("counter");
+            // var counter = jQuery(obj)
+            // .parent()
+            // .parent()
+            // .parent()
+            // .find(".price")
+            // .data("counter");
+            // calculate_subtotal();
+            // calculation(counter);
+
+            // var in_id = idd;
+            var price = $("#price2_" + in_id).val();
+            var quantity = $("#quantity2_" + in_id).val();
+            var discount = $("#discount2_" + in_id).val();
+            var tax = (parseFloat(price) * 7.5) / 100;
+            var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+                2
+            );
+            if( discount == '' ){
+                discount = 0;
+            }
+            
+            var total = (
+                (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+                parseFloat(discount)
+            ).toFixed(2);
+
+            //   alert( 'yeah' + tax1);
+
+            $("#span_total2_" + in_id).text(total);
+            $("#tax2_1_" + in_id).text(tax1);
+            $("#tax2_11_" + in_id).val(tax1);
+            $("#discount2_" + in_id).val(discount);
+
+            if( $('#tax2_1_'+ in_id).length ){
+                $('#tax2_1_'+in_id).val(tax1);
+            }
+
+            if( $('#item_total2_'+ in_id).length ){
+                $('#item_total2_'+in_id).val(total);
+            }
+
+            var eqpt_cost = 0;
+            var cnt = $("#count").val();
+            var total_discount = 0;
+            for (var p = 0; p <= cnt; p++) {
+                var prc = $("#price2_" + p).val();
+                var quantity = $("#quantity2_" + p).val();
+                var discount = $("#discount2_" + p).val();
+                // var discount= $('#discount_' + p).val();
+                // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+                eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+                total_discount += parseFloat(discount);
+            }
+            //   var subtotal = 0;
+            // $( total ).each( function(){
+            //   subtotal += parseFloat( $( this ).val() ) || 0;
+            // });
+
+            eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+            total_discount = parseFloat(total_discount).toFixed(2);
+            // var test = 5;
+
+            var subtotal = 0;
+            // $("#span_total_0").each(function(){
+                $('*[id^="span_total2_"]').each(function(){
+                subtotal += parseFloat($(this).text());
+            });
+            // $('#sum').text(subtotal);
+
+            var subtotaltaxx = 0;
+            // $("#span_total_0").each(function(){
+                $('*[id^="tax2_1_"]').each(function(){
+                subtotaltaxx += parseFloat($(this).val());
+            });
+
+            //   alert(subtotaltaxx);
+
+            $("#eqpt_cost").val(eqpt_cost);
+            $("#total_discount").val(total_discount);
+            $("#span_sub_total_0").text(total_discount);
+            $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+            $("#item_total2").val(subtotal.toFixed(2));
+            
+            var s_total = subtotal.toFixed(2);
+            var adjustment = $("#adjustment_input").val();
+            var grand_total = s_total - parseFloat(adjustment);
+            var markup = $("#markup_input_form").val();
+            var grand_total_w = grand_total + parseFloat(markup);
+
+            $("#total_tax2_").text(subtotaltaxx.toFixed(2));
+            $("#total_tax2_").val(subtotaltaxx.toFixed(2));
+            
+
+            $("#grand_total2").text(grand_total_w.toFixed(2));
+            $("#grand_total_input2").val(grand_total_w.toFixed(2));
+            $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+            var bundle1_total = $("#grand_total").text();
+            var bundle2_total = $("#grand_total2").text();
+            var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+            $("#supergrandtotal").text(super_grand.toFixed(2));
+            $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+            var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+            sls = parseFloat(sls).toFixed(2);
+            $("#sales_tax").val(sls);
+            cal_total_due();
+        });
+
+        // function calculate_subtotal(tax=0){
+        //     var subtotal = 0 ;
+        //     $('.total_per_item').each(function(index) {
+        //         var idd = $(this).data('subtotal');
+        //         // var idd = this.id;
+        //         subtotal = Number(subtotal) + Number(idd);
+        //     });
+        //     var total = parseFloat(subtotal).toFixed(2);
+        //     var tax_total=0;
+        //     if(tax !== 0 || tax !== ''){
+        //         tax_total = Number(total) *  Number(tax);
+        //         total = Number(total) - Number(tax_total);
+        //         total = parseFloat(total).toFixed(2);
+        //         tax_total =  parseFloat(tax_total).toFixed(2);
+        //         var tax_with_comma = Number(tax_total).toLocaleString('en');
+        //         $('#invoice_tax_total').html('$' + tax_with_comma);
+        //     }
+        //     var withCommas = Number(total).toLocaleString('en');
+        //     if(tax_total < 1){
+        //         $('#invoice_sub_total').html('$' + formatNumber(total));
+        //     }
+        //     $('#invoice_overall_total').html('$' + formatNumber(total));
+        //     $('#pay_amount').val(withCommas);
+        // }
+
+$(document).on("focusout", ".tax_changeoptions", function () {
+  var counter = $(this).data("counter");
+  // alert(counter);
+  //calculation(counter);
+  var price = $("#price_" + counter).val();
+  var quantity = $("#quantity_" + counter).val();
+  var discount = $("#discount_" + counter).val();
+  var rate_val = this.value;
+//   alert(rate_val);
+  var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
+  var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total_" + counter).text(total);
+  $("#tax_1_" + counter).text(tax1);
+  $("#tax_111_" + counter).text(tax1);
+  $("#tax_1_" + counter).val(tax1);
+  $("#discount_" + counter).val(discount);
+  $("#tax1_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax_1_'+ counter).length ){
+    $('#tax_1_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_'+ counter).length ){
+    $('#item_total_'+counter).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_").val(subtotaltax.toFixed(2));
+  
+
+  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
+$(document).on("focusout", ".tax_changeoptions2", function () {
+  // var counter = $(this).data("counter");
+  var counter = $(this).attr('data-itemid');
+//   alert(counter);
+  //calculation(counter);
+  var price = $("#price_" + counter).val();
+  var quantity = $("#quantity_" + counter).val();
+  var discount = $("#discount_" + counter).val();
+  var rate_val = this.value;
+//   alert(rate_val);
+  var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
+  var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total_" + counter).text(total);
+  $("#tax_1_" + counter).text(tax1);
+  $("#tax_111_" + counter).text(tax1);
+  $("#tax_1_" + counter).val(tax1);
+  $("#discount_" + counter).val(discount);
+  $("#tax1_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax_1_'+ counter).length ){
+    $('#tax_1_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_'+ counter).length ){
+    $('#item_total_'+counter).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_").val(subtotaltax.toFixed(2));
+  
+
+  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+$(document).on("focusout", ".tax_changeoptionsb", function () {
+  var counter = $(this).data("counter");
+  // alert(counter);
+  //calculation(counter);
+  var price = $("#price2_" + counter).val();
+  var quantity = $("#quantity2_" + counter).val();
+  var discount = $("#discount2_" + counter).val();
+  var rate_val = this.value;
+//   alert(rate_val);
+  var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
+  var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total2_" + counter).text(total);
+  $("#tax2_1_" + counter).text(tax1);
+  $("#tax2_11_" + counter).text(tax1);
+  $("#tax2_1_" + counter).val(tax1);
+  $("#discount2_" + counter).val(discount);
+  $("#tax1_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax2_1_'+ counter).length ){
+    $('#tax2_1_'+counter).val(tax1);
+  }
+
+  if( $('#item_total2_'+ counter).length ){
+    $('#item_total2_'+counter).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price2_" + p).val();
+    var quantity = $("#quantity2_" + p).val();
+    var discount = $("#discount2_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total2_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax2_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#sub_total2").text(total_discount);
+  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+  $("#item_total2").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax2_").text(subtotaltax.toFixed(2));
+  $("#total_tax2_").val(subtotaltax.toFixed(2));
+  
+
+  $("#grand_total2").text(grand_total_w.toFixed(2));
+  $("#grand_total_input2").val(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
+
+
+$(document).on("focusout", ".tax_changeoptions2b", function () {
+  // var counter = $(this).data("counter");
+  var counter = $(this).attr('data-itemid');
+//   alert(counter);
+  //calculation(counter);
+  var price = $("#price2_" + counter).val();
+  var quantity = $("#quantity2_" + counter).val();
+  var discount = $("#discount2_" + counter).val();
+  var rate_val = this.value;
+//   alert(rate_val);
+  var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
+  var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total2_" + counter).text(total);
+  $("#tax2_1_" + counter).text(tax1);
+  $("#tax2_11_" + counter).text(tax1);
+  $("#tax2_1_" + counter).val(tax1);
+  $("#discount2_" + counter).val(discount);
+  $("#tax1_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax2_1_'+ counter).length ){
+    $('#tax2_1_'+counter).val(tax1);
+  }
+
+  if( $('#item_total2_'+ counter).length ){
+    $('#item_total2_'+counter).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price2_" + p).val();
+    var quantity = $("#quantity2_" + p).val();
+    var discount = $("#discount2_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total2_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax2_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#sub_total2").text(total_discount);
+  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+  $("#item_total2").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax2_").text(subtotaltax.toFixed(2));
+  $("#total_tax2_").val(subtotaltax.toFixed(2));
+  
+
+  $("#grand_total2").text(grand_total_w.toFixed(2));
+  $("#grand_total_input2").val(grand_total_w.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
 </script>

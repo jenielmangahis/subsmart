@@ -110,3 +110,15 @@ tfoot label {
 form#formNewProject td {
   height: 20px;
 }
+#edit_attendance_log {
+  position: relative;
+}
+#edit_attendance_log a {
+  color: #028b81;
+  font-weight: bold;
+  font-size: 10px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 65px;
+}

@@ -527,7 +527,9 @@
                             // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
                             // $getTimeZone = json_decode($ipInfo);
                             $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
-
+                            $checkin_date_time = "";
+                            $attendance_status = 0;
+                            $overtime_status_acknowledgement = 0;
                             foreach ($attendances as $attn) {
                                 $attn_id = $attn->id;
                                 if ($attn->overtime_status == 1) {
@@ -536,10 +538,15 @@
                                     $overtime_status = 1;
                                 }
 
+                                $overtime_status_acknowledgement = $attn->overtime_status;
+
 
                                 foreach ($ts_logs_h as $log) {
                                     if ($log->attendance_id == $attn->id && $attn->status == 1) {
                                         if ($log->action == 'Check in') {
+                                            $checkin_date_time = $log->date_created;
+                                            $date_created = $log->date_created;
+                                            $attendance_status = 1;
                                             $date_created = $log->date_created;
                                             date_default_timezone_set('UTC');
                                             $datetime_defaultTimeZone = new DateTime($date_created);
@@ -650,6 +657,10 @@
                                 <!--                     lou       <input type="hidden" id="clock-end-time" value="--><?php //echo ($expected_endbreak)?$expected_endbreak:null;       
                                                                                                                         ?>
                                 <!--">-->
+                                <input type="hidden" id="clockedin_date_time" value="<?= $checkin_date_time ?>">
+                                <input type="hidden" id="attendance_status" value="<?= $attendance_status ?>">
+                                <input type="hidden" id="overtime_status_acknowledgement" value="<?= $overtime_status_acknowledgement ?>">
+                                <input type="hidden" id="break_duration_for_auto_out" value="<?= $break_duration_for_auto_out ?>">
                                 <input type="hidden" id="lunchStartTime" value="<?php echo $lunch_in; ?>" data-value="<?php echo date('h:i A', $lunch_in) ?>">
                                 <input type="hidden" id="latestLunchTime" value="<?php echo $latest_lunch_in; ?>" data-value="<?php echo date('h:i A', $latest_lunch_in) ?>">
                                 <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break') ? 1 : 0; ?>">

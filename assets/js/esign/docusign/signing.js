@@ -76,6 +76,13 @@ function Signing(hash) {
           text = moment().format("MM/DD/YYYY");
         }
 
+        if (["Approve", "Decline"].includes(field_name)) {
+          const html = `<button class="btn btn-secondary btn-sm">${field_name}</button>`;
+          const $element = createElementFromHTML(html);
+          $element.css({ top, left, position: "absolute" });
+          return $element;
+        }
+
         if (field_name === "Attachment") {
           const html = `
             <div class="signing__fieldAttachment" title="Attachment">

@@ -3,7 +3,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 define("FIREBASE_API_KEY", "AAAA0yE6SAE:APA91bFQOOZnqWcMbdBY9ZfJfc0TWanlN1l6f95QfjpfMhVLWNfHVd63nlfxP69I_snCkaqaY9yuezx65GLyevUmkflRADYdYAZKPY8e8SS5Q_dyPDqQaxxlstamhhUG1BiFr4bC4ABo");
 
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Timesheet extends MY_Controller
 {
@@ -21,7 +22,6 @@ class Timesheet extends MY_Controller
         $this->page_data['page']->title = 'Timesheet Management';
 
         $this->page_data['page']->menu = 'users';
-
         add_css(array(
             "assets/css/timesheet.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -139,11 +139,11 @@ class Timesheet extends MY_Controller
         // $company_id = logged('company_id');
         // echo ("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id . " and user_seen_notif.seen_status != 2 and user_notification.company_id = $company_id order by user_notification.date_created DESC");
         // date_default_timezone_set($this->session->userdata('usertimezone'));
-        date_default_timezone_set($this->session->userdata('usertimezone'));
-        $the_date = strtotime("2021-03-15" . " 00:00:00");
-        date_default_timezone_set("UTC");
-        $shift_date = date('Y-m-d', $the_date);
-        echo  $shift_date;
+        // date_default_timezone_set($this->session->userdata('usertimezone'));
+        // $the_date = strtotime("2021-03-15" . " 00:00:00");
+        // date_default_timezone_set("UTC");
+        // $shift_date = date('Y-m-d', $the_date);
+        // echo  $shift_date;
         // $start = new DateTime("2021-03-16 03:00:00");
         // $end =  new DateTime(date('Y-m-d H:i:s'));
         // $interval = $start->diff($end);
@@ -155,6 +155,7 @@ class Timesheet extends MY_Controller
         // $minutes = $minutes / 60;
         // var_dump($end);
         // echo $minutes / 60;
+        echo getLoggedUserID();
     }
 
     public function employee()
@@ -3485,6 +3486,8 @@ class Timesheet extends MY_Controller
                 } else {
                     $overtime = $expected_work_hours;
                 }
+            } else {
+                $overtime = $attendance->overtime;
             }
             $display .= '<td class="center num_only time-log">' . $overtime . '</td>';
             if ($attendance->overtime_status == 1) {
@@ -3630,6 +3633,15 @@ class Timesheet extends MY_Controller
         if ($shift_start != '') {
             $minutes_late = round($this->get_differenct_of_dates($shift_start, $checkin_date . " " . $checkin_time) * 60, 2);
         }
+
+        $footprints = $this->timesheet_model->get_attendance_logs_editor_footprint($att_id);
+        $footprint_text = "";
+        if (count($footprints) > 0) {
+            foreach ($footprints as $editor) {
+                $date = $this->datetime_zone_converter($editor->date_created, "UTC", $this->session->userdata("usertimezone"));
+                $footprint_text = "Edited by " . $editor->FName . " " . $editor->LName . " last " . date("m-d-Y h:i A", strtotime($date));
+            }
+        }
         $data = new stdClass();
         $data->shift_date = $shift_date;
         $data->att_id = $att_id;
@@ -3656,15 +3668,22 @@ class Timesheet extends MY_Controller
         $data->expected_break = $expected_break;
         $data->expected_work_hours = $expected_work_hours;
         $data->clock_status = $clock_status;
+        $data->footprint_text = $footprint_text;
         echo json_encode($data);
     }
     public function get_differenct_of_dates_ajax()
     {
         $from_date = $this->input->post("from_date");
-        $to_date = $this->input->post("to_date");
-        $data = $this->get_differenct_of_dates($from_date, $to_date);
-        echo json_encode($data);
+        if ($this->input->post("transaction") == "") {
+            $to_date = $this->input->post("to_date");
+        } else {
+            $to_date = date("Y-m-d H:i:s");
+        }
+        $data = new stdClass();
+        $data->difference = $this->get_differenct_of_dates($from_date, $to_date);
+        $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
     }
+
 
     public function datetime_zone_converter($olddate, $from_timezone, $to_timezone)
     {
@@ -3708,26 +3727,212 @@ class Timesheet extends MY_Controller
         );
         $this->timesheet_model->attendance_logs_update($update, $where, "timesheet_attendance");
 
-
-        $date_created = $this->datetime_zone_converter($form_clockin_date . " " . $form_clockin_time, $this->session->userdata('usertimezone'), "UTC");
-        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Check in'");
-        $this->db->reset_query();
-
-
-        $date_created = $this->datetime_zone_converter($form_clockout_date . " " . $form_clockout_time, $this->session->userdata('usertimezone'), "UTC");
-        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Check out'");
-        $this->db->reset_query();
-
-
-        $date_created = $this->datetime_zone_converter($form_breakin_date . " " . $form_breakin_time, $this->session->userdata('usertimezone'), "UTC");
-        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Break in'");
-        $this->db->reset_query();
-
-        $date_created = $this->datetime_zone_converter($form_breakout_date . " " . $form_breakout_time, $this->session->userdata('usertimezone'), "UTC");
-        $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $form_timesheet_attendance_id . " and action='Break out'");
-        $this->db->reset_query();
-
+        if ($form_clockin_date != "") {
+            $date_created = $this->datetime_zone_converter($form_clockin_date . " " . $form_clockin_time, $this->session->userdata('usertimezone'), "UTC");
+            $this->timesheet_model->attendance_logs_update_timesheet_logs($form_timesheet_attendance_id, $date_created, 'Check in', $form_user_id);
+        }
+        if ($form_clockout_date != "") {
+            $date_created = $this->datetime_zone_converter($form_clockout_date . " " . $form_clockout_time, $this->session->userdata('usertimezone'), "UTC");
+            $this->timesheet_model->attendance_logs_update_timesheet_logs($form_timesheet_attendance_id, $date_created, 'Check out', $form_user_id);
+        }
+        if ($form_breakin_date != "") {
+            $date_created = $this->datetime_zone_converter($form_breakin_date . " " . $form_breakin_time, $this->session->userdata('usertimezone'), "UTC");
+            $this->timesheet_model->attendance_logs_update_timesheet_logs($form_timesheet_attendance_id, $date_created, 'Break in', $form_user_id);
+        }
+        if ($form_breakout_date != "") {
+            $date_created = $this->datetime_zone_converter($form_breakout_date . " " . $form_breakout_time, $this->session->userdata('usertimezone'), "UTC");
+            $this->timesheet_model->attendance_logs_update_timesheet_logs($form_timesheet_attendance_id, $date_created, 'Break out', $form_user_id);
+        }
+        $this->timesheet_model->attendance_logs_update_footprint_setter($form_timesheet_attendance_id, getLoggedUserID(), "attendance_log_update");
         echo json_encode(0);
+    }
+    public function get_shift_duration()
+    {
+        $att_id = $this->input->post("attn_id");
+        $shifts = $this->timesheet_model->calculateShiftDuration_and_overtime($att_id);
+        $data = new stdClass();
+        $data->difference = $shifts[0] + $shifts[1];
+        $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
+        echo json_encode($data);
+    }
+
+    public function download_attendance_sheet_logs_to_excel()
+    {
+        $date_from = $this->input->post("date_from");
+        $date_to = $this->input->post("date_to");
+        // file name 
+        $filename = $date_from . " to " . $date_to . '.csv';
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=$filename");
+        header("Content-Type: application/csv; ");
+        // get data 
+
+
+
+        // file creation 
+
+
+
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_from . " 00:00:00");
+        date_default_timezone_set("UTC");
+        $date_from = date("Y-m-d", $the_date);
+
+
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_to . " 24:59:00");
+        date_default_timezone_set("UTC");
+        $date_to = date("Y-m-d H:i:s", $the_date);
+        $company_id = logged('company_id');
+        $attendances = $this->timesheet_model->get_all_attendance($date_from, $date_to, $company_id);
+
+        $file = fopen('php://output', 'w');
+        $header = array(
+            "Employee",
+            "Title",
+            "Shift Date",
+            "Shift Start",
+            "Shift End",
+            "Clock In",
+            "Clock Out",
+            "Break in",
+            "Break out",
+            "Expected Shift Duration",
+            "Expected Break Duration",
+            "Expected Work Hours",
+            "Worked Hours",
+            "Break Duration",
+            "Late in minutes",
+            "Overtime",
+            "OT Status",
+            "Payable Hours",
+            "Notes"
+        );
+        fputcsv($file, $header);
+        foreach ($attendances as $attendance) {
+            $data = array();
+            $shift_date = $attendance->date_created;
+            date_default_timezone_set("UTC");
+            $the_date = strtotime($shift_date);
+            date_default_timezone_set($this->session->userdata('usertimezone'));
+            $shift_date = date("m/d/Y", $the_date);
+
+            $data[] = $attendance->FName . ' ' .   $attendance->LName;
+            $data[] = $attendance->title;
+            $data[] = $shift_date;
+
+            date_default_timezone_set("UTC");
+            $shift_schedules = $this->timesheet_model->get_schedule_in_shift_date(date("Y-m-d", strtotime($attendance->date_created)), $attendance->user_id);
+            $shift_start = '';
+            $shift_end = '';
+            $expected_hours = '';
+            $expected_break = '';
+            $expected_work_hours = '';
+            foreach ($shift_schedules as $sched) {
+                $olddate_start = $sched->shift_start;
+                $olddate_end = $sched->shift_end;
+                date_default_timezone_set("UTC");
+                $the_date1 = strtotime($olddate_start);
+                $the_date2 = strtotime($olddate_end);
+                date_default_timezone_set($this->session->userdata('usertimezone'));
+                $newdate_start = date("m/d/Y h:i A", $the_date1);
+                $newdate_end = date("m/d/Y h:i A", $the_date2);
+                $shift_start = $newdate_start;
+                $shift_end = $newdate_end;
+                $expected_hours = $sched->duration;
+                $expected_break = 0;
+                if ($expected_hours > 4) {
+                    $expected_break = 30;
+                }
+                if ($expected_hours > 6) {
+                    $expected_break += 15;
+                }
+                if ($expected_hours >= 8) {
+                    $expected_break = 60;
+                }
+                $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
+            }
+
+            $data[] = $shift_start;
+            $data[] = $shift_end;
+
+
+
+            $auxes = $this->timesheet_model->get_logs_of_attendance($attendance->id);
+            $checkin = '';
+            $checkout = '';
+            $breakin = '';
+            $breakout = '';
+
+            foreach ($auxes as $aux) {
+                $olddate = $aux->date_created;
+                date_default_timezone_set("UTC");
+                $the_date = strtotime($olddate);
+                date_default_timezone_set($this->session->userdata('usertimezone'));
+                $newdate = date("m/d/Y h:i A", $the_date);
+                if ($aux->action == "Check in") {
+                    $checkin = $newdate;
+                } elseif ($aux->action == "Check out") {
+                    $checkout = $newdate;
+                } elseif ($aux->action == "Break in") {
+                    $breakin = $newdate;
+                } elseif ($aux->action == "Break out") {
+                    $breakout = $newdate;
+                }
+            }
+            $data[] = $checkin;
+            $data[] = $checkout;
+            $data[] = $breakin;
+            $data[] = $breakout;
+            $data[] = $expected_hours;
+            $data[] = $expected_break;
+            $data[] = $expected_work_hours;
+            $data[] =  ($attendance->shift_duration + $attendance->overtime);
+
+            $data[] = $attendance->break_duration;
+
+            $minutes_late = "";
+            if ($shift_start != '') {
+                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin) * 60;
+            }
+            $data[] = round($minutes_late, 2);
+            $overtime = 0;
+            if ($expected_hours != '') {
+                if ($expected_work_hours < ($attendance->shift_duration + $attendance->overtime)) {
+                    $overtime = round(($attendance->shift_duration + $attendance->overtime) - $expected_work_hours, 2);
+                } elseif ($attendance->shift_duration == 0) {
+                    $overtime = 0;
+                } else {
+                    $overtime = $expected_work_hours;
+                }
+            } else {
+                $overtime = $attendance->overtime;
+            }
+            $data[] = $overtime;
+            if ($attendance->overtime_status == 1) {
+                $ot_status = "Pending";
+            } elseif ($attendance->overtime_status == 0) {
+                $ot_status = "Denied";
+            } else {
+                $ot_status = "Approved";
+            }
+            $data[] = $ot_status;
+            $payable_hours = $attendance->shift_duration;
+            if ($expected_hours != '') {
+                if ($payable_hours > $expected_work_hours) {
+                    $payable_hours = $expected_work_hours;
+                }
+            }
+            if ($ot_status === "Approved") {
+                $payable_hours = $payable_hours + $attendance->overtime;
+            }
+
+            $data[] = $payable_hours;
+            $data[] = $attendance->notes;
+            fputcsv($file, $data);
+        }
+        fclose($file);
+        exit;
     }
 }
 

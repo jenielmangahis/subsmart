@@ -74,7 +74,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Customer</a>
+                                    <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
+                                       data-target="#modalNewCustomer" style="color:#02A32C;"><span
+                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
@@ -239,7 +241,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td><b>Bundle-1 Total</b></td>
                                             <td></td>
                                             <td><b><span id="grand_total">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                                <input type="hidden" name="bundle1_total" id="grandtotal_input" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -250,7 +252,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
                                 <div class="col-md-5 table-responsive">
                                     <label for="option1_m"><h6>Bundle 1 Message</h6></label>
-                                    <textarea name="option1_message" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="bundle1_message" cols="40" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
 
@@ -282,16 +284,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td><input type="number" class="form-control quantity2" name="quantity[]"
+                                            <td><input type="number" class="form-control quantity2" name="quantity2[]"
                                                        data-counter="0" id="quantity2_0" value="1"></td>
                                             <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
-                                            <td><input type="number" class="form-control price2" name="price[]"
+                                            <td><input type="number" class="form-control price2" name="price2[]"
                                                        data-counter="0" id="price2_0" min="0" value="0"></td>
-                                            <td><input type="number" class="form-control discount2" name="discount[]"
+                                            <td><input type="number" class="form-control discount2" name="discount2[]"
                                                        data-counter="0" id="discount2_0" min="0" value="0" readonly></td>
-                                            <td><input type="text" class="form-control tax_changeoptionsb" name="tax[]"
+                                            <td><input type="text" class="form-control tax_changeoptionsb" name="tax2[]"
                                                        data-counter="0" id="tax2_1_0" min="0" value="0"></td>
-                                            <td><input type="hidden" class="form-control " name="total[]"
+                                            <td><input type="hidden" class="form-control " name="total2[]"
                                                        data-counter="0" id="item_total2_0" min="0" value="0">
                                                        $<span id="span_total2_0">0.00</span></td>
                                         </tr>
@@ -325,19 +327,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                         <tr>
                                             <td>Bundle Discount</td>
-                                            <td></td>
-                                            <td style="width:100px;"><input type="text" class="form-control" placeholder="0"></td>
+                                            <td align="right">$</td>
+                                            <td style="width:100px;"><input type="number" name="bundle_discount" class="form-control"></td>
                                         </tr>
                                         <tr>
                                             <td><b>Bundle-2 Total</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total2">0.00</span><input type="hidden" name="grand_total2" id="grand_total_input2" value='0'></b></td>
+                                            <td><b><span id="grand_total2">0.00</span><input type="hidden" name="bundle2_total" id="grand_total_input2" value='0'></b></td>
                                         </tr>
                                         <tr>
                                             <td><b>Grand Total</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total2">0.00</span>
-                                                <input type="hidden" name="grand_total2" id="grand_total_input2" value='0'></b></td>
+                                            <td><b><span id="supergrandtotal">0.00</span>
+                                                <input type="hidden" name="supergrandtotal" id="supergrandtotal_input" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -348,7 +350,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
                                 <div class="col-md-5 table-responsive">
                                     <label for="option2_m"><h6>Bundle 2 Message</h6></label>
-                                    <textarea name="option2_message" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="bundle2_message" cols="40" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
                             <br><br>
@@ -460,6 +462,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </button>
                         </div>
                         <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Modal New Customer -->
+             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body pt-0 pl-3 pb-3"></div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary">Save changes</button>
@@ -628,6 +650,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
 </script>
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script>
+function initialize() {
+          var input = document.getElementById('job_location');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                document.getElementById('city2').value = place.name;
+                document.getElementById('cityLat').value = place.geometry.location.lat();
+                document.getElementById('cityLng').value = place.geometry.location.lng();
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
 <script>
 
 $(document).ready(function(){
@@ -644,7 +681,7 @@ $(document).ready(function(){
             success: function(response){
                 // alert('success');
                 // console.log(response['customer']);
-            $("#job_location").val(response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
             $("#customer_email").val(response['customer'].email);
             $("#shipping_address").val(response['customer'].mail_add);
             $("#billing_address").val(response['customer'].mail_add);
@@ -706,9 +743,9 @@ $(".select_item").click(function () {
                 "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\"  id='discount_"+idd+"'></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"20%\"><input type=\"text\"  data-itemid='"+idd+"' class=\"form-control tax_changeoptions2\" name=\"tax[]\" data-counter=\"0\"  id='tax_1_"+idd+"'></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' test=\"test\" id='span_total_"+idd+"' class=\"total_per_item\">"+total+
+                "</span><input type=\"hidden\" name=\"total[]\" id='item_total_"+idd+"' value='"+total+"'></td>" +
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                "<input type=\"hidden\" name=\"total[]\" id='item_total_"+idd+"' value='"+total+"'></td>" +
                 "</tr>";
             tableBody = $("#table_body_bundle1");
             tableBody.append(markup);
@@ -815,6 +852,16 @@ $(".select_item").click(function () {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
+//   alert(super_grand);
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -852,7 +899,7 @@ $(".select_item2").click(function () {
                 "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_changeoptions2b\" name=\"tax2[]\" data-counter=\"0\"  id='tax2_1_"+idd+"'></td>\n" +
                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total2_"+idd+"' class=\"total_per_item2\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                "<input type=\"hidden\" name=\"total2[]\" id='item_total2_"+idd+"' value='"+total+"'></td>" +
+                "</span><input type=\"hidden\" name=\"total2[]\" id='item_total2_"+idd+"' value='"+total+"'></td>" +
                 "</tr>";
             tableBody = $("#table_body_bundle2");
             tableBody.append(markup);
@@ -959,6 +1006,16 @@ $(".select_item2").click(function () {
 
   $("#grand_total2").text(grand_total_w.toFixed(2));
   $("#grand_total_input2").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+  
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -1092,6 +1149,15 @@ $(".select_item2").click(function () {
 
             $("#grand_total").text(grand_total_w.toFixed(2));
             $("#grand_total_input").val(grand_total_w.toFixed(2));
+            $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+            var bundle1_total = $("#grand_total").text();
+            var bundle2_total = $("#grand_total2").text();
+            var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+            $("#supergrandtotal").text(super_grand.toFixed(2));
+            $("#supergrandtotal_input").val(super_grand.toFixed(2));
+
 
             var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
             sls = parseFloat(sls).toFixed(2);
@@ -1213,6 +1279,14 @@ $(".select_item2").click(function () {
 
             $("#grand_total2").text(grand_total_w.toFixed(2));
             $("#grand_total_input2").val(grand_total_w.toFixed(2));
+            $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+            var bundle1_total = $("#grand_total").text();
+            var bundle2_total = $("#grand_total2").text();
+            var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+            $("#supergrandtotal").text(super_grand.toFixed(2));
+            $("#supergrandtotal_input").val(super_grand.toFixed(2));
 
             var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
             sls = parseFloat(sls).toFixed(2);
@@ -1341,6 +1415,14 @@ $(document).on("focusout", ".tax_changeoptions", function () {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -1445,6 +1527,14 @@ $(document).on("focusout", ".tax_changeoptions2", function () {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  var bundle1_total = $("#grand_total").text();
+  var bundle2_total = $("#grand_total2").text();
+  var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+  $("#supergrandtotal").text(super_grand.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -1665,6 +1755,7 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
 
   $("#grand_total2").text(grand_total_w.toFixed(2));
   $("#grand_total_input2").val(grand_total_w.toFixed(2));
+  $("#supergrandtotal_input").val(super_grand.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);

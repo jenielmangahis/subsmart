@@ -111,44 +111,6 @@ $('input[name="type"]').on('change', function() {
     }
 });
 
-$('#payment-term-form').on('submit', function(e) {
-    e.preventDefault();
-
-    var data = new FormData(document.getElementById('payment-term-form'));
-    var url = '/accounting/terms/add';
-
-    if(data.has('id')) {
-        url = '/accounting/terms/update'
-    }
-
-    $.ajax({
-        url: url,
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-            var res = JSON.parse(result);
-
-            $.toast({
-                icon: res.success ? 'success' : 'error',
-                heading: res.success ? 'Success' : 'Error',
-                text: res.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-
-            $('#payment_term_modal').modal('hide');
-
-            $('#terms_table').DataTable().ajax.reload();
-        }
-    });
-});
-
 $(document).on('click', '#terms_table .make-inactive', function(e) {
     e.preventDefault();
 
@@ -182,23 +144,7 @@ $(document).on('click', '#inactive_term .modal-footer .btn-success', function(e)
         url: `/accounting/terms/delete/${id}`,
         type:"DELETE",
         success:function (result) {
-            var res = JSON.parse(result);
-
-            $.toast({
-                icon: res.success ? 'success' : 'error',
-                heading: res.success ? 'Success' : 'Error',
-                text: res.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-
-            $('#inactive_term').modal('hide');
-
-            $('#terms_table').DataTable().ajax.reload();
+            location.reload();
         }
     });
 });
@@ -212,23 +158,7 @@ $(document).on('click', '#active_term .modal-footer .btn-success', function(e) {
         url: `/accounting/terms/activate/${id}`,
         type:"GET",
         success:function (result) {
-            var res = JSON.parse(result);
-
-            $.toast({
-                icon: res.success ? 'success' : 'error',
-                heading: res.success ? 'Success' : 'Error',
-                text: res.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-
-            $('#active_term').modal('hide');
-
-            $('#terms_table').DataTable().ajax.reload();
+            location.reload();
         }
     });
 });
@@ -239,11 +169,7 @@ $(document).on('click', '#terms_table .edit-term', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = table.row(row).data();
 
-    if($('#payment-term-form input[name="id"]').length > 0) {
-        $('#payment-term-form input[name="id"]').val(data.id);
-    } else {
-        $('#payment-term-form').prepend(`<input type="hidden" value="${data.id}" name="id">`);
-    }
+    $('#payment-term-form').prop('action', `/accounting/terms/update/${data.id}`);
 
     if(data.name !== null && data.name !== "null") {
         $('#payment-term-form #name').val(data.name);

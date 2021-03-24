@@ -16,7 +16,7 @@ class Events extends MY_Controller
         $this->load->model('General_model', 'general');
 
     }
-    
+
     public function loadStreetView($address = NULL)
     {
         $this->load->library('wizardlib');
@@ -33,6 +33,9 @@ class Events extends MY_Controller
         }
         $this->page_data['events'] = $this->event_model->get_all_events();
         $this->page_data['title'] = 'Events';
+        $cid  = logged('id');
+        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
         $this->load->view('events/list', $this->page_data);
     }
 
@@ -457,12 +460,12 @@ class Events extends MY_Controller
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         $this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
-        
+
         if (empty($get['job_num'])) {
             $comp = array(
                 'company_id' => $comp_id
             );
-        } else { 
+        } else {
             $comp = array(
                 'company_id' => $comp_id,
                 'job_number' => $get['job_num']
@@ -633,13 +636,13 @@ class Events extends MY_Controller
         $returnURL = base_url().'paypal/success';
         $cancelURL = base_url().'paypal/cancel';
         $notifyURL = base_url().'paypal/ipn';
-        
+
         // Get product data from the database
         $product = $this->invoice_model->getRows($id);
-        
+
         // Get current user ID from the session
         $userID = logged('id');
-        
+
         // Add fields to paypal form
         $this->paypal_lib->add_field('return', $returnURL);
         $this->paypal_lib->add_field('cancel_return', $cancelURL);
@@ -648,7 +651,7 @@ class Events extends MY_Controller
         $this->paypal_lib->add_field('custom', $userID);
         $this->paypal_lib->add_field('item_number',  $product['invoice_id']);
         $this->paypal_lib->add_field('amount',  $product['total_value']);
-        
+
         // Render paypal form
         $this->paypal_lib->paypal_auto_form();
     }
@@ -656,7 +659,7 @@ class Events extends MY_Controller
     public function saveCreditCard() {
         if ($this->input->post('billingExpDate') != '' && $this->input->post('cardNumber') != '') {
             $exp_date = explode("/",$this->input->post('billingExpDate'));
-    
+
             $data = array(
                 'card_number' => $this->input->post('cardNumber'),
                 'exp_day' => $exp_date[1],
@@ -668,7 +671,7 @@ class Events extends MY_Controller
                 'payment_method_id' => 0,
                 'added' => date('Y-m-d H:i:s')
             );
-    
+
             $this->db->insert($this->jobs_model->table_credit_cards, $data);
         }
     }
@@ -687,7 +690,7 @@ class Events extends MY_Controller
             'smtp_port' => 465,
             'smtp_user' => 'nsmartrac@gmail.com',
             'smtp_pass' => 'nSmarTrac2020',
-            'mailtype'  => 'html', 
+            'mailtype'  => 'html',
             'charset'   => 'utf-8'
         );
         $this->email->initialize($config);
@@ -751,11 +754,11 @@ class Events extends MY_Controller
 
         redirect('job/new_job?job_num=' . $get['job_num']);
     }
-    
+
     function deleteMultiple() {
         postAllowed();
         $ids = explode(",",$this->input->post('ids'));
-        
+
         foreach($ids as $id) {
             $this->jobs_model->deleteJob($id);
         }
@@ -831,7 +834,7 @@ class Events extends MY_Controller
             $this->load->view('job/details', $this->page_data);
 
         }else{
-           redirect('dashboard'); 
+           redirect('dashboard');
         }
     }
 
@@ -846,7 +849,7 @@ class Events extends MY_Controller
         }else{
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
         }
-        
+
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
 
@@ -856,7 +859,7 @@ class Events extends MY_Controller
     {
         $this->load->model('Icons_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -871,7 +874,7 @@ class Events extends MY_Controller
         $this->load->model('Icons_model');
         $this->load->model('EventTags_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -917,7 +920,7 @@ class Events extends MY_Controller
                 $this->session->set_flashdata('message', 'Cannot update event tag');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
             }
-            
+
         }
 
         $this->session->set_flashdata('message', 'Add new event tag was successful');
@@ -962,7 +965,7 @@ class Events extends MY_Controller
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
 
-        }        
+        }
 
         redirect('events/event_tags');
     }

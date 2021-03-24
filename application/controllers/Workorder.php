@@ -701,8 +701,15 @@ class Workorder extends MY_Controller
             die();
         }
 
+        $url      =  base_url(uri_string());
+        $map_type = 'events';
+        if(strpos($url, 'job/bird_eye_view') !== false) {
+            $map_type = 'jobs';
+        }
+
         $company_id   = logged('company_id');
         $companyUsers = $this->Users_model->getCompanyUsers($company_id);
+        $this->page_data['map_type'] = $map_type;
         $this->page_data['job_status'] = $this->Jobs_model->getAllStatus();
         $this->page_data['companyUsers'] = $companyUsers;
         $this->load->view('workorder/bird-eye-view', $this->page_data);
@@ -719,6 +726,7 @@ class Workorder extends MY_Controller
         $this->load->model('Jobs_model');
         $this->load->model('Users_model');
         $this->load->model('EventType_model');
+        $this->load->model('Clients_model');
 
         $user_id    = logged('id');  
         $locations  = array();
@@ -730,17 +738,26 @@ class Workorder extends MY_Controller
         $post = $this->input->post();
         $date_range = ['date_from' => date("Y-m-d",strtotime($post['date_from'])), 'date_to' => date("Y-m-d",strtotime($post['date_to']))];
         if( $post['job_status'] != 'all' ){
-            $criteria = ['jobs.status' => $post['job_status']];
+            if( $post['map_type'] == 'events' ){
+                $criteria = ['events.status' => $post['job_status']];
+            }else{
+                $criteria = ['jobs.status' => $post['job_status']]; 
+            }
         }else{
             $criteria = array();
         }
         
         if( $post['user'] == 'all' ){
             $users    = $this->Users_model->getAll();
+            $default_imp_img = base_url('uploads/users/default.png');
             foreach( $users as $user ){
                 //Set Center Map
-                $pointA   =  $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
-                $description_a = "<b><i class='fa fa-user'></i> ".$user->FName. " " .$user->LName. "</b><br /><small>".$pointA."</small>";
+                $company = $this->Clients_model->getById($user->company_id);
+
+                //$pointA   =  $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
+                $pointA        = $company->business_address;
+                $user_img      = userProfileImage($user->id);
+                $description_a = "<div class='row'><div class='col-md-2'><img style='width: 40px;display:inline;margin-right:10px;' src='".$user_img."' alt='user' class='rounded-circle nav-user-img vertical-center'></div><div class='col-md-10'><b>".$user->FName. " " .$user->LName. "<br />".$company->business_name."</b><br /><small>".$pointA."</small></div></div>";
                 $gdata    = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
                 if($gdata){
                     $json = json_decode($gdata, true);
@@ -750,8 +767,124 @@ class Workorder extends MY_Controller
                     }
                 }
 
+                if( $post['map_type'] == 'events' ){
+                    //Events
+                    $events  = $this->Event_model->getAllUserEventsWithAddress($user->id, $date_range);
+                    foreach($events as $e){
+                        if( $e->event_address != '' ){
+                            $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
+                            if( $e->event_type_id > 0 ){
+                                $eventType = $this->EventType_model->getById($e->event_type_id);
+                                if( $eventType->is_marker_icon_default_list == 1 ){
+                                    $marker = base_url('/uploads/icons/' . $eventType->icon_marker);
+                                }else{
+                                    $marker = base_url('/uploads/event_types/' . $eventType->company_id . "/" . $eventType->icon_marker);
+                                }
+                            }
+                            
+                            $pointB = $e->event_address; 
+                            $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
+                            $json   = json_decode($gdata, true);   
+                            if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                                $description_b = "<table style='font-size:12px;'>
+                                    <tr'>
+                                        <td style='width:10%;'>
+                                            <img style='width: 40px;display:inline;margin-right:10px;' src='".$user_img."' alt='user' class='rounded-circle nav-user-img vertical-center'>
+                                        </td>
+                                        <td>
+                                            <i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<hr style='margin:7px 0px;' />
+                                            <b>".$e->event_type. "</b><br /><small>".$pointB."</small>
+                                        </td>
+                                    </tr>
+                                </table>";
+                                $locations[] = [
+                                    'title' => $description_a,
+                                    'lat' => $center_lat,
+                                    'lng' => $center_lng,
+                                    'title' => "<b>Start Point</b><br />" . $pointA,
+                                    'description' => $description_a,
+                                    'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
+                                ];
+                                $locations[] = [
+                                    'title' => $description_b,
+                                    'lat' => $json['results'][0]['geometry']['location']['lat'],
+                                    'lng' => $json['results'][0]['geometry']['location']['lng'],
+                                    'description' => $description_b,
+                                    'marker' => $marker
+                                ];  
+                            }
+                        }
+                        $counter++;    
+                    } 
+                }else{
+                    //Jobs
+                    $jobs    = $this->Jobs_model->getAllJobsByUserId($user->id,$date_range,$criteria);
+                    foreach($jobs as $j){
+                        //if( $j->job_location != '' ){
+                            $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code; 
+
+                            $description_b = "<table style='font-size:12px;'>
+                                <tr'>
+                                    <td style='width:10%;'>
+                                        <img style='width: 40px;display:inline;margin-right:10px;' src='".$user_img."' alt='user' class='rounded-circle nav-user-img vertical-center'>
+                                    </td>
+                                    <td>
+                                        <i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<hr style='margin:7px 0px;' />
+                                        <i class='fa fa-user'></i>" .$j->first_name . ' ' . $j->last_name."<b />
+                                        <b>".$j->job_number . " - " . $j->job_type. "</b><br /><small>".$pointB."</small>
+                                    </td>
+                                </tr>
+                            </table>";
+
+                            //$description_b = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><br />" . $j->job_number . " - " . $j->job_type . "<br /><small>" . $j->first_name . ' ' . $j->last_name . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
+
+                            $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
+                            $json   = json_decode($gdata, true); 
+                            if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                               $locations[] = [
+                                    'title' => $description_a,
+                                    'lat' => $center_lat,
+                                    'lng' => $center_lng,
+                                    'description' => $description_a,
+                                    'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
+                                ];
+                                $locations[] = [
+                                    'title' => $description_b,
+                                    'lat' => $json['results'][0]['geometry']['location']['lat'],
+                                    'lng' => $json['results'][0]['geometry']['location']['lng'],
+                                    'description' => $description_b,
+                                    'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
+                                ];    
+                            }    
+                        //}
+
+                        $counter++;  
+                    }
+                }
+            } 
+        }else{
+            if( $post['user'] > 0 ){
+                $user    = $this->Users_model->getUser($post['user']);
+                $company = $this->Clients_model->getById($user->company_id);
+            }else{
+                $user    = $this->Users_model->getUser($user_id);
+                $company = $this->Clients_model->getById($user->company_id);
+            }
+
+            //Set Center Map
+            $pointA        = $company->business_address;
+            $user_img      = userProfileImage($user->id);
+            $description_a = "<div class='row'><div class='col-md-2'><img style='width: 40px;display:inline;margin-right:10px;' src='".$user_img."' alt='user' class='rounded-circle nav-user-img vertical-center'></div><div class='col-md-10'><b>".$user->FName. " " .$user->LName. "<br />".$company->business_name."</b><br /><small>".$pointA."</small></div></div>";
+            $gdata   = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
+            if($gdata){
+                $json = json_decode($gdata, true);
+                $center_lng = $json['results'][0]['geometry']['location']['lng'];
+                $center_lat = $json['results'][0]['geometry']['location']['lat'];
+            }
+
+            if( $post['map_type'] == 'events' ){
+                $events  = $this->Event_model->getAllUserEventsWithAddress($user->id,$date_range);
                 //Events
-                $events  = $this->Event_model->getAllUserEventsWithAddress($user->id, $date_range);
                 foreach($events as $e){
                     if( $e->event_address != '' ){
                         $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
@@ -762,19 +895,30 @@ class Workorder extends MY_Controller
                             }else{
                                 $marker = base_url('/uploads/event_types/' . $eventType->company_id . "/" . $eventType->icon_marker);
                             }
+                            
                         }
-                        
-                        $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
+
+                        $pointB = $e->event_address;  
+                        $description_b = "<table style='font-size:12px;'>
+                            <tr'>
+                                <td style='width:10%;'>
+                                    <img style='width: 40px;display:inline;margin-right:10px;' src='".$user_img."' alt='user' class='rounded-circle nav-user-img vertical-center'>
+                                </td>
+                                <td>
+                                    <i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<hr style='margin:7px 0px;' />
+                                    <b>".$e->event_type. "</b><br /><small>".$pointB."</small>
+                                </td>
+                            </tr>
+                        </table>";
+
+                        //$description_b = "<i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<br /><br />" . $e->event_type . "<br /><small>" . $pointB . "</small>";
                         $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
                         $json   = json_decode($gdata, true);   
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
-                            $description_b = "<i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<br /><br />" . $e->event_type . "<br /><small>" . $pointB . "</small>";
-
                             $locations[] = [
                                 'title' => $description_a,
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
-                                'title' => "<b>Start Point</b><br />" . $pointA,
                                 'description' => $description_a,
                                 'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                             ];
@@ -784,139 +928,50 @@ class Workorder extends MY_Controller
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
                                 'description' => $description_b,
                                 'marker' => $marker
-                            ];  
-                        }
-                    }
-                    $counter++;    
-                } 
-
-                //Jobs
-                $jobs    = $this->Jobs_model->getAllJobsByUserId($user->id,$date_range,$criteria);
-                /*echo "<pre>";
-                print_r($jobs);
-                exit;*/
-                foreach($jobs as $j){
-                    //if( $j->job_location != '' ){
-                        $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code; 
-                        $description_b = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><br />" . $j->job_number . " - " . $j->job_type . "<br /><small>" . $j->first_name . ' ' . $j->last_name . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
-
-                        $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
-                        $json   = json_decode($gdata, true); 
-                        if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
-                           $locations[] = [
-                                'title' => $description_a,
-                                'lat' => $center_lat,
-                                'lng' => $center_lng,
-                                'description' => $description_a,
-                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
-                            ];
-                            $locations[] = [
-                                'title' => $description_b,
-                                'lat' => $json['results'][0]['geometry']['location']['lat'],
-                                'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => $description_b,
-                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
-                            ];    
-                        }    
-                    //}
-
-                    $counter++;  
-                }
-            } 
-        }else{
-            if( $post['user'] > 0 ){
-                $user    = $this->Users_model->getUser($post['user']);
-                $events  = $this->Event_model->getAllUserEventsWithAddress($post['user'],$date_range);
-                $jobs    = $this->Jobs_model->getAllJobsByUserId($post['user'],$date_range,$criteria);
-            }else{
-                $user    = $this->Users_model->getUser($user_id);
-                $events  = $this->Event_model->getAllUserEventsWithAddress($user_id,$date_range);
-                $jobs    = $this->Jobs_model->getAllJobsByUserId($user_id,$date_range,$criteria);
-            }
-
-            //Set Center Map
-            $pointA  = $user->address1 . ', ' . $user->city . ' ' . $user->state . ' ' . $user->postal_code;
-            $description_a = "<b><i class='fa fa-user'></i> ".$user->FName. " " .$user->LName. "</b><br /><small>".$pointA."</small>";
-            $gdata   = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointA)."&sensor=false");
-            if($gdata){
-                $json = json_decode($gdata, true);
-                $center_lng = $json['results'][0]['geometry']['location']['lng'];
-                $center_lat = $json['results'][0]['geometry']['location']['lat'];
-            }
-
-            //Events
-            foreach($events as $e){
-                if( $e->event_address != '' ){
-                    $marker = 'https://staging.nsmartrac.com/uploads/event_types/internet_48px.png';
-                    if( $e->event_type_id > 0 ){
-                        $eventType = $this->EventType_model->getById($e->event_type_id);
-                        if( $eventType->is_marker_icon_default_list == 1 ){
-                            $marker = base_url('/uploads/icons/' . $eventType->icon_marker);
-                        }else{
-                            $marker = base_url('/uploads/event_types/' . $eventType->company_id . "/" . $eventType->icon_marker);
-                        }
-                        
-                    }
-                    $pointB = $e->event_address . ", " . $e->event_state . " " . $e->event_zip_code; 
-                    $description_b = "<i class='fa fa-calendar'></i> " . $e->start_time . " - " . $e->end_time . "<br /><br />" . $e->event_type . "<br /><small>" . $pointB . "</small>";
-                    $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
-                    $json   = json_decode($gdata, true);   
-                    if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
-                        $locations[] = [
-                            'title' => $description_a,
-                            'lat' => $center_lat,
-                            'lng' => $center_lng,
-                            'description' => $description_a,
-                            'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
-                        ];
-                        $locations[] = [
-                            'title' => $description_b,
-                            'lat' => $json['results'][0]['geometry']['location']['lat'],
-                            'lng' => $json['results'][0]['geometry']['location']['lng'],
-                            'description' => $description_b,
-                            'marker' => $marker
-                        ]; 
-                    } 
-                }
-                $counter++;    
-            }
-
-            //Jobs
-            $jobs_customer = array();
-            $counter = end(array_keys($locations));
-            foreach($jobs as $j){
-                if( $j->city != '' && $j->state != '' && $j->country != '' && $j->zip_code != '' ){
-                    if( isset($jobs_customer[$j->prof_id]) ){
-                        $index_b = $jobs_customer[$j->prof_id]['index_b'];
-                        $description = $locations[$index_b]['description'];
-                        $new_description = "<br /><b>". $j->job_number . " - " . $j->job_description . "</b>" . $description;
-                        $locations[$index_b]['description'] = $new_description;
-                    }else{
-                        $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code; 
-                        $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
-                        $json   = json_decode($gdata, true);  
-                        if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
-                            $locations[$counter] = [
-                                'title' => $description_a,
-                                'lat' => $center_lat,
-                                'lng' => $center_lng,
-                                'description' => $description_a,
-                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
-                            ];
-                            $locations[$counter+1] = [
-                                'title' => $pointB,
-                                'lat' => $json['results'][0]['geometry']['location']['lat'],
-                                'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => "<b>" . $j->job_number . " - " . $j->job_description . "</b><br/ ><small>".$pointB."</small>",
-                                'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
-                            ];    
-
-                            $jobs_customer[$j->prof_id] = ['index_a' => $counter, 'index_b' => $counter + 1];
-
-                            $counter++;
+                            ]; 
                         } 
                     }
+                    $counter++;    
                 }
+            }else{
+                //Jobs
+                $jobs    = $this->Jobs_model->getAllJobsByUserId($user->id,$date_range,$criteria);
+                $jobs_customer = array();
+                $counter = end(array_keys($locations));
+                foreach($jobs as $j){
+                    if( $j->city != '' && $j->state != '' && $j->country != '' && $j->zip_code != '' ){
+                        if( isset($jobs_customer[$j->prof_id]) ){
+                            $index_b = $jobs_customer[$j->prof_id]['index_b'];
+                            $description = $locations[$index_b]['description'];
+                            $new_description = "<br /><b>". $j->job_number . " - " . $j->job_description . "</b>" . $description;
+                            $locations[$index_b]['description'] = $new_description;
+                        }else{
+                            $pointB = $j->subdivision . ' ' . $j->city . ' ' . $j->state . ' ' . ' ' . $j->country . ' ' . $j->zip_code; 
+                            $gdata  = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&address=".urlencode($pointB)."&sensor=false");
+                            $json   = json_decode($gdata, true);  
+                            if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
+                                $locations[$counter] = [
+                                    'title' => $description_a,
+                                    'lat' => $center_lat,
+                                    'lng' => $center_lng,
+                                    'description' => $description_a,
+                                    'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
+                                ];
+                                $locations[$counter+1] = [
+                                    'title' => $pointB,
+                                    'lat' => $json['results'][0]['geometry']['location']['lat'],
+                                    'lng' => $json['results'][0]['geometry']['location']['lng'],
+                                    'description' => "<b>" . $j->job_number . " - " . $j->job_description . "</b><br/ ><small>".$pointB."</small>",
+                                    'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
+                                ];    
+
+                                $jobs_customer[$j->prof_id] = ['index_a' => $counter, 'index_b' => $counter + 1];
+
+                                $counter++;
+                            } 
+                        }
+                    }
+                } 
             }
         }
         $this->page_data['center_lng'] = $center_lng;
